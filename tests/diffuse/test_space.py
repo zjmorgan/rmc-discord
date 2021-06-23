@@ -20,7 +20,7 @@ class test_space(unittest.TestCase):
         
         nh, nk, nl = 3, 2, 5
 
-        mask = np.random.randint(0, 2, size=(nh,nk,nl), dtype=np.bool)
+        mask = np.random.randint(0, 2, size=(nh,nk,nl), dtype=bool)
         
         h_range, k_range, l_range = [0,2], [-2,-1], [-1,1]
         
@@ -177,7 +177,7 @@ class test_space(unittest.TestCase):
         sigma, n = 2, 3
         boxes = space.boxblur(sigma, n)
         
-        l = np.int(np.floor(np.floor(np.sqrt(12*sigma**2/n+1))/2-0.5)*2+1)
+        l = int(np.floor(np.floor(np.sqrt(12*sigma**2/n+1))/2-0.5)*2+1)
         m = np.round((n*(l*(l+4)+3)-12*sigma**2)/(l+1)/4)
     
         self.assertEqual(boxes.size, n)        
@@ -186,7 +186,7 @@ class test_space(unittest.TestCase):
         sigma, n = 3, 2
         boxes = space.boxblur(sigma, n)
         
-        l = np.int(np.floor(np.floor(np.sqrt(12*sigma**2/n+1))/2-0.5)*2+1)
+        l = int(np.floor(np.floor(np.sqrt(12*sigma**2/n+1))/2-0.5)*2+1)
         m = np.round((n*(l*(l+4)+3)-12*sigma**2)/(l+1)/4)
             
         self.assertEqual(boxes.size, n)        
@@ -195,7 +195,7 @@ class test_space(unittest.TestCase):
         sigma, n = 4, 3
         boxes = space.boxblur(sigma, n)
         
-        l = np.int(np.floor(np.floor(np.sqrt(12*sigma**2/n+1))/2-0.5)*2+1)
+        l = int(np.floor(np.floor(np.sqrt(12*sigma**2/n+1))/2-0.5)*2+1)
         m = np.round((n*(l*(l+4)+3)-12*sigma**2)/(l+1)/4)
             
         self.assertEqual(boxes.size, n)        
@@ -204,8 +204,7 @@ class test_space(unittest.TestCase):
         sigma, n = np.array([3,1,2]), 4
         boxes = space.boxblur(sigma, n)
         
-        l = (np.floor(np.floor(np.sqrt(12*sigma**2/n+1))/2-0.5)*2+1).astype(
-                                                                           int)
+        l = (np.floor(np.floor(np.sqrt(12*sigma**2/n+1))/2-0.5)*2+1).astype(int)
         m = np.round((n*(l*(l+4)+3)-12*sigma**2)/(l+1)/4)
                     
         self.assertEqual(boxes.size, n*sigma.size)     
@@ -220,7 +219,7 @@ class test_space(unittest.TestCase):
         
         nh, nk, nl = 16, 27, 36
 
-        mask = np.random.randint(0, 2, size=(nh,nk,nl), dtype=np.bool)
+        mask = np.random.randint(0, 2, size=(nh,nk,nl), dtype=bool)
         
         sigma = [2,1,3]
         v_inv = space.gaussian(mask, sigma).reshape(nh,nk,nl)
@@ -238,7 +237,7 @@ class test_space(unittest.TestCase):
         
         nh, nk, nl = 16, 27, 36
 
-        mask = np.random.randint(0, 2, size=(nh,nk,nl), dtype=np.bool)
+        mask = np.random.randint(0, 2, size=(nh,nk,nl), dtype=bool)
         
         sigma = [2,1,3]
         v_inv = space.gaussian(mask, sigma)

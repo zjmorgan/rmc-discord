@@ -25,7 +25,7 @@ def parallelism():
         num_threads = openmp.omp_get_max_threads()
         
     if (len(sys.argv) > 1):
-        openmp.omp_set_num_threads(np.int(sys.argv[1]))
+        openmp.omp_set_num_threads(int(sys.argv[1]))
     elif (threads is None):
         if (num_threads > 8):
             openmp.omp_set_num_threads(8)
@@ -611,7 +611,7 @@ def length(ions, Py_ssize_t n_hkl):
     
     cdef Py_ssize_t n_atm = len(ions)
     
-    b_np = np.zeros(n_hkl*n_atm, dtype=np.complex)
+    b_np = np.zeros(n_hkl*n_atm, dtype=complex)
     
     cdef double complex [::1] b = b_np
     
@@ -686,7 +686,7 @@ def phase(double [::1] Qx,
 
     cdef Py_ssize_t n_uvw = rx.shape[0]
 
-    factor_np = np.zeros(n_hkl*n_uvw, dtype=np.complex)
+    factor_np = np.zeros(n_hkl*n_uvw, dtype=complex)
     
     cdef double complex [::1] factor = factor_np
        

@@ -143,7 +143,7 @@ def boxblur(sigma, n):
     
     if (np.size(sigma) == 1): 
         
-        sizes = np.zeros(n, dtype=np.int)
+        sizes = np.zeros(n, dtype=int)
         
         for i in range(n):
        
@@ -154,7 +154,7 @@ def boxblur(sigma, n):
     
     else:
         
-        sizes = np.zeros((n, np.size(sigma)), dtype=np.int)
+        sizes = np.zeros((n, np.size(sigma)), dtype=int)
         
         for i in range(n):
             for j in range(np.size(sigma)):
