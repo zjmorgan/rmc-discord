@@ -1,0 +1,6 @@
+theme: jekyll-theme-cayman
+baseurl: /rmc-discord
+url: https://zjmorgan.github.io
+title: [rmc-discord]
+description: [Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals]
+show_downloads: ["true"]

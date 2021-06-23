@@ -1,0 +1,161 @@
+---
+---
+
+// Breakpoints
+$large-breakpoint: 64em !default;
+$medium-breakpoint: 42em !default;
+
+// Headers
+$header-heading-color: #ffffff !default;
+$header-bg-color: #ffffff;
+$header-bg-color-secondary: #ffffff;
+
+// Text
+$section-headings-color: #440154;
+$body-text-color: #000000 !default;
+$body-link-color: #414487 !default;
+$blockquote-text-color: #22a884 !default;
+
+// Code
+$code-bg-color: #f3f6fa !default;
+$code-text-color: #2a788e !default;
+
+// Borders
+$border-color: #dce6f0 !default;
+$table-border-color: #e9ebec !default;
+$hr-border-color: #eff0f1 !default;
+
+@import "{{ site.theme }}";
+
+// Background;
+.page-header {
+  top: 0;
+  position: sticky;
+  display: block;
+  z-index: 1;
+  background-image: url(../../docs/banner-str.svg), url(../../docs/banner-mag.svg), url(../../docs/banner-dis.svg), url(../../docs/banner-occ.svg), linear-gradient(45deg, #944b94, #d75a88, #ff7f71, #ffb25f, #ffeb68);
+  background-repeat: no-repeat;
+  background-position: 50% 50%, 50% 50%, 50% 50%;
+  width: 100%;
+  height: 8rem;
+  //-webkit-transition: all 0.2s;
+  //-moz-transition: all 0.2s;
+  //-ms-transition: all 0.2s;
+  //transition: all 0.2s;
+
+  @include large {
+    padding: 1rem 0.5rem;
+    background-position: 5% 100%, 25% 10%, 75% 10%, 95% 100%;
+    background-size: 8rem, 8rem, 8rem, 8rem, auto;
+  }
+
+  @include medium {
+    padding: 1rem 0.5rem;
+    background-position: 2.5% 100%, 17.25% 10%, 82.75% 10%, 97.5% 100%;
+    background-size: 6.5rem, 6.5rem, 6.5rem, 6.5rem, auto;
+  }
+
+  @include small {
+    padding: 1rem 0.5rem;
+    background-position: 0% 100%, 12.5% 10%, 87.5% 10%, 100% 100%;
+    background-size: 5rem, 5rem, 5rem, 5rem, auto;
+  }
+}
+
+.project-name {
+  color: $header-heading-color;
+  margin-top: 0;
+
+  @include large {
+    padding: 0.0rem;
+    font-size: 2.25rem;
+  }
+
+  @include medium {
+    padding: 0.0rem;
+    font-size: 2rem;
+  }
+
+  @include small {
+    padding: 0.0rem;
+    font-size: 1.75rem;
+  }
+}
+
+.nav {
+  display: inline-block;
+  position: center;
+  text-align: center;
+  color: $header-heading-color;
+  font-family: Ubuntu;
+  font-weight: bold;
+  opacity: 1;
+
+  @include large {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  @include medium {
+    padding: 1rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  @include small {
+    padding: 1.25rem 0.2rem;
+    font-size: 0.8rem;
+  }
+}
+
+body {
+  padding: 0rem;
+  margin: 0rem;
+  font-family: 'DejaVu Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: $body-text-color;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Ubuntu;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  color: $section-headings-color;
+}
+
+code {
+  padding: 2px 4px;
+  font-family: 1rem 'DejaVu Sans Mono', monospace;
+  font-size: 0.9rem;
+  color: $code-text-color;
+  background-color: $code-bg-color;
+  border-radius: 0.3rem;
+}
+
+pre {
+  padding: 0.8rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-family: 1rem 'DejaVu Sans Mono', monospace;
+  color: $code-text-color;
+  word-wrap: normal;
+  background-color: $code-bg-color;
+  border: solid 1px $border-color;
+  border-radius: 0.3rem;
+
+  > code {
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+    color: $code-text-color;
+    word-break: normal;
+    white-space: pre;
+    background: transparent;
+    border: 0;
+  }
+}

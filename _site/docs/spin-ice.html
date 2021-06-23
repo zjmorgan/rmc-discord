@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+  <title>rmc-discord</title>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js">
+      MathJax.Hub.Config({
+          extensions: ["tex2jax.js"],
+          jax: ["input/TeX", "output/HTML-CSS"],
+          tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+              displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+          },
+          "HTML-CSS" : {
+               availableFonts : ["STIX"],
+               preferredFont : "STIX",
+               webFont : "STIX-Web",
+               imageFont : null
+           }
+      });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
+  <script src="https://tikzjax.com/v1/tikzjax.js"></script>
+
+  
+  <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Spin ice | [“rmc-discord”]</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Spin ice" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="[“Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals”]" />
+<meta property="og:description" content="[“Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals”]" />
+<link rel="canonical" href="http://localhost:4000/docs/spin-ice.html" />
+<meta property="og:url" content="http://localhost:4000/docs/spin-ice.html" />
+<meta property="og:site_name" content="[“rmc-discord”]" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Spin ice" />
+<script type="application/ld+json">
+{"description":"[“Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals”]","@type":"WebPage","headline":"Spin ice","url":"http://localhost:4000/docs/spin-ice.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=572e59b72a00d81c29ec9938cb8de84afb865b6d">
+  </head>
+  <body>
+    <header class="page-header">
+      <h1 class="project-name">rmc-discord</h1>
+      <a href="/" class="nav">Home</a>
+      <a href="/docs/installation" class="nav">Installation</a>
+      <a href="/docs/tutorials" class="nav">Tutorials</a>
+      <a id="#about" class="nav">About</a>
+    </header>
+
+    <!-- <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+    $(window).scroll(function () {
+      var scrolled = $(window).scrollTop();
+      if (scrolled > 256) {
+          $('header').addClass('fixed');
+      }
+      else if (scrolled == 0) {
+          $('header').removeClass('fixed');
+      }
+    });
+    </script> -->
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="spin-ice"><strong>Spin ice</strong></h1>
+
+<p>The pyrochlore lattice decorated with magnetic moments and ferromagnetic nearest neighbor interactions is a simple example of a three-dimensional geometrically frustrated system. Using the forward Monte Carlo method, the Hamiltonian</p>
+
+<p>\[E=-J\sum_{\langle i,j\rangle}\pmb{S}_i\cdot\pmb{S}_j\]</p>
+
+<p>is used to describe the nearest neighbor ferromagnetic interactions where the interaction strength is greater than zero (\(J&gt;0\)). The spin vectors \(\pmb{S}\) of the \(\mathrm{Ho^{3+}}\) ions are restricted to be oriented either in or out of the vertex of each tetrahedra which corresponds to the \(\langle111\rangle\) family of directions.</p>
+
+<p align="center">
+<img src="standard-cubic.svg" alt="Standard-cubic" width="64" style="vertical-align:bottom" />
+<img src="pyrochlore-mag.png" alt="Pyrochlore-magnetic" width="256" />
+<br />
+Example of pyrochlore lattice with magnetic disorder
+</p>
+
+<p>The spin-pair correlations of an \(8\times8\times8\) supercell are obtained from a forward Monte Carlo simulation. The first nearest neighbors are clearly ferromagnetic while the second are antiferromagnetic.</p>
+
+<p align="center">
+<img src="pyrochlore-spin-correlations.svg" alt="Pyrochlore-magnetic correlations" width="512" />
+<br />
+Spin-pair correlations
+</p>
+
+<p>The diffuse scattering intensity is calculated over a range of -6 to 6 in each \(h\)-, \(k\)-, and \(l\)-direction with a bin size of 0.04 in each dimension. Averaging is done over 20 independent forward Monte Carlo simulations to improve the statistics. A slice in the \((h,h,l)\)-plane is also calculated from -4 to 4 along \((h,h,0)\) and -6 to 6 along \((0,0,l)\).</p>
+
+<p align="center">
+<img src="pyrochlore-intensity-mag.svg" alt="Pyrochlore-magnetic intensity" width="512" />
+<br />
+Diffuse scattering intensity
+</p>
+
+<h2 id="rmc-refinement"><strong>RMC refinement</strong></h2>
+
+<p>Setup, run, and analyze a refinement with magnetic disorder.</p>
+
+<h3 id="crystal-tab"><strong>Crystal tab</strong></h3>
+
+<p>Create a supercell for magnetic refinement.</p>
+<ul>
+  <li>Click on <em>Load CIF file</em>, navigate to the <code class="language-plaintext highlighter-rouge">tutorials/pyrochlore/</code> directory, and locate the <code class="language-plaintext highlighter-rouge">pyrochlore.cif</code> file.</li>
+  <li>Change the refinement from <em>Neutron nonmagnetic</em> to <em>Neutron magnetic</em>.</li>
+  <li>Create a supercell with size \(N_1=4\), \(N_2=4\), and \(N_3=4\).</li>
+  <li>Change the atom to a \(\mathrm{Ho3+}\) ion.</li>
+</ul>
+
+<p align="center">
+<img src="pyrochlore-magnetic-gui-crystal.png" alt="Pyrochlore GUI crystal tab" width="640" />
+<br />
+Crystal tab
+</p>
+
+<h3 id="intensity-tab"><strong>Intensity tab</strong></h3>
+
+<p>Preprocess intensity obtained from forward Monte Carlo.</p>
+<ul>
+  <li>Download the <a href="http://dl.dropboxusercontent.com/s/c7x9zo4x903wdh7/pyrochlore-magnetic.nxs?dl=0"><code class="language-plaintext highlighter-rouge">pyrochlore-magnetic.nxs</code></a> file.</li>
+  <li>Click on <em>Load NeXus file</em> and locate the <code class="language-plaintext highlighter-rouge">pyrochlore-magnetic.nxs</code> file.</li>
+  <li>Under the <em>Rebin</em> tab, change the step size to <em>0.2</em> in each \(h\)-, \(k\)-, and \(l\)-direction.</li>
+  <li>Under the <em>Crop</em> tab, change the \(h\)-, \(k\)-, and \(l\)-range from <em>0</em> to <em>6</em>.</li>
+</ul>
+
+<p align="center">
+<img src="pyrochlore-magnetic-gui-intensity.png" alt="Pyrochlore GUI intensity tab" width="640" />
+<br />
+Intensity tab
+</p>
+
+<h3 id="refinement-tab"><strong>Refinement tab</strong></h3>
+
+<p>Perform the refinement.</p>
+<ul>
+  <li>Change the number of RMC <em>Cycles</em> to <em>100</em>.</li>
+  <li>Change the filter size to <em>1.0</em> pixel in each \(h\)-, \(k\)-, and \(l\)-direction.</li>
+  <li>Change the temperature prefactor to <em>1.00e+00</em> and decay constant to <em>1.00e-04</em>.</li>
+  <li>Click on run and save refinement file.</li>
+</ul>
+
+<p align="center">
+<img src="pyrochlore-magnetic-gui-refinement.png" alt="Pyrochlore GUI refinement tab" width="640" />
+<br />
+Refinement tab
+</p>
+
+<h3 id="correlations-tab"><strong>Correlations tab</strong></h3>
+
+<p>Calculate three-dimensional spin-pair correlations.</p>
+<ul>
+  <li>Under the <em>Three-dimensional</em> tab, change $h$, $k$ and $l$ to <em>1</em>.</li>
+  <li>Change <em>Fraction</em> to <em>0.2</em>.</li>
+  <li>Click <em>Calculate</em>.</li>
+  <li>Change <em>Linear</em> scaling to <em>Logarithmic</em>.</li>
+</ul>
+
+<p align="center">
+<img src="pyrochlore-magnetic-gui-correlations.png" alt="Pyrochlore GUI correlations tab" width="640" />
+<br />
+Correlations tab
+</p>
+
+<h3 id="recalculation-tab"><strong>Recalculation tab</strong></h3>
+
+<p>Recalculate the intensity over new axes.</p>
+<ul>
+  <li>In the table, change $h$ and $k$ size to <em>201</em> and $l$ size to <em>301</em>.</li>
+  <li>Change $h$ and $k$ min to <em>-4</em> and $l$ min to <em>-6</em>.</li>
+  <li>Change $h$ and $k$ max to <em>4</em> and $l$ max to <em>6</em>.</li>
+  <li>Change $h$, $k$ and $l$ filter size to <em>3.0</em>.</li>
+  <li>Change the <em>Axes</em> to <em>(hh0), (-kk0), (00l)</em>.</li>
+  <li>Change the <em>Laue</em> symmetry to <em>cif</em> which is inferred from the loaded <code class="language-plaintext highlighter-rouge">pyrochlore.cif</code> file.</li>
+  <li>Click <em>Calculate</em>.</li>
+</ul>
+
+<p align="center">
+<img src="pyrochlore-magnetic-gui-recalculation.png" alt="Pyrochlore GUI recalculation tab" width="640" />
+<br />
+Recalculation tab
+</p>
+
+<ul>
+  <li>Navigate to <em>File-&gt;Save</em> to save all results into the refinement file.</li>
+</ul>
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/zjmorgan/rmc-discord">rmc-discord</a> is maintained by <a href="https://github.com/zjmorgan">zjmorgan</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </main>
+  </body>
+</html>

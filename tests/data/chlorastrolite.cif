@@ -1,0 +1,68 @@
+data_global
+_chemical_name_mineral 'Pumpellyite-(Mg)'
+loop_
+_publ_author_name
+'Artioli G'
+'Geiger C A'
+_journal_name_full 'Physics and Chemistry of Minerals'
+_journal_volume 20 
+_journal_year 1994
+_journal_page_first 443
+_journal_page_last 453
+_publ_section_title
+;
+ The crystal chemistry of pumpellyite: An X-ray Rietveld
+ refinement and 57Fe Mossbauer study
+ Note: sample K1
+;
+_database_code_amcsd 0007760
+_chemical_compound_source 'Keweenawan, Michigan'
+_chemical_formula_sum 'Si3 Al2.272 Fe.358 Mg.373 Ca2 O14 H4'
+_cell_length_a 8.8192
+_cell_length_b 5.9192
+_cell_length_c 19.1274
+_cell_angle_alpha 90
+_cell_angle_beta 97.446
+_cell_angle_gamma 90
+_cell_volume 990.080
+_exptl_crystal_density_diffrn      3.239
+_symmetry_space_group_name_H-M 'A 1 2/m 1'
+loop_
+_space_group_symop_operation_xyz
+  'x,y,z'
+  'x,1/2+y,1/2+z'
+  '-x,y,-z'
+  '-x,1/2+y,1/2-z'
+  'x,-y,z'
+  'x,1/2-y,1/2+z'
+  '-x,-y,-z'
+  '-x,1/2-y,1/2-z'
+loop_
+_atom_site_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+_atom_site_U_iso_or_equiv
+Si1   0.05080   0.00000   0.09090   1.00000   0.00800
+Si2   0.16720   0.00000   0.24890   1.00000   0.00800
+Si3   0.46450   0.00000   0.40140   1.00000   0.00800
+AlX   0.50000   0.25000   0.25000   0.50000   0.02300
+FeX   0.50000   0.25000   0.25000   0.13000   0.02300
+MgX   0.50000   0.25000   0.25000   0.37300   0.02300
+AlY   0.25410   0.24200   0.49760   0.88600   0.02300
+FeY   0.25410   0.24200   0.49760   0.11400   0.02300
+Ca1   0.24740   0.50000   0.33880   1.00000   0.01500
+Ca2   0.18780   0.50000   0.15540   1.00000   0.01400
+O1   0.13350   0.22400   0.07210   1.00000   0.01040
+O2   0.26790   0.22500   0.24170   1.00000   0.01040
+O3   0.37360   0.22000   0.41680   1.00000   0.01040
+O4   0.13600   0.50000   0.44530   1.00000   0.01040
+O-H5   0.12800   0.00000   0.45680   1.00000   0.01040
+O6   0.36800   0.50000   0.04580   1.00000   0.01040
+O-H7   0.37000   0.00000   0.03680   1.00000   0.01040
+O8   0.03500   0.00000   0.17300   1.00000   0.01040
+O9   0.48500   0.50000   0.17720   1.00000   0.01040
+O-H10   0.07000   0.00000   0.31350   1.00000   0.01040
+O-H11   0.50100   0.50000   0.31220   1.00000   0.01040
+

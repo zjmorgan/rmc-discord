@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+
+  <title>rmc-discord</title>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js">
+      MathJax.Hub.Config({
+          extensions: ["tex2jax.js"],
+          jax: ["input/TeX", "output/HTML-CSS"],
+          tex2jax: {
+              inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+              displayMath: [ ['$$','$$'], ["\\[","\\]"] ]
+          },
+          "HTML-CSS" : {
+               availableFonts : ["STIX"],
+               preferredFont : "STIX",
+               webFont : "STIX-Web",
+               imageFont : null
+           }
+      });
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/latest.js?config=TeX-MML-AM_CHTML" type="text/javascript"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" type="text/css" href="https://tikzjax.com/v1/fonts.css">
+  <script src="https://tikzjax.com/v1/tikzjax.js"></script>
+
+  
+  <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.7.1 -->
+<title>Reverse Monte Carlo refinement | [“rmc-discord”]</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="Reverse Monte Carlo refinement" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="[“Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals”]" />
+<meta property="og:description" content="[“Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals”]" />
+<link rel="canonical" href="http://localhost:4000/docs/reverse-monte-carlo-refinement.html" />
+<meta property="og:url" content="http://localhost:4000/docs/reverse-monte-carlo-refinement.html" />
+<meta property="og:site_name" content="[“rmc-discord”]" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Reverse Monte Carlo refinement" />
+<script type="application/ld+json">
+{"description":"[“Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals”]","@type":"WebPage","headline":"Reverse Monte Carlo refinement","url":"http://localhost:4000/docs/reverse-monte-carlo-refinement.html","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="stylesheet" href="/assets/css/style.css?v=572e59b72a00d81c29ec9938cb8de84afb865b6d">
+  </head>
+  <body>
+    <header class="page-header">
+      <h1 class="project-name">rmc-discord</h1>
+      <a href="/" class="nav">Home</a>
+      <a href="/docs/installation" class="nav">Installation</a>
+      <a href="/docs/tutorials" class="nav">Tutorials</a>
+      <a id="#about" class="nav">About</a>
+    </header>
+
+    <!-- <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+    $(window).scroll(function () {
+      var scrolled = $(window).scrollTop();
+      if (scrolled > 256) {
+          $('header').addClass('fixed');
+      }
+      else if (scrolled == 0) {
+          $('header').removeClass('fixed');
+      }
+    });
+    </script> -->
+
+    <main id="content" class="main-content" role="main">
+      <h1 id="reverse-monte-carlo-refinement"><strong>Reverse Monte Carlo refinement</strong></h1>
+
+<p>To calculate the diffuse scattering intensity from a disordered structure, a supercell is first generated corresponding to the average structure. Next, initially random disorder is introduced with magnetic moments or site occupancies and/or atomic displacements. The diffuse scattering intensity is then calculated from the <em>deviations</em> from the <em>average</em> structure.</p>
+
+<p align="center">
+<img src="reverse-monte-carlo.svg" alt="reverse Monte Carlo" width="512" />
+<br />
+Illustration of generating a supercell with disorder
+</p>
+
+<p>The reverse Monte Carlo refinement methodology is bases on the Metropolis algorithm. The chi-square goodness of fit is used as the system energy which is a measure of the closeness of the calculated to the experimentally obtained diffuse scattering intensity</p>
+
+<p>\[\chi^2=\sum_{\pmb{Q}}\bigg[\frac{I_{\text{calc}}(\pmb{Q})-I_{\text{expt}}(\pmb{Q})}{\sigma_{\text{expt}}(\pmb{Q})}\bigg]^2.\]</p>
+
+<p>The acceptance ratio \(\alpha\) follows a Boltzmann distribution</p>
+
+<p>\[\alpha=e^{-\beta\Delta{\chi^2}}\]</p>
+
+<p>which gives the likelihood of a bad move being accepted with energy change \(\Delta{\chi^2}\) with inverse system temperature \(\beta\). The temperature of the system is cooled according to a function analogous to Newton’s law of cooling</p>
+
+<p>\[T=T_0e^{-\lambda t}\]</p>
+
+<p>where \(T_0\) is the temperature prefactor and \(\lambda\) is the decay constant.</p>
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/zjmorgan/rmc-discord">rmc-discord</a> is maintained by <a href="https://github.com/zjmorgan">zjmorgan</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </main>
+  </body>
+</html>
