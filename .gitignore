@@ -141,3 +141,5 @@ dmypy.json
 *.vts
 *.vtk
 
+# Jekyll site
+_site/
