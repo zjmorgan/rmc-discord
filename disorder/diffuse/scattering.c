@@ -2342,7 +2342,6 @@ static const char __pyx_k_rz[] = "rz";
 static const char __pyx_k_Q_k[] = "Q_k";
 static const char __pyx_k_exp[] = "exp";
 static const char __pyx_k_get[] = "get";
-static const char __pyx_k_int[] = "int";
 static const char __pyx_k_ion[] = "ion";
 static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_obj[] = "obj";
@@ -2704,7 +2703,6 @@ static PyObject *__pyx_n_s_ind_k_np;
 static PyObject *__pyx_n_s_ind_l;
 static PyObject *__pyx_n_s_ind_l_np;
 static PyObject *__pyx_n_s_indices;
-static PyObject *__pyx_n_s_int;
 static PyObject *__pyx_n_s_inv_error_sq;
 static PyObject *__pyx_n_s_inverses;
 static PyObject *__pyx_n_s_ion;
@@ -2987,9 +2985,8 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10scattering_parallelism(CYTHON_UNU
   Py_ssize_t __pyx_t_4;
   Py_ssize_t __pyx_t_5;
   int __pyx_t_6;
-  PyObject *__pyx_t_7 = NULL;
+  int __pyx_t_7;
   int __pyx_t_8;
-  int __pyx_t_9;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3110,7 +3107,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10scattering_parallelism(CYTHON_UNU
  *         num_threads = openmp.omp_get_max_threads()
  * 
  *     if (len(sys.argv) > 1):             # <<<<<<<<<<<<<<
- *         openmp.omp_set_num_threads(np.int(sys.argv[1]))
+ *         openmp.omp_set_num_threads(int(sys.argv[1]))
  *     elif (threads is None):
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sys); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 27, __pyx_L1_error)
@@ -3126,48 +3123,30 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10scattering_parallelism(CYTHON_UNU
     /* "disorder/diffuse/scattering.pyx":28
  * 
  *     if (len(sys.argv) > 1):
- *         openmp.omp_set_num_threads(np.int(sys.argv[1]))             # <<<<<<<<<<<<<<
+ *         openmp.omp_set_num_threads(int(sys.argv[1]))             # <<<<<<<<<<<<<<
  *     elif (threads is None):
  *         if (num_threads > 8):
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_int); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 28, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_3);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_sys); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_argv); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 28, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_7);
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_7, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_1);
-    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-      __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_3);
-      if (likely(__pyx_t_7)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-        __Pyx_INCREF(__pyx_t_7);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_3, function);
-      }
-    }
-    __pyx_t_2 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_7, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_1);
-    __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_sys); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_argv); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    omp_set_num_threads(__pyx_t_8);
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 28, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    __pyx_t_1 = __Pyx_PyNumber_Int(__pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 28, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+    __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 28, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+    omp_set_num_threads(__pyx_t_7);
 
     /* "disorder/diffuse/scattering.pyx":27
  *         num_threads = openmp.omp_get_max_threads()
  * 
  *     if (len(sys.argv) > 1):             # <<<<<<<<<<<<<<
- *         openmp.omp_set_num_threads(np.int(sys.argv[1]))
+ *         openmp.omp_set_num_threads(int(sys.argv[1]))
  *     elif (threads is None):
  */
     goto __pyx_L12;
@@ -3175,24 +3154,24 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10scattering_parallelism(CYTHON_UNU
 
   /* "disorder/diffuse/scattering.pyx":29
  *     if (len(sys.argv) > 1):
- *         openmp.omp_set_num_threads(np.int(sys.argv[1]))
+ *         openmp.omp_set_num_threads(int(sys.argv[1]))
  *     elif (threads is None):             # <<<<<<<<<<<<<<
  *         if (num_threads > 8):
  *             openmp.omp_set_num_threads(8)
  */
   __pyx_t_6 = (__pyx_v_threads == Py_None);
-  __pyx_t_9 = (__pyx_t_6 != 0);
-  if (__pyx_t_9) {
+  __pyx_t_8 = (__pyx_t_6 != 0);
+  if (__pyx_t_8) {
 
     /* "disorder/diffuse/scattering.pyx":30
- *         openmp.omp_set_num_threads(np.int(sys.argv[1]))
+ *         openmp.omp_set_num_threads(int(sys.argv[1]))
  *     elif (threads is None):
  *         if (num_threads > 8):             # <<<<<<<<<<<<<<
  *             openmp.omp_set_num_threads(8)
  *         else:
  */
-    __pyx_t_9 = ((__pyx_v_num_threads > 8) != 0);
-    if (__pyx_t_9) {
+    __pyx_t_8 = ((__pyx_v_num_threads > 8) != 0);
+    if (__pyx_t_8) {
 
       /* "disorder/diffuse/scattering.pyx":31
  *     elif (threads is None):
@@ -3204,7 +3183,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10scattering_parallelism(CYTHON_UNU
       omp_set_num_threads(8);
 
       /* "disorder/diffuse/scattering.pyx":30
- *         openmp.omp_set_num_threads(np.int(sys.argv[1]))
+ *         openmp.omp_set_num_threads(int(sys.argv[1]))
  *     elif (threads is None):
  *         if (num_threads > 8):             # <<<<<<<<<<<<<<
  *             openmp.omp_set_num_threads(8)
@@ -3227,7 +3206,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10scattering_parallelism(CYTHON_UNU
 
     /* "disorder/diffuse/scattering.pyx":29
  *     if (len(sys.argv) > 1):
- *         openmp.omp_set_num_threads(np.int(sys.argv[1]))
+ *         openmp.omp_set_num_threads(int(sys.argv[1]))
  *     elif (threads is None):             # <<<<<<<<<<<<<<
  *         if (num_threads > 8):
  *             openmp.omp_set_num_threads(8)
@@ -3320,20 +3299,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10scattering_parallelism(CYTHON_UNU
  * 
  * def threads():
  */
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_num_threads); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_num_threads); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_kp_u_threads);
   __Pyx_GIVEREF(__pyx_kp_u_threads);
-  PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_kp_u_threads);
-  __Pyx_GIVEREF(__pyx_t_2);
-  PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
-  __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_3, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_kp_u_threads);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_print, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 38, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "disorder/diffuse/scattering.pyx":18
  * import os, sys
@@ -3350,7 +3329,6 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10scattering_parallelism(CYTHON_UNU
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_7);
   __Pyx_AddTraceback("disorder.diffuse.scattering.parallelism", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
@@ -37873,7 +37851,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_ind_l, __pyx_k_ind_l, sizeof(__pyx_k_ind_l), 0, 0, 1, 1},
   {&__pyx_n_s_ind_l_np, __pyx_k_ind_l_np, sizeof(__pyx_k_ind_l_np), 0, 0, 1, 1},
   {&__pyx_n_s_indices, __pyx_k_indices, sizeof(__pyx_k_indices), 0, 0, 1, 1},
-  {&__pyx_n_s_int, __pyx_k_int, sizeof(__pyx_k_int), 0, 0, 1, 1},
   {&__pyx_n_s_inv_error_sq, __pyx_k_inv_error_sq, sizeof(__pyx_k_inv_error_sq), 0, 0, 1, 1},
   {&__pyx_n_s_inverses, __pyx_k_inverses, sizeof(__pyx_k_inverses), 0, 0, 1, 1},
   {&__pyx_n_s_ion, __pyx_k_ion, sizeof(__pyx_k_ion), 0, 0, 1, 1},

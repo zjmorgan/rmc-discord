@@ -15,6 +15,20 @@ qtCreatorFile_MainWindow = os.path.join(_root, 'mainwindow.ui')
  
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile_MainWindow)
 
+class FractionalDelegate(QtWidgets.QItemDelegate):
+    def createEditor(self, parent, option, index):
+        lineEdit = QtWidgets.QLineEdit(parent)
+        validator = QtGui.QDoubleValidator(0, 1, 4, lineEdit)
+        lineEdit.setValidator(validator)
+        return lineEdit
+    
+class StandardDoubleDelegate(QtWidgets.QItemDelegate):
+    def createEditor(self, parent, option, index):
+        lineEdit = QtWidgets.QLineEdit(parent)
+        validator = QtGui.QDoubleValidator(-999999, 999999, 4, lineEdit)
+        lineEdit.setValidator(validator)
+        return lineEdit
+
 class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def __init__(self):
@@ -61,27 +75,99 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                            'occupancy': 4, 'Uiso': 5,
                            'U11': 6, 'U22': 7, 'U33': 8,
                            'U23': 9, 'U13': 10, 'U12': 11,
-                           'mu': 12, 'mu1': 13, 'mu2': 14, 'mu3': 15, 'g': 16,
-                           'u': 17, 'v': 18, 'w': 19}
+                           'U1': 12, 'U2': 13, 'U3': 14,
+                           'mu': 15, 'mu1': 16, 'mu2': 17, 'mu3': 18, 'g': 19,
+                           'u': 20, 'v': 21, 'w': 22, 
+                           'operator': 23, 'moment': 24}
         
-        self.atom_table = {'atom': 0, 'ion': 1, 'occupancy': 2, 'Uiso': 3,
-                           'U11': 4, 'U22': 5, 'U33': 6, 
-                           'U23': 7, 'U13': 8, 'U12': 9,
-                           'mu': 10, 'mu1': 11, 'mu2': 12, 'mu3': 13, 'g': 14,
-                           'u': 15, 'v': 16, 'w': 17, '': 18}
+        self.atom_table = {'atom': 0, 'ion': 1, 'occupancy': 2, 
+                           'U11': 3, 'U22': 4, 'U33': 5, 
+                           'U23': 6, 'U13': 7, 'U12': 8,
+                           'mu1': 9, 'mu2': 10, 'mu3': 11, 'g': 12,
+                           'u': 13, 'v': 14, 'w': 15, '': 16}
         
     def get_every_site(self):
-        j = self.unit_table['site']
-        data = []
-        for i in range(self.tableWidget_CIF.rowCount()):
-            data.append(str(self.tableWidget_CIF.item(i, j).text()))
-        return np.array(data)
+        return self.get_every_unit_cell_table_col(self.unit_table['site'])
     
+    def get_every_atom(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['atom'])
+    
+    def get_every_isotope(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['isotope'])
+    
+    def get_every_ion(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['ion'])
+
+    def get_every_occupancy(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['occupancy'])
+
+    def get_every_Uiso(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['Uiso'])
+    
+    def get_every_U11(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['U11'])
+    
+    def get_every_U22(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['U22'])
+    
+    def get_every_U33(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['U33'])
+    
+    def get_every_U23(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['U23'])
+    
+    def get_every_U13(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['U13'])
+    
+    def get_every_U12(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['U12'])
+    
+    def get_every_U1(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['U1'])
+    
+    def get_every_U2(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['U2'])
+    
+    def get_every_U3(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['U3'])
+
+    def get_every_mu(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['mu'])
+    
+    def get_every_mu1(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['mu1'])
+    
+    def get_every_mu2(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['mu2'])
+    
+    def get_every_mu3(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['mu3'])
+   
+    def get_every_g(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['g'])
+    
+    def get_every_u(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['u'])
+    
+    def get_every_v(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['v'])
+    
+    def get_every_w(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['w'])
+    
+    def get_every_operator(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['operator'])
+
+    def get_every_magnetic_operator(self):
+        return self.get_every_unit_cell_table_col(self.unit_table['moment'])    
+    
+    # ---
+
     def get_site(self):
         return self.get_unit_cell_table_col(self.unit_table['site'])
 
-    def get_atm(self):
-        return self.get_unit_cell_table_col(self.unit_table['atm'])
+    def get_atom(self):
+        return self.get_unit_cell_table_col(self.unit_table['atom'])
     
     def get_isotope(self):
         return self.get_unit_cell_table_col(self.unit_table['isotope'])
@@ -112,6 +198,15 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def get_U12(self):
         return self.get_unit_cell_table_col(self.unit_table['U12'])
+    
+    def get_U1(self):
+        return self.get_unit_cell_table_col(self.unit_table['U1'])
+    
+    def get_U2(self):
+        return self.get_unit_cell_table_col(self.unit_table['U2'])
+    
+    def get_U3(self):
+        return self.get_unit_cell_table_col(self.unit_table['U3'])
 
     def get_mu(self):
         return self.get_unit_cell_table_col(self.unit_table['mu'])
@@ -175,17 +270,17 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         return float(self.lineEdit_a.text()), \
                float(self.lineEdit_b.text()), \
                float(self.lineEdit_c.text()), \
-               float(self.lineEdit_alpha.text()), \
-               float(self.lineEdit_beta.text()), \
-               float(self.lineEdit_gamma.text())
+               np.deg2rad(float(self.lineEdit_alpha.text())), \
+               np.deg2rad(float(self.lineEdit_beta.text())), \
+               np.deg2rad(float(self.lineEdit_gamma.text()))
         
     def set_lattice_parameters(self, a, b, c, alpha, beta, gamma):
         self.lineEdit_a.setText(str(a))
         self.lineEdit_b.setText(str(b))
         self.lineEdit_c.setText(str(c))
-        self.lineEdit_alpha.setText(str(alpha))
-        self.lineEdit_beta.setText(str(beta))
-        self.lineEdit_gamma.setText(str(gamma))
+        self.lineEdit_alpha.setText(str(np.rad2deg(alpha)))
+        self.lineEdit_beta.setText(str(np.rad2deg(beta)))
+        self.lineEdit_gamma.setText(str(np.rad2deg(gamma)))
         
     def set_lattice(self, lat):
         self.lineEdit_lat.setText(lat)
@@ -210,6 +305,16 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def button_clicked_CIF(self, slot):
         self.pushButton_load_CIF.clicked.connect(slot)
+        
+    def get_every_unit_cell_table_col(self, j):       
+        data = []
+        for i in range(self.tableWidget_CIF.rowCount()):
+            item = self.tableWidget_CIF.item(i, j)
+            if (item is not None):
+                data.append(str(item.text()))
+            else:
+                data.append(str(''))
+        return np.array(data)
                 
     def get_unit_cell_table_col(self, j):
         data = []
@@ -237,6 +342,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             
     def set_unit_cell_site(self, data):
         self.set_unit_cell_table_col(data, self.unit_table['site'])
+        
+    def set_unit_cell_atom(self, data):
+        self.set_unit_cell_table_col(data, self.unit_table['atom'])
 
     def set_unit_cell_isotope(self, data):
         self.set_unit_cell_table_col(data, self.unit_table['isotope'])
@@ -267,7 +375,16 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def set_unit_cell_U12(self, data):
         self.set_unit_cell_table_col(data, self.unit_table['U12'])
+
+    def set_unit_cell_U1(self, data):
+        self.set_unit_cell_table_col(data, self.unit_table['U1'])
         
+    def set_unit_cell_U2(self, data):
+        self.set_unit_cell_table_col(data, self.unit_table['U2'])
+        
+    def set_unit_cell_U3(self, data):
+        self.set_unit_cell_table_col(data, self.unit_table['U3'])
+
     def set_unit_cell_mu(self, data):
         self.set_unit_cell_table_col(data, self.unit_table['mu'])
         
@@ -292,11 +409,14 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def set_unit_cell_w(self, data):
         self.set_unit_cell_table_col(data, self.unit_table['w'])
         
+    def set_unit_cell_operator(self, data):
+        self.set_unit_cell_table_col(data, self.unit_table['operator'])
+    
+    def set_unit_cell_magnetic_operator(self, data):
+        self.set_unit_cell_table_col(data, self.unit_table['moment'])
+        
     def set_atom_site_occupancy(self, data):
         self.set_atom_site_table_col(data, self.atom_table['occupancy'])
-        
-    def set_atom_site_Uiso(self, data):
-        self.set_atom_site_table_col(data, self.atom_table['Uiso'])
         
     def set_atom_site_U11(self, data):
         self.set_atom_site_table_col(data, self.atom_table['U11'])
@@ -315,9 +435,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def set_atom_site_U12(self, data):
         self.set_atom_site_table_col(data, self.atom_table['U12'])
-        
-    def set_atom_site_mu(self, data):
-        self.set_atom_site_table_col(data, self.atom_table['mu'])
         
     def set_atom_site_mu1(self, data):
         self.set_atom_site_table_col(data, self.atom_table['mu1'])
@@ -364,7 +481,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         stretch = QtWidgets.QHeaderView.Stretch
         resize = QtWidgets.QHeaderView.ResizeToContents
-        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
 
         for i in range(self.tableWidget_atm.rowCount()):
             for j in range(self.tableWidget_atm.columnCount()):
@@ -376,16 +492,22 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         horiz_hdr.setSectionResizeMode(stretch)
         horiz_hdr.setSectionResizeMode(self.atom_table['occupancy'], resize)
         
-        frac_coords = [self.atom_table['u'], 
-                       self.atom_table['v'], 
-                       self.atom_table['w']]
-        
-        for i in range(self.tableWidget_atm.rowCount()):
-            for j in frac_coords:
-                item = self.tableWidget_atm.item(i, j)
-                if (item is not None and item.text() != ''):
-                    item.setFlags(flags)
+        for col_name in ['occupancy', 'u', 'v', 'w']:
+            j = self.atom_table[col_name]
+            delegate = FractionalDelegate(self.tableWidget_atm)
+            self.tableWidget_atm.setItemDelegateForColumn(j, delegate)
 
+        for col_name in ['mu1', 'mu2', 'mu3', 'g']:
+            j = self.atom_table[col_name]
+            delegate = StandardDoubleDelegate(self.tableWidget_atm)
+            self.tableWidget_atm.setItemDelegateForColumn(j, delegate)            
+            
+        for col_name in ['U11', 'U22', 'U33', 'U23', 'U13', 'U12']:
+            j = self.atom_table[col_name]
+            delegate = StandardDoubleDelegate(self.tableWidget_atm)
+            self.tableWidget_atm.setItemDelegateForColumn(j, delegate)            
+ 
+    
     def format_unit_cell_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         stretch = QtWidgets.QHeaderView.Stretch
@@ -402,6 +524,20 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         horiz_hdr = self.tableWidget_CIF.horizontalHeader()
         horiz_hdr.setSectionResizeMode(stretch)
         horiz_hdr.setSectionResizeMode(self.unit_table['occupancy'], resize)
+        
+    def format_atom_site_table_col(self, j):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        for i in range(self.tableWidget_atm.rowCount()):
+            item = self.tableWidget_atm.item(i, j)
+            if (item is not None and item.text() != ''):
+                item.setTextAlignment(alignment)
+                
+    def format_unit_cell_table_col(self, j):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        for i in range(self.tableWidget_CIF.rowCount()):
+            item = self.tableWidget_CIF.item(i, j)
+            if (item is not None and item.text() != ''):
+                item.setTextAlignment(alignment)
     
     def show_atom_site_table_cols(self):
         disorder_index = self.comboBox_type.currentIndex()    
@@ -429,17 +565,24 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                 self.tableWidget_atm.setColumnHidden(i, True)
                 
     def show_unit_cell_table_cols(self):
+        disorder_index = self.comboBox_type.currentIndex()    
+        disorder_type = self.comboBox_type.itemText(disorder_index)
+        
         index = self.comboBox_parameters.currentIndex()    
         parameters = self.comboBox_parameters.itemText(index)
         
         cols = ['site', 'atom']
-        if (parameters == 'Site parameters'):
-            cols += ['isotope','occupancy']
-        elif (parameters == 'Structural parameters'):
-            cols += ['isotope','Uiso']
+        if (disorder_type == 'Neutron' and \
+            parameters != 'Magnetic parameters'):
+            cols += ['isotope']
         else:
-            cols += ['ion','mu']
-        cols += ['u','v','w']
+            cols += ['ion']
+        if (parameters == 'Site parameters'):
+            cols += ['occupancy','u','v','w']
+        elif (parameters == 'Structural parameters'):
+            cols += ['Uiso','U1','U2','U3']
+        else:
+            cols += ['mu','mu1','mu2','mu3']
             
         show = [self.unit_table[key] for key in cols]         
         for i in range(len(self.unit_table)):
@@ -452,7 +595,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         key = list(self.atom_table.keys())[col]
         
         if key in ['U11', 'U22', 'U33', 'U23', 'U13', 'U12']: key = 'Uiso'
-        if key in ['mu1', 'mu2', 'mu3', 'g']: key = 'mu'
+        if key in ['U1', 'U2', 'U3']: key = 'Uiso'
+        if key in ['g']: key = 'mu'
                 
         if (self.unit_table.get(key) is None):
             return 0
@@ -489,10 +633,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         return self.comboBox_type.itemText(index)
         
     def add_item_magnetic(self):
-        self.comboBox_parameters.addItem('Magnetic parameters')
+        if (self.comboBox_parameters.count() == 2):
+            self.comboBox_parameters.addItem('Magnetic parameters')
 
     def remove_item_magnetic(self):
-        self.comboBox_parameters.removeItem(2)
+        if (self.comboBox_parameters.count() == 3):
+            self.comboBox_parameters.removeItem(2)
         
     def index_changed_parameters(self, slot):
         self.comboBox_parameters.currentIndexChanged.connect(slot)
@@ -515,6 +661,14 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                 combo.addItem(item)
             self.tableWidget_atm.setCellWidget(i, j, combo)
             
+    def add_mag_ion_combo(self, i, data): 
+        j = self.atom_table['ion']
+        combo = QtWidgets.QComboBox()
+        combo.setObjectName('comboBox_ion'+str(i))
+        for item in data:
+            combo.addItem(item)
+        self.tableWidget_atm.setCellWidget(i, j, combo)
+            
     def set_atom_combo(self, atm):
         j = self.atom_table['atom']
         for i in range(self.tableWidget_atm.rowCount()):
@@ -530,7 +684,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                     index = combo.findText(atm[i][0], QtCore.Qt.MatchStartsWith)
                     if (index >= 0):
                         combo.setCurrentIndex(index)
- 
+                        
     def set_ion_combo(self, atm):
         j = self.atom_table['ion']
         for i in range(self.tableWidget_atm.rowCount()):
@@ -545,75 +699,50 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                 else:
                     index = combo.findText(atm[i][0], QtCore.Qt.MatchStartsWith)
                     if (index >= 0):
-                        combo.setCurrentIndex(index)                       
-        
-#    def 
-#    
-#        for i in range(ind.size):
-#            combo = QtWidgets.QComboBox()
-#            combo.setObjectName('comboBox_site'+str(i))
-#            for t in data:
-#                combo.addItem(t)
-#            self.tableWidget_atm.setCellWidget(i, 0, combo)
-#            index = combo.findText(atm[ind[i]], QtCore.Qt.MatchFixedString)
-#            if (index >= 0):
-#                 combo.setCurrentIndex(index)
-#            else:
-#                index = combo.findText(atm[ind[i]][:2], 
-#                                       QtCore.Qt.MatchStartsWith)
-#                if (index >= 0):
-#                    combo.setCurrentIndex(index)
-#                else:
-#                    index = combo.findText(atm[ind[i]][0], 
-#                                           QtCore.Qt.MatchStartsWith)
-#                    if (index >= 0):
-#                        combo.setCurrentIndex(index)                    
-#            combo.currentIndexChanged.connect(self.combo_change_site)
-#            atm[ind[i]] = combo.currentText()
-#            
-#            mag_atm = j0_atm[j0_atm == atm[ind[i]]]
-#            mag_ion = j0_ion[j0_atm == atm[ind[i]]]
-#
-#            combo = QtWidgets.QComboBox()
-#            combo.setObjectName('comboBox_ion'+str(i))
-#            for j in range(mag_ion.size):
-#                combo.addItem(mag_atm[j]+mag_ion[j])
-#            if (mag_ion.size == 0):
-#                combo.addItem('None')
+                        combo.setCurrentIndex(index)
+                        
+    def get_atom_combo(self):
+        data = []
+        j = self.atom_table['atom']
+        for i in range(self.tableWidget_atm.rowCount()):
+            data.append(self.tableWidget_atm.cellWidget(i, j).currentText())
+        return np.array(data)
+    
+    def get_ion_combo(self):
+        data = []
+        j = self.atom_table['ion']
+        for i in range(self.tableWidget_atm.rowCount()):
+            data.append(self.tableWidget_atm.cellWidget(i, j).currentText())
+        return np.array(data)
+
+    def index_changed_atom(self, slot):
+        j = self.atom_table['atom']
+        for i in range(self.tableWidget_atm.rowCount()):
+            combo = self.tableWidget_atm.cellWidget(i, j)
+            combo.currentIndexChanged.connect(slot)
             
-#    def combo_change_ion(self):
-#        
-#        combo = self.sender()
-#        index = self.tableWidget_atm.indexAt(combo.pos())
-#        
-#        site = index.row()
-# 
-#        atom = str(combo.currentText())
-#        ion = atom.lstrip(numbers).lstrip(letters)
-#        
-#        for i in range(self.tableWidget_CIF.rowCount()):
-#            s = np.int(self.tableWidget_CIF.item(i, 0).text())-1
-#            if (site == s):
-#                self.tableWidget_CIF.setItem(i, 3, 
-#                                             QtWidgets.QTableWidgetItem(ion))
-#                self.tableWidget_CIF.item(i, 3).setTextAlignment(alignment)
+    def index_changed_ion(self, slot):
+        j = self.atom_table['ion']
+        for i in range(self.tableWidget_atm.rowCount()):
+            combo = self.tableWidget_atm.cellWidget(i, j)
+            combo.currentIndexChanged.connect(slot)
     
     def add_site_check(self):
         for i in range(self.tableWidget_atm.rowCount()):
             check = QtWidgets.QCheckBox()
             check.setObjectName('checkBox_site'+str(i))
             check.setCheckState(QtCore.Qt.Checked) 
-            self.tableWidget_atm.setCellWidget(i, 18, check)
+            self.tableWidget_atm.setCellWidget(i, 16, check)
     
     def check_clicked_site(self, slot):
         for i in range(self.tableWidget_atm.rowCount()):
-            check = self.tableWidget_atm.cellWidget(i, 18)
+            check = self.tableWidget_atm.cellWidget(i, 16)
             check.clicked.connect(slot)
             
     def change_site_check(self):
         n_atm = 0
         for i in range(self.tableWidget_atm.rowCount()):
-            check = self.tableWidget_atm.cellWidget(i, 18)
+            check = self.tableWidget_atm.cellWidget(i, 16)
             site = self.tableWidget_atm.indexAt(check.pos()).row()
             for j in range(self.tableWidget_CIF.rowCount()):
                 s = np.int(self.tableWidget_CIF.item(j, 0).text())-1
@@ -623,4 +752,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                         n_atm += 1
                     else:
                         self.tableWidget_CIF.setRowHidden(j, True)
-        return n_atm                    
+        return n_atm
+    
+    def item_changed_atom_site_table(self, slot):
+        self.tableWidget_atm.itemChanged.connect(slot)

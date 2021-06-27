@@ -52,11 +52,24 @@ class test_symmetry(unittest.TestCase):
         mom = symmetry.evaluate_mag(operator, moments)        
         np.testing.assert_array_almost_equal(mom, np.array([-mx,-my,-mz]))
         
+    def test_reverse(self):
+        
+        operator = u'-y+1/2,x-y,z-1/2'
+        coordinates = [1,2,-3]
+        
+        x, y, z = coordinates
+        
+        coord = symmetry.evaluate(operator, coordinates, translate=True)     
+        rev_operator = symmetry.reverse(operator)[0]
+        coordinates = symmetry.evaluate(rev_operator, coord, translate=True)     
+        
+        np.testing.assert_array_almost_equal(coordinates, np.array([x,y,z]))
+        
     def test_inverse(self):
         
-        operator = [u'-y+1/2,x-y,z-1/2']
+        operator = u'-y+1/2,x-y,z-1/2'
         
-        inv_operator = symmetry.inverse(operator)
+        inv_operator = symmetry.inverse(operator)[0]
         
         self.assertEqual(inv_operator, np.array(['-x-y,x,z']))
         

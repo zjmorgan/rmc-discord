@@ -508,6 +508,8 @@ def unique(data):
         
 def evaluate(operator, coordinates, translate=True):
     
+    operator = str(operator)
+    
     x, y, z = coordinates
         
     if (not translate):
@@ -517,17 +519,80 @@ def evaluate(operator, coordinates, translate=True):
 
 def evaluate_mag(operator, moments):
    
+    operator = str(operator)
+
     mx, my, mz = moments
                 
     return np.array(eval(operator))
 
-def inverse(symops):
+def reverse(symops):
+    
+    if (type(symops) == str or type(symops) == np.str_):
+        symops = [symops]
     
     uvw = np.array(['x','y','z'])
 
     rsymops = []
         
     for symop in symops:
+
+        symop = str(symop)
+
+        W = np.zeros((3,3))
+            
+        W[:,0] = evaluate(symop, [1,0,0], translate=False)
+        W[:,1] = evaluate(symop, [0,1,0], translate=False)
+        W[:,2] = evaluate(symop, [0,0,1], translate=False)
+        
+        w = evaluate(symop, [0,0,0], translate=True)
+                
+        W_inv = np.linalg.inv(W).round()
+        w_inv = -np.dot(W_inv, w)  
+
+        W_inv = W_inv.astype(int).astype(str)
+        w_inv = [str(float.as_integer_ratio(c)).replace('(', '')\
+                                               .replace(')', '')\
+                                               .replace(', ', '/')\
+                                               .replace('0/1', '')\
+                                               for c in w_inv]
+
+        rop = u''
+        
+        for i in range(3):
+            string = ''
+            for j in range(3):
+                if (W_inv[i,j] == '-1'):
+                    string += '-'+uvw[j]
+                elif (W_inv[i,j] == '1'):
+                    if (len(string) == 0):
+                        string += uvw[j]
+                    else:
+                        string += '+'+uvw[j]
+            if (len(w_inv[i]) > 0):
+                if (w_inv[i][0] == '-'):
+                    string += w_inv[i]
+                else:
+                    string += '+'+w_inv[i]
+            rop += string
+            if (i != 2):
+                rop += ','
+                                    
+        rsymops.append(rop)
+        
+    return np.array(rsymops)
+
+def inverse(symops):
+    
+    if (type(symops) == str or type(symops) == np.str_):
+        symops = [symops]
+    
+    uvw = np.array(['x','y','z'])
+
+    rsymops = []
+        
+    for symop in symops:
+        
+        symop = str(symop)
         
         W = np.zeros((3,3))
             
@@ -558,6 +623,9 @@ def inverse(symops):
     return np.array(rsymops)
 
 def binary(symop0, symop1):
+    
+    symop0 = str(symop0)
+    symop1 = str(symop1)
     
     uvw = np.array(['x','y','z'])
         

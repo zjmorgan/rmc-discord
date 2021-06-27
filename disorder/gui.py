@@ -3759,13 +3759,13 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                                                   self.beta, 
                                                   self.gamma)
             
-        self.D = crystal.orthogonalized(self.A,
-                                        self.a, 
-                                        self.b, 
-                                        self.c, 
-                                        self.alpha, 
-                                        self.beta, 
-                                        self.gamma)
+        self.C, self.D = crystal.orthogonalized(self.A,
+                                                self.a, 
+                                                self.b, 
+                                                self.c, 
+                                                self.alpha, 
+                                                self.beta, 
+                                                self.gamma)
             
         self.atm, self.ion, self.occupancy = [], [], []
         self.Uiso, self.U11, self.U22, self.U33, self.g = [], [], [], [], []

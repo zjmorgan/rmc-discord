@@ -16,6 +16,8 @@ def unitcell(folder='ising/',
              displacement=False, 
              moment=False,
              site=False, 
+             operator=False,
+             magnetic_operator=False,
              tol=1e-2):
     
     if (filename is None):
@@ -28,21 +30,12 @@ def unitcell(folder='ising/',
         
         output = (u, v, w,)
         
-        if (occupancy):
-            c = np.ones(n_atm)
-            output = (*output, c)
-            
-        if (displacement):
-            d = np.zeros(n_atm)
-            output = (*output, d)
-            
-        if (moment):
-            m = np.zeros(n_atm)
-            output = (*output, m)
-            
-        if (site):
-            s = np.zeros(n_atm)
-            output = (*output, s)
+        if occupancy: output = (*output, np.ones(n_atm))
+        if displacement: output = (*output, np.zeros(n_atm))
+        if moment: output = (*output, np.zeros(n_atm))
+        if site: output = (*output, np.zeros(n_atm))
+        if operator: output = (*output, np.full(n_atm, 'x,y,z'))
+        if magnetic_operator: output = (*output, np.full(n_atm, 'mx,my,mz'))
             
         output = (*output, atm, n_atm)
 
@@ -153,7 +146,7 @@ def unitcell(folder='ising/',
             if (len(magnetic_sites) != len(atomic_sites)):
                 j = 0
                 for i, mag in enumerate(magnetic_atoms):
-                    if (mag):
+                    if mag:
                         Mxs[i], Mys[i], Mzs[i] = mxs[j], mys[j], mzs[j]
                         j += 1
             else:
@@ -167,9 +160,8 @@ def unitcell(folder='ising/',
                         
         c, d, m, s = [], [], [], []
                     
-        total = []
-        types = []
-        
+        total, types, operators, mag_operators = [], [], [], []
+
         for i, asite in enumerate(atomic_sites):
             
             x, y, z = float(xs[i]), float(ys[i]), float(zs[i])
@@ -216,24 +208,23 @@ def unitcell(folder='ising/',
                 transformed = symmetry.evaluate(symop, [x,y,z])[:3]
                                 
                 mom = symmetry.evaluate_mag(mag_symop, [Mx,My,Mz])
-                                                                   
-                for j in range(3):
-                    if transformed[j] < 0:
-                        transformed[j] += 1
-                    elif transformed[j] >= 1:
-                        transformed[j] -= 1    
-                                                
+                
+                transformed = [tf+(tf < 0)-(tf > 1) for tf in transformed]
+
                 total.append(transformed)
                 types.append(symbol)
+                operators.append(symop)
+                mag_operators.append(mag_symop)
                 
                 c.append(occ)
                 d.append(disp)
                 m.append(mom)
-                
                 s.append(i)
                                                         
         total = np.array(total)
         types = np.array(types)
+        operators = np.array(operators)
+        mag_operators = np.array(mag_operators)
         
         c = np.array(c)
         d = np.array(d)
@@ -264,6 +255,9 @@ def unitcell(folder='ising/',
         m = m.reshape(m.size // 3, 3)[indices]
         s = s[indices]
         
+        ops = operators[indices]
+        mag_ops = mag_operators[indices]
+
         sort = np.lexsort(np.column_stack((u, v, w, s)).T)
 
         u = u[sort]
@@ -275,21 +269,19 @@ def unitcell(folder='ising/',
         m = m[sort]
         s = s[sort]
         
+        ops = ops[sort]
+        mag_ops = mag_ops[sort]
+        
         atm = atm[sort]
         
         output = (u, v, w,)
        
-        if (occupancy):
-            output = (*output, c)
-            
-        if (displacement):
-            output = (*output, d)
-            
-        if (moment):
-            output = (*output, m)
-            
-        if (site):
-            output = (*output, s)
+        if occupancy: output = (*output, c)
+        if displacement: output = (*output, d)
+        if moment: output = (*output, m)
+        if site: output = (*output, s)
+        if operator: output = (*output, ops)
+        if magnetic_operator: output = (*output, mag_ops)
             
         output = (*output, atm, n_atm)
         
@@ -1346,7 +1338,7 @@ def matrices(a, b, c, alpha, beta, gamma):
                                                       
     return A, B, R
 
-def orthogonalized(A, a, b, c, alpha, beta, gamma):
+def orthogonalized(a, b, c, alpha, beta, gamma):
     
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
                                                    b, 
@@ -1355,7 +1347,14 @@ def orthogonalized(A, a, b, c, alpha, beta, gamma):
                                                    beta, 
                                                    gamma)
     
-    return A*np.array([[a_, b_, c_], [a_, b_, c_], [a_, b_, c_]])
+    A = np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
+                  [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
+                  [0, 0,                1/c_]])
+    
+    L = np.array([[a,0,0],[0,b,0],[0,0,c]])
+    L_ = np.array([[a_,0,0],[0,b_,0],[0,0,c_]])
+        
+    return np.dot(A, np.linalg.inv(L)), np.dot(A, L_)
 
 def transform(p, q, r, U):
         

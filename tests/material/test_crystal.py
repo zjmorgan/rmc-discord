@@ -420,6 +420,37 @@ class test_crystal(unittest.TestCase):
         uvw = np.array([4.2,-2.7,1.8])
         
         self.assertAlmostEqual(hkl.dot(uvw), A.dot(uvw).dot(R.dot(B.dot(hkl))))
+        
+    def test_orthogonalized(self):
+        
+        a, b, c, alpha, beta, gamma = 5, 5, 7, np.pi/2, np.pi/2, 2*np.pi/3
+                                
+        C, D = crystal.orthogonalized(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = crystal.reciprocal(a, 
+                                                               b, 
+                                                               c, 
+                                                               alpha, 
+                                                               beta, 
+                                                               gamma)
+
+        U = np.array([[1,0.1,0.2],
+                      [0.1,3,0.3],
+                      [0.2,0.3,4]])
+                 
+        Up, _ = np.linalg.eig(np.dot(np.dot(D, U), D.T))
+        Uiso = np.mean(Up).real
+        
+        Viso = (U[0,0]*(a*a_)**2+U[1,1]*(b*b_)**2+U[2,2]*(c*c_)**2+\
+                2*U[0,1]*a*a_*b*b_*np.cos(gamma)+\
+                2*U[0,2]*a*a_*c*c_*np.cos(beta)+\
+                2*U[1,2]*b*b_*c*c_*np.cos(alpha))/3
+            
+        self.assertAlmostEqual(Uiso, Viso)
+                
+        self.assertAlmostEqual(np.arccos(np.dot(C[:,0],C[:,1])), gamma)
+        self.assertAlmostEqual(np.arccos(np.dot(C[:,1],C[:,2])), alpha)
+        self.assertAlmostEqual(np.arccos(np.dot(C[:,2],C[:,0])), beta)
 
     def test_transform(self):
         
