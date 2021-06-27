@@ -168,8 +168,10 @@ class Presenter:
             mu = self.model.magnetic_symmetry(mag_op[row], mu)
             mu[comp] = float(moment)
             mu = self.model.magnetic_symmetry(mag_op[row], mu)
-            mu1[row] = mu[0]
+            mu1[row], mu2[row], mu3[row] = mu
         self.view.set_unit_cell_mu1(mu1)
+        self.view.set_unit_cell_mu2(mu2)
+        self.view.set_unit_cell_mu3(mu3)
         self.view.format_unit_cell_table_col(self.view.unit_table['mu1'])
         self.view.format_unit_cell_table_col(self.view.unit_table['mu2'])
         self.view.format_unit_cell_table_col(self.view.unit_table['mu3'])
@@ -184,8 +186,10 @@ class Presenter:
         a, b, c, alpha, beta, gamma = self.view.get_lattice_parameters()
         A, B, R, C, D = self.model.crystal_matrices(a, b, c, 
                                                     alpha, beta, gamma)
-        
+                
         mu = self.model.magnetic_moments(mu1, mu2, mu3, C)
+        mu = np.round(mu, 4)
+
         self.view.set_unit_cell_mu(mu)
         self.view.format_unit_cell_table_col(self.view.unit_table['mu'])
         
@@ -246,6 +250,11 @@ class Presenter:
                                                                      U13, 
                                                                      U12, 
                                                                      D)
+        Uiso = np.round(Uiso, 4)
+        U1 = np.round(U1, 4)
+        U2 = np.round(U2, 4)
+        U3 = np.round(U3, 4)
+                    
         self.view.set_unit_cell_Uiso(Uiso)
         self.view.set_unit_cell_U1(U1)
         self.view.set_unit_cell_U2(U2)
