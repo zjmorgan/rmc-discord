@@ -16,9 +16,14 @@ import numpy as np
 import sys, re
 
 if (sys.platform == 'win32'):
-    openmp = ''
+    compile_openmp = '/openmp'
+    link_openmp = '/openmp'
+elif (sys.platform == 'darwin'):
+    compile_openmp = '-Xpreprocessor -fopenmp'
+    link_openmp = '-lomp'
 else:
-    openmp = '-fopenmp'
+    compile_openmp = '-fopenmp'
+    link_openmp = '-fopenmp'
     
 with open('README.md', 'r') as fh:
     long_description = fh.read()
@@ -32,64 +37,64 @@ ext_modules = [
     Extension(
         'disorder.diffuse.scattering',
         ['disorder/diffuse/scattering'+ext],
-        extra_compile_args=[openmp],
-        extra_link_args=[openmp],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]
     ),
     Extension(
         'disorder.diffuse.original',
         ['disorder/diffuse/original'+ext],
-        extra_compile_args=[openmp],
-        extra_link_args=[openmp],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]
     ),
     Extension(
         'disorder.diffuse.candidate',
         ['disorder/diffuse/candidate'+ext],
-        extra_compile_args=[openmp],
-        extra_link_args=[openmp],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]
     ),
     Extension(
         'disorder.diffuse.powder',
         ['disorder/diffuse/powder'+ext],
-        extra_compile_args=[openmp],
-        extra_link_args=[openmp],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]
     ),
     Extension(
         'disorder.diffuse.direct',
         ['disorder/diffuse/direct'+ext],
-        extra_compile_args=[openmp],
-        extra_link_args=[openmp],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]
     ),
     Extension(
         'disorder.diffuse.refinement',
         ['disorder/diffuse/refinement'+ext],
-        extra_compile_args=[openmp],
-        extra_link_args=[openmp],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]
     ),
     Extension(
         'disorder.correlation.radii',
         ['disorder/correlation/radii'+ext],
-        extra_compile_args=[openmp],
-        extra_link_args=[openmp],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]
     ),
     Extension(
         'disorder.material.symmetry',
         ['disorder/material/symmetry'+ext],
-        extra_compile_args=[openmp],
-        extra_link_args=[openmp],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]
     ),
     Extension(
         'disorder.diffuse.monocrystal',
         ['disorder/diffuse/monocrystal'+ext],
-        extra_compile_args=[openmp],
-        extra_link_args=[openmp],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]
     ),
 ]
@@ -115,7 +120,7 @@ setuptools.setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.6', 
+    python_requires='>=3.6,<3.9', 
     install_requires=[
         'numpy',
         'scipy',
@@ -123,6 +128,7 @@ setuptools.setup(
         'pycifrw',
         'nexusformat',
         'pyvista',
+        'pyqt5'
     ],
     cmdclass=cmdclass,
     ext_modules=ext_modules,
@@ -138,7 +144,8 @@ setuptools.setup(
                      'diffuse/*.pxd',
                      'diffuse/*.pyx',
                      'material/*.pxd',
-                     'material/*.pyx'],
+                     'material/*.pyx',
+                     'tests/data/*'],
     },
     zip_safe=False
 )

@@ -10,7 +10,7 @@ import sys, os, io, re
 from disorder.material import symmetry
 from disorder.material import tables
 
-def unitcell(folder='ising/', 
+def unitcell(folder=None, 
              filename=None, 
              occupancy=False, 
              displacement=False, 
@@ -20,273 +20,267 @@ def unitcell(folder='ising/',
              magnetic_operator=False,
              tol=1e-2):
     
-    if (filename is None):
+    cf = CifFile.ReadCif(os.path.join(folder, filename))
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
                 
-        n_atm = 1
-        
-        u, v, w = np.zeros(n_atm), np.zeros(n_atm), np.zeros(n_atm)
-        
-        atm = np.zeros(n_atm, dtype=str)
-        
-        output = (u, v, w,)
-        
-        if occupancy: output = (*output, np.ones(n_atm))
-        if displacement: output = (*output, np.zeros(n_atm))
-        if moment: output = (*output, np.zeros(n_atm))
-        if site: output = (*output, np.zeros(n_atm))
-        if operator: output = (*output, np.full(n_atm, 'x,y,z'))
-        if magnetic_operator: output = (*output, np.full(n_atm, 'mx,my,mz'))
-            
-        output = (*output, atm, n_atm)
-
-        return output
-   
-    else:
-        
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-        
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
-        
-        loop_ops = ['_space_group_symop_operation_xyz',
-                    '_symmetry_equiv_pos_as_xyz',
-                    '_space_group_symop_magn_operation_xyz']
-                
-        ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                        if loop_key in cif_dict), None)          
-        
-        symops = cif_dict[loop_ops[ind_ops]]
-        
-        if (ind_ops == 2):
-            add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
-            combine = []
-            for symop in symops:
-                for add_symop in add_symops:
-                    combine.append(symmetry.binary(
-                                   ','.join(symop.split(',')[:3]),
-                                   ','.join(add_symop.split(',')[:3])))
-            symops = combine  
-                                
-        atomic_sites = cif_dict['_atom_site_label']
-         
-        if ('_atom_site_moment_label' in cif_dict):
-            magnetic_sites = cif_dict['_atom_site_moment_label']
-            magnetic_atoms = [asite in magnetic_sites \
-                              for asite in atomic_sites]    
-        
-        atomic_sites = [re.sub(r'[0-9]', '', asite) for asite in atomic_sites]
-        
-        if ('_atom_site_symbol' in cif_dict):
-            symbols = cif_dict['_atom_site_symbol']
-        else:
-            symbols = atomic_sites
-        
-        xs = cif_dict['_atom_site_fract_x']
-        ys = cif_dict['_atom_site_fract_y']
-        zs = cif_dict['_atom_site_fract_z']
-        
-        xs = [re.sub(r'\([^()]*\)', '', x) for x in xs]
-        ys = [re.sub(r'\([^()]*\)', '', y) for y in ys]
-        zs = [re.sub(r'\([^()]*\)', '', z) for z in zs]
-        
-        if ('_atom_site_occupancy' in cif_dict):
-            occs = cif_dict['_atom_site_occupancy']
-            occs = [re.sub(r'\([^()]*\)', '', occ) for occ in occs]
-        else:
-            occs = [1.0]*len(atomic_sites)
-
-        if ('_atom_site_aniso_label' in cif_dict):
-            adp_type = 'ani'
-            if ('_atom_site_aniso_u_11' in cif_dict):
-                adp_U = True
-                U11s = cif_dict['_atom_site_aniso_u_11']
-                U22s = cif_dict['_atom_site_aniso_u_22']
-                U33s = cif_dict['_atom_site_aniso_u_33']
-                U23s = cif_dict['_atom_site_aniso_u_23']
-                U13s = cif_dict['_atom_site_aniso_u_13']
-                U12s = cif_dict['_atom_site_aniso_u_12']
-            else:
-                adp_U = False
-                B11s = cif_dict['_atom_site_aniso_b_11']
-                B22s = cif_dict['_atom_site_aniso_b_22']
-                B33s = cif_dict['_atom_site_aniso_b_33']
-                B23s = cif_dict['_atom_site_aniso_b_23']
-                B13s = cif_dict['_atom_site_aniso_b_13']
-                B12s = cif_dict['_atom_site_aniso_b_12']                
-        else:
-            adp_type = 'iso'
-            if ('_atom_site_u_iso_or_equiv' in cif_dict):
-                adp_U = True
-                Uisos = cif_dict['_atom_site_u_iso_or_equiv']
-            elif ('_atom_site_b_iso_or_equiv' in cif_dict):
-                adp_U = False
-                Uisos = cif_dict['_atom_site_b_iso_or_equiv']
-            if ('_atom_site_u_iso_or_equiv' in cif_dict):
-                adp_U = True
-                Bisos = cif_dict['_atom_site_u_iso_or_equiv']
-            elif ('_atom_site_b_iso_or_equiv' in cif_dict):
-                adp_U = False
-                Bisos = cif_dict['_atom_site_b_iso_or_equiv']
-            else:
-                adp_U = True
-                Uisos = [0.0]*len(atomic_sites) 
-                
-        Mxs = [0.0]*len(atomic_sites)    
-        Mys = [0.0]*len(atomic_sites)
-        Mzs = [0.0]*len(atomic_sites)
-                
-        if ('_atom_site_moment_label' in cif_dict):
-            mxs = cif_dict['_atom_site_moment_crystalaxis_x']
-            mys = cif_dict['_atom_site_moment_crystalaxis_y']
-            mzs = cif_dict['_atom_site_moment_crystalaxis_z']
-            mxs = [re.sub(r'\([^()]*\)', '', mx) for mx in mxs]
-            mys = [re.sub(r'\([^()]*\)', '', my) for my in mys]
-            mzs = [re.sub(r'\([^()]*\)', '', mz) for mz in mzs]
-            if (len(magnetic_sites) != len(atomic_sites)):
-                j = 0
-                for i, mag in enumerate(magnetic_atoms):
-                    if mag:
-                        Mxs[i], Mys[i], Mzs[i] = mxs[j], mys[j], mzs[j]
-                        j += 1
-            else:
-                Mxs, Mys, Mzs = mxs, mys, mzs
-                       
-        if ('_space_group_symop_magn_centering_mxmymz' in cif_dict):
-            mag_symops = cif_dict['_space_group_symop_magn_centering_mxmymz']
-            mag_symops += cif_dict['_space_group_symop_magn_operation_mxmymz']
-        else:
-            mag_symops = ['mx,my,mz']*len(symops) 
-                        
-        c, d, m, s = [], [], [], []
-                    
-        total, types, operators, mag_operators = [], [], [], []
-
-        for i, asite in enumerate(atomic_sites):
-            
-            x, y, z = float(xs[i]), float(ys[i]), float(zs[i])
-            Mx, My, Mz = float(Mxs[i]), float(Mys[i]), float(Mzs[i])
-                        
-            occ = float(occs[i])
-                    
-            if (adp_type == 'ani'):
-                if (adp_U is False):
-                    B11 = float(B11s[i])
-                    B22 = float(B22s[i])
-                    B33 = float(B33s[i])
-                    B23 = float(B23s[i])
-                    B13 = float(B13s[i])          
-                    B12 = float(B12s[i])
-                    
-                    cf = 8*np.pi**2
-                    U11, U22, U33 = B11/cf, B22/cf, B33/cf
-                    U23, U13, U12 = B23/cf, B13/cf, B12/cf
-                else:
-                    U11 = float(U11s[i])
-                    U22 = float(U22s[i])
-                    U33 = float(U33s[i])
-                    U23 = float(U23s[i])
-                    U13 = float(U13s[i])          
-                    U12 = float(U12s[i])
-                    
-                disp = [U11,U22,U33,U23,U13,U12]
-                    
-            else:
-                if (adp_U is False):
-                    Biso = float(Bisos[i])
-
-                    Uiso = Biso/(8*np.pi**2)
-                else:
-                    Uiso = float(Uisos[i])
-
-                disp = [Uiso,Uiso,Uiso,0,0,0]
-
-            symbol = symbols[i]
-                
-            for symop, mag_symop in zip(symops, mag_symops):
-                                
-                transformed = symmetry.evaluate(symop, [x,y,z])[:3]
-                                
-                mom = symmetry.evaluate_mag(mag_symop, [Mx,My,Mz])
-                
-                transformed = [tf+(tf < 0)-(tf > 1) for tf in transformed]
-
-                total.append(transformed)
-                types.append(symbol)
-                operators.append(symop)
-                mag_operators.append(mag_symop)
-                
-                c.append(occ)
-                d.append(disp)
-                m.append(mom)
-                s.append(i)
-                                                        
-        total = np.array(total)
-        types = np.array(types)
-        operators = np.array(operators)
-        mag_operators = np.array(mag_operators)
-        
-        c = np.array(c)
-        d = np.array(d)
-        m = np.array(m)
-        s = np.array(s)
-        
-        metric = np.round(np.round(total/tol, 1)).astype(int)
- 
-        _, labels = np.unique(types, return_inverse=True)
-        
-        metric = np.column_stack((metric, labels))
-                    
-        symmetries, indices = np.unique(metric, axis=0, return_index=True)
-        
-        total = total[indices]
-                            
-        u, v, w = total[:,0], total[:,1], total[:,2]
-        
-        n_atm = symmetries.shape[0]
-        atm = types[indices]
-        
-        u = np.round(u, 4)
-        v = np.round(v, 4)
-        w = np.round(w, 4)
-                
-        c = c[indices]
-        d = d.reshape(d.size // 6, 6)[indices]
-        m = m.reshape(m.size // 3, 3)[indices]
-        s = s[indices]
-        
-        ops = operators[indices]
-        mag_ops = mag_operators[indices]
-
-        sort = np.lexsort(np.column_stack((u, v, w, s)).T)
-
-        u = u[sort]
-        v = v[sort]
-        w = w[sort]
-
-        c = c[sort]
-        d = d[sort]
-        m = m[sort]
-        s = s[sort]
-        
-        ops = ops[sort]
-        mag_ops = mag_ops[sort]
-        
-        atm = atm[sort]
-        
-        output = (u, v, w,)
-       
-        if occupancy: output = (*output, c)
-        if displacement: output = (*output, d)
-        if moment: output = (*output, m)
-        if site: output = (*output, s)
-        if operator: output = (*output, ops)
-        if magnetic_operator: output = (*output, mag_ops)
-            
-        output = (*output, atm, n_atm)
-        
-        return output
+    cif_dict = dict(cb.items())
+    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
     
+    loop_ops = ['_space_group_symop_operation_xyz',
+                '_symmetry_equiv_pos_as_xyz',
+                '_space_group_symop_magn_operation_xyz']
+            
+    ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
+                    if loop_key in cif_dict), None)          
+    
+    symops = cif_dict[loop_ops[ind_ops]]
+    
+    if (ind_ops == 2):
+        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
+        combine = []
+        for symop in symops:
+            for add_symop in add_symops:
+                combine.append(symmetry.binary(
+                               ','.join(symop.split(',')[:3]),
+                               ','.join(add_symop.split(',')[:3])))
+        symops = combine  
+                            
+    atomic_sites = cif_dict['_atom_site_label']
+     
+    if ('_atom_site_moment_label' in cif_dict):
+        magnetic_sites = cif_dict['_atom_site_moment_label']
+        magnetic_atoms = [asite in magnetic_sites \
+                          for asite in atomic_sites]    
+    
+    atomic_sites = [re.sub(r'[0-9]', '', asite) for asite in atomic_sites]
+    
+    if ('_atom_site_symbol' in cif_dict):
+        symbols = cif_dict['_atom_site_symbol']
+    else:
+        symbols = atomic_sites
+    
+    xs = cif_dict['_atom_site_fract_x']
+    ys = cif_dict['_atom_site_fract_y']
+    zs = cif_dict['_atom_site_fract_z']
+    
+    xs = [re.sub(r'\([^()]*\)', '', x) for x in xs]
+    ys = [re.sub(r'\([^()]*\)', '', y) for y in ys]
+    zs = [re.sub(r'\([^()]*\)', '', z) for z in zs]
+    
+    if ('_atom_site_occupancy' in cif_dict):
+        occs = cif_dict['_atom_site_occupancy']
+        occs = [re.sub(r'\([^()]*\)', '', occ) for occ in occs]
+    else:
+        occs = [1.0]*len(atomic_sites)
+
+    if ('_atom_site_aniso_label' in cif_dict):
+        adp_type = 'ani'
+        if ('_atom_site_aniso_u_11' in cif_dict):
+            adp_U = True
+            U11s = cif_dict['_atom_site_aniso_u_11']
+            U22s = cif_dict['_atom_site_aniso_u_22']
+            U33s = cif_dict['_atom_site_aniso_u_33']
+            U23s = cif_dict['_atom_site_aniso_u_23']
+            U13s = cif_dict['_atom_site_aniso_u_13']
+            U12s = cif_dict['_atom_site_aniso_u_12']
+            U11s = [re.sub(r'\([^()]*\)', '', U11) for U11 in U11s]
+            U22s = [re.sub(r'\([^()]*\)', '', U22) for U22 in U22s]
+            U33s = [re.sub(r'\([^()]*\)', '', U33) for U33 in U33s]
+            U23s = [re.sub(r'\([^()]*\)', '', U23) for U23 in U23s]
+            U13s = [re.sub(r'\([^()]*\)', '', U13) for U13 in U13s]
+            U12s = [re.sub(r'\([^()]*\)', '', U12) for U12 in U12s]
+        else:
+            adp_U = False
+            B11s = cif_dict['_atom_site_aniso_b_11']
+            B22s = cif_dict['_atom_site_aniso_b_22']
+            B33s = cif_dict['_atom_site_aniso_b_33']
+            B23s = cif_dict['_atom_site_aniso_b_23']
+            B13s = cif_dict['_atom_site_aniso_b_13']
+            B12s = cif_dict['_atom_site_aniso_b_12']
+            B11s = [re.sub(r'\([^()]*\)', '', B11) for B11 in B11s]
+            B22s = [re.sub(r'\([^()]*\)', '', B22) for B22 in B22s]
+            B33s = [re.sub(r'\([^()]*\)', '', B33) for B33 in B33s]
+            B23s = [re.sub(r'\([^()]*\)', '', B23) for B23 in B23s]
+            B13s = [re.sub(r'\([^()]*\)', '', B13) for B13 in B13s]
+            B12s = [re.sub(r'\([^()]*\)', '', B12) for B12 in B12s]
+    else:
+        adp_type = 'iso'
+        if ('_atom_site_u_iso_or_equiv' in cif_dict):
+            adp_U = True
+            Uisos = cif_dict['_atom_site_u_iso_or_equiv']
+            Uisos = [re.sub(r'\([^()]*\)', '', Uiso) for Uiso in Uisos]
+        elif ('_atom_site_b_iso_or_equiv' in cif_dict):
+            adp_U = False
+            Uisos = cif_dict['_atom_site_b_iso_or_equiv']
+            Uisos = [re.sub(r'\([^()]*\)', '', Uiso) for Uiso in Uisos]
+        if ('_atom_site_u_iso_or_equiv' in cif_dict):
+            adp_U = True
+            Bisos = cif_dict['_atom_site_u_iso_or_equiv']
+            Bisos = [re.sub(r'\([^()]*\)', '', Biso) for Biso in Bisos]
+        elif ('_atom_site_b_iso_or_equiv' in cif_dict):
+            adp_U = False
+            Bisos = cif_dict['_atom_site_b_iso_or_equiv']
+            Bisos = [re.sub(r'\([^()]*\)', '', Biso) for Biso in Bisos]
+        else:
+            adp_U = True
+            Uisos = [0.0]*len(atomic_sites) 
+        
+    Mxs = [0.0]*len(atomic_sites)    
+    Mys = [0.0]*len(atomic_sites)
+    Mzs = [0.0]*len(atomic_sites)
+            
+    if ('_atom_site_moment_label' in cif_dict):
+        mxs = cif_dict['_atom_site_moment_crystalaxis_x']
+        mys = cif_dict['_atom_site_moment_crystalaxis_y']
+        mzs = cif_dict['_atom_site_moment_crystalaxis_z']
+        mxs = [re.sub(r'\([^()]*\)', '', mx) for mx in mxs]
+        mys = [re.sub(r'\([^()]*\)', '', my) for my in mys]
+        mzs = [re.sub(r'\([^()]*\)', '', mz) for mz in mzs]
+        if (len(magnetic_sites) != len(atomic_sites)):
+            j = 0
+            for i, mag in enumerate(magnetic_atoms):
+                if mag:
+                    Mxs[i], Mys[i], Mzs[i] = mxs[j], mys[j], mzs[j]
+                    j += 1
+        else:
+            Mxs, Mys, Mzs = mxs, mys, mzs
+                   
+    if ('_space_group_symop_magn_centering_mxmymz' in cif_dict):
+        mag_symops = cif_dict['_space_group_symop_magn_centering_mxmymz']
+        mag_symops += cif_dict['_space_group_symop_magn_operation_mxmymz']
+    else:
+        mag_symops = ['mx,my,mz']*len(symops) 
+                    
+    c, d, m, s = [], [], [], []
+                
+    total, types, operators, mag_operators = [], [], [], []
+
+    for i, asite in enumerate(atomic_sites):
+        
+        x, y, z = float(xs[i]), float(ys[i]), float(zs[i])
+        Mx, My, Mz = float(Mxs[i]), float(Mys[i]), float(Mzs[i])
+                    
+        occ = float(occs[i])
+                
+        if (adp_type == 'ani'):
+            if (adp_U is False):
+                B11 = float(B11s[i])
+                B22 = float(B22s[i])
+                B33 = float(B33s[i])
+                B23 = float(B23s[i])
+                B13 = float(B13s[i])          
+                B12 = float(B12s[i])
+                
+                cf = 8*np.pi**2
+                U11, U22, U33 = B11/cf, B22/cf, B33/cf
+                U23, U13, U12 = B23/cf, B13/cf, B12/cf
+            else:
+                U11 = float(U11s[i])
+                U22 = float(U22s[i])
+                U33 = float(U33s[i])
+                U23 = float(U23s[i])
+                U13 = float(U13s[i])          
+                U12 = float(U12s[i])
+                
+            disp = [U11,U22,U33,U23,U13,U12]
+                
+        else:
+            if (adp_U is False):
+                Biso = float(Bisos[i])
+
+                Uiso = Biso/(8*np.pi**2)
+            else:
+                Uiso = float(Uisos[i])
+
+            disp = [Uiso,Uiso,Uiso,0,0,0]
+
+        symbol = symbols[i]
+            
+        for symop, mag_symop in zip(symops, mag_symops):
+                            
+            transformed = symmetry.evaluate(symop, [x,y,z])[:3]
+                            
+            mom = symmetry.evaluate_mag(mag_symop, [Mx,My,Mz])
+            
+            transformed = [tf+(tf < 0)-(tf > 1) for tf in transformed]
+
+            total.append(transformed)
+            types.append(symbol)
+            operators.append(symop)
+            mag_operators.append(mag_symop)
+            
+            c.append(occ)
+            d.append(disp)
+            m.append(mom)
+            s.append(i)
+                                                    
+    total = np.array(total)
+    types = np.array(types)
+    operators = np.array(operators)
+    mag_operators = np.array(mag_operators)
+    
+    c = np.array(c)
+    d = np.array(d)
+    m = np.array(m)
+    s = np.array(s)
+    
+    metric = np.round(np.round(total/tol, 1)).astype(int)
+ 
+    _, labels = np.unique(types, return_inverse=True)
+    
+    metric = np.column_stack((metric, labels))
+                
+    symmetries, indices = np.unique(metric, axis=0, return_index=True)
+    
+    total = total[indices]
+                        
+    u, v, w = total[:,0], total[:,1], total[:,2]
+    
+    n_atm = symmetries.shape[0]
+    atm = types[indices]
+    
+    u = np.round(u, 4)
+    v = np.round(v, 4)
+    w = np.round(w, 4)
+            
+    c = c[indices]
+    d = d.reshape(d.size // 6, 6)[indices]
+    m = m.reshape(m.size // 3, 3)[indices]
+    s = s[indices]
+    
+    ops = operators[indices]
+    mag_ops = mag_operators[indices]
+
+    sort = np.lexsort(np.column_stack((u, v, w, s)).T)
+
+    u = u[sort]
+    v = v[sort]
+    w = w[sort]
+
+    c = c[sort]
+    d = d[sort]
+    m = m[sort]
+    s = s[sort]
+    
+    ops = ops[sort]
+    mag_ops = mag_ops[sort]
+    
+    atm = atm[sort]
+    
+    output = (u, v, w,)
+   
+    if occupancy: output = (*output, c)
+    if displacement: output = (*output, d)
+    if moment: output = (*output, m)
+    if site: output = (*output, s)
+    if operator: output = (*output, ops)
+    if magnetic_operator: output = (*output, mag_ops)
+        
+    output = (*output, atm, n_atm)
+    
+    return output
+
 def nuclear(H, K, L, h=None, k=None, l=None, nu=1, nv=1, nw=1, centering=None):
     
     iH = np.mod(H, nu) 
@@ -335,7 +329,7 @@ def bragg(h_range,
           nv,
           nw,
           T=np.eye(3),
-          folder='ising/', 
+          folder=None, 
           filename=None, 
           symmetry=None):
     
@@ -386,8 +380,9 @@ def bragg(h_range,
     elif (symmetry == 'cif'):
             
         cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-        
+        cb = cf[[key for key in cf.keys() \
+                 if cf[key].get('_cell_length_a') is not None][0]]
+                    
         cif_dict = dict(cb.items())
         cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
         
@@ -485,7 +480,7 @@ def reduced(h_range,
             nv,
             nw,
             T=np.eye(3),
-            folder='ising/', 
+            folder=None, 
             filename=None, 
             symmetry=None):
     
@@ -580,8 +575,9 @@ def reduced(h_range,
     elif (symmetry == 'cif'):
             
         cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-        
+        cb = cf[[key for key in cf.keys() \
+                 if cf[key].get('_cell_length_a') is not None][0]]
+                    
         cif_dict = dict(cb.items())
         cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
         
@@ -671,7 +667,7 @@ def reduced(h_range,
            symops, \
            Nu, Nv, Nw
            
-def multiplicity(h, k, l, folder='ising/', filename=None, symmetry=None):
+def multiplicity(h, k, l, folder=None, filename=None, symmetry=None):
             
     total = []
     
@@ -680,8 +676,9 @@ def multiplicity(h, k, l, folder='ising/', filename=None, symmetry=None):
     if (symmetry == 'cif'): 
             
         cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-        
+        cb = cf[[key for key in cf.keys() \
+                 if cf[key].get('_cell_length_a') is not None][0]]
+                    
         cif_dict = dict(cb.items())
         cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
         
@@ -750,7 +747,7 @@ def multiplicity(h, k, l, folder='ising/', filename=None, symmetry=None):
         
     return m, symops
 
-def spherical(Q_range, B, folder='ising/', filename=None, tol=0.00001):
+def spherical(Q_range, B, folder=None, filename=None, tol=0.00001):
     
     Q_min = Q_range[0]
     Q_max = Q_range[1]
@@ -769,8 +766,9 @@ def spherical(Q_range, B, folder='ising/', filename=None, tol=0.00001):
     h, k, l = h.flatten(), k.flatten(), l.flatten()
         
     cf = CifFile.ReadCif(os.path.join(folder, filename))
-    cb = cf.first_block()
-    
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
+                
     cif_dict = dict(cb.items())
     cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
     
@@ -886,7 +884,7 @@ def symmetrize(arrays,
                dz, 
                ion,
                A, 
-               folder='ising/', 
+               folder=None, 
                filename=None, 
                tol=1e-4):
         
@@ -899,8 +897,9 @@ def symmetrize(arrays,
     M = arrays.shape[0]
         
     cf = CifFile.ReadCif(os.path.join(folder, filename))
-    cb = cf.first_block()
-    
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
+                
     cif_dict = dict(cb.items())
     cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
     
@@ -1113,74 +1112,62 @@ def average3d(arrays, dx, dy, dz, tol=1e-4):
     
     return output
 
-def parameters(folder='ising/', filename=None):
-    
-    if (filename is None):
-        
-        a, b, c, = 1, 1, 1
-        alpha, beta, gamma = np.pi/2, np.pi/2, np.pi/2
-   
-    else:
+def parameters(folder=None, filename=None):
                 
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-        
-        cif_dict = dict(cb.items())
-        
-        a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
-        b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
-        c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
+    cf = CifFile.ReadCif(os.path.join(folder, filename))
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
+    
+    cif_dict = dict(cb.items())
+            
+    a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
+    b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
+    c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
 
-        alpha = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_alpha']))
-        beta = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_beta']))
-        gamma = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_gamma']))
-                    
+    alpha = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_alpha']))
+    beta = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_beta']))
+    gamma = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_gamma']))
+                
     return a, b, c, np.deg2rad(alpha), np.deg2rad(beta), np.deg2rad(gamma)
 
-def group(folder='ising/', filename=None):
+def group(folder=None, filename=None):
+        
+    cf = CifFile.ReadCif(os.path.join(folder, filename))
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
+        
+    cif_dict = dict(cb.items())
+    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
     
-    if (filename is None):
-        
-        group = 1
-        hm = 'P1'
-   
-    else:
-        
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
-        
-        loop_hms = ['_space_group_name_h-m_alt',
-                    '_symmetry_space_group_name_h-m',
-                    '_parent_space_group_name_h-m']
-                
-        ind_hms = next((i for i, loop_key in enumerate(loop_hms) \
-                        if loop_key in cif_dict), None)      
-
-        if (ind_hms is not None):
-            hm = cif_dict[loop_hms[ind_hms]]
-        else:
-            hm = ''
+    loop_hms = ['_space_group_name_h-m_alt',
+                '_symmetry_space_group_name_h-m',
+                '_parent_space_group_name_h-m']
             
-        hm = hm.replace('_', '').replace(' ', '')
-        
-        loop_gps = ['_space_group_it_number',
-                    '_symmetry_int_tables_number',
-                    '_parent_space_group_it_number']
-        
-        ind_gps = next((i for i, loop_key in enumerate(loop_gps) \
-                        if loop_key in cif_dict), None)      
+    ind_hms = next((i for i, loop_key in enumerate(loop_hms) \
+                    if loop_key in cif_dict), None)      
 
-        if (ind_gps is not None):
-            group = int(cif_dict[loop_gps[ind_gps]])
-        else:
-            group = 0
+    if (ind_hms is not None):
+        hm = cif_dict[loop_hms[ind_hms]]
+    else:
+        hm = ''
         
-        if (group == 0):        
-            if (hm in tables.sg):
-                group = tables.sg[hm]
+    hm = hm.replace('_', '').replace(' ', '')
+    
+    loop_gps = ['_space_group_it_number',
+                '_symmetry_int_tables_number',
+                '_parent_space_group_it_number']
+    
+    ind_gps = next((i for i, loop_key in enumerate(loop_gps) \
+                    if loop_key in cif_dict), None)      
+
+    if (ind_gps is not None):
+        group = int(cif_dict[loop_gps[ind_gps]])
+    else:
+        group = 0
+    
+    if (group == 0):        
+        if (hm in tables.sg):
+            group = tables.sg[hm]
     
     return group, hm
 
@@ -1373,14 +1360,15 @@ def supercell(atm,
               nv,
               nw,
               name,
-              folder='ising/',
+              folder=None,
               filename=None):
     
     if (filename != None):
                 
         cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-        
+        cb = cf[[key for key in cf.keys() \
+                 if cf[key].get('_cell_length_a') is not None][0]]
+            
         cif_dict = dict(cb.items())
         cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
         
@@ -1510,8 +1498,7 @@ def supercell(atm,
                          MW[i],
                          'mx,my,mz'])
         
-        cb.AddLoopItem((['_space_group_symop_operation_xyz'],
-                         ['']))
+        cb.AddLoopItem((['_space_group_symop_operation_xyz'], ['']))
         
         cb['_space_group_symop_operation_xyz'] = ['x, y, z']
     
@@ -1569,7 +1556,7 @@ def magnetic(Sx,
              nw,
              atm, 
              A,
-             folder='ising/',
+             folder=None,
              filename=None,
              xlim=[0,1], 
              ylim=[0,1], 
@@ -1578,8 +1565,9 @@ def magnetic(Sx,
     if (filename != None):
         
         cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-     
+        cb = cf[[key for key in cf.keys() \
+                 if cf[key].get('_cell_length_a') is not None][0]]
+                 
         cif_dict = dict(cb.items())
         cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
         
@@ -1705,7 +1693,7 @@ def occupational(delta,
                  nw,
                  atm, 
                  A,
-                 folder='ising/',
+                 folder=None,
                  filename=None,
                  xlim=[0,1], 
                  ylim=[0,1], 
@@ -1714,8 +1702,9 @@ def occupational(delta,
     if (filename != None):
                 
         cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-
+        cb = cf[[key for key in cf.keys() \
+                 if cf[key].get('_cell_length_a') is not None][0]]
+            
         cif_dict = dict(cb.items())
         cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
         
@@ -1838,7 +1827,7 @@ def displacive(Ux,
                nw,
                atm, 
                A,
-               folder='ising/',
+               folder=None,
                filename=None,
                xlim=[0,1], 
                ylim=[0,1], 
@@ -1847,8 +1836,9 @@ def displacive(Ux,
     if (filename != None):
                 
         cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-        
+        cb = cf[[key for key in cf.keys() \
+                 if cf[key].get('_cell_length_a') is not None][0]]
+                    
         cif_dict = dict(cb.items())
         cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
         
@@ -1959,7 +1949,7 @@ def nonmagnetic(Ux,
                 nw,
                 atm, 
                 A,
-                folder='ising/',
+                folder=None,
                 filename=None,
                 xlim=[0,1], 
                 ylim=[0,1], 
@@ -1968,8 +1958,9 @@ def nonmagnetic(Ux,
     if (filename != None):
                 
         cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf.first_block()
-     
+        cb = cf[[key for key in cf.keys() \
+                 if cf[key].get('_cell_length_a') is not None][0]]
+                 
         cif_dict = dict(cb.items())
         cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
         
