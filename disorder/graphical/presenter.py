@@ -84,8 +84,7 @@ class Presenter:
         
         n_cols = self.view.get_atom_site_table_col_count()
         
-        disorder_type = self.view.get_type()
-        if (disorder_type == 'Neutron'):
+        if (self.view.get_type() == 'Neutron'):
             self.view.add_item_magnetic()
             if (n_cols > 0):
                 atm = self.view.get_ion_combo()
@@ -121,8 +120,8 @@ class Presenter:
         nuclei = self.view.get_every_isotope().astype('<U3')
         ions = self.view.get_every_ion().astype('<U2')
         
-        mag_ions = self.model.get_magnetic_form_factor_keys()
-        mag_atoms = self.model.ion_symbols(mag_ions)
+        mag_charges = self.model.get_magnetic_form_factor_keys()
+        mag_atoms = self.model.ion_symbols(mag_charges)
                 
         for row in range(n_rows):
             rows = np.argwhere(sites == row)
@@ -130,14 +129,17 @@ class Presenter:
                 row_range = [rows.min(), rows.max()+1]
                 atoms[row_range[0]:row_range[1]] = atm[row]
                 nuclei[row_range[0]:row_range[1]] = nuc[row]
-                self.view.set_unit_cell_atom(atoms)
-                self.view.set_unit_cell_isotope(nuclei)
-                mag_symbols = [mag_ions[i] for i, \
+                mag_symbols = [mag_charges[i] for i, \
                                mag_atom in enumerate(mag_atoms) \
                                if mag_atom in atm[row]]
                 self.view.add_mag_ion_combo(row, mag_symbols)
                 if (len(mag_symbols) > 0):
-                    ions[row_range[0]:row_range[1]] = mag_symbols[0]
+                    mag_ions = self.model.remove_symbols(mag_symbols)
+                    ions[row_range[0]:row_range[1]] = mag_ions[0]
+                    
+        self.view.set_unit_cell_atom(atoms)
+        self.view.set_unit_cell_isotope(nuclei)
+        self.view.set_unit_cell_ion(ions)
 
         self.view.format_unit_cell_table_col(self.view.unit_table['atom'])
         self.view.format_unit_cell_table_col(self.view.unit_table['isotope'])
@@ -163,8 +165,9 @@ class Presenter:
                 if (atm[row] != ''):
                     atoms[row_range[0]:row_range[1]] = atm[row]
                 ions[row_range[0]:row_range[1]+1] = ion[row]
-                self.view.set_unit_cell_atom(atoms)
-                self.view.set_unit_cell_ion(ions)
+                
+        self.view.set_unit_cell_atom(atoms)
+        self.view.set_unit_cell_ion(ions)
                 
         self.view.format_unit_cell_table_col(self.view.unit_table['atom'])
         self.view.format_unit_cell_table_col(self.view.unit_table['ion'])
