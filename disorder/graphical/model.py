@@ -12,35 +12,43 @@ class Model:
         pass
 
     def supercell_size(self, n_atm, nu, nv, nw):
+        
         return n_atm*nu*nv*nw
     
     def ion_symbols(self, keys):
+        
         return np.array([re.sub(r'[\d.+-]+$', '', key) for key in keys])
 
     def iso_symbols(self, keys):
+        
         return np.array([re.sub(r'^\d+\s*', '', key) for key in keys])
     
     def remove_symbols(self, keys):
+        
         return np.array([re.sub(r'[a-zA-Z]', '', key) for key in keys])
 
     def sort_keys(self, col0, col1, keys):
+        
         keys = np.array([key for key in keys])
         sort = np.lexsort(np.array((col0, col1)))        
         return keys[sort]
     
-    def get_neutron_scattering_lengths(self):
+    def get_neutron_scattering_length_keys(self):
+        
         bc_keys = tables.bc.keys()
         bc_atm = self.iso_symbols(bc_keys)
         bc_nuc = self.remove_symbols(bc_keys)
         return self.sort_keys(bc_nuc,bc_atm,bc_keys)
  
-    def get_xray_form_factors(self):
+    def get_xray_form_factor_keys(self):
+        
         X_keys = tables.X.keys()
         X_atm = self.ion_symbols(X_keys)
         X_ion = self.remove_symbols(X_keys)
         return self.sort_keys(X_ion,X_atm,X_keys)
 
-    def get_magnetic_form_factors(self):
+    def get_magnetic_form_factor_keys(self):
+        
         j0_keys = tables.j0.keys()
         j0_atm = self.ion_symbols(j0_keys)
         j0_ion = self.remove_symbols(j0_keys)
@@ -49,13 +57,13 @@ class Model:
     def load_unit_cell(self, folder, filename):
         
         return crystal.unitcell(folder=folder, 
-                                 filename=filename,
-                                 occupancy=True,
-                                 displacement=True,
-                                 moment=True,
-                                 site=True,
-                                 operator=True,
-                                 magnetic_operator=True)
+                                filename=filename,
+                                occupancy=True,
+                                displacement=True,
+                                moment=True,
+                                site=True,
+                                operator=True,
+                                magnetic_operator=True)
     
     def load_space_group(self, folder, filename):
                 
@@ -79,7 +87,7 @@ class Model:
     
     def atomic_displacement_parameters(self, U11, U22, U33, U23, U13, U12, D):
 
-        U = np.array([[U11,U12,U13], [U12,U22,U13], [U13,U23,U33]])
+        U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
         n = np.size(U11)
         
         U = U.reshape(3,3,n)

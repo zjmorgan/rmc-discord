@@ -557,7 +557,7 @@ def reverse(symops):
                                                for c in w_inv]
 
         rop = u''
-        
+                
         for i in range(3):
             string = ''
             for j in range(3):

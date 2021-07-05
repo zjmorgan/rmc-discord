@@ -137,6 +137,9 @@ dmypy.json
 # NeXus
 *.nxs
 
+# INI
+*.ini
+
 # VTK
 *.vts
 *.vtk

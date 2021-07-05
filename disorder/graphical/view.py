@@ -7,6 +7,11 @@ import sys
 
 import numpy as np
 
+from disorder.graphical.utilities import FractionalDelegate
+from disorder.graphical.utilities import StandardDoubleDelegate
+
+from disorder.graphical.utilities import save_gui, load_gui
+
 _root = os.path.abspath(os.path.dirname(__file__))
 
 sys.path.append(_root)
@@ -14,20 +19,6 @@ sys.path.append(_root)
 qtCreatorFile_MainWindow = os.path.join(_root, 'mainwindow.ui')
  
 Ui_MainWindow, QtBaseClass = uic.loadUiType(qtCreatorFile_MainWindow)
-
-class FractionalDelegate(QtWidgets.QItemDelegate):
-    def createEditor(self, parent, option, index):
-        lineEdit = QtWidgets.QLineEdit(parent)
-        validator = QtGui.QDoubleValidator(0, 1, 4, lineEdit)
-        lineEdit.setValidator(validator)
-        return lineEdit
-    
-class StandardDoubleDelegate(QtWidgets.QItemDelegate):
-    def createEditor(self, parent, option, index):
-        lineEdit = QtWidgets.QLineEdit(parent)
-        validator = QtGui.QDoubleValidator(-999999, 999999, 4, lineEdit)
-        lineEdit.setValidator(validator)
-        return lineEdit
 
 class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
@@ -67,9 +58,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_nv.setValidator(QtGui.QIntValidator(1, 32))
         self.lineEdit_nw.setValidator(QtGui.QIntValidator(1, 32))
         
-        self.lineEdit_nu.setText('1')
-        self.lineEdit_nv.setText('1')
-        self.lineEdit_nw.setText('1')
+        self.clear_application()
         
         self.unit_table = {'site': 0, 'atom': 1, 'isotope': 2, 'ion': 3,
                            'occupancy': 4, 'Uiso': 5,
@@ -84,7 +73,165 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                            'U11': 3, 'U22': 4, 'U33': 5, 
                            'U23': 6, 'U13': 7, 'U12': 8,
                            'mu1': 9, 'mu2': 10, 'mu3': 11, 'g': 12,
-                           'u': 13, 'v': 14, 'w': 15, '': 16}
+                           'u': 13, 'v': 14, 'w': 15, 'active': 16}
+        
+    def new_triggered(self, slot): 
+        self.actionNew.triggered.connect(slot)    
+        
+    def clear_application(self):
+        self.lineEdit_n_atm.setText('')
+        
+        self.lineEdit_nu.setText('1')
+        self.lineEdit_nv.setText('1')
+        self.lineEdit_nw.setText('1')
+        
+        self.lineEdit_n.setText('')
+            
+        self.lineEdit_space_group.setText('')
+        self.lineEdit_space_group_hm.setText('')
+        
+        self.lineEdit_a.setText('')
+        self.lineEdit_b.setText('')
+        self.lineEdit_c.setText('')
+        
+        self.lineEdit_alpha.setText('')
+        self.lineEdit_beta.setText('')
+        self.lineEdit_gamma.setText('')
+        
+        self.lineEdit_lat.setText('')
+        
+        self.tableWidget_CIF.setRowCount(0)
+        self.tableWidget_CIF.setColumnCount(0)
+        
+        self.tableWidget_atm.setRowCount(0)
+        self.tableWidget_atm.setColumnCount(0)
+        
+        self.comboBox_rebin_h.clear()
+        self.comboBox_rebin_k.clear()
+        self.comboBox_rebin_l.clear()
+        
+        self.lineEdit_min_h.setText('')
+        self.lineEdit_min_k.setText('')
+        self.lineEdit_min_l.setText('')
+        
+        self.lineEdit_max_h.setText('')
+        self.lineEdit_max_k.setText('')
+        self.lineEdit_max_l.setText('')
+        
+        self.lineEdit_radius_h.setText('0')
+        self.lineEdit_radius_k.setText('0')
+        self.lineEdit_radius_l.setText('0')
+        
+        self.lineEdit_outlier.setText('1.5')
+        
+        self.lineEdit_slice_h.setText('')
+        self.lineEdit_slice_k.setText('')
+        self.lineEdit_slice_l.setText('')
+        
+        self.lineEdit_min_exp.setText('')       
+        self.lineEdit_max_exp.setText('')       
+
+        self.tableWidget_exp.setRowCount(0)
+        self.tableWidget_exp.setColumnCount(0)
+                
+        self.lineEdit_cycles.setText('10')
+       
+        self.lineEdit_filter_ref_h.setText('0.0')
+        self.lineEdit_filter_ref_k.setText('0.0')
+        self.lineEdit_filter_ref_l.setText('0.0')
+
+        self.lineEdit_runs.setText('1')
+        self.lineEdit_runs.setEnabled(False)
+        self.checkBox_batch.setChecked(False)
+        
+        self.checkBox_fixed_moment.setChecked(True)
+        self.checkBox_fixed_composition.setChecked(True)
+        self.checkBox_fixed_displacement.setChecked(True)
+        
+        self.lineEdit_order.setText('2')
+       
+        self.lineEdit_slice.setText('0.0')
+        
+        self.lineEdit_prefactor.setText('%1.2e' % 1e+4)
+        self.lineEdit_tau.setText('%1.2e' % 1e-3)
+        
+        self.lineEdit_min_ref.setText('')       
+        self.lineEdit_max_ref.setText('')    
+
+        self.lineEdit_chi_sq.setText('')    
+                        
+        self.tableWidget_pairs_1d.setRowCount(0)
+        self.tableWidget_pairs_1d.setColumnCount(0)
+        
+        self.tableWidget_pairs_3d.setRowCount(0)
+        self.tableWidget_pairs_3d.setColumnCount(0)
+                        
+        self.tableWidget_calc.setRowCount(0)
+        self.tableWidget_calc.setColumnCount(0)
+        
+        self.lineEdit_order_calc.setText('2')
+       
+        self.lineEdit_slice_calc.setText('0.0')
+        
+        self.lineEdit_min_calc.setText('')       
+        self.lineEdit_max_calc.setText('')
+        
+    def save_as_triggered(self, slot):
+        self.actionSave_As.triggered.connect(slot)
+
+    def save_triggered(self, slot):
+        self.actionSave.triggered.connect(slot)
+        
+    def open_dialog_save(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+            
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 
+                                                        'Save file',
+                                                        '.', 
+                                                        'ini files *.ini',
+                                                        options=options)   
+        
+        return filename
+        
+    def save_widgets(self, filename):
+                    
+        settings = QtCore.QSettings(filename, QtCore.QSettings.IniFormat)
+        save_gui(self, settings)
+
+    def open_triggered(self, slot):
+        self.actionOpen.triggered.connect(slot)
+        
+    def open_dialog_load(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+            
+        filename, \
+        filters = QtWidgets.QFileDialog.getOpenFileName(self, 
+                                                        'Open file',
+                                                        '.', 
+                                                        'ini files *.ini',
+                                                        options=options)   
+
+        return filename
+        
+    def load_widgets(self, filename):
+        settings = QtCore.QSettings(filename, QtCore.QSettings.IniFormat)
+        load_gui(self, settings)
+
+    def exit_triggered(self, slot):
+        self.actionExit.triggered.connect(slot)
+
+    def close_application(self):
+        choice = QtWidgets.QMessageBox.question(self, 
+                                               'Quit?', 
+                                               'Are you sure?',
+                                               QtWidgets.QMessageBox.Yes |
+                                               QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.Yes)
+        
+        return choice == QtWidgets.QMessageBox.Yes
         
     def get_every_site(self):
         return self.get_every_unit_cell_table_col(self.unit_table['site'])
@@ -332,13 +479,17 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def set_unit_cell_table_col(self, data, j):
         for i in range(self.tableWidget_CIF.rowCount()):
-            widget_item = QtWidgets.QTableWidgetItem(str(data[i]))
-            self.tableWidget_CIF.setItem(i, j, widget_item)
+            text = str(data[i])
+            if not text: text = '-'
+            item = QtWidgets.QTableWidgetItem(text)
+            self.tableWidget_CIF.setItem(i, j, item)
             
     def set_atom_site_table_col(self, data, j):
         for i in range(self.tableWidget_atm.rowCount()):
-            widget_item = QtWidgets.QTableWidgetItem(str(data[i]))
-            self.tableWidget_atm.setItem(i, j, widget_item)
+            text = str(data[i])
+            if not text: text = '-'
+            item = QtWidgets.QTableWidgetItem(text)
+            self.tableWidget_atm.setItem(i, j, item)
             
     def set_unit_cell_site(self, data):
         self.set_unit_cell_table_col(data, self.unit_table['site'])
@@ -506,7 +657,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             j = self.atom_table[col_name]
             delegate = StandardDoubleDelegate(self.tableWidget_atm)
             self.tableWidget_atm.setItemDelegateForColumn(j, delegate)            
- 
     
     def format_unit_cell_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
@@ -551,11 +701,11 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                 cols = ['atom']
             else:
                 cols = ['ion']
-            cols += ['occupancy','u','v','w','']
+            cols += ['occupancy','u','v','w','active']
         elif (parameters == 'Structural parameters'):
             cols = ['U11','U22','U33','U23','U13','U12']
         else:
-            cols = ['ion','mu1','mu2','mu3','g','']
+            cols = ['ion','mu1','mu2','mu3','g','active']
             
         show = [self.atom_table[key] for key in cols]         
         for i in range(len(self.atom_table)):
@@ -571,7 +721,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         index = self.comboBox_parameters.currentIndex()    
         parameters = self.comboBox_parameters.itemText(index)
         
-        cols = ['site', 'atom']
+        cols = ['site','atom']
         if (disorder_type == 'Neutron' and \
             parameters != 'Magnetic parameters'):
             cols += ['isotope']
@@ -625,6 +775,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_atom_site_table_col_count(self):
         return self.tableWidget_atm.columnCount()
     
+    def get_unit_cell_table_row_count(self):
+        return self.tableWidget_CIF.rowCount()
+    
+    def get_unit_cell_table_col_count(self):
+        return self.tableWidget_CIF.columnCount()
+    
     def index_changed_type(self, slot):
         self.comboBox_type.currentIndexChanged.connect(slot)
         
@@ -672,47 +828,57 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def set_atom_combo(self, atm):
         j = self.atom_table['atom']
         for i in range(self.tableWidget_atm.rowCount()):
+            a = atm[i]
             combo = self.tableWidget_atm.cellWidget(i, j)
-            index = combo.findText(atm[i], QtCore.Qt.MatchFixedString)
-            if (index >= 0):
-                 combo.setCurrentIndex(index)
-            else:
-                index = combo.findText(atm[i][:2], QtCore.Qt.MatchStartsWith)
+            if (combo is not None):
+                index = combo.findText(a, QtCore.Qt.MatchFixedString)
+                if (index < 0 and len(a) > 2):
+                    index = combo.findText(a[:2], QtCore.Qt.MatchStartsWith)
+                if (index < 0 and len(a) > 0):
+                    index = combo.findText(a[0], QtCore.Qt.MatchStartsWith)
                 if (index >= 0):
                     combo.setCurrentIndex(index)
-                else:
-                    index = combo.findText(atm[i][0], QtCore.Qt.MatchStartsWith)
-                    if (index >= 0):
-                        combo.setCurrentIndex(index)
+            else:
+                combo = QtWidgets.QComboBox()
+                combo.setObjectName('comboBox_site'+str(i))
+                combo.addItem(a)
+                self.tableWidget_atm.setCellWidget(i, j, combo)
                         
     def set_ion_combo(self, atm):
         j = self.atom_table['ion']
         for i in range(self.tableWidget_atm.rowCount()):
+            a = atm[i]
             combo = self.tableWidget_atm.cellWidget(i, j)
-            index = combo.findText(atm[i], QtCore.Qt.MatchFixedString)
-            if (index >= 0):
-                 combo.setCurrentIndex(index)
-            else:
-                index = combo.findText(atm[i][:2], QtCore.Qt.MatchStartsWith)
+            if (combo is not None):
+                index = combo.findText(a, QtCore.Qt.MatchFixedString)
+                if (index < 0 and len(a) > 2):
+                    index = combo.findText(a[:2], QtCore.Qt.MatchStartsWith)
+                if (index < 0 and len(a) > 0):
+                    index = combo.findText(a[0], QtCore.Qt.MatchStartsWith)
                 if (index >= 0):
                     combo.setCurrentIndex(index)
-                else:
-                    index = combo.findText(atm[i][0], QtCore.Qt.MatchStartsWith)
-                    if (index >= 0):
-                        combo.setCurrentIndex(index)
-                        
+            else:
+                combo = QtWidgets.QComboBox()
+                combo.setObjectName('comboBox_site'+str(i))
+                combo.addItem(a)
+                self.tableWidget_atm.setCellWidget(i, j, combo)
+                
     def get_atom_combo(self):
         data = []
         j = self.atom_table['atom']
         for i in range(self.tableWidget_atm.rowCount()):
-            data.append(self.tableWidget_atm.cellWidget(i, j).currentText())
+            widget = self.tableWidget_atm.cellWidget(i, j)
+            text = widget.currentText() if (widget is not None) else ''
+            data.append(text)
         return np.array(data)
     
     def get_ion_combo(self):
         data = []
         j = self.atom_table['ion']
         for i in range(self.tableWidget_atm.rowCount()):
-            data.append(self.tableWidget_atm.cellWidget(i, j).currentText())
+            widget = self.tableWidget_atm.cellWidget(i, j)
+            text = widget.currentText() if (widget is not None) else ''
+            data.append(text)
         return np.array(data)
 
     def index_changed_atom(self, slot):
@@ -728,24 +894,27 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             combo.currentIndexChanged.connect(slot)
     
     def add_site_check(self):
+        j = self.atom_table['active']
         for i in range(self.tableWidget_atm.rowCount()):
             check = QtWidgets.QCheckBox()
             check.setObjectName('checkBox_site'+str(i))
             check.setCheckState(QtCore.Qt.Checked) 
-            self.tableWidget_atm.setCellWidget(i, 16, check)
+            self.tableWidget_atm.setCellWidget(i, j, check)
     
     def check_clicked_site(self, slot):
+        j = self.atom_table['active']
         for i in range(self.tableWidget_atm.rowCount()):
-            check = self.tableWidget_atm.cellWidget(i, 16)
+            check = self.tableWidget_atm.cellWidget(i, j)
             check.clicked.connect(slot)
             
     def change_site_check(self):
         n_atm = 0
+        k, l = self.atom_table['active'], self.unit_table['site']
         for i in range(self.tableWidget_atm.rowCount()):
-            check = self.tableWidget_atm.cellWidget(i, 16)
+            check = self.tableWidget_atm.cellWidget(i, k)
             site = self.tableWidget_atm.indexAt(check.pos()).row()
             for j in range(self.tableWidget_CIF.rowCount()):
-                s = np.int(self.tableWidget_CIF.item(j, 0).text())-1
+                s = np.int(self.tableWidget_CIF.item(j, l).text())-1
                 if (site == s):
                     if check.isChecked():
                         self.tableWidget_CIF.setRowHidden(j, False)
@@ -756,3 +925,19 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def item_changed_atom_site_table(self, slot):
         self.tableWidget_atm.itemChanged.connect(slot)
+        
+    def open_dialog_nxs(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+            
+        filename, \
+        filters = QtWidgets.QFileDialog.getOpenFileName(self, 
+                                                        'Open file', 
+                                                        '.', 
+                                                        'NeXus files *.nxs',
+                                                        options=options)
+        
+        return filename            
+    
+    def button_clicked_NXS(self, slot):
+        self.pushButton_load_NXS.clicked.connect(slot)

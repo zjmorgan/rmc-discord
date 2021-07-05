@@ -193,7 +193,7 @@ def unitcell(folder=None,
             else:
                 Uiso = float(Uisos[i])
 
-            disp = [Uiso,Uiso,Uiso,0,0,0]
+            disp = [Uiso]
 
         symbol = symbols[i]
             
@@ -245,10 +245,10 @@ def unitcell(folder=None,
     w = np.round(w, 4)
             
     c = c[indices]
-    d = d.reshape(d.size // 6, 6)[indices]
-    m = m.reshape(m.size // 3, 3)[indices]
+    d = d[indices]
+    m = m[indices]
     s = s[indices]
-    
+        
     ops = operators[indices]
     mag_ops = mag_operators[indices]
 
@@ -1442,6 +1442,26 @@ def supercell(atm,
         
         atom = np.tile(atm, n_uvw)
         occupancy = np.tile(occ, n_uvw)
+        
+        if (np.shape(disp)[1] == 1):
+            
+            C, D = orthogonalized(a,
+                                  b, 
+                                  c, 
+                                  np.deg2rad(alpha), 
+                                  np.deg2rad(beta), 
+                                  np.deg2rad(gamma))
+            
+            uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
+            u11, u22, u33 = uiso[0,0], uiso[1,1], uiso[2,2]
+            u23, u13, u12 = uiso[1,2], uiso[0,2], uiso[0,1]
+
+            ani_disp = []
+            for i in range(len(disp)):
+                const = disp[i,0]
+                ani_disp.append([const*u11, const*u22, const*u33,
+                                 const*u23, const*u13, const*u12])
+            disp = np.array(ani_disp)
         
         U11 = np.tile(disp[:,0], n_uvw)
         U22 = np.tile(disp[:,1], n_uvw)

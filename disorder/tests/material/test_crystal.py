@@ -5,6 +5,7 @@ import numpy as np
 import scipy.linalg
 
 from disorder.material import crystal
+from disorder.material import symmetry
 
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
@@ -88,36 +89,62 @@ class test_crystal(unittest.TestCase):
         occ, \
         disp, \
         site, \
+        op, \
         atm, \
         n_atm = crystal.unitcell(folder=folder, 
                                  filename='chlorastrolite.cif', 
                                  occupancy=True, 
                                  displacement=True, 
                                  site=True, 
+                                 operator=True, 
                                  tol=1e-4)
+        
+        np.testing.assert_array_almost_equal(occ[atm == 'FeX']+\
+                                             occ[atm == 'AlX']+\
+                                             occ[atm == 'MgX'], 1.0, 2)
+        np.testing.assert_array_almost_equal(occ[atm == 'FeY']+\
+                                             occ[atm == 'AlY'], 1.0)
+            
+        np.testing.assert_array_almost_equal(disp[atm == 'FeX'], 
+                                             disp[atm == 'AlX'])
+        np.testing.assert_array_almost_equal(disp[atm == 'AlX'], 
+                                             disp[atm == 'MgX'])
+            
+        x, y, z = np.array([0.2541,0.242,0.4976])  
+        for i in range(8):
+            ux, vy, wz = symmetry.evaluate(op[atm == 'FeY'][i], [x,y,z])
+            ux += 1*(ux < 0)-1*(ux >= 1)
+            vy += 1*(vy < 0)-1*(vy >= 1)
+            wz += 1*(wz < 0)-1*(wz >= 1)
+            np.testing.assert_array_almost_equal(u[atm == 'FeY'][i], ux)
+            np.testing.assert_array_almost_equal(v[atm == 'FeY'][i], vy)
+            np.testing.assert_array_almost_equal(w[atm == 'FeY'][i], wz)
         
         # ---
         
-        u, v, w, mom, atm, n_atm = crystal.unitcell(folder=folder, 
-                                                    filename='CuMnO2.mcif', 
-                                                    occupancy=False, 
-                                                    displacement=False, 
-                                                    moment=True, 
-                                                    site=False, 
-                                                    tol=1e-4)
+        u, \
+        v, \
+        w, \
+        mom, \
+        mag_op, \
+        atm, \
+        n_atm = crystal.unitcell(folder=folder, 
+                                 filename='CuMnO2.mcif', 
+                                 occupancy=False, 
+                                 displacement=False, 
+                                 moment=True, 
+                                 site=False, 
+                                 operator=False, 
+                                 magnetic_operator=True, 
+                                 tol=1e-4)
         
         np.testing.assert_array_almost_equal(mom[atm == 'Cu'], 0.0)
         np.testing.assert_array_almost_equal(mom[atm == 'O'], 0.0)        
         
-        moments = np.array([1.8,0.0,1.4])       
-        np.testing.assert_array_almost_equal(mom[atm == 'Mn'][0], moments)
-        np.testing.assert_array_almost_equal(mom[atm == 'Mn'][1], -moments)
-        np.testing.assert_array_almost_equal(mom[atm == 'Mn'][2], moments)
-        np.testing.assert_array_almost_equal(mom[atm == 'Mn'][3], -moments)
-        np.testing.assert_array_almost_equal(mom[atm == 'Mn'][4], -moments)
-        np.testing.assert_array_almost_equal(mom[atm == 'Mn'][5], moments)
-        np.testing.assert_array_almost_equal(mom[atm == 'Mn'][6], -moments)
-        np.testing.assert_array_almost_equal(mom[atm == 'Mn'][7], moments)
+        mx, my, mz = np.array([1.8,0.0,1.4])  
+        for i in range(8):
+            moment = symmetry.evaluate_mag(mag_op[atm == 'Mn'][i], [mx,my,mz])
+            np.testing.assert_array_almost_equal(mom[atm == 'Mn'][i], moment)
         
     def test_supercell(self):
 

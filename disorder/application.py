@@ -10,7 +10,7 @@ from disorder.graphical.presenter import Presenter
 
 class Window:
 
-  def __init__(self , view, adder):
+  def __init__(self, view, adder):
       self.view = view
       self.adder = adder
 
