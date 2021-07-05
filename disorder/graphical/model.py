@@ -95,6 +95,7 @@ class Model:
         Uiso, U1, U2, U3 = [], [], [], []
         for i in range(n):
             Up, _ = np.linalg.eig(np.dot(np.dot(D, U[...,i]), D.T))
+            Up.sort()
             U1.append(Up[0].real)
             U2.append(Up[1].real)
             U3.append(Up[2].real)

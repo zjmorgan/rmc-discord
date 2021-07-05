@@ -168,12 +168,15 @@ class test_model(unittest.TestCase):
         u = np.dot(D, D.T)
         
         U = np.trace(u)/3
+        
         np.testing.assert_array_almost_equal(Uiso, np.array([0.0, 2.3*U]))
 
         V, _ = np.linalg.eig(u)
-        np.testing.assert_array_almost_equal(U1, np.array([2.0, 2.3*V[0]]))
-        np.testing.assert_array_almost_equal(U2, np.array([-2.0, 2.3*V[1]]))
-        np.testing.assert_array_almost_equal(U3, np.array([0.0, 2.3*V[2]]))
+        V.sort()
+        
+        np.testing.assert_array_almost_equal(U1, np.array([-2.0, 2.3*V[0]]))
+        np.testing.assert_array_almost_equal(U2, np.array([0.0, 2.3*V[1]]))
+        np.testing.assert_array_almost_equal(U3, np.array([2.0, 2.3*V[2]]))
         
     def test_magnetic_moments(self):
         

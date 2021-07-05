@@ -26,7 +26,7 @@ class Presenter:
         self.view.index_changed_parameters(self.change_parameters)
         
         self.view.button_clicked_CIF(self.load_CIF)
-        self.view.button_clicked_NXS(self.load_NXS)
+        # self.view.button_clicked_NXS(self.load_NXS)
         self.view.select_site(self.select_highlight)
         
     def new_application(self):
@@ -517,8 +517,11 @@ class Presenter:
         
     # def load_NXS(self):
 
-    #     name = self.view.open_dialog_nxs()
-        
-    #     if name:
+    #     if (self.view.get_atom_site_table_col_count() > 0):
+
+    #         name = self.view.open_dialog_nxs()
             
-    #         if (self.view.get_atom_site_table_col_count() > 0):
+    #         if name:
+                
+                
+                
