@@ -9,6 +9,8 @@ import sys
 
 from PyQt5 import QtWidgets
 
+app = QtWidgets.QApplication(sys.argv)
+
 from disorder.graphical.presenter import Presenter
 from disorder.graphical.view import View
 from disorder.graphical.model import Model
@@ -17,10 +19,6 @@ import os
 directory = os.path.dirname(os.path.abspath(__file__))
 
 class test_presenter(unittest.TestCase):      
-        
-    @classmethod
-    def setUpClass(self):
-        self.app = QtWidgets.QApplication(sys.argv)
 
     def setUp(self):
         self.view = View()
