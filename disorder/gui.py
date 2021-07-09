@@ -3759,8 +3759,7 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                                                   self.beta, 
                                                   self.gamma)
             
-        self.C, self.D = crystal.orthogonalized(self.A,
-                                                self.a, 
+        self.C, self.D = crystal.orthogonalized(self.a, 
                                                 self.b, 
                                                 self.c, 
                                                 self.alpha, 
@@ -6242,6 +6241,14 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                                      displacement=True,
                                      moment=True,
                                      site=True)
+            
+            if displacement.shape[1] == 1:
+                displacement = np.column_stack((displacement,
+                                                displacement,
+                                                displacement,
+                                                displacement*0,
+                                                displacement*0,
+                                                displacement*0))
                         
             gfactor = np.full(moment.size, 2.0)
             
@@ -6286,14 +6293,13 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                                                       self.beta, 
                                                       self.gamma)
             
-            self.D = crystal.orthogonalized(self.A,
-                                            self.a, 
-                                            self.b, 
-                                            self.c, 
-                                            self.alpha, 
-                                            self.beta, 
-                                            self.gamma)
-    
+            self.C, self.D = crystal.orthogonalized(self.a, 
+                                                    self.b, 
+                                                    self.c, 
+                                                    self.alpha, 
+                                                    self.beta, 
+                                                    self.gamma)
+                
             atm = np.array([s.rstrip(numbers+pm) for s in atms.tolist()])
             
             nuc = np.array([s.lstrip(letters) for s in atms.tolist()])
@@ -7383,13 +7389,12 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                                                           self.beta, 
                                                           self.gamma)
             
-                self.D = crystal.orthogonalized(self.A,
-                                                self.a, 
-                                                self.b, 
-                                                self.c, 
-                                                self.alpha, 
-                                                self.beta, 
-                                                self.gamma)
+                self.C, self.D = crystal.orthogonalized(self.a, 
+                                                        self.b, 
+                                                        self.c, 
+                                                        self.alpha, 
+                                                        self.beta, 
+                                                        self.gamma)
                                 
                 self.folder = folder
                 self.filename = filename+'.cif'

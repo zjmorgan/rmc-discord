@@ -2,11 +2,146 @@
 
 import numpy as np
 from scipy import ndimage
+from nexusformat.nexus import nxload
 
 from functools import reduce
 
 from disorder.diffuse.scattering import rebin0, rebin1, rebin2
 
+def data(filename):
+    
+    data = nxload(filename)
+        
+    signal = np.array(data.MDHistoWorkspace.data.signal.nxdata)
+    error_sq = np.array(data.MDHistoWorkspace.data.errors_squared.nxdata)
+            
+    if ('Q1' in data.MDHistoWorkspace.data.keys()):
+        Qh = data.MDHistoWorkspace.data['Q1']
+        Qk = data.MDHistoWorkspace.data['Q2']
+        Ql = data.MDHistoWorkspace.data['Q3']
+    elif ('[H,0,0]' in data.MDHistoWorkspace.data.keys()):
+        Qh = data.MDHistoWorkspace.data['[H,0,0]']
+        Qk = data.MDHistoWorkspace.data['[0,K,0]']
+        Ql = data.MDHistoWorkspace.data['[0,0,L]']       
+        
+    Qh_min, Qk_min, Ql_min = Qh.min(), Qk.min(), Ql.min()
+    Qh_max, Qk_max, Ql_max = Qh.max(), Qk.max(), Ql.max()
+    
+    mh, mk, ml = Qh.size, Qk.size, Ql.size
+                
+    nh = mh-1
+    nk = mk-1
+    nl = ml-1
+    
+    step_h = (Qh_max-Qh_min)/nh
+    step_k = (Qk_max-Qk_min)/nk
+    step_l = (Ql_max-Ql_min)/nl
+                
+    min_h = np.round(Qh_min+step_h/2, 4)
+    min_k = np.round(Qk_min+step_k/2, 4)
+    min_l = np.round(Ql_min+step_l/2, 4)
+    
+    max_h = np.round(Qh_max-step_h/2, 4)
+    max_k = np.round(Qk_max-step_k/2, 4)
+    max_l = np.round(Ql_max-step_l/2, 4)
+    
+    h_range, k_range, l_range = [min_h, max_h], [min_k, max_k], [min_l, max_l]
+    
+    return signal, error_sq, h_range, k_range, l_range, nh, nk, nl
+
+def mask(signal, error_sq):
+    
+    mask = np.isnan(signal)\
+         + np.isinf(signal)\
+         + np.less_equal(signal, 0, where=~np.isnan(signal))\
+         + np.isnan(error_sq)\
+         + np.isinf(error_sq)\
+         + np.less_equal(error_sq, 0, where=~np.isnan(error_sq))
+         
+    return mask
+
+# def punch(radii, ranges):
+    
+#     radius_h, radius_k, radius_l = radii
+    
+#     h_range, k_range, l_range = ranges
+    
+#     box = [np.round(radius_h).astype(int), 
+#            np.round(radius_k).astype(int),
+#            np.round(radius_l).astype(int)]
+    
+#     h_range = [np.round(min_h).astype(int), np.round(max_h).astype(int)]
+#     k_range = [np.round(min_k).astype(int), np.round(max_k).astype(int)]
+#     l_range = [np.round(min_l).astype(int), np.round(max_l).astype(int)]
+
+#     with warnings.catch_warnings():                    
+
+#         warnings.filterwarnings('ignore')
+        
+#         for h in np.arange(h_range[0], h_range[1]+1):
+#             for k in np.arange(k_range[0], k_range[1]+1):
+#                 for l in np.arange(l_range[0], l_range[1]+1):
+                    
+#                     allow = experimental.reflections(h,
+#                                                      k, 
+#                                                      l, 
+#                                                      centering=centering)
+        
+#                     if (allow == 1):
+                        
+#                         i_hkl = [int(np.round((h-h_range[0])/step_h,4)), \
+#                                  int(np.round((k-k_range[0])/step_k,4)), \
+#                                  int(np.round((l-l_range[0])/step_l,4))]
+                                
+#                         h0, h1 = i_hkl[0]-box[0], i_hkl[0]+box[0]+1  
+#                         k0, k1 = i_hkl[1]-box[1], i_hkl[1]+box[1]+1      
+#                         l0, l1 = i_hkl[2]-box[2], i_hkl[2]+box[2]+1
+                        
+#                         if (h0 < 0):
+#                             h0 = 0
+#                         if (h1 >= data.shape[0]):
+#                             h1 = data.shape[0]
+                            
+#                         if (k0 < 0):
+#                             k0 = 0
+#                         if (k1 >= data.shape[1]):
+#                             k1 = data.shape[1]
+                            
+#                         if (l0 < 0):
+#                             l0 = 0
+#                         if (l1 >= data.shape[2]):
+#                             l1 = data.shape[2]
+                                            
+#                         values = data[h0:h1,k0:k1,l0:l1].copy()
+                        
+#                         if (punch == 'Ellipsoid'):
+#                             values_outside = values.copy()
+#                             x, \
+#                             y, \
+#                             z = np.meshgrid(np.arange(h0,h1)-i_hkl[0], 
+#                                             np.arange(k0,k1)-i_hkl[1], 
+#                                             np.arange(l0,l1)-i_hkl[2], 
+#                                             indexing='ij')
+#                             mask = x**2/np.float(box[0])**2\
+#                                  + y**2/np.float(box[1])**2\
+#                                  + z**2/np.float(box[2])**2 > 1
+#                             values[mask] = np.nan
+
+#                         Q3 = np.nanpercentile(values,75)
+#                         Q1 = np.nanpercentile(values,25)
+                    
+#                         interquartile = Q3-Q1                
+                    
+#                         reject = (values >= Q3+outlier*interquartile) | \
+#                                  (values <  Q1-outlier*interquartile)
+                        
+#                         values[reject] = np.nan
+                        
+#                         if (punch == 'Ellipsoid'):
+#                             values[mask] = values_outside[mask].copy()
+                           
+#                         data[h0:h1,k0:k1,l0:l1] = values.copy()
+  
 def rebin(a, binsize):
     
     changed = np.array(binsize) != np.array(a.shape)

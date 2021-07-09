@@ -5,7 +5,32 @@ import numpy as np
 
 from disorder.diffuse import experimental
 
+import os
+directory = os.path.dirname(os.path.abspath(__file__))     
+
 class test_experimental(unittest.TestCase):
+    
+    def test_data(self):
+        
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+        
+        np.random.seed(13)
+        
+        signal, sigma_sq, \
+        h_range, k_range, l_range, \
+        nh, nk, nl = experimental.data(folder+'/test.nxs')
+        
+        self.assertEqual(nh, 13)
+        self.assertEqual(nk, 7)
+        self.assertEqual(nl, 26)
+                
+        self.assertEqual(h_range, [-4,2])
+        self.assertEqual(k_range, [-2,4])
+        self.assertEqual(l_range, [-3,3])
+        
+        shape = (13,7,26)
+        np.testing.assert_array_almost_equal(signal, np.random.random(shape))
+        np.testing.assert_array_almost_equal(sigma_sq, np.random.random(shape))
     
     def test_factors(self):
         

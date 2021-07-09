@@ -135,7 +135,7 @@ dmypy.json
 *.pdf
 
 # NeXus
-*.nxs
+#*.nxs
 
 # INI
 *.ini
