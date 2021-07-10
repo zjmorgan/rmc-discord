@@ -924,8 +924,27 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         return n_atm
     
     def item_changed_atom_site_table(self, slot):
-        self.tableWidget_atm.itemChanged.connect(slot)
+        self.tableWidget_exp.itemChanged.connect(slot)
         
+    def create_experiment_table(self):
+        self.tableWidget_exp.setRowCount(3)
+        self.tableWidget_exp.setColumnCount(4)
+        
+        horiz_lbl = ['step','size','min','max']
+        self.tableWidget_atm.setHorizontalHeaderLabels(horiz_lbl)
+        
+        vert_lbl = ['h','k','l']
+        self.tableWidget_atm.setVerticalHeaderLabels(vert_lbl)
+        
+    def format_experimet_table(self):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+
+        for i in range(self.tableWidget_exp.rowCount()):
+            for j in range(self.tableWidget_exp.columnCount()):
+                item = self.tableWidget_exp.item(i, j)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                
     def open_dialog_nxs(self):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog

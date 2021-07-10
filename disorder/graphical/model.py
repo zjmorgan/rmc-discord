@@ -4,6 +4,7 @@ import re
 
 import numpy as np
 
+from disorder.diffuse import experimental
 from disorder.material import crystal, symmetry, tables
 
 class Model:
@@ -133,3 +134,11 @@ class Model:
         coord = symmetry.evaluate(rev_operator, coordinate)
         
         return [c+(c < 0)-(c > 1) for c in coord]
+    
+    def data(filename):
+        
+        signal, sigma_sq, \
+        h_range, k_range, l_range, \
+        nh, nk, nl = experimental.data(filename)        
+        
+        return signal, sigma_sq, h_range, k_range, l_range, nh, nk, nl

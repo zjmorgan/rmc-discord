@@ -4886,7 +4886,7 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                                      + y**2/np.float(box[1])**2\
                                      + z**2/np.float(box[2])**2 > 1
                                 values[mask] = np.nan
-    
+                                
                             Q3 = np.nanpercentile(values,75)
                             Q1 = np.nanpercentile(values,25)
                         

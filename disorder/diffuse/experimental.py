@@ -60,87 +60,78 @@ def mask(signal, error_sq):
          
     return mask
 
-# def punch(radii, ranges):
+def punch(radius_h, 
+          radius_k, 
+          radius_l, 
+          step_h, 
+          step_k, 
+          step_l, 
+          h_range, 
+          k_range, 
+          l_range, 
+          centering='P',
+          outlier=1.5,
+          punch='Box'):
     
-#     radius_h, radius_k, radius_l = radii
-    
-#     h_range, k_range, l_range = ranges
-    
-#     box = [np.round(radius_h).astype(int), 
-#            np.round(radius_k).astype(int),
-#            np.round(radius_l).astype(int)]
-    
-#     h_range = [np.round(min_h).astype(int), np.round(max_h).astype(int)]
-#     k_range = [np.round(min_k).astype(int), np.round(max_k).astype(int)]
-#     l_range = [np.round(min_l).astype(int), np.round(max_l).astype(int)]
-
-#     with warnings.catch_warnings():                    
-
-#         warnings.filterwarnings('ignore')
+    box = [int(round(radius_h)), int(round(radius_k)), int(round(radius_l))]
         
-#         for h in np.arange(h_range[0], h_range[1]+1):
-#             for k in np.arange(k_range[0], k_range[1]+1):
-#                 for l in np.arange(l_range[0], l_range[1]+1):
-                    
-#                     allow = experimental.reflections(h,
-#                                                      k, 
-#                                                      l, 
-#                                                      centering=centering)
+    min_h, max_h = h_range
+    min_k, max_k = k_range
+    min_l, max_l = l_range
+    
+    h_range = [int(round(min_h)), int(round(max_h))]
+    k_range = [int(round(min_k)), int(round(max_k))]
+    l_range = [int(round(min_l)), int(round(max_l))]
         
-#                     if (allow == 1):
-                        
-#                         i_hkl = [int(np.round((h-h_range[0])/step_h,4)), \
-#                                  int(np.round((k-k_range[0])/step_k,4)), \
-#                                  int(np.round((l-l_range[0])/step_l,4))]
-                                
-#                         h0, h1 = i_hkl[0]-box[0], i_hkl[0]+box[0]+1  
-#                         k0, k1 = i_hkl[1]-box[1], i_hkl[1]+box[1]+1      
-#                         l0, l1 = i_hkl[2]-box[2], i_hkl[2]+box[2]+1
-                        
-#                         if (h0 < 0):
-#                             h0 = 0
-#                         if (h1 >= data.shape[0]):
-#                             h1 = data.shape[0]
+    for h in range(h_range[0], h_range[1]+1):
+        for k in range(k_range[0], k_range[1]+1):
+            for l in range(l_range[0], l_range[1]+1):
+                
+                if reflections(h, k, l, centering=centering):
+                    
+                    i_hkl = [int(np.round((h-h_range[0])/step_h,4)),\
+                             int(np.round((k-k_range[0])/step_k,4)),\
+                             int(np.round((l-l_range[0])/step_l,4))]
                             
-#                         if (k0 < 0):
-#                             k0 = 0
-#                         if (k1 >= data.shape[1]):
-#                             k1 = data.shape[1]
-                            
-#                         if (l0 < 0):
-#                             l0 = 0
-#                         if (l1 >= data.shape[2]):
-#                             l1 = data.shape[2]
-                                            
-#                         values = data[h0:h1,k0:k1,l0:l1].copy()
-                        
-#                         if (punch == 'Ellipsoid'):
-#                             values_outside = values.copy()
-#                             x, \
-#                             y, \
-#                             z = np.meshgrid(np.arange(h0,h1)-i_hkl[0], 
-#                                             np.arange(k0,k1)-i_hkl[1], 
-#                                             np.arange(l0,l1)-i_hkl[2], 
-#                                             indexing='ij')
-#                             mask = x**2/np.float(box[0])**2\
-#                                  + y**2/np.float(box[1])**2\
-#                                  + z**2/np.float(box[2])**2 > 1
-#                             values[mask] = np.nan
+                    h0, h1 = i_hkl[0]-box[0], i_hkl[0]+box[0]+1  
+                    k0, k1 = i_hkl[1]-box[1], i_hkl[1]+box[1]+1      
+                    l0, l1 = i_hkl[2]-box[2], i_hkl[2]+box[2]+1
+                    
+                    h0 = i_hkl[0]-box[0]
+                    
+                    if (h0 < 0): h0 = 0
+                    if (k0 < 0): k0 = 0
+                    if (l0 < 0): l0 = 0
+                    
+                    if (h1 >= data.shape[0]): h1 = data.shape[0]
+                    if (k1 >= data.shape[1]): k1 = data.shape[1]
+                    if (l1 >= data.shape[2]): l1 = data.shape[2]
+                                        
+                    values = data[h0:h1,k0:k1,l0:l1].copy()
+                    
+                    if (punch == 'Ellipsoid'):
+                        values_outside = values.copy()
+                        x, y, z = np.meshgrid(np.arange(h0,h1)-i_hkl[0], 
+                                              np.arange(k0,k1)-i_hkl[1], 
+                                              np.arange(l0,l1)-i_hkl[2], 
+                                              indexing='ij')
+                        mask = (x/box[0])**2+(y/box[1])**2+(z/box[2])**2 > 1
+                        values[mask] = np.nan
 
-#                         Q3 = np.nanpercentile(values,75)
-#                         Q1 = np.nanpercentile(values,25)
+                    Q3 = np.nanpercentile(values,75)
+                    Q1 = np.nanpercentile(values,25)
+                
+                    interquartile = Q3-Q1                
+                
+                    reject = (values >= Q3+outlier*interquartile) | \
+                             (values <  Q1-outlier*interquartile)
                     
-#                         interquartile = Q3-Q1                
+                    values[reject] = np.nan
                     
-#                         reject = (values >= Q3+outlier*interquartile) | \
-#                                  (values <  Q1-outlier*interquartile)
-                        
-#                         values[reject] = np.nan
-                        
-#                         if (punch == 'Ellipsoid'):
-#                             values[mask] = values_outside[mask].copy()
-                           
-#                         data[h0:h1,k0:k1,l0:l1] = values.copy()
+                    if (punch == 'Ellipsoid'):
+                        values[mask] = values_outside[mask].copy()
+                       
+                    data[h0:h1,k0:k1,l0:l1] = values.copy()
   
 def rebin(a, binsize):
     

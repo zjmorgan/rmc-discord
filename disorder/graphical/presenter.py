@@ -518,13 +518,20 @@ class Presenter:
             
             self.connect_table_signals()
         
-    # def load_NXS(self):
+    def load_NXS(self):
 
-    #     if (self.view.get_atom_site_table_col_count() > 0):
+        if (self.view.get_atom_site_table_col_count() > 0):
 
-    #         name = self.view.open_dialog_nxs()
+            name = self.view.open_dialog_nxs()
             
-    #         if name:
+            if name:
                 
-                
+                signal, \
+                error_sq, \
+                h_range,\
+                k_range, \
+                l_range, \
+                nh, \
+                nk, \
+                nl = self.model.data(name)
                 

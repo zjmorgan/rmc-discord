@@ -18,7 +18,7 @@ class test_experimental(unittest.TestCase):
         
         signal, sigma_sq, \
         h_range, k_range, l_range, \
-        nh, nk, nl = experimental.data(os.path.join(folder, '/test.nxs'))
+        nh, nk, nl = experimental.data(os.path.join(folder, 'test.nxs'))
         
         self.assertEqual(nh, 13)
         self.assertEqual(nk, 7)
