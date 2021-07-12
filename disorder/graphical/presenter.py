@@ -834,6 +834,17 @@ class Presenter:
                 self.signal_m = self.model.mask_array(signal)
                 self.error_sq_m = self.model.mask_array(error_sq)
                 
+                self.signal_raw_m = self.signal_m.copy()
+                self.error_sq_raw_m = self.error_sq_m.copy()
+                
+                self.h_range_raw_m =  h_range.copy()
+                self.k_range_raw_m =  k_range.copy()
+                self.l_range_raw_m =  l_range.copy()
+                
+                self.nh_raw_m = nh
+                self.nk_raw_m = nk
+                self.nl_raw_m = nl
+                
                 min_h, max_h = h_range
                 min_k, max_k = k_range
                 min_l, max_l = l_range
