@@ -9,6 +9,7 @@ import numpy as np
 
 from disorder.graphical.utilities import FractionalDelegate
 from disorder.graphical.utilities import StandardDoubleDelegate
+from disorder.graphical.utilities import SizeIntDelegate
 
 from disorder.graphical.utilities import save_gui, load_gui
 
@@ -57,6 +58,23 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_nu.setValidator(QtGui.QIntValidator(1, 32))
         self.lineEdit_nv.setValidator(QtGui.QIntValidator(1, 32))
         self.lineEdit_nw.setValidator(QtGui.QIntValidator(1, 32))
+        
+        self.comboBox_centering.addItem('P')
+        self.comboBox_centering.addItem('I')
+        self.comboBox_centering.addItem('F')
+        self.comboBox_centering.addItem('A')
+        self.comboBox_centering.addItem('B')
+        self.comboBox_centering.addItem('C')
+        self.comboBox_centering.addItem('R')
+        
+        self.comboBox_punch.addItem('Box')
+        self.comboBox_punch.addItem('Ellipsoid')
+        
+        self.comboBox_plot_exp.addItem('Intensity')
+        self.comboBox_plot_exp.addItem('Error')
+
+        self.comboBox_norm_exp.addItem('Linear')
+        self.comboBox_norm_exp.addItem('Logarithmic')
         
         self.clear_application()
         
@@ -196,7 +214,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         return filename
         
     def save_widgets(self, filename):
-                    
         settings = QtCore.QSettings(filename, QtCore.QSettings.IniFormat)
         save_gui(self, settings)
 
@@ -924,27 +941,339 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         return n_atm
     
     def item_changed_atom_site_table(self, slot):
-        self.tableWidget_exp.itemChanged.connect(slot)
+        self.tableWidget_atm.itemChanged.connect(slot)
+        
+    # ---
         
     def create_experiment_table(self):
         self.tableWidget_exp.setRowCount(3)
         self.tableWidget_exp.setColumnCount(4)
         
         horiz_lbl = ['step','size','min','max']
-        self.tableWidget_atm.setHorizontalHeaderLabels(horiz_lbl)
+        self.tableWidget_exp.setHorizontalHeaderLabels(horiz_lbl)
         
         vert_lbl = ['h','k','l']
-        self.tableWidget_atm.setVerticalHeaderLabels(vert_lbl)
+        self.tableWidget_exp.setVerticalHeaderLabels(vert_lbl)
         
     def format_experimet_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        stretch = QtWidgets.QHeaderView.Stretch
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
 
         for i in range(self.tableWidget_exp.rowCount()):
             for j in range(self.tableWidget_exp.columnCount()):
                 item = self.tableWidget_exp.item(i, j)
                 if (item is not None and item.text() != ''):
                     item.setTextAlignment(alignment)
+                    if (j == 0): item.setFlags(flags)
+
+        delegate = SizeIntDelegate(self.tableWidget_exp)
+        self.tableWidget_exp.setItemDelegateForColumn(1, delegate)
+        delegate = StandardDoubleDelegate(self.tableWidget_exp)
+        self.tableWidget_exp.setItemDelegateForColumn(2, delegate)
+        self.tableWidget_exp.setItemDelegateForColumn(3, delegate)
+        
+        horiz_hdr = self.tableWidget_exp.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        
+    def get_experiment_binning_h(self):       
+        i = 0
+        step = float(self.tableWidget_exp.item(i, 0).text()) 
+        size = int(self.tableWidget_exp.item(i, 1).text()) 
+        mininum = float(self.tableWidget_exp.item(i, 2).text())
+        maximum = float(self.tableWidget_exp.item(i, 3).text())
+        return step, size, mininum, maximum
                 
+    def get_experiment_binning_k(self):       
+        i = 1
+        step = float(self.tableWidget_exp.item(i, 0).text()) 
+        size = int(self.tableWidget_exp.item(i, 1).text()) 
+        mininum = float(self.tableWidget_exp.item(i, 2).text())
+        maximum = float(self.tableWidget_exp.item(i, 3).text())
+        return step, size, mininum, maximum
+    
+    def get_experiment_binning_l(self):       
+        i = 2
+        step = float(self.tableWidget_exp.item(i, 0).text())
+        size = int(self.tableWidget_exp.item(i, 1).text()) 
+        mininum = float(self.tableWidget_exp.item(i, 2).text())
+        maximum = float(self.tableWidget_exp.item(i, 3).text())
+        return step, size, mininum, maximum
+    
+    def set_experiment_binning_h(self, size, minimum, maximum):
+        i = 0
+        text = '-' if size == 0 else np.round((maximum-minimum)/(size-1),4)
+        item = QtWidgets.QTableWidgetItem(str(text))
+        self.tableWidget_exp.setItem(i, 0, item)
+        
+        item = QtWidgets.QTableWidgetItem(str(size))
+        self.tableWidget_exp.setItem(i, 1, item)   
+        item = QtWidgets.QTableWidgetItem(str(minimum))
+        self.tableWidget_exp.setItem(i, 2, item)  
+        item = QtWidgets.QTableWidgetItem(str(maximum))
+        self.tableWidget_exp.setItem(i, 3, item)  
+        
+    def set_experiment_binning_k(self, size, minimum, maximum):
+        i = 1
+        text = '-' if size == 0 else np.round((maximum-minimum)/(size-1),4)
+        item = QtWidgets.QTableWidgetItem(str(text))
+        self.tableWidget_exp.setItem(i, 0, item)
+        
+        item = QtWidgets.QTableWidgetItem(str(size))
+        self.tableWidget_exp.setItem(i, 1, item)   
+        item = QtWidgets.QTableWidgetItem(str(minimum))
+        self.tableWidget_exp.setItem(i, 2, item)  
+        item = QtWidgets.QTableWidgetItem(str(maximum))
+        self.tableWidget_exp.setItem(i, 3, item)  
+        
+    def set_experiment_binning_l(self, size, minimum, maximum):
+        i = 2
+        text = '-' if size == 0 else np.round((maximum-minimum)/(size-1),4)
+        item = QtWidgets.QTableWidgetItem(str(text))
+        self.tableWidget_exp.setItem(i, 0, item)
+        
+        item = QtWidgets.QTableWidgetItem(str(size))
+        self.tableWidget_exp.setItem(i, 1, item)   
+        item = QtWidgets.QTableWidgetItem(str(minimum))
+        self.tableWidget_exp.setItem(i, 2, item)  
+        item = QtWidgets.QTableWidgetItem(str(maximum))
+        self.tableWidget_exp.setItem(i, 3, item)  
+    
+    def set_experiment_table_item(self, i, j, value):
+        item = QtWidgets.QTableWidgetItem(str(value))
+        self.tableWidget_exp.setItem(i, j, item)
+        
+    def item_changed_experiment_table(self, slot):
+        self.tableWidget_exp.itemChanged.connect(slot)
+        
+    def block_experiment_table_signals(self):
+        self.tableWidget_exp.blockSignals(True)
+
+    def unblock_experiment_table_signals(self):
+        self.tableWidget_exp.blockSignals(False)
+        
+    def set_rebin_combo_h(self, steps, sizes):
+        for step, size in zip(steps, sizes):            
+            parameters = 'h-step : {}, h-size: {}'.format(step,size)
+            self.comboBox_rebin_h.addItem(parameters)
+ 
+    def set_rebin_combo_k(self, steps, sizes):
+        for step, size in zip(steps, sizes):            
+            parameters = 'k-step : {}, k-size: {}'.format(step,size)
+            self.comboBox_rebin_k.addItem(parameters)
+            
+    def set_rebin_combo_l(self, steps, sizes):
+        for step, size in zip(steps, sizes):            
+            parameters = 'l-step : {}, l-size: {}'.format(step,size)
+            self.comboBox_rebin_l.addItem(parameters)
+            
+    def get_rebin_combo_h(self):
+        text = self.comboBox_rebin_h.currentText().split(':')[-1]
+        if (text != ''):
+            return int(text)
+    
+    def get_rebin_combo_k(self):
+        text = self.comboBox_rebin_k.currentText().split(':')[-1]
+        if (text != ''):
+            return int(text)  
+        
+    def get_rebin_combo_l(self):
+        text = self.comboBox_rebin_l.currentText().split(':')[-1]
+        if (text != ''):
+            return int(text)
+            
+    def clear_rebin_combo_h(self):
+        self.comboBox_rebin_h.clear()
+ 
+    def clear_rebin_combo_k(self):
+        self.comboBox_rebin_k.clear()
+
+    def clear_rebin_combo_l(self):
+        self.comboBox_rebin_l.clear()
+        
+    def index_changed_combo_h(self, slot):
+        self.comboBox_rebin_h.currentIndexChanged.connect(slot)
+        
+    def index_changed_combo_k(self, slot):
+        self.comboBox_rebin_k.currentIndexChanged.connect(slot)
+        
+    def index_changed_combo_l(self, slot):
+        self.comboBox_rebin_l.currentIndexChanged.connect(slot)
+           
+    def centered_h_checked(self):
+        return self.checkBox_centered_h.isChecked()
+    
+    def centered_k_checked(self):
+        return self.checkBox_centered_k.isChecked()
+    
+    def centered_l_checked(self):
+        return self.checkBox_centered_l.isChecked()
+    
+    def clicked_centered_h(self, slot):
+        self.checkBox_centered_h.clicked.connect(slot)
+
+    def clicked_centered_k(self, slot):
+        self.checkBox_centered_k.clicked.connect(slot)
+
+    def clicked_centered_l(self, slot):
+        self.checkBox_centered_l.clicked.connect(slot)
+        
+    def set_min_h(self, value):
+        self.lineEdit_min_h.setText(str(value))
+
+    def set_min_k(self, value):
+        self.lineEdit_min_k.setText(str(value))
+        
+    def set_min_l(self, value):
+        self.lineEdit_min_l.setText(str(value))
+    
+    def set_max_h(self, value):
+        self.lineEdit_max_h.setText(str(value))
+        
+    def set_max_k(self, value):
+        self.lineEdit_max_k.setText(str(value))
+        
+    def set_max_l(self, value):
+        self.lineEdit_max_l.setText(str(value))
+        
+    def get_min_h(self):
+        return float(self.lineEdit_min_h.text())
+    
+    def get_min_k(self):
+        return float(self.lineEdit_min_k.text())
+    
+    def get_min_l(self):
+        return float(self.lineEdit_min_l.text())
+    
+    def get_max_h(self):
+        return float(self.lineEdit_max_h.text())
+    
+    def get_max_k(self):
+        return float(self.lineEdit_max_k.text())
+    
+    def get_max_l(self):
+        return float(self.lineEdit_max_l.text())
+    
+    def finished_editing_min_h(self, slot):
+        self.lineEdit_min_h.editingFinished.connect(slot)
+ 
+    def finished_editing_min_k(self, slot):
+        self.lineEdit_min_k.editingFinished.connect(slot)
+        
+    def finished_editing_min_l(self, slot):
+        self.lineEdit_min_l.editingFinished.connect(slot)
+        
+    def finished_editing_max_h(self, slot):
+        self.lineEdit_max_h.editingFinished.connect(slot)
+ 
+    def finished_editing_max_k(self, slot):
+        self.lineEdit_max_k.editingFinished.connect(slot)
+        
+    def finished_editing_max_l(self, slot):
+        self.lineEdit_max_l.editingFinished.connect(slot)
+ 
+    def validate_crop_h(self, minimum, maximum):
+        validator = QtGui.QDoubleValidator(minimum, maximum, 4)
+        self.lineEdit_min_h.setValidator(validator)
+        self.lineEdit_max_h.setValidator(validator)
+
+    def validate_crop_k(self, minimum, maximum):
+        validator = QtGui.QDoubleValidator(minimum, maximum, 4)
+        self.lineEdit_min_k.setValidator(validator)
+        self.lineEdit_max_k.setValidator(validator)
+        
+    def validate_crop_l(self, minimum, maximum):
+        validator = QtGui.QDoubleValidator(minimum, maximum, 4)
+        self.lineEdit_min_l.setValidator(validator)
+        self.lineEdit_max_l.setValidator(validator)
+        
+    def set_slice_h(self, value):
+        self.lineEdit_slice_h.setText(str(value))
+
+    def set_slice_k(self, value):
+        self.lineEdit_slice_k.setText(str(value))
+
+    def set_slice_l(self, value):
+        self.lineEdit_slice_l.setText(str(value))
+        
+    def get_slice_h(self):
+        text = self.lineEdit_slice_h.text()
+        if (text != ''): return float(text) 
+
+    def get_slice_k(self):
+        text = self.lineEdit_slice_k.text()
+        if (text != ''): return float(text) 
+        
+    def get_slice_l(self):
+        text = self.lineEdit_slice_l.text()
+        if (text != ''): return float(text) 
+        
+    def validate_slice_h(self, minimum, maximum):
+        validator = QtGui.QDoubleValidator(minimum, maximum, 4)
+        self.lineEdit_slice_h.setValidator(validator)
+        
+    def validate_slice_k(self, minimum, maximum):
+        validator = QtGui.QDoubleValidator(minimum, maximum, 4)
+        self.lineEdit_slice_k.setValidator(validator)
+        
+    def validate_slice_l(self, minimum, maximum):
+        validator = QtGui.QDoubleValidator(minimum, maximum, 4)
+        self.lineEdit_slice_l.setValidator(validator)
+        
+    def finished_editing_slice_h(self, slot):
+        self.lineEdit_slice_h.editingFinished.connect(slot)
+        
+    def finished_editing_slice_k(self, slot):
+        self.lineEdit_slice_k.editingFinished.connect(slot)
+        
+    def finished_editing_slice_l(self, slot):
+        self.lineEdit_slice_l.editingFinished.connect(slot)
+        
+    def set_min_exp(self, value):
+        self.lineEdit_min_exp.setText('{:1.4e}'.format(value))
+ 
+    def set_max_exp(self, value):
+        self.lineEdit_max_exp.setText('{:1.4e}'.format(value))
+        
+    def get_min_exp(self):
+        return float(self.lineEdit_min_exp.text())
+
+    def get_max_exp(self):
+        return float(self.lineEdit_max_exp.text())
+    
+    def finished_editing_min_exp(self, slot):
+        self.lineEdit_min_exp.editingFinished.connect(slot)
+
+    def finished_editing_max_exp(self, slot):
+        self.lineEdit_max_exp.editingFinished.connect(slot)
+        
+    def validate_min_exp(self):
+        maximum = float(self.lineEdit_max_exp.text())
+        validator = QtGui.QDoubleValidator(np.finfo(float).min, maximum, 4)
+        self.lineEdit_min_exp.setValidator(validator)
+        
+    def validate_max_exp(self):
+        minimum = float(self.lineEdit_min_exp.text())
+        validator = QtGui.QDoubleValidator(minimum, np.finfo(float).max, 4)
+        self.lineEdit_max_exp.setValidator(validator)
+    
+    def get_plot_exp(self):
+        index = self.comboBox_plot_exp.currentIndex()    
+        return self.comboBox_plot_exp.itemText(index)
+    
+    def get_norm_exp(self):
+        index = self.comboBox_norm_exp.currentIndex()    
+        return self.comboBox_norm_exp.itemText(index)
+    
+    def get_plot_exp_canvas(self):
+        return self.canvas_exp
+    
+    def index_changed_plot_exp(self, slot):
+        self.comboBox_norm_exp.currentIndexChanged.connect(slot)
+        
+    def index_changed_norm_exp(self, slot):
+        self.comboBox_norm_exp.currentIndexChanged.connect(slot)
+    
     def open_dialog_nxs(self):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog

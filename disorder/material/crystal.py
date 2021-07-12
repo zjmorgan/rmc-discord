@@ -1257,7 +1257,6 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
 
     G_ = metric(a_, b_, c_, alpha_, beta_, gamma_)
-    
         
     inv_d0_spacing = np.sqrt(G_[0,0]*h0*h0+G_[0,1]*k0*h0+G_[0,2]*l0*h0+\
                              G_[1,0]*h0*k0+G_[1,1]*k0*k0+G_[1,2]*l0*k0+\

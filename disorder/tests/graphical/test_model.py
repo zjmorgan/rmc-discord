@@ -222,6 +222,18 @@ class test_model(unittest.TestCase):
         transformed = self.model.reverse_symmetry(operator, transformed)
         
         np.testing.assert_array_almost_equal(transformed, coordinate)
+        
+    def test_slice_value(self):
+        
+        self.assertAlmostEqual(self.model.slice_value(-2, 1, 31, 15), -0.5)
+        self.assertAlmostEqual(self.model.slice_value(-2, 1, 31, -1), -2)
+        self.assertAlmostEqual(self.model.slice_value(-2, 1, 31, 32), 1)
+
+    def test_slice_index(self):
+        
+        self.assertAlmostEqual(self.model.slice_index(-2, 1, 31, -0.5), 15)
+        self.assertAlmostEqual(self.model.slice_index(-2, 1, 31, -3), 0)
+        self.assertAlmostEqual(self.model.slice_index(-2, 1, 31, 2), 30)
 
 if __name__ == '__main__':
     unittest.main()

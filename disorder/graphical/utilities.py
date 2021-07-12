@@ -20,9 +20,17 @@ class FractionalDelegate(QtWidgets.QItemDelegate):
 class StandardDoubleDelegate(QtWidgets.QItemDelegate):
     
     def createEditor(self, parent, option, index):
-        
         lineEdit = QtWidgets.QLineEdit(parent)
         validator = QtGui.QDoubleValidator(-999999, 999999, 4, lineEdit)
+        lineEdit.setValidator(validator)
+        
+        return lineEdit
+    
+class SizeIntDelegate(QtWidgets.QItemDelegate):
+    
+    def createEditor(self, parent, option, index):
+        lineEdit = QtWidgets.QLineEdit(parent)
+        validator = QtGui.QIntValidator(1, 999, lineEdit)
         lineEdit.setValidator(validator)
         
         return lineEdit

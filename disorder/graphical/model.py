@@ -86,6 +86,18 @@ class Model:
         
         return A, B, R, C, D
     
+    def crystal_reciprocal_matrices(self, a, b, c, alpha, beta, gamma):
+        
+        a_, b_, c_, \
+        alpha_, beta_, gamma_ = crystal.reciprocal(a, b, c, 
+                                                   alpha, beta, gamma)
+      
+        A_, B_, R_ = crystal.matrices(a_, b_, c_, alpha_, beta_, gamma_)
+    
+        C_, D_ = crystal.orthogonalized(a_, b_, c_, alpha_, beta_, gamma_)
+        
+        return A_, B_, R_, C_, D_
+    
     def atomic_displacement_parameters(self, U11, U22, U33, U23, U13, U12, D):
 
         U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
@@ -135,10 +147,105 @@ class Model:
         
         return [c+(c < 0)-(c > 1) for c in coord]
     
-    def data(filename):
+    def data(self, filename):
         
         signal, sigma_sq, \
         h_range, k_range, l_range, \
         nh, nk, nl = experimental.data(filename)        
         
         return signal, sigma_sq, h_range, k_range, l_range, nh, nk, nl
+    
+    def rebin_parameters(self, size, minimum, maximum, centered=True):
+        
+        if (size > 0):
+            step = (maximum-minimum)/(size-1)
+       
+            if centered:         
+                round_min = round(minimum)
+                round_max = round(maximum)  
+                offset_min = int(np.round((round_min-minimum)/step, 4))
+                offset_max = int(np.round((round_max-minimum)/step, 4))
+                scale = experimental.factors(offset_max-offset_min)
+                mask = np.isclose(np.mod(1/(step*scale), 1), 0)
+                scale = scale[mask]
+            else:
+                scale = experimental.factors(size-1)            
+            
+            mask = step*scale <= 1
+            scale = scale[mask]
+            
+            steps = np.round(step*scale, 4)
+            sizes = (size-1) // scale+1
+             
+            return steps, sizes
+    
+        else:
+            return np.array([]), np.array([])
+    
+    def slice_value(self, minimum, maximum, size, index):
+        
+        if (index > size):
+            return np.round(maximum, 4)
+        elif (index < 0 or size <= 1):
+            return np.round(minimum, 4)
+        else:
+            step = (maximum-minimum)/(size-1)
+            return np.round(minimum+step*index, 4)
+    
+    def slice_index(self, minimum, maximum, size, value):
+              
+        if (value > maximum):
+            return size-1
+        elif (value < minimum or size <= 1):
+            return 0
+        else:
+            step = (maximum-minimum)/(size-1)
+            return int(round((value-minimum)/step))
+        
+    def step_value(self, minimum, maximum, size):
+        
+        return (maximum-minimum)/(size-1) if (size > 1) else 0
+    
+    def size_value(self, minimum, maximum, step):
+        
+        return int(round((maximum-minimum)/step))+1 if (step > 0) else 1
+    
+    def minimum_value(self, size, step, maximum):
+        
+        return maximum-step*(size-1)
+    
+    def maximum_value(self, size, step, minimum):
+        
+        return minimum+step*(size-1)
+            
+    def matrix_transform(self, T, layer='l'):
+    
+        M = np.eye(3)
+        
+        if (layer == 'h'):
+            Q = T[1:3,1:3].copy()
+        elif (layer == 'k'):
+            Q = T[0:3:2,0:3:2].copy()
+        elif (layer == 'l'):
+            Q = T[0:2,0:2].copy()     
+                       
+        Q /= Q[1,1]
+        
+        scale = 1/Q[0,0]
+        Q[0,:] *= scale
+        
+        M[0:2,0:2] = Q
+        
+        return M, scale
+    
+    def mask_array(self, array):
+    
+        return np.ma.masked_invalid(array, copy=False)
+    
+    def crop(self, array, h_slice, k_slice, l_slice):
+        
+        return experimental.crop(array, h_slice, k_slice, l_slice)
+    
+    def rebin(self, array, binsize):
+        
+        return experimental.rebin(array, binsize)
