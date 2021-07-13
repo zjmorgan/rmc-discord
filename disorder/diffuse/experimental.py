@@ -60,7 +60,8 @@ def mask(signal, error_sq):
          
     return mask
 
-def punch(radius_h, 
+def punch(data,
+          radius_h, 
           radius_k, 
           radius_l, 
           step_h, 
@@ -132,6 +133,8 @@ def punch(radius_h,
                         values[mask] = values_outside[mask].copy()
                        
                     data[h0:h1,k0:k1,l0:l1] = values.copy()
+                    
+    return data
   
 def rebin(a, binsize):
     

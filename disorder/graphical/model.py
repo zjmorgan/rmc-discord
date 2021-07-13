@@ -239,8 +239,10 @@ class Model:
         return M, scale
     
     def mask_array(self, array):
-    
-        return np.ma.masked_invalid(array, copy=False)
+        
+        return np.ma.masked_less_equal(np.ma.masked_invalid(array, 
+                                                            copy=False), 
+                                       0, copy=False)
     
     def crop(self, array, h_slice, k_slice, l_slice):
         
@@ -250,10 +252,22 @@ class Model:
         
         return experimental.rebin(array, binsize)
     
-    def cropbin_paramters(xmin, xmax, xsize, minimum, maximum, size):
-        step = (maximum-minimum)/(size-1)
-        xstep = (xmax-xmin)/(xsize-1)
-        if np.isclose((xmax-(xmin-xstep))/(xsize), xstep):
-            return 'crop'
-        else:
-            return 'rebin'
+    def crop_parameters(self, xmin, xmax, minimum, maximum, size):
+        
+        binning = np.linspace(minimum, maximum, size)
+        i_min = np.where(binning <= xmin)[0][-1]
+        i_max = np.where(binning >= xmax)[0][-1]
+        
+        return i_min, i_max
+
+    def punch(self, array, radius_h, radius_k, radius_l, 
+                    step_h, step_k, step_l,
+                    h_range, k_range, l_range,
+                    centering, outlier, punch):
+        
+        return experimental.punch(array, radius_h, radius_k, radius_l,
+                             step_h, step_k, step_l,
+                             h_range, k_range, l_range,
+                             centering=centering, outlier=outlier, punch=punch)
+        
+        

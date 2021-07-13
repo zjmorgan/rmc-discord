@@ -58,7 +58,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_nu.setValidator(QtGui.QIntValidator(1, 32))
         self.lineEdit_nv.setValidator(QtGui.QIntValidator(1, 32))
         self.lineEdit_nw.setValidator(QtGui.QIntValidator(1, 32))
-        
+                
         self.comboBox_centering.addItem('P')
         self.comboBox_centering.addItem('I')
         self.comboBox_centering.addItem('F')
@@ -69,6 +69,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.comboBox_punch.addItem('Box')
         self.comboBox_punch.addItem('Ellipsoid')
+        
+        self.lineEdit_outlier.setValidator(QtGui.QDoubleValidator(0, 99999, 4))
+
+        self.lineEdit_radius_h.setValidator(QtGui.QIntValidator(0, 100))
+        self.lineEdit_radius_k.setValidator(QtGui.QIntValidator(0, 100))
+        self.lineEdit_radius_l.setValidator(QtGui.QIntValidator(0, 100))
         
         self.comboBox_plot_exp.addItem('Intensity')
         self.comboBox_plot_exp.addItem('Error')
@@ -973,7 +979,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tableWidget_exp.setRowCount(0)
         self.tableWidget_exp.setColumnCount(0)
         
-    def format_experimet_table(self):
+    def format_experiment_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         stretch = QtWidgets.QHeaderView.Stretch
         flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
@@ -993,6 +999,14 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         horiz_hdr = self.tableWidget_exp.horizontalHeader()
         horiz_hdr.setSectionResizeMode(stretch)
+        
+    def format_experiment_table_size(self):
+        j = 1
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        for i in range(self.tableWidget_exp.rowCount()):
+            item = self.tableWidget_exp.item(i, j)
+            if (item is not None and item.text() != ''):
+                item.setTextAlignment(alignment)
         
     def get_experiment_binning_h(self):       
         i = 0
@@ -1291,6 +1305,30 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def index_changed_norm_exp(self, slot):
         self.comboBox_norm_exp.currentIndexChanged.connect(slot)
+        
+    def get_centering(self):
+        return self.comboBox_centering.currentText()
+    
+    def get_radius_h(self):
+        return float(self.lineEdit_radius_h.text())
+    
+    def get_radius_k(self):
+        return float(self.lineEdit_radius_k.text())
+    
+    def get_radius_l(self):
+        return float(self.lineEdit_radius_l.text())
+    
+    def get_outlier(self):
+        return float(self.lineEdit_outlier.text())
+    
+    def get_punch(self):
+        return self.comboBox_punch.currentText()
+    
+    def button_clicked_punch(self, slot):
+        self.pushButton_punch.clicked.connect(slot)
+        
+    def button_clicked_reset_punch(self, slot):
+        self.pushButton_reset_punch.clicked.connect(slot)
     
     def open_dialog_nxs(self):
         options = QtWidgets.QFileDialog.Option()
@@ -1319,6 +1357,3 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def button_clicked_reset_l(self, slot):
         self.pushButton_reset_l.clicked.connect(slot)
-        
-    def button_clicked_reset_punch(self, slot):
-        self.pushButton_reset_punch.clicked.connect(slot)
