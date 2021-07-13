@@ -249,3 +249,11 @@ class Model:
     def rebin(self, array, binsize):
         
         return experimental.rebin(array, binsize)
+    
+    def cropbin_paramters(xmin, xmax, xsize, minimum, maximum, size):
+        step = (maximum-minimum)/(size-1)
+        xstep = (xmax-xmin)/(xsize-1)
+        if np.isclose((xmax-(xmin-xstep))/(xsize), xstep):
+            return 'crop'
+        else:
+            return 'rebin'

@@ -645,6 +645,18 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         vert_lbl = ['{}'.format(s+1) for s in range(n_site)]
         self.tableWidget_atm.setVerticalHeaderLabels(vert_lbl)
         
+    def clear_unit_cell_table(self):
+        self.tableWidget_CIF.disconnect()
+        self.tableWidget_CIF.clearContents()
+        self.tableWidget_CIF.setRowCount(0)
+        self.tableWidget_CIF.setColumnCount(0)
+        
+    def clear_atom_site_table(self):
+        self.tableWidget_atm.disconnect()
+        self.tableWidget_atm.clearContents()
+        self.tableWidget_atm.setRowCount(0)
+        self.tableWidget_atm.setColumnCount(0)
+        
     def format_atom_site_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         stretch = QtWidgets.QHeaderView.Stretch
@@ -954,6 +966,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         vert_lbl = ['h','k','l']
         self.tableWidget_exp.setVerticalHeaderLabels(vert_lbl)
+        
+    def clear_experiment_table(self):
+        self.tableWidget_exp.disconnect()
+        self.tableWidget_exp.clearContents()
+        self.tableWidget_exp.setRowCount(0)
+        self.tableWidget_exp.setColumnCount(0)
         
     def format_experimet_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
@@ -1289,3 +1307,18 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def button_clicked_NXS(self, slot):
         self.pushButton_load_NXS.clicked.connect(slot)
+        
+    def button_clicked_reset(self, slot):
+        self.pushButton_reset.clicked.connect(slot)
+        
+    def button_clicked_reset_h(self, slot):
+        self.pushButton_reset_h.clicked.connect(slot)
+        
+    def button_clicked_reset_k(self, slot):
+        self.pushButton_reset_k.clicked.connect(slot)
+        
+    def button_clicked_reset_l(self, slot):
+        self.pushButton_reset_l.clicked.connect(slot)
+        
+    def button_clicked_reset_punch(self, slot):
+        self.pushButton_reset_punch.clicked.connect(slot)

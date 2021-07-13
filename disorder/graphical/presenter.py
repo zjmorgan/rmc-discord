@@ -384,8 +384,8 @@ class Presenter:
         
         if name:
             
-            self.view.create_unit_cell_table(0)
-            self.view.create_atom_site_table(0)
+            self.view.clear_unit_cell_table()
+            self.view.clear_atom_site_table()
                         
             folder, filename = name.rsplit('/', 1)
             folder += '/'
@@ -637,6 +637,9 @@ class Presenter:
         self.view.format_experimet_table()
         self.view.unblock_experiment_table_signals()
         
+        self.crop_history.append([h_range, k_range, l_range])
+        self.rebin_history.append(binning)
+        
         self.redraw_plot_exp()
         
     def update_crop_min_h(self):
@@ -818,6 +821,185 @@ class Presenter:
         self.view.validate_slice_h(min_h, max_h)
         self.view.validate_slice_k(min_k, max_k)
         self.view.validate_slice_l(min_l, max_l)
+        
+    def connect_experiment_table_signals(self):
+        
+        self.view.index_changed_combo_h(self.update_binning_h)
+        self.view.index_changed_combo_k(self.update_binning_k)
+        self.view.index_changed_combo_l(self.update_binning_l)
+        
+        self.view.clicked_centered_h(self.populate_binning)
+        self.view.clicked_centered_k(self.populate_binning)
+        self.view.clicked_centered_l(self.populate_binning)
+        
+        self.view.finished_editing_min_h(self.update_crop_min_h)
+        self.view.finished_editing_min_k(self.update_crop_min_k)
+        self.view.finished_editing_min_l(self.update_crop_min_l)
+        
+        self.view.finished_editing_max_h(self.update_crop_max_h)
+        self.view.finished_editing_max_k(self.update_crop_max_k)
+        self.view.finished_editing_max_l(self.update_crop_max_l)
+                        
+        self.view.item_changed_experiment_table(
+            self.update_experiment_table
+        )
+        
+        self.redraw_plot_exp()
+        
+        self.view.index_changed_plot_exp(self.redraw_plot_exp)
+        self.view.index_changed_norm_exp(self.redraw_plot_exp)
+        
+        self.view.finished_editing_slice_h(self.redraw_plot_exp)  
+        self.view.finished_editing_slice_k(self.redraw_plot_exp)                
+        self.view.finished_editing_slice_l(self.redraw_plot_exp)
+        
+        self.view.finished_editing_min_exp(self.draw_plot_exp)
+        self.view.finished_editing_max_exp(self.draw_plot_exp)     
+        
+    def reset_data(self):
+        
+        self.view.clear_experiment_table()
+
+        self.signal_m = self.signal_raw_m.copy()
+        self.error_sq_m = self.error_sq_raw_m.copy()
+                
+        nh, nk, nl = self.nh_raw_m, self.nk_raw_m, self.nl_raw_m
+    
+        min_h, max_h = self.h_range_raw_m
+        min_k, max_k = self.k_range_raw_m
+        min_l, max_l = self.l_range_raw_m
+
+        self.view.create_experiment_table()
+        
+        self.view.set_experiment_binning_h(nh, min_h, max_h)
+        self.view.set_experiment_binning_k(nk, min_k, max_k)
+        self.view.set_experiment_binning_l(nl, min_l, max_l)
+        
+        self.view.format_experimet_table()
+        
+        self.populate_binning()
+        self.populate_cropping()
+        self.populate_slicing()
+        
+        self.connect_experiment_table_signals()
+                
+    # def cropbin(self, h_range, k_range, l_range, binsize):
+        
+    #     signal = self.signal_m 
+    #     error_sq = self.error_sq_m 
+
+    #     nh, nk, nl = self.nh_raw_m, self.nk_raw_m, self.nl_raw_m
+
+    #     ih_min = self.model.slice_index(h_range[0], h_range[1], nh, min_h)
+    #     ik_min = self.model.slice_index(k_range[0], k_range[1], nk, min_k)
+    #     il_min = self.model.slice_index(l_range[0], l_range[1], nl, min_l)
+        
+    #     ih_max = self.model.slice_index(h_range[0], h_range[1], nh, max_h)
+    #     ik_max = self.model.slice_index(k_range[0], k_range[1], nk, max_k)
+    #     il_max = self.model.slice_index(l_range[0], l_range[1], nl, max_l)
+        
+    #     h_slice = [ih_min, ih_max+1]
+    #     k_slice = [ik_min, ik_max+1]
+    #     l_slice = [il_min, il_max+1]
+                
+    #     self.signal_m  = self.model.crop(signal, h_slice, k_slice, l_slice)
+    #     self.error_sq_m  = self.model.crop(error_sq, h_slice, k_slice, l_slice)
+        
+    #     signal = self.signal_m 
+    #     error_sq = self.error_sq_m 
+        
+    #     self.signal_m = self.model.rebin(signal, binsize)
+    #     self.error_sq_m = self.model.rebin(error_sq, binsize)
+        
+    # def reset_data_h(self):
+        
+    #     dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
+    #     dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
+        
+    #     self.view.clear_experiment_table()
+
+    #     self.signal_m = self.signal_raw_m.copy()
+    #     self.error_sq_m = self.error_sq_raw_m.copy()
+                
+    #     nh = self.nh_raw_m
+    
+    #     min_h, max_h = self.h_range_raw_m
+        
+    #     self.view.create_experiment_table()
+        
+    #     self.view.set_experiment_binning_h(nh, min_h, max_h)
+    #     self.view.set_experiment_binning_k(nk, min_k, max_k)
+    #     self.view.set_experiment_binning_l(nl, min_l, max_l)
+        
+    #     self.view.format_experimet_table()
+        
+    #     self.populate_binning()
+    #     self.populate_cropping()
+    #     self.populate_slicing()
+        
+    #     self.connect_experiment_table_signals()
+        
+    # def reset_data_k(self):
+        
+    #     dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
+    #     dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
+    #     dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
+        
+    #     self.view.clear_experiment_table()
+
+    #     self.signal_m = self.signal_raw_m.copy()
+    #     self.error_sq_m = self.error_sq_raw_m.copy()
+                
+    #     nh, nk, nl = self.nh_raw_m, self.nk_raw_m, self.nl_raw_m
+    
+    #     min_h, max_h = self.h_range_raw_m
+    #     min_k, max_k = self.k_range_raw_m
+    #     min_l, max_l = self.l_range_raw_m
+
+    #     self.view.create_experiment_table()
+        
+    #     self.view.set_experiment_binning_h(nh, min_h, max_h)
+    #     self.view.set_experiment_binning_k(nk, min_k, max_k)
+    #     self.view.set_experiment_binning_l(nl, min_l, max_l)
+        
+    #     self.view.format_experimet_table()
+        
+    #     self.populate_binning()
+    #     self.populate_cropping()
+    #     self.populate_slicing()
+        
+    #     self.connect_experiment_table_signals()
+        
+    # def reset_data_l(self):
+        
+    #     dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
+    #     dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
+    #     dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
+        
+    #     self.view.clear_experiment_table()
+
+    #     self.signal_m = self.signal_raw_m.copy()
+    #     self.error_sq_m = self.error_sq_raw_m.copy()
+                
+    #     nh, nk, nl = self.nh_raw_m, self.nk_raw_m, self.nl_raw_m
+    
+    #     min_h, max_h = self.h_range_raw_m
+    #     min_k, max_k = self.k_range_raw_m
+    #     min_l, max_l = self.l_range_raw_m
+
+    #     self.view.create_experiment_table()
+        
+    #     self.view.set_experiment_binning_h(nh, min_h, max_h)
+    #     self.view.set_experiment_binning_k(nk, min_k, max_k)
+    #     self.view.set_experiment_binning_l(nl, min_l, max_l)
+        
+    #     self.view.format_experimet_table()
+        
+    #     self.populate_binning()
+    #     self.populate_cropping()
+    #     self.populate_slicing()
+        
+    #     self.connect_experiment_table_signals()
                 
     def load_NXS(self):
 
@@ -841,54 +1023,7 @@ class Presenter:
                 self.k_range_raw_m =  k_range.copy()
                 self.l_range_raw_m =  l_range.copy()
                 
-                self.nh_raw_m = nh
-                self.nk_raw_m = nk
-                self.nl_raw_m = nl
-                
-                min_h, max_h = h_range
-                min_k, max_k = k_range
-                min_l, max_l = l_range
-                
-                self.view.create_experiment_table()
-                
-                self.view.set_experiment_binning_h(nh, min_h, max_h)
-                self.view.set_experiment_binning_k(nk, min_k, max_k)
-                self.view.set_experiment_binning_l(nl, min_l, max_l)
-                
-                self.view.format_experimet_table()
-                
-                self.populate_binning()
-                self.populate_cropping()
-                self.populate_slicing()
-                
-                self.view.index_changed_combo_h(self.update_binning_h)
-                self.view.index_changed_combo_k(self.update_binning_k)
-                self.view.index_changed_combo_l(self.update_binning_l)
-                
-                self.view.clicked_centered_h(self.populate_binning)
-                self.view.clicked_centered_k(self.populate_binning)
-                self.view.clicked_centered_l(self.populate_binning)
-                
-                self.view.finished_editing_min_h(self.update_crop_min_h)
-                self.view.finished_editing_min_k(self.update_crop_min_k)
-                self.view.finished_editing_min_l(self.update_crop_min_l)
-                
-                self.view.finished_editing_max_h(self.update_crop_max_h)
-                self.view.finished_editing_max_k(self.update_crop_max_k)
-                self.view.finished_editing_max_l(self.update_crop_max_l)
-                                
-                self.view.item_changed_experiment_table(
-                    self.update_experiment_table
-                )
-                
-                self.redraw_plot_exp()
-                
-                self.view.index_changed_plot_exp(self.redraw_plot_exp)
-                self.view.index_changed_norm_exp(self.redraw_plot_exp)
-                
-                self.view.finished_editing_slice_h(self.redraw_plot_exp)  
-                self.view.finished_editing_slice_k(self.redraw_plot_exp)                
-                self.view.finished_editing_slice_l(self.redraw_plot_exp)
-                
-                self.view.finished_editing_min_exp(self.draw_plot_exp)
-                self.view.finished_editing_max_exp(self.draw_plot_exp)
+                self.nh_raw_m, self.nk_raw_m, self.nl_raw_m = nh, nk, nl
+
+                self.reset_data()
+                self.view.button_clicked_reset(self.reset_data)
