@@ -58,6 +58,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_nu.setValidator(QtGui.QIntValidator(1, 32))
         self.lineEdit_nv.setValidator(QtGui.QIntValidator(1, 32))
         self.lineEdit_nw.setValidator(QtGui.QIntValidator(1, 32))
+        
+        # ---
                 
         self.comboBox_centering.addItem('P')
         self.comboBox_centering.addItem('I')
@@ -82,6 +84,144 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_norm_exp.addItem('Linear')
         self.comboBox_norm_exp.addItem('Logarithmic')
         
+        # ---
+
+        self.lineEdit_runs.setValidator(QtGui.QIntValidator(1, 100))  
+        self.lineEdit_cycles.setValidator(QtGui.QIntValidator(1, 10000))
+       
+        validator = QtGui.QDoubleValidator(0, 99999, 4)
+        self.lineEdit_filter_ref_h.setValidator(validator)
+        self.lineEdit_filter_ref_k.setValidator(validator)
+        self.lineEdit_filter_ref_l.setValidator(validator)
+
+        self.lineEdit_order.setValidator(QtGui.QIntValidator(0, 10))
+        
+        self.comboBox_centering_ref.addItem('P')
+        self.comboBox_centering_ref.addItem('I')
+        self.comboBox_centering_ref.addItem('F')
+        self.comboBox_centering_ref.addItem('A')
+        self.comboBox_centering_ref.addItem('B')
+        self.comboBox_centering_ref.addItem('C')
+        self.comboBox_centering_ref.addItem('R')
+        
+        self.comboBox_slice.addItem('h =')
+        self.comboBox_slice.addItem('k =')
+        self.comboBox_slice.addItem('l =')
+        
+        notation = QtGui.QDoubleValidator.ScientificNotation
+        validator = QtGui.QDoubleValidator(0, 1e+10, 4, notation=notation)
+        
+        self.lineEdit_prefactor.setValidator(validator)
+        self.lineEdit_tau.setValidator(validator)
+        
+        self.comboBox_plot_top_chi_sq.addItem('Accepted')
+        self.comboBox_plot_top_chi_sq.addItem('Rejected')
+        self.comboBox_plot_top_chi_sq.addItem('Temperature')
+        self.comboBox_plot_top_chi_sq.addItem('Energy')
+        self.comboBox_plot_top_chi_sq.addItem('Chi-squared')
+        self.comboBox_plot_top_chi_sq.addItem('Scale factor')
+        
+        self.comboBox_plot_bottom_chi_sq.addItem('Accepted')
+        self.comboBox_plot_bottom_chi_sq.addItem('Rejected')
+        self.comboBox_plot_bottom_chi_sq.addItem('Temperature')
+        self.comboBox_plot_bottom_chi_sq.addItem('Energy')
+        self.comboBox_plot_bottom_chi_sq.addItem('Chi-squared')
+        self.comboBox_plot_bottom_chi_sq.addItem('Scale factor')
+        
+        self.comboBox_plot_ref.addItem('Calculated')
+        self.comboBox_plot_ref.addItem('Experimental')
+        self.comboBox_plot_ref.addItem('Error')
+        
+        self.comboBox_norm_ref.addItem('Linear')
+        self.comboBox_norm_ref.addItem('Logarithmic')
+
+        self.lineEdit_chi_sq.setEnabled(False)
+        
+        disorder = self.tabWidget_disorder.tabBar()
+        
+        self.checkBox_mag = QtWidgets.QCheckBox()
+        self.checkBox_mag.setObjectName('Magnetic')
+        
+        self.checkBox_occ = QtWidgets.QCheckBox()
+        self.checkBox_occ.setObjectName('Occupational')
+        
+        self.checkBox_dis = QtWidgets.QCheckBox()
+        self.checkBox_dis.setObjectName('Displacive')
+        
+        disorder.setTabButton(0, QtWidgets.QTabBar.LeftSide, self.checkBox_mag)
+        disorder.setTabButton(1, QtWidgets.QTabBar.LeftSide, self.checkBox_occ)
+        disorder.setTabButton(2, QtWidgets.QTabBar.LeftSide, self.checkBox_dis)
+
+        # ---
+
+        self.lineEdit_runs_corr_1d.setValidator(QtGui.QIntValidator(1, 100))  
+        self.lineEdit_runs_corr_3d.setValidator(QtGui.QIntValidator(1, 100))
+        
+        self.lineEdit_fract_1d.setValidator(QtGui.QDoubleValidator(0, 1, 4))
+        self.lineEdit_fract_3d.setValidator(QtGui.QDoubleValidator(0, 1, 4))
+        
+        notation = QtGui.QDoubleValidator.ScientificNotation
+        validator = QtGui.QDoubleValidator(1e-6, 1e-1, 4, notation=notation)
+        
+        self.lineEdit_tol_1d.setValidator(validator)
+        self.lineEdit_tol_3d.setValidator(validator)
+        
+        self.lineEdit_plane_h.setValidator(QtGui.QIntValidator(-99, 99))
+        self.lineEdit_plane_k.setValidator(QtGui.QIntValidator(-99, 99))
+        self.lineEdit_plane_l.setValidator(QtGui.QIntValidator(-99, 99))
+        self.lineEdit_plane_d.setValidator(QtGui.QDoubleValidator(-99, 99, 4))
+
+        vectors = ['Correlation', 'Collinearity']
+        scalars = ['Correlation']
+        
+        self.comboBox_correlations_1d.addItem('Moment', vectors)
+        self.comboBox_correlations_1d.addItem('Occupancy', scalars)
+        self.comboBox_correlations_1d.addItem('Displacement', vectors)
+
+        self.comboBox_correlations_3d.addItem('Moment', vectors)
+        self.comboBox_correlations_3d.addItem('Occupancy', scalars)
+        self.comboBox_correlations_3d.addItem('Displacement', vectors) 
+        
+        self.comboBox_plot_1d.addItem('Correlation')
+
+        self.comboBox_norm_1d.addItem('Linear')
+        self.comboBox_norm_1d.addItem('Logarithmic')
+
+        self.comboBox_plot_3d.addItem('Correlation')
+
+        self.comboBox_norm_3d.addItem('Linear')
+        self.comboBox_norm_3d.addItem('Logarithmic')
+        
+        # ---
+        
+        self.lineEdit_runs_calc.setValidator(QtGui.QIntValidator(1, 100))  
+
+        self.comboBox_norm_calc.addItem('Linear')
+        self.comboBox_norm_calc.addItem('Logarithmic')
+        
+        self.comboBox_axes.addItem('(h00), (0k0), (00l)')
+        self.comboBox_axes.addItem('(hh0), (-kk0), (00l)')
+        
+        self.comboBox_laue.addItem('None')        
+        self.comboBox_laue.addItem('-1')
+        self.comboBox_laue.addItem('2/m')
+        self.comboBox_laue.addItem('mmm')
+        self.comboBox_laue.addItem('4/m')
+        self.comboBox_laue.addItem('4/mmm')
+        self.comboBox_laue.addItem('-3')
+        self.comboBox_laue.addItem('-3m')
+        self.comboBox_laue.addItem('6/m')
+        self.comboBox_laue.addItem('6/mmm')
+        self.comboBox_laue.addItem('m-3')
+        self.comboBox_laue.addItem('m-3m')
+        self.comboBox_laue.addItem('cif')
+        
+        self.lineEdit_order_calc.setText('2')
+        
+        self.comboBox_slice_calc.addItem('h =')
+        self.comboBox_slice_calc.addItem('k =')
+        self.comboBox_slice_calc.addItem('l =')
+                       
         self.clear_application()
         
         self.unit_table = {'site': 0, 'atom': 1, 'isotope': 2, 'ion': 3,
@@ -130,6 +270,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tableWidget_atm.setRowCount(0)
         self.tableWidget_atm.setColumnCount(0)
         
+        # ---
+        
         self.comboBox_rebin_h.clear()
         self.comboBox_rebin_k.clear()
         self.comboBox_rebin_l.clear()
@@ -157,6 +299,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.tableWidget_exp.setRowCount(0)
         self.tableWidget_exp.setColumnCount(0)
+        
+        # ---
                 
         self.lineEdit_cycles.setText('10')
        
@@ -164,17 +308,22 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_filter_ref_k.setText('0.0')
         self.lineEdit_filter_ref_l.setText('0.0')
 
+        self.checkBox_batch.setChecked(False)
         self.lineEdit_runs.setText('1')
         self.lineEdit_runs.setEnabled(False)
-        self.checkBox_batch.setChecked(False)
         
         self.checkBox_fixed_moment.setChecked(True)
         self.checkBox_fixed_composition.setChecked(True)
         self.checkBox_fixed_displacement.setChecked(True)
         
+        self.lineEdit_run.setEnabled(False)
+        self.lineEdit_run.setText('0')
+
         self.lineEdit_order.setText('2')
        
-        self.lineEdit_slice.setText('0.0')
+        self.lineEdit_slice.setText('')
+        
+        self.comboBox_slice.setCurrentIndex(2)
         
         self.lineEdit_prefactor.setText('%1.2e' % 1e+4)
         self.lineEdit_tau.setText('%1.2e' % 1e-3)
@@ -182,23 +331,66 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_min_ref.setText('')       
         self.lineEdit_max_ref.setText('')    
 
-        self.lineEdit_chi_sq.setText('')    
+        self.lineEdit_chi_sq.setText('') 
+
+        self.comboBox_plot_top_chi_sq.setCurrentIndex(0)
+        self.comboBox_plot_bottom_chi_sq.setCurrentIndex(1)
+        
+        self.checkBox_mag.setCheckState(QtCore.Qt.Unchecked)
+        self.checkBox_occ.setCheckState(QtCore.Qt.Checked)
+        self.checkBox_dis.setCheckState(QtCore.Qt.Unchecked)
+        
+        # ---
                         
         self.tableWidget_pairs_1d.setRowCount(0)
         self.tableWidget_pairs_1d.setColumnCount(0)
         
         self.tableWidget_pairs_3d.setRowCount(0)
         self.tableWidget_pairs_3d.setColumnCount(0)
+        
+        self.comboBox_correlations_1d.setCurrentIndex(1)   
+        self.comboBox_correlations_3d.setCurrentIndex(1)   
+        
+        self.lineEdit_fract_1d.setText('0.125')
+        self.lineEdit_fract_3d.setText('0.125')
+        
+        self.lineEdit_tol_1d.setText('1e-04')
+        self.lineEdit_tol_3d.setText('1e-04')
+        
+        self.lineEdit_plane_h.setText('0')
+        self.lineEdit_plane_k.setText('0')
+        self.lineEdit_plane_l.setText('1')
+        self.lineEdit_plane_d.setText('0.0')
+        
+        self.checkBox_batch_corr_1d.setCheckState(QtCore.Qt.Unchecked)
+        self.lineEdit_runs_corr_1d.setText('1')
+        self.lineEdit_runs_corr_1d.setEnabled(False)
+
+        self.checkBox_batch_corr_3d.setCheckState(QtCore.Qt.Unchecked)
+        self.lineEdit_runs_corr_3d.setText('1')
+        self.lineEdit_runs_corr_3d.setEnabled(False)
+        
+        self.checkBox_average_1d.setCheckState(QtCore.Qt.Checked)
+        self.checkBox_average_3d.setCheckState(QtCore.Qt.Checked)
+        self.checkBox_symmetrize.setCheckState(QtCore.Qt.Checked)
+        
+        # ---
                         
         self.tableWidget_calc.setRowCount(0)
         self.tableWidget_calc.setColumnCount(0)
         
         self.lineEdit_order_calc.setText('2')
-       
-        self.lineEdit_slice_calc.setText('0.0')
+        
+        self.comboBox_slice_calc.setCurrentIndex(2)
+
+        self.lineEdit_slice_calc.setText('')
         
         self.lineEdit_min_calc.setText('')       
         self.lineEdit_max_calc.setText('')
+
+        self.checkBox_batch_calc.setCheckState(QtCore.Qt.Unchecked)
+        self.lineEdit_runs_calc.setText('1')
+        self.lineEdit_runs_calc.setEnabled(False)
         
     def save_as_triggered(self, slot):
         self.actionSave_As.triggered.connect(slot)
@@ -1329,6 +1521,18 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def button_clicked_reset_punch(self, slot):
         self.pushButton_reset_punch.clicked.connect(slot)
+        
+    def button_clicked_reset(self, slot):
+        self.pushButton_reset.clicked.connect(slot)
+        
+    def button_clicked_reset_h(self, slot):
+        self.pushButton_reset_h.clicked.connect(slot)
+        
+    def button_clicked_reset_k(self, slot):
+        self.pushButton_reset_k.clicked.connect(slot)
+        
+    def button_clicked_reset_l(self, slot):
+        self.pushButton_reset_l.clicked.connect(slot)
     
     def open_dialog_nxs(self):
         options = QtWidgets.QFileDialog.Option()
@@ -1346,14 +1550,70 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def button_clicked_NXS(self, slot):
         self.pushButton_load_NXS.clicked.connect(slot)
         
-    def button_clicked_reset(self, slot):
-        self.pushButton_reset.clicked.connect(slot)
+    # ---
+    
+    def batch_checked(self):
+        return self.checkBox_batch.isChecked()
+    
+    def clicked_batch(self, slot):
+        self.checkBox_batch.stateChanged.connect(slot)
         
-    def button_clicked_reset_h(self, slot):
-        self.pushButton_reset_h.clicked.connect(slot)
+    def enable_runs(self, visible):
+        self.lineEdit_runs.setEnabled(visible)
         
-    def button_clicked_reset_k(self, slot):
-        self.pushButton_reset_k.clicked.connect(slot)
+    def batch_checked_1d(self):
+        return self.checkBox_batch_corr_1d.isChecked()
+    
+    def clicked_batch_1d(self, slot):
+        self.checkBox_batch_corr_1d.stateChanged.connect(slot)
         
-    def button_clicked_reset_l(self, slot):
-        self.pushButton_reset_l.clicked.connect(slot)
+    def enable_runs_1d(self, visible):
+        self.lineEdit_runs_corr_1d.setEnabled(visible)
+        
+    def batch_checked_3d(self):
+        return self.checkBox_batch_corr_3d.isChecked()
+    
+    def clicked_batch_3d(self, slot):
+        self.checkBox_batch_corr_3d.stateChanged.connect(slot)
+        
+    def enable_runs_3d(self, visible):
+        self.lineEdit_runs_corr_3d.setEnabled(visible)
+        
+    def batch_checked_calc(self):
+        return self.checkBox_batch_calc.isChecked()
+    
+    def clicked_batch_calc(self, slot):
+        self.checkBox_batch_calc.stateChanged.connect(slot)
+        
+    def enable_runs_calc(self, visible):
+        self.lineEdit_runs_calc.setEnabled(visible)
+        
+    def clicked_disorder_mag(self, slot):
+        self.checkBox_mag.clicked.connect(slot)
+
+    def clicked_disorder_occ(self, slot):
+        self.checkBox_occ.clicked.connect(slot)
+        
+    def clicked_disorder_dis(self, slot):
+        self.checkBox_dis.clicked.connect(slot)
+        
+    def set_disorder_mag(self, state):
+        check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        self.checkBox_mag.setCheckState(check)
+        
+    def set_disorder_occ(self, state):
+        check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        self.checkBox_occ.setCheckState(check)
+        
+    def set_disorder_dis(self, state):
+        check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        self.checkBox_dis.setCheckState(check)
+
+    def get_disorder_mag(self):
+        return self.checkBox_mag.isChecked()
+    
+    def get_disorder_occ(self):
+        return self.checkBox_occ.isChecked()
+    
+    def get_disorder_dis(self):
+        return self.checkBox_dis.isChecked()

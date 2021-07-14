@@ -781,7 +781,7 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>150</height>
+              <height>120</height>
              </size>
             </property>
             <property name="autoFillBackground">
@@ -803,7 +803,7 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>150</height>
+              <height>120</height>
              </size>
             </property>
             <property name="tabPosition">
@@ -3232,7 +3232,7 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>150</height>
+              <height>120</height>
              </size>
             </property>
            </widget>

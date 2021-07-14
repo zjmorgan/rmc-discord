@@ -31,6 +31,15 @@ class Presenter:
         self.view.button_clicked_NXS(self.load_NXS)
         self.view.select_site(self.select_highlight)
         
+        self.view.clicked_batch(self.check_batch)
+        self.view.clicked_batch_1d(self.check_batch_1d)
+        self.view.clicked_batch_3d(self.check_batch_3d)
+        self.view.clicked_batch_calc(self.check_batch_calc)
+        
+        self.view.clicked_disorder_mag(self.disorder_check_mag)
+        self.view.clicked_disorder_occ(self.disorder_check_occ)
+        self.view.clicked_disorder_dis(self.disorder_check_dis)
+        
     def new_application(self):
         
         self.view.clear_application()
@@ -1138,3 +1147,57 @@ class Presenter:
                 
                 self.view.button_clicked_punch(self.punch)
                 self.view.button_clicked_reset_punch(self.reset_punch)
+                
+    def check_batch(self):
+                
+        visibility = True if self.view.batch_checked() else False
+        self.view.enable_runs(visibility)
+    
+    def check_batch_1d(self):
+                
+        visibility = True if self.view.batch_checked_1d() else False
+        self.view.enable_runs_1d(visibility)
+        
+    def check_batch_3d(self):
+                
+        visibility = True if self.view.batch_checked_3d() else False
+        self.view.enable_runs_3d(visibility)
+        
+    def check_batch_calc(self):
+                
+        visibility = True if self.view.batch_checked_calc() else False
+        self.view.enable_runs_calc(visibility)
+        
+    def disorder_check_mag(self):
+        
+        if self.view.get_disorder_mag():
+            self.view.set_disorder_mag(True)
+            self.view.set_disorder_occ(False)
+            self.view.set_disorder_dis(False)
+        else:
+            self.view.set_disorder_mag(False)
+            self.view.set_disorder_occ(True)
+            self.view.set_disorder_dis(False)
+            
+    def disorder_check_occ(self):
+        
+        if self.view.get_disorder_occ():
+            self.view.set_disorder_mag(False)
+            self.view.set_disorder_occ(True)
+            self.view.set_disorder_dis(False)
+        else:
+            self.view.set_disorder_mag(False)
+            self.view.set_disorder_occ(False)
+            self.view.set_disorder_dis(True)
+            
+    def disorder_check_dis(self):
+        
+        if self.view.get_disorder_dis():
+            self.view.set_disorder_mag(False)
+            self.view.set_disorder_occ(False)
+            self.view.set_disorder_dis(True)
+        else:
+            self.view.set_disorder_mag(False)
+            self.view.set_disorder_occ(True)
+            self.view.set_disorder_dis(False)
+            
