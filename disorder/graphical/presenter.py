@@ -40,6 +40,9 @@ class Presenter:
         self.view.clicked_disorder_occ(self.disorder_check_occ)
         self.view.clicked_disorder_dis(self.disorder_check_dis)
         
+        self.view.index_changed_correlations_1d(self.change_type_1d)
+        self.view.index_changed_correlations_3d(self.change_type_3d)
+        
     def new_application(self):
         
         self.view.clear_application()
@@ -1201,3 +1204,141 @@ class Presenter:
             self.view.set_disorder_occ(True)
             self.view.set_disorder_dis(False)
             
+    def change_type_1d(self):
+        
+        self.view.set_correlations_1d_type()
+            
+    def change_type_3d(self):
+        
+        self.view.set_correlations_3d_type()
+        
+    def preprocess_supercell(self):
+        
+        self.mask = self.model.mask(self.signal_m, self.error_sq_m)
+        
+        self.I_expt, 
+        self.inv_sigma_sq = self.model.get_refinement_data(self.signal_m, 
+                                                           self.error_sq_m, 
+                                                           self.mask)
+        
+        self.nu = self.view.get_nu()
+        self.nv = self.view.get_nv()
+        self.nw = self.view.get_nw()
+        
+        self.n_atm = self.view.get_n_atm()
+        self.n_uvw = self.model.unitcell_size(self.nu, self.nv, self.nw)
+        
+        self.n = self.view.get_n()
+        
+        constants = self.view.get_lattice_parameters()  
+        
+        self.a, self.b, self.c, self.alpha, self.beta, self.gamma = constants
+        
+        self.A, self.B, self.R, 
+        self.C, self.D = self.model.crystal_matrices(*constants)
+        
+        self.site = self.view.get_site()
+        
+        element = self.view.get_atom()    
+        nucleus = self.view.get_isotope()    
+        charge = self.view.get_ion()
+        
+        self.atm = element
+        self.nuc = self.model.get_isotope(element, nucleus)
+        self.ion = self.model.get_ion(element, charge)
+        
+        self.occupancy = self.view.get_occupancy()
+        self.Uiso = self.view.get_Uiso()    
+        self.U11 = self.view.get_U11()    
+        self.U22 = self.view.get_U22()    
+        self.U33 = self.view.get_U33()    
+        self.U23 = self.view.get_U23()    
+        self.U12 = self.view.get_U13()    
+        self.U12 = self.view.get_U12()    
+
+        self.mu = self.view.get_mu()    
+        self.mu1 = self.view.get_mu1()    
+        self.mu2 = self.view.get_mu2()    
+        self.mu3 = self.view.get_mu3()   
+        self.g = self.view.get_g()    
+        
+        self.u = self.view.get_u()    
+        self.v = self.view.get_v()    
+        self.w = self.view.get_w()
+        
+        dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
+        dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
+        dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
+        
+        h_range = [min_h, max_h]
+        k_range = [min_k, max_k]
+        l_range = [min_l, max_l]
+        
+        self.h, self.k, self.l, \
+        self.indices, \
+        self.inverses, \
+        self.i_mask, \
+        self.i_unmask = self.model.reciprocal_mapping(h_range,
+                                                      k_range,
+                                                      l_range,
+                                                      self.nu, 
+                                                      self.nv, 
+                                                      self.nw, 
+                                                      self.mask)
+        
+        self.Qx, self.Qy, self.Qz, \
+        self.Qx_norm, self.Qy_norm, self.Qz_norm, \
+        self.Q = self.model.reciprocal_space_coordinate_transform(self.h, 
+                                                                  self.k, 
+                                                                  self.l, 
+                                                                  self.B, 
+                                                                  self.R)
+        
+        self.ux, self.uy, self.uz, \
+        self.rx, self.ry, self.rz, \
+        self.atms = self.model.real_space_coordinate_transform(self.u, 
+                                                               self.v, 
+                                                               self.w, 
+                                                               self.atm, 
+                                                               self.A, 
+                                                               self.nu, 
+                                                               self.nv, 
+                                                               self.nw)
+                                        
+        self.phase_factor, \
+        self.space_factor = self.model.exponential_factors(self.Qx, 
+                                                           self.Qy,
+                                                           self.Qz, 
+                                                           self.ux, 
+                                                           self.uy, 
+                                                           self.uz, 
+                                                           self.nu, 
+                                                           self.nv, 
+                                                           self.nw)
+                                        
+        if (self.view.get_type() == 'Neutron'):
+             self.factors, \
+             self.mag_factors = self.model.neutron_factors(self.Q, 
+                                                           self.atm, 
+                                                           self.ion, 
+                                                           self.occupancy, 
+                                                           self.g, 
+                                                           self.phase_factor)
+        else:
+             self.factors = self.model.xray_factors(self.Q, 
+                                                    self.ion, 
+                                                    self.occupancy, 
+                                                    self.phase_factor)
+             
+    def refinement_statistics(self):
+        
+        self.acc_moves = []
+        self.acc_temps = []
+        self.rej_moves = []
+        self.rej_temps = []
+        
+        self.chi_sq = [np.inf]
+        self.energy = []
+        self.temperature = [self.temp]
+        self.scale = []
+        

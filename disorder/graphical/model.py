@@ -4,7 +4,7 @@ import re
 
 import numpy as np
 
-from disorder.diffuse import experimental
+from disorder.diffuse import experimental, space, scattering, magnetic
 from disorder.material import crystal, symmetry, tables
 
 class Model:
@@ -15,6 +15,10 @@ class Model:
     def supercell_size(self, n_atm, nu, nv, nw):
         
         return n_atm*nu*nv*nw
+    
+    def unitcell_size(self, nu, nv, nw):
+        
+        return nu*nv*nw
     
     def ion_symbols(self, keys):
         
@@ -33,6 +37,16 @@ class Model:
         keys = np.array([key for key in keys])
         sort = np.lexsort(np.array((col0, col1)))        
         return keys[sort]
+    
+    def get_isotope(self, element, nucleus):
+        
+        nucleus = nucleus[nucleus == '-'] = ''
+        return np.array([pre+atm for atm, pre in zip(element, nucleus)])
+    
+    def get_ion(self, element, charge):
+        
+        charge = charge[charge == '-'] = ''
+        return np.array([atm+app for atm, app in zip(element, charge)])
     
     def get_neutron_scattering_length_keys(self):
         
@@ -243,7 +257,7 @@ class Model:
         return np.ma.masked_less_equal(np.ma.masked_invalid(array, 
                                                             copy=False), 
                                        0, copy=False)
-    
+        
     def crop(self, array, h_slice, k_slice, l_slice):
         
         return experimental.crop(array, h_slice, k_slice, l_slice)
@@ -261,13 +275,110 @@ class Model:
         return i_min, i_max
 
     def punch(self, array, radius_h, radius_k, radius_l, 
-                    step_h, step_k, step_l,
-                    h_range, k_range, l_range,
-                    centering, outlier, punch):
+              step_h, step_k, step_l, h_range, k_range, l_range,
+              centering, outlier, punch):
         
         return experimental.punch(array, radius_h, radius_k, radius_l,
-                             step_h, step_k, step_l,
-                             h_range, k_range, l_range,
-                             centering=centering, outlier=outlier, punch=punch)
+                   step_h, step_k, step_l, h_range, k_range, l_range,
+                   centering=centering, outlier=outlier, punch=punch)
+    
+    def get_mask(self, signal, error_sq):
         
+        return experimental.mask(signal, error_sq)
+    
+    def get_refinement_data(self, signal, error_sq, mask):
+        
+            return signal[~mask], 1/error_sq[~mask]
+    
+            
+        # self.ux, self.uy, self.uz = crystal.transform(self.u, 
+        #                                               self.v, 
+        #                                               self.w, 
+        #                                               self.A)
+        
+        # self.nh = self.mask.shape[0]
+        # self.nk = self.mask.shape[1]
+        # self.nl = self.mask.shape[2]
+        
+        # self.I_obs = np.full((self.nh, self.nk, self.nl), np.nan)
+        
+        # t = 0
+        # T = np.array([[np.cos(t), -np.sin(t), 0],
+        #               [np.sin(t),  np.cos(t), 0],
+        #               [0,          0,         1]])
+    
+        # min_h = np.float(self.tableWidget_exp.item(0, 2).text())
+        # max_h = np.float(self.tableWidget_exp.item(0, 3).text())
+        
+        # min_k = np.float(self.tableWidget_exp.item(1, 2).text())
+        # max_k = np.float(self.tableWidget_exp.item(1, 3).text())
+        
+        # min_l = np.float(self.tableWidget_exp.item(2, 2).text())
+        # max_l = np.float(self.tableWidget_exp.item(2, 3).text())
+                
+        # h_range = [min_h, max_h]
+        # k_range = [min_k, max_k]
+        # l_range = [min_l, max_l]
+        
+    def reciprocal_mapping(self, h_range, k_range, l_range, nu, nv, nw, mask):
+        
+        nh, nk, nl = mask.shape
+        
+        h, k, l, \
+        H, K, L, \
+        indices, inverses, \
+        operators = crystal.bragg(h_range, k_range, l_range, 
+                                  nh, nk, nl, nu, nv, nw)
+        
+        i_mask, i_unmask = space.indices(inverses, mask)
+            
+        return h, k, l, indices, inverses, i_mask, i_unmask 
+    
+    def reciprocal_space_coordinate_transform(self, h, k, l, B, R):
+            
+        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        
+        Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
+        
+        Qx_norm, Qy_norm, Qz_norm, Q = space.unit(Qx, Qy, Qz)
+        
+        return Qx, Qy, Qx, Qx_norm, Qy_norm, Qz_norm, Q 
+    
+    def real_space_coordinate_transform(self, u, v, w, atm, A, nu, nv, nw):
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        ix, iy, iz = space.cell(nu, nv, nw, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, ix, iy, iz, atm)
+        
+        return ux, uy, uz, rx, ry, rz, atms
+        
+    def exponential_factors(self, Qx, Qy, Qz, ux, uy, uz, nu, nv, nw):
+                
+        phase_factor = scattering.phase(Qx, Qy, Qz, ux, uy, uz)
+        
+        space_factor = space.factor(nu, nv, nw)
+        
+        return phase_factor, space_factor
+
+    def neutron_factors(self, Q, atm, ion, occupancy, g, phase_factor):
+                    
+        scattering_length = scattering.length(atm, Q.size)
+                    
+        factors = space.prefactors(scattering_length, phase_factor, occupancy)
+        
+        magnetic_form_factor = magnetic.form(Q, ion, g)
+        
+        magnetic_factors = magnetic_form_factor*phase_factor*occupancy
+        
+        return factors, magnetic_factors
+    
+    def xray_factors(self, Q, ion, occupancy, phase_factor):
+            
+        form_factor = scattering.form(ion, Q)
+        
+        factors = space.prefactors(form_factor, phase_factor, occupancy)
+
+        return factors
         

@@ -216,7 +216,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_laue.addItem('m-3m')
         self.comboBox_laue.addItem('cif')
         
-        self.lineEdit_order_calc.setText('2')
+        self.lineEdit_order_calc.setValidator(QtGui.QIntValidator(0, 10))
         
         self.comboBox_slice_calc.addItem('h =')
         self.comboBox_slice_calc.addItem('k =')
@@ -1561,33 +1561,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def enable_runs(self, visible):
         self.lineEdit_runs.setEnabled(visible)
         
-    def batch_checked_1d(self):
-        return self.checkBox_batch_corr_1d.isChecked()
-    
-    def clicked_batch_1d(self, slot):
-        self.checkBox_batch_corr_1d.stateChanged.connect(slot)
-        
-    def enable_runs_1d(self, visible):
-        self.lineEdit_runs_corr_1d.setEnabled(visible)
-        
-    def batch_checked_3d(self):
-        return self.checkBox_batch_corr_3d.isChecked()
-    
-    def clicked_batch_3d(self, slot):
-        self.checkBox_batch_corr_3d.stateChanged.connect(slot)
-        
-    def enable_runs_3d(self, visible):
-        self.lineEdit_runs_corr_3d.setEnabled(visible)
-        
-    def batch_checked_calc(self):
-        return self.checkBox_batch_calc.isChecked()
-    
-    def clicked_batch_calc(self, slot):
-        self.checkBox_batch_calc.stateChanged.connect(slot)
-        
-    def enable_runs_calc(self, visible):
-        self.lineEdit_runs_calc.setEnabled(visible)
-        
     def clicked_disorder_mag(self, slot):
         self.checkBox_mag.clicked.connect(slot)
 
@@ -1617,3 +1590,58 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def get_disorder_dis(self):
         return self.checkBox_dis.isChecked()
+    
+    def get_prefactor(self):
+        return float(self.lineEdit_prefactor.text())
+ 
+    def get_constant(self):
+        return float(self.lineEdit_tau.text()) 
+ 
+    # ---
+        
+    def batch_checked_1d(self):
+        return self.checkBox_batch_corr_1d.isChecked()
+    
+    def clicked_batch_1d(self, slot):
+        self.checkBox_batch_corr_1d.stateChanged.connect(slot)
+        
+    def enable_runs_1d(self, visible):
+        self.lineEdit_runs_corr_1d.setEnabled(visible)
+        
+    def batch_checked_3d(self):
+        return self.checkBox_batch_corr_3d.isChecked()
+    
+    def clicked_batch_3d(self, slot):
+        self.checkBox_batch_corr_3d.stateChanged.connect(slot)
+        
+    def enable_runs_3d(self, visible):
+        self.lineEdit_runs_corr_3d.setEnabled(visible)
+      
+    def set_correlations_1d_type(self):
+        selection = self.comboBox_correlations_1d.currentIndex()    
+        data = self.comboBox_correlations_1d.itemData(selection)
+        self.comboBox_plot_1d.clear()
+        for t in data: self.comboBox_plot_1d.addItem(t)    
+
+    def set_correlations_3d_type(self):
+        selection = self.comboBox_correlations_3d.currentIndex()    
+        data = self.comboBox_correlations_3d.itemData(selection)
+        self.comboBox_plot_3d.clear()
+        for t in data: self.comboBox_plot_3d.addItem(t)
+        
+    def index_changed_correlations_1d(self, slot):
+        self.comboBox_correlations_1d.currentIndexChanged.connect(slot)
+        
+    def index_changed_correlations_3d(self, slot):
+        self.comboBox_correlations_3d.currentIndexChanged.connect(slot)
+        
+    # ---
+        
+    def batch_checked_calc(self):
+        return self.checkBox_batch_calc.isChecked()
+    
+    def clicked_batch_calc(self, slot):
+        self.checkBox_batch_calc.stateChanged.connect(slot)
+        
+    def enable_runs_calc(self, visible):
+        self.lineEdit_runs_calc.setEnabled(visible)
