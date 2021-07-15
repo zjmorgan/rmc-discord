@@ -1221,14 +1221,15 @@ class Presenter:
                                                            self.error_sq_m, 
                                                            self.mask)
         
-        self.nu = self.view.get_nu()
-        self.nv = self.view.get_nv()
-        self.nw = self.view.get_nw()
+        nu, nv, nw = self.view.get_nu(), self.view.get_nv(), self.view.get_nw()
         
-        self.n_atm = self.view.get_n_atm()
-        self.n_uvw = self.model.unitcell_size(self.nu, self.nv, self.nw)
+        self.nu, self.nv, self.nw = nu, nv, nw
         
-        self.n = self.view.get_n()
+        n_atm = self.view.get_n_atm()
+        n_uvw = self.model.unitcell_size(nu, nv, nw)
+        n = self.view.get_n()
+        
+        self.n_atm, self.n_atm, self.n = n_atm, n_uvw, n
         
         constants = self.view.get_lattice_parameters()  
         
@@ -1329,6 +1330,16 @@ class Presenter:
                                                     self.ion, 
                                                     self.occupancy, 
                                                     self.phase_factor)
+                     
+        self.I_obs, self.I_ref, \
+        self.I_calc, self.I_raw, \
+        self.I_flat = self.model.initialize_intensity(self.intensity, 
+                                                      self.mask, self.Q)
+        
+        self.a_filt, self.b_filt, \
+        self.c_filt, self.d_filt, \
+        self.e_filt, self.f_filt, \
+        self.g_filt, self.h_filt = self.model.initialize_filter(self.mask)
              
     def refinement_statistics(self):
         
@@ -1342,3 +1353,28 @@ class Presenter:
         self.temperature = [self.temp]
         self.scale = []
         
+    def initialize_magnetic(self):
+        
+        nu, nv, nw, n_atm = self.nu, self.nv. self.nw, self.n_atm
+        
+        Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm)
+        
+        self.Sx, self.Sy, self.Sz = Sx, Sy, Sz 
+        
+        H, K, L = self.H, self.K, self.L
+        Qx_norm, Qy_norm, Qz_norm = self.Qx_norm, self.Qy_norm, self.Qz_norm
+        
+        indices = self.indices
+        magnetic_factors = self.magnetic_factors
+        
+        arrays = self.model.initialize_magnetic(Sx, Sy, Sz, H, K, L, 
+                                                Qx_norm, Qy_norm, Qz_norm, 
+                                                indices, magnetic_factors, 
+                                                nu, nv, nw, n_atm)
+               
+        self.Fx_orig, self.Fy_orig, self.Fz_orig, \
+        self.Fx_cand, self.Fy_cand, self.Fz_cand, \
+        self.prod_x_orig, self.prod_y_orig, self.prod_z_orig, \
+        self.prod_x_cand, self.prod_y_cand, self.prod_z_cand, \
+        self.Sx_k_orig, self.Sy_k_orig, self.Sz_k_orig, \
+        self.Sx_k_cand, self.Sy_k_cand, self.Sz_k_cand = arrays

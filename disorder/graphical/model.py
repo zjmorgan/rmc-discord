@@ -290,36 +290,6 @@ class Model:
         
             return signal[~mask], 1/error_sq[~mask]
     
-            
-        # self.ux, self.uy, self.uz = crystal.transform(self.u, 
-        #                                               self.v, 
-        #                                               self.w, 
-        #                                               self.A)
-        
-        # self.nh = self.mask.shape[0]
-        # self.nk = self.mask.shape[1]
-        # self.nl = self.mask.shape[2]
-        
-        # self.I_obs = np.full((self.nh, self.nk, self.nl), np.nan)
-        
-        # t = 0
-        # T = np.array([[np.cos(t), -np.sin(t), 0],
-        #               [np.sin(t),  np.cos(t), 0],
-        #               [0,          0,         1]])
-    
-        # min_h = np.float(self.tableWidget_exp.item(0, 2).text())
-        # max_h = np.float(self.tableWidget_exp.item(0, 3).text())
-        
-        # min_k = np.float(self.tableWidget_exp.item(1, 2).text())
-        # max_k = np.float(self.tableWidget_exp.item(1, 3).text())
-        
-        # min_l = np.float(self.tableWidget_exp.item(2, 2).text())
-        # max_l = np.float(self.tableWidget_exp.item(2, 3).text())
-                
-        # h_range = [min_h, max_h]
-        # k_range = [min_k, max_k]
-        # l_range = [min_l, max_l]
-        
     def reciprocal_mapping(self, h_range, k_range, l_range, nu, nv, nw, mask):
         
         nh, nk, nl = mask.shape
@@ -380,5 +350,83 @@ class Model:
         
         factors = space.prefactors(form_factor, phase_factor, occupancy)
 
-        return factors
+        return factors       
+
+    def initialize_intensity(self, intensity, mask, Q):
         
+        nh, nk, nl = mask.shape
+        
+        I_obs = np.full((nh, nk, nl), np.nan)
+        I_ref = I_obs[~mask]
+        
+        I_calc = np.zeros(Q.size, dtype=float)
+        
+        I_raw = np.zeros(mask.size, dtype=float)
+        I_flat = np.zeros(mask.size, dtype=float)
+        
+        return I_obs, I_ref, I_calc, I_raw, I_flat
+        
+    def initialize_filter(self, mask):
+
+        a_filt = np.zeros(mask.size, dtype=float)
+        b_filt = np.zeros(mask.size, dtype=float)
+        c_filt = np.zeros(mask.size, dtype=float)
+        d_filt = np.zeros(mask.size, dtype=float)
+        e_filt = np.zeros(mask.size, dtype=float)
+        f_filt = np.zeros(mask.size, dtype=float)
+        g_filt = np.zeros(mask.size, dtype=float)
+        h_filt = np.zeros(mask.size, dtype=float)
+        i_filt = np.zeros(mask.size, dtype=float)
+        
+        return a_filt, b_filt, c_filt, \
+               d_filt, e_filt, f_filt, \
+               g_filt, h_filt, i_filt
+        
+    def random_moments(self, nu, nv, nw, n_atm):
+    
+        Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm)
+        
+    def initialize_magnetic(self, Sx, Sy, Sz, H, K, L, 
+                            Qx_norm, Qy_norm, Qz_norm, indices, 
+                            magnetic_factors, nu, nv, nw, n_atm):
+        
+        n_uvw = nu*nv*nw
+        
+        Sx_k, Sy_k, Sz_k, i_dft = magnetic.transform(Sx, Sy, Sz, H, K, L, 
+                                                     nu, nv, nw, n_atm)
+        
+        Fx, Fy, Fz, \
+        prod_x, prod_y, prod_z = magnetic.structure(Qx_norm, Qy_norm, Qz_norm, 
+                                                    Sx_k, Sy_k, Sz_k, i_dft, 
+                                                    magnetic_factors)
+        
+        Fx_orig = np.zeros(indices.size, dtype=complex)
+        Fy_orig = np.zeros(indices.size, dtype=complex)
+        Fz_orig = np.zeros(indices.size, dtype=complex)
+        
+        prod_x_orig = np.zeros(indices.size, dtype=complex)
+        prod_y_orig = np.zeros(indices.size, dtype=complex)
+        prod_z_orig = np.zeros(indices.size, dtype=complex)
+        
+        Sx_k_orig = np.zeros(n_uvw, dtype=complex)
+        Sy_k_orig = np.zeros(n_uvw, dtype=complex)
+        Sz_k_orig = np.zeros(n_uvw, dtype=complex)
+        
+        Fx_cand = np.zeros(indices.size, dtype=complex)
+        Fy_cand = np.zeros(indices.size, dtype=complex)
+        Fz_cand = np.zeros(indices.size, dtype=complex)
+        
+        prod_x_cand = np.zeros(indices.size, dtype=complex)
+        prod_y_cand = np.zeros(indices.size, dtype=complex)
+        prod_z_cand = np.zeros(indices.size, dtype=complex)
+        
+        Sx_k_cand = np.zeros(n_uvw, dtype=complex)
+        Sy_k_cand = np.zeros(n_uvw, dtype=complex)
+        Sz_k_cand = np.zeros(n_uvw, dtype=complex)
+        
+        return Fx_orig, Fy_orig, Fz_orig, \
+               Fx_cand, Fy_cand, Fz_cand, \
+               prod_x_orig, prod_y_orig, prod_z_orig, \
+               prod_x_cand, prod_y_cand, prod_z_cand, \
+               Sx_k_orig, Sy_k_orig, Sz_k_orig, \
+               Sx_k_cand, Sy_k_cand, Sz_k_cand
