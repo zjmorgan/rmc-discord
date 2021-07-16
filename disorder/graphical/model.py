@@ -4,7 +4,8 @@ import re
 
 import numpy as np
 
-from disorder.diffuse import experimental, space, scattering, magnetic
+from disorder.diffuse import experimental, space, scattering
+from disorder.diffuse import magnetic, occupational, displacive
 from disorder.material import crystal, symmetry, tables
 
 class Model:
@@ -352,7 +353,7 @@ class Model:
 
         return factors       
 
-    def initialize_intensity(self, intensity, mask, Q):
+    def initialize_intensity(self, mask, Q):
         
         nh, nk, nl = mask.shape
         
@@ -384,8 +385,16 @@ class Model:
         
     def random_moments(self, nu, nv, nw, n_atm):
     
-        Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm)
+        return magnetic.spin(nu, nv, nw, n_atm)
         
+    def random_occupancies(self, nu, nv, nw, n_atm, occupancy):
+        
+        return occupational.composition(nu, nv, nw, n_atm, value=occupancy)
+    
+    def random_displacements(self, nu, nv, nw, n_atm, displacement):
+        
+        return displacive.expansion(nu, nv, nw, n_atm, value=displacement)
+            
     def initialize_magnetic(self, Sx, Sy, Sz, H, K, L, 
                             Qx_norm, Qy_norm, Qz_norm, indices, 
                             magnetic_factors, nu, nv, nw, n_atm):
@@ -424,9 +433,94 @@ class Model:
         Sy_k_cand = np.zeros(n_uvw, dtype=complex)
         Sz_k_cand = np.zeros(n_uvw, dtype=complex)
         
-        return Fx_orig, Fy_orig, Fz_orig, \
-               Fx_cand, Fy_cand, Fz_cand, \
-               prod_x_orig, prod_y_orig, prod_z_orig, \
-               prod_x_cand, prod_y_cand, prod_z_cand, \
+        return Sx_k, Sy_k, Sz_k, \
                Sx_k_orig, Sy_k_orig, Sz_k_orig, \
-               Sx_k_cand, Sy_k_cand, Sz_k_cand
+               Sx_k_cand, Sy_k_cand, Sz_k_cand, \
+               Fx, Fy, Fz, \
+               Fx_orig, Fy_orig, Fz_orig, \
+               Fx_cand, Fy_cand, Fz_cand, \
+               prod_x, prod_y, prod_z, \
+               prod_x_orig, prod_y_orig, prod_z_orig, \
+               prod_x_cand, prod_y_cand, prod_z_cand, i_dft
+               
+    def initialize_occupational(self, A_r, H, K, L, indices, 
+                                factors, nu, nv, nw, n_atm):
+        
+        n_uvw = nu*nv*nw
+                                                
+        A_k, i_dft = occupational.transform(A_r, H, K, L, nu, nv, nw, n_atm)
+            
+        F, prod = occupational.structure(A_k, i_dft, factors)
+                        
+        F_orig = np.zeros(indices.size, dtype=complex)
+        
+        prod_orig = np.zeros(indices.size, dtype=complex)
+        
+        A_k_orig = np.zeros(n_uvw, dtype=complex)
+        
+        F_cand = np.zeros(indices.size, dtype=complex)
+        
+        prod_cand = np.zeros(indices.size, dtype=complex)
+        
+        A_k_cand = np.zeros(n_uvw, dtype=complex)
+        
+        return A_k, A_k_orig, A_k_cand, F, F_orig, F_cand, \
+               prod, prod_orig, prod_cand, i_dft
+            
+    def initialize_displacive(self, Ux, Uy, Uz, h, k, l, H, K, L, Qx, Qy, Qz, 
+                              indices, factors, nu, nv, nw, n_atm, 
+                              p, centering):
+        
+        n_uvw = nu*nv*nw
+
+        coeffs = displacive.coefficients(p)
+        
+        U_r = displacive.products(Ux, Uy, Uz, p)
+        Q_k = displacive.products(Qx, Qy, Qz, p)
+        
+        U_k, i_dft = displacive.transform(U_r, H, K, L, nu, nv, nw, n_atm)
+        
+        H_nuc, K_nuc, L_nuc, \
+        cond = crystal.nuclear(H, K, L, h, k, l, nu, nv, nw, centering)    
+        
+        F, F_nuc, \
+        prod, prod_nuc, \
+        V_k, V_k_nuc, \
+        even, \
+        bragg = displacive.structure(U_k, Q_k, coeffs, cond, p, i_dft, factors)
+        
+        F_orig = np.zeros(indices.size, dtype=complex)
+        F_nuc_orig = np.zeros(bragg.size, dtype=complex)
+        
+        prod_orig = np.zeros(indices.size, dtype=complex)
+        prod_nuc_orig = np.zeros(bragg.size, dtype=complex)
+        
+        V_k_orig = np.zeros(indices.size, dtype=complex)
+        V_k_nuc_orig = np.zeros(bragg.size, dtype=complex)
+        
+        U_k_orig = np.zeros(n_uvw*coeffs.size, dtype=complex)
+        
+        F_cand = np.zeros(indices.shape, dtype=complex)
+        F_nuc_cand = np.zeros(bragg.shape, dtype=complex)
+        
+        prod_cand = np.zeros(indices.shape, dtype=complex)
+        prod_nuc_cand = np.zeros(bragg.shape, dtype=complex)
+        
+        V_k_cand = np.zeros(indices.size, dtype=complex)
+        V_k_nuc_cand = np.zeros(bragg.size, dtype=complex)
+        
+        U_k_cand = np.zeros(n_uvw*coeffs.size, dtype=complex)
+        
+        U_r_orig = np.zeros(coeffs.size, dtype=float)
+        
+        U_r_cand = np.zeros(coeffs.size, dtype=float)
+        
+        return U_r, U_r_orig, U_r_cand, Q_k, \
+               U_k, U_k_orig, U_k_cand, \
+               V_k, V_k_orig, V_k_cand, \
+               V_k_nuc, V_k_nuc_orig, V_k_nuc_cand, \
+               F, F_orig, F_cand, \
+               F_nuc, F_nuc_orig, F_nuc_cand, \
+               prod, prod_orig, prod_cand, \
+               prod_nuc, prod_nuc_orig, prod_nuc_cand, \
+               i_dft, coeffs, H_nuc, K_nuc, L_nuc, cond, even, bragg

@@ -1214,12 +1214,16 @@ class Presenter:
         
     def preprocess_supercell(self):
         
-        self.mask = self.model.mask(self.signal_m, self.error_sq_m)
+        mask = self.model.mask(self.signal_m, self.error_sq_m)
         
-        self.I_expt, 
-        self.inv_sigma_sq = self.model.get_refinement_data(self.signal_m, 
-                                                           self.error_sq_m, 
-                                                           self.mask)
+        self.mask = mask
+        
+        signal, error_sq = self.signal_m, self.error_sq_m
+        
+        data = self.model.get_refinement_data(signal, error_sq, mask)
+        
+        I_expt, inv_sigma_sq = data
+        self.I_expt, self.inv_sigma_sq = I_expt, inv_sigma_sq
         
         nu, nv, nw = self.view.get_nu(), self.view.get_nv(), self.view.get_nw()
         
@@ -1235,37 +1239,52 @@ class Presenter:
         
         self.a, self.b, self.c, self.alpha, self.beta, self.gamma = constants
         
-        self.A, self.B, self.R, 
-        self.C, self.D = self.model.crystal_matrices(*constants)
+        A, B, R, C, D = self.model.crystal_matrices(*constants)
         
-        self.site = self.view.get_site()
+        self.A, self.B, self.R, self.C, self.D = A, B, R, C, D
+        
+        site = self.view.get_site()
+        
+        self.site = site 
         
         element = self.view.get_atom()    
         nucleus = self.view.get_isotope()    
         charge = self.view.get_ion()
         
         self.atm = element
-        self.nuc = self.model.get_isotope(element, nucleus)
-        self.ion = self.model.get_ion(element, charge)
         
-        self.occupancy = self.view.get_occupancy()
-        self.Uiso = self.view.get_Uiso()    
-        self.U11 = self.view.get_U11()    
-        self.U22 = self.view.get_U22()    
-        self.U33 = self.view.get_U33()    
-        self.U23 = self.view.get_U23()    
-        self.U12 = self.view.get_U13()    
-        self.U12 = self.view.get_U12()    
+        nuc = self.model.get_isotope(element, nucleus)
+        ion = self.model.get_ion(element, charge)
+                
+        self.nuc, self.ion = nuc, ion
+        
+        occupancy = self.view.get_occupancy()
+        Uiso = self.view.get_Uiso()    
+        U11 = self.view.get_U11()    
+        U22 = self.view.get_U22()    
+        U33 = self.view.get_U33()    
+        U23 = self.view.get_U23()    
+        U13 = self.view.get_U13()    
+        U12 = self.view.get_U12()  
+        
+        self.occupancy, self.Uiso = occupancy, Uiso
+        
+        self.U11, self.U22, self.U33 = U11, U22, U33
+        self.U23, self.U13, self.U12 = U23, U13, U12
 
-        self.mu = self.view.get_mu()    
-        self.mu1 = self.view.get_mu1()    
-        self.mu2 = self.view.get_mu2()    
-        self.mu3 = self.view.get_mu3()   
-        self.g = self.view.get_g()    
+        mu = self.view.get_mu()    
+        mu1 = self.view.get_mu1()    
+        mu2 = self.view.get_mu2()    
+        mu3 = self.view.get_mu3()   
+        g = self.view.get_g()    
         
-        self.u = self.view.get_u()    
-        self.v = self.view.get_v()    
-        self.w = self.view.get_w()
+        self.mu, self.mu1, self.mu2, self.mu3, self.g = mu, mu1, mu2, mu3, g
+        
+        u = self.view.get_u()    
+        v = self.view.get_v()    
+        w = self.view.get_w()
+        
+        u, v, w = self.u, self.v, self.w
         
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
         dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
@@ -1275,71 +1294,58 @@ class Presenter:
         k_range = [min_k, max_k]
         l_range = [min_l, max_l]
         
-        self.h, self.k, self.l, \
-        self.indices, \
-        self.inverses, \
-        self.i_mask, \
-        self.i_unmask = self.model.reciprocal_mapping(h_range,
-                                                      k_range,
-                                                      l_range,
-                                                      self.nu, 
-                                                      self.nv, 
-                                                      self.nw, 
-                                                      self.mask)
+        h, k, l, \
+        indices, \
+        inverses, \
+        i_mask, \
+        i_unmask = self.model.reciprocal_mapping(h_range, k_range, l_range,
+                                                 nu, nv, nw, mask)
         
-        self.Qx, self.Qy, self.Qz, \
-        self.Qx_norm, self.Qy_norm, self.Qz_norm, \
-        self.Q = self.model.reciprocal_space_coordinate_transform(self.h, 
-                                                                  self.k, 
-                                                                  self.l, 
-                                                                  self.B, 
-                                                                  self.R)
+        self.h, self.k, self.l = h, k, l
+        self.indices, self.inverses = indices, inverses
+        self.i_mask, self.i_unmask = i_mask, i_unmask
         
-        self.ux, self.uy, self.uz, \
-        self.rx, self.ry, self.rz, \
-        self.atms = self.model.real_space_coordinate_transform(self.u, 
-                                                               self.v, 
-                                                               self.w, 
-                                                               self.atm, 
-                                                               self.A, 
-                                                               self.nu, 
-                                                               self.nv, 
-                                                               self.nw)
+        Q_arrays = self.model.reciprocal_space_coordinate_transform(h, k, l, 
+                                                                    B, R)
+        
+        Qx, Qy, Qz, Qx_norm, Qy_norm, Qz_norm, Q = Q_arrays
+        
+        self.Qx, self.Qy, self.Qz, self.Q = Qx, Qy, Qz, Q
+        self.Qx_norm, self.Qy_norm, self.Qz_norm = Qx_norm, Qy_norm, Qz_norm
+        
+        r_arrays = self.model.real_space_coordinate_transform(u, v, w, element, 
+                                                              A, nu, nv, nw)
+       
+        ux, uy, uz, rx, ry, rz, atms = r_arrays
+        
+        self.ux, self.uy, self.uz = ux, uy, uz
+        self.rx, self.ry, self.rz = rx, ry, rz
+        self.atms = atms
                                         
-        self.phase_factor, \
-        self.space_factor = self.model.exponential_factors(self.Qx, 
-                                                           self.Qy,
-                                                           self.Qz, 
-                                                           self.ux, 
-                                                           self.uy, 
-                                                           self.uz, 
-                                                           self.nu, 
-                                                           self.nv, 
-                                                           self.nw)
+        exp_factors = self.model.exponential_factors(Qx, Qy, Qz, 
+                                                     ux, uy, uz, 
+                                                     nu, nv, nw)
+         
+        phase_factor, space_factor = exp_factors
+        self.phase_factor, self.space_factor = exp_factors
                                         
         if (self.view.get_type() == 'Neutron'):
-             self.factors, \
-             self.mag_factors = self.model.neutron_factors(self.Q, 
-                                                           self.atm, 
-                                                           self.ion, 
-                                                           self.occupancy, 
-                                                           self.g, 
-                                                           self.phase_factor)
+             factors = self.model.neutron_factors(Q, element, ion, occupancy,
+                                                  g, phase_factor)
+             self.factors, self.mag_factors = factors
         else:
-             self.factors = self.model.xray_factors(self.Q, 
-                                                    self.ion, 
-                                                    self.occupancy, 
-                                                    self.phase_factor)
+             factors = self.model.xray_factors(Q, ion, occupancy, phase_factor)
+             self.factors = factors
                      
-        self.I_obs, self.I_ref, \
-        self.I_calc, self.I_raw, \
-        self.I_flat = self.model.initialize_intensity(self.intensity, 
-                                                      self.mask, self.Q)
+        I_arrays = self.model.initialize_intensity(mask, Q)
         
-        self.a_filt, self.b_filt, \
-        self.c_filt, self.d_filt, \
-        self.e_filt, self.f_filt, \
-        self.g_filt, self.h_filt = self.model.initialize_filter(self.mask)
+        self.I_obs, self.I_ref, self.I_calc, self.I_raw, self.I_flat = I_arrays
+        
+        filt_arrays = self.model.initialize_filter(mask)
+            
+        self.a_filt, self.b_filt, self.c_filt, \
+        self.d_filt, self.e_filt, self.f_filt, \
+        self.g_filt, self.h_filt, self.i_filt = filt_arrays
              
     def refinement_statistics(self):
         
@@ -1378,3 +1384,55 @@ class Presenter:
         self.prod_x_cand, self.prod_y_cand, self.prod_z_cand, \
         self.Sx_k_orig, self.Sy_k_orig, self.Sz_k_orig, \
         self.Sx_k_cand, self.Sy_k_cand, self.Sz_k_cand = arrays
+        
+    def initialize_occupational(self):
+        
+        nu, nv, nw, n_atm = self.nu, self.nv. self.nw, self.n_atm
+        
+        occupancy = self.occupancy
+        
+        A_r = self.model.random_occupancies(nu, nv, nw, n_atm, occupancy)
+        
+        self.A_r = A_r 
+        
+        H, K, L = self.H, self.K, self.L
+        
+        indices = self.indices
+        factors = self.magnetic_factors
+        
+        arrays = self.model.initialize_magnetic(A_r, H, K, L, indices, 
+                                                factors, nu, nv, nw, n_atm)
+               
+        self.A_k, self.A_k_orig, self.A_k_cand, \
+        self.F, self.F_orig, self.F_cand, \
+        self.prod, self.prod_orig, self.prod_cand, self.i_dft = arrays
+        
+    # def initialize_displacive(self):
+            
+    #     nu, nv, nw, n_atm = self.nu, self.nv. self.nw, self.n_atm
+        
+    #     displacement = self.displacement
+        
+    #     Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, 
+    #                                                  displacement)
+        
+    #     self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
+        
+    #     H, K, L = self.H, self.K, self.L
+    #     h, k, l = self.h, self.k, self.l
+        
+    #     Qx, Qy, Qz = self.Qx, self.Qy, self.Qz
+        
+    #     arrays = self.model.initialize_displacive(Ux, Uy, Uz, h, k, l, H, K, L, Qx, Qy, Qz, 
+    #                           indices, factors, nu, nv, nw, n_atm, 
+    #                           p, centering)
+       
+    #     U_r, U_r_orig, U_r_cand, Q_k, \
+    #     U_k, U_k_orig, U_k_cand, \
+    #     V_k, V_k_orig, V_k_cand, \
+    #     V_k_nuc, V_k_nuc_orig, V_k_nuc_cand, \
+    #     F, F_orig, F_cand, \
+    #     F_nuc, F_nuc_orig, F_nuc_cand, \
+    #     prod, prod_orig, prod_cand, \
+    #     prod_nuc, prod_nuc_orig, prod_nuc_cand, \
+    #     i_dft, coeffs, H_nuc, K_nuc, L_nuc, cond, even, bragg
