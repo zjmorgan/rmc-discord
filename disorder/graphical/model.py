@@ -4,7 +4,7 @@ import re
 
 import numpy as np
 
-from disorder.diffuse import experimental, space, scattering
+from disorder.diffuse import experimental, space, scattering, monocrystal
 from disorder.diffuse import magnetic, occupational, displacive
 from disorder.material import crystal, symmetry, tables
 
@@ -112,6 +112,18 @@ class Model:
         C_, D_ = crystal.orthogonalized(a_, b_, c_, alpha_, beta_, gamma_)
         
         return A_, B_, R_, C_, D_
+    
+    def anisotropic_parameters(self, displacement, D):
+        
+        if (displacement.shape[1] == 6):
+            U11, U22, U33, U23, U13, U12 = np.round(displacement.T, 4)
+        else:
+            Uiso = np.round(displacement.flatten(), 4)                
+            uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
+            U11, U22, U33 = Uiso*uiso[0,0], Uiso*uiso[1,1], Uiso*uiso[2,2]
+            U23, U13, U12 = Uiso*uiso[1,2], Uiso*uiso[0,2], Uiso*uiso[0,1]
+            
+        return U11, U22, U33, U23, U13, U12
     
     def atomic_displacement_parameters(self, U11, U22, U33, U23, U13, U12, D):
 
@@ -524,3 +536,102 @@ class Model:
                prod, prod_orig, prod_cand, \
                prod_nuc, prod_nuc_orig, prod_nuc_cand, \
                i_dft, coeffs, H_nuc, K_nuc, L_nuc, cond, even, bragg
+               
+    def reduced_crystal_symmetry(self, h_range, k_range, l_range, nh, nk, nl, 
+                                 nu, nv, nw, T, folder, filename, laue):
+               
+        indices, inverses, operators, \
+        Nu, Nv, Nw = crystal.reduced(h_range, k_range, l_range, nh, nk, nl,
+                                     nu, nv, nw, T=T, folder=folder, 
+                                     filename=filename, symmetry=laue)
+        
+        lauesym = symmetry.operators(invert=True)
+        
+        symmetries = list(lauesym.keys())
+        
+        symop = [11,1]
+        
+        for count, sym in enumerate(symmetries):
+            if (np.array([operators[p] in lauesym.get(sym) \
+                for p in range(operators.shape[0])]).all() and \
+                len(lauesym.get(sym)) == operators.shape[0]):
+                
+                symop = [count,len(lauesym.get(sym))]
+                
+        return indices, inverses, operators, Nu, Nv, Nw, symop
+    
+    def displacive_parameters(self, p):
+         
+        coeffs = displacive.coefficients(p)
+        
+        start = (np.cumsum(displacive.number(np.arange(p+1)))
+              -  displacive.number(np.arange(p+1)))[::2]
+        end = np.cumsum(displacive.number(np.arange(p+1)))[::2]
+        
+        even = []
+        for k in range(len(end)):
+            even += range(start[k], end[k])
+        even = np.array(even)
+                
+        nuclear = ['P', 'I', 'F', 'R', 'C', 'A', 'B']
+                            
+        cntr = np.argwhere([x in self.centering for x in nuclear])[0][0]
+        
+        cntr += 1
+        
+        return coeffs, even, cntr
+    
+    def magnetic_intensity(self, fname, run, ux, uy, uz, atm,
+                           h_range, k_range, l_range, indices, symop,
+                           T, B, R, twins, variants, nh, nk, nl, nu, nv, nw,
+                           Nu, Nv, Nw, g):
+        
+        r = '-{}'.format(run) if run else ''
+    
+        Sx = np.load('{}-calculated-spin-x{}.npy'.format(fname, r))
+        Sy = np.load('{}-calculated-spin-y{}.npy'.format(fname, r))
+        Sz = np.load('{}-calculated-spin-z{}.npy'.format(fname, r))
+        
+        I_calc = monocrystal.magnetic(Sx, Sy, Sz, ux, uy, uz, atm,
+                                      h_range, k_range, l_range, indices,
+                                      symop, T, B, R, twins, variants,
+                                      nh, nk, nl, nu, nv, nw, Nu, Nv, Nw, g)
+        
+        return I_calc
+                                
+    def occupational_intensity(self, fname, run, occupancy, ux, uy, uz, atm,
+                               h_range, k_range, l_range, indices, symop,
+                               T, B, R, twins, variants, nh, nk, nl, 
+                               nu, nv, nw, Nu, Nv, Nw):
+        
+        r = '-{}'.format(run) if run else ''
+            
+        A_r = np.load('{}-calculated-composition{}.npy'.format(fname, r))
+        
+        I_calc = monocrystal.occupational(A_r, occupancy, ux, uy, uz, atm,
+                                          h_range, k_range, l_range, indices, 
+                                          symop, T, B, R, twins, variants,
+                                          nh, nk, nl, nu, nv, nw, Nu, Nv, Nw)
+        
+        return I_calc
+
+    def displacive_intensity(self, fname, run, coeffs, ux, uy, uz, atm,
+                             h_range, k_range, l_range, indices, symop,
+                             T, B, R, twins, variants, nh, nk, nl, nu, nv, nw,
+                             Nu, Nv, Nw, p, even, cntr):
+        
+        r = '-{}'.format(run) if run else ''
+        
+        Ux = np.load('{}-calculated-displacement-x{}.npy'.format(fname, r))
+        Uy = np.load('{}-calculated-displacement-y{}.npy'.format(fname, r))
+        Uz = np.load('{}-calculated-displacement-z{}.npy'.format(fname, r))
+            
+        U_r = displacive.products(Ux, Uy, Uz, p)
+                
+        I_calc = monocrystal.displacive(U_r, coeffs, ux, uy, uz, atm,
+                                        h_range, k_range, l_range, indices,
+                                        symop, T, B, R, twins, variants,
+                                        nh, nk, nl, nu, nv, nw, Nu, Nv, Nw,
+                                        p, even, cntr)
+                    
+        return I_calc

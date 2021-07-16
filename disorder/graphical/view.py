@@ -1597,6 +1597,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_constant(self):
         return float(self.lineEdit_tau.text()) 
  
+    def get_order(self):
+        return int(self.lineEdit_order.text())
+    
+    def get_centering_ref(self):
+        return self.comboBox_centering_ref.currentText()
+    
     # ---
         
     def batch_checked_1d(self):
@@ -1645,3 +1651,15 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def enable_runs_calc(self, visible):
         self.lineEdit_runs_calc.setEnabled(visible)
+        
+    def get_runs_calc(self, visible):
+        int(self.lineEdit_runs_calc.text())
+ 
+    def get_order_calc(self):
+        return int(self.lineEdit_order_calc.text())
+    
+    def get_laue(self):
+        return self.comboBox_laue.currentText()
+    
+    def get_axes(self):
+        return self.comboBox_axes.currentText()

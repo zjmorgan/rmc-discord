@@ -423,13 +423,8 @@ class Presenter:
             A, B, R, C, D = self.model.crystal_matrices(a, b, c, 
                                                         alpha, beta, gamma)
             
-            if (displacement.shape[1] == 6):
-                U11, U22, U33, U23, U13, U12 = np.round(displacement.T, 4)
-            else:
-                Uiso = np.round(displacement.flatten(), 4)                
-                uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
-                U11, U22, U33 = Uiso*uiso[0,0], Uiso*uiso[1,1], Uiso*uiso[2,2]
-                U23, U13, U12 = Uiso*uiso[1,2], Uiso*uiso[0,2], Uiso*uiso[0,1]
+            U11, U22, U33, \
+            U23, U13, U12 = self.model.anisotropic_parameters(displacement)
             
             mu1, mu2, mu3 = np.round(moment.T, 4)
             
@@ -1398,7 +1393,7 @@ class Presenter:
         H, K, L = self.H, self.K, self.L
         
         indices = self.indices
-        factors = self.magnetic_factors
+        factors = self.factors
         
         arrays = self.model.initialize_magnetic(A_r, H, K, L, indices, 
                                                 factors, nu, nv, nw, n_atm)
@@ -1407,32 +1402,157 @@ class Presenter:
         self.F, self.F_orig, self.F_cand, \
         self.prod, self.prod_orig, self.prod_cand, self.i_dft = arrays
         
-    # def initialize_displacive(self):
+    def initialize_displacive(self):
             
-    #     nu, nv, nw, n_atm = self.nu, self.nv. self.nw, self.n_atm
+        nu, nv, nw, n_atm = self.nu, self.nv. self.nw, self.n_atm
         
-    #     displacement = self.displacement
+        displacement = self.displacement
         
-    #     Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, 
-    #                                                  displacement)
+        Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, 
+                                                      displacement)
         
-    #     self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
+        self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
         
-    #     H, K, L = self.H, self.K, self.L
-    #     h, k, l = self.h, self.k, self.l
+        H, K, L = self.H, self.K, self.L
+        h, k, l = self.h, self.k, self.l
         
-    #     Qx, Qy, Qz = self.Qx, self.Qy, self.Qz
+        Qx, Qy, Qz = self.Qx, self.Qy, self.Qz
         
-    #     arrays = self.model.initialize_displacive(Ux, Uy, Uz, h, k, l, H, K, L, Qx, Qy, Qz, 
-    #                           indices, factors, nu, nv, nw, n_atm, 
-    #                           p, centering)
+        indices = self.indices
+        factors = self.factors
+        
+        p = self.view.get_order()
+        centering = self.view.get_centering_ref()
+        
+        arrays = self.model.initialize_displacive(Ux, Uy, Uz, h, k, l, H, K, L, 
+                                                  Qx, Qy, Qz, indices, factors, 
+                                                  nu, nv, nw, n_atm, p, 
+                                                  centering)
        
-    #     U_r, U_r_orig, U_r_cand, Q_k, \
-    #     U_k, U_k_orig, U_k_cand, \
-    #     V_k, V_k_orig, V_k_cand, \
-    #     V_k_nuc, V_k_nuc_orig, V_k_nuc_cand, \
-    #     F, F_orig, F_cand, \
-    #     F_nuc, F_nuc_orig, F_nuc_cand, \
-    #     prod, prod_orig, prod_cand, \
-    #     prod_nuc, prod_nuc_orig, prod_nuc_cand, \
-    #     i_dft, coeffs, H_nuc, K_nuc, L_nuc, cond, even, bragg
+        self.U_r, self.U_r_orig, self.U_r_cand, self.Q_k, \
+        self.U_k, self.U_k_orig, self.U_k_cand, \
+        self.V_k, self.V_k_orig, self.V_k_cand, \
+        self.V_k_nuc, self.V_k_nuc_orig, self.V_k_nuc_cand, \
+        self.F, self.F_orig, self.F_cand, \
+        self.F_nuc, self.F_nuc_orig, self.F_nuc_cand, \
+        self.prod, self.prod_orig, self.prod_cand, \
+        self.prod_nuc, self.prod_nuc_orig, self.prod_nuc_cand, \
+        self.i_dft, self.coeffs, self.H_nuc, self.K_nuc, self.L_nuc, \
+        self.cond, self.even, self.bragg = arrays
+        
+    def calculate_intensity(self):
+
+        if (self.tableWidget_calc.rowCount() or self.progress > 0):
+
+            if (self.changed_params):
+                            
+                if (self.allocated == False):
+                    self.preprocess_supercell()
+                                                    
+                batch = self.view.batch_checked_calc()
+                
+                runs = self.view.get_runs_calc()
+                
+                # ---
+                
+                dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
+                dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
+                dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
+                
+                h_range = [min_h, max_h]
+                k_range = [min_k, max_k]
+                l_range = [min_l, max_l]
+                
+                ux, uy, uz, atm = self.ux, self.uy, self.uz, self.atm
+                
+                nu, nv, nw = self.nu, self.nv, self.nw
+                
+                folder, filename = self.folder, self.filename
+                
+                fname = self.fname
+                
+                B, R, = self.B, self.R
+                
+                occupancy, g = self.occupancy, self.g
+                
+                # ---
+                
+                twins = np.zeros((1,3,3))
+                variants = np.array([1.])
+                
+                twins[0,:,:] = np.eye(3)
+                                        
+                axes = self.view.get_axes()       
+                
+                if (axes == '(h00), (0k0), (00l)'):
+                    T = np.eye(3)
+                else:                
+                    T = np.array([[1, -1,  0],
+                                  [1,  1,  0],
+                                  [0,  0,  1]])*1.                
+                
+                laue = self.view.get_laue()
+                                
+                self.recalc_params = [nh,nk,nl,
+                                      min_h,min_k,min_l,
+                                      max_h,max_k,max_l,
+                                      laue,axes,batch,runs]
+                
+                intensity = np.zeros((nh,nk,nl))
+                            
+                indices, inverses, operators, \
+                Nu, Nv, Nw, \
+                symop = self.model.reduced_crystal_symmetry(
+                            h_range, k_range, l_range, nh, nk, nl, 
+                            nu, nv, nw, T, folder, filename, laue)
+                    
+                if (self.displacive):
+                    
+                    p = self.view.get_order_calc()
+    
+                    coeffs, even, cntr = self.model.displacive_parameters(p)
+                        
+                # ---
+                    
+                for run in range(runs):               
+    
+                    if not batch: run = None
+                        
+                    if (self.magnetic):
+                        
+                        I_calc = self.model.magnetic_intensity(
+                                     fname, run, ux, uy, uz, atm,
+                                     h_range, k_range, l_range, indices, symop,
+                                     T, B, R, twins, variants, nh, nk, nl, 
+                                     nu, nv, nw, Nu, Nv, Nw, g)
+                                                
+                    elif (self.occupational):
+                        
+                        I_calc = self.model.occupational_intensity(
+                                     fname, run, occupancy, ux, uy, uz, atm,
+                                     h_range, k_range, l_range, indices, symop,
+                                     T, B, R, twins, variants, nh, nk, nl,
+                                     nu, nv, nw, Nu, Nv, Nw)
+        
+                    else:
+                                
+                        I_calc = self.model.displacive_intensity(
+                                     fname, run, coeffs, ux, uy, uz, atm,
+                                     h_range, k_range, l_range, indices, symop,
+                                     T, B, R, twins, variants, nh, nk, nl,
+                                     nu, nv, nw, Nu, Nv, Nw, p, even, cntr)
+    
+                intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
+                            
+                intensity /= runs*operators.shape[0]
+                
+
+                            
+                
+            # sigma_h = np.float(self.tableWidget_calc.item(0, 4).text())
+            # sigma_k = np.float(self.tableWidget_calc.item(1, 4).text())
+            # sigma_l = np.float(self.tableWidget_calc.item(2, 4).text())
+
+            # sigma = [sigma_h, sigma_k, sigma_l]
+            
+            # self.I_recalc = space.blurring(self.intensity, sigma)
