@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1107</width>
-    <height>814</height>
+    <height>842</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -781,7 +781,7 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>120</height>
+              <height>150</height>
              </size>
             </property>
             <property name="autoFillBackground">
@@ -803,7 +803,7 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>120</height>
+              <height>150</height>
              </size>
             </property>
             <property name="tabPosition">
@@ -2280,7 +2280,7 @@
         <item row="2" column="1">
          <widget class="QTabWidget" name="tabWidget_correlations">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="tab_1d">
            <attribute name="title">
@@ -3232,7 +3232,7 @@
             <property name="maximumSize">
              <size>
               <width>16777215</width>
-              <height>120</height>
+              <height>150</height>
              </size>
             </property>
            </widget>

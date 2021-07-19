@@ -4099,7 +4099,7 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
                         self.magnetic = True
                         self.occupational = False
                         self.displacive = False
-                    elif (self.checkBox_occ.isChecked()):                        
+                    elif (self.checkBox_occ.isChecked()):
                         self.magnetic = False
                         self.occupational = True
                         self.displacive = False

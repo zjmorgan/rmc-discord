@@ -13,7 +13,7 @@ def f(x,y):
 def g(x,y):
     return (1-np.cos(x))/np.pi
 
-def expansion(nu, nv, nw, n_atm, value=1, structure=None, fixed=True, T=None): 
+def expansion(nu, nv, nw, n_atm, value=1, structure=None, fixed=True): 
     """
     Generate random displacement vectors.
     
@@ -42,27 +42,29 @@ def expansion(nu, nv, nw, n_atm, value=1, structure=None, fixed=True, T=None):
     
     theta = 2*np.pi*np.random.rand(nu,nv,nw,n_atm)
     phi = np.arccos(1-2*np.random.rand(nu,nv,nw,n_atm))
- 
-    if (fixed):
-        U = value
-    else:
-        U = value*np.random.rand(nu,nv,nw,n_atm)
     
-    if (T is None):
-        
-        Ux = U*np.sin(phi)*np.cos(theta)
-        Uy = U*np.sin(phi)*np.sin(theta)
-        Uz = U*np.cos(phi)
-        
+    nx = np.sin(phi)*np.cos(theta)
+    ny = np.sin(phi)*np.sin(theta)
+    nz = np.cos(phi) 
+    
+    if (len(np.shape(value)) == 0):
+        Vxx = Vyy = Vzz = np.full(n_atm, value)
+        Vyz = Vxz = Vxy = np.full(n_atm, 0)
+    elif (len(np.shape(value)) == 1):
+        Vxx = Vyy = Vzz = value
+        Vyz = Vxz = Vxy = np.full(n_atm, 0)
     else:
-        
-        x = np.sin(phi)*np.cos(theta)
-        y = np.sin(phi)*np.sin(theta)
-        z = np.cos(phi)     
-        
-        Ux = U*(T[0]*x+T[5]*y+T[4]*z)
-        Uy = U*(T[5]*x+T[1]*y+T[3]*z)
-        Uz = U*(T[4]*x+T[3]*y+T[2]*z)
+        Vxx, Vyy, Vzz = value[0], value[1], value[2]
+        Vyz, Vxz, Vxy = value[3], value[4], value[5]
+    
+    U = 1 if fixed else np.random.rand(nu,nv,nw,n_atm)
+    
+    ms = np.sqrt(Vxx*nx*nx+Vyy*ny*ny+Vzz*nz*nz\
+             +2*(Vxz*nx*nz+Vyz*ny*nz+Vxy*nx*ny))
+            
+    Ux = U*ms*nx
+    Uy = U*ms*ny
+    Uz = U*ms*nz
     
     return Ux.flatten(), Uy.flatten(), Uz.flatten()
 

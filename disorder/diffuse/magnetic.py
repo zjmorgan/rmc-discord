@@ -126,7 +126,7 @@ def form(Q, ions, g=2):
 
     """
     
-    K = 2/g-1
+    k = 2/g-1
 
     n_hkl = Q.shape[0]
     n_atm = len(ions)
@@ -135,8 +135,17 @@ def form(Q, ions, g=2):
 
     for i, ion in enumerate(ions):
 
-        A0, a0, B0, b0, C0, c0, D0 = tables.j0.get(ion)
-        A2, a2, B2, b2, C2, c2, D2 = tables.j2.get(ion)
+        if (tables.j0.get(ion) is None):
+            A0, a0, B0, b0, C0, c0, D0 = 0, 0, 0, 0, 0, 0, 0
+            A2, a2, B2, b2, C2, c2, D2 = 0, 0, 0, 0, 0, 0, 0
+        else:
+            A0, a0, B0, b0, C0, c0, D0 = tables.j0.get(ion)
+            A2, a2, B2, b2, C2, c2, D2 = tables.j2.get(ion)
+            
+        if (np.size(k) > 1):
+            K = k[i] 
+        else:
+            K = k
 
         factor[i::n_atm] = f(Q, j0(Q, A0, a0, B0, b0, C0, c0, D0),\
                                 j2(Q, A2, a2, B2, b2, C2, c2, D2), K)

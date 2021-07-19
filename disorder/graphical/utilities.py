@@ -26,6 +26,15 @@ class StandardDoubleDelegate(QtWidgets.QItemDelegate):
         
         return lineEdit
     
+class PositiveDoubleDelegate(QtWidgets.QItemDelegate):
+    
+    def createEditor(self, parent, option, index):
+        lineEdit = QtWidgets.QLineEdit(parent)
+        validator = QtGui.QDoubleValidator(0, 999999, 4, lineEdit)
+        lineEdit.setValidator(validator)
+        
+        return lineEdit
+    
 class SizeIntDelegate(QtWidgets.QItemDelegate):
     
     def createEditor(self, parent, option, index):
@@ -40,7 +49,7 @@ class WorkerSignals(QtCore.QObject):
     finished = QtCore.pyqtSignal()
     error = QtCore.pyqtSignal(tuple)
     result = QtCore.pyqtSignal(object)
-    progress = QtCore.pyqtSignal(int)
+    progress = QtCore.pyqtSignal(list)
 
 class Worker(QtCore.QRunnable):
 

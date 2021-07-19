@@ -9,8 +9,10 @@ import numpy as np
 
 from disorder.graphical.utilities import FractionalDelegate
 from disorder.graphical.utilities import StandardDoubleDelegate
+from disorder.graphical.utilities import PositiveDoubleDelegate
 from disorder.graphical.utilities import SizeIntDelegate
 
+from disorder.graphical.utilities import Worker
 from disorder.graphical.utilities import save_gui, load_gui
 
 _root = os.path.abspath(os.path.dirname(__file__))
@@ -239,6 +241,18 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                            'mu1': 9, 'mu2': 10, 'mu3': 11, 'g': 12,
                            'u': 13, 'v': 14, 'w': 15, 'active': 16}
         
+    def create_threadpool(self):
+        return QtCore.QThreadPool()
+    
+    def worker(self, slot):
+        return Worker(slot)
+        
+    def progress(self, worker, slot):
+        worker.signals.progress.connect(slot)
+        
+    def finished(self, worker, slot):
+        worker.signals.finished.connect(slot)
+        
     def new_triggered(self, slot): 
         self.actionNew.triggered.connect(slot)    
         
@@ -264,11 +278,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.lineEdit_lat.setText('')
         
-        self.tableWidget_CIF.setRowCount(0)
-        self.tableWidget_CIF.setColumnCount(0)
-        
-        self.tableWidget_atm.setRowCount(0)
-        self.tableWidget_atm.setColumnCount(0)
+        self.clear_atom_site_table()
+        self.clear_unit_cell_table()
         
         # ---
         
@@ -297,8 +308,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_min_exp.setText('')       
         self.lineEdit_max_exp.setText('')       
 
-        self.tableWidget_exp.setRowCount(0)
-        self.tableWidget_exp.setColumnCount(0)
+        self.clear_experiment_table()
         
         # ---
                 
@@ -328,8 +338,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_prefactor.setText('%1.2e' % 1e+4)
         self.lineEdit_tau.setText('%1.2e' % 1e-3)
         
-        self.lineEdit_min_ref.setText('')       
-        self.lineEdit_max_ref.setText('')    
+        self.lineEdit_min_ref.setText('')
+        self.lineEdit_max_ref.setText('')
 
         self.lineEdit_chi_sq.setText('') 
 
@@ -376,8 +386,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         # ---
                         
-        self.tableWidget_calc.setRowCount(0)
-        self.tableWidget_calc.setColumnCount(0)
+        self.clear_recalculation_table()
         
         self.lineEdit_order_calc.setText('2')
         
@@ -403,9 +412,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
             
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 
-                                                        'Save file',
-                                                        '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
                                                         'ini files *.ini',
                                                         options=options)   
         
@@ -447,152 +454,170 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                                                QtWidgets.QMessageBox.Yes)
         
         return choice == QtWidgets.QMessageBox.Yes
+    
+    def get_table_item_info(self, item):
+        return item.row(), item.column(), item.text()
         
     def get_every_site(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['site'])
+        return self.get_every_unit_cell_table_col(self.unit_table['site'], int)
     
     def get_every_atom(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['atom'])
+        return self.get_every_unit_cell_table_col(self.unit_table['atom'], str)
     
     def get_every_isotope(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['isotope'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['isotope'], str)
     
     def get_every_ion(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['ion'])
+        return self.get_every_unit_cell_table_col(self.unit_table['ion'], str)
 
     def get_every_occupancy(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['occupancy'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['occupancy'], float)
 
     def get_every_Uiso(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['Uiso'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['Uiso'], float)
     
     def get_every_U11(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['U11'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['U11'], float)
     
     def get_every_U22(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['U22'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['U22'], float)
     
     def get_every_U33(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['U33'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['U33'], float)
     
     def get_every_U23(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['U23'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['U23'], float)
     
     def get_every_U13(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['U13'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['U13'], float)
     
     def get_every_U12(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['U12'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['U12'], float)
     
     def get_every_U1(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['U1'])
+        return self.get_every_unit_cell_table_col(self.unit_table['U1'], float)
     
     def get_every_U2(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['U2'])
+        return self.get_every_unit_cell_table_col(self.unit_table['U2'], float)
     
     def get_every_U3(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['U3'])
+        return self.get_every_unit_cell_table_col(self.unit_table['U3'], float)
 
     def get_every_mu(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['mu'])
+        return self.get_every_unit_cell_table_col(self.unit_table['mu'], float)
     
     def get_every_mu1(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['mu1'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['mu1'], float)
     
     def get_every_mu2(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['mu2'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['mu2'], float)
     
     def get_every_mu3(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['mu3'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['mu3'], float)
    
     def get_every_g(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['g'])
+        return self.get_every_unit_cell_table_col(self.unit_table['g'], float)
     
     def get_every_u(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['u'])
+        return self.get_every_unit_cell_table_col(self.unit_table['u'], float)
     
     def get_every_v(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['v'])
+        return self.get_every_unit_cell_table_col(self.unit_table['v'], float)
     
     def get_every_w(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['w'])
+        return self.get_every_unit_cell_table_col(self.unit_table['w'], float)
     
     def get_every_operator(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['operator'])
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['operator'], str)
 
     def get_every_magnetic_operator(self):
-        return self.get_every_unit_cell_table_col(self.unit_table['moment'])    
+        return self.get_every_unit_cell_table_col(
+                   self.unit_table['moment'], str)    
     
     # ---
 
     def get_site(self):
-        return self.get_unit_cell_table_col(self.unit_table['site'])
+        return self.get_unit_cell_table_col(self.unit_table['site'], int)
 
     def get_atom(self):
-        return self.get_unit_cell_table_col(self.unit_table['atom'])
+        return self.get_unit_cell_table_col(self.unit_table['atom'], str)
     
     def get_isotope(self):
-        return self.get_unit_cell_table_col(self.unit_table['isotope'])
+        return self.get_unit_cell_table_col(self.unit_table['isotope'], str)
     
     def get_ion(self):
-        return self.get_unit_cell_table_col(self.unit_table['ion'])
+        return self.get_unit_cell_table_col(self.unit_table['ion'], str)
 
     def get_occupancy(self):
-        return self.get_unit_cell_table_col(self.unit_table['occupancy'])
+        return self.get_unit_cell_table_col(
+                    self.unit_table['occupancy'], float)
 
     def get_Uiso(self):
-        return self.get_unit_cell_table_col(self.unit_table['Uiso'])
+        return self.get_unit_cell_table_col(self.unit_table['Uiso'], float)
     
     def get_U11(self):
-        return self.get_unit_cell_table_col(self.unit_table['U11'])
+        return self.get_unit_cell_table_col(self.unit_table['U11'], float)
     
     def get_U22(self):
-        return self.get_unit_cell_table_col(self.unit_table['U22'])
+        return self.get_unit_cell_table_col(self.unit_table['U22'], float)
     
     def get_U33(self):
-        return self.get_unit_cell_table_col(self.unit_table['U33'])
+        return self.get_unit_cell_table_col(self.unit_table['U33'], float)
     
     def get_U23(self):
-        return self.get_unit_cell_table_col(self.unit_table['U23'])
+        return self.get_unit_cell_table_col(self.unit_table['U23'], float)
     
     def get_U13(self):
-        return self.get_unit_cell_table_col(self.unit_table['U13'])
+        return self.get_unit_cell_table_col(self.unit_table['U13'], float)
     
     def get_U12(self):
-        return self.get_unit_cell_table_col(self.unit_table['U12'])
+        return self.get_unit_cell_table_col(self.unit_table['U12'], float)
     
     def get_U1(self):
-        return self.get_unit_cell_table_col(self.unit_table['U1'])
+        return self.get_unit_cell_table_col(self.unit_table['U1'], float)
     
     def get_U2(self):
-        return self.get_unit_cell_table_col(self.unit_table['U2'])
+        return self.get_unit_cell_table_col(self.unit_table['U2'], float)
     
     def get_U3(self):
-        return self.get_unit_cell_table_col(self.unit_table['U3'])
+        return self.get_unit_cell_table_col(self.unit_table['U3'], float)
 
     def get_mu(self):
-        return self.get_unit_cell_table_col(self.unit_table['mu'])
+        return self.get_unit_cell_table_col(self.unit_table['mu'], float)
     
     def get_mu1(self):
-        return self.get_unit_cell_table_col(self.unit_table['mu1'])
+        return self.get_unit_cell_table_col(self.unit_table['mu1'], float)
     
     def get_mu2(self):
-        return self.get_unit_cell_table_col(self.unit_table['mu2'])
+        return self.get_unit_cell_table_col(self.unit_table['mu2'], float)
     
     def get_mu3(self):
-        return self.get_unit_cell_table_col(self.unit_table['mu3'])
+        return self.get_unit_cell_table_col(self.unit_table['mu3'], float)
    
     def get_g(self):
-        return self.get_unit_cell_table_col(self.unit_table['g'])
+        return self.get_unit_cell_table_col(self.unit_table['g'], float)
     
     def get_u(self):
-        return self.get_unit_cell_table_col(self.unit_table['u'])
+        return self.get_unit_cell_table_col(self.unit_table['u'], float)
     
     def get_v(self):
-        return self.get_unit_cell_table_col(self.unit_table['v'])
+        return self.get_unit_cell_table_col(self.unit_table['v'], float)
     
     def get_w(self):
-        return self.get_unit_cell_table_col(self.unit_table['w'])
+        return self.get_unit_cell_table_col(self.unit_table['w'], float)
         
     def get_nu(self):
         return int(self.lineEdit_nu.text())
@@ -656,9 +681,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
             
         filename, \
-        filters = QtWidgets.QFileDialog.getOpenFileName(self, 
-                                                        'Open file', 
-                                                        '.', 
+        filters = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '.', 
                                                         'CIF files *.cif;;'\
                                                         'mCIF files *.mcif',
                                                         options=options)
@@ -668,7 +691,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def button_clicked_CIF(self, slot):
         self.pushButton_load_CIF.clicked.connect(slot)
         
-    def get_every_unit_cell_table_col(self, j):       
+    def get_every_unit_cell_table_col(self, j, dtype):       
         data = []
         for i in range(self.tableWidget_CIF.rowCount()):
             item = self.tableWidget_CIF.item(i, j)
@@ -676,21 +699,21 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                 data.append(str(item.text()))
             else:
                 data.append(str(''))
-        return np.array(data)
+        return np.array(data).astype(dtype)
                 
-    def get_unit_cell_table_col(self, j):
+    def get_unit_cell_table_col(self, j, dtype):
         data = []
         for i in range(self.tableWidget_CIF.rowCount()):
             if (not self.tableWidget_CIF.isRowHidden(i)):
                 data.append(str(self.tableWidget_CIF.item(i, j).text()))
-        return np.array(data)
+        return np.array(data).astype(dtype)
     
-    def get_atom_site_table_col(self, j):
+    def get_atom_site_table_col(self, j, dtype):
         data = []
         for i in range(self.tableWidget_atm.rowCount()):
             if (not self.tableWidget_atm.isRowHidden(i)):
                 data.append(str(self.tableWidget_atm.item(i, j).text()))
-        return np.array(data)
+        return np.array(data).astype(dtype)
     
     def set_unit_cell_table_col(self, data, j):
         for i in range(self.tableWidget_CIF.rowCount()):
@@ -844,13 +867,13 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tableWidget_atm.setVerticalHeaderLabels(vert_lbl)
         
     def clear_unit_cell_table(self):
-        self.tableWidget_CIF.disconnect()
+        # self.tableWidget_CIF.disconnect()
         self.tableWidget_CIF.clearContents()
         self.tableWidget_CIF.setRowCount(0)
         self.tableWidget_CIF.setColumnCount(0)
         
     def clear_atom_site_table(self):
-        self.tableWidget_atm.disconnect()
+        # self.tableWidget_atm.disconnect()
         self.tableWidget_atm.clearContents()
         self.tableWidget_atm.setRowCount(0)
         self.tableWidget_atm.setColumnCount(0)
@@ -1152,7 +1175,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def item_changed_atom_site_table(self, slot):
         self.tableWidget_atm.itemChanged.connect(slot)
-        
+                
     # ---
         
     def create_experiment_table(self):
@@ -1226,7 +1249,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def set_experiment_binning_h(self, size, minimum, maximum):
         i = 0
-        text = '-' if size == 0 else np.round((maximum-minimum)/(size-1),4)
+        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
         item = QtWidgets.QTableWidgetItem(str(text))
         self.tableWidget_exp.setItem(i, 0, item)
         
@@ -1239,7 +1262,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def set_experiment_binning_k(self, size, minimum, maximum):
         i = 1
-        text = '-' if size == 0 else np.round((maximum-minimum)/(size-1),4)
+        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
         item = QtWidgets.QTableWidgetItem(str(text))
         self.tableWidget_exp.setItem(i, 0, item)
         
@@ -1252,7 +1275,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def set_experiment_binning_l(self, size, minimum, maximum):
         i = 2
-        text = '-' if size == 0 else np.round((maximum-minimum)/(size-1),4)
+        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
         item = QtWidgets.QTableWidgetItem(str(text))
         self.tableWidget_exp.setItem(i, 0, item)
         
@@ -1492,8 +1515,14 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_plot_exp_canvas(self):
         return self.canvas_exp
     
+    def clear_plot_exp_canvas(self):
+        self.canvas_exp.figure.clear()
+        self.canvas_exp.draw()
+        self.lineEdit_min_exp.setText('')       
+        self.lineEdit_max_exp.setText('')    
+
     def index_changed_plot_exp(self, slot):
-        self.comboBox_norm_exp.currentIndexChanged.connect(slot)
+        self.comboBox_plot_exp.currentIndexChanged.connect(slot)
         
     def index_changed_norm_exp(self, slot):
         self.comboBox_norm_exp.currentIndexChanged.connect(slot)
@@ -1539,9 +1568,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
             
         filename, \
-        filters = QtWidgets.QFileDialog.getOpenFileName(self, 
-                                                        'Open file', 
-                                                        '.', 
+        filters = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '.', 
                                                         'NeXus files *.nxs',
                                                         options=options)
         
@@ -1549,6 +1576,146 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def button_clicked_NXS(self, slot):
         self.pushButton_load_NXS.clicked.connect(slot)
+        
+    def create_recalculation_table(self, dh, nh, min_h, max_h, 
+                                         dk, nk, min_k, max_k, 
+                                         dl, nl, min_l, max_l):
+        
+        self.tableWidget_calc.setRowCount(3)
+        self.tableWidget_calc.setColumnCount(5)
+        
+        data = [[dh, nh, min_h, max_h, 0.0], 
+                [dk, nk, min_k, max_k, 0.0], 
+                [dl, nl, min_l, max_l, 0.0]]
+        
+        for i in range(self.tableWidget_calc.rowCount()):
+            for j in range(self.tableWidget_calc.columnCount()):
+                item = QtWidgets.QTableWidgetItem(str(data[i][j]))
+                self.tableWidget_calc.setItem(i, j, item)
+        
+        lbl = 'step,size,min,max,filter'    
+        lbl = lbl.split(',')
+        self.tableWidget_calc.setHorizontalHeaderLabels(lbl)
+        
+        lbl = 'h,k,l'
+        lbl = lbl.split(',')
+        self.tableWidget_calc.setVerticalHeaderLabels(lbl)
+        
+    def clear_recalculation_table(self):
+        self.tableWidget_calc.disconnect()
+        self.tableWidget_calc.clearContents()
+        self.tableWidget_calc.setRowCount(0)
+        self.tableWidget_calc.setColumnCount(0)
+        
+    def format_recalculation_table(self):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        stretch = QtWidgets.QHeaderView.Stretch
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+
+        for i in range(self.tableWidget_calc.rowCount()):
+            for j in range(self.tableWidget_calc.columnCount()):
+                item = self.tableWidget_calc.item(i, j)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    if (j == 0): item.setFlags(flags)
+
+        delegate = SizeIntDelegate(self.tableWidget_calc)
+        self.tableWidget_calc.setItemDelegateForColumn(1, delegate)
+        delegate = StandardDoubleDelegate(self.tableWidget_calc)
+        self.tableWidget_calc.setItemDelegateForColumn(2, delegate)
+        self.tableWidget_calc.setItemDelegateForColumn(3, delegate)
+        delegate = PositiveDoubleDelegate(self.tableWidget_calc)
+        self.tableWidget_calc.setItemDelegateForColumn(4, delegate)
+        
+        horiz_hdr = self.tableWidget_calc.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        
+    def get_recalculation_binning_h(self):       
+        i = 0
+        text = self.tableWidget_calc.item(i, 0).text()
+        step = 0 if text == '-' else float(text)
+        size = int(self.tableWidget_calc.item(i, 1).text()) 
+        mininum = float(self.tableWidget_calc.item(i, 2).text())
+        maximum = float(self.tableWidget_calc.item(i, 3).text())
+        return step, size, mininum, maximum
+    
+    def get_recalculation_binning_k(self):       
+        i = 1
+        text = self.tableWidget_calc.item(i, 0).text()
+        step = 0 if text == '-' else float(text)
+        size = int(self.tableWidget_calc.item(i, 1).text()) 
+        mininum = float(self.tableWidget_calc.item(i, 2).text())
+        maximum = float(self.tableWidget_calc.item(i, 3).text())
+        return step, size, mininum, maximum
+    
+    def get_recalculation_binning_l(self):       
+        i = 2
+        text = self.tableWidget_calc.item(i, 0).text()
+        step = 0 if text == '-' else float(text)
+        size = int(self.tableWidget_calc.item(i, 1).text()) 
+        mininum = float(self.tableWidget_calc.item(i, 2).text())
+        maximum = float(self.tableWidget_calc.item(i, 3).text())
+        return step, size, mininum, maximum
+    
+    def set_recalculation_binning_h(self, size, minimum, maximum):
+        i = 0
+        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
+        item = QtWidgets.QTableWidgetItem(str(text))
+        self.tableWidget_calc.setItem(i, 0, item)
+        
+        item = QtWidgets.QTableWidgetItem(str(size))
+        self.tableWidget_calc.setItem(i, 1, item)   
+        item = QtWidgets.QTableWidgetItem(str(minimum))
+        self.tableWidget_calc.setItem(i, 2, item)  
+        item = QtWidgets.QTableWidgetItem(str(maximum))
+        self.tableWidget_calc.setItem(i, 3, item)
+        
+    def set_recalculation_binning_k(self, size, minimum, maximum):
+        i = 1
+        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
+        item = QtWidgets.QTableWidgetItem(str(text))
+        self.tableWidget_calc.setItem(i, 0, item)
+        
+        item = QtWidgets.QTableWidgetItem(str(size))
+        self.tableWidget_calc.setItem(i, 1, item)   
+        item = QtWidgets.QTableWidgetItem(str(minimum))
+        self.tableWidget_calc.setItem(i, 2, item)  
+        item = QtWidgets.QTableWidgetItem(str(maximum))
+        self.tableWidget_calc.setItem(i, 3, item)
+        
+    def set_recalculation_binning_l(self, size, minimum, maximum):
+        i = 2
+        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
+        item = QtWidgets.QTableWidgetItem(str(text))
+        self.tableWidget_calc.setItem(i, 0, item)
+        
+        item = QtWidgets.QTableWidgetItem(str(size))
+        self.tableWidget_calc.setItem(i, 1, item)   
+        item = QtWidgets.QTableWidgetItem(str(minimum))
+        self.tableWidget_calc.setItem(i, 2, item)  
+        item = QtWidgets.QTableWidgetItem(str(maximum))
+        self.tableWidget_calc.setItem(i, 3, item)
+        
+    def get_recalculation_filter(self):       
+        sigma_h = float(self.tableWidget_calc.item(0, 4).text())
+        sigma_k = float(self.tableWidget_calc.item(1, 4).text())
+        sigma_l = float(self.tableWidget_calc.item(2, 4).text())
+        return sigma_h, sigma_k, sigma_l
+        
+    def block_recalculation_table_signals(self):
+        self.tableWidget_calc.blockSignals(True)
+
+    def unblock_recalculation_table_signals(self):
+        self.tableWidget_calc.blockSignals(False)
+        
+    def item_changed_recalculation_table(self, slot):
+        self.tableWidget_calc.itemChanged.connect(slot)
+        
+    def get_recalculation_table_row_count(self):
+        return self.tableWidget_calc.rowCount()
+    
+    def get_unit_recalculation_col_count(self):
+        return self.tableWidget_calc.columnCount()
         
     # ---
     
@@ -1560,6 +1727,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def enable_runs(self, visible):
         self.lineEdit_runs.setEnabled(visible)
+        
+    def enable_disorder_mag(self, visible):
+        self.checkBox_mag.setEnabled(visible)
         
     def clicked_disorder_mag(self, slot):
         self.checkBox_mag.clicked.connect(slot)
@@ -1603,6 +1773,148 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_centering_ref(self):
         return self.comboBox_centering_ref.currentText()
     
+    def get_filter_ref_h(self):
+        return int(self.lineEdit_filter_ref_h.text())
+    
+    def get_filter_ref_k(self):
+        return int(self.lineEdit_filter_ref_k.text())
+
+    def get_filter_ref_l(self):
+        return int(self.lineEdit_filter_ref_l.text())
+    
+    def get_progress(self):
+        return int(self.progressBar_ref.value())
+    
+    def set_progress(self, progress):
+        self.progressBar_ref.setValue(progress)
+        
+    def get_run(self):
+        return int(self.lineEdit_run.text())
+        
+    def set_run(self, batch):
+        self.lineEdit_run.setText(str(batch))
+     
+    def set_chi_sq(self, chi_sq):
+        self.lineEdit_chi_sq.setText('{:1.4e}'.format(chi_sq))
+        
+    def enable_refinement(self, visible):
+        self.pushButton_run.setEnabled(visible)
+        
+    def get_runs(self):
+        return int(self.lineEdit_runs.text())
+    
+    def set_runs(self, runs):
+        self.lineEdit_runs.setText(str(runs))
+        
+    def get_cycles(self):
+        return int(self.lineEdit_cycles.text())
+    
+    def clicked_run(self, slot):
+        self.pushButton_run.clicked.connect(slot)
+    
+    def clicked_stop(self, slot):
+        self.pushButton_stop.clicked.connect(slot)
+        
+    def clicked_reset(self, slot):
+        self.pushButton_reset_run.clicked.connect(slot)
+        
+    def get_filter_h(self):
+        return float(self.lineEdit_filter_ref_h.text())
+ 
+    def get_filter_k(self):
+        return float(self.lineEdit_filter_ref_k.text())
+    
+    def get_filter_l(self):
+        return float(self.lineEdit_filter_ref_l.text())
+    
+    def set_min_ref(self, value):
+        self.lineEdit_min_ref.setText('{:1.4e}'.format(value))
+
+    def set_max_ref(self, value):
+        self.lineEdit_max_ref.setText('{:1.4e}'.format(value))
+        
+    def get_min_ref(self):
+        return float(self.lineEdit_min_ref.text())
+
+    def get_max_ref(self):
+        return float(self.lineEdit_max_ref.text())
+    
+    def finished_editing_min_ref(self, slot):
+        self.lineEdit_min_ref.editingFinished.connect(slot)
+
+    def finished_editing_max_ref(self, slot):
+        self.lineEdit_max_ref.editingFinished.connect(slot)
+        
+    def validate_min_ref(self):
+        maximum = float(self.lineEdit_max_ref.text())
+        validator = QtGui.QDoubleValidator(np.finfo(float).min, maximum, 4)
+        self.lineEdit_min_ref.setValidator(validator)
+        
+    def validate_max_ref(self):
+        minimum = float(self.lineEdit_min_ref.text())
+        validator = QtGui.QDoubleValidator(minimum, np.finfo(float).max, 4)
+        self.lineEdit_max_ref.setValidator(validator)
+    
+    def get_plot_ref(self):
+        index = self.comboBox_plot_ref.currentIndex()    
+        return self.comboBox_plot_ref.itemText(index)
+            
+    def get_norm_ref(self):
+        index = self.comboBox_norm_ref.currentIndex()    
+        return self.comboBox_norm_ref.itemText(index)
+    
+    def get_plot_ref_canvas(self):
+        return self.canvas_ref
+    
+    def clear_plot_ref_canvas(self):
+        self.canvas_ref.figure.clear()
+        self.canvas_ref.draw()
+        self.lineEdit_min_ref.setText('')       
+        self.lineEdit_max_ref.setText('')    
+        self.lineEdit_chi_sq.setText('') 
+        
+    def index_changed_plot_ref(self, slot):
+        self.comboBox_plot_ref.currentIndexChanged.connect(slot)
+        
+    def index_changed_norm_ref(self, slot):
+        self.comboBox_norm_ref.currentIndexChanged.connect(slot)
+        
+    def set_slice(self, value):
+        self.lineEdit_slice.setText(str(value))
+        
+    def get_slice(self):
+        text = self.lineEdit_slice.text()
+        if (text != ''): return float(text) 
+        
+    def get_slice_hkl(self):
+        index = self.comboBox_slice.currentIndex()    
+        return self.comboBox_slice.itemText(index)
+    
+    def index_changed_slice_hkl(self, slot):
+        self.comboBox_slice.currentIndexChanged.connect(slot)
+        
+    def finished_editing_slice(self, slot):
+        self.lineEdit_slice.editingFinished.connect(slot)
+        
+    def get_plot_chi_sq_canvas(self):
+        return self.canvas_chi_sq
+    
+    def clear_plot_chi_sq_canvas(self):
+        self.canvas_chi_sq.figure.clear()
+        self.canvas_chi_sq.draw()
+        
+    def get_plot_top_chi_sq(self,):
+        return self.comboBox_plot_top_chi_sq.currentText()
+
+    def get_plot_bottom_chi_sq(self):
+        return self.comboBox_plot_bottom_chi_sq.currentText()
+        
+    def index_changed_plot_top_chi_sq(self, slot):
+        self.comboBox_plot_top_chi_sq.currentIndexChanged.connect(slot)
+
+    def index_changed_plot_bottom_chi_sq(self, slot):
+        self.comboBox_plot_bottom_chi_sq.currentIndexChanged.connect(slot)
+        
     # ---
         
     def batch_checked_1d(self):
@@ -1614,6 +1926,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def enable_runs_1d(self, visible):
         self.lineEdit_runs_corr_1d.setEnabled(visible)
         
+    def set_runs_1d(self, runs):
+        self.lineEdit_runs_corr_1d.setText(str(runs))
+        
     def batch_checked_3d(self):
         return self.checkBox_batch_corr_3d.isChecked()
     
@@ -1622,6 +1937,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def enable_runs_3d(self, visible):
         self.lineEdit_runs_corr_3d.setEnabled(visible)
+        
+    def set_runs_3d(self, runs):
+        self.lineEdit_runs_corr_3d.setText(str(runs))
       
     def set_correlations_1d_type(self):
         selection = self.comboBox_correlations_1d.currentIndex()    
@@ -1641,6 +1959,15 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def index_changed_correlations_3d(self, slot):
         self.comboBox_correlations_3d.currentIndexChanged.connect(slot)
         
+    def fixed_moment_check(self):
+        return self.checkBox_fixed_moment.isChecked()
+
+    def fixed_composition_check(self):
+        return self.checkBox_fixed_composition.isChecked()
+        
+    def fixed_displacement_check(self):
+        return self.checkBox_fixed_displacement.isChecked()
+        
     # ---
         
     def batch_checked_calc(self):
@@ -1651,6 +1978,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def enable_runs_calc(self, visible):
         self.lineEdit_runs_calc.setEnabled(visible)
+        
+    def set_runs_calc(self, runs):
+        self.lineEdit_runs_calc.setText(str(runs))
         
     def get_runs_calc(self, visible):
         int(self.lineEdit_runs_calc.text())

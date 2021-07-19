@@ -1,6 +1,7 @@
 #!/usr/bin/env/python3
 
 import sys
+
 import numpy as np
 
 from disorder.graphical import plots
@@ -40,8 +41,28 @@ class Presenter:
         self.view.clicked_disorder_occ(self.disorder_check_occ)
         self.view.clicked_disorder_dis(self.disorder_check_dis)
         
+        self.view.clicked_run(self.run_refinement)
+        self.view.clicked_stop(self.stop_refinement)
+        self.view.clicked_reset(self.reset_refinement)
+        
         self.view.index_changed_correlations_1d(self.change_type_1d)
         self.view.index_changed_correlations_3d(self.change_type_3d)
+        
+        self.view.finished_editing_min_ref(self.draw_plot_ref)
+        self.view.finished_editing_max_ref(self.draw_plot_ref)
+        self.view.finished_editing_slice(self.draw_plot_ref)
+        
+        self.view.index_changed_slice_hkl(self.redraw_plot_ref)
+        self.view.index_changed_plot_ref(self.redraw_plot_ref)
+        self.view.index_changed_norm_ref(self.redraw_plot_ref)
+        
+        self.view.index_changed_plot_top_chi_sq(self.draw_plot_chi_sq)
+        self.view.index_changed_plot_bottom_chi_sq(self.draw_plot_chi_sq)
+        
+        self.threadpool = self.view.create_threadpool()
+        
+        self.allocated = False
+        self.iteration = 0
         
     def new_application(self):
         
@@ -99,6 +120,7 @@ class Presenter:
         n_cols = self.view.get_atom_site_table_col_count()
         
         if (self.view.get_type() == 'Neutron'):
+            self.view.enable_disorder_mag(True)
             self.view.add_item_magnetic()
             if (n_cols > 0):
                 atm = self.view.get_ion_combo()
@@ -109,6 +131,7 @@ class Presenter:
                 self.view.set_atom_combo(atm)
                 self.populate_atoms()
         else:
+            self.view.enable_disorder_mag(False)
             self.view.remove_item_magnetic()
             if (n_cols > 0):
                 atm = self.view.get_atom_combo()
@@ -124,15 +147,15 @@ class Presenter:
     def populate_atoms(self):
         
         n_rows = self.view.get_atom_site_table_row_count()
-        sites = self.view.get_every_site().astype(int)-1
+        sites = self.view.get_every_site()-1
                 
         isotope = self.view.get_atom_combo()
         atm = self.model.iso_symbols(isotope)
         nuc = self.model.remove_symbols(isotope)
         
-        atoms = self.view.get_every_atom().astype('<U2')
+        atoms = self.view.get_every_atom().astype('<U3')
         nuclei = self.view.get_every_isotope().astype('<U3')
-        ions = self.view.get_every_ion().astype('<U2')
+        ions = self.view.get_every_ion().astype('<U3')
         
         mag_charges = self.model.get_magnetic_form_factor_keys()
         mag_atoms = self.model.ion_symbols(mag_charges)
@@ -163,15 +186,15 @@ class Presenter:
     def populate_ions(self):
         
         n_rows = self.view.get_atom_site_table_row_count()
-        sites = self.view.get_every_site().astype(int)-1
+        sites = self.view.get_every_site()-1
                 
         charge = self.view.get_ion_combo()
-        atm = self.model.iso_symbols(charge)
+        atm = self.model.ion_symbols(charge)
         ion = self.model.remove_symbols(charge)
-        
-        atoms = self.view.get_every_atom().astype('<U2')
-        ions = self.view.get_every_ion().astype('<U2')
-                
+            
+        atoms = self.view.get_every_atom().astype('<U3')
+        ions = self.view.get_every_ion().astype('<U3')
+                        
         for row in range(n_rows):
             rows = np.argwhere(sites == row)
             if (len(rows) > 0):
@@ -179,7 +202,7 @@ class Presenter:
                 if (atm[row] != ''):
                     atoms[row_range[0]:row_range[1]] = atm[row]
                 ions[row_range[0]:row_range[1]+1] = ion[row]
-                
+                                                
         self.view.set_unit_cell_atom(atoms)
         self.view.set_unit_cell_ion(ions)
                 
@@ -188,8 +211,8 @@ class Presenter:
         
     def update_atom_site_table(self, item):
         
-        row, col, text = item.row(), item.column(), item.text()
-        sites = self.view.get_every_site().astype(int)-1
+        row, col, text = self.view.get_table_item_info(item)
+        sites = self.view.get_every_site()-1
         rows = np.argwhere(sites == row)
         if (len(rows) > 0):
             row_range = [rows.min(), rows.max()+1]
@@ -231,9 +254,9 @@ class Presenter:
         
     def update_mu(self, row_range, moment, comp):
         
-        mu1 = self.view.get_every_mu1().astype(float)
-        mu2 = self.view.get_every_mu2().astype(float)
-        mu3 = self.view.get_every_mu3().astype(float)
+        mu1 = self.view.get_every_mu1()
+        mu2 = self.view.get_every_mu2()
+        mu3 = self.view.get_every_mu3()
         mag_op = self.view.get_every_magnetic_operator()
         for row in range(*row_range):
             mu = [mu1[row], mu2[row], mu3[row]]
@@ -251,9 +274,9 @@ class Presenter:
         
     def update_moment_magnitudes(self):
         
-        mu1 = self.view.get_every_mu1().astype(float)
-        mu2 = self.view.get_every_mu2().astype(float)
-        mu3 = self.view.get_every_mu3().astype(float)
+        mu1 = self.view.get_every_mu1()
+        mu2 = self.view.get_every_mu2()
+        mu3 = self.view.get_every_mu3()
         
         a, b, c, alpha, beta, gamma = self.view.get_lattice_parameters()
         A, B, R, C, D = self.model.crystal_matrices(a, b, c, 
@@ -316,10 +339,10 @@ class Presenter:
                                                     alpha, beta, gamma)
         
         Uiso, \
-        U1, \
-        U2, \
-        U3 = self.model.atomic_displacement_parameters(U11, U22, U33, 
-                                                       U23, U13, U12, D)
+        U1, U2, U3 = self.model.atomic_displacement_parameters(U11, U22, U33, 
+                                                               U23, U13, U12,
+                                                               D)
+        
         Uiso = np.round(Uiso, 4)
         U1 = np.round(U1, 4)
         U2 = np.round(U2, 4)
@@ -424,7 +447,7 @@ class Presenter:
                                                         alpha, beta, gamma)
             
             U11, U22, U33, \
-            U23, U13, U12 = self.model.anisotropic_parameters(displacement)
+            U23, U13, U12 = self.model.anisotropic_parameters(displacement, D)
             
             mu1, mu2, mu3 = np.round(moment.T, 4)
             
@@ -453,8 +476,8 @@ class Presenter:
             
             g = np.full(n_atm, 2.0)
             
-            empty = np.full(n_atm, '-')
-            
+            empty = np.full(n_atm, '-', dtype='<U3')
+                        
             self.view.create_atom_site_table(n_sites)
             self.view.show_atom_site_table_cols()
             
@@ -480,6 +503,7 @@ class Presenter:
             self.view.show_unit_cell_table_cols()
             
             self.view.set_unit_cell_site(site+1)  
+            self.view.set_unit_cell_atom(empty)
             self.view.set_unit_cell_ion(empty)
             self.view.set_unit_cell_isotope(empty)
             self.view.set_unit_cell_occupancy(occupancy)
@@ -556,20 +580,14 @@ class Presenter:
         self.view.validate_min_exp()
         self.view.validate_max_exp()
         
-        plots.plot_exp(canvas, 
-                       data, 
-                       h, k, l, 
-                       ih, ik, il, 
-                       min_h, min_k, min_l, 
-                       max_h, max_k, max_l, 
-                       nh, nk, nl, 
-                       matrix_h, matrix_k, matrix_l,
-                       scale_h, scale_k, scale_l,
+        plots.plot_exp(canvas, data, h, k, l, ih, ik, il, 
+                       min_h, min_k, min_l, max_h, max_k, max_l, nh, nk, nl, 
+                       matrix_h, matrix_k, matrix_l, scale_h, scale_k, scale_l,
                        norm, vmin, vmax)
         
     def redraw_plot_exp(self):
         
-        if (self.view.get_plot_exp() == 'Neutron'):
+        if (self.view.get_plot_exp() == 'Intensity'):
             self.exp_arr_m = self.signal_m 
         else:
             self.exp_arr_m = self.error_sq_m 
@@ -581,7 +599,7 @@ class Presenter:
         
     def update_experiment_table(self, item):
         
-        row, col, text = item.row(), item.column(), item.text()
+        row, col, text = self.view.get_table_item_info(item)
         
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
         dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
@@ -1112,6 +1130,37 @@ class Presenter:
 
         self.redraw_plot_exp()
         
+    def populate_recalculation_table(self):
+        
+        dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
+        dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
+        dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
+        
+        self.view.create_recalculation_table(dh, nh, min_h, max_h,
+                                             dk, nk, min_k, max_k,
+                                             dl, nl, min_l, max_l)
+        
+        self.view.format_recalculation_table()
+        
+        self.view.item_changed_recalculation_table(
+            self.update_recalculation_table
+        )
+
+    def update_recalculation_table(self):
+                
+        dh, nh, min_h, max_h = self.view.get_recalculation_binning_h()
+        dk, nk, min_k, max_k = self.view.get_recalculation_binning_k()
+        dl, nl, min_l, max_l = self.view.get_recalculation_binning_l()
+                
+        self.view.block_recalculation_table_signals()
+        
+        self.view.set_recalculation_binning_h(nh, min_h, max_h)
+        self.view.set_recalculation_binning_k(nk, min_k, max_k)
+        self.view.set_recalculation_binning_l(nl, min_l, max_l)
+        
+        self.view.format_recalculation_table()
+        self.view.unblock_recalculation_table_signals()
+
     def load_NXS(self):
 
         if (self.view.get_atom_site_table_col_count() > 0):
@@ -1146,26 +1195,32 @@ class Presenter:
                 self.view.button_clicked_punch(self.punch)
                 self.view.button_clicked_reset_punch(self.reset_punch)
                 
+                self.populate_recalculation_table()
+                                
     def check_batch(self):
                 
         visibility = True if self.view.batch_checked() else False
         self.view.enable_runs(visibility)
+        if (not visibility): self.view.set_runs(1)
     
     def check_batch_1d(self):
                 
         visibility = True if self.view.batch_checked_1d() else False
         self.view.enable_runs_1d(visibility)
+        if (not visibility): self.view.set_runs_1d(1)
         
     def check_batch_3d(self):
                 
         visibility = True if self.view.batch_checked_3d() else False
         self.view.enable_runs_3d(visibility)
+        if (not visibility): self.view.set_runs_3d(1)
         
     def check_batch_calc(self):
                 
         visibility = True if self.view.batch_checked_calc() else False
         self.view.enable_runs_calc(visibility)
-        
+        if (not visibility): self.view.set_runs_calc(1)
+       
     def disorder_check_mag(self):
         
         if self.view.get_disorder_mag():
@@ -1209,7 +1264,7 @@ class Presenter:
         
     def preprocess_supercell(self):
         
-        mask = self.model.mask(self.signal_m, self.error_sq_m)
+        mask = self.model.get_mask(self.signal_m, self.error_sq_m)
         
         self.mask = mask
         
@@ -1228,7 +1283,7 @@ class Presenter:
         n_uvw = self.model.unitcell_size(nu, nv, nw)
         n = self.view.get_n()
         
-        self.n_atm, self.n_atm, self.n = n_atm, n_uvw, n
+        self.n_atm, self.n_uvw, self.n = n_atm, n_uvw, n
         
         constants = self.view.get_lattice_parameters()  
         
@@ -1252,7 +1307,7 @@ class Presenter:
         ion = self.model.get_ion(element, charge)
                 
         self.nuc, self.ion = nuc, ion
-        
+                
         occupancy = self.view.get_occupancy()
         Uiso = self.view.get_Uiso()    
         U11 = self.view.get_U11()    
@@ -1279,17 +1334,22 @@ class Presenter:
         v = self.view.get_v()    
         w = self.view.get_w()
         
-        u, v, w = self.u, self.v, self.w
+        self.u, self.v, self.w = u, v, w
         
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
         dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
         dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
+        
+        self.nh, self.min_h, self.max_h = nh, min_h, max_h
+        self.nk, self.min_k, self.max_k = nk, min_k, max_k
+        self.nl, self.min_l, self.max_l = nl, min_l, max_l
         
         h_range = [min_h, max_h]
         k_range = [min_k, max_k]
         l_range = [min_l, max_l]
         
         h, k, l, \
+        H, K, L, \
         indices, \
         inverses, \
         i_mask, \
@@ -1297,6 +1357,8 @@ class Presenter:
                                                  nu, nv, nw, mask)
         
         self.h, self.k, self.l = h, k, l
+        self.H, self.K, self.L = H, K, L
+        
         self.indices, self.inverses = indices, inverses
         self.i_mask, self.i_unmask = i_mask, i_unmask
         
@@ -1327,10 +1389,14 @@ class Presenter:
         if (self.view.get_type() == 'Neutron'):
              factors = self.model.neutron_factors(Q, element, ion, occupancy,
                                                   g, phase_factor)
-             self.factors, self.mag_factors = factors
+             self.factors, self.magnetic_factors = factors
         else:
              factors = self.model.xray_factors(Q, ion, occupancy, phase_factor)
              self.factors = factors
+             
+    def initialize_intensity(self):
+        
+        mask, Q = self.mask, self.Q
                      
         I_arrays = self.model.initialize_intensity(mask, Q)
         
@@ -1351,12 +1417,12 @@ class Presenter:
         
         self.chi_sq = [np.inf]
         self.energy = []
-        self.temperature = [self.temp]
+        self.temperature = [self.view.get_prefactor()]
         self.scale = []
         
     def initialize_magnetic(self):
         
-        nu, nv, nw, n_atm = self.nu, self.nv. self.nw, self.n_atm
+        nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
         
         Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm)
         
@@ -1372,17 +1438,21 @@ class Presenter:
                                                 Qx_norm, Qy_norm, Qz_norm, 
                                                 indices, magnetic_factors, 
                                                 nu, nv, nw, n_atm)
-               
+                
+        self.Sx_k, self.Sy_k, self.Sz_k, \
+        self.Sx_k_orig, self.Sy_k_orig, self.Sz_k_orig, \
+        self.Sx_k_cand, self.Sy_k_cand, self.Sz_k_cand, \
+        self.Fx, self.Fy, self.Fz, \
         self.Fx_orig, self.Fy_orig, self.Fz_orig, \
         self.Fx_cand, self.Fy_cand, self.Fz_cand, \
+        self.prod_x, self.prod_y, self.prod_z, \
         self.prod_x_orig, self.prod_y_orig, self.prod_z_orig, \
         self.prod_x_cand, self.prod_y_cand, self.prod_z_cand, \
-        self.Sx_k_orig, self.Sy_k_orig, self.Sz_k_orig, \
-        self.Sx_k_cand, self.Sy_k_cand, self.Sz_k_cand = arrays
+        self.i_dft = arrays
         
     def initialize_occupational(self):
         
-        nu, nv, nw, n_atm = self.nu, self.nv. self.nw, self.n_atm
+        nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
         
         occupancy = self.occupancy
         
@@ -1395,8 +1465,8 @@ class Presenter:
         indices = self.indices
         factors = self.factors
         
-        arrays = self.model.initialize_magnetic(A_r, H, K, L, indices, 
-                                                factors, nu, nv, nw, n_atm)
+        arrays = self.model.initialize_occupational(A_r, H, K, L, indices, 
+                                                    factors, nu, nv, nw, n_atm)
                
         self.A_k, self.A_k_orig, self.A_k_cand, \
         self.F, self.F_orig, self.F_cand, \
@@ -1404,12 +1474,11 @@ class Presenter:
         
     def initialize_displacive(self):
             
-        nu, nv, nw, n_atm = self.nu, self.nv. self.nw, self.n_atm
+        nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
         
-        displacement = self.displacement
+        Uiso = self.Uiso
         
-        Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, 
-                                                      displacement)
+        Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, Uiso)
         
         self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
         
@@ -1455,9 +1524,9 @@ class Presenter:
                 
                 # ---
                 
-                dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
-                dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
-                dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
+                dh, nh, min_h, max_h = self.view.get_recalculation_binning_h()
+                dk, nk, min_k, max_k = self.view.get_recalculation_binning_k()
+                dl, nl, min_l, max_l = self.view.get_recalculation_binning_l()
                 
                 h_range = [min_h, max_h]
                 k_range = [min_k, max_k]
@@ -1546,13 +1615,380 @@ class Presenter:
                             
                 intensity /= runs*operators.shape[0]
                 
-
-                            
+    def recalculation_blur(self):
                 
-            # sigma_h = np.float(self.tableWidget_calc.item(0, 4).text())
-            # sigma_k = np.float(self.tableWidget_calc.item(1, 4).text())
-            # sigma_l = np.float(self.tableWidget_calc.item(2, 4).text())
+        sigma_h, sigma_k, sigma_l = self.view.get_recalculation_filter()
 
-            # sigma = [sigma_h, sigma_k, sigma_l]
+        sigma = [sigma_h, sigma_k, sigma_l]
+        
+        intensity = self.intensity
+        
+        I_recalc = self.model.blurring(intensity, sigma)
+        
+        self.I_recalc = I_recalc
+        
+    def filter_sigma(self):
+                
+        sigma_h = self.view.get_filter_h()
+        sigma_k = self.view.get_filter_k()
+        sigma_l = self.view.get_filter_l()
+
+        sigma = [sigma_h, sigma_k, sigma_l]
+        
+        mask = self.mask
+
+        v_inv, boxes = self.model.gaussian(mask, sigma)
+        
+        self.v_inv, self.boxes = v_inv, boxes 
+                    
+    def run_refinement_thread(self, callback):
+                           
+        batch = self.view.get_run()
+        runs = self.view.get_runs()
+        cycles = self.view.get_cycles()
+                                                        
+        for b in range(batch, runs):
+
+            if self.magnetic: self.initialize_magnetic()
+            if self.occupational: self.initialize_occupational()
+            if self.displacive: self.initialize_displacive()
+        
+            n = cycles // 1
+              
+            iteration = self.iteration
+            for i in range(iteration, n):
+                
+                self.refinement_cycle()
+                
+                p = int(round(100*(i+1)/n))
+                if (p <= 0): p = 1
+                elif (p > 100): p = 100
+                callback.emit([p, b])
+                                
+                self.iteration = i+1
+                if self.stop:
+                    break  
+                             
+    def run_refinement_progress_update(self, data):
+        
+        progress, batch = data
+        
+        self.view.set_progress(progress)
+        self.view.set_run(batch)
+        
+        self.redraw_plot_ref()
+        self.draw_plot_chi_sq()
             
-            # self.I_recalc = space.blurring(self.intensity, sigma)
+    def run_refinement_thread_complete(self):
+        
+        if (self.view.get_progress() == 100):
+            batch = self.view.get_run()+1
+            self.view.set_run(batch)
+            self.iteration = 0
+        
+        self.view.enable_refinement(True)
+        
+    def run_refinement(self):
+        
+        if self.view.get_recalculation_table_row_count():            
+            self.stop = False
+            
+            if not self.allocated:
+                self.magnetic = self.view.get_disorder_mag()
+                self.occupational = self.view.get_disorder_occ()
+                self.displacive = self.view.get_disorder_dis()   
+                
+                self.preprocess_supercell()
+                self.initialize_intensity()
+                self.refinement_statistics()
+                self.filter_sigma()
+                
+                self.allocated = True
+            
+            self.view.enable_refinement(False)
+                         
+            refinement = self.view.worker(self.run_refinement_thread)
+            self.view.progress(refinement, self.run_refinement_progress_update)
+            self.view.finished(refinement, self.run_refinement_thread_complete)
+            self.threadpool.start(refinement) 
+            
+    def stop_refinement(self):
+        
+        if self.view.get_recalculation_table_row_count():
+            if (self.iteration > 0 or self.view.get_run() > 0):
+                self.stop = True
+
+    def reset_refinement(self):
+        
+        if self.view.get_recalculation_table_row_count():
+            self.allocated = False
+                        
+            self.stop_refinement()
+                        
+            self.view.set_progress(0)
+            self.view.set_run(0)
+            self.view.set_runs(1)
+            self.iteration = 0
+        
+            self.view.clear_plot_ref_canvas()
+            self.view.clear_plot_chi_sq_canvas()
+            
+    def refinement_cycle(self):
+        
+        N = self.n_uvw*self.n_atm*1
+            
+        delta = 1
+        
+        T = np.array([1.,1.,1.,0.,0.,0.])
+        
+        space_factor = self.space_factor
+        I_calc, I_expt = self.I_calc, self.I_expt
+        inv_sigma_sq = self.inv_sigma_sq
+        
+        I_raw, I_flat, I_ref = self.I_raw, self.I_flat, self.I_ref
+        
+        v_inv, boxes = self.v_inv, self.boxes
+        
+        a_filt, b_filt, c_filt = self.a_filt, self.b_filt, self.c_filt
+        d_filt, e_filt, f_filt = self.d_filt, self.e_filt, self.f_filt
+        g_filt, h_filt, i_filt = self.g_filt, self.h_filt, self.i_filt
+        
+        i_dft, inverses = self.i_dft, self.inverses
+        i_mask, i_unmask = self.i_mask, self.i_unmask
+        
+        acc_moves, acc_temps = self.acc_moves, self.acc_temps
+        rej_moves, rej_temps = self.rej_moves, self.rej_temps
+        
+        chi_sq, energy = self.chi_sq, self.energy
+        temperature = self.temperature
+        scale = self.scale
+        
+        nh, nk, nl = self.nh, self.nk, self.nl
+        nu, nv, nw, n_atm, n = self.nu, self.nv, self.nw, self.n_atm, self.n
+        
+        constant = self.view.get_constant()
+
+        if self.magnetic:
+            
+            Sx, Sy, Sz, mu = self.Sx, self.Sy, self.Sz, self.mu
+            
+            Sx_k, Sy_k, Sz_k = self.Sx_k, self.Sy_k, self.Sz_k
+            
+            Sx_k_orig, Sx_k_cand = self.Sx_k_orig, self.Sx_k_cand
+            Sy_k_orig, Sy_k_cand = self.Sy_k_orig, self.Sy_k_cand
+            Sz_k_orig, Sz_k_cand = self.Sz_k_orig, self.Sz_k_cand
+            
+            Fx, Fy, Fz = self.Fx, self.Fy, self.Fz
+            
+            Fx_orig, Fx_cand = self.Fx_orig, self.Fx_cand
+            Fy_orig, Fy_cand = self.Fy_orig, self.Fy_cand
+            Fz_orig, Fz_cand = self.Fz_orig, self.Fz_cand
+            
+            prod_x, prod_y, prod_z = self.prod_x, self.prod_y, self.prod_z
+        
+            prod_x_orig, prod_x_cand = self.prod_x_orig, self.prod_x_cand
+            prod_y_orig, prod_y_cand = self.prod_y_orig, self.prod_y_cand 
+            prod_z_orig, prod_z_cand = self.prod_z_orig, self.prod_z_cand
+        
+            magnetic_factors = self.magnetic_factors
+        
+            Qx_norm = self.Qx_norm
+            Qy_norm = self.Qy_norm
+            Qz_norm = self.Qz_norm
+            
+            fixed = self.view.fixed_moment_check()
+            
+            self.model.magnetic_refinement(
+                Sx, Sy, Sz, Qx_norm, Qy_norm, Qz_norm, 
+                Sx_k, Sy_k, Sz_k, 
+                Sx_k_orig, Sy_k_orig, Sz_k_orig,
+                Sx_k_cand, Sy_k_cand, Sz_k_cand,
+                Fx, Fy, Fz,
+                Fx_orig, Fy_orig, Fz_orig,
+                Fx_cand, Fy_cand, Fz_cand,
+                prod_x, prod_y, prod_z,
+                prod_x_orig, prod_y_orig, prod_z_orig,  
+                prod_x_cand, prod_y_cand, prod_z_cand,   
+                space_factor, magnetic_factors, mu,
+                I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref, v_inv, 
+                a_filt, b_filt, c_filt, 
+                d_filt, e_filt, f_filt, 
+                g_filt, h_filt, i_filt,
+                boxes, i_dft, inverses, i_mask, i_unmask,
+                acc_moves, acc_temps, rej_moves, rej_temps,
+                chi_sq, energy, temperature, scale, constant,
+                delta, fixed, T, nh, nk, nl, nu, nv, nw, n_atm, n, N)
+            
+        elif self.occupational:
+            
+            A_r, occupancy = self.A_r, self.occupancy
+            
+            A_k, A_k_orig, A_k_cand = self.A_k, self.A_k_orig, self.A_k_cand
+            
+            F, F_orig, F_cand = self.F, self.F_orig, self.F_cand
+            
+            prod = self.prod 
+            prod_orig, prod_cand = self.prod_orig, self.prod_cand
+            
+            factors  = self.factors
+            
+            fixed = self.view.fixed_composition_check()
+            
+            self.model.occupational_refinement(
+                A_r, A_k, A_k_orig, A_k_cand,
+                F, F_orig, F_cand,
+                prod, prod_orig, prod_cand,     
+                space_factor, factors, occupancy,
+                I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref, v_inv, 
+                a_filt, b_filt, c_filt,
+                d_filt, e_filt, f_filt,
+                g_filt, h_filt, i_filt,
+                boxes, i_dft, inverses, i_mask, i_unmask,
+                acc_moves, acc_temps, rej_moves, rej_temps,
+                chi_sq, energy, temperature, scale, constant, fixed,
+                nh, nk, nl, nu, nv, nw, n, n_atm, N)
+    
+        elif self.displacive:
+            
+            Ux, Uy, Uz = self.Ux, self.Uy, self.Uz 
+            Uiso = self.Uiso
+            
+            U_r, U_r_orig, U_r_cand = self.U_r, self.U_r_orig, self.U_r_cand
+            U_k, U_k_orig, U_k_cand = self.U_k, self.U_k_orig, self.U_k_cand
+            
+            V_k, V_k_nuc = self.V_k, self.V_k_nuc
+            V_k_orig, V_k_nuc_orig = self.V_k_orig, self.V_k_nuc_orig
+            V_k_cand, V_k_nuc_cand = self.V_k_cand, self.V_k_nuc_cand
+            
+            F, F_nuc = self.F, self.F_nuc
+            F_orig, F_nuc_orig = self.F_orig, self.F_nuc_orig 
+            F_cand, F_nuc_cand = self.F_cand, self.F_nuc_cand
+            
+            prod, prod_nuc = self.prod, self.prod_nuc 
+            prod_orig, prod_nuc_orig = self.prod_orig, self.prod_nuc_orig
+            prod_cand, prod_nuc_cand = self.prod_cand, self.prod_nuc_cand 
+            
+            factors = self.factors
+            
+            coeffs, Q_k = self.coeffs, self.Q_k 
+            
+            bragg, even = self.bragg, self.even
+            
+            fixed = self.view.fixed_displacement_check()
+            
+            p = self.view.get_order()
+            
+            self.model.displacive_refinement(
+                Ux, Uy, Uz,
+                U_r, U_r_orig, U_r_cand,
+                U_k, U_k_orig, U_k_cand,
+                V_k, V_k_nuc, V_k_orig,
+                V_k_nuc_orig, V_k_cand, V_k_nuc_cand,
+                F, F_nuc, F_orig, F_nuc_orig, F_cand, F_nuc_cand,
+                prod, prod_nuc, prod_orig, prod_nuc_orig,    
+                prod_cand, prod_nuc_cand, space_factor, factors,
+                coeffs, Q_k, Uiso,
+                I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref, v_inv,
+                a_filt, b_filt, c_filt,
+                d_filt, e_filt, f_filt,
+                g_filt, h_filt, i_filt,
+                bragg, even, boxes, i_dft, inverses, i_mask, i_unmask, 
+                acc_moves, acc_temps, rej_moves, rej_temps, 
+                chi_sq, energy, temperature, scale, constant, 
+                delta, fixed, T, p, nh, nk, nl,
+                nu, nv, nw, n_atm, n, N)
+            
+        self.I_obs = I_flat.reshape(nh,nk,nl)
+        self.I_obs[self.mask] = np.nan
+        
+        self.refinement_m = self.model.mask_array(self.I_obs)
+            
+    def draw_plot_ref(self):
+        
+        if self.allocated:
+            
+            canvas = self.view.get_plot_ref_canvas()
+            data = self.ref_arr_m 
+            
+            B = self.B
+            
+            hkl = self.view.get_slice_hkl()
+                    
+            matrix_h, scale_h = self.model.matrix_transform(B, 'h')
+            matrix_k, scale_k = self.model.matrix_transform(B, 'k')
+            matrix_l, scale_l = self.model.matrix_transform(B, 'l')
+            
+            nh, min_h, max_h = self.nh, self.min_h, self.max_h
+            nk, min_k, max_k = self.nk, self.min_k, self.max_k
+            nl, min_l, max_l = self.nl, self.min_l, self.max_l
+            
+            slice_hkl = self.view.get_slice()
+                   
+            i_khl = (nh-1) // 2
+            
+            if (hkl == 'h ='):
+                i_khl = (nh-1) // 2
+                if (slice_hkl is not None):
+                    i_khl = self.model.slice_index(min_h, max_h, nh, slice_hkl) 
+                slice_hkl = self.model.slice_value(min_h, max_h, nh, i_khl)
+                self.view.set_slice(slice_hkl)
+            elif (hkl == 'k ='):
+                i_khl = (nk-1) // 2
+                if (slice_hkl is not None):
+                    i_khl = self.model.slice_index(min_k, max_k, nk, slice_hkl)
+                slice_hkl = self.model.slice_value(min_k, max_k, nk, i_khl)           
+                self.view.set_slice(slice_hkl)
+            elif (hkl == 'l ='):
+                i_khl = (nl-1) // 2
+                if (slice_hkl is not None):
+                    i_khl = self.model.slice_index(min_l, max_l, nl, slice_hkl)
+                slice_hkl = self.model.slice_value(min_l, max_l, nl, i_khl)
+                self.view.set_slice(slice_hkl)
+            
+            norm = self.view.get_norm_ref()
+            
+            vmin = self.view.get_min_ref()
+            vmax = self.view.get_max_ref()
+            
+            self.view.validate_min_ref()
+            self.view.validate_max_ref()
+            
+            plots.plot_ref(canvas, data, hkl, slice_hkl, i_khl, 
+                           min_h, min_k, min_l, max_h, max_k, max_l, 
+                           nh, nk, nl, matrix_h, matrix_k, matrix_l,
+                           scale_h, scale_k, scale_l, norm, vmin, vmax)
+        
+    def redraw_plot_ref(self):
+        
+        if self.allocated:
+            
+            plot_type = self.view.get_plot_ref()
+            if (plot_type == 'Calculated'):
+                self.ref_arr_m = self.refinement_m
+            elif (plot_type == 'Experimental'):
+                self.ref_arr_m = self.signal_m 
+            else:
+                self.ref_arr_m = self.error_sq_m 
+                
+            print(self.ref_arr_m)
+    
+            self.view.set_min_ref(self.ref_arr_m.min())
+            self.view.set_max_ref(self.ref_arr_m.max())
+            
+            self.draw_plot_ref()
+            
+    def draw_plot_chi_sq(self):
+        
+        if self.allocated:
+                        
+            canvas = self.view.get_plot_chi_sq_canvas()
+
+            plot0 = self.view.get_plot_top_chi_sq()
+            plot1 = self.view.get_plot_bottom_chi_sq()
+                        
+            acc_moves, rej_moves = self.acc_moves, self.rej_moves
+            temperature, energy = self.temperature, self.energy
+            chi_sq, scale = self.chi_sq, self.scale
+            
+            plots.chi_sq(canvas, plot0, plot1, acc_moves, rej_moves, 
+                         temperature, energy, chi_sq, scale)

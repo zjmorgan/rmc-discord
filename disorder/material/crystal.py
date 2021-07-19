@@ -59,6 +59,8 @@ def unitcell(folder=None,
         symbols = cif_dict['_atom_site_symbol']
     else:
         symbols = atomic_sites
+        
+    symbols = [sym if (sym != 'D') else '2H' for sym in symbols]
     
     xs = cif_dict['_atom_site_fract_x']
     ys = cif_dict['_atom_site_fract_y']

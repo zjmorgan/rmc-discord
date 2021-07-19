@@ -40,7 +40,7 @@ class test_presenter(unittest.TestCase):
         self.view.create_atom_site_table(2)
         self.view.create_unit_cell_table(4)
                 
-        every_site = np.array(['1','2','2','2'])
+        every_site = np.array(['1','2','2','2']).astype(int)
         
         self.view.get_every_site = MagicMock(return_value=every_site)
 
@@ -76,7 +76,7 @@ class test_presenter(unittest.TestCase):
         self.view.create_atom_site_table(2)
         self.view.create_unit_cell_table(4)
                 
-        every_site = np.array(['1','2','2','2'])
+        every_site = np.array(['1','2','2','2']).astype(int)
         
         self.view.get_every_site = MagicMock(return_value=every_site)
 
@@ -101,7 +101,7 @@ class test_presenter(unittest.TestCase):
         self.view.create_atom_site_table(2)
         self.view.create_unit_cell_table(4)
                 
-        every_site = np.array(['1','2','2','2'])
+        every_site = np.array(['1','2','2','2']).astype(int)
         
         self.view.get_every_site = MagicMock(return_value=every_site)
 

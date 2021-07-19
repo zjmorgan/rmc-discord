@@ -5,8 +5,10 @@ import re
 import numpy as np
 
 from disorder.diffuse import experimental, space, scattering, monocrystal
-from disorder.diffuse import magnetic, occupational, displacive
+from disorder.diffuse import magnetic, occupational, displacive, refinement
 from disorder.material import crystal, symmetry, tables
+
+import disorder.correlation.functions as correlations
 
 class Model:
 
@@ -41,12 +43,12 @@ class Model:
     
     def get_isotope(self, element, nucleus):
         
-        nucleus = nucleus[nucleus == '-'] = ''
+        nucleus[nucleus == '-'] = ''
         return np.array([pre+atm for atm, pre in zip(element, nucleus)])
     
     def get_ion(self, element, charge):
         
-        charge = charge[charge == '-'] = ''
+        charge[charge == '-'] = ''
         return np.array([atm+app for atm, app in zip(element, charge)])
     
     def get_neutron_scattering_length_keys(self):
@@ -315,7 +317,7 @@ class Model:
         
         i_mask, i_unmask = space.indices(inverses, mask)
             
-        return h, k, l, indices, inverses, i_mask, i_unmask 
+        return h, k, l, H, K, L, indices, inverses, i_mask, i_unmask 
     
     def reciprocal_space_coordinate_transform(self, h, k, l, B, R):
             
@@ -353,7 +355,8 @@ class Model:
         
         magnetic_form_factor = magnetic.form(Q, ion, g)
         
-        magnetic_factors = magnetic_form_factor*phase_factor*occupancy
+        magnetic_factors = space.prefactors(magnetic_form_factor, 
+                                            phase_factor, occupancy)
         
         return factors, magnetic_factors
     
@@ -394,6 +397,18 @@ class Model:
         return a_filt, b_filt, c_filt, \
                d_filt, e_filt, f_filt, \
                g_filt, h_filt, i_filt
+               
+    def blurring(self, intensity, sigma):
+                   
+        return self.space.blurring(intensity, sigma)
+    
+    def gaussian(self, mask, sigma):
+                   
+        v_inv = space.gaussian(mask, sigma)
+        
+        boxes = space.boxblur(sigma, 3)
+            
+        return v_inv, boxes
         
     def random_moments(self, nu, nv, nw, n_atm):
     
@@ -581,16 +596,66 @@ class Model:
         
         return coeffs, even, cntr
     
+    def save_magnetic(self, fname, run, Sx, Sy, Sz):
+
+        np.save('{}-calculated-spin-x-{}.npy'.format(fname, run), Sx)
+        np.save('{}-calculated-spin-y-{}.npy'.format(fname, run), Sy)
+        np.save('{}-calculated-spin-z-{}.npy'.format(fname, run), Sz)
+        
+    def save_occupational(self, fname, run, A_r):
+        
+        np.save('{}-calculated-composition-{}.npy'.format(fname, run), A_r)
+    
+    def save_displacive(self, fname, run, Ux, Uy, Uz):
+
+        np.save('{}-calculated-displacement-x-{}.npy'.format(fname, run), Ux)
+        np.save('{}-calculated-displacement-y-{}.npy'.format(fname, run), Uy)
+        np.save('{}-calculated-displacement-z-{}.npy'.format(fname, run), Uz)
+        
+    def load_magnetic(self, fname, run):
+    
+        Sx = np.load('{}-calculated-spin-x-{}.npy'.format(fname, run))
+        Sy = np.load('{}-calculated-spin-y-{}.npy'.format(fname, run))
+        Sz = np.load('{}-calculated-spin-z-{}.npy'.format(fname, run))
+        
+        return Sx, Sy, Sz
+                                
+    def load_occupationa(self, fname, run):
+                    
+        A_r = np.load('{}-calculated-composition-{}.npy'.format(fname, run))
+        
+        return A_r
+
+    def load_displacive(self, fname, run):
+                
+        Ux = np.load('{}-calculated-displacement-x-{}.npy'.format(fname, run))
+        Uy = np.load('{}-calculated-displacement-y-{}.npy'.format(fname, run))
+        Uz = np.load('{}-calculated-displacement-z-{}.npy'.format(fname, run))   
+        
+        return Ux, Uy, Uz
+            
+    def save_refinement(self, fname, run, I_obs, chi_sq, energy, temperature, 
+                        scale, acc_moves, rej_moves, acc_temps, rej_temps):
+        
+        np.save('{}-calculated-intensity-{}.npy'.format(fname, run), I_obs)
+            
+        np.save('{}-goodness-of-fit-{}.npy'.format(fname, run), chi_sq)
+        np.save('{}-energy-{}.npy'.format(fname, run), energy)        
+        np.save('{}-temperature-{}.npy'.format(fname, run), temperature)
+        np.save('{}-scale-factor-{}.npy'.format(fname, run), scale)
+
+        np.save('{}-accepted-moves-{}.npy'.format(fname, run), acc_moves)
+        np.save('{}-rejected-moves-{}.npy'.format(fname, run), rej_moves)     
+        
+        np.save('{}-accepted-temperature-{}.npy'.format(fname, run), acc_temps)
+        np.save('{}-rejected-temperature-{}.npy'.format(fname, run), rej_temps)
+    
     def magnetic_intensity(self, fname, run, ux, uy, uz, atm,
                            h_range, k_range, l_range, indices, symop,
                            T, B, R, twins, variants, nh, nk, nl, nu, nv, nw,
                            Nu, Nv, Nw, g):
-        
-        r = '-{}'.format(run) if run else ''
-    
-        Sx = np.load('{}-calculated-spin-x{}.npy'.format(fname, r))
-        Sy = np.load('{}-calculated-spin-y{}.npy'.format(fname, r))
-        Sz = np.load('{}-calculated-spin-z{}.npy'.format(fname, r))
+            
+        Sx, Sy, Sz = self.load_magnetic(fname, run)
         
         I_calc = monocrystal.magnetic(Sx, Sy, Sz, ux, uy, uz, atm,
                                       h_range, k_range, l_range, indices,
@@ -603,10 +668,8 @@ class Model:
                                h_range, k_range, l_range, indices, symop,
                                T, B, R, twins, variants, nh, nk, nl, 
                                nu, nv, nw, Nu, Nv, Nw):
-        
-        r = '-{}'.format(run) if run else ''
-            
-        A_r = np.load('{}-calculated-composition{}.npy'.format(fname, r))
+                    
+        A_r = self.load_occupational(fname, run)
         
         I_calc = monocrystal.occupational(A_r, occupancy, ux, uy, uz, atm,
                                           h_range, k_range, l_range, indices, 
@@ -619,12 +682,8 @@ class Model:
                              h_range, k_range, l_range, indices, symop,
                              T, B, R, twins, variants, nh, nk, nl, nu, nv, nw,
                              Nu, Nv, Nw, p, even, cntr):
-        
-        r = '-{}'.format(run) if run else ''
-        
-        Ux = np.load('{}-calculated-displacement-x{}.npy'.format(fname, r))
-        Uy = np.load('{}-calculated-displacement-y{}.npy'.format(fname, r))
-        Uz = np.load('{}-calculated-displacement-z{}.npy'.format(fname, r))
+                
+        Ux, Uy, Uz = self.load_displacive(fname, run)
             
         U_r = displacive.products(Ux, Uy, Uz, p)
                 
@@ -635,3 +694,260 @@ class Model:
                                         p, even, cntr)
                     
         return I_calc
+    
+    def magnetic_refinement(self, Sx, Sy, Sz, Qx_norm, Qy_norm, Qz_norm, 
+                            Sx_k, Sy_k, Sz_k, 
+                            Sx_k_orig, Sy_k_orig, Sz_k_orig,
+                            Sx_k_cand, Sy_k_cand, Sz_k_cand,
+                            Fx, Fy, Fz,
+                            Fx_orig, Fy_orig, Fz_orig,
+                            Fx_cand, Fy_cand, Fz_cand,
+                            prod_x, prod_y, prod_z,
+                            prod_x_orig, prod_y_orig, prod_z_orig,  
+                            prod_x_cand, prod_y_cand, prod_z_cand,   
+                            space_factor, factors, moment,
+                            I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref, 
+                            v_inv, a_filt, b_filt, c_filt, 
+                            d_filt, e_filt, f_filt, 
+                            g_filt, h_filt, i_filt,
+                            boxes, i_dft, inverses, i_mask, i_unmask,
+                            acc_moves, acc_temps, rej_moves, rej_temps,
+                            chi_sq, energy, temperature, scale, constant,
+                            delta, fixed, T, nh, nk, nl, nu, nv, nw, n_atm, n,
+                            N):
+
+        refinement.magnetic(Sx, Sy, Sz, Qx_norm, Qy_norm, Qz_norm, 
+                            Sx_k, Sy_k, Sz_k, 
+                            Sx_k_orig, Sy_k_orig, Sz_k_orig,
+                            Sx_k_cand, Sy_k_cand, Sz_k_cand,
+                            Fx, Fy, Fz,
+                            Fx_orig, Fy_orig, Fz_orig,
+                            Fx_cand, Fy_cand, Fz_cand,
+                            prod_x, prod_y, prod_z,
+                            prod_x_orig, prod_y_orig, prod_z_orig,  
+                            prod_x_cand, prod_y_cand, prod_z_cand,   
+                            space_factor, factors, moment,
+                            I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref, 
+                            v_inv, a_filt, b_filt, c_filt, 
+                            d_filt, e_filt, f_filt, 
+                            g_filt, h_filt, i_filt,
+                            boxes, i_dft, inverses, i_mask, i_unmask,
+                            acc_moves, acc_temps, rej_moves, rej_temps,
+                            chi_sq, energy, temperature, scale, constant,
+                            delta, fixed, T, nh, nk, nl, nu, nv, nw, n_atm, n,
+                            N)
+            
+    def occupational_refinement(self, A_r, A_k, A_k_orig, A_k_cand,
+                                F, F_orig, F_cand,
+                                prod, prod_orig, prod_cand,     
+                                space_factor, factors, occupancy,
+                                I_calc, I_expt, inv_sigma_sq,
+                                I_raw, I_flat, I_ref, v_inv, 
+                                a_filt, b_filt, c_filt,
+                                d_filt, e_filt, f_filt,
+                                g_filt, h_filt, i_filt,
+                                boxes, i_dft, inverses, i_mask, i_unmask,
+                                acc_moves, acc_temps, rej_moves, rej_temps,
+                                chi_sq, energy, temperature, scale, constant, 
+                                fixed, nh, nk, nl, nu, nv, nw, n, n_atm, N):
+
+        refinement.occupational(A_r, A_k, A_k_orig, A_k_cand,
+                                F, F_orig, F_cand,
+                                prod, prod_orig, prod_cand,     
+                                space_factor, factors, occupancy,
+                                I_calc, I_expt, inv_sigma_sq, 
+                                I_raw, I_flat, I_ref, v_inv, 
+                                a_filt, b_filt, c_filt,
+                                d_filt, e_filt, f_filt,
+                                g_filt, h_filt, i_filt,
+                                boxes, i_dft, inverses, i_mask, i_unmask,
+                                acc_moves, acc_temps, rej_moves, rej_temps,
+                                chi_sq, energy, temperature, scale, constant,
+                                fixed, nh, nk, nl, nu, nv, nw, n, n_atm, N)
+        
+    def displacive_refinement(self, Ux, Uy, Uz,
+                              U_r, U_r_orig, U_r_cand,
+                              U_k, U_k_orig, U_k_cand,
+                              V_k, V_k_nuc, V_k_orig,
+                              V_k_nuc_orig, V_k_cand, V_k_nuc_cand,
+                              F, F_nuc, F_orig, F_nuc_orig, F_cand, F_nuc_cand,
+                              prod, prod_nuc, prod_orig, prod_nuc_orig,    
+                              prod_cand, prod_nuc_cand, space_factor, factors,
+                              coeffs, Q_k, displacement,
+                              I_calc, I_expt, inv_sigma_sq, 
+                              I_raw, I_flat, I_ref, v_inv, 
+                              a_filt, b_filt, c_filt,
+                              d_filt, e_filt, f_filt,
+                              g_filt, h_filt, i_filt,
+                              bragg, even, boxes, i_dft, inverses, i_mask, 
+                              i_unmask, acc_moves, acc_temps, rej_moves,
+                              rej_temps, chi_sq, energy, temperature, scale,
+                              constant, delta, fixed, T, p, nh, nk, nl,
+                              nu, nv, nw, n_atm, n, N):
+                                            
+        refinement.displacive(Ux, Uy, Uz,
+                              U_r, U_r_orig, U_r_cand,
+                              U_k, U_k_orig, U_k_cand,
+                              V_k, V_k_nuc, V_k_orig,
+                              V_k_nuc_orig, V_k_cand, V_k_nuc_cand,
+                              F, F_nuc, F_orig, F_nuc_orig, F_cand, F_nuc_cand,
+                              prod, prod_nuc, prod_orig, prod_nuc_orig,    
+                              prod_cand, prod_nuc_cand, space_factor, factors,
+                              coeffs, Q_k, displacement,
+                              I_calc, I_expt, inv_sigma_sq, 
+                              I_raw, I_flat, I_ref, v_inv, 
+                              a_filt, b_filt, c_filt,
+                              d_filt, e_filt, f_filt,
+                              g_filt, h_filt, i_filt,
+                              bragg, even, boxes, i_dft, inverses, i_mask, 
+                              i_unmask, acc_moves, acc_temps, rej_moves,
+                              rej_temps, chi_sq, energy, temperature, scale,
+                              constant, delta, fixed, T, p, nh, nk, nl,
+                              nu, nv, nw, n_atm, n, N)
+    
+    def correlation_statistics(self, S_corr, S_corr_):
+    
+        runs = np.shape(S_corr)[1]
+        
+        return np.mean(S_corr, axis=1), np.mean(S_corr_, axis=1), \
+               np.std(S_corr, axis=1)**2/runs, np.std(S_corr_, axis=1)**2/runs
+               
+    def vector_correlations_1d(self, Vx, Vy, Vz, rx, ry, rz, atms, fract, tol,
+                               A, nu, nv, nw, n_atm):
+
+        S_corr, S_coll, \
+        S_corr_, S_coll_, \
+        d, atm_pair = correlations.radial(Vx, Vy, Vz, rx, ry, rz, atms, 
+                                          fract=fract, tol=tol,
+                                          period=(A, nu, nw, n_atm))
+        
+        return S_corr, S_coll, S_corr_, S_coll_, d, atm_pair
+
+    def scalar_correlations_1d(self, V_r, rx, ry, rz, atms, fract, tol,
+                               A, nu, nv, nw, n_atm):
+
+        S_corr, S_corr_, \
+        d, atm_pair = correlations.parameter(V_r, rx, ry, rz, atms, 
+                                             fract=fract, tol=tol,
+                                             period=(A, nu, nw, n_atm))
+            
+        return S_corr, S_corr_, d, atm_pair
+                
+    def vector_average_1d(self, S_corr, S_coll, S_corr_, S_coll_,
+                          sigma_sq_corr, sigma_sq_coll,
+                          sigma_sq_corr_, sigma_sq_coll_, d, tol):
+    
+        S_corr, S_coll, \
+        S_corr_, S_coll_, \
+        sigma_sq_corr, sigma_sq_coll, \
+        sigma_sq_corr_, sigma_sq_coll_, \
+        d = crystal.average((S_corr, S_coll, S_corr_, S_coll_,
+                             sigma_sq_corr, sigma_sq_coll,
+                             sigma_sq_corr_, sigma_sq_coll_), d, tol=tol)
+        
+        
+        return S_corr, S_coll, S_corr_, S_coll_, \
+               sigma_sq_corr, sigma_sq_coll, \
+               sigma_sq_corr_, sigma_sq_coll_
+                        
+    def scalar_average_1d(self, S_corr, S_corr_, 
+                          sigma_sq_corr, sigma_sq_corr_, d, tol):
+            
+        S_corr, S_corr_, \
+        sigma_sq_corr, sigma_sq_corr_, \
+        d = crystal.average((S_corr, S_corr_, sigma_sq_corr, sigma_sq_corr_), 
+                             d, tol=tol)
+        
+        return S_corr, S_corr_, sigma_sq_corr, sigma_sq_corr_, d
+            
+    def vector_correlations_3d(self, Ux, Uy, Uz, rx, ry, rz, atms, fract, tol,
+                               A, nu, nv, nw, n_atm):  
+        
+        S_corr3d, S_coll3d, \
+        S_corr3d_, S_coll3d_, \
+        dx, dy, dz, \
+        atm_pair3d = correlations.radial3d(Ux, Uy, Uz, rx, ry, rz, atms, 
+                                           fract=fract, tol=tol,
+                                           period=(A, nu, nv, nw, n_atm))
+        
+        return S_corr3d, S_coll3d, S_corr3d_, S_coll3d_, dx, dy, dz, atm_pair3d
+               
+    def scalar_correlations_3d(self, V_r, rx, ry, rz, atms, fract, tol,
+                               A, nu, nv, nw, n_atm):
+                            
+        S_corr3d, S_corr3d_, \
+        dx, dy, dz, \
+        atm_pair3d = correlations.parameter3d(V_r, rx, ry, rz, atms,
+                                              fract=fract, tol=tol,
+                                              period=(A, nu, nv, nw, n_atm))    
+                                        
+        return S_corr3d, S_corr3d_, dx, dy, dz, atm_pair3d
+       
+    def vector_symmetrize_3d(self, S_corr3d, S_coll3d, S_corr3d_, S_coll3d_,
+                             sigma_sq_corr3d, sigma_sq_coll3d, 
+                             sigma_sq_corr3d_, sigma_sq_coll3d_,
+                             dx, dy, dz, atm_pair3d, A, folder, filename, tol):
+        
+        S_corr3d, S_coll3d, \
+        S_corr3d_, S_coll3d_, \
+        sigma_sq_corr3d, sigma_sq_coll3d, \
+        sigma_sq_corr3d_, sigma_sq_coll3d_, \
+        dx, dy, dz, \
+        atm_pair3d = crystal.symmetrize((S_corr3d, S_coll3d,
+                                         S_corr3d_, S_coll3d_, 
+                                         sigma_sq_corr3d, sigma_sq_coll3d, 
+                                         sigma_sq_corr3d_, sigma_sq_coll3d_),
+                                         dx, dy, dz, atm_pair3d, A, 
+                                         folder=folder, filename=filename, 
+                                         tol=tol)
+        
+        return S_corr3d, S_coll3d, S_corr3d_, S_coll3d_, \
+               sigma_sq_corr3d, sigma_sq_coll3d, \
+               sigma_sq_corr3d_, sigma_sq_coll3d_, \
+               dx, dy, dz, atm_pair3d
+        
+    def scalar_symmetrizes_3d(self, S_corr3d, S_corr3d_,
+                              sigma_sq_corr3d, sigma_sq_corr3d_, dx, dy, dz, 
+                              atm_pair3d, A, folder, filename, tol):
+
+        S_corr3d, S_corr3d_, \
+        sigma_sq_corr3d, sigma_sq_corr3d_, \
+        dx, dy, dz, \
+        atm_pair3d = crystal.symmetrize((S_corr3d, S_corr3d_, 
+                                         sigma_sq_corr3d, sigma_sq_corr3d_),
+                                         dx, dy, dz, atm_pair3d, A, 
+                                         folder=folder, filename=filename, 
+                                         tol=tol)
+        
+        return S_corr3d, S_corr3d_, sigma_sq_corr3d, sigma_sq_corr3d_, \
+               dx, dy, dz, atm_pair3d
+        
+    def vector_average_3d(self, S_corr3d, S_coll3d, S_corr3d_, S_coll3d_,
+                          sigma_sq_corr3d, sigma_sq_coll3d, 
+                          sigma_sq_corr3d_, sigma_sq_coll3d_, dx, dy, dz, tol):
+        
+        S_corr3d, S_coll3d, \
+        S_corr3d_, S_coll3d_,\
+        sigma_sq_corr3d, sigma_sq_coll3d, \
+        sigma_sq_corr3d_, sigma_sq_coll3d_, \
+        dx, dy, dz = crystal.average3d((S_corr3d, S_coll3d, 
+                                        S_corr3d_, S_coll3d_,
+                                        sigma_sq_corr3d, sigma_sq_coll3d, 
+                                        sigma_sq_corr3d_,  sigma_sq_coll3d_),
+                                        dx, dy, dz, tol=tol)
+
+        return S_corr3d, S_coll3d,  S_corr3d_, S_coll3d_, \
+               sigma_sq_corr3d, sigma_sq_coll3d, \
+               sigma_sq_corr3d_, sigma_sq_coll3d_, dx, dy, dz                            
+        
+    def scalar_average_3d(self, S_corr3d, S_corr3d_,
+                          sigma_sq_corr3d, sigma_sq_corr3d_, dx, dy, dz, tol):
+
+        S_corr3d, S_corr3d_, \
+        sigma_sq_corr3d, sigma_sq_corr3d_, \
+        dx, dy, dz = crystal.average3d((S_corr3d, S_corr3d_,
+                                        sigma_sq_corr3d, sigma_sq_corr3d_),
+                                        dx, dy, dz, tol=tol)
+        
+        return  S_corr3d, S_corr3d_, \
+                sigma_sq_corr3d, sigma_sq_corr3d_, dx, dy, dz

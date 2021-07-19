@@ -14,7 +14,7 @@ class test_displacive(unittest.TestCase):
         np.random.seed(13)
         
         c = 0.1
-        Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, value=c)
+        Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, value=c**2)
         U = np.sqrt(Ux**2+Uy**2+Uz**2)
         
         np.testing.assert_array_almost_equal(U, c*np.ones(nu*nv*nw*n_atm))
@@ -32,7 +32,7 @@ class test_displacive(unittest.TestCase):
         np.random.seed(13)
         
         c = np.array([0.1,0.2])
-        Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, value=c)
+        Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, value=c**2)
         U = np.sqrt(Ux**2+Uy**2+Uz**2)
         
         V = np.ones((nu,nv,nw,n_atm))*c
