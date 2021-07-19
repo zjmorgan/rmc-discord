@@ -815,17 +815,17 @@ class Presenter:
         self.view.set_rebin_combo_k(ksteps, ksizes)
         
     def populate_binning_l(self):
-        
+                
         self.view.clear_rebin_combo_l()
                      
         dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
 
-        cntr_l = self.view.centered_l_checked()                
-
+        cntr_l = self.view.centered_l_checked()  
+        
         lsteps, lsizes = self.model.rebin_parameters(nl, min_l, max_l, cntr_l)
 
         self.view.set_rebin_combo_l(lsteps, lsizes)    
-        
+                
     def populate_cropping(self):
         
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()

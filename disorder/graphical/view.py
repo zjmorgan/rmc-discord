@@ -1364,7 +1364,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def clicked_centered_l(self, slot):
         self.checkBox_centered_l.clicked.connect(slot)
-        
+                
     def set_min_h(self, value):
         self.lineEdit_min_h.setText(str(value))
 

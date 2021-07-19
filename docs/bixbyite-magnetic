@@ -1,0 +1,59 @@
+# **Bixbyite -- magnetic**
+
+
+## **RMC refinement**
+
+There are four main steps to performing a reverse Monte Carlo refinement:
+1. Define a supercell
+2. Load and preprocess a diffuse scattering intensity dataset
+3. Setup and perform a refinement
+4. Calculate and visualize the correlations.
+
+### **Crystal tab**
+
+To define a supercell, it is first necessary to construct a unit cell from the average structure.
+
+1. Begin by loading a crystallographic information file (CIF) or magnetic CIF file.
+  - The button is located on the upper left corner of window *Load CIF*.
+  - The parameters are extracted from the CIF file and populated into two tables.
+    - The left hand table displays all atoms in the unit supercell.
+    - The right hand table gives the basic atom site information.
+        - Modifying the atom site information on the right automatically updates the unit cell table on the right.
+2. Modify (if necessary) the atom site table.
+  - Begin by choosing between *Neutron* and *X-ray* refinement in the upper right combo box.
+     - By selecting refinement type first, the relevant parameters are available to edit including nuclei and ions.
+        - For magnetic refinement, *Neutron* must be selected to access magnetic information.
+     - To display, different parameters, choose from *Site parameters*, *Structural parameters*, and if available *Magnetic parameters*.
+        - In *Site parameters*, along with the atom (isotope for neutron, ion for X-ray), its occupancy and fractional coordinates $$u$$, $$v$$, $$w$$ can be modified.
+          An atom may also be de-activated or activated for refinement.
+        - In *Structural parameters*, the anisotropic displacement parameters $$U_{ij}$$ may be modified.
+          The equivalent isotropic parameter $$U_\text{iso}$$ and its principal components will be updated ($$U_1$$, $$U_2$$, $$U_3$$).
+          If available, *Magnetic parameters* allows the magnetic ion to be chosen along with the magnetic moment component along the crystal axes.
+          If a valid  `.mcif` is used, the magnetic symmetry will be accounted for. The $$g$$-factor can also be specified.
+     - Select *Magnetic parameters*, choose $$\mathrm{Fe3+}$$ and $$\mathrm{Mn3+}$$ ions and deactivate site 3 since oxygen is nonmagnetic.
+     - Create a supercell with size $$N_1=4$$, $$N_2=4$$, and $$N_3=4$$ by entering the number of cells along each crystal axes.
+3. Optionally save the CIF file of the supercell and visualize it in external program [VESTA](https://jp-minerals.org/vesta/en/).
+
+**Hints**
+- The size of the supercell defines the maximum resolution of the refined reciprocal space pattern.
+  - A larger supercell is needed to refine finer reciprocal space features
+    - Along each dimension $$i$$, the resolution in reciprocal lattice units is $$1/N_i$$
+  - Start with a small number (e.g. $$4\times4\times4$$) and increase as needed.
+    - Too large of a supercell uses more memory and takes longer to refine.
+
+### **Intensity tab**
+
+
+
+
+
+### **Refinement tab**
+
+
+
+### **Correlations tab**
+
+
+
+
+### **Recalculation tab**
