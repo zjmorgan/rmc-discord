@@ -1915,6 +1915,15 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def index_changed_plot_bottom_chi_sq(self, slot):
         self.comboBox_plot_bottom_chi_sq.currentIndexChanged.connect(slot)
         
+    def fixed_moment_check(self):
+        return self.checkBox_fixed_moment.isChecked()
+
+    def fixed_composition_check(self):
+        return self.checkBox_fixed_composition.isChecked()
+        
+    def fixed_displacement_check(self):
+        return self.checkBox_fixed_displacement.isChecked()
+        
     # ---
         
     def batch_checked_1d(self):
@@ -1929,6 +1938,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def set_runs_1d(self, runs):
         self.lineEdit_runs_corr_1d.setText(str(runs))
         
+    def get_runs_1d(self, runs):
+        return int(self.lineEdit_runs_corr_1d.text())
+        
     def batch_checked_3d(self):
         return self.checkBox_batch_corr_3d.isChecked()
     
@@ -1940,6 +1952,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def set_runs_3d(self, runs):
         self.lineEdit_runs_corr_3d.setText(str(runs))
+        
+    def get_runs_3d(self, runs):
+        return int(self.lineEdit_runs_corr_3d.text())
       
     def set_correlations_1d_type(self):
         selection = self.comboBox_correlations_1d.currentIndex()    
@@ -1959,15 +1974,126 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def index_changed_correlations_3d(self, slot):
         self.comboBox_correlations_3d.currentIndexChanged.connect(slot)
         
-    def fixed_moment_check(self):
-        return self.checkBox_fixed_moment.isChecked()
+    def get_correlations_1d(self):
+        return self.comboBox_correlations_1d.currentText()
+    
+    def get_correlations_3d(self):
+        return self.comboBox_correlations_3d.currentText()
+    
+    def get_plot_1d(self):
+        return self.comboBox_plot_1d.currentText()
+    
+    def get_plot_3d(self):
+        return self.comboBox_plot_3d.currentText()    
+    
+    def get_norm_1d(self):
+        return self.comboBox_norm_1d.currentText()
+    
+    def get_norm_3d(self):
+        return self.comboBox_norm_3d.currentText()
 
-    def fixed_composition_check(self):
-        return self.checkBox_fixed_composition.isChecked()
+    def get_fract_1d(self):
+        return self.lineEdit_fract_1d.text()
+    
+    def get_fract_3d(self):
+        return self.lineEdit_fract_3d.text()
+    
+    def get_tol_1d(self):
+        return self.lineEdit_tol_1d.text()
+    
+    def get_tol_3d(self):
+        return self.lineEdit_tol_3d.text()
+ 
+    def get_plot_1d_canvas(self):
+        return self.canvas_1d
+    
+    def get_plot_3d_canvas(self):
+        return self.canvas_3d
+
+    def enable_calculate_1d(self, visible):
+        self.pushButton_calculate_1d.setEnabled(visible)
         
-    def fixed_displacement_check(self):
-        return self.checkBox_fixed_displacement.isChecked()
+    def enable_calculate_3d(self, visible):
+        self.pushButton_calculate_3d.setEnabled(visible)
         
+    def clear_plot_1d_canvas(self):
+        self.canvas_1d.figure.clear()
+        
+    def clear_plot_3d_canvas(self):
+        self.canvas_3d.figure.clear()
+        
+    def create_pairs_3d_table(self, n_pairs):
+        self.tableWidget_pairs_3d.setRowCount(n_pairs)
+        self.tableWidget_pairs_3d.setColumnCount(3)
+        
+        horiz_lbl = 'atom,pair,active'
+        horiz_lbl = horiz_lbl.split(',')
+        self.tableWidget_pairs_3d.setHorizontalHeaderLabels(horiz_lbl)
+        
+        vert_lbl = ['{}'.format(s+1) for s in range(n_pairs)]
+        self.tableWidget_pairs_3d.setVerticalHeaderLabels(vert_lbl)
+        
+    def clear_pairs_3d_table(self):
+        self.tableWidget_pairs_3d.clearContents()
+        self.tableWidget_pairs_3d.setRowCount(0)
+        self.tableWidget_pairs_3d.setColumnCount(0)
+    
+    def format_pairs_3d_table(self):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        stretch = QtWidgets.QHeaderView.Stretch
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+        
+        for i in range(self.tableWidget_pairs_3d.rowCount()):
+            for j in range(self.tableWidget_pairs_3d.columnCount()):
+                item = self.tableWidget_CIF.item(i, j)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    item.setFlags(flags)
+                                
+        horiz_hdr = self.tableWidget_pairs_3d.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        
+        self.tableWidget_pairs_3d.setSpan(0, 0, 1, 2)
+                
+    def get_pairs_3d_table_row_count(self):
+        return self.tableWidget_pairs_3d.rowCount()
+    
+    def get_pairs_3d_table_col_count(self):
+        return self.tableWidget_pairs_3d.columnCount()
+    
+    def get_pairs_3d_table_row(self, i):
+        atom = self.tableWidget_pairs_3d.item(i, 0)
+        pair = self.tableWidget_pairs_3d.item(i, 1)
+        active = self.tableWidget_pairs_3d.cellWidget(i, 2).isChecked()
+        if (atom is not None): atom = atom.text()
+        if (pair is not None): pair = pair.text()
+        return atom, pair, active
+    
+    def set_pairs_3d_table_row(self, data, i):
+        item = QtWidgets.QTableWidgetItem(data[0])
+        self.tableWidget_pairs_3d.setItem(i, 0, item)
+        item = QtWidgets.QTableWidgetItem(data[1])
+        self.tableWidget_pairs_3d.setItem(i, 1, item)        
+        check = QtWidgets.QCheckBox()
+        check.setObjectName('checkBox_pairs_3d_'+str(i))
+        check.setCheckState(QtCore.Qt.Checked) 
+        self.tableWidget_pairs_3d.setCellWidget(i, 2, check)
+        
+    def enable_pairs_3d(self, state):  
+        visible = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        for i in range(self.tableWidget_pairs_3d.rowCount()):
+            check = self.tableWidget_pairs_3d.cellWidget(i, 2)
+            check.setCheckState(QtCore.Qt.Checked) 
+            check.setEnabled(visible)
+    
+    def check_clicked_pairs_3d(self, slot):
+        for i in range(self.tableWidget_pairs_3d.rowCount()):
+            check = self.tableWidget_pairs_3d.cellWidget(i, 2)
+            check.clicked.connect(slot)
+            
+    def get_average_3d(self):
+        return self.checkBox_average_3d.isChecked()
+            
     # ---
         
     def batch_checked_calc(self):

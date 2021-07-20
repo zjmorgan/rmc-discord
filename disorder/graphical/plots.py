@@ -27,7 +27,7 @@ def _transform_extents(matrix, extents):
 def _offset(matrix, minimum):
     return -np.dot(matrix, [0,minimum,0])[0]
 
-def plot_exp(canvas, data, h, k, l,  ih, ik, il, 
+def plot_exp(canvas, data, h, k, l, ih, ik, il, 
              min_h, min_k, min_l, max_h, max_k, max_l, size_h, size_k, size_l, 
              matrix_h, matrix_k, matrix_l, scale_h, scale_k, scale_l,
              norm, vmin, vmax):

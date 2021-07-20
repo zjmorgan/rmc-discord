@@ -1969,9 +1969,7 @@ class Presenter:
                 self.ref_arr_m = self.signal_m 
             else:
                 self.ref_arr_m = self.error_sq_m 
-                
-            print(self.ref_arr_m)
-    
+                    
             self.view.set_min_ref(self.ref_arr_m.min())
             self.view.set_max_ref(self.ref_arr_m.max())
             
@@ -1992,3 +1990,90 @@ class Presenter:
             
             plots.chi_sq(canvas, plot0, plot1, acc_moves, rej_moves, 
                          temperature, energy, chi_sq, scale)
+            
+    def recreate_table_3d(self):
+                
+        unique_pairs = np.unique(self.atm_pair3d)
+        
+        rows = self.get_pairs_3d_table_row_count()
+        
+        pairs = []
+        for i in range(rows):
+            left, right, active = self.view.get_pairs_3d_table_row()
+            if (left == 'self-correlation'):
+                pairs.append('0')
+            else:
+                pairs.append('{}_{}'.format(left,right))
+                        
+        if (rows == 0 or unique_pairs.tolist() != np.unique(pairs).tolist()):
+            
+            n_pairs = unique_pairs.size
+            self.clear_pairs_3d_table()
+            self.view.create_pairs_3d_table(n_pairs)
+                       
+            for i in range(n_pairs):
+                uni = unique_pairs[i]
+                if (uni == '0'):
+                    uni = 'self-correlation'
+                    self.view.set_pairs_3d_table_row([uni, ' ' , True], i)
+                else:
+                    left, right = uni.split('_')
+                    self.view.set_pairs_3d_table_row([left, right, True], i)
+
+            visible = False if self.view.get_average_3d() else True   
+            self.view.enable_pairs_3d(visible)
+            self.view.check_clicked_pairs_3d(self.plot_3d)
+            self.view.format_pairs_3d_table()
+        
+    def calculate_correlations_3d_thread_complete(self):
+                
+        self.view.enable_calculate_3d(True)
+        self.recreate_table_3d() 
+        self.plot_3d()
+        
+    def calculate_correlations_3d(self):
+        
+        if (self.get_pairs_3d_table_row_count() > 0):
+                        
+            disorder = self.view.get_correlations_3d()
+            
+            aligned = (disorder == 'Moment' and self.magnetic) or \
+                      (disorder == 'Occupancy' and self.occupational) or \
+                      (disorder == 'Displacement' and self.displacive)
+                       
+            if (self.progress > 0 and self.allocated and aligned):
+                
+                self.view.enable_calculate_3d(False)
+                
+                calculate_3d = self.view.worker(
+                                   self.calculate_correlations_3d_thread)
+                self.view.finished(
+                    calculate_3d, 
+                    self.calculate_correlations_3d_thread_complete)
+                self.threadpool.start(calculate_3d) 
+
+    def calculate_correlations_3d_thread(self, callback):
+                
+        disorder = self.view.get_correlations_3d()
+
+        fract = self.view.get_fract_3d()
+        tol = self.view.get_tol_3d()
+        
+        runs = self.view.get_runs_3d()
+        
+    # def plot_3d(self):
+        
+    #     disorder = self.view.get_correlations_3d()
+    #     correlation = self.view.get_plot_3d()
+    #     norm = self.get_norm_3d()
+        
+    #     if (correlation == 'Correlation'):
+    #         data = self.S_corr3d
+    #     else:
+    #         data = self.S_coll3d
+
+    #     canvas = self.view.get_plot_3d_canvas()
+        
+    #     plots.correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, plane, 
+    #                         atm_pair3d, disorder, correlation, average, norm, atoms, 
+    #                         pairs, A, B, tol)
