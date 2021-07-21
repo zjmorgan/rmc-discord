@@ -154,7 +154,7 @@ def form(Q, ions, g=2):
 
     return factor
 
-def spin(nu, nv, nw, n_atm):
+def spin(nu, nv, nw, n_atm, value=1):
     """
     Generate random spin vectors.
 
@@ -182,9 +182,9 @@ def spin(nu, nv, nw, n_atm):
     theta = 2*np.pi*np.random.rand(nu,nv,nw,n_atm)
     phi = np.arccos(1-2*np.random.rand(nu,nv,nw,n_atm))
 
-    Sx = np.sin(phi)*np.cos(theta)
-    Sy = np.sin(phi)*np.sin(theta)
-    Sz = np.cos(phi)
+    Sx = value*np.sin(phi)*np.cos(theta)
+    Sy = value*np.sin(phi)*np.sin(theta)
+    Sz = value*np.cos(phi)
 
     return Sx.flatten(), Sy.flatten(), Sz.flatten()
 

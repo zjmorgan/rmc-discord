@@ -1420,13 +1420,33 @@ class Presenter:
         self.temperature = [self.view.get_prefactor()]
         self.scale = []
         
+    def initialize_disorder(self):
+        
+        nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
+        
+        moment = self.moment
+        
+        Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm, moment)
+        
+        self.Sx, self.Sy, self.Sz = Sx, Sy, Sz 
+        
+        occupancy = self.occupancy
+        
+        A_r = self.model.random_occupancies(nu, nv, nw, n_atm, occupancy)
+        
+        self.A_r = A_r 
+        
+        Uiso = self.Uiso
+        
+        Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, Uiso)
+        
+        self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
+        
     def initialize_magnetic(self):
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
         
-        Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm)
-        
-        self.Sx, self.Sy, self.Sz = Sx, Sy, Sz 
+        Sx, Sy, Sz = self.Sx, self.Sy, self.Sz
         
         H, K, L = self.H, self.K, self.L
         Qx_norm, Qy_norm, Qz_norm = self.Qx_norm, self.Qy_norm, self.Qz_norm
@@ -1454,11 +1474,7 @@ class Presenter:
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
         
-        occupancy = self.occupancy
-        
-        A_r = self.model.random_occupancies(nu, nv, nw, n_atm, occupancy)
-        
-        self.A_r = A_r 
+        A_r = self.A_r 
         
         H, K, L = self.H, self.K, self.L
         
@@ -1476,11 +1492,7 @@ class Presenter:
             
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
         
-        Uiso = self.Uiso
-        
-        Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, Uiso)
-        
-        self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
+        Ux, Uy, Uz = self.Ux, self.Uy, self.Uz
         
         H, K, L = self.H, self.K, self.L
         h, k, l = self.h, self.k, self.l
@@ -1699,6 +1711,7 @@ class Presenter:
                 self.displacive = self.view.get_disorder_dis()   
                 
                 self.preprocess_supercell()
+                self.initialize_disorder()
                 self.initialize_intensity()
                 self.refinement_statistics()
                 self.filter_sigma()
@@ -1991,6 +2004,194 @@ class Presenter:
             plots.chi_sq(canvas, plot0, plot1, acc_moves, rej_moves, 
                          temperature, energy, chi_sq, scale)
             
+    # ---
+    
+    def recreate_table_1d(self):
+                
+        unique_pairs = np.unique(self.atm_pair1d)
+        
+        rows = self.get_pairs_1d_table_row_count()
+        
+        pairs = []
+        for i in range(rows):
+            left, right, active = self.view.get_pairs_1d_table_row(i)
+            if (left == 'self-correlation'):
+                pairs.append('0')
+            else:
+                pairs.append('{}_{}'.format(left,right))
+                        
+        if (rows == 0 or unique_pairs.tolist() != np.unique(pairs).tolist()):
+            
+            n_pairs = unique_pairs.size
+            self.clear_pairs_1d_table()
+            self.view.create_pairs_1d_table(n_pairs)
+                       
+            for i in range(n_pairs):
+                uni = unique_pairs[i]
+                if (uni == '0'):
+                    uni = 'self-correlation'
+                    self.view.set_pairs_1d_table_row([uni, ' ' , True], i)
+                else:
+                    left, right = uni.split('_')
+                    self.view.set_pairs_1d_table_row([left, right, True], i)
+
+            visible = False if self.view.get_average_1d() else True   
+            self.view.enable_pairs_1d(visible)
+            self.view.check_clicked_pairs_1d(self.plot_1d)
+            self.view.format_pairs_1d_table()
+        
+    def calculate_1d_thread_complete(self):
+                
+        self.view.enable_calculate_1d(True)
+        self.recreate_table_1d() 
+        self.plot_1d()
+        
+    def calculate_correlations_1d(self):
+        
+        if (self.get_pairs_1d_table_row_count() > 0):
+                        
+            disorder = self.view.get_correlations_1d()
+            
+            aligned = (disorder == 'Moment' and self.magnetic) or \
+                      (disorder == 'Occupancy' and self.occupational) or \
+                      (disorder == 'Displacement' and self.displacive)
+                       
+            if (self.progress > 0 and self.allocated and aligned):
+                
+                self.view.enable_calculate_1d(False)
+                
+                calculate_1d = self.view.worker(self.calculate_1d_thread)
+                self.view.finished(calculate_1d, 
+                                   self.calculate_1d_thread_complete)
+                self.threadpool.start(calculate_1d) 
+
+    def calculate_1d_thread(self, callback):
+                
+        disorder = self.view.get_correlations_1d()
+
+        fract = self.view.get_fract_1d()
+        tol = self.view.get_tol_1d()
+        
+        runs = self.view.get_runs_1d()
+        
+        nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
+        
+        A = self.A
+        
+        rx, ry, rz, atms = self.rx, self.ry, self.rz, self.atms
+                
+        period = (A, nu, nv, nw, n_atm)
+        
+        corr1d_arrs, coll1d_arrs = [], []
+        
+        for run in range(runs):
+            
+            if (disorder == 'Moment'):
+        
+                Sx, Sy, Sz = self.model.load_magnetic(self.fname, run)
+                
+                corr1d, coll1d, \
+                d, \
+                atm_pair1d = self.model.vector_correlations_1d(Sx, Sy, Sz, 
+                                                               rx, ry, rz,
+                                                               atms, fract, 
+                                                               tol, period)
+                
+                corr1d_arrs.append(corr1d)
+                coll1d_arrs.append(coll1d)
+                
+            elif (disorder == 'Occupancy'):
+                
+                A_r = self.model.load_occupational(self.fname, run)
+                
+                corr1d, \
+                dx, dy, dz, \
+                atm_pair1d = self.model.scalar_correlations_1d(A_r, rx, ry, rz,
+                                                               atms, fract, 
+                                                               tol, period)
+                
+                corr1d_arrs.append(corr1d)
+                
+            elif (disorder == 'Displacement'):
+        
+                Ux, Uy, Uz = self.model.load_displacive(self.fname, run)
+                
+                corr1d, coll1d, \
+                corr1d_, coll1d_, \
+                d, \
+                atm_pair1d = self.model.vector_correlations_1d(Ux, Uy, Uz, 
+                                                               rx, ry, rz,
+                                                               atms, fract, 
+                                                               tol, period)
+                
+                corr1d_arrs.append(corr1d)
+                coll1d_arrs.append(coll1d)               
+                
+        stats_corr1d = self.model.correlation_statistics(corr1d_arrs)
+        corr1d, sigma_sq_corr1d = stats_corr1d
+    
+        if (disorder != 'Occupancy'):
+            
+            stats_coll1d = self.model.correlation_statistics(coll1d_arrs)
+            coll1d, sigma_sq_coll1d = stats_coll1d
+                
+        if self.view.average_1d_checked():
+            
+            if (disorder != 'Occupancy'):
+                
+                data1d = [corr1d, coll1d, sigma_sq_corr1d, 
+                          sigma_sq_coll1d, d, tol]
+            
+                ave1d = self.model.vector_average_1d(*data1d)
+                
+                corr1d, coll1d, sigma_sq_corr1d, \
+                sigma_sq_coll1d, d = ave1d
+            
+            else:
+                
+                data1d = [corr1d, sigma_sq_corr1d, d, tol]
+                
+                ave1d = self.model.scalar_average_1d(*data1d)
+                
+                corr1d, sigma_sq_corr1d, d = ave1d
+         
+        self.d, self.atm_pair1d = d, atm_pair1d
+        
+        self.corr1d, self.sigma_sq_corr1d = corr1d, sigma_sq_corr1d
+        
+        if (disorder != 'Occupancy'):
+                
+            self.coll1d, self.sigma_sq_coll1d = coll1d, sigma_sq_coll1d
+
+    def plot_1d(self):
+        
+        disorder = self.view.get_correlations_1d()
+        correlation = self.view.get_plot_1d()
+        norm = self.get_norm_1d()
+                
+        average = self.view.average_1d_checked()
+        
+        d, atm_pair1d = self.d, self.atm_pair1d 
+
+        if (correlation == 'Correlation'):
+            data = self.corr1d
+            error = self.sigma_sq_corr1d
+        else:
+            data = self.coll1d
+            error = self.sigma_sq_coll1d
+
+        canvas = self.view.get_plot_1d_canvas()
+        
+        atoms, pairs = [], []
+        for i in range(self.get_pairs_1d_table_row_count()):
+            left, right, active = self.view.get_pairs_1d_table_row(i)
+            if active:
+                atoms.append(left)
+                pairs.append(right)
+        
+        plots.correlations_1d(canvas, d, data, error, atm_pair1d, disorder, 
+                              correlation, average, norm, atoms, pairs)
+
     def recreate_table_3d(self):
                 
         unique_pairs = np.unique(self.atm_pair3d)
@@ -1999,7 +2200,7 @@ class Presenter:
         
         pairs = []
         for i in range(rows):
-            left, right, active = self.view.get_pairs_3d_table_row()
+            left, right, active = self.view.get_pairs_3d_table_row(i)
             if (left == 'self-correlation'):
                 pairs.append('0')
             else:
@@ -2025,7 +2226,7 @@ class Presenter:
             self.view.check_clicked_pairs_3d(self.plot_3d)
             self.view.format_pairs_3d_table()
         
-    def calculate_correlations_3d_thread_complete(self):
+    def calculate_3d_thread_complete(self):
                 
         self.view.enable_calculate_3d(True)
         self.recreate_table_3d() 
@@ -2045,14 +2246,12 @@ class Presenter:
                 
                 self.view.enable_calculate_3d(False)
                 
-                calculate_3d = self.view.worker(
-                                   self.calculate_correlations_3d_thread)
-                self.view.finished(
-                    calculate_3d, 
-                    self.calculate_correlations_3d_thread_complete)
+                calculate_3d = self.view.worker(self.calculate_3d_thread)
+                self.view.finished(calculate_3d, 
+                                   self.calculate_3d_thread_complete)
                 self.threadpool.start(calculate_3d) 
 
-    def calculate_correlations_3d_thread(self, callback):
+    def calculate_3d_thread(self, callback):
                 
         disorder = self.view.get_correlations_3d()
 
@@ -2061,19 +2260,151 @@ class Presenter:
         
         runs = self.view.get_runs_3d()
         
-    # def plot_3d(self):
+        nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
         
-    #     disorder = self.view.get_correlations_3d()
-    #     correlation = self.view.get_plot_3d()
-    #     norm = self.get_norm_3d()
+        A = self.A
         
-    #     if (correlation == 'Correlation'):
-    #         data = self.S_corr3d
-    #     else:
-    #         data = self.S_coll3d
+        rx, ry, rz, atms = self.rx, self.ry, self.rz, self.atms
+        
+        folder, filename = self.folder, self.filename
+        
+        period = (A, nu, nv, nw, n_atm)
+        
+        corr3d_arrs, coll3d_arrs = [], []
+        
+        for run in range(runs):
+            
+            if (disorder == 'Moment'):
+        
+                Sx, Sy, Sz = self.model.load_magnetic(self.fname, run)
+                
+                corr3d, coll3d, \
+                dx, dy, dz, \
+                atm_pair3d = self.model.vector_correlations_3d(Sx, Sy, Sz, 
+                                                               rx, ry, rz,
+                                                               atms, fract, 
+                                                               tol, period)
+                
+                corr3d_arrs.append(corr3d)
+                coll3d_arrs.append(coll3d)
+                
+            elif (disorder == 'Occupancy'):
+                
+                A_r = self.model.load_occupational(self.fname, run)
+                
+                corr3d, \
+                dx, dy, dz, \
+                atm_pair3d = self.model.scalar_correlations_3d(A_r, rx, ry, rz,
+                                                               atms, fract, 
+                                                               tol, period)
+                
+                corr3d_arrs.append(corr3d)
+                
+            elif (disorder == 'Displacement'):
+        
+                Ux, Uy, Uz = self.model.load_displacive(self.fname, run)
+                
+                corr3d, coll3d, \
+                corr3d_, coll3d_, \
+                dx, dy, dz, \
+                atm_pair3d = self.model.vector_correlations_3d(Ux, Uy, Uz, 
+                                                               rx, ry, rz,
+                                                               atms, fract, 
+                                                               tol, period)
+                
+                corr3d_arrs.append(corr3d)
+                coll3d_arrs.append(coll3d)               
+                
+        stats_corr3d = self.model.correlation_statistics(corr3d_arrs)
+        corr3d, sigma_sq_corr3d = stats_corr3d
+    
+        if (disorder != 'Occupancy'):
+            
+            stats_coll3d = self.model.correlation_statistics(coll3d_arrs)
+            coll3d, sigma_sq_coll3d = stats_coll3d
+            
+        if self.view.symmetrize_checked():
+            
+            if (disorder != 'Occupancy'):
+                
+                data3d = [corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d, 
+                          dx, dy, dz, atm_pair3d, A, folder, filename, tol]
+            
+                symm3d = self.model.vector_symmetrize_3d(*data3d)
+                 
+                corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d, \
+                dx, dy, dz, atm_pair3d = symm3d
+        
+            else:
+                
+                data3d = [corr3d, sigma_sq_corr3d, dx, dy, dz, 
+                          atm_pair3d, A, folder, filename, tol]
+                       
+                symm3d = self.model.scalar_symmetrizes_3d(*data3d)
 
-    #     canvas = self.view.get_plot_3d_canvas()
+                corr3d, sigma_sq_corr3d, dx, dy, dz, atm_pair3d = symm3d
+                
+        if self.view.average_3d_checked():
+            
+            if (disorder != 'Occupancy'):
+                
+                data3d = [corr3d, coll3d, sigma_sq_corr3d, 
+                          sigma_sq_coll3d, dx, dy, dz, tol]
+            
+                ave3d = self.model.vector_average_3d(*data3d)
+                
+                corr3d, coll3d, sigma_sq_corr3d, \
+                sigma_sq_coll3d, dx, dy, dz = ave3d
+            
+            else:
+                
+                data3d = [corr3d, sigma_sq_corr3d, dx, dy, dz, tol]
+                
+                ave3d = self.model.scalar_average_3d(*data3d)
+                
+                corr3d, sigma_sq_corr3d, dx, dy, dz = ave3d
+         
+        self.dx, self.dy, self.dz, self.atm_pair3d = dx, dy, dz, atm_pair3d
         
-    #     plots.correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, plane, 
-    #                         atm_pair3d, disorder, correlation, average, norm, atoms, 
-    #                         pairs, A, B, tol)
+        self.corr3d, self.sigma_sq_corr3d = corr3d, sigma_sq_corr3d
+        
+        if (disorder != 'Occupancy'):
+                
+            self.coll3d, self.sigma_sq_coll3d = coll3d, sigma_sq_coll3d
+
+    def plot_3d(self):
+        
+        disorder = self.view.get_correlations_3d()
+        correlation = self.view.get_plot_3d()
+        norm = self.get_norm_3d()
+        
+        tol = self.view.get_tol_3d()
+        
+        average = self.view.average_3d_checked()
+        
+        h, k, l = self.view.get_h(), self.view.get_k(), self.view.get_l()
+        d = self.view.get_d()
+        
+        A, B = self.A, self.B
+        
+        dx, dy, dz, atm_pair3d = self.dx, self.dy, self.dz, self.atm_pair3d 
+
+        if (correlation == 'Correlation'):
+            data = self.corr3d
+            error = self.sigma_sq_corr3d
+        else:
+            data = self.coll3d
+            error = self.sigma_sq_coll3d
+
+        canvas = self.view.get_plot_3d_canvas()
+        
+        atoms, pairs = [], []
+        for i in range(self.get_pairs_3d_table_row_count()):
+            left, right, active = self.view.get_pairs_3d_table_row(i)
+            if active:
+                atoms.append(left)
+                pairs.append(right)
+        
+        plots.correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, 
+                              atm_pair3d, disorder, correlation, average, 
+                              norm, atoms, pairs, A, B, tol)

@@ -2022,6 +2022,20 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def clear_plot_3d_canvas(self):
         self.canvas_3d.figure.clear()
         
+    def symmetrize_checked(self):
+        return self.checkBox_symmetrize.isChecked()
+    
+    def create_pairs_1d_table(self, n_pairs):
+        self.tableWidget_pairs_1d.setRowCount(n_pairs)
+        self.tableWidget_pairs_1d.setColumnCount(3)
+        
+        horiz_lbl = 'atom,pair,active'
+        horiz_lbl = horiz_lbl.split(',')
+        self.tableWidget_pairs_1d.setHorizontalHeaderLabels(horiz_lbl)
+        
+        vert_lbl = ['{}'.format(s+1) for s in range(n_pairs)]
+        self.tableWidget_pairs_1d.setVerticalHeaderLabels(vert_lbl)
+        
     def create_pairs_3d_table(self, n_pairs):
         self.tableWidget_pairs_3d.setRowCount(n_pairs)
         self.tableWidget_pairs_3d.setColumnCount(3)
@@ -2032,11 +2046,33 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         vert_lbl = ['{}'.format(s+1) for s in range(n_pairs)]
         self.tableWidget_pairs_3d.setVerticalHeaderLabels(vert_lbl)
+     
+    def clear_pairs_1d_table(self):
+        self.tableWidget_pairs_1d.clearContents()
+        self.tableWidget_pairs_1d.setRowCount(0)
+        self.tableWidget_pairs_1d.setColumnCount(0)
         
     def clear_pairs_3d_table(self):
         self.tableWidget_pairs_3d.clearContents()
         self.tableWidget_pairs_3d.setRowCount(0)
         self.tableWidget_pairs_3d.setColumnCount(0)
+        
+    def format_pairs_1d_table(self):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        stretch = QtWidgets.QHeaderView.Stretch
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+        
+        for i in range(self.tableWidget_pairs_1d.rowCount()):
+            for j in range(self.tableWidget_pairs_1d.columnCount()):
+                item = self.tableWidget_CIF.item(i, j)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    item.setFlags(flags)
+                                
+        horiz_hdr = self.tableWidget_pairs_1d.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        
+        self.tableWidget_pairs_1d.setSpan(0, 0, 1, 2)
     
     def format_pairs_3d_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
@@ -2054,12 +2090,26 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         horiz_hdr.setSectionResizeMode(stretch)
         
         self.tableWidget_pairs_3d.setSpan(0, 0, 1, 2)
+        
+    def get_pairs_1d_table_row_count(self):
+        return self.tableWidget_pairs_1d.rowCount()
                 
     def get_pairs_3d_table_row_count(self):
         return self.tableWidget_pairs_3d.rowCount()
+ 
+    def get_pairs_1d_table_col_count(self):
+        return self.tableWidget_pairs_1d.columnCount()
     
     def get_pairs_3d_table_col_count(self):
         return self.tableWidget_pairs_3d.columnCount()
+ 
+    def get_pairs_1d_table_row(self, i):
+        atom = self.tableWidget_pairs_1d.item(i, 0)
+        pair = self.tableWidget_pairs_1d.item(i, 1)
+        active = self.tableWidget_pairs_1d.cellWidget(i, 2).isChecked()
+        if (atom is not None): atom = atom.text()
+        if (pair is not None): pair = pair.text()
+        return atom, pair, active
     
     def get_pairs_3d_table_row(self, i):
         atom = self.tableWidget_pairs_3d.item(i, 0)
@@ -2068,6 +2118,16 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         if (atom is not None): atom = atom.text()
         if (pair is not None): pair = pair.text()
         return atom, pair, active
+ 
+    def set_pairs_1d_table_row(self, data, i):
+        item = QtWidgets.QTableWidgetItem(data[0])
+        self.tableWidget_pairs_1d.setItem(i, 0, item)
+        item = QtWidgets.QTableWidgetItem(data[1])
+        self.tableWidget_pairs_1d.setItem(i, 1, item)        
+        check = QtWidgets.QCheckBox()
+        check.setObjectName('checkBox_pairs_3d_'+str(i))
+        check.setCheckState(QtCore.Qt.Checked) 
+        self.tableWidget_pairs_1d.setCellWidget(i, 2, check)
     
     def set_pairs_3d_table_row(self, data, i):
         item = QtWidgets.QTableWidgetItem(data[0])
@@ -2078,7 +2138,14 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         check.setObjectName('checkBox_pairs_3d_'+str(i))
         check.setCheckState(QtCore.Qt.Checked) 
         self.tableWidget_pairs_3d.setCellWidget(i, 2, check)
-        
+ 
+    def enable_pairs_1d(self, state):  
+        visible = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        for i in range(self.tableWidget_pairs_1d.rowCount()):
+            check = self.tableWidget_pairs_1d.cellWidget(i, 2)
+            check.setCheckState(QtCore.Qt.Checked) 
+            check.setEnabled(visible)
+            
     def enable_pairs_3d(self, state):  
         visible = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
         for i in range(self.tableWidget_pairs_3d.rowCount()):
@@ -2086,13 +2153,33 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             check.setCheckState(QtCore.Qt.Checked) 
             check.setEnabled(visible)
     
+    def check_clicked_pairs_1d(self, slot):
+        for i in range(self.tableWidget_pairs_1d.rowCount()):
+            check = self.tableWidget_pairs_1d.cellWidget(i, 2)
+            check.clicked.connect(slot)
+            
     def check_clicked_pairs_3d(self, slot):
         for i in range(self.tableWidget_pairs_3d.rowCount()):
             check = self.tableWidget_pairs_3d.cellWidget(i, 2)
             check.clicked.connect(slot)
-            
-    def get_average_3d(self):
+ 
+    def average_1d_checked(self):
+        return self.checkBox_average_1d.isChecked()
+    
+    def average_3d_checked(self):
         return self.checkBox_average_3d.isChecked()
+    
+    def get_h(self):
+        return int(self.lineEdit_plane_h.text())
+    
+    def get_k(self):
+        return int(self.lineEdit_plane_k.text())
+    
+    def get_l(self):    
+        return int(self.lineEdit_plane_l.text())
+    
+    def get_d(self):
+        return float(self.lineEdit_plane_d.text())
             
     # ---
         

@@ -399,7 +399,7 @@ class MinorSymLogLocator(Locator):
         raise NotImplementedError('Cannot get tick locations for a '
                           '%s type.' % type(self))
     
-def correlations_1d(canvas, d, data, error, mask, atm_pair, disorder, 
+def correlations_1d(canvas, d, data, error, atm_pair, disorder, 
                     correlation, average, norm, atoms, pairs):
         
     fig = canvas.figure
@@ -408,10 +408,9 @@ def correlations_1d(canvas, d, data, error, mask, atm_pair, disorder,
     ax = fig.add_subplot(111)
 
     if (correlation == 'Correlation'):   
-        
         ax.axhline(y=0, xmin=0, xmax=1, color='k', linestyle='-', linewidth=1)
         
-    if average:   
+    if average:  
         
         ax.scatter(d, data, marker='o', clip_on=False, zorder=50)
         
@@ -533,13 +532,13 @@ def _mask_plane(dx, dy, dz, h, k, l, d, A, B, tol):
          d0 = (px*dx[plane]+py*dy[plane]+pz*dz[plane])*scale_d0
          d1 = (qx*dx[plane]+qy*dy[plane]+qz*dz[plane])*scale_d1
          
-         return cor_aspect, proj0, proj1, d0, d1
+         return cor_aspect, proj0, proj1, d0, d1, plane
     
 def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, plane, 
                     atm_pair3d, disorder, correlation, average, norm, atoms, 
                     pairs, A, B, tol):
     
-    cor_aspect, proj0, proj1, d0, d1 = _mask_plane(dx, dy, dz, h, k, l, d)
+    aspect, proj0, proj1, d0, d1, plane = _mask_plane(dx, dy, dz, h, k, l, d)
 
     if (correlation == 'Correlation'):
         vmin = -1.0
@@ -563,23 +562,20 @@ def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, plane,
     if average:   
         
         s = ax.scatter(d0, d1, c=data[plane], norm=normalize, cmap=cmap)
+        
     else:
         
         for atom, pair in zip(atoms, pairs):
             
             if (atom == 'self-correlation'):
-                
                 mask = atm_pair3d[plane] == '0'
-                
             else:
-                
                 mask = atm_pair3d[plane] == atom+'_'+pair
                 
             s = ax.scatter(d0[mask], d1[mask], c=data[plane][mask], 
                            norm=normalize, cmap=cmap)
         
-    if (len(atom) == 0):
-        s = ax.scatter(0, 0, c=0, norm=normalize, cmap=cmap)            
+    if (len(atom) == 0): s = ax.scatter(0, 0, c=0, norm=normalize, cmap=cmap)            
 
     cb = fig.colorbar(s, format='%.1f')
     cb.ax.minorticks_on()
@@ -601,18 +597,17 @@ def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, plane,
     
     scale = np.gcd.reduce([h, k, l])
     
-    if (scale != 0):
-        h, k, l = np.array([h, k, l]) // scale
+    if (scale != 0):  h, k, l = np.array([h, k, l]) // scale
 
-    H = str(h) if (h >= 0) else r'\bar{'+str(np.abs(h))+'}'
-    K = str(k) if (k >= 0) else r'\bar{'+str(np.abs(k))+'}'
-    L = str(l) if (l >= 0) else r'\bar{'+str(np.abs(l))+'}'
+    H = str(h) if (h >= 0) else r'\bar{{{}}}'.format(h)
+    K = str(k) if (k >= 0) else r'\bar{{{}}}'.format(k)
+    L = str(l) if (l >= 0) else r'\bar{{{}}}'.format(l)
        
-    ax.set_title(r'$('+H+K+L+')\cdot[uvw]='+str(d)+'$', fontsize='small')
+    ax.set_title(r'$({}{}{})\cdot[uvw]={}$'.format(H,K,L,d), fontsize='small')
 
     ax.minorticks_on()
     
-    ax.set_aspect(cor_aspect)
+    ax.set_aspect(aspect)
     
     uvw = np.array(['u','v','w'])
     
