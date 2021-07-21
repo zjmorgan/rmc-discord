@@ -244,8 +244,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def create_threadpool(self):
         return QtCore.QThreadPool()
     
-    def worker(self, slot):
-        return Worker(slot)
+    def worker(self, *args, **kwargs):
+        return Worker(*args, **kwargs)
         
     def progress(self, worker, slot):
         worker.signals.progress.connect(slot)

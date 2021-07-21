@@ -1,0 +1,453 @@
+ 
+data_exp_natrolite_300K
+ 
+_audit_creation_method            'SHELXL-2016/6'
+_shelx_SHELXL_version_number      '2016/6'
+_chemical_name_systematic         ?
+_chemical_name_common             ?
+_chemical_melting_point           ?
+_chemical_formula_moiety          ?
+_chemical_formula_sum
+ 'Al2.29 H4.57 Na2.29 O13.71 Si3.43' 
+_chemical_formula_weight          434.56
+
+loop_
+ _atom_type_symbol
+ _atom_type_description
+ _atom_type_scat_dispersion_real
+ _atom_type_scat_dispersion_imag
+ _atom_type_scat_source
+ 'Na'  'Na'   0.0362   0.0249
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ 'Al'  'Al'   0.0645   0.0514
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ 'Si'  'Si'   0.0817   0.0704
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ 'O'  'O'   0.0106   0.0060
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ 'H'  'H'   0.0000   0.0000
+ 'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
+ 
+_space_group_crystal_system       orthorhombic
+_space_group_IT_number            43
+_space_group_name_H-M_alt         'F d d 2'
+_space_group_name_Hall            'F 2 -2d'
+ 
+_shelx_space_group_comment
+;
+The symmetry employed for this shelxl refinement is uniquely defined
+by the following loop, which should always be used as a source of
+symmetry information in preference to the above space-group names.
+They are only intended as comments.
+;
+ 
+loop_
+ _space_group_symop_operation_xyz
+ 'x, y, z'
+ '-x, -y, z'
+ 'x+1/4, -y+1/4, z+1/4'
+ '-x+1/4, y+1/4, z+1/4'
+ 'x, y+1/2, z+1/2'
+ '-x, -y+1/2, z+1/2'
+ 'x+1/4, -y+3/4, z+3/4'
+ '-x+1/4, y+3/4, z+3/4'
+ 'x+1/2, y, z+1/2'
+ '-x+1/2, -y, z+1/2'
+ 'x+3/4, -y+1/4, z+3/4'
+ '-x+3/4, y+1/4, z+3/4'
+ 'x+1/2, y+1/2, z'
+ '-x+1/2, -y+1/2, z'
+ 'x+3/4, -y+3/4, z+1/4'
+ '-x+3/4, y+3/4, z+1/4'
+ 
+_cell_length_a                    18.6550(10)
+_cell_length_b                    18.3016(10)
+_cell_length_c                    6.5919(4)
+_cell_angle_alpha                 90
+_cell_angle_beta                  90
+_cell_angle_gamma                 90
+_cell_volume                      2250.6(2)
+_cell_formula_units_Z             7
+_cell_measurement_temperature     293(2)
+_cell_measurement_reflns_used     ?
+_cell_measurement_theta_min       ?
+_cell_measurement_theta_max       ?
+ 
+_exptl_crystal_description        ?
+_exptl_crystal_colour             ?
+_exptl_crystal_density_meas       ?
+_exptl_crystal_density_method     ?
+_exptl_crystal_density_diffrn     2.244          
+_exptl_crystal_F_000              1520
+_exptl_transmission_factor_min    ?
+_exptl_transmission_factor_max    ?
+_exptl_crystal_size_max           ?
+_exptl_crystal_size_mid           ?
+_exptl_crystal_size_min           ?
+_exptl_absorpt_coefficient_mu     0.715
+_shelx_estimated_absorpt_T_min    ?
+_shelx_estimated_absorpt_T_max    ?
+_exptl_absorpt_correction_type    ?
+_exptl_absorpt_correction_T_min   ?
+_exptl_absorpt_correction_T_max   ?
+_exptl_absorpt_process_details    ?
+_exptl_absorpt_special_details    ?
+_diffrn_ambient_temperature       293(2)
+_diffrn_radiation_wavelength      0.71075
+_diffrn_radiation_type            MoK\a
+_diffrn_source                    ?
+_diffrn_measurement_device_type   ?
+_diffrn_measurement_method        ?
+_diffrn_detector_area_resol_mean  ?
+_diffrn_reflns_number             8297
+_diffrn_reflns_av_unetI/netI      0.0187
+_diffrn_reflns_av_R_equivalents   0.0226
+_diffrn_reflns_limit_h_min        -28
+_diffrn_reflns_limit_h_max        26
+_diffrn_reflns_limit_k_min        -25
+_diffrn_reflns_limit_k_max        26
+_diffrn_reflns_limit_l_min        -9
+_diffrn_reflns_limit_l_max        8
+_diffrn_reflns_theta_min          4.370
+_diffrn_reflns_theta_max          32.980
+_diffrn_reflns_theta_full         25.242
+_diffrn_measured_fraction_theta_max   0.923
+_diffrn_measured_fraction_theta_full  0.996
+_diffrn_reflns_Laue_measured_fraction_max    0.923
+_diffrn_reflns_Laue_measured_fraction_full   0.996
+_diffrn_reflns_point_group_measured_fraction_max   0.867
+_diffrn_reflns_point_group_measured_fraction_full  0.995
+_reflns_number_total              1837
+_reflns_number_gt                 1797
+_reflns_threshold_expression      'I > 2\s(I)'
+_reflns_Friedel_coverage          0.750
+_reflns_Friedel_fraction_max      0.801
+_reflns_Friedel_fraction_full     0.994
+ 
+_reflns_special_details
+;
+ Reflections were merged by SHELXL according to the crystal
+ class for the calculation of statistics and refinement.
+ 
+ _reflns_Friedel_fraction is defined as the number of unique
+ Friedel pairs measured divided by the number that would be
+ possible theoretically, ignoring centric projections and
+ systematic absences.
+;
+ 
+_computing_data_collection        ?
+_computing_cell_refinement        ?
+_computing_data_reduction         ?
+_computing_structure_solution     ?
+_computing_structure_refinement 'SHELXL-2016/6 (Sheldrick, 2016)'
+_computing_molecular_graphics     ?
+_computing_publication_material   ?
+_refine_special_details           ?
+_refine_ls_structure_factor_coef  Fsqd
+_refine_ls_matrix_type            full
+_refine_ls_weighting_scheme       calc
+_refine_ls_weighting_details
+'w=1/[\s^2^(Fo^2^)+(0.0309P)^2^+1.8781P] where P=(Fo^2^+2Fc^2^)/3'
+_atom_sites_solution_primary      ?
+_atom_sites_solution_secondary    ?
+_atom_sites_solution_hydrogens    difmap
+_refine_ls_hydrogen_treatment     refall
+_refine_ls_extinction_method      none
+_refine_ls_extinction_coef        .
+_refine_ls_abs_structure_details
+;
+ Flack x determined using 758 quotients [(I+)-(I-)]/[(I+)+(I-)]
+ (Parsons, Flack and Wagner, Acta Cryst. B69 (2013) 249-259).
+;
+_refine_ls_abs_structure_Flack    0.97(5)
+_chemical_absolute_configuration  ?
+_refine_ls_number_reflns          1837
+_refine_ls_number_parameters      95
+_refine_ls_number_restraints      1
+_refine_ls_R_factor_all           0.0209
+_refine_ls_R_factor_gt            0.0202
+_refine_ls_wR_factor_ref          0.0543
+_refine_ls_wR_factor_gt           0.0541
+_refine_ls_goodness_of_fit_ref    1.137
+_refine_ls_restrained_S_all       1.137
+_refine_ls_shift/su_max           0.000
+_refine_ls_shift/su_mean          0.000
+ 
+loop_
+ _atom_site_label
+ _atom_site_type_symbol
+ _atom_site_fract_x
+ _atom_site_fract_y
+ _atom_site_fract_z
+ _atom_site_U_iso_or_equiv
+ _atom_site_adp_type
+ _atom_site_occupancy
+ _atom_site_site_symmetry_order  
+ _atom_site_calc_flag
+ _atom_site_refinement_flags_posn
+ _atom_site_refinement_flags_adp
+ _atom_site_refinement_flags_occupancy
+ _atom_site_disorder_assembly
+ _atom_site_disorder_group
+Al1 Al -0.03862(2) 0.09680(2) 0.53118(8) 0.00161(10) Uani 1 1 d . . . . .
+Si1 Si 0.000000 0.000000 0.15844(12) 0.00654(14) Uani 1 2 d S T P . .
+Si2 Si -0.15625(3) 0.21266(3) 0.52343(9) 0.01055(11) Uani 1 1 d . . . . .
+Na1 Na 0.03079(4) 0.22083(5) 0.77574(16) 0.01674(17) Uani 1 1 d . . . . .
+O1 O 0.06034(10) 0.30632(10) 0.5192(3) 0.0219(3) Uani 1 1 d . . . . .
+O2 O 0.06824(7) 0.02267(8) 0.0246(3) 0.0135(3) Uani 1 1 d . . . . .
+O3 O -0.02262(8) 0.06959(8) 0.2991(2) 0.0141(3) Uani 1 1 d . . . . .
+O4 O -0.06807(6) 0.18001(6) 0.5179(3) 0.0080(2) Uani 1 1 d . . . . .
+O5 O 0.03498(7) 0.09844(7) 0.6584(3) 0.0126(3) Uani 1 1 d . . . . .
+O6 O -0.09727(8) 0.04377(7) 0.6345(3) 0.0120(3) Uani 1 1 d . . . . .
+H1 H 0.098(2) 0.304(2) 0.463(6) 0.034(10) Uiso 1 1 d . . . . .
+H2 H 0.0586(19) 0.346(2) 0.561(6) 0.032(10) Uiso 1 1 d . . . . .
+ 
+loop_
+ _atom_site_aniso_label
+ _atom_site_aniso_U_11
+ _atom_site_aniso_U_22
+ _atom_site_aniso_U_33
+ _atom_site_aniso_U_23
+ _atom_site_aniso_U_13
+ _atom_site_aniso_U_12
+Al1 0.00166(18) 0.00085(19) 0.0023(2) 0.00018(18) -0.00047(18) 0.00058(14)
+Si1 0.0075(3) 0.0076(3) 0.0045(3) 0.000 0.000 0.0003(2)
+Si2 0.0096(2) 0.0111(2) 0.0110(2) 0.0003(2) -0.0002(2) 0.00037(16)
+Na1 0.0157(4) 0.0157(4) 0.0188(4) -0.0026(4) -0.0022(4) -0.0014(3)
+O1 0.0217(8) 0.0244(8) 0.0197(8) -0.0012(8) 0.0026(8) -0.0014(6)
+O2 0.0116(6) 0.0203(6) 0.0085(6) 0.0016(7) 0.0035(6) -0.0023(5)
+O3 0.0203(7) 0.0122(6) 0.0098(7) -0.0029(6) 0.0018(6) 0.0020(5)
+O4 0.0067(5) 0.0060(5) 0.0112(6) 0.0001(6) 0.0003(5) 0.0011(4)
+O5 0.0098(6) 0.0107(6) 0.0172(7) 0.0002(6) -0.0051(6) 0.0021(5)
+O6 0.0112(6) 0.0093(6) 0.0157(7) 0.0048(6) 0.0006(5) -0.0014(5)
+ 
+_geom_special_details
+;
+ All esds (except the esd in the dihedral angle between two l.s. planes)
+ are estimated using the full covariance matrix.  The cell esds are taken
+ into account individually in the estimation of esds in distances, angles
+ and torsion angles; correlations between esds in cell parameters are only
+ used when they are defined by crystal symmetry.  An approximate (isotropic)
+ treatment of cell esds is used for estimating esds involving l.s. planes.
+;
+ 
+loop_
+ _geom_bond_atom_site_label_1
+ _geom_bond_atom_site_label_2
+ _geom_bond_distance
+ _geom_bond_site_symmetry_2
+ _geom_bond_publ_flag
+Al1 O5 1.6092(15) . ?
+Al1 O6 1.6135(15) . ?
+Al1 O4 1.6213(13) . ?
+Al1 O3 1.6362(16) . ?
+Al1 Na1 3.0705(10) . ?
+Al1 Na1 3.5893(9) 11_454 ?
+Si1 O2 1.6034(15) 2 ?
+Si1 O2 1.6034(15) . ?
+Si1 O3 1.6310(15) . ?
+Si1 O3 1.6311(15) 2 ?
+Si2 O5 1.7399(15) 11_454 ?
+Si2 O2 1.7437(17) 11_455 ?
+Si2 O6 1.7453(15) 12_454 ?
+Si2 O4 1.7506(13) . ?
+Si2 Na1 3.1025(10) 6_554 ?
+Na1 O1 2.369(2) . ?
+Na1 O5 2.3709(17) . ?
+Na1 O1 2.390(2) 6 ?
+Na1 O6 2.3999(17) 3 ?
+Na1 O4 2.5149(17) 6 ?
+Na1 O4 2.6170(17) . ?
+Na1 Na1 3.6501(7) 6 ?
+Na1 Na1 3.6502(7) 6_554 ?
+ 
+loop_
+ _geom_angle_atom_site_label_1
+ _geom_angle_atom_site_label_2
+ _geom_angle_atom_site_label_3
+ _geom_angle
+ _geom_angle_site_symmetry_1
+ _geom_angle_site_symmetry_3
+ _geom_angle_publ_flag
+O5 Al1 O6 111.69(9) . . ?
+O5 Al1 O4 107.45(8) . . ?
+O6 Al1 O4 110.98(7) . . ?
+O5 Al1 O3 109.73(8) . . ?
+O6 Al1 O3 109.59(8) . . ?
+O4 Al1 O3 107.28(8) . . ?
+O5 Al1 Na1 49.66(5) . . ?
+O6 Al1 Na1 120.60(7) . . ?
+O4 Al1 Na1 58.46(6) . . ?
+O3 Al1 Na1 129.72(6) . . ?
+O5 Al1 Na1 144.33(7) . 11_454 ?
+O6 Al1 Na1 32.89(6) . 11_454 ?
+O4 Al1 Na1 90.30(5) . 11_454 ?
+O3 Al1 Na1 93.26(6) . 11_454 ?
+Na1 Al1 Na1 130.99(3) . 11_454 ?
+O2 Si1 O2 113.25(12) 2 . ?
+O2 Si1 O3 108.03(8) 2 . ?
+O2 Si1 O3 108.43(8) . . ?
+O2 Si1 O3 108.43(8) 2 2 ?
+O2 Si1 O3 108.03(8) . 2 ?
+O3 Si1 O3 110.70(12) . 2 ?
+O5 Si2 O2 109.91(8) 11_454 11_455 ?
+O5 Si2 O6 109.99(8) 11_454 12_454 ?
+O2 Si2 O6 112.18(8) 11_455 12_454 ?
+O5 Si2 O4 111.33(7) 11_454 . ?
+O2 Si2 O4 109.20(8) 11_455 . ?
+O6 Si2 O4 104.12(7) 12_454 . ?
+O5 Si2 Na1 119.89(7) 11_454 6_554 ?
+O2 Si2 Na1 130.19(6) 11_455 6_554 ?
+O6 Si2 Na1 50.34(5) 12_454 6_554 ?
+O4 Si2 Na1 54.13(5) . 6_554 ?
+O1 Na1 O5 112.56(8) . . ?
+O1 Na1 O1 141.46(4) . 6 ?
+O5 Na1 O1 92.63(7) . 6 ?
+O1 Na1 O6 93.80(6) . 3 ?
+O5 Na1 O6 87.77(5) . 3 ?
+O1 Na1 O6 116.77(8) 6 3 ?
+O1 Na1 O4 84.95(7) . 6 ?
+O5 Na1 O4 151.60(6) . 6 ?
+O1 Na1 O4 85.44(7) 6 6 ?
+O6 Na1 O4 68.20(5) 3 6 ?
+O1 Na1 O4 83.62(6) . . ?
+O5 Na1 O4 62.72(5) . . ?
+O1 Na1 O4 82.85(6) 6 . ?
+O6 Na1 O4 146.12(6) 3 . ?
+O4 Na1 O4 144.40(4) 6 . ?
+O1 Na1 Al1 102.22(6) . . ?
+O5 Na1 Al1 31.16(4) . . ?
+O1 Na1 Al1 84.20(5) 6 . ?
+O6 Na1 Al1 118.31(5) 3 . ?
+O4 Na1 Al1 169.51(5) 6 . ?
+O4 Na1 Al1 31.87(3) . . ?
+O1 Na1 Si2 86.61(5) . 6 ?
+O5 Na1 Si2 121.16(5) . 6 ?
+O1 Na1 Si2 105.35(6) 6 6 ?
+O6 Na1 Si2 34.05(4) 3 6 ?
+O4 Na1 Si2 34.34(3) 6 6 ?
+O4 Na1 Si2 170.21(5) . 6 ?
+Al1 Na1 Si2 152.19(3) . 6 ?
+O1 Na1 Al1 90.94(5) . 3 ?
+O5 Na1 Al1 69.30(4) . 3 ?
+O1 Na1 Al1 126.10(6) 6 3 ?
+O6 Na1 Al1 21.41(4) 3 3 ?
+O4 Na1 Al1 89.03(4) 6 3 ?
+O4 Na1 Al1 124.72(4) . 3 ?
+Al1 Na1 Al1 98.40(2) . 3 ?
+Si2 Na1 Al1 54.689(18) 6 3 ?
+O1 Na1 Na1 121.64(7) . 6 ?
+O5 Na1 Na1 125.54(6) . 6 ?
+O1 Na1 Na1 39.70(5) 6 6 ?
+O6 Na1 Na1 93.50(5) 3 6 ?
+O4 Na1 Na1 45.80(4) 6 6 ?
+O4 Na1 Na1 116.63(5) . 6 ?
+Al1 Na1 Na1 123.89(4) . 6 ?
+Si2 Na1 Na1 69.36(2) 6 6 ?
+Al1 Na1 Na1 112.79(3) 3 6 ?
+O1 Na1 Na1 40.13(5) . 6_554 ?
+O5 Na1 Na1 89.56(5) . 6_554 ?
+O1 Na1 Na1 116.31(7) 6 6_554 ?
+O6 Na1 Na1 126.92(6) 3 6_554 ?
+O4 Na1 Na1 116.68(5) 6 6_554 ?
+O4 Na1 Na1 43.55(4) . 6_554 ?
+Al1 Na1 Na1 67.01(3) . 6_554 ?
+Si2 Na1 Na1 126.72(4) 6 6_554 ?
+Al1 Na1 Na1 113.91(3) 3 6_554 ?
+Na1 Na1 Na1 129.10(5) 6 6_554 ?
+Na1 O1 Na1 100.16(7) . 6_554 ?
+Si1 O2 Si2 141.16(10) . 3_554 ?
+Si1 O3 Al1 144.73(11) . . ?
+Al1 O4 Si2 129.63(8) . . ?
+Al1 O4 Na1 128.21(8) . 6_554 ?
+Si2 O4 Na1 91.54(6) . 6_554 ?
+Al1 O4 Na1 89.67(6) . . ?
+Si2 O4 Na1 123.45(8) . . ?
+Na1 O4 Na1 90.65(4) 6_554 . ?
+Al1 O5 Si2 138.83(9) . 3 ?
+Al1 O5 Na1 99.18(7) . . ?
+Si2 O5 Na1 119.07(9) 3 . ?
+Al1 O6 Si2 135.04(9) . 16_445 ?
+Al1 O6 Na1 125.70(9) . 11_454 ?
+Si2 O6 Na1 95.61(6) 16_445 11_454 ?
+ 
+_refine_diff_density_max    0.258
+_refine_diff_density_min   -0.505
+_refine_diff_density_rms    0.077
+
+_shelx_res_file
+;
+TITL exp_natrolite_300K
+    exp_natrolite_300K.res
+    created by SHELXL-2016/6 at 16:47:58 on 15-May-2019
+CELL 0.71075 18.655 18.3016 6.5919 90 90 90
+ZERR    7.00   0.000955   0.000993   0.000411   0.0000   0.0000   0.0000
+LATT -4
+SYMM -x,-y,z
+SYMM x+1/4,-y+1/4,z+1/4
+SYMM -x+1/4,y+1/4,z+1/4
+SFAC  Na Al Si O H
+UNIT 16 16 24 96 32
+L.S. 10
+ACTA noHKL
+WGHT    0.030900    1.878100
+FVAR       0.05226
+AL1   2   -0.038617    0.096801    0.531182    11.00000    0.00166    0.00085 =
+         0.00232    0.00018   -0.00047    0.00058
+SI1   3    0.000000    0.000000    0.158440    10.50000    0.00746    0.00765 =
+         0.00451    0.00000    0.00000    0.00030
+SI2   3   -0.156250    0.212659    0.523425    11.00000    0.00955    0.01108 =
+         0.01103    0.00026   -0.00021    0.00037
+NA1   1    0.030794    0.220827    0.775740    11.00000    0.01572    0.01575 =
+         0.01876   -0.00256   -0.00218   -0.00136
+O1    4    0.060345    0.306325    0.519230    11.00000    0.02169    0.02441 =
+         0.01973   -0.00120    0.00259   -0.00138
+O2    4    0.068242    0.022672    0.024626    11.00000    0.01157    0.02032 =
+         0.00850    0.00158    0.00346   -0.00231
+O3    4   -0.022625    0.069592    0.299123    11.00000    0.02030    0.01217 =
+         0.00977   -0.00291    0.00179    0.00200
+O4    4   -0.068066    0.180010    0.517867    11.00000    0.00671    0.00604 =
+         0.01123    0.00014    0.00027    0.00105
+O5    4    0.034975    0.098439    0.658448    11.00000    0.00980    0.01070 =
+         0.01716    0.00023   -0.00515    0.00211
+O6    4   -0.097270    0.043768    0.634534    11.00000    0.01120    0.00928 =
+         0.01566    0.00480    0.00060   -0.00142
+H1    5    0.098139    0.304051    0.462900    11.00000    0.03380
+H2    5    0.058643    0.346477    0.560758    11.00000    0.03245
+HKLF 4
+
+
+
+
+REM  exp_natrolite_300K
+REM R1 =  0.0202 for    1797 Fo > 4sig(Fo)  and  0.0209 for all    1837 data
+REM     95 parameters refined using      1 restraints
+
+END
+
+WGHT      0.0309      1.8667
+
+REM Highest difference peak  0.258,  deepest hole -0.505,  1-sigma level  0.077
+Q1    1   0.0005  0.1011  0.6177  11.00000  0.05    0.26
+Q2    1   0.0506  0.0736  0.6318  11.00000  0.05    0.23
+Q3    1   0.0902  0.1982  0.6648  11.00000  0.05    0.23
+Q4    1  -0.0300  0.1946  0.5904  11.00000  0.05    0.22
+Q5    1  -0.0571  0.1467  0.5828  11.00000  0.05    0.22
+Q6    1  -0.0474  0.1440  0.5246  11.00000  0.05    0.22
+Q7    1  -0.0910  0.1365  0.5277  11.00000  0.05    0.21
+Q8    1  -0.0754  0.0781  0.6151  11.00000  0.05    0.21
+Q9    1  -0.0697  0.0498  0.7119  11.00000  0.05    0.20
+Q10   1  -0.0075  0.1033  0.7131  11.00000  0.05    0.20
+Q11   1   0.0397  0.0237  0.0908  11.00000  0.05    0.20
+Q12   1  -0.0768  0.0525  0.5559  11.00000  0.05    0.20
+Q13   1   0.0885  0.1634  0.5459  11.00000  0.05    0.20
+Q14   1   0.0429 -0.0176  0.0246  11.00000  0.05    0.19
+Q15   1  -0.0115  0.1052  0.3646  11.00000  0.05    0.19
+Q16   1   0.0278  0.0953  0.5402  11.00000  0.05    0.19
+Q17   1   0.0717  0.4166  0.4836  11.00000  0.05    0.18
+Q18   1  -0.0121  0.1175  0.2083  11.00000  0.05    0.18
+Q19   1   0.0858 -0.0652 -0.0618  11.00000  0.05    0.18
+Q20   1  -0.0592  0.0952  0.1702  11.00000  0.05    0.18
+;
+_shelx_res_checksum   41279
+

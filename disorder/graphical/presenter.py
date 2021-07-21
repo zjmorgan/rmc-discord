@@ -1160,7 +1160,42 @@ class Presenter:
         
         self.view.format_recalculation_table()
         self.view.unblock_recalculation_table_signals()
+        
+    def load_data_thread(self, name, callback):
+                           
+        signal, error_sq, \
+        h_range, k_range, l_range, nh, nk, nl = self.model.data(name)
+        
+        self.signal_m = self.model.mask_array(signal)
+        self.error_sq_m = self.model.mask_array(error_sq)
+                
+        self.signal_raw_m = self.signal_m.copy()
+        self.error_sq_raw_m = self.error_sq_m.copy()
+        
+        self.h_range_raw_m =  h_range.copy()
+        self.k_range_raw_m =  k_range.copy()
+        self.l_range_raw_m =  l_range.copy()
+        
+        self.nh_raw_m, self.nk_raw_m, self.nl_raw_m = nh, nk, nl
+                             
+    def load_data_progress_update(self, data):
+        
+        pass
 
+    def load_data_thread_complete(self):
+        
+        self.reset_data()
+        
+        self.view.button_clicked_reset(self.reset_data)
+        self.view.button_clicked_reset_h(self.reset_data_h)
+        self.view.button_clicked_reset_k(self.reset_data_k)
+        self.view.button_clicked_reset_l(self.reset_data_l)
+        
+        self.view.button_clicked_punch(self.punch)
+        self.view.button_clicked_reset_punch(self.reset_punch)
+        
+        self.populate_recalculation_table()
+                
     def load_NXS(self):
 
         if (self.view.get_atom_site_table_col_count() > 0):
@@ -1168,34 +1203,11 @@ class Presenter:
             name = self.view.open_dialog_nxs()
             
             if name:
-                
-                signal, error_sq, \
-                h_range, k_range, l_range, \
-                nh, nk, nl = self.model.data(name)
-                
-                self.signal_m = self.model.mask_array(signal)
-                self.error_sq_m = self.model.mask_array(error_sq)
-                
-                self.signal_raw_m = self.signal_m.copy()
-                self.error_sq_raw_m = self.error_sq_m.copy()
-                
-                self.h_range_raw_m =  h_range.copy()
-                self.k_range_raw_m =  k_range.copy()
-                self.l_range_raw_m =  l_range.copy()
-                
-                self.nh_raw_m, self.nk_raw_m, self.nl_raw_m = nh, nk, nl
-
-                self.reset_data()
-                
-                self.view.button_clicked_reset(self.reset_data)
-                self.view.button_clicked_reset_h(self.reset_data_h)
-                self.view.button_clicked_reset_k(self.reset_data_k)
-                self.view.button_clicked_reset_l(self.reset_data_l)
-                
-                self.view.button_clicked_punch(self.punch)
-                self.view.button_clicked_reset_punch(self.reset_punch)
-                
-                self.populate_recalculation_table()
+                         
+                load_data = self.view.worker(self.load_data_thread, name)
+                self.view.progress(load_data, self.load_data_progress_update)
+                self.view.finished(load_data, self.load_data_thread_complete)
+                self.threadpool.start(load_data) 
                                 
     def check_batch(self):
                 
@@ -1680,6 +1692,15 @@ class Presenter:
                 self.iteration = i+1
                 if self.stop:
                     break  
+                
+            Sx, Sy, Sx = self.Sx, self.Sy, self.Sz
+            self.model.save_magnetic(self.fname, b, Sx, Sy, Sx)
+          
+            A_r = self.A_r
+            self.model.save_occupational(self.fname, b, A_r)
+
+            Ux, Uy, Ux = self.Ux, self.Uy, self.Uz
+            self.model.save_displacive(self.fname, b, Ux, Uy, Ux)
                              
     def run_refinement_progress_update(self, data):
         
