@@ -7241,7 +7241,7 @@ class Window(QtWidgets.QMainWindow, Ui_MainWindow):
             
             try:
                 folder = self.folder
-                filename = self.filenamerea
+                filename = self.filename
                 
                 copyfile(folder+filename, self.fname+'.cif')
                             

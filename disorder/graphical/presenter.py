@@ -40,13 +40,16 @@ class Presenter:
         self.view.clicked_disorder_mag(self.disorder_check_mag)
         self.view.clicked_disorder_occ(self.disorder_check_occ)
         self.view.clicked_disorder_dis(self.disorder_check_dis)
-        
+                
         self.view.clicked_run(self.run_refinement)
         self.view.clicked_stop(self.stop_refinement)
         self.view.clicked_reset(self.reset_refinement)
         
         self.view.index_changed_correlations_1d(self.change_type_1d)
         self.view.index_changed_correlations_3d(self.change_type_3d)
+        
+        self.view.button_clicked_calculate_1d(self.calculate_correlations_1d)
+        self.view.button_clicked_calculate_3d(self.calculate_correlations_3d)
         
         self.view.finished_editing_min_ref(self.draw_plot_ref)
         self.view.finished_editing_max_ref(self.draw_plot_ref)
@@ -60,6 +63,10 @@ class Presenter:
         self.view.index_changed_plot_bottom_chi_sq(self.draw_plot_chi_sq)
         
         self.threadpool = self.view.create_threadpool()
+        
+        self.magnetic = False
+        self.occupational = False
+        self.displacive = False
         
         self.allocated = False
         self.iteration = 0
@@ -86,6 +93,10 @@ class Presenter:
         if fname:
             if not fname.endswith('.ini'): fname += '.ini'
             self.view.save_widgets(fname)
+            
+        self.fname = fname.split('.ini')[0]
+        
+        # self.fname_cif 
                         
     def load_application(self):
                 
@@ -419,6 +430,8 @@ class Presenter:
         
         if name:
             
+            self.fname_cif = name
+            
             self.view.clear_unit_cell_table()
             self.view.clear_atom_site_table()
                         
@@ -600,7 +613,7 @@ class Presenter:
     def update_experiment_table(self, item):
         
         row, col, text = self.view.get_table_item_info(item)
-        
+                
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
         dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
         dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
@@ -612,6 +625,7 @@ class Presenter:
         binning = [nh, nk, nl]
         
         self.view.block_experiment_table_signals()
+        self.view.format_experiment_table()
         
         if (col == 1):
             size = int(text)
@@ -628,6 +642,7 @@ class Presenter:
                 self.view.set_experiment_binning_h(binning[0], min_h, max_h)
                 self.view.set_experiment_binning_k(binning[1], min_k, max_k)
                 self.view.set_experiment_binning_l(binning[2], min_l, max_l)
+                self.view.unblock_experiment_table_signals()
         elif (col == 2):
             minimum = float(text)
             if   (row == 0): size, step, maximum = nh, dh, max_h
@@ -643,6 +658,7 @@ class Presenter:
                 self.view.set_experiment_binning_h(nh, h_range[0], max_h)
                 self.view.set_experiment_binning_k(nk, k_range[0], max_k)
                 self.view.set_experiment_binning_l(nl, l_range[0], max_l)
+                self.view.unblock_experiment_table_signals()
         elif (col == 3):
             maximum = float(text)
             if   (row == 0): size, step, minimum = nh, dh, min_h
@@ -658,12 +674,10 @@ class Presenter:
                 self.view.set_experiment_binning_h(nh, min_h, h_range[1])
                 self.view.set_experiment_binning_k(nk, min_k, k_range[1])
                 self.view.set_experiment_binning_l(nl, min_l, l_range[1])
-        
+                self.view.unblock_experiment_table_signals()
+
         self.view.format_experiment_table()
-        self.view.unblock_experiment_table_signals()
-        
-        self.redraw_plot_exp()
-        
+                
     def update_crop_min_h(self):
 
         self.view.set_experiment_table_item(0, 2, self.view.get_min_h())
@@ -731,17 +745,21 @@ class Presenter:
     def rebin_process_output(self, data):
         
         nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l = data
-        
+                
         self.view.set_experiment_binning_h(nh, min_h, max_h)
         self.view.set_experiment_binning_k(nk, min_k, max_k)
         self.view.set_experiment_binning_l(nl, min_l, max_l)
         
     def rebin_thread_complete(self):
-                        
+                                
         self.populate_binning()
         self.populate_cropping()
         self.populate_slicing()
-            
+ 
+        self.view.format_experiment_table()
+        self.redraw_plot_exp()
+        self.view.unblock_experiment_table_signals()
+                    
     def rebin(self):
         
         rebin_data = self.view.worker(self.rebin_thread)
@@ -779,30 +797,38 @@ class Presenter:
         self.signal_m = self.model.mask_array(signal)
         self.error_sq_m = self.model.mask_array(error_sq)
         
+        min_h = self.model.slice_value(h_range[0], h_range[1], nh, ih_min)
+        min_k = self.model.slice_value(k_range[0], k_range[1], nk, ik_min)
+        min_l = self.model.slice_value(l_range[0], l_range[1], nl, il_min)
+        
+        max_h = self.model.slice_value(h_range[0], h_range[1], nh, ih_max)
+        max_k = self.model.slice_value(k_range[0], k_range[1], nk, ik_max)
+        max_l = self.model.slice_value(l_range[0], l_range[1], nl, il_max)
+        
         nh = h_slice[1]-h_slice[0]
         nk = k_slice[1]-k_slice[0]
         nl = l_slice[1]-l_slice[0]
-        
-        print(nh,nk,nl)
-        
+                
         return nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l
                              
     def crop_process_output(self, data):
         
         nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l = data
-        
-        print(nh,nk,nl)
-        
+                
         self.view.set_experiment_binning_h(nh, min_h, max_h)
         self.view.set_experiment_binning_k(nk, min_k, max_k)
         self.view.set_experiment_binning_l(nl, min_l, max_l)
         
     def crop_thread_complete(self):
-                        
+                                
         self.populate_binning()
         self.populate_cropping()
         self.populate_slicing()
-            
+
+        self.view.format_experiment_table()
+        self.redraw_plot_exp()
+        self.view.unblock_experiment_table_signals()        
+                
     def crop(self, h_range, k_range, l_range):
         
         crop_data = self.view.worker(self.crop_thread, h_range, k_range, l_range)
@@ -974,7 +1000,7 @@ class Presenter:
         self.populate_slicing()
         
         self.connect_experiment_table_signals()
-        self.view.format_experiment_table_size()
+        self.view.format_experiment_table_size()        
 
     def cropbin(self, h_range, k_range, l_range, binsize):
         
@@ -1241,6 +1267,8 @@ class Presenter:
             name = self.view.open_dialog_nxs()
             
             if name:
+                
+                self.fname_exp = name
                          
                 load_data = self.view.worker(self.load_data_thread, name)
                 self.view.progress(load_data, self.load_data_progress_update)
@@ -1474,7 +1502,7 @@ class Presenter:
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
         
-        moment = self.moment
+        moment = self.mu
         
         Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm, moment)
         
@@ -1573,7 +1601,7 @@ class Presenter:
         
     def calculate_intensity(self):
 
-        if (self.tableWidget_calc.rowCount() or self.progress > 0):
+        if (self.tableWidget_calc.rowCount() or self.view.get_progress() > 0):
 
             if (self.changed_params):
                             
@@ -1733,10 +1761,10 @@ class Presenter:
                 
             Sx, Sy, Sx = self.Sx, self.Sy, self.Sz
             self.model.save_magnetic(self.fname, b, Sx, Sy, Sx)
-          
+            
             A_r = self.A_r
             self.model.save_occupational(self.fname, b, A_r)
-
+            
             Ux, Uy, Ux = self.Ux, self.Uy, self.Uz
             self.model.save_displacive(self.fname, b, Ux, Uy, Ux)
                              
@@ -1763,6 +1791,8 @@ class Presenter:
         
         if self.view.get_recalculation_table_row_count():            
             self.stop = False
+            
+            self.save_application()
             
             if not self.allocated:
                 self.magnetic = self.view.get_disorder_mag()
@@ -2106,23 +2136,20 @@ class Presenter:
         self.plot_1d()
         
     def calculate_correlations_1d(self):
+                                
+        disorder = self.view.get_correlations_1d()
         
-        if (self.get_pairs_1d_table_row_count() > 0):
-                        
-            disorder = self.view.get_correlations_1d()
+        aligned = (disorder == 'Moment' and self.magnetic) or \
+                  (disorder == 'Occupancy' and self.occupational) or \
+                  (disorder == 'Displacement' and self.displacive)
+                   
+        if (self.view.get_progress() > 0 and self.allocated and aligned):
             
-            aligned = (disorder == 'Moment' and self.magnetic) or \
-                      (disorder == 'Occupancy' and self.occupational) or \
-                      (disorder == 'Displacement' and self.displacive)
-                       
-            if (self.progress > 0 and self.allocated and aligned):
-                
-                self.view.enable_calculate_1d(False)
-                
-                calculate_1d = self.view.worker(self.calculate_1d_thread)
-                self.view.finished(calculate_1d, 
-                                   self.calculate_1d_thread_complete)
-                self.threadpool.start(calculate_1d) 
+            self.view.enable_calculate_1d(False)
+            
+            calculate_1d = self.view.worker(self.calculate_1d_thread)
+            self.view.finished(calculate_1d, self.calculate_1d_thread_complete)
+            self.threadpool.start(calculate_1d) 
 
     def calculate_1d_thread(self, callback):
                 
@@ -2292,23 +2319,20 @@ class Presenter:
         self.plot_3d()
         
     def calculate_correlations_3d(self):
+                                
+        disorder = self.view.get_correlations_3d()
         
-        if (self.get_pairs_3d_table_row_count() > 0):
-                        
-            disorder = self.view.get_correlations_3d()
+        aligned = (disorder == 'Moment' and self.magnetic) or \
+                  (disorder == 'Occupancy' and self.occupational) or \
+                  (disorder == 'Displacement' and self.displacive)
+                   
+        if (self.view.get_progress() > 0 and self.allocated and aligned):
             
-            aligned = (disorder == 'Moment' and self.magnetic) or \
-                      (disorder == 'Occupancy' and self.occupational) or \
-                      (disorder == 'Displacement' and self.displacive)
-                       
-            if (self.progress > 0 and self.allocated and aligned):
-                
-                self.view.enable_calculate_3d(False)
-                
-                calculate_3d = self.view.worker(self.calculate_3d_thread)
-                self.view.finished(calculate_3d, 
-                                   self.calculate_3d_thread_complete)
-                self.threadpool.start(calculate_3d) 
+            self.view.enable_calculate_3d(False)
+            
+            calculate_3d = self.view.worker(self.calculate_3d_thread)
+            self.view.finished(calculate_3d, self.calculate_3d_thread_complete)
+            self.threadpool.start(calculate_3d) 
 
     def calculate_3d_thread(self, callback):
                 
@@ -2331,6 +2355,7 @@ class Presenter:
         
         corr3d_arrs, coll3d_arrs = [], []
         
+        print(runs)
         for run in range(runs):
             
             if (disorder == 'Moment'):

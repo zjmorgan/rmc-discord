@@ -410,9 +410,9 @@ class Model:
             
         return v_inv, boxes
         
-    def random_moments(self, nu, nv, nw, n_atm):
+    def random_moments(self, nu, nv, nw, n_atm, moment):
     
-        return magnetic.spin(nu, nv, nw, n_atm)
+        return magnetic.spin(nu, nv, nw, n_atm, moment)
         
     def random_occupancies(self, nu, nv, nw, n_atm, occupancy):
         

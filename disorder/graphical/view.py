@@ -1962,7 +1962,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def set_runs_3d(self, runs):
         self.lineEdit_runs_corr_3d.setText(str(runs))
         
-    def get_runs_3d(self, runs):
+    def get_runs_3d(self):
         return int(self.lineEdit_runs_corr_3d.text())
       
     def set_correlations_1d_type(self):
@@ -2024,6 +2024,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def enable_calculate_3d(self, visible):
         self.pushButton_calculate_3d.setEnabled(visible)
+        
+    def button_clicked_calculate_1d(self, slot):
+        self.pushButton_calculate_1d.clicked.connect(slot)
+        
+    def button_clicked_calculate_3d(self, slot):
+        self.pushButton_calculate_3d.clicked.connect(slot)
         
     def clear_plot_1d_canvas(self):
         self.canvas_1d.figure.clear()
