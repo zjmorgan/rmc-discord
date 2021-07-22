@@ -665,7 +665,7 @@ class Presenter:
         self.redraw_plot_exp()
         
     def update_crop_min_h(self):
-        
+
         self.view.set_experiment_table_item(0, 2, self.view.get_min_h())
         
     def update_crop_min_k(self):
@@ -705,9 +705,9 @@ class Presenter:
         nl = self.view.get_rebin_combo_l()
         if (nl is not None):
             self.view.set_experiment_table_item(2, 1, nl)
-        
-    def rebin(self):
-        
+            
+    def rebin_thread(self, callback):
+            
         signal = self.signal_m 
         error_sq = self.error_sq_m 
         
@@ -726,16 +726,31 @@ class Presenter:
         self.signal_m = self.model.mask_array(signal)
         self.error_sq_m = self.model.mask_array(error_sq)
         
+        return nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l
+            
+    def rebin_process_output(self, data):
+        
+        nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l = data
+        
         self.view.set_experiment_binning_h(nh, min_h, max_h)
         self.view.set_experiment_binning_k(nk, min_k, max_k)
         self.view.set_experiment_binning_l(nl, min_l, max_l)
-                
+        
+    def rebin_thread_complete(self):
+                        
         self.populate_binning()
         self.populate_cropping()
         self.populate_slicing()
             
-    def crop(self, h_range, k_range, l_range):
+    def rebin(self):
         
+        rebin_data = self.view.worker(self.rebin_thread)
+        self.view.result(rebin_data, self.rebin_process_output)
+        self.view.finished(rebin_data, self.rebin_thread_complete)
+        self.threadpool.start(rebin_data) 
+        
+    def crop_thread(self, h_range, k_range, l_range, callback):
+                           
         signal = self.signal_m 
         error_sq = self.error_sq_m 
         
@@ -755,8 +770,8 @@ class Presenter:
         k_slice = [ik_min, ik_max+1]
         l_slice = [il_min, il_max+1]
                 
-        self.signal_m  = self.model.crop(signal, h_slice, k_slice, l_slice)
-        self.error_sq_m  = self.model.crop(error_sq, h_slice, k_slice, l_slice)
+        self.signal_m = self.model.crop(signal, h_slice, k_slice, l_slice)
+        self.error_sq_m = self.model.crop(error_sq, h_slice, k_slice, l_slice)
         
         signal = self.signal_m 
         error_sq = self.error_sq_m      
@@ -764,25 +779,36 @@ class Presenter:
         self.signal_m = self.model.mask_array(signal)
         self.error_sq_m = self.model.mask_array(error_sq)
         
-        min_h = self.model.slice_value(h_range[0], h_range[1], nh, ih_min)
-        min_k = self.model.slice_value(k_range[0], k_range[1], nk, ik_min)
-        min_l = self.model.slice_value(l_range[0], l_range[1], nl, il_min)
-        
-        max_h = self.model.slice_value(h_range[0], h_range[1], nh, ih_max)
-        max_k = self.model.slice_value(k_range[0], k_range[1], nk, ik_max)
-        max_l = self.model.slice_value(l_range[0], l_range[1], nl, il_max)
-        
         nh = h_slice[1]-h_slice[0]
         nk = k_slice[1]-k_slice[0]
         nl = l_slice[1]-l_slice[0]
-                
+        
+        print(nh,nk,nl)
+        
+        return nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l
+                             
+    def crop_process_output(self, data):
+        
+        nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l = data
+        
+        print(nh,nk,nl)
+        
         self.view.set_experiment_binning_h(nh, min_h, max_h)
         self.view.set_experiment_binning_k(nk, min_k, max_k)
         self.view.set_experiment_binning_l(nl, min_l, max_l)
-                
+        
+    def crop_thread_complete(self):
+                        
         self.populate_binning()
         self.populate_cropping()
         self.populate_slicing()
+            
+    def crop(self, h_range, k_range, l_range):
+        
+        crop_data = self.view.worker(self.crop_thread, h_range, k_range, l_range)
+        self.view.result(crop_data, self.crop_process_output)
+        self.view.finished(crop_data, self.crop_thread_complete)
+        self.threadpool.start(crop_data) 
         
     def populate_binning(self):
         
@@ -791,7 +817,9 @@ class Presenter:
         self.populate_binning_l()
         
     def populate_binning_h(self):
-        
+
+        self.view.block_changed_combo_h(True)
+                
         self.view.clear_rebin_combo_h()
         
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
@@ -799,10 +827,14 @@ class Presenter:
         cntr_h = self.view.centered_h_checked()              
 
         hsteps, hsizes = self.model.rebin_parameters(nh, min_h, max_h, cntr_h)
+                
+        self.view.set_rebin_combo_h(hsteps, hsizes)
         
-        self.view.set_rebin_combo_h(hsteps, hsizes)                
-        
+        self.view.block_changed_combo_h(False)
+               
     def populate_binning_k(self):
+
+        self.view.block_changed_combo_k(True)
         
         self.view.clear_rebin_combo_k()
         
@@ -814,8 +846,12 @@ class Presenter:
         
         self.view.set_rebin_combo_k(ksteps, ksizes)
         
-    def populate_binning_l(self):
+        self.view.block_changed_combo_k(False)
                 
+    def populate_binning_l(self):
+ 
+        self.view.block_changed_combo_l(True)
+               
         self.view.clear_rebin_combo_l()
                      
         dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
@@ -825,7 +861,9 @@ class Presenter:
         lsteps, lsizes = self.model.rebin_parameters(nl, min_l, max_l, cntr_l)
 
         self.view.set_rebin_combo_l(lsteps, lsizes)    
-                
+        
+        self.view.block_changed_combo_l(False)
+                        
     def populate_cropping(self):
         
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
@@ -1178,7 +1216,7 @@ class Presenter:
         
         self.nh_raw_m, self.nk_raw_m, self.nl_raw_m = nh, nk, nl
                              
-    def load_data_progress_update(self, data):
+    def load_data_progress_update(self):
         
         pass
 

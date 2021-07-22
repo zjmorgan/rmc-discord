@@ -250,6 +250,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def progress(self, worker, slot):
         worker.signals.progress.connect(slot)
         
+    def result(self, worker, slot):
+        worker.signals.result.connect(slot)
+        
     def finished(self, worker, slot):
         worker.signals.finished.connect(slot)
         
@@ -1252,7 +1255,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
         item = QtWidgets.QTableWidgetItem(str(text))
         self.tableWidget_exp.setItem(i, 0, item)
-        
+
         item = QtWidgets.QTableWidgetItem(str(size))
         self.tableWidget_exp.setItem(i, 1, item)   
         item = QtWidgets.QTableWidgetItem(str(minimum))
@@ -1316,18 +1319,15 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             
     def get_rebin_combo_h(self):
         text = self.comboBox_rebin_h.currentText().split(':')[-1]
-        if (text != ''):
-            return int(text)
+        if (text != ''): return int(text)
     
     def get_rebin_combo_k(self):
         text = self.comboBox_rebin_k.currentText().split(':')[-1]
-        if (text != ''):
-            return int(text)  
+        if (text != ''): return int(text)  
         
     def get_rebin_combo_l(self):
         text = self.comboBox_rebin_l.currentText().split(':')[-1]
-        if (text != ''):
-            return int(text)
+        if (text != ''): return int(text)
             
     def clear_rebin_combo_h(self):
         self.comboBox_rebin_h.clear()
@@ -1346,7 +1346,16 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def index_changed_combo_l(self, slot):
         self.comboBox_rebin_l.currentIndexChanged.connect(slot)
-           
+        
+    def block_changed_combo_h(self, block):
+        self.comboBox_rebin_h.blockSignals(block)
+        
+    def block_changed_combo_k(self, block):
+        self.comboBox_rebin_k.blockSignals(block)
+        
+    def block_changed_combo_l(self, block):
+        self.comboBox_rebin_l.blockSignals(block)
+                   
     def centered_h_checked(self):
         return self.checkBox_centered_h.isChecked()
     
