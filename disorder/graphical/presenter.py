@@ -2142,14 +2142,8 @@ class Presenter:
         self.plot_1d()
         
     def calculate_correlations_1d(self):
-                                
-        disorder = self.view.get_correlations_1d()
-        
-        aligned = (disorder == 'Moment' and self.magnetic) or \
-                  (disorder == 'Occupancy' and self.occupational) or \
-                  (disorder == 'Displacement' and self.displacive)
-                   
-        if (self.view.get_progress() > 0 and self.allocated and aligned):
+                                                   
+        if (self.view.get_progress() > 0 and self.allocated):
             
             self.view.enable_calculate_1d(False)
             
@@ -2324,14 +2318,8 @@ class Presenter:
         self.plot_3d()
         
     def calculate_correlations_3d(self):
-                                
-        disorder = self.view.get_correlations_3d()
-        
-        aligned = (disorder == 'Moment' and self.magnetic) or \
-                  (disorder == 'Occupancy' and self.occupational) or \
-                  (disorder == 'Displacement' and self.displacive)
-                   
-        if (self.view.get_progress() > 0 and self.allocated and aligned):
+                                                   
+        if (self.view.get_progress() > 0 and self.allocated):
             
             self.view.enable_calculate_3d(False)
             
@@ -2396,7 +2384,6 @@ class Presenter:
                 Ux, Uy, Uz = self.model.load_displacive(self.fname, run)
                 
                 corr3d, coll3d, \
-                corr3d_, coll3d_, \
                 dx, dy, dz, \
                 atm_pair3d = self.model.vector_correlations_3d(Ux, Uy, Uz, 
                                                                rx, ry, rz,

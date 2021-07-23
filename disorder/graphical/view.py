@@ -241,6 +241,17 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                            'mu1': 9, 'mu2': 10, 'mu3': 11, 'g': 12,
                            'u': 13, 'v': 14, 'w': 15, 'active': 16}
         
+        self.label_map = {'site': 'site', 'atom': 'atom', 
+                          'isotope': 'isotope', 'ion': 'ion',
+                          'occupancy': 'occ', 'Uiso': 'Uiso', 
+                          'U11': 'U\u2081\u2081', 'U13': 'U\u2081\u2083', 
+                          'U22': 'U\u2082\u2082', 'U23': 'U\u2082\u2083', 
+                          'U33': 'U\u2083\u2083', 'U12': 'U\u2081\u2082',
+                          'U1': 'U\u2081', 'U2': 'U\u2082', 'U3': 'U\u2083',
+                          'mu': 'mu', 'mu1': 'mu\u2081',  'mu2': 'mu\u2082', 
+                          'mu3': 'mu\u2083', 'g': 'g', 'u': 'x', 'v': 'y', 
+                          'w': 'z', 'operator': 'operator', 'moment': 'moment'}
+        
     def create_threadpool(self):
         return QtCore.QThreadPool()
     
