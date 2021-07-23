@@ -1,5 +1,6 @@
 #!/usr/bin/env/python3
 
+import os
 import sys
 
 import numpy as np
@@ -14,6 +15,8 @@ class Presenter:
         self.view = view
         
         self.fname = ''
+        self.fname_cif = ''
+        self.fname_exp = ''
         
         self.view.new_triggered(self.new_application)
         self.view.save_as_triggered(self.save_as_application)
@@ -1626,7 +1629,10 @@ class Presenter:
                 
                 nu, nv, nw = self.nu, self.nv, self.nw
                 
-                folder, filename = self.folder, self.filename
+                fname_cif = self.fname_cif
+                
+                folder = os.path.dirname(fname_cif)
+                filename = os.path.basename(fname_cif)
                 
                 fname = self.fname
                 
@@ -2099,7 +2105,7 @@ class Presenter:
                 
         unique_pairs = np.unique(self.atm_pair1d)
         
-        rows = self.get_pairs_1d_table_row_count()
+        rows = self.view.get_pairs_1d_table_row_count()
         
         pairs = []
         for i in range(rows):
@@ -2112,7 +2118,7 @@ class Presenter:
         if (rows == 0 or unique_pairs.tolist() != np.unique(pairs).tolist()):
             
             n_pairs = unique_pairs.size
-            self.clear_pairs_1d_table()
+            self.view.clear_pairs_1d_table()
             self.view.create_pairs_1d_table(n_pairs)
                        
             for i in range(n_pairs):
@@ -2181,7 +2187,7 @@ class Presenter:
                 atm_pair1d = self.model.vector_correlations_1d(Sx, Sy, Sz, 
                                                                rx, ry, rz,
                                                                atms, fract, 
-                                                               tol, period)
+                                                               tol, *period)
                 
                 corr1d_arrs.append(corr1d)
                 coll1d_arrs.append(coll1d)
@@ -2191,10 +2197,10 @@ class Presenter:
                 A_r = self.model.load_occupational(self.fname, run)
                 
                 corr1d, \
-                dx, dy, dz, \
+                d, \
                 atm_pair1d = self.model.scalar_correlations_1d(A_r, rx, ry, rz,
                                                                atms, fract, 
-                                                               tol, period)
+                                                               tol, *period)
                 
                 corr1d_arrs.append(corr1d)
                 
@@ -2203,12 +2209,11 @@ class Presenter:
                 Ux, Uy, Uz = self.model.load_displacive(self.fname, run)
                 
                 corr1d, coll1d, \
-                corr1d_, coll1d_, \
                 d, \
                 atm_pair1d = self.model.vector_correlations_1d(Ux, Uy, Uz, 
                                                                rx, ry, rz,
                                                                atms, fract, 
-                                                               tol, period)
+                                                               tol, *period)
                 
                 corr1d_arrs.append(corr1d)
                 coll1d_arrs.append(coll1d)               
@@ -2253,7 +2258,7 @@ class Presenter:
         
         disorder = self.view.get_correlations_1d()
         correlation = self.view.get_plot_1d()
-        norm = self.get_norm_1d()
+        norm = self.view.get_norm_1d()
                 
         average = self.view.average_1d_checked()
         
@@ -2269,7 +2274,7 @@ class Presenter:
         canvas = self.view.get_plot_1d_canvas()
         
         atoms, pairs = [], []
-        for i in range(self.get_pairs_1d_table_row_count()):
+        for i in range(self.view.get_pairs_1d_table_row_count()):
             left, right, active = self.view.get_pairs_1d_table_row(i)
             if active:
                 atoms.append(left)
@@ -2282,7 +2287,7 @@ class Presenter:
                 
         unique_pairs = np.unique(self.atm_pair3d)
         
-        rows = self.get_pairs_3d_table_row_count()
+        rows = self.view.get_pairs_3d_table_row_count()
         
         pairs = []
         for i in range(rows):
@@ -2295,7 +2300,7 @@ class Presenter:
         if (rows == 0 or unique_pairs.tolist() != np.unique(pairs).tolist()):
             
             n_pairs = unique_pairs.size
-            self.clear_pairs_3d_table()
+            self.view.clear_pairs_3d_table()
             self.view.create_pairs_3d_table(n_pairs)
                        
             for i in range(n_pairs):
@@ -2349,13 +2354,15 @@ class Presenter:
         
         rx, ry, rz, atms = self.rx, self.ry, self.rz, self.atms
         
-        folder, filename = self.folder, self.filename
+        fname_cif = self.fname_cif
         
+        folder = os.path.dirname(fname_cif)
+        filename = os.path.basename(fname_cif)
+                
         period = (A, nu, nv, nw, n_atm)
         
         corr3d_arrs, coll3d_arrs = [], []
         
-        print(runs)
         for run in range(runs):
             
             if (disorder == 'Moment'):
@@ -2367,7 +2374,7 @@ class Presenter:
                 atm_pair3d = self.model.vector_correlations_3d(Sx, Sy, Sz, 
                                                                rx, ry, rz,
                                                                atms, fract, 
-                                                               tol, period)
+                                                               tol, *period)
                 
                 corr3d_arrs.append(corr3d)
                 coll3d_arrs.append(coll3d)
@@ -2380,7 +2387,7 @@ class Presenter:
                 dx, dy, dz, \
                 atm_pair3d = self.model.scalar_correlations_3d(A_r, rx, ry, rz,
                                                                atms, fract, 
-                                                               tol, period)
+                                                               tol, *period)
                 
                 corr3d_arrs.append(corr3d)
                 
@@ -2394,7 +2401,7 @@ class Presenter:
                 atm_pair3d = self.model.vector_correlations_3d(Ux, Uy, Uz, 
                                                                rx, ry, rz,
                                                                atms, fract, 
-                                                               tol, period)
+                                                               tol, *period)
                 
                 corr3d_arrs.append(corr3d)
                 coll3d_arrs.append(coll3d)               
@@ -2460,7 +2467,7 @@ class Presenter:
         
         disorder = self.view.get_correlations_3d()
         correlation = self.view.get_plot_3d()
-        norm = self.get_norm_3d()
+        norm = self.view.get_norm_3d()
         
         tol = self.view.get_tol_3d()
         
@@ -2483,7 +2490,7 @@ class Presenter:
         canvas = self.view.get_plot_3d_canvas()
         
         atoms, pairs = [], []
-        for i in range(self.get_pairs_3d_table_row_count()):
+        for i in range(self.view.get_pairs_3d_table_row_count()):
             left, right, active = self.view.get_pairs_3d_table_row(i)
             if active:
                 atoms.append(left)

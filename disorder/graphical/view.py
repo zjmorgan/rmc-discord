@@ -1947,7 +1947,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def set_runs_1d(self, runs):
         self.lineEdit_runs_corr_1d.setText(str(runs))
         
-    def get_runs_1d(self, runs):
+    def get_runs_1d(self):
         return int(self.lineEdit_runs_corr_1d.text())
         
     def batch_checked_3d(self):
@@ -2002,22 +2002,28 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         return self.comboBox_norm_3d.currentText()
 
     def get_fract_1d(self):
-        return self.lineEdit_fract_1d.text()
+        return float(self.lineEdit_fract_1d.text())
     
     def get_fract_3d(self):
-        return self.lineEdit_fract_3d.text()
+        return float(self.lineEdit_fract_3d.text())
     
     def get_tol_1d(self):
-        return self.lineEdit_tol_1d.text()
+        return float(self.lineEdit_tol_1d.text())
     
     def get_tol_3d(self):
-        return self.lineEdit_tol_3d.text()
+        return float(self.lineEdit_tol_3d.text())
  
     def get_plot_1d_canvas(self):
         return self.canvas_1d
     
     def get_plot_3d_canvas(self):
         return self.canvas_3d
+    
+    def get_average_1d(self):
+        return self.checkBox_average_1d.isChecked()
+    
+    def get_average_3d(self):
+        return self.checkBox_average_3d.isChecked()
 
     def enable_calculate_1d(self, visible):
         self.pushButton_calculate_1d.setEnabled(visible)

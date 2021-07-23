@@ -534,11 +534,12 @@ def _mask_plane(dx, dy, dz, h, k, l, d, A, B, tol):
          
          return cor_aspect, proj0, proj1, d0, d1, plane
     
-def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, plane, 
-                    atm_pair3d, disorder, correlation, average, norm, atoms, 
-                    pairs, A, B, tol):
+def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, atm_pair3d, 
+                    disorder, correlation, average, norm, atoms, pairs, 
+                    A, B, tol):
     
-    aspect, proj0, proj1, d0, d1, plane = _mask_plane(dx, dy, dz, h, k, l, d)
+    aspect, proj0, proj1, d0, d1, plane = _mask_plane(dx, dy, dz, h, k, l, 
+                                                      d, A, B, tol)
 
     if (correlation == 'Correlation'):
         vmin = -1.0
@@ -575,7 +576,7 @@ def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, plane,
             s = ax.scatter(d0[mask], d1[mask], c=data[plane][mask], 
                            norm=normalize, cmap=cmap)
         
-    if (len(atom) == 0): s = ax.scatter(0, 0, c=0, norm=normalize, cmap=cmap)            
+    if (len(atoms) == 0): s = ax.scatter(0, 0, c=0, norm=normalize, cmap=cmap)            
 
     cb = fig.colorbar(s, format='%.1f')
     cb.ax.minorticks_on()

@@ -620,7 +620,7 @@ class Model:
         
         return Sx, Sy, Sz
                                 
-    def load_occupationa(self, fname, run):
+    def load_occupational(self, fname, run):
                     
         A_r = np.load('{}-calculated-composition-{}.npy'.format(fname, run))
         
@@ -818,7 +818,7 @@ class Model:
         corr_, coll_, \
         d, atm_pair = correlations.radial(Vx, Vy, Vz, rx, ry, rz, atms, 
                                           fract=fract, tol=tol,
-                                          period=(A, nu, nw, n_atm))
+                                          period=(A, nu, nv, nw, n_atm))
         
         return corr, coll, d, atm_pair
 
@@ -828,7 +828,7 @@ class Model:
         corr, corr_, \
         d, atm_pair = correlations.parameter(V_r, rx, ry, rz, atms, 
                                              fract=fract, tol=tol,
-                                             period=(A, nu, nw, n_atm))
+                                             period=(A, nu, nv, nw, n_atm))
             
         return corr, d, atm_pair
                 
@@ -843,8 +843,7 @@ class Model:
         
         return corr, coll, sigma_sq_corr, sigma_sq_coll, \
                         
-    def scalar_average_1d(self, corr, corr_, 
-                          sigma_sq_corr, sigma_sq_corr_, d, tol):
+    def scalar_average_1d(self, corr, sigma_sq_corr, d, tol):
             
         corr, sigma_sq_corr, d = crystal.average((corr, sigma_sq_corr), d, tol)
         
