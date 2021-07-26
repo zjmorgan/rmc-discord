@@ -25,6 +25,7 @@ def _transform_extents(matrix, extents):
     return ext_min, ext_max
 
 def _offset(matrix, minimum):
+    
     return -np.dot(matrix, [0,minimum,0])[0]
 
 def plot_exp(canvas, data, h, k, l, ih, ik, il, 
@@ -603,6 +604,8 @@ def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, atm_pair3d,
     H = str(h) if (h >= 0) else r'\bar{{{}}}'.format(h)
     K = str(k) if (k >= 0) else r'\bar{{{}}}'.format(k)
     L = str(l) if (l >= 0) else r'\bar{{{}}}'.format(l)
+    
+    d = np.round(d, int(-np.log10(tol)))
        
     ax.set_title(r'$({}{}{})\cdot[uvw]={}$'.format(H,K,L,d), fontsize='small')
 
@@ -669,4 +672,134 @@ def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, atm_pair3d,
     ax.axes.tick_params(labelsize='small')
     
     fig.tight_layout(pad=3.24)
+    canvas.draw()
+    
+    return H, K, L, d
+
+def plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T,
+              min_h, min_k, min_l, max_h, max_k, max_l, size_h, size_k, size_l, 
+              matrix_h, matrix_k, matrix_l, scale_h, scale_k, scale_l,
+              norm, vmin, vmax):
+        
+    extents_h = [min_k, max_k, min_l, max_l]
+    extents_k = [min_h, max_h, min_l, max_l]
+    extents_l = [min_h, max_h, min_k, max_k]
+                
+    ext_min_h, ext_max_h = _transform_extents(matrix_h, extents_h)
+    ext_min_k, ext_max_k = _transform_extents(matrix_k, extents_k)
+    ext_min_l, ext_max_l = _transform_extents(matrix_l, extents_l)
+    
+    extents_h = _extents(min_k, min_l, max_k, max_l, size_k, size_l)
+    extents_k = _extents(min_h, min_l, max_h, max_l, size_h, size_l)
+    extents_l = _extents(min_h, min_k, max_h, max_k, size_h, size_k)
+    
+    offset_h = _offset(matrix_h, min_l)
+    offset_k = _offset(matrix_k, min_l)
+    offset_l = _offset(matrix_l, min_k)
+    
+    aligned = np.allclose(T, np.eye(3))
+        
+    if (norm == 'Logarithmic'):
+        normalize = colors.LogNorm(vmin=vmin, vmax=vmax)
+    else:
+        normalize = colors.Normalize(vmin=vmin, vmax=vmax)
+                
+    fig = canvas.figure
+    fig.clear()   
+    
+    ax = fig.add_subplot(111)
+    
+    ax.set_aspect(1.)
+    
+    if (hkl == 'h ='):
+    
+        im = ax.imshow(data[i_hkl,:,:].T,
+                       norm=normalize,
+                       interpolation='nearest', 
+                       origin='lower',
+                       extent=extents_h)
+        
+        ax.set_title(r'$h={}$'.format(slice_hkl), fontsize='small') 
+        
+        if aligned:
+            ax.set_xlabel(r'$(0k0)$', fontsize='small')
+            ax.set_ylabel(r'$(00l)$', fontsize='small')
+        else:
+            ax.set_xlabel(r'$(\bar{k}k0)$', fontsize='small')
+            ax.set_ylabel(r'$(00l)$', fontsize='small')
+
+        matrix, offset, scale = matrix_h, offset_h, scale_h
+        ext_min, ext_max = ext_min_h, ext_max_h
+        
+    elif (hkl == 'k ='):
+        
+        im = ax.imshow(data[:,i_hkl,:].T,
+                       norm=normalize,
+                       interpolation='nearest', 
+                       origin='lower',
+                       extent=extents_k)
+    
+        ax.set_title(r'$k={}$'.format(slice_hkl), fontsize='small')
+   
+        if aligned:
+            ax.set_xlabel(r'$(h00)$', fontsize='small')
+            ax.set_ylabel(r'$(00l)$', fontsize='small')
+        else:
+            ax.set_xlabel(r'$(hh0)$', fontsize='small')
+            ax.set_ylabel(r'$(00l)$', fontsize='small')
+        
+        matrix, offset, scale = matrix_k, offset_k, scale_k
+        ext_min, ext_max = ext_min_k, ext_max_k
+        
+    else:
+    
+        im = ax.imshow(data[:,:,i_hkl].T,
+                       norm=normalize,
+                       interpolation='nearest', 
+                       origin='lower',
+                       extent=extents_l)
+        
+        ax.set_title(r'$l={}$'.format(slice_hkl), fontsize='small') 
+        
+        if aligned:
+            ax.set_xlabel(r'$(h00)$', fontsize='small') 
+            ax.set_ylabel(r'$(0k0)$', fontsize='small') 
+        else:
+            ax.set_xlabel(r'$(hh0)$', fontsize='small')
+            ax.set_ylabel(r'$(\bar{k}k0)$', fontsize='small')
+        
+        matrix, offset, scale = matrix_l, offset_l, scale_l
+        ext_min, ext_max = ext_min_l, ext_max_l
+   
+    trans = mtransforms.Affine2D()
+    
+    trans.set_matrix(matrix)
+            
+    shift = mtransforms.Affine2D().translate(offset,0)
+    
+    ax.set_aspect(scale)
+    
+    trans_data = trans+shift+ax.transData
+    
+    im.set_transform(trans_data)
+    
+    ax.set_xlim(ext_min[0]+offset,ext_max[0]+offset)
+    ax.set_ylim(ext_min[1],ext_max[1])   
+
+    ax.xaxis.tick_bottom()
+    
+    ax.minorticks_on()
+    
+    ax.axes.tick_params(labelsize='small')
+
+    fig.tight_layout(pad=3.24)
+    
+    cb = fig.colorbar(im, ax=ax)
+    cb.ax.minorticks_on()
+    
+    if (norm == 'Linear'):
+        cb.formatter.set_powerlimits((0, 0))
+        cb.update_ticks()
+        
+    cb.ax.tick_params(labelsize='small') 
     canvas.draw()

@@ -58,26 +58,26 @@ cpdef (double, double, double) vector(double A,
         V = value
     else:
         V = value*rand()/RAND_MAX
-    
-    a = A/s
-    b = B/s
-    c = C/s
 
     u = sin(phi)*cos(theta)
     v = sin(phi)*sin(theta)
     w = cos(phi)
+    
+    if (fabs(s) <= MACHINE_EPSILON):
+        
+        return V*(T[0]*u+T[5]*v+T[4]*w), \
+               V*(T[5]*u+T[1]*v+T[3]*w), \
+               V*(T[4]*u+T[3]*v+T[2]*w)
+               
+    a = A/s
+    b = B/s
+    c = C/s
     
     dot = a*u+b*v+c*w
         
     if (fabs(dot) > 1):
         
         return A, B, C
-    
-    elif (fabs(s) <= MACHINE_EPSILON):
-        
-        return V*(T[0]*u+T[5]*v+T[4]*w), \
-               V*(T[5]*u+T[1]*v+T[3]*w), \
-               V*(T[4]*u+T[3]*v+T[2]*w)
     
     else:
     

@@ -28,6 +28,13 @@ class Presenter:
         self.view.finished_editing_nv(self.supercell_n)
         self.view.finished_editing_nw(self.supercell_n)
         
+        self.view.finished_editing_a(self.edit_lattice)
+        self.view.finished_editing_b(self.edit_lattice)
+        self.view.finished_editing_c(self.edit_lattice)
+        self.view.finished_editing_alpha(self.edit_lattice)
+        self.view.finished_editing_beta(self.edit_lattice)
+        self.view.finished_editing_gamma(self.edit_lattice)
+        
         self.view.index_changed_type(self.change_type)
         self.view.index_changed_parameters(self.change_parameters)
         
@@ -65,6 +72,30 @@ class Presenter:
         self.view.index_changed_plot_top_chi_sq(self.draw_plot_chi_sq)
         self.view.index_changed_plot_bottom_chi_sq(self.draw_plot_chi_sq)
         
+        self.view.index_changed_norm_1d(self.plot_1d)
+        self.view.index_changed_norm_3d(self.plot_3d)
+        
+        self.view.index_changed_plot_1d(self.plot_1d)
+        self.view.index_changed_plot_3d(self.plot_3d)
+        
+        self.view.finished_editing_h(self.plot_3d)
+        self.view.finished_editing_k(self.plot_3d)
+        self.view.finished_editing_l(self.plot_3d)
+        self.view.finished_editing_d(self.plot_3d)
+        
+        self.view.clicked_disorder_mag_recalc(self.disorder_check_mag_recalc)
+        self.view.clicked_disorder_occ_recalc(self.disorder_check_occ_recalc)
+        self.view.clicked_disorder_dis_recalc(self.disorder_check_dis_recalc)
+        
+        self.view.finished_editing_min_calc(self.draw_plot_calc)
+        self.view.finished_editing_max_calc(self.draw_plot_calc)
+        self.view.finished_editing_slice_calc(self.draw_plot_calc)
+        
+        self.view.index_changed_slice_hkl_calc(self.redraw_plot_calc)
+        self.view.index_changed_norm_calc(self.redraw_plot_calc)
+        
+        self.view.button_clicked_calc(self.recalculate_intensity)
+
         self.threadpool = self.view.create_threadpool()
         
         self.magnetic = False
@@ -73,6 +104,8 @@ class Presenter:
         
         self.allocated = False
         self.iteration = 0
+        
+        self.intensity = None
         
     def new_application(self):
         
@@ -293,6 +326,7 @@ class Presenter:
         mu3 = self.view.get_every_mu3()
         
         a, b, c, alpha, beta, gamma = self.view.get_lattice_parameters()
+        
         A, B, R, C, D = self.model.crystal_matrices(a, b, c, 
                                                     alpha, beta, gamma)
                 
@@ -427,6 +461,20 @@ class Presenter:
         self.view.check_clicked_site(self.add_remove_atoms)
         self.view.item_changed_atom_site_table(self.update_atom_site_table)
         
+    def edit_lattice(self):
+        
+        a, b, c, alpha, beta, gamma = self.view.get_lattice_parameters()
+
+        lat = self.view.get_lattice()
+                
+        if (lat == 'Cubic' or lat == 'Hexagonal'):
+            b = a
+        elif (lat == 'Rhobmohedral'):
+            c = b = a
+            gamma = beta = alpha
+        
+        self.view.set_lattice_parameters(a, b, c, alpha, beta, gamma)
+        
     def load_CIF(self):
         
         name = self.view.open_dialog_cif()
@@ -448,6 +496,41 @@ class Presenter:
             
             self.view.set_lattice(lat)
             
+            self.view.set_a_visible(False)
+            self.view.set_b_visible(False)
+            self.view.set_c_visible(False)
+            self.view.set_alpha_visible(False)
+            self.view.set_beta_visible(False)
+            self.view.set_gamma_visible(False)
+            
+            if (lat == 'Cubic'):
+                self.view.set_a_visible(True)
+            elif (lat == 'Hexagonal' or lat == 'Tetragonal'):
+                self.view.set_a_visible(True)
+                self.view.set_c_visible(True)
+            elif (lat == 'Rhobmohedral'):
+                self.view.set_a_visible(True)
+                self.view.set_alpha_visible(True)
+            elif (lat == 'Orthorhombic'):
+                self.view.set_a_visible(True)
+                self.view.set_b_visible(True)
+                self.view.set_c_visible(True)
+            elif (lat == 'Monoclinic'):
+                self.view.set_a_visible(True)
+                self.view.set_b_visible(True)
+                self.view.set_c_visible(True)
+                if (not np.isclose(beta, np.pi/2)):
+                    self.view.set_beta_visible(True)
+                else:
+                    self.view.set_gamma_visible(True)                
+            else:
+                self.view.set_a_visible(False)
+                self.view.set_b_visible(False)
+                self.view.set_c_visible(False)                   
+                self.view.set_alpha_visible(False)
+                self.view.set_beta_visible(False)
+                self.view.set_gamma_visible(False)
+          
             self.view.set_lattice_parameters(a, b, c, alpha, beta, gamma)
             
             group, hm = self.model.load_space_group(folder, filename)
@@ -630,11 +713,12 @@ class Presenter:
         self.view.block_experiment_table_signals()
         self.view.format_experiment_table()
         
+        if   (row == 0): step, size, minimum, maximum = dh, nh, min_h, max_h
+        elif (row == 1): step, size, minimum, maximum = dk, nk, min_k, max_k
+        elif (row == 2): step, size, minimum, maximum = dl, nl, min_l, max_l
+        
         if (col == 1):
             size = int(text)
-            if   (row == 0): minimum, maximum, step = min_h, max_h, dh
-            elif (row == 1): minimum, maximum, step = min_k, max_k, dk
-            elif (row == 2): minimum, maximum, step = min_l, max_l, dl
             n = self.model.size_value(minimum, maximum, step)
             if   (row == 0): binning[0] = n
             elif (row == 1): binning[1] = n         
@@ -648,9 +732,6 @@ class Presenter:
                 self.view.unblock_experiment_table_signals()
         elif (col == 2):
             minimum = float(text)
-            if   (row == 0): size, step, maximum = nh, dh, max_h
-            elif (row == 1): size, step, maximum = nk, dk, max_k
-            elif (row == 2): size, step, maximum = nl, dl, max_l
             low = self.model.minimum_value(size, step, maximum)
             if   (row == 0): h_range = [low, max_h]
             elif (row == 1): k_range = [low, max_k]
@@ -664,9 +745,6 @@ class Presenter:
                 self.view.unblock_experiment_table_signals()
         elif (col == 3):
             maximum = float(text)
-            if   (row == 0): size, step, minimum = nh, dh, min_h
-            elif (row == 1): size, step, minimum = nk, dk, min_k
-            elif (row == 2): size, step, minimum = nl, dl, min_l
             high = self.model.maximum_value(size, step, minimum)
             if   (row == 0): h_range = [min_h, high]
             elif (row == 1): k_range = [min_k, high]
@@ -834,7 +912,9 @@ class Presenter:
                 
     def crop(self, h_range, k_range, l_range):
         
-        crop_data = self.view.worker(self.crop_thread, h_range, k_range, l_range)
+        ranges = [h_range, k_range, l_range]
+        
+        crop_data = self.view.worker(self.crop_thread, *ranges)
         self.view.result(crop_data, self.crop_process_output)
         self.view.finished(crop_data, self.crop_thread_complete)
         self.threadpool.start(crop_data) 
@@ -1337,10 +1417,14 @@ class Presenter:
             
     def change_type_1d(self):
         
+        self.view.clear_plot_1d_canvas()
+        self.view.clear_pairs_1d_table_table()
         self.view.set_correlations_1d_type()
             
     def change_type_3d(self):
         
+        self.view.clear_plot_3d_canvas()
+        self.view.clear_pairs_3d_table_table()
         self.view.set_correlations_3d_type()
         
     def preprocess_supercell(self):
@@ -1586,6 +1670,12 @@ class Presenter:
         p = self.view.get_order()
         centering = self.view.get_centering_ref()
         
+        lat = self.view.get_lattice()
+        
+        if (lat == 'Rhombohedral'):
+            if (centering == 'R'):
+                centering = 'P'
+                        
         arrays = self.model.initialize_displacive(Ux, Uy, Uz, h, k, l, H, K, L, 
                                                   Qx, Qy, Qz, indices, factors, 
                                                   nu, nv, nw, n_atm, p, 
@@ -1601,141 +1691,6 @@ class Presenter:
         self.prod_nuc, self.prod_nuc_orig, self.prod_nuc_cand, \
         self.i_dft, self.coeffs, self.H_nuc, self.K_nuc, self.L_nuc, \
         self.cond, self.even, self.bragg = arrays
-        
-    def calculate_intensity(self):
-
-        if (self.tableWidget_calc.rowCount() or self.view.get_progress() > 0):
-
-            if (self.changed_params):
-                            
-                if (self.allocated == False):
-                    self.preprocess_supercell()
-                                                    
-                batch = self.view.batch_checked_calc()
-                
-                runs = self.view.get_runs_calc()
-                
-                # ---
-                
-                dh, nh, min_h, max_h = self.view.get_recalculation_binning_h()
-                dk, nk, min_k, max_k = self.view.get_recalculation_binning_k()
-                dl, nl, min_l, max_l = self.view.get_recalculation_binning_l()
-                
-                h_range = [min_h, max_h]
-                k_range = [min_k, max_k]
-                l_range = [min_l, max_l]
-                
-                ux, uy, uz, atm = self.ux, self.uy, self.uz, self.atm
-                
-                nu, nv, nw = self.nu, self.nv, self.nw
-                
-                fname_cif = self.fname_cif
-                
-                folder = os.path.dirname(fname_cif)
-                filename = os.path.basename(fname_cif)
-                
-                fname = self.fname
-                
-                B, R, = self.B, self.R
-                
-                occupancy, g = self.occupancy, self.g
-                
-                # ---
-                
-                twins = np.zeros((1,3,3))
-                variants = np.array([1.])
-                
-                twins[0,:,:] = np.eye(3)
-                                        
-                axes = self.view.get_axes()       
-                
-                if (axes == '(h00), (0k0), (00l)'):
-                    T = np.eye(3)
-                else:                
-                    T = np.array([[1, -1,  0],
-                                  [1,  1,  0],
-                                  [0,  0,  1]])*1.                
-                
-                laue = self.view.get_laue()
-                                
-                self.recalc_params = [nh,nk,nl,
-                                      min_h,min_k,min_l,
-                                      max_h,max_k,max_l,
-                                      laue,axes,batch,runs]
-                
-                intensity = np.zeros((nh,nk,nl))
-                            
-                indices, inverses, operators, \
-                Nu, Nv, Nw, \
-                symop = self.model.reduced_crystal_symmetry(
-                            h_range, k_range, l_range, nh, nk, nl, 
-                            nu, nv, nw, T, folder, filename, laue)
-                    
-                if (self.displacive):
-                    
-                    p = self.view.get_order_calc()
-    
-                    coeffs, even, cntr = self.model.displacive_parameters(p)
-                        
-                # ---
-                    
-                for run in range(runs):               
-    
-                    if not batch: run = None
-                        
-                    if (self.magnetic):
-                        
-                        I_calc = self.model.magnetic_intensity(
-                                     fname, run, ux, uy, uz, atm,
-                                     h_range, k_range, l_range, indices, symop,
-                                     T, B, R, twins, variants, nh, nk, nl, 
-                                     nu, nv, nw, Nu, Nv, Nw, g)
-                                                
-                    elif (self.occupational):
-                        
-                        I_calc = self.model.occupational_intensity(
-                                     fname, run, occupancy, ux, uy, uz, atm,
-                                     h_range, k_range, l_range, indices, symop,
-                                     T, B, R, twins, variants, nh, nk, nl,
-                                     nu, nv, nw, Nu, Nv, Nw)
-        
-                    else:
-                                
-                        I_calc = self.model.displacive_intensity(
-                                     fname, run, coeffs, ux, uy, uz, atm,
-                                     h_range, k_range, l_range, indices, symop,
-                                     T, B, R, twins, variants, nh, nk, nl,
-                                     nu, nv, nw, Nu, Nv, Nw, p, even, cntr)
-    
-                intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
-                            
-                intensity /= runs*operators.shape[0]
-                
-    def recalculation_blur(self):
-                
-        sigma_h, sigma_k, sigma_l = self.view.get_recalculation_filter()
-
-        sigma = [sigma_h, sigma_k, sigma_l]
-        
-        intensity = self.intensity
-        
-        I_recalc = self.model.blurring(intensity, sigma)
-        
-        self.I_recalc = I_recalc
-        
-    def filter_sigma(self):
-                
-        sigma_h = self.view.get_filter_h()
-        sigma_k = self.view.get_filter_k()
-        sigma_l = self.view.get_filter_l()
-
-        sigma = [sigma_h, sigma_k, sigma_l]
-        
-        mask = self.mask
-
-        v_inv, boxes = self.model.gaussian(mask, sigma)
-        
-        self.v_inv, self.boxes = v_inv, boxes 
                     
     def run_refinement_thread(self, callback):
                            
@@ -1795,16 +1750,25 @@ class Presenter:
         
     def run_refinement(self):
         
-        if self.view.get_recalculation_table_row_count():            
+        if self.view.get_recalculation_table_row_count():
             self.stop = False
             
             self.save_application()
             
-            if not self.allocated:
+            if (self.fname and not self.allocated):
                 self.magnetic = self.view.get_disorder_mag()
                 self.occupational = self.view.get_disorder_occ()
-                self.displacive = self.view.get_disorder_dis()   
+                self.displacive = self.view.get_disorder_dis()
                 
+                technique = self.view.get_type()
+                self.view.set_type_recalc(technique)
+                
+                magnetic = True if technique == 'Neutron' else False
+       
+                self.view.enable_disorder_mag_recalc(magnetic)
+                self.view.enable_disorder_occ_recalc(True)
+                self.view.enable_disorder_dis_recalc(True)
+
                 self.preprocess_supercell()
                 self.initialize_disorder()
                 self.initialize_intensity()
@@ -1813,13 +1777,27 @@ class Presenter:
                 
                 self.allocated = True
             
-            self.view.enable_refinement(False)
-                         
-            refinement = self.view.worker(self.run_refinement_thread)
-            self.view.progress(refinement, self.run_refinement_progress_update)
-            self.view.finished(refinement, self.run_refinement_thread_complete)
-            self.threadpool.start(refinement) 
-            
+                self.view.enable_refinement(False)
+                             
+                ref = self.view.worker(self.run_refinement_thread)
+                self.view.progress(ref, self.run_refinement_progress_update)
+                self.view.finished(ref, self.run_refinement_thread_complete)
+                self.threadpool.start(ref)
+                
+    def filter_sigma(self):
+                
+        sigma_h = self.view.get_filter_h()
+        sigma_k = self.view.get_filter_k()
+        sigma_l = self.view.get_filter_l()
+
+        sigma = [sigma_h, sigma_k, sigma_l]
+        
+        mask = self.mask
+
+        v_inv, boxes = self.model.gaussian(mask, sigma)
+        
+        self.v_inv, self.boxes = v_inv, boxes 
+                
     def stop_refinement(self):
         
         if self.view.get_recalculation_table_row_count():
@@ -1899,7 +1877,7 @@ class Presenter:
             prod_z_orig, prod_z_cand = self.prod_z_orig, self.prod_z_cand
         
             magnetic_factors = self.magnetic_factors
-        
+                    
             Qx_norm = self.Qx_norm
             Qy_norm = self.Qy_norm
             Qz_norm = self.Qz_norm
@@ -2032,25 +2010,25 @@ class Presenter:
             
             slice_hkl = self.view.get_slice()
                    
-            i_khl = (nh-1) // 2
+            i_hkl = (nh-1) // 2
             
             if (hkl == 'h ='):
-                i_khl = (nh-1) // 2
+                i_hkl = (nh-1) // 2
                 if (slice_hkl is not None):
-                    i_khl = self.model.slice_index(min_h, max_h, nh, slice_hkl) 
-                slice_hkl = self.model.slice_value(min_h, max_h, nh, i_khl)
+                    i_hkl = self.model.slice_index(min_h, max_h, nh, slice_hkl) 
+                slice_hkl = self.model.slice_value(min_h, max_h, nh, i_hkl)
                 self.view.set_slice(slice_hkl)
             elif (hkl == 'k ='):
-                i_khl = (nk-1) // 2
+                i_hkl = (nk-1) // 2
                 if (slice_hkl is not None):
-                    i_khl = self.model.slice_index(min_k, max_k, nk, slice_hkl)
-                slice_hkl = self.model.slice_value(min_k, max_k, nk, i_khl)           
+                    i_hkl = self.model.slice_index(min_k, max_k, nk, slice_hkl)
+                slice_hkl = self.model.slice_value(min_k, max_k, nk, i_hkl)           
                 self.view.set_slice(slice_hkl)
             elif (hkl == 'l ='):
-                i_khl = (nl-1) // 2
+                i_hkl = (nl-1) // 2
                 if (slice_hkl is not None):
-                    i_khl = self.model.slice_index(min_l, max_l, nl, slice_hkl)
-                slice_hkl = self.model.slice_value(min_l, max_l, nl, i_khl)
+                    i_hkl = self.model.slice_index(min_l, max_l, nl, slice_hkl)
+                slice_hkl = self.model.slice_value(min_l, max_l, nl, i_hkl)
                 self.view.set_slice(slice_hkl)
             
             norm = self.view.get_norm_ref()
@@ -2061,7 +2039,7 @@ class Presenter:
             self.view.validate_min_ref()
             self.view.validate_max_ref()
             
-            plots.plot_ref(canvas, data, hkl, slice_hkl, i_khl, 
+            plots.plot_ref(canvas, data, hkl, slice_hkl, i_hkl, 
                            min_h, min_k, min_l, max_h, max_k, max_l, 
                            nh, nk, nl, matrix_h, matrix_k, matrix_l,
                            scale_h, scale_k, scale_l, norm, vmin, vmax)
@@ -2077,7 +2055,7 @@ class Presenter:
                 self.ref_arr_m = self.signal_m 
             else:
                 self.ref_arr_m = self.error_sq_m 
-                    
+            
             self.view.set_min_ref(self.ref_arr_m.min())
             self.view.set_max_ref(self.ref_arr_m.max())
             
@@ -2114,26 +2092,24 @@ class Presenter:
                 pairs.append('0')
             else:
                 pairs.append('{}_{}'.format(left,right))
-                        
-        if (rows == 0 or unique_pairs.tolist() != np.unique(pairs).tolist()):
-            
-            n_pairs = unique_pairs.size
-            self.view.clear_pairs_1d_table()
-            self.view.create_pairs_1d_table(n_pairs)
-                       
-            for i in range(n_pairs):
-                uni = unique_pairs[i]
-                if (uni == '0'):
-                    uni = 'self-correlation'
-                    self.view.set_pairs_1d_table_row([uni, ' ' , True], i)
-                else:
-                    left, right = uni.split('_')
-                    self.view.set_pairs_1d_table_row([left, right, True], i)
+                                    
+        n_pairs = unique_pairs.size
+        self.view.clear_pairs_1d_table()
+        self.view.create_pairs_1d_table(n_pairs)
+                   
+        for i in range(n_pairs):
+            uni = unique_pairs[i]
+            if (uni == '0'):
+                uni = 'self-correlation'
+                self.view.set_pairs_1d_table_row([uni, ' ', True], i)
+            else:
+                left, right = uni.split('_')
+                self.view.set_pairs_1d_table_row([left, right, True], i)
 
-            visible = False if self.view.get_average_1d() else True   
-            self.view.enable_pairs_1d(visible)
-            self.view.check_clicked_pairs_1d(self.plot_1d)
-            self.view.format_pairs_1d_table()
+        visible = False if self.view.get_average_1d() else True   
+        self.view.enable_pairs_1d(visible)
+        self.view.check_clicked_pairs_1d(self.plot_1d)
+        self.view.format_pairs_1d_table()
         
     def calculate_1d_thread_complete(self):
                 
@@ -2147,9 +2123,9 @@ class Presenter:
             
             self.view.enable_calculate_1d(False)
             
-            calculate_1d = self.view.worker(self.calculate_1d_thread)
-            self.view.finished(calculate_1d, self.calculate_1d_thread_complete)
-            self.threadpool.start(calculate_1d) 
+            calc_1d = self.view.worker(self.calculate_1d_thread)
+            self.view.finished(calc_1d, self.calculate_1d_thread_complete)
+            self.threadpool.start(calc_1d) 
 
     def calculate_1d_thread(self, callback):
                 
@@ -2229,8 +2205,7 @@ class Presenter:
             
                 ave1d = self.model.vector_average_1d(*data1d)
                 
-                corr1d, coll1d, sigma_sq_corr1d, \
-                sigma_sq_coll1d, d = ave1d
+                corr1d, coll1d, sigma_sq_corr1d, sigma_sq_coll1d, d = ave1d
             
             else:
                 
@@ -2250,32 +2225,34 @@ class Presenter:
 
     def plot_1d(self):
         
-        disorder = self.view.get_correlations_1d()
-        correlation = self.view.get_plot_1d()
-        norm = self.view.get_norm_1d()
-                
-        average = self.view.average_1d_checked()
+        if (self.view.get_pairs_1d_table_row_count() > 0):
         
-        d, atm_pair1d = self.d, self.atm_pair1d 
+            disorder = self.view.get_correlations_1d()
+            correlation = self.view.get_plot_1d()
+            norm = self.view.get_norm_1d()
+                    
+            average = self.view.average_1d_checked()
+            
+            d, atm_pair1d = self.d, self.atm_pair1d 
+    
+            if (correlation == 'Correlation'):
+                data = self.corr1d
+                error = self.sigma_sq_corr1d
+            else:
+                data = self.coll1d
+                error = self.sigma_sq_coll1d
 
-        if (correlation == 'Correlation'):
-            data = self.corr1d
-            error = self.sigma_sq_corr1d
-        else:
-            data = self.coll1d
-            error = self.sigma_sq_coll1d
-
-        canvas = self.view.get_plot_1d_canvas()
-        
-        atoms, pairs = [], []
-        for i in range(self.view.get_pairs_1d_table_row_count()):
-            left, right, active = self.view.get_pairs_1d_table_row(i)
-            if active:
-                atoms.append(left)
-                pairs.append(right)
-        
-        plots.correlations_1d(canvas, d, data, error, atm_pair1d, disorder, 
-                              correlation, average, norm, atoms, pairs)
+            canvas = self.view.get_plot_1d_canvas()
+            
+            atoms, pairs = [], []
+            for i in range(self.view.get_pairs_1d_table_row_count()):
+                left, right, active = self.view.get_pairs_1d_table_row(i)
+                if active:
+                    atoms.append(left)
+                    pairs.append(right)
+            
+            plots.correlations_1d(canvas, d, data, error, atm_pair1d, disorder, 
+                                  correlation, average, norm, atoms, pairs)
 
     def recreate_table_3d(self):
                 
@@ -2290,26 +2267,28 @@ class Presenter:
                 pairs.append('0')
             else:
                 pairs.append('{}_{}'.format(left,right))
-                        
-        if (rows == 0 or unique_pairs.tolist() != np.unique(pairs).tolist()):
-            
-            n_pairs = unique_pairs.size
-            self.view.clear_pairs_3d_table()
-            self.view.create_pairs_3d_table(n_pairs)
-                       
-            for i in range(n_pairs):
-                uni = unique_pairs[i]
-                if (uni == '0'):
-                    uni = 'self-correlation'
-                    self.view.set_pairs_3d_table_row([uni, ' ' , True], i)
-                else:
-                    left, right = uni.split('_')
-                    self.view.set_pairs_3d_table_row([left, right, True], i)
+                                    
+        n_pairs = unique_pairs.size
+        self.view.clear_pairs_3d_table()
+        self.view.create_pairs_3d_table(n_pairs)
+                   
+        for i in range(n_pairs):
+            uni = unique_pairs[i]
+            if (uni == '0'):
+                uni = 'self-correlation'
+                self.view.set_pairs_3d_table_row([uni, ' ', True], i)
+            else:
+                left, right = uni.split('_')
+                self.view.set_pairs_3d_table_row([left, right, True], i)
 
-            visible = False if self.view.get_average_3d() else True   
-            self.view.enable_pairs_3d(visible)
-            self.view.check_clicked_pairs_3d(self.plot_3d)
-            self.view.format_pairs_3d_table()
+        visible = False if self.view.get_average_3d() else True   
+        self.view.enable_pairs_3d(visible)
+        self.view.check_clicked_pairs_3d(self.plot_3d)
+        self.view.format_pairs_3d_table()
+        
+    def calculate_3d_process_output(self, data):
+        
+        self.view.set_symmetrize(data)
         
     def calculate_3d_thread_complete(self):
                 
@@ -2323,9 +2302,10 @@ class Presenter:
             
             self.view.enable_calculate_3d(False)
             
-            calculate_3d = self.view.worker(self.calculate_3d_thread)
-            self.view.finished(calculate_3d, self.calculate_3d_thread_complete)
-            self.threadpool.start(calculate_3d) 
+            calc_3d = self.view.worker(self.calculate_3d_thread)
+            self.view.result(calc_3d, self.calculate_3d_process_output)
+            self.view.finished(calc_3d, self.calculate_3d_thread_complete)
+            self.threadpool.start(calc_3d) 
 
     def calculate_3d_thread(self, callback):
                 
@@ -2342,11 +2322,6 @@ class Presenter:
         
         rx, ry, rz, atms = self.rx, self.ry, self.rz, self.atms
         
-        fname_cif = self.fname_cif
-        
-        folder = os.path.dirname(fname_cif)
-        filename = os.path.basename(fname_cif)
-                
         period = (A, nu, nv, nw, n_atm)
         
         corr3d_arrs, coll3d_arrs = [], []
@@ -2401,12 +2376,23 @@ class Presenter:
             stats_coll3d = self.model.correlation_statistics(coll3d_arrs)
             coll3d, sigma_sq_coll3d = stats_coll3d
             
-        if self.view.symmetrize_checked():
+        symm = self.view.get_symmetrize()
+        
+        if (symm == 'cif'):
+            
+            fname_cif = self.fname_cif
+        
+            folder = os.path.dirname(fname_cif)
+            filename = os.path.basename(fname_cif)
+                
+            symm = self.model.find_laue(folder, filename)
+                                 
+        if (symm != 'None'):
             
             if (disorder != 'Occupancy'):
                 
                 data3d = [corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d, 
-                          dx, dy, dz, atm_pair3d, A, folder, filename, tol]
+                          dx, dy, dz, atm_pair3d, A, symm, tol]
             
                 symm3d = self.model.vector_symmetrize_3d(*data3d)
                  
@@ -2416,7 +2402,7 @@ class Presenter:
             else:
                 
                 data3d = [corr3d, sigma_sq_corr3d, dx, dy, dz, 
-                          atm_pair3d, A, folder, filename, tol]
+                          atm_pair3d, A, symm, tol]
                        
                 symm3d = self.model.scalar_symmetrizes_3d(*data3d)
 
@@ -2449,40 +2435,308 @@ class Presenter:
         if (disorder != 'Occupancy'):
                 
             self.coll3d, self.sigma_sq_coll3d = coll3d, sigma_sq_coll3d
+            
+        return symm
 
     def plot_3d(self):
         
-        disorder = self.view.get_correlations_3d()
-        correlation = self.view.get_plot_3d()
-        norm = self.view.get_norm_3d()
+        if (self.view.get_pairs_3d_table_row_count() > 0):
         
-        tol = self.view.get_tol_3d()
-        
-        average = self.view.average_3d_checked()
-        
-        h, k, l = self.view.get_h(), self.view.get_k(), self.view.get_l()
-        d = self.view.get_d()
-        
-        A, B = self.A, self.B
-        
-        dx, dy, dz, atm_pair3d = self.dx, self.dy, self.dz, self.atm_pair3d 
+            disorder = self.view.get_correlations_3d()
+            correlation = self.view.get_plot_3d()
+            norm = self.view.get_norm_3d()
+            
+            tol = self.view.get_tol_3d()
+            
+            average = self.view.average_3d_checked()
+            
+            h, k, l = self.view.get_h(), self.view.get_k(), self.view.get_l()
+            d = self.view.get_d()
+            
+            A, B = self.A, self.B
+            
+            dx, dy, dz, atm_pair3d = self.dx, self.dy, self.dz, self.atm_pair3d 
+            
+            if (correlation == 'Correlation'):
+                data = self.corr3d
+                error = self.sigma_sq_corr3d
+            else:
+                data = self.coll3d
+                error = self.sigma_sq_coll3d
+    
+            canvas = self.view.get_plot_3d_canvas()
+            
+            atoms, pairs = [], []
+            for i in range(self.view.get_pairs_3d_table_row_count()):
+                left, right, active = self.view.get_pairs_3d_table_row(i)
+                if active:
+                    atoms.append(left)
+                    pairs.append(right)
+            
+            h, k, l, d = plots.correlations_3d(canvas, dx, dy, dz, h, k, l, d, 
+                                               data, error, atm_pair3d, 
+                                               disorder, correlation, average, 
+                                               norm, atoms, pairs, A, B, tol)
+            
+            self.view.set_h(h)
+            self.view.set_k(k)
+            self.view.set_l(l)
+            self.view.set_d(d)
+            
+    # ---
 
-        if (correlation == 'Correlation'):
-            data = self.corr3d
-            error = self.sigma_sq_corr3d
+    def disorder_check_mag_recalc(self):
+        
+        if self.view.get_disorder_mag_recalc():
+            self.view.set_disorder_mag_recalc(True)
+            self.view.set_disorder_occ_recalc(False)
+            self.view.set_disorder_dis_recalc(False)
         else:
-            data = self.coll3d
-            error = self.sigma_sq_coll3d
+            self.view.set_disorder_mag_recalc(False)
+            self.view.set_disorder_occ_recalc(True)
+            self.view.set_disorder_dis_recalc(False)
+            
+    def disorder_check_occ_recalc(self):
+        
+        if self.view.get_disorder_occ_recalc():
+            self.view.set_disorder_mag_recalc(False)
+            self.view.set_disorder_occ_recalc(True)
+            self.view.set_disorder_dis_recalc(False)
+        else:
+            self.view.set_disorder_mag_recalc(False)
+            self.view.set_disorder_occ_recalc(False)
+            self.view.set_disorder_dis_recalc(True)
+            
+    def disorder_check_dis_recalc(self):
+        
+        if self.view.get_disorder_dis_recalc():
+            self.view.set_disorder_mag_recalc(False)
+            self.view.set_disorder_occ_recalc(False)
+            self.view.set_disorder_dis_recalc(True)
+        else:
+            self.view.set_disorder_mag_recalc(False)
+            self.view.set_disorder_occ_recalc(True)
+            self.view.set_disorder_dis_recalc(False)
+    
+    def recalculate_intensity_thread(self, callback):
+        
+        if self.view.get_recalculation_table_row_count():
+                            
+            if (self.allocated == False):
+                self.preprocess_supercell()
+                                                
+            # batch = self.view.batch_checked_calc()
+            
+            runs = self.view.get_runs_calc()
+            
+            # ---
+            
+            dh, nh, min_h, max_h = self.view.get_recalculation_binning_h()
+            dk, nk, min_k, max_k = self.view.get_recalculation_binning_k()
+            dl, nl, min_l, max_l = self.view.get_recalculation_binning_l()
+            
+            h_range = [min_h, max_h]
+            k_range = [min_k, max_k]
+            l_range = [min_l, max_l]
+            
+            ux, uy, uz, atm = self.ux, self.uy, self.uz, self.atm
+            
+            nuc, ion = self.nuc, self.ion
+            
+            atm = nuc if (self.view.get_type_recalc() == 'Neutron') else ion
+                            
+            nu, nv, nw = self.nu, self.nv, self.nw
+            
+            fname_cif = self.fname_cif
+            
+            folder = os.path.dirname(fname_cif)
+            filename = os.path.basename(fname_cif)
+            
+            fname = self.fname
+            
+            B, R, = self.B, self.R
+            
+            occupancy, g = self.occupancy, self.g
+            
+            # ---
+            
+            twins = np.zeros((1,3,3))
+            variants = np.array([1.])
+            
+            twins[0,:,:] = np.eye(3)
+                                    
+            axes = self.view.get_axes()       
+            
+            if (axes == '(h00), (0k0), (00l)'):
+                T = np.eye(3)
+            else:                
+                T = np.array([[1, -1,  0],
+                              [1,  1,  0],
+                              [0,  0,  1]])*1.      
+            
+            laue = self.view.get_laue()
+                    
+            if (laue == 'cif'):
+                
+                symm = self.model.find_laue(folder, filename)
+                
+                self.view.set_laue(symm)
+            
+            self.intensity = np.zeros((nh,nk,nl))
+                        
+            indices, inverses, operators, \
+            Nu, Nv, Nw, \
+            symop = self.model.reduced_crystal_symmetry(
+                        h_range, k_range, l_range, nh, nk, nl, 
+                        nu, nv, nw, T, laue)
+                
+            if self.view.get_disorder_dis_recalc():
+                
+                p = self.view.get_order_calc()
+                
+                lat = self.view.get_lattice()
+                
+                cent = self.view.get_centering_calc()
+                
+                if (lat == 'Rhombohedral'): 
+                    if (cent == 'R'): cent = 'P'
+                        
+                coeffs, even, cntr = self.model.displacive_parameters(p, cent)
+                                        
+            for run in range(runs):               
+                    
+                if self.view.get_disorder_mag_recalc():
+                    
+                    I_calc = self.model.magnetic_intensity(
+                                 fname, run, ux, uy, uz, ion,
+                                 h_range, k_range, l_range, indices, symop,
+                                 T, B, R, twins, variants, nh, nk, nl, 
+                                 nu, nv, nw, Nu, Nv, Nw, g)
+                    
+                    self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
+                                            
+                elif self.view.get_disorder_occ_recalc():
+                    
+                    I_calc = self.model.occupational_intensity(
+                                 fname, run, occupancy, ux, uy, uz, atm,
+                                 h_range, k_range, l_range, indices, symop,
+                                 T, B, R, twins, variants, nh, nk, nl,
+                                 nu, nv, nw, Nu, Nv, Nw)
+                    
+                    self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
+                    
+                elif self.view.get_disorder_dis_recalc():
+                            
+                    I_calc = self.model.displacive_intensity(
+                                 fname, run, coeffs, ux, uy, uz, atm,
+                                 h_range, k_range, l_range, indices, symop,
+                                 T, B, R, twins, variants, nh, nk, nl,
+                                 nu, nv, nw, Nu, Nv, Nw, p, even, cntr)
+                    
+                    self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
+                            
+                self.intensity /= runs*operators.shape[0]
+                
+                self.recalculation_blur()
+                
+    def recalculation_blur(self):
+                
+        sigma_h, sigma_k, sigma_l = self.view.get_recalculation_filter()
 
-        canvas = self.view.get_plot_3d_canvas()
+        sigma = [sigma_h, sigma_k, sigma_l]
         
-        atoms, pairs = [], []
-        for i in range(self.view.get_pairs_3d_table_row_count()):
-            left, right, active = self.view.get_pairs_3d_table_row(i)
-            if active:
-                atoms.append(left)
-                pairs.append(right)
+        intensity = self.intensity
         
-        plots.correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, 
-                              atm_pair3d, disorder, correlation, average, 
-                              norm, atoms, pairs, A, B, tol)
+        I_recalc = self.model.blurring(intensity, sigma)
+        
+        self.I_recalc = I_recalc
+
+    def recalculate_intensity_thread_complete(self):
+        
+        self.redraw_plot_calc()
+        
+        self.view.enable_runs_calc(True)        
+                                                                        
+    def recalculate_intensity(self):
+        
+        if (self.view.get_recalculation_table_row_count() and self.allocated):
+        
+            self.view.enable_runs_calc(False)
+            
+            recalculate = self.view.worker(self.recalculate_intensity_thread)
+            self.view.result(
+                recalculate, self.recalculate_intensity_thread_complete
+            )
+            
+            self.threadpool.start(recalculate)
+            
+    def redraw_plot_calc(self):
+        
+        if self.intensity is not None:
+        
+            self.view.set_min_calc(self.intensity.min())
+            self.view.set_max_calc(self.intensity.max())
+            
+            self.draw_plot_calc()
+        
+    def draw_plot_calc(self):
+        
+        if self.intensity is not None:
+        
+            canvas = self.view.get_plot_calc_canvas()
+            data = self.intensity 
+            
+            B = self.B
+            
+            axes = self.view.get_axes() 
+            
+            if (axes == '(h00), (0k0), (00l)'):
+                T = np.eye(3)
+            else:                
+                T = np.array([[1, -1,  0],
+                              [1,  1,  0],
+                              [0,  0,  1]])*1.   
+            
+            hkl = self.view.get_slice_hkl_calc()
+            
+            matrix_h, scale_h = self.model.matrix_transform(B, 'h', T=T)
+            matrix_k, scale_k = self.model.matrix_transform(B, 'k', T=T)
+            matrix_l, scale_l = self.model.matrix_transform(B, 'l', T=T)
+            
+            dh, nh, min_h, max_h = self.view.get_recalculation_binning_h()
+            dk, nk, min_k, max_k = self.view.get_recalculation_binning_k()
+            dl, nl, min_l, max_l = self.view.get_recalculation_binning_l()
+            
+            slice_hkl = self.view.get_slice_calc()
+                           
+            if (hkl == 'h ='):
+                i_hkl = (nh-1) // 2
+                if (slice_hkl is not None):
+                    i_hkl = self.model.slice_index(min_h, max_h, nh, slice_hkl) 
+                slice_hkl = self.model.slice_value(min_h, max_h, nh, i_hkl)
+                self.view.set_slice_calc(slice_hkl)
+            elif (hkl == 'k ='):
+                i_hkl = (nk-1) // 2
+                if (slice_hkl is not None):
+                    i_hkl = self.model.slice_index(min_k, max_k, nk, slice_hkl)
+                slice_hkl = self.model.slice_value(min_k, max_k, nk, i_hkl)           
+                self.view.set_slice_calc(slice_hkl)
+            elif (hkl == 'l ='):
+                i_hkl = (nl-1) // 2
+                if (slice_hkl is not None):
+                    i_hkl = self.model.slice_index(min_l, max_l, nl, slice_hkl)
+                slice_hkl = self.model.slice_value(min_l, max_l, nl, i_hkl)
+                self.view.set_slice_calc(slice_hkl)
+            
+            norm = self.view.get_norm_calc()
+            
+            vmin = self.view.get_min_calc()
+            vmax = self.view.get_max_calc()
+            
+            self.view.validate_min_calc()
+            self.view.validate_max_calc()
+            
+            plots.plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T, 
+                            min_h, min_k, min_l, max_h, max_k, max_l, 
+                            nh, nk, nl, matrix_h, matrix_k, matrix_l, 
+                            scale_h, scale_k, scale_l, norm, vmin, vmax)

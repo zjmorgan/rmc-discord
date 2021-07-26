@@ -12042,7 +12042,7 @@ static PyObject *__pyx_pf_8disorder_8material_8symmetry_16inverse(CYTHON_UNUSED 
  * 
  *         rsymops.append(rop)
  */
-        __pyx_t_9 = PyNumber_InPlaceAdd(__pyx_v_rop, __pyx_kp_u__17); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 619, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyUnicode_ConcatSafe(__pyx_v_rop, __pyx_kp_u__17); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 619, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF_SET(__pyx_v_rop, __pyx_t_9);
         __pyx_t_9 = 0;
@@ -15028,7 +15028,7 @@ static PyObject *__pyx_pf_8disorder_8material_8symmetry_22laue(CYTHON_UNUSED PyO
  * 
  *         ops = [u'x,y,z',u'-x,y,-z',u'-x,-y,-z',u'x,-y,z']             # <<<<<<<<<<<<<<
  * 
- *     else:
+ *     elif (symmetry == '-1'):
  */
     __pyx_t_2 = PyList_New(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 817, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
@@ -15057,14 +15057,23 @@ static PyObject *__pyx_pf_8disorder_8material_8symmetry_22laue(CYTHON_UNUSED PyO
     goto __pyx_L3;
   }
 
-  /* "disorder/material/symmetry.pyx":821
- *     else:
+  /* "disorder/material/symmetry.pyx":819
+ *         ops = [u'x,y,z',u'-x,y,-z',u'-x,-y,-z',u'x,-y,z']
+ * 
+ *     elif (symmetry == '-1'):             # <<<<<<<<<<<<<<
+ * 
+ *         ops = [u'x,y,z',u'-x,-y,-z']
+ */
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_symmetry, __pyx_kp_u_1, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 819, __pyx_L1_error)
+  if (__pyx_t_1) {
+
+    /* "disorder/material/symmetry.pyx":821
+ *     elif (symmetry == '-1'):
  * 
  *         ops = [u'x,y,z',u'-x,-y,-z']             # <<<<<<<<<<<<<<
  * 
- *     return ops
+ *     else:
  */
-  /*else*/ {
     __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 821, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_kp_u_x_y_z);
@@ -15075,11 +15084,37 @@ static PyObject *__pyx_pf_8disorder_8material_8symmetry_22laue(CYTHON_UNUSED PyO
     PyList_SET_ITEM(__pyx_t_2, 1, __pyx_kp_u_x_y_z_5);
     __pyx_v_ops = ((PyObject*)__pyx_t_2);
     __pyx_t_2 = 0;
+
+    /* "disorder/material/symmetry.pyx":819
+ *         ops = [u'x,y,z',u'-x,y,-z',u'-x,-y,-z',u'x,-y,z']
+ * 
+ *     elif (symmetry == '-1'):             # <<<<<<<<<<<<<<
+ * 
+ *         ops = [u'x,y,z',u'-x,-y,-z']
+ */
+    goto __pyx_L3;
+  }
+
+  /* "disorder/material/symmetry.pyx":825
+ *     else:
+ * 
+ *         ops = [u'x,y,z']             # <<<<<<<<<<<<<<
+ * 
+ *     return ops
+ */
+  /*else*/ {
+    __pyx_t_2 = PyList_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 825, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_2);
+    __Pyx_INCREF(__pyx_kp_u_x_y_z);
+    __Pyx_GIVEREF(__pyx_kp_u_x_y_z);
+    PyList_SET_ITEM(__pyx_t_2, 0, __pyx_kp_u_x_y_z);
+    __pyx_v_ops = ((PyObject*)__pyx_t_2);
+    __pyx_t_2 = 0;
   }
   __pyx_L3:;
 
-  /* "disorder/material/symmetry.pyx":823
- *         ops = [u'x,y,z',u'-x,-y,-z']
+  /* "disorder/material/symmetry.pyx":827
+ *         ops = [u'x,y,z']
  * 
  *     return ops             # <<<<<<<<<<<<<<
  */

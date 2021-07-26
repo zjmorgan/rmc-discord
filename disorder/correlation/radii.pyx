@@ -51,8 +51,9 @@ cpdef void averaging(double [::1] S_corr,
                 count -= 1
                 
         if (count > 0):
-            
             S_corr[r] /= count
+        else:
+            S_corr[r] = 0
                         
 cpdef void scaling(double [::1] S_corr,
                    double [::1] Sx,
@@ -102,8 +103,9 @@ cpdef void scaling(double [::1] S_corr,
                 count -= 1
                 
         if (count > 0):
-                                        
             S_corr[r] = (Sx_i*Sx_j+Sy_i*Sy_j+Sz_i*Sz_j)/count**2
+        else:
+            S_corr[r] = 0
             
 cpdef void varying(double [::1] S_coll,
                    double [::1] Sx,
@@ -141,8 +143,9 @@ cpdef void varying(double [::1] S_coll,
                 count -= 1
                 
         if (count > 0):
-            
             S_coll[r] /= count
+        else:
+            S_coll[r] = 0
                       
 cpdef void ordering(double [::1] S_corr,
                     double [::1] A_r,
@@ -178,8 +181,9 @@ cpdef void ordering(double [::1] S_corr,
                 count -= 1
                 
         if (count > 0):
-            
             S_corr[r] /= count
+        else:
+            S_corr[r] = 0
             
 cpdef void fluctuating(double [::1] S_corr,
                        double [::1] A_r,
@@ -218,9 +222,12 @@ cpdef void fluctuating(double [::1] S_corr,
             else:
                 
                 count -= 1
-                            
-        S_corr[r] = S_i*S_j/count**2
         
+        if (count > 0):
+            S_corr[r] = S_i*S_j/count**2                   
+        else:
+            S_corr[r] = 0
+            
 cpdef void effect(double [::1] S_corr,
                   double [::1] delta,
                   double [::1] Sx,
@@ -273,10 +280,6 @@ cpdef void effect(double [::1] S_corr,
                 count -= 1
                 
         if (count > 0):
-            
             S_corr[r] /= count
-            
         else:
-            
             S_corr[r] = 0
-            

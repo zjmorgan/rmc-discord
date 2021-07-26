@@ -320,6 +320,48 @@ def nuclear(H, K, L, h=None, k=None, l=None, nu=1, nv=1, nw=1, centering=None):
         cond = ((l+h) % 2 == 0) & (dft_cond)
         
     return H[cond], K[cond], L[cond], cond
+
+def laue(folder, filename):
+                           
+    cf = CifFile.ReadCif(os.path.join(folder, filename))
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
+                
+    cif_dict = dict(cb.items())
+    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
+    
+    loop_ops = ['_space_group_symop_operation_xyz',
+                '_symmetry_equiv_pos_as_xyz',
+                '_space_group_symop_magn_operation_xyz']
+            
+    ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
+                    if loop_key in cif_dict), None)          
+    
+    symops = cif_dict[loop_ops[ind_ops]]
+    
+    if (ind_ops == 2):
+        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
+        combine = []
+        for symop in symops:
+            for add_symop in add_symops:
+                combine.append(symmetry.binary(
+                               ','.join(symop.split(',')[:3]),
+                               ','.join(add_symop.split(',')[:3])))
+        symops = combine 
+        
+    symops = symmetry.inverse(symmetry.inverse(symops)).tolist()
+        
+    symops.append(u'-x,-y,-z')
+
+    symops = np.unique(symops)
+    
+    lauesym = symmetry.operators(invert=False)
+    
+    symmetries = list(lauesym.keys())
+
+    for symm in symmetries:
+        if (set(lauesym[symm]) == set(symops)):
+            return symm
            
 def bragg(h_range, 
           k_range, 
@@ -331,9 +373,7 @@ def bragg(h_range,
           nv,
           nw,
           T=np.eye(3),
-          folder=None, 
-          filename=None, 
-          symmetry=None):
+          laue=None):
     
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
                              np.linspace(k_range[0],k_range[1],nk), 
@@ -365,7 +405,7 @@ def bragg(h_range,
     mask = (iL == 0) & (~np.isclose(np.mod(l*nw,nw),0))
     L[mask] += 1
     
-    if (symmetry == None or symmetry == 'None'):
+    if (laue == None or laue == 'None'):
         
         index = np.arange(nh*nk*nl)
         
@@ -379,55 +419,10 @@ def bragg(h_range,
                index, \
                np.array([u'x,y,z'])
 
-    elif (symmetry == 'cif'):
-            
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf[[key for key in cf.keys() \
-                 if cf[key].get('_cell_length_a') is not None][0]]
-                    
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
-        
-        loop_ops = ['_space_group_symop_operation_xyz',
-                    '_symmetry_equiv_pos_as_xyz',
-                    '_space_group_symop_magn_operation_xyz']
-                
-        ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                        if loop_key in cif_dict), None)          
-        
-        symops = cif_dict[loop_ops[ind_ops]]
-        
-        if (ind_ops == 2):
-            add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
-            combine = []
-            for symop in symops:
-                for add_symop in add_symops:
-                    combine.append(symmetry.binary(
-                                   ','.join(symop.split(',')[:3]),
-                                   ','.join(add_symop.split(',')[:3])))
-            symops = combine 
-            
-        symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]
-        
-        ops = []
-        
-        for symop in symops:
-            
-            ops.append(symops)
-        
-        ops.append(u'-x,-y,-z')
+    symops = np.array(symmetry.laue(laue))
     
-        symops = np.unique(ops)
+    symops = symmetry.inverse(symops)
     
-        # hkl
-        symops = symmetry.inverse(symops)
-            
-    else:
-        
-        symops = np.unique(symmetry.laue(symmetry))
-                
-        symops = symmetry.inverse(symops)
-        
     symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
                 
     total = []
@@ -481,10 +476,8 @@ def reduced(h_range,
             nu,
             nv,
             nw,
-            T=np.eye(3),
-            folder=None, 
-            filename=None, 
-            symmetry=None):
+            T=np.eye(3), 
+            laue=None):
     
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
                              np.linspace(k_range[0],k_range[1],nk), 
@@ -563,7 +556,7 @@ def reduced(h_range,
         
     del l
             
-    if (symmetry == None or symmetry == 'None'):
+    if (laue == None or laue == 'None'):
         
         index = np.arange(nh*nk*nl)
         
@@ -574,55 +567,10 @@ def reduced(h_range,
                Nv, \
                Nw
                
-    elif (symmetry == 'cif'):
-            
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf[[key for key in cf.keys() \
-                 if cf[key].get('_cell_length_a') is not None][0]]
+    symops = np.array(symmetry.laue(laue))
+    
+    symops = symmetry.inverse(symops)
                     
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
-        
-        loop_ops = ['_space_group_symop_operation_xyz',
-                    '_symmetry_equiv_pos_as_xyz',
-                    '_space_group_symop_magn_operation_xyz']
-                
-        ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                        if loop_key in cif_dict), None)          
-        
-        symops = cif_dict[loop_ops[ind_ops]]
-        
-        if (ind_ops == 2):
-            add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
-            combine = []
-            for symop in symops:
-                for add_symop in add_symops:
-                    combine.append(symmetry.binary(
-                                   ','.join(symop.split(',')[:3]),
-                                   ','.join(add_symop.split(',')[:3])))
-            symops = combine   
-            
-        symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]
-        
-        ops = []
-        
-        for symop in symops:
-            
-            ops.append(symops)
-        
-        ops.append(u'-x,-y,-z')
-    
-        symops = np.unique(ops)
-    
-        # hkl
-        symops = symmetry.inverse(symops)
-            
-    else:
-        
-        symops = np.unique(symmetry.laue(symmetry))
-        
-        symops = symmetry.inverse(symops)
-                
     symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
                     
     coordinate = np.ascontiguousarray(np.stack(((H,-H),(K,-K),(L,-L))).T)
@@ -669,61 +617,16 @@ def reduced(h_range,
            symops, \
            Nu, Nv, Nw
            
-def multiplicity(h, k, l, folder=None, filename=None, symmetry=None):
+def multiplicity(h, k, l, laue):
             
     total = []
     
     coordinate = np.stack((h,k,l))
     
-    if (symmetry == 'cif'): 
-            
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf[[key for key in cf.keys() \
-                 if cf[key].get('_cell_length_a') is not None][0]]
-                    
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
-        
-        loop_ops = ['_space_group_symop_operation_xyz',
-                    '_symmetry_equiv_pos_as_xyz',
-                    '_space_group_symop_magn_operation_xyz']
-                
-        ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                        if loop_key in cif_dict), None)          
-        
-        symops = cif_dict[loop_ops[ind_ops]]
-        
-        if (ind_ops == 2):
-            add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
-            combine = []
-            for symop in symops:
-                for add_symop in add_symops:
-                    combine.append(symmetry.binary(
-                                   ','.join(symop.split(',')[:3]),
-                                   ','.join(add_symop.split(',')[:3])))
-            symops = combine   
-            
-        symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]
-                
-        ops = []
-        
-        for symop in symops:
-            
-            ops.append(symops)
-        
-        ops.append(u'-x,-y,-z')
+    symops = np.array(symmetry.laue(laue))
     
-        symops = np.unique(ops)
-    
-        # hkl
-        symops = symmetry.inverse(symops)
+    symops = symmetry.inverse(symops)
             
-    else:
-        
-        symops = np.unique(symmetry.laue(symmetry))
-        
-        symops = symmetry.inverse(symops)
-        
     symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
             
     for op in symops:
@@ -749,7 +652,7 @@ def multiplicity(h, k, l, folder=None, filename=None, symmetry=None):
         
     return m, symops
 
-def spherical(Q_range, B, folder=None, filename=None, tol=0.00001):
+def spherical(Q_range, B, laue, tol=0.00001):
     
     Q_min = Q_range[0]
     Q_max = Q_range[1]
@@ -767,52 +670,15 @@ def spherical(Q_range, B, folder=None, filename=None, tol=0.00001):
     
     h, k, l = h.flatten(), k.flatten(), l.flatten()
         
-    cf = CifFile.ReadCif(os.path.join(folder, filename))
-    cb = cf[[key for key in cf.keys() \
-             if cf[key].get('_cell_length_a') is not None][0]]
-                
-    cif_dict = dict(cb.items())
-    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
+    symops = np.array(symmetry.laue(laue))
     
-    loop_ops = ['_space_group_symop_operation_xyz',
-                '_symmetry_equiv_pos_as_xyz',
-                '_space_group_symop_magn_operation_xyz']
-            
-    ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                    if loop_key in cif_dict), None)          
+    symops = symmetry.inverse(symops)
     
-    symops = cif_dict[loop_ops[ind_ops]]
-    
-    if (ind_ops == 2):
-        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
-        combine = []
-        for symop in symops:
-            for add_symop in add_symops:
-                combine.append(symmetry.binary(
-                               ','.join(symop.split(',')[:3]),
-                               ','.join(add_symop.split(',')[:3])))
-        symops = combine   
-        
-    symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]       
+    symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
             
     total = []
     
     coordinate = np.stack((h,k,l))
-    
-    ops = []
-    
-    for symop in symops:
-        
-        ops.append(symops)
-    
-    ops.append(u'-x,-y,-z')
-
-    symops = np.unique(ops)
-
-    # hkl
-    symops = symmetry.inverse(symops)
-    
-    symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
             
     for op in symops:
                 
@@ -886,8 +752,7 @@ def symmetrize(arrays,
                dz, 
                ion,
                A, 
-               folder=None, 
-               filename=None, 
+               laue,
                tol=1e-4):
         
     arrays = np.hstack(list((arrays,)))
@@ -898,33 +763,9 @@ def symmetrize(arrays,
             
     M = arrays.shape[0]
         
-    cf = CifFile.ReadCif(os.path.join(folder, filename))
-    cb = cf[[key for key in cf.keys() \
-             if cf[key].get('_cell_length_a') is not None][0]]
-                
-    cif_dict = dict(cb.items())
-    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
-    
-    loop_ops = ['_space_group_symop_operation_xyz',
-                '_symmetry_equiv_pos_as_xyz',
-                '_space_group_symop_magn_operation_xyz']
-            
-    ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                    if loop_key in cif_dict), None)          
-    
-    symops = cif_dict[loop_ops[ind_ops]]
-    
-    if (ind_ops == 2):
-        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
-        combine = []
-        for symop in symops:
-            for add_symop in add_symops:
-                combine.append(symmetry.binary(
-                               ','.join(symop.split(',')[:3]),
-                               ','.join(add_symop.split(',')[:3])))
-        symops = combine   
+    symops = np.array(symmetry.laue(laue))
         
-    symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]      
+    symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])     
         
     N = arrays.shape[1]
     
@@ -958,7 +799,9 @@ def symmetrize(arrays,
             displacement.append(transformed)
         
         # inversion 
-        # transformed = symmetry.evaluate([u'-x, -y, -z'], [x,y,z], translate=False)
+        # transformed = symmetry.evaluate([u'-x, -y, -z'],
+        #                                 [x,y,z], 
+        #                                 translate=False)
                 
         displacement.append(transformed)
 

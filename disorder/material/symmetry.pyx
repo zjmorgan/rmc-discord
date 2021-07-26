@@ -816,8 +816,12 @@ def laue(symmetry):
         
         ops = [u'x,y,z',u'-x,y,-z',u'-x,-y,-z',u'x,-y,z']
                 
-    else:
+    elif (symmetry == '-1'):
         
         ops = [u'x,y,z',u'-x,-y,-z']
+        
+    else:
+        
+        ops = [u'x,y,z']
         
     return ops

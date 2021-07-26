@@ -85,11 +85,15 @@ class Model:
     
     def load_space_group(self, folder, filename):
                 
-        return crystal.group(folder=folder, filename=filename)
+        return crystal.group(folder=folder, filename=filename)        
     
     def load_lattice_parameters(self, folder, filename):
         
         return crystal.parameters(folder=folder, filename=filename)
+    
+    def find_laue(self, folder, filename):
+        
+        return crystal.laue(folder, filename)
     
     def find_lattice(self, a, b, c, alpha, beta, gamma):
     
@@ -247,16 +251,18 @@ class Model:
         
         return minimum+step*(size-1)
             
-    def matrix_transform(self, T, layer='l'):
+    def matrix_transform(self, B, layer='l', T=np.eye(3)):
     
         M = np.eye(3)
         
+        Bp = np.linalg.cholesky(np.dot(T.T,np.dot(np.dot(B.T,B),T))).T
+        
         if (layer == 'h'):
-            Q = T[1:3,1:3].copy()
+            Q = Bp[1:3,1:3].copy()
         elif (layer == 'k'):
-            Q = T[0:3:2,0:3:2].copy()
+            Q = Bp[0:3:2,0:3:2].copy()
         elif (layer == 'l'):
-            Q = T[0:2,0:2].copy()     
+            Q = Bp[0:2,0:2].copy()     
                        
         Q /= Q[1,1]
         
@@ -400,7 +406,7 @@ class Model:
                
     def blurring(self, intensity, sigma):
                    
-        return self.space.blurring(intensity, sigma)
+        return space.blurring(intensity, sigma)
     
     def gaussian(self, mask, sigma):
                    
@@ -553,12 +559,11 @@ class Model:
                i_dft, coeffs, H_nuc, K_nuc, L_nuc, cond, even, bragg
                
     def reduced_crystal_symmetry(self, h_range, k_range, l_range, nh, nk, nl, 
-                                 nu, nv, nw, T, folder, filename, laue):
+                                 nu, nv, nw, T, laue):
                
         indices, inverses, operators, \
         Nu, Nv, Nw = crystal.reduced(h_range, k_range, l_range, nh, nk, nl,
-                                     nu, nv, nw, T=T, folder=folder, 
-                                     filename=filename, symmetry=laue)
+                                     nu, nv, nw, T=T, laue=laue)
         
         lauesym = symmetry.operators(invert=True)
         
@@ -575,7 +580,7 @@ class Model:
                 
         return indices, inverses, operators, Nu, Nv, Nw, symop
     
-    def displacive_parameters(self, p):
+    def displacive_parameters(self, p, centering):
          
         coeffs = displacive.coefficients(p)
         
@@ -590,7 +595,7 @@ class Model:
                 
         nuclear = ['P', 'I', 'F', 'R', 'C', 'A', 'B']
                             
-        cntr = np.argwhere([x in self.centering for x in nuclear])[0][0]
+        cntr = np.argwhere([x in centering for x in nuclear])[0][0]
         
         cntr += 1
         
@@ -832,16 +837,14 @@ class Model:
             
         return corr, d, atm_pair
                 
-    def vector_average_1d(self, corr, coll, corr_, coll_,
-                          sigma_sq_corr, sigma_sq_coll,
-                          sigma_sq_corr_, sigma_sq_coll_, d, tol):
+    def vector_average_1d(self, corr, coll, sigma_sq_corr, 
+                          sigma_sq_coll, d, tol):
     
         corr, corr_, \
         sigma_sq_corr, sigma_sq_coll, \
         d = crystal.average((corr, coll, sigma_sq_corr, sigma_sq_coll), d, tol)
         
-        
-        return corr, coll, sigma_sq_corr, sigma_sq_coll, \
+        return corr, coll, sigma_sq_corr, sigma_sq_coll, d
                         
     def scalar_average_1d(self, corr, sigma_sq_corr, d, tol):
             
@@ -874,29 +877,25 @@ class Model:
        
     def vector_symmetrize_3d(self, corr3d, coll3d,
                              sigma_sq_corr3d, sigma_sq_coll3d, 
-                             dx, dy, dz, atm_pair3d, A, folder, filename, tol):
+                             dx, dy, dz, atm_pair3d, A, laue, tol):
         
         corr3d, coll3d, \
         sigma_sq_corr3d, sigma_sq_coll3d, \
         dx, dy, dz, \
         atm_pair3d = crystal.symmetrize((corr3d, coll3d,
                                          sigma_sq_corr3d, sigma_sq_coll3d),
-                                         dx, dy, dz, atm_pair3d, A, 
-                                         folder=folder, filename=filename, 
-                                         tol=tol)
+                                         dx, dy, dz, atm_pair3d, A, laue, tol)
         
         return corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d, \
                dx, dy, dz, atm_pair3d
         
     def scalar_symmetrizes_3d(self, corr3d, sigma_sq_corr3d, dx, dy, dz, 
-                              atm_pair3d, A, folder, filename, tol):
+                              atm_pair3d, A, laue, tol):
 
         corr3d, sigma_sq_corr3d, \
         dx, dy, dz, \
         atm_pair3d = crystal.symmetrize((corr3d, sigma_sq_corr3d),
-                                         dx, dy, dz, atm_pair3d, A, 
-                                         folder=folder, filename=filename, 
-                                         tol=tol)
+                                         dx, dy, dz, atm_pair3d, A, laue, tol)
         
         return corr3d, sigma_sq_corr3d, dx, dy, dz, atm_pair3d
         
