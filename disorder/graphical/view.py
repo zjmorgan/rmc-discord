@@ -1288,6 +1288,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def clear_experiment_table(self):
         self.tableWidget_exp.clearContents()
+        self.tableWidget_exp.disconnect()
         self.tableWidget_exp.setRowCount(0)
         self.tableWidget_exp.setColumnCount(0)
         
@@ -1311,15 +1312,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         horiz_hdr = self.tableWidget_exp.horizontalHeader()
         horiz_hdr.setSectionResizeMode(stretch)
-        
-    def format_experiment_table_size(self):
-        j = 1
-        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
-        for i in range(self.tableWidget_exp.rowCount()):
-            item = self.tableWidget_exp.item(i, j)
-            if (item is not None and item.text() != ''):
-                item.setTextAlignment(alignment)
-        
+
     def get_experiment_binning_h(self):       
         i = 0
         step = float(self.tableWidget_exp.item(i, 0).text()) 
@@ -1545,6 +1538,16 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def set_slice_l(self, value):
         self.lineEdit_slice_l.setText(str(value))
+        
+    def block_slices(self):
+        self.lineEdit_slice_h.blockSignals(True)
+        self.lineEdit_slice_k.blockSignals(True)
+        self.lineEdit_slice_l.blockSignals(True)
+        
+    def unblock_slices(self):
+        self.lineEdit_slice_h.blockSignals(False)
+        self.lineEdit_slice_k.blockSignals(False)
+        self.lineEdit_slice_l.blockSignals(False)
         
     def get_slice_h(self):
         text = self.lineEdit_slice_h.text()
