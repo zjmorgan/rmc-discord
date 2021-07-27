@@ -3,7 +3,6 @@
 import os
 import sys
 
-import time
 import numpy as np
 
 from disorder.graphical import plots
@@ -1185,7 +1184,7 @@ class Presenter:
         self.signal_m = self.signal_raw_m.copy()
         self.error_sq_m = self.error_sq_raw_m.copy()
                 
-        nk =  self.nk_raw_m
+        nk = self.nk_raw_m
     
         min_k, max_k = self.k_range_raw_m
         
@@ -1292,7 +1291,7 @@ class Presenter:
         self.threadpool.start(punch_data) 
         
     def reset_punch(self):
-        
+                
         self.signal_m = self.signal_raw_m.copy()
         self.error_sq_m = self.error_sq_raw_m.copy()
         
@@ -1302,9 +1301,7 @@ class Presenter:
         
         self.cropbin([min_h, max_h], [min_k, max_k], 
                      [min_l, max_l], [nh, nk, nl])
-
-        self.redraw_plot_exp()
-        
+                
     def populate_recalculation_table(self):
         
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
@@ -1746,7 +1743,6 @@ class Presenter:
                                 
                 self.iteration = i+1
                 
-                time.sleep(0.1)
                 if self.stop:
                     break
                                 
