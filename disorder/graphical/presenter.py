@@ -3,6 +3,7 @@
 import os
 import sys
 
+import time
 import numpy as np
 
 from disorder.graphical import plots
@@ -1717,9 +1718,11 @@ class Presenter:
                 callback.emit([p, b])
                                 
                 self.iteration = i+1
-                if self.stop:
-                    break  
                 
+                time.sleep(0.1)
+                if self.stop:
+                    break
+                                
             Sx, Sy, Sx = self.Sx, self.Sy, self.Sz
             self.model.save_magnetic(self.fname, b, Sx, Sy, Sx)
             
@@ -1728,6 +1731,9 @@ class Presenter:
             
             Ux, Uy, Ux = self.Ux, self.Uy, self.Uz
             self.model.save_displacive(self.fname, b, Ux, Uy, Ux)
+                            
+            if self.stop:
+                break
                              
     def run_refinement_progress_update(self, data):
         
@@ -1755,7 +1761,7 @@ class Presenter:
             
             self.save_application()
             
-            if (self.fname and not self.allocated):
+            if (self.fname):
                 self.magnetic = self.view.get_disorder_mag()
                 self.occupational = self.view.get_disorder_occ()
                 self.displacive = self.view.get_disorder_dis()
@@ -1768,14 +1774,16 @@ class Presenter:
                 self.view.enable_disorder_mag_recalc(magnetic)
                 self.view.enable_disorder_occ_recalc(True)
                 self.view.enable_disorder_dis_recalc(True)
-
-                self.preprocess_supercell()
-                self.initialize_disorder()
-                self.initialize_intensity()
-                self.refinement_statistics()
-                self.filter_sigma()
                 
-                self.allocated = True
+                if (not self.allocated):
+
+                    self.preprocess_supercell()
+                    self.initialize_disorder()
+                    self.initialize_intensity()
+                    self.refinement_statistics()
+                    self.filter_sigma()
+                    
+                    self.allocated = True
             
                 self.view.enable_refinement(False)
                              
