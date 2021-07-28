@@ -675,7 +675,7 @@ class Model:
                                nu, nv, nw, Nu, Nv, Nw):
                     
         A_r = self.load_occupational(fname, run)
-        
+                
         I_calc = monocrystal.occupational(A_r, occupancy, ux, uy, uz, atm,
                                           h_range, k_range, l_range, indices, 
                                           symop, T, B, R, twins, variants,

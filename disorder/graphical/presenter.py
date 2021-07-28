@@ -1301,6 +1301,8 @@ class Presenter:
         
         self.cropbin([min_h, max_h], [min_k, max_k], 
                      [min_l, max_l], [nh, nk, nl])
+        
+        self.redraw_plot_exp()
                 
     def populate_recalculation_table(self):
         
@@ -1466,7 +1468,7 @@ class Presenter:
         self.I_expt, self.inv_sigma_sq = I_expt, inv_sigma_sq
         
         nu, nv, nw = self.view.get_nu(), self.view.get_nv(), self.view.get_nw()
-        
+                
         self.nu, self.nv, self.nw = nu, nv, nw
         
         n_atm = self.view.get_n_atm()
@@ -1562,7 +1564,7 @@ class Presenter:
         
         r_arrays = self.model.real_space_coordinate_transform(u, v, w, element, 
                                                               A, nu, nv, nw)
-       
+               
         ux, uy, uz, rx, ry, rz, atms = r_arrays
         
         self.ux, self.uy, self.uz = ux, uy, uz
@@ -1572,7 +1574,7 @@ class Presenter:
         exp_factors = self.model.exponential_factors(Qx, Qy, Qz, 
                                                      ux, uy, uz, 
                                                      nu, nv, nw)
-         
+                 
         phase_factor, space_factor = exp_factors
         self.phase_factor, self.space_factor = exp_factors
                                         
@@ -2553,8 +2555,7 @@ class Presenter:
         
         if self.view.get_recalculation_table_row_count():
                             
-            if (self.allocated == False):
-                self.preprocess_supercell()
+            if (self.allocated == False): self.preprocess_supercell()
                                                 
             # batch = self.view.batch_checked_calc()
             
@@ -2565,7 +2566,7 @@ class Presenter:
             dh, nh, min_h, max_h = self.view.get_recalculation_binning_h()
             dk, nk, min_k, max_k = self.view.get_recalculation_binning_k()
             dl, nl, min_l, max_l = self.view.get_recalculation_binning_l()
-            
+                        
             h_range = [min_h, max_h]
             k_range = [min_k, max_k]
             l_range = [min_l, max_l]
@@ -2575,7 +2576,7 @@ class Presenter:
             nuc, ion = self.nuc, self.ion
             
             atm = nuc if (self.view.get_type_recalc() == 'Neutron') else ion
-                            
+                                        
             nu, nv, nw = self.nu, self.nv, self.nw
             
             fname_cif = self.fname_cif
@@ -2620,7 +2621,7 @@ class Presenter:
             symop = self.model.reduced_crystal_symmetry(
                         h_range, k_range, l_range, nh, nk, nl, 
                         nu, nv, nw, T, laue)
-                
+                                        
             if self.view.get_disorder_dis_recalc():
                 
                 p = self.view.get_order_calc()
@@ -2647,13 +2648,13 @@ class Presenter:
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
                                             
                 elif self.view.get_disorder_occ_recalc():
-                    
+                                        
                     I_calc = self.model.occupational_intensity(
                                  fname, run, occupancy, ux, uy, uz, atm,
                                  h_range, k_range, l_range, indices, symop,
                                  T, B, R, twins, variants, nh, nk, nl,
                                  nu, nv, nw, Nu, Nv, Nw)
-                    
+                                                            
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
                     
                 elif self.view.get_disorder_dis_recalc():
@@ -2663,9 +2664,9 @@ class Presenter:
                                  h_range, k_range, l_range, indices, symop,
                                  T, B, R, twins, variants, nh, nk, nl,
                                  nu, nv, nw, Nu, Nv, Nw, p, even, cntr)
-                    
+                                        
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
-                            
+                                  
                 self.intensity /= runs*operators.shape[0]
                 
                 self.recalculation_blur()
@@ -2686,15 +2687,16 @@ class Presenter:
         
         self.redraw_plot_calc()
         
-        self.view.enable_runs_calc(True)        
+        self.view.enable_recalculation(True)        
                                                                         
     def recalculate_intensity(self):
         
         if (self.view.get_recalculation_table_row_count() and self.allocated):
         
-            self.view.enable_runs_calc(False)
+            self.view.enable_recalculation(False)
             
             recalculate = self.view.worker(self.recalculate_intensity_thread)
+            
             self.view.result(
                 recalculate, self.recalculate_intensity_thread_complete
             )
