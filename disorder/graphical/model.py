@@ -710,16 +710,15 @@ class Model:
                             prod_x, prod_y, prod_z,
                             prod_x_orig, prod_y_orig, prod_z_orig,  
                             prod_x_cand, prod_y_cand, prod_z_cand,   
-                            space_factor, factors, moment,
-                            I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref, 
-                            v_inv, a_filt, b_filt, c_filt, 
+                            space_factor, factors, moment, I_calc, I_expt, 
+                            inv_sigma_sq, I_raw, I_flat, I_ref, v_inv, 
+                            a_filt, b_filt, c_filt, 
                             d_filt, e_filt, f_filt, 
                             g_filt, h_filt, i_filt,
                             boxes, i_dft, inverses, i_mask, i_unmask,
-                            acc_moves, acc_temps, rej_moves, rej_temps,
-                            chi_sq, energy, temperature, scale, constant,
-                            delta, fixed, T, nh, nk, nl, nu, nv, nw, n_atm, n,
-                            N):
+                            acc_moves, acc_temps, rej_moves, rej_temps, chi_sq, 
+                            energy, temperature, scale, constant, delta, fixed, 
+                            T, nh, nk, nl, nu, nv, nw, n_atm, n, N):
 
         refinement.magnetic(Sx, Sy, Sz, Qx_norm, Qy_norm, Qz_norm, 
                             Sx_k, Sy_k, Sz_k, 
@@ -731,16 +730,15 @@ class Model:
                             prod_x, prod_y, prod_z,
                             prod_x_orig, prod_y_orig, prod_z_orig,  
                             prod_x_cand, prod_y_cand, prod_z_cand,   
-                            space_factor, factors, moment,
-                            I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref, 
-                            v_inv, a_filt, b_filt, c_filt, 
+                            space_factor, factors, moment, I_calc, I_expt, 
+                            inv_sigma_sq, I_raw, I_flat, I_ref, v_inv, 
+                            a_filt, b_filt, c_filt, 
                             d_filt, e_filt, f_filt, 
                             g_filt, h_filt, i_filt,
                             boxes, i_dft, inverses, i_mask, i_unmask,
-                            acc_moves, acc_temps, rej_moves, rej_temps,
-                            chi_sq, energy, temperature, scale, constant,
-                            delta, fixed, T, nh, nk, nl, nu, nv, nw, n_atm, n,
-                            N)
+                            acc_moves, acc_temps, rej_moves, rej_temps, chi_sq, 
+                            energy, temperature, scale, constant, delta, fixed, 
+                            T, nh, nk, nl, nu, nv, nw, n_atm, n, N)
             
     def occupational_refinement(self, A_r, A_k, A_k_orig, A_k_cand,
                                 F, F_orig, F_cand,
@@ -754,7 +752,7 @@ class Model:
                                 boxes, i_dft, inverses, i_mask, i_unmask,
                                 acc_moves, acc_temps, rej_moves, rej_temps,
                                 chi_sq, energy, temperature, scale, constant, 
-                                fixed, nh, nk, nl, nu, nv, nw, n, n_atm, N):
+                                fixed, nh, nk, nl, nu, nv, nw, n_atm, n, N):
 
         refinement.occupational(A_r, A_k, A_k_orig, A_k_cand,
                                 F, F_orig, F_cand,
@@ -768,7 +766,7 @@ class Model:
                                 boxes, i_dft, inverses, i_mask, i_unmask,
                                 acc_moves, acc_temps, rej_moves, rej_temps,
                                 chi_sq, energy, temperature, scale, constant,
-                                fixed, nh, nk, nl, nu, nv, nw, n, n_atm, N)
+                                fixed, nh, nk, nl, nu, nv, nw, n_atm, n, N)
         
     def displacive_refinement(self, Ux, Uy, Uz,
                               U_r, U_r_orig, U_r_cand,

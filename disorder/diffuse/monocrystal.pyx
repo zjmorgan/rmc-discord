@@ -121,27 +121,27 @@ def magnetic(double [::1] Sx,
     
     cdef double [::1] K2 = 2/np.copy(g, order='C')-1
     
-    cdef double form_factor, j0, j2, s, s_sq
+    cdef double form_factor, j0, j2, s_, s_sq
     
-    cdef double [::1] A0 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] B0 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] C0 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] D0 = np.zeros(n_atm, dtype=np.double)
+    cdef double [::1] A0 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] B0 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] C0 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] D0 = np.zeros(n_atm, dtype=float)
     
-    cdef double [::1] A2 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] B2 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] C2 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] D2 = np.zeros(n_atm, dtype=np.double)
+    cdef double [::1] A2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] B2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] C2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] D2 = np.zeros(n_atm, dtype=float)
 
-    cdef double [::1] a0 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] b0 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] c0 = np.zeros(n_atm, dtype=np.double)
+    cdef double [::1] a0 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b0 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] c0 = np.zeros(n_atm, dtype=float)
     
-    cdef double [::1] a2 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] b2 = np.zeros(n_atm, dtype=np.double)
-    cdef double [::1] c2 = np.zeros(n_atm, dtype=np.double)
+    cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] c2 = np.zeros(n_atm, dtype=float)
     
-    I_np = np.zeros(n_hkl, dtype=np.double)
+    I_np = np.zeros(n_hkl, dtype=float)
     
     cdef double [::1] I = I_np
         
@@ -227,8 +227,24 @@ def magnetic(double [::1] Sx,
         
         ion = ions[j]
         
-        A0[j], a0[j], B0[j], b0[j], C0[j], c0[j], D0[j] = tables.j0.get(ion)
-        A2[j], a2[j], B2[j], b2[j], C2[j], c2[j], D2[j] = tables.j2.get(ion)
+        if (tables.j0.get(ion) is None):
+            A0[j], a0[j], \
+            B0[j], b0[j], \
+            C0[j], c0[j], \
+            D0[j] = 0, 0, 0, 0, 0, 0, 0
+            A2[j], a2[j], \
+            B2[j], b2[j], \
+            C2[j], c2[j], \
+            D2[j] = 0, 0, 0, 0, 0, 0, 0
+        else:
+            A0[j], a0[j], \
+            B0[j], b0[j], \
+            C0[j], c0[j], \
+            D0[j] = tables.j0.get(ion)
+            A2[j], a2[j], \
+            B2[j], b2[j], \
+            C2[j], c2[j], \
+            D2[j] = tables.j2.get(ion)
                             
     for i in prange(n_hkl, nogil=True):
              
@@ -266,11 +282,11 @@ def magnetic(double [::1] Sx,
                 iK = (K % Nv+Nv) % Nv
                 iL = (L % Nw+Nw) % Nw
                 
-                if (iH < Fu and not iszero(fmod(f_H, f_Nu))):
+                if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
                     iH = iH+Fu
-                if (iK < Fv and not iszero(fmod(f_K, f_Nv))):
+                if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
                     iK = iK+Fv
-                if (iL < Fw and not iszero(fmod(f_L, f_Nw))):
+                if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):
                     iL = iL+Fw
                     
                 i_dft = iL+Nw*(iK+Nv*iH)
@@ -290,8 +306,8 @@ def magnetic(double [::1] Sx,
                 else:
                     Qx_norm, Qy_norm, Qz_norm = Qx/Q, Qy/Q, Qz/Q   
                 
-                s = Q*inv_M_SP
-                s_sq = s*s
+                s_ = Q*inv_M_SP
+                s_sq = s_*s_
                     
                 prod_x = 0
                 prod_y = 0
@@ -369,7 +385,8 @@ def occupational(double [::1] A_r,
                  Py_ssize_t nw,
                  Py_ssize_t Nu,
                  Py_ssize_t Nv,
-                 Py_ssize_t Nw):
+                 Py_ssize_t Nw,
+                 technique='Neutron'):
     
     cdef Py_ssize_t n_atm = len(atms)
         
@@ -396,13 +413,25 @@ def occupational(double [::1] A_r,
         
     cdef double complex phase_factor, factors
     
+    cdef double Q, s_, s_sq
+    
     cdef double occ
     
     cdef double complex scattering_length
     
-    cdef double complex [::1] b = np.zeros(n_atm, dtype=np.complex)
+    cdef double complex [::1] b = np.zeros(n_atm, dtype=complex)
     
-    I_np = np.zeros(n_hkl, dtype=np.double)
+    cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] c  = np.zeros(n_atm, dtype=float)
+    
+    I_np = np.zeros(n_hkl, dtype=float)
     
     cdef double [::1] I = I_np
     
@@ -441,7 +470,7 @@ def occupational(double [::1] A_r,
     cdef Py_ssize_t Fu = Nu // nu
     cdef Py_ssize_t Fv = Nv // nv
     cdef Py_ssize_t Fw = Nw // nw
-    
+        
     cdef double f_H, f_K, f_L
     
     cdef double f_Nu = float(Nu)
@@ -469,12 +498,24 @@ def occupational(double [::1] A_r,
     
     cdef double M_TAU = 2*np.pi
     cdef double complex M_I = 1j
+    
+    cdef double inv_M_SP = 1/(4*np.pi)
         
     for j in range(n_atm):
         
         atm = atms[j]
         
-        b[j] = tables.bc.get(atm)
+        if (technique == 'Neutron'):
+            
+            b[j] = tables.bc.get(atm)
+        
+        else:
+        
+            a1[j], b1[j], \
+            a2[j], b2[j], \
+            a3[j], b3[j], \
+            a4[j], b4[j], \
+            c[j] = tables.X.get(atm)
                             
     for i in prange(n_hkl, nogil=True):
             
@@ -512,11 +553,11 @@ def occupational(double [::1] A_r,
                 iK = (K % Nv+Nv) % Nv
                 iL = (L % Nw+Nw) % Nw
                 
-                if (iH < Fu and not iszero(fmod(f_H, f_Nu))):
+                if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
                     iH = iH+Fu
-                if (iK < Fv and not iszero(fmod(f_K, f_Nv))):
+                if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
                     iK = iK+Fv
-                if (iL < Fw and not iszero(fmod(f_L, f_Nw))):
+                if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):
                     iL = iL+Fw
                     
                 i_dft = iL+Nw*(iK+Nv*iH)
@@ -534,8 +575,23 @@ def occupational(double [::1] A_r,
                 for j in range(n_atm):
                     
                     occ = occupancy[j]
+                    
+                    if (technique == 'Neutron'):
                         
-                    scattering_length = b[j]
+                        scattering_length = b[j]
+                        
+                    else:
+                        
+                        Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)
+                        
+                        s_ = Q*inv_M_SP
+                        s_sq = s_*s_
+                                                
+                        scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
+                                          + a2[j]*iexp(-b2[j]*s_sq)\
+                                          + a3[j]*iexp(-b3[j]*s_sq)\
+                                          + a4[j]*iexp(-b4[j]*s_sq)\
+                                          + c[j]
                         
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
                     
@@ -580,7 +636,8 @@ def displacive(double [::1] U_r,
                Py_ssize_t Nw,
                Py_ssize_t p,
                long [::1] even,
-               Py_ssize_t centering):
+               Py_ssize_t centering,
+               technique='Neutron'):
     
     cdef Py_ssize_t n_atm = len(atms)
         
@@ -609,12 +666,24 @@ def displacive(double [::1] U_r,
     cdef double Qx, Qy, Qz
         
     cdef double complex phase_factor, factors
+    
+    cdef double Q, s_, s_sq
         
     cdef double complex scattering_length
     
-    cdef double complex [::1] b = np.zeros(n_atm, dtype=np.complex)
+    cdef double complex [::1] b = np.zeros(n_atm, dtype=complex)
     
-    I_np = np.zeros(n_hkl, dtype=np.double)
+    cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] c  = np.zeros(n_atm, dtype=float)
+    
+    I_np = np.zeros(n_hkl, dtype=float)
     
     cdef double [::1] I = I_np
     
@@ -687,13 +756,25 @@ def displacive(double [::1] U_r,
     
     cdef double M_TAU = 2*np.pi
     cdef double complex M_I = 1j
+    
+    cdef double inv_M_SP = 1/(4*np.pi)
         
     for j in range(n_atm):
         
         atm = atms[j]
         
-        b[j] = tables.bc.get(atm)
+        if (technique == 'Neutron'):
+            
+            b[j] = tables.bc.get(atm)
         
+        else:
+        
+            a1[j], b1[j], \
+            a2[j], b2[j], \
+            a3[j], b3[j], \
+            a4[j], b4[j], \
+            c[j] = tables.X.get(atm)
+            
     g = 0
     for f in range(p+1):
         for t in range(f+1):
@@ -746,11 +827,11 @@ def displacive(double [::1] U_r,
                 iK = (K % Nv+Nv) % Nv
                 iL = (L % Nw+Nw) % Nw
                 
-                if (iH < Fu and not iszero(fmod(f_H, f_Nu))):
+                if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
                     iH = iH+Fu
-                if (iK < Fv and not iszero(fmod(f_K, f_Nv))):
+                if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
                     iK = iK+Fv
-                if (iL < Fw and not iszero(fmod(f_L, f_Nw))):
+                if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):
                     iL = iL+Fw
                                        
                 i_dft = iL+Nw*(iK+Nv*iH)
@@ -765,15 +846,31 @@ def displacive(double [::1] U_r,
                 
                 prod = 0
                 
-                for j in range(n_atm):
-                                        
-                    scattering_length = b[j]
+                for j in range(n_atm):                                        
+                    
+                    if (technique == 'Neutron'):
                         
+                        scattering_length = b[j]
+                        
+                    else:
+                        
+                        Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)
+                        
+                        s_ = Q*inv_M_SP
+                        s_sq = s_*s_
+                                                
+                        scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
+                                          + a2[j]*iexp(-b2[j]*s_sq)\
+                                          + a3[j]*iexp(-b3[j]*s_sq)\
+                                          + a4[j]*iexp(-b4[j]*s_sq)\
+                                          + c[j]
+                                          
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
                     
                     factors = scattering_length*phase_factor
                     
-                    if ((iH <= Fu and iK <= Fv and iL <= Fw) and nuclear(h, k, l, centering)):
+                    if ((iH <= Fu and iK <= Fv and iL <= Fw) and \
+                        nuclear(h, k, l, centering)):
                     
                         for g in range(n_odd):
                             
@@ -858,13 +955,13 @@ def structure(double [::1] ux,
         
     cdef double complex scattering_length
     
-    cdef double complex [::1] b = np.zeros(n_atm, dtype=np.complex)
+    cdef double complex [::1] b = np.zeros(n_atm, dtype=complex)
     
-    I_np = np.zeros(n_hkl, dtype=np.double)
+    I_np = np.zeros(n_hkl, dtype=float)
     
     cdef double [::1] I = I_np
         
-    A_r_np = np.ones((nu,nv,nw,n_atm), dtype=np.double)
+    A_r_np = np.ones((nu,nv,nw,n_atm), dtype=float)
     
     cdef double h_min_, k_min_, l_min_
     cdef double h_max_, k_max_, l_max_
@@ -968,11 +1065,11 @@ def structure(double [::1] ux,
                 iK = (K % Nv+Nv) % Nv
                 iL = (L % Nw+Nw) % Nw
                 
-                if (iH < Fu and not iszero(fmod(f_H, f_Nu))):
+                if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
                     iH = iH+Fu
-                if (iK < Fv and not iszero(fmod(f_K, f_Nv))):
+                if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
                     iK = iK+Fv
-                if (iL < Fw and not iszero(fmod(f_L, f_Nw))):
+                if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):
                     iL = iL+Fw
                                        
                 i_dft = iL+Nw*(iK+Nv*iH)
@@ -1015,7 +1112,7 @@ def idft_many(X, Nu, Nv, Nw):
     nw = X.shape[3]
     n_atm = X.shape[4]
         
-    U = np.zeros((nc,Nu,Nv,Nw,n_atm), dtype=np.complex)
+    U = np.zeros((nc,Nu,Nv,Nw,n_atm), dtype=complex)
     
     for i in range(nc):
         for j in range(n_atm):
@@ -1058,7 +1155,7 @@ def idft(X, Nu, Nv, Nw):
     nw = X.shape[2]
     n_atm = X.shape[3]
         
-    U = np.zeros((Nu,Nv,Nw,n_atm), dtype=np.complex)
+    U = np.zeros((Nu,Nv,Nw,n_atm), dtype=complex)
     
     for j in range(n_atm):
         V = X[:,:,:,j].copy()

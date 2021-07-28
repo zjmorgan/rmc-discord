@@ -1585,7 +1585,7 @@ class Presenter:
         else:
              factors = self.model.xray_factors(Q, ion, occupancy, phase_factor)
              self.factors = factors
-             
+                          
     def initialize_intensity(self):
         
         mask, Q = self.mask, self.Q
@@ -1615,7 +1615,7 @@ class Presenter:
     def initialize_disorder(self):
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
-        
+                
         moment = self.mu
         
         Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm, moment)
@@ -1633,7 +1633,7 @@ class Presenter:
         Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, Uiso)
         
         self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
-        
+                
     def initialize_magnetic(self):
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
@@ -1884,7 +1884,7 @@ class Presenter:
         
         nh, nk, nl = self.nh, self.nk, self.nl
         nu, nv, nw, n_atm, n = self.nu, self.nv, self.nw, self.n_atm, self.n
-        
+                
         constant = self.view.get_constant()
 
         if self.magnetic:
@@ -1965,7 +1965,7 @@ class Presenter:
                 boxes, i_dft, inverses, i_mask, i_unmask,
                 acc_moves, acc_temps, rej_moves, rej_temps,
                 chi_sq, energy, temperature, scale, constant, fixed,
-                nh, nk, nl, nu, nv, nw, n, n_atm, N)
+                nh, nk, nl, nu, nv, nw, n_atm, n, N)
     
         elif self.displacive:
             
@@ -2016,7 +2016,7 @@ class Presenter:
                 chi_sq, energy, temperature, scale, constant, 
                 delta, fixed, T, p, nh, nk, nl,
                 nu, nv, nw, n_atm, n, N)
-            
+                        
         self.I_obs = I_flat.reshape(nh,nk,nl)
         self.I_obs[self.mask] = np.nan
         
@@ -2621,7 +2621,7 @@ class Presenter:
             symop = self.model.reduced_crystal_symmetry(
                         h_range, k_range, l_range, nh, nk, nl, 
                         nu, nv, nw, T, laue)
-                                        
+                                                    
             if self.view.get_disorder_dis_recalc():
                 
                 p = self.view.get_order_calc()
@@ -2707,8 +2707,8 @@ class Presenter:
         
         if self.intensity is not None:
         
-            self.view.set_min_calc(self.intensity.min())
-            self.view.set_max_calc(self.intensity.max())
+            self.view.set_min_calc(self.I_recalc.min())
+            self.view.set_max_calc(self.I_recalc.max())
             
             self.draw_plot_calc()
         
