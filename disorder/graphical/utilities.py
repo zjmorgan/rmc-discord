@@ -51,7 +51,7 @@ class WorkerSignals(QtCore.QObject):
     result = QtCore.pyqtSignal(object)
     progress = QtCore.pyqtSignal(list)
 
-class Worker(QtCore.QRunnable):
+class Worker(QtCore.QThread):
 
     def __init__(self, fn, *args, **kwargs):
         super(Worker, self).__init__()
@@ -75,7 +75,7 @@ class Worker(QtCore.QRunnable):
         else:
             self.signals.result.emit(result)
         finally:
-            self.signals.finished.emit()      
+            self.signals.finished.emit()
     
 def save_gui(ui, settings):
     

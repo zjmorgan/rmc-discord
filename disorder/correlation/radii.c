@@ -2757,7 +2757,7 @@ static void __pyx_f_8disorder_11correlation_5radii_averaging(__Pyx_memviewslice 
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] /= count
- * 
+ *         else:
  */
     __pyx_t_17 = ((__pyx_v_count > 0) != 0);
     if (__pyx_t_17) {
@@ -2766,8 +2766,8 @@ static void __pyx_f_8disorder_11correlation_5radii_averaging(__Pyx_memviewslice 
  * 
  *         if (count > 0):
  *             S_corr[r] /= count             # <<<<<<<<<<<<<<
- * 
- * cpdef void scaling(double [::1] S_corr,
+ *         else:
+ *             S_corr[r] = 0
  */
       __pyx_t_4 = __pyx_v_r;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) /= __pyx_v_count;
@@ -2777,9 +2777,23 @@ static void __pyx_f_8disorder_11correlation_5radii_averaging(__Pyx_memviewslice 
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] /= count
- * 
+ *         else:
  */
+      goto __pyx_L10;
     }
+
+    /* "disorder/correlation/radii.pyx":56
+ *             S_corr[r] /= count
+ *         else:
+ *             S_corr[r] = 0             # <<<<<<<<<<<<<<
+ * 
+ * cpdef void scaling(double [::1] S_corr,
+ */
+    /*else*/ {
+      __pyx_t_4 = __pyx_v_r;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) = 0.0;
+    }
+    __pyx_L10:;
   }
 
   /* "disorder/correlation/radii.pyx":18
@@ -2956,8 +2970,8 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_averaging(CYTHON_UNUSED
   return __pyx_r;
 }
 
-/* "disorder/correlation/radii.pyx":56
- *             S_corr[r] /= count
+/* "disorder/correlation/radii.pyx":58
+ *             S_corr[r] = 0
  * 
  * cpdef void scaling(double [::1] S_corr,             # <<<<<<<<<<<<<<
  *                    double [::1] Sx,
@@ -3004,7 +3018,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "disorder/correlation/radii.pyx":64
+  /* "disorder/correlation/radii.pyx":66
  *                    long [:,::1] coordinate) nogil:
  * 
  *     cdef Py_ssize_t D = S_corr.shape[0]             # <<<<<<<<<<<<<<
@@ -3013,7 +3027,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
  */
   __pyx_v_D = (__pyx_v_S_corr.shape[0]);
 
-  /* "disorder/correlation/radii.pyx":75
+  /* "disorder/correlation/radii.pyx":77
  *     cdef Py_ssize_t count
  * 
  *     for r in range(D):             # <<<<<<<<<<<<<<
@@ -3025,7 +3039,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_r = __pyx_t_3;
 
-    /* "disorder/correlation/radii.pyx":77
+    /* "disorder/correlation/radii.pyx":79
  *     for r in range(D):
  * 
  *         count = counts[r]             # <<<<<<<<<<<<<<
@@ -3035,7 +3049,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
     __pyx_t_4 = __pyx_v_r;
     __pyx_v_count = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_counts.data) + __pyx_t_4)) )));
 
-    /* "disorder/correlation/radii.pyx":79
+    /* "disorder/correlation/radii.pyx":81
  *         count = counts[r]
  * 
  *         Sx_i, Sy_i, Sz_i = 0, 0, 0             # <<<<<<<<<<<<<<
@@ -3049,7 +3063,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
     __pyx_v_Sy_i = __pyx_t_6;
     __pyx_v_Sz_i = __pyx_t_7;
 
-    /* "disorder/correlation/radii.pyx":80
+    /* "disorder/correlation/radii.pyx":82
  * 
  *         Sx_i, Sy_i, Sz_i = 0, 0, 0
  *         Sx_j, Sy_j, Sz_j = 0, 0, 0             # <<<<<<<<<<<<<<
@@ -3063,7 +3077,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
     __pyx_v_Sy_j = __pyx_t_6;
     __pyx_v_Sz_j = __pyx_t_5;
 
-    /* "disorder/correlation/radii.pyx":82
+    /* "disorder/correlation/radii.pyx":84
  *         Sx_j, Sy_j, Sz_j = 0, 0, 0
  * 
  *         for s in range(search[r],search[r+1]):             # <<<<<<<<<<<<<<
@@ -3077,7 +3091,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
     for (__pyx_t_10 = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_search.data) + __pyx_t_4)) ))); __pyx_t_10 < __pyx_t_9; __pyx_t_10+=1) {
       __pyx_v_s = __pyx_t_10;
 
-      /* "disorder/correlation/radii.pyx":84
+      /* "disorder/correlation/radii.pyx":86
  *         for s in range(search[r],search[r+1]):
  * 
  *             i, j = coordinate[s,0], coordinate[s,1]             # <<<<<<<<<<<<<<
@@ -3093,7 +3107,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
       __pyx_v_i = __pyx_t_13;
       __pyx_v_j = __pyx_t_14;
 
-      /* "disorder/correlation/radii.pyx":86
+      /* "disorder/correlation/radii.pyx":88
  *             i, j = coordinate[s,0], coordinate[s,1]
  * 
  *             U = sqrt(Sx[i]*Sx[i]+Sy[i]*Sy[i]+Sz[i]*Sz[i])             # <<<<<<<<<<<<<<
@@ -3108,7 +3122,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
       __pyx_t_18 = __pyx_v_i;
       __pyx_v_U = sqrt(((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_11)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_12)) )))) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_15)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_16)) ))))) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_17)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_18)) ))))));
 
-      /* "disorder/correlation/radii.pyx":87
+      /* "disorder/correlation/radii.pyx":89
  * 
  *             U = sqrt(Sx[i]*Sx[i]+Sy[i]*Sy[i]+Sz[i]*Sz[i])
  *             V = sqrt(Sx[j]*Sx[j]+Sy[j]*Sy[j]+Sz[j]*Sz[j])             # <<<<<<<<<<<<<<
@@ -3123,7 +3137,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
       __pyx_t_11 = __pyx_v_j;
       __pyx_v_V = sqrt(((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_18)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_17)) )))) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_16)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_15)) ))))) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_12)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_11)) ))))));
 
-      /* "disorder/correlation/radii.pyx":89
+      /* "disorder/correlation/radii.pyx":91
  *             V = sqrt(Sx[j]*Sx[j]+Sy[j]*Sy[j]+Sz[j]*Sz[j])
  * 
  *             if (not (iszero(U) or iszero(V))):             # <<<<<<<<<<<<<<
@@ -3142,7 +3156,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
       __pyx_t_20 = ((!__pyx_t_19) != 0);
       if (__pyx_t_20) {
 
-        /* "disorder/correlation/radii.pyx":91
+        /* "disorder/correlation/radii.pyx":93
  *             if (not (iszero(U) or iszero(V))):
  * 
  *                 Sx_i += Sx[i]/U             # <<<<<<<<<<<<<<
@@ -3159,11 +3173,11 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 91, __pyx_L1_error)
+          __PYX_ERR(0, 93, __pyx_L1_error)
         }
         __pyx_v_Sx_i = (__pyx_v_Sx_i + (__pyx_t_5 / __pyx_v_U));
 
-        /* "disorder/correlation/radii.pyx":92
+        /* "disorder/correlation/radii.pyx":94
  * 
  *                 Sx_i += Sx[i]/U
  *                 Sy_i += Sy[i]/U             # <<<<<<<<<<<<<<
@@ -3180,11 +3194,11 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 92, __pyx_L1_error)
+          __PYX_ERR(0, 94, __pyx_L1_error)
         }
         __pyx_v_Sy_i = (__pyx_v_Sy_i + (__pyx_t_5 / __pyx_v_U));
 
-        /* "disorder/correlation/radii.pyx":93
+        /* "disorder/correlation/radii.pyx":95
  *                 Sx_i += Sx[i]/U
  *                 Sy_i += Sy[i]/U
  *                 Sz_i += Sz[i]/U             # <<<<<<<<<<<<<<
@@ -3201,11 +3215,11 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 93, __pyx_L1_error)
+          __PYX_ERR(0, 95, __pyx_L1_error)
         }
         __pyx_v_Sz_i = (__pyx_v_Sz_i + (__pyx_t_5 / __pyx_v_U));
 
-        /* "disorder/correlation/radii.pyx":95
+        /* "disorder/correlation/radii.pyx":97
  *                 Sz_i += Sz[i]/U
  * 
  *                 Sx_j += Sx[j]/V             # <<<<<<<<<<<<<<
@@ -3222,11 +3236,11 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 95, __pyx_L1_error)
+          __PYX_ERR(0, 97, __pyx_L1_error)
         }
         __pyx_v_Sx_j = (__pyx_v_Sx_j + (__pyx_t_5 / __pyx_v_V));
 
-        /* "disorder/correlation/radii.pyx":96
+        /* "disorder/correlation/radii.pyx":98
  * 
  *                 Sx_j += Sx[j]/V
  *                 Sy_j += Sy[j]/V             # <<<<<<<<<<<<<<
@@ -3243,11 +3257,11 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 96, __pyx_L1_error)
+          __PYX_ERR(0, 98, __pyx_L1_error)
         }
         __pyx_v_Sy_j = (__pyx_v_Sy_j + (__pyx_t_5 / __pyx_v_V));
 
-        /* "disorder/correlation/radii.pyx":97
+        /* "disorder/correlation/radii.pyx":99
  *                 Sx_j += Sx[j]/V
  *                 Sy_j += Sy[j]/V
  *                 Sz_j += Sz[j]/V             # <<<<<<<<<<<<<<
@@ -3264,11 +3278,11 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 97, __pyx_L1_error)
+          __PYX_ERR(0, 99, __pyx_L1_error)
         }
         __pyx_v_Sz_j = (__pyx_v_Sz_j + (__pyx_t_5 / __pyx_v_V));
 
-        /* "disorder/correlation/radii.pyx":89
+        /* "disorder/correlation/radii.pyx":91
  *             V = sqrt(Sx[j]*Sx[j]+Sy[j]*Sy[j]+Sz[j]*Sz[j])
  * 
  *             if (not (iszero(U) or iszero(V))):             # <<<<<<<<<<<<<<
@@ -3278,7 +3292,7 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
         goto __pyx_L7;
       }
 
-      /* "disorder/correlation/radii.pyx":101
+      /* "disorder/correlation/radii.pyx":103
  *             else:
  * 
  *                 count -= 1             # <<<<<<<<<<<<<<
@@ -3291,22 +3305,22 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
       __pyx_L7:;
     }
 
-    /* "disorder/correlation/radii.pyx":103
+    /* "disorder/correlation/radii.pyx":105
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] = (Sx_i*Sx_j+Sy_i*Sy_j+Sz_i*Sz_j)/count**2
- * 
+ *         else:
  */
     __pyx_t_20 = ((__pyx_v_count > 0) != 0);
     if (__pyx_t_20) {
 
-      /* "disorder/correlation/radii.pyx":104
+      /* "disorder/correlation/radii.pyx":106
  * 
  *         if (count > 0):
  *             S_corr[r] = (Sx_i*Sx_j+Sy_i*Sy_j+Sz_i*Sz_j)/count**2             # <<<<<<<<<<<<<<
- * 
- * cpdef void varying(double [::1] S_coll,
+ *         else:
+ *             S_corr[r] = 0
  */
       __pyx_t_5 = (((__pyx_v_Sx_i * __pyx_v_Sx_j) + (__pyx_v_Sy_i * __pyx_v_Sy_j)) + (__pyx_v_Sz_i * __pyx_v_Sz_j));
       __pyx_t_10 = __Pyx_pow_Py_ssize_t(__pyx_v_count, 2);
@@ -3318,23 +3332,37 @@ static void __pyx_f_8disorder_11correlation_5radii_scaling(__Pyx_memviewslice __
         #ifdef WITH_THREAD
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
         #endif
-        __PYX_ERR(0, 104, __pyx_L1_error)
+        __PYX_ERR(0, 106, __pyx_L1_error)
       }
       __pyx_t_4 = __pyx_v_r;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) = (__pyx_t_5 / ((double)__pyx_t_10));
 
-      /* "disorder/correlation/radii.pyx":103
+      /* "disorder/correlation/radii.pyx":105
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] = (Sx_i*Sx_j+Sy_i*Sy_j+Sz_i*Sz_j)/count**2
- * 
+ *         else:
  */
+      goto __pyx_L10;
     }
+
+    /* "disorder/correlation/radii.pyx":108
+ *             S_corr[r] = (Sx_i*Sx_j+Sy_i*Sy_j+Sz_i*Sz_j)/count**2
+ *         else:
+ *             S_corr[r] = 0             # <<<<<<<<<<<<<<
+ * 
+ * cpdef void varying(double [::1] S_coll,
+ */
+    /*else*/ {
+      __pyx_t_4 = __pyx_v_r;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) = 0.0;
+    }
+    __pyx_L10:;
   }
 
-  /* "disorder/correlation/radii.pyx":56
- *             S_corr[r] /= count
+  /* "disorder/correlation/radii.pyx":58
+ *             S_corr[r] = 0
  * 
  * cpdef void scaling(double [::1] S_corr,             # <<<<<<<<<<<<<<
  *                    double [::1] Sx,
@@ -3397,41 +3425,41 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_3scaling(PyObject *__py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sx)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 1); __PYX_ERR(0, 56, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 1); __PYX_ERR(0, 58, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sy)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 2); __PYX_ERR(0, 56, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 2); __PYX_ERR(0, 58, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sz)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 3); __PYX_ERR(0, 56, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 3); __PYX_ERR(0, 58, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_counts)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 4); __PYX_ERR(0, 56, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 4); __PYX_ERR(0, 58, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_search)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 5); __PYX_ERR(0, 56, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 5); __PYX_ERR(0, 58, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_coordinate)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 6); __PYX_ERR(0, 56, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, 6); __PYX_ERR(0, 58, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "scaling") < 0)) __PYX_ERR(0, 56, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "scaling") < 0)) __PYX_ERR(0, 58, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 7) {
       goto __pyx_L5_argtuple_error;
@@ -3444,17 +3472,17 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_3scaling(PyObject *__py
       values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
       values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
     }
-    __pyx_v_S_corr = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_corr.memview)) __PYX_ERR(0, 56, __pyx_L3_error)
-    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 57, __pyx_L3_error)
-    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 58, __pyx_L3_error)
-    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 59, __pyx_L3_error)
-    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 60, __pyx_L3_error)
-    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 61, __pyx_L3_error)
-    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 62, __pyx_L3_error)
+    __pyx_v_S_corr = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_corr.memview)) __PYX_ERR(0, 58, __pyx_L3_error)
+    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 59, __pyx_L3_error)
+    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 60, __pyx_L3_error)
+    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 61, __pyx_L3_error)
+    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 62, __pyx_L3_error)
+    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 63, __pyx_L3_error)
+    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 64, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 56, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("scaling", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 58, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("disorder.correlation.radii.scaling", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3476,14 +3504,14 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_2scaling(CYTHON_UNUSED 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("scaling", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_S_corr.memview)) { __Pyx_RaiseUnboundLocalError("S_corr"); __PYX_ERR(0, 56, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_Sx.memview)) { __Pyx_RaiseUnboundLocalError("Sx"); __PYX_ERR(0, 56, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_Sy.memview)) { __Pyx_RaiseUnboundLocalError("Sy"); __PYX_ERR(0, 56, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_Sz.memview)) { __Pyx_RaiseUnboundLocalError("Sz"); __PYX_ERR(0, 56, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 56, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 56, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 56, __pyx_L1_error) }
-  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_scaling(__pyx_v_S_corr, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 56, __pyx_L1_error)
+  if (unlikely(!__pyx_v_S_corr.memview)) { __Pyx_RaiseUnboundLocalError("S_corr"); __PYX_ERR(0, 58, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_Sx.memview)) { __Pyx_RaiseUnboundLocalError("Sx"); __PYX_ERR(0, 58, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_Sy.memview)) { __Pyx_RaiseUnboundLocalError("Sy"); __PYX_ERR(0, 58, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_Sz.memview)) { __Pyx_RaiseUnboundLocalError("Sz"); __PYX_ERR(0, 58, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 58, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 58, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 58, __pyx_L1_error) }
+  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_scaling(__pyx_v_S_corr, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 58, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3507,8 +3535,8 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_2scaling(CYTHON_UNUSED 
   return __pyx_r;
 }
 
-/* "disorder/correlation/radii.pyx":106
- *             S_corr[r] = (Sx_i*Sx_j+Sy_i*Sy_j+Sz_i*Sz_j)/count**2
+/* "disorder/correlation/radii.pyx":110
+ *             S_corr[r] = 0
  * 
  * cpdef void varying(double [::1] S_coll,             # <<<<<<<<<<<<<<
  *                    double [::1] Sx,
@@ -3548,7 +3576,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "disorder/correlation/radii.pyx":114
+  /* "disorder/correlation/radii.pyx":118
  *                    long [:,::1] coordinate) nogil:
  * 
  *     cdef Py_ssize_t D = S_coll.shape[0]             # <<<<<<<<<<<<<<
@@ -3557,7 +3585,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
  */
   __pyx_v_D = (__pyx_v_S_coll.shape[0]);
 
-  /* "disorder/correlation/radii.pyx":122
+  /* "disorder/correlation/radii.pyx":126
  *     cdef Py_ssize_t count
  * 
  *     for r in range(D):             # <<<<<<<<<<<<<<
@@ -3569,7 +3597,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_r = __pyx_t_3;
 
-    /* "disorder/correlation/radii.pyx":124
+    /* "disorder/correlation/radii.pyx":128
  *     for r in range(D):
  * 
  *         count = counts[r]             # <<<<<<<<<<<<<<
@@ -3579,7 +3607,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
     __pyx_t_4 = __pyx_v_r;
     __pyx_v_count = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_counts.data) + __pyx_t_4)) )));
 
-    /* "disorder/correlation/radii.pyx":126
+    /* "disorder/correlation/radii.pyx":130
  *         count = counts[r]
  * 
  *         for s in range(search[r],search[r+1]):             # <<<<<<<<<<<<<<
@@ -3593,7 +3621,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
     for (__pyx_t_7 = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_search.data) + __pyx_t_4)) ))); __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
       __pyx_v_s = __pyx_t_7;
 
-      /* "disorder/correlation/radii.pyx":128
+      /* "disorder/correlation/radii.pyx":132
  *         for s in range(search[r],search[r+1]):
  * 
  *             i, j = coordinate[s,0], coordinate[s,1]             # <<<<<<<<<<<<<<
@@ -3609,7 +3637,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
       __pyx_v_i = __pyx_t_10;
       __pyx_v_j = __pyx_t_11;
 
-      /* "disorder/correlation/radii.pyx":130
+      /* "disorder/correlation/radii.pyx":134
  *             i, j = coordinate[s,0], coordinate[s,1]
  * 
  *             U = Sx[i]*Sx[i]+Sy[i]*Sy[i]+Sz[i]*Sz[i]             # <<<<<<<<<<<<<<
@@ -3624,7 +3652,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
       __pyx_t_15 = __pyx_v_i;
       __pyx_v_U = ((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_8)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_9)) )))) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_12)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_13)) ))))) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_14)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_15)) )))));
 
-      /* "disorder/correlation/radii.pyx":131
+      /* "disorder/correlation/radii.pyx":135
  * 
  *             U = Sx[i]*Sx[i]+Sy[i]*Sy[i]+Sz[i]*Sz[i]
  *             V = Sx[j]*Sx[j]+Sy[j]*Sy[j]+Sz[j]*Sz[j]             # <<<<<<<<<<<<<<
@@ -3639,7 +3667,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
       __pyx_t_8 = __pyx_v_j;
       __pyx_v_V = ((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_15)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_14)) )))) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_13)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_12)) ))))) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_9)) ))) * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_8)) )))));
 
-      /* "disorder/correlation/radii.pyx":133
+      /* "disorder/correlation/radii.pyx":137
  *             V = Sx[j]*Sx[j]+Sy[j]*Sy[j]+Sz[j]*Sz[j]
  * 
  *             if (not (iszero(U) or iszero(V))):             # <<<<<<<<<<<<<<
@@ -3658,7 +3686,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
       __pyx_t_17 = ((!__pyx_t_16) != 0);
       if (__pyx_t_17) {
 
-        /* "disorder/correlation/radii.pyx":135
+        /* "disorder/correlation/radii.pyx":139
  *             if (not (iszero(U) or iszero(V))):
  * 
  *                 S_coll[r] += (Sx[i]*Sx[j]+Sy[i]*Sy[j]+Sz[i]*Sz[j])**2/U/V             # <<<<<<<<<<<<<<
@@ -3680,7 +3708,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 135, __pyx_L1_error)
+          __PYX_ERR(0, 139, __pyx_L1_error)
         }
         __pyx_t_19 = (__pyx_t_18 / __pyx_v_U);
         if (unlikely(__pyx_v_V == 0)) {
@@ -3691,12 +3719,12 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 135, __pyx_L1_error)
+          __PYX_ERR(0, 139, __pyx_L1_error)
         }
         __pyx_t_15 = __pyx_v_r;
         *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_coll.data) + __pyx_t_15)) )) += (__pyx_t_19 / __pyx_v_V);
 
-        /* "disorder/correlation/radii.pyx":133
+        /* "disorder/correlation/radii.pyx":137
  *             V = Sx[j]*Sx[j]+Sy[j]*Sy[j]+Sz[j]*Sz[j]
  * 
  *             if (not (iszero(U) or iszero(V))):             # <<<<<<<<<<<<<<
@@ -3706,7 +3734,7 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
         goto __pyx_L7;
       }
 
-      /* "disorder/correlation/radii.pyx":139
+      /* "disorder/correlation/radii.pyx":143
  *             else:
  * 
  *                 count -= 1             # <<<<<<<<<<<<<<
@@ -3719,38 +3747,52 @@ static void __pyx_f_8disorder_11correlation_5radii_varying(__Pyx_memviewslice __
       __pyx_L7:;
     }
 
-    /* "disorder/correlation/radii.pyx":141
+    /* "disorder/correlation/radii.pyx":145
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_coll[r] /= count
- * 
+ *         else:
  */
     __pyx_t_17 = ((__pyx_v_count > 0) != 0);
     if (__pyx_t_17) {
 
-      /* "disorder/correlation/radii.pyx":142
+      /* "disorder/correlation/radii.pyx":146
  * 
  *         if (count > 0):
  *             S_coll[r] /= count             # <<<<<<<<<<<<<<
- * 
- * cpdef void ordering(double [::1] S_corr,
+ *         else:
+ *             S_coll[r] = 0
  */
       __pyx_t_4 = __pyx_v_r;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_coll.data) + __pyx_t_4)) )) /= __pyx_v_count;
 
-      /* "disorder/correlation/radii.pyx":141
+      /* "disorder/correlation/radii.pyx":145
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_coll[r] /= count
- * 
+ *         else:
  */
+      goto __pyx_L10;
     }
+
+    /* "disorder/correlation/radii.pyx":148
+ *             S_coll[r] /= count
+ *         else:
+ *             S_coll[r] = 0             # <<<<<<<<<<<<<<
+ * 
+ * cpdef void ordering(double [::1] S_corr,
+ */
+    /*else*/ {
+      __pyx_t_4 = __pyx_v_r;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_coll.data) + __pyx_t_4)) )) = 0.0;
+    }
+    __pyx_L10:;
   }
 
-  /* "disorder/correlation/radii.pyx":106
- *             S_corr[r] = (Sx_i*Sx_j+Sy_i*Sy_j+Sz_i*Sz_j)/count**2
+  /* "disorder/correlation/radii.pyx":110
+ *             S_corr[r] = 0
  * 
  * cpdef void varying(double [::1] S_coll,             # <<<<<<<<<<<<<<
  *                    double [::1] Sx,
@@ -3813,41 +3855,41 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_5varying(PyObject *__py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sx)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 1); __PYX_ERR(0, 106, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 1); __PYX_ERR(0, 110, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sy)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 2); __PYX_ERR(0, 106, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 2); __PYX_ERR(0, 110, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sz)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 3); __PYX_ERR(0, 106, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 3); __PYX_ERR(0, 110, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_counts)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 4); __PYX_ERR(0, 106, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 4); __PYX_ERR(0, 110, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_search)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 5); __PYX_ERR(0, 106, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 5); __PYX_ERR(0, 110, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_coordinate)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 6); __PYX_ERR(0, 106, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, 6); __PYX_ERR(0, 110, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "varying") < 0)) __PYX_ERR(0, 106, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "varying") < 0)) __PYX_ERR(0, 110, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 7) {
       goto __pyx_L5_argtuple_error;
@@ -3860,17 +3902,17 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_5varying(PyObject *__py
       values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
       values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
     }
-    __pyx_v_S_coll = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_coll.memview)) __PYX_ERR(0, 106, __pyx_L3_error)
-    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 107, __pyx_L3_error)
-    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 108, __pyx_L3_error)
-    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 109, __pyx_L3_error)
-    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 110, __pyx_L3_error)
-    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 111, __pyx_L3_error)
-    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 112, __pyx_L3_error)
+    __pyx_v_S_coll = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_coll.memview)) __PYX_ERR(0, 110, __pyx_L3_error)
+    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 111, __pyx_L3_error)
+    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 112, __pyx_L3_error)
+    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 113, __pyx_L3_error)
+    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 114, __pyx_L3_error)
+    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 115, __pyx_L3_error)
+    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 116, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 106, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("varying", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 110, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("disorder.correlation.radii.varying", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -3892,14 +3934,14 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_4varying(CYTHON_UNUSED 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("varying", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_S_coll.memview)) { __Pyx_RaiseUnboundLocalError("S_coll"); __PYX_ERR(0, 106, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_Sx.memview)) { __Pyx_RaiseUnboundLocalError("Sx"); __PYX_ERR(0, 106, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_Sy.memview)) { __Pyx_RaiseUnboundLocalError("Sy"); __PYX_ERR(0, 106, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_Sz.memview)) { __Pyx_RaiseUnboundLocalError("Sz"); __PYX_ERR(0, 106, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 106, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 106, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 106, __pyx_L1_error) }
-  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_varying(__pyx_v_S_coll, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 106, __pyx_L1_error)
+  if (unlikely(!__pyx_v_S_coll.memview)) { __Pyx_RaiseUnboundLocalError("S_coll"); __PYX_ERR(0, 110, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_Sx.memview)) { __Pyx_RaiseUnboundLocalError("Sx"); __PYX_ERR(0, 110, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_Sy.memview)) { __Pyx_RaiseUnboundLocalError("Sy"); __PYX_ERR(0, 110, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_Sz.memview)) { __Pyx_RaiseUnboundLocalError("Sz"); __PYX_ERR(0, 110, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 110, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 110, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 110, __pyx_L1_error) }
+  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_varying(__pyx_v_S_coll, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 110, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3923,8 +3965,8 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_4varying(CYTHON_UNUSED 
   return __pyx_r;
 }
 
-/* "disorder/correlation/radii.pyx":144
- *             S_coll[r] /= count
+/* "disorder/correlation/radii.pyx":150
+ *             S_coll[r] = 0
  * 
  * cpdef void ordering(double [::1] S_corr,             # <<<<<<<<<<<<<<
  *                     double [::1] A_r,
@@ -3960,7 +4002,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "disorder/correlation/radii.pyx":150
+  /* "disorder/correlation/radii.pyx":156
  *                     long [:,::1] coordinate) nogil:
  * 
  *     cdef Py_ssize_t D = S_corr.shape[0]             # <<<<<<<<<<<<<<
@@ -3969,7 +4011,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
  */
   __pyx_v_D = (__pyx_v_S_corr.shape[0]);
 
-  /* "disorder/correlation/radii.pyx":158
+  /* "disorder/correlation/radii.pyx":164
  *     cdef Py_ssize_t count
  * 
  *     for r in range(D):             # <<<<<<<<<<<<<<
@@ -3981,7 +4023,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_r = __pyx_t_3;
 
-    /* "disorder/correlation/radii.pyx":160
+    /* "disorder/correlation/radii.pyx":166
  *     for r in range(D):
  * 
  *         count = counts[r]             # <<<<<<<<<<<<<<
@@ -3991,7 +4033,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
     __pyx_t_4 = __pyx_v_r;
     __pyx_v_count = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_counts.data) + __pyx_t_4)) )));
 
-    /* "disorder/correlation/radii.pyx":162
+    /* "disorder/correlation/radii.pyx":168
  *         count = counts[r]
  * 
  *         for s in range(search[r],search[r+1]):             # <<<<<<<<<<<<<<
@@ -4005,7 +4047,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
     for (__pyx_t_7 = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_search.data) + __pyx_t_4)) ))); __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
       __pyx_v_s = __pyx_t_7;
 
-      /* "disorder/correlation/radii.pyx":164
+      /* "disorder/correlation/radii.pyx":170
  *         for s in range(search[r],search[r+1]):
  * 
  *             i, j = coordinate[s,0], coordinate[s,1]             # <<<<<<<<<<<<<<
@@ -4021,7 +4063,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
       __pyx_v_i = __pyx_t_10;
       __pyx_v_j = __pyx_t_11;
 
-      /* "disorder/correlation/radii.pyx":166
+      /* "disorder/correlation/radii.pyx":172
  *             i, j = coordinate[s,0], coordinate[s,1]
  * 
  *             U = fabs(A_r[i])             # <<<<<<<<<<<<<<
@@ -4031,7 +4073,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
       __pyx_t_8 = __pyx_v_i;
       __pyx_v_U = fabs((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_A_r.data) + __pyx_t_8)) ))));
 
-      /* "disorder/correlation/radii.pyx":167
+      /* "disorder/correlation/radii.pyx":173
  * 
  *             U = fabs(A_r[i])
  *             V = fabs(A_r[j])             # <<<<<<<<<<<<<<
@@ -4041,7 +4083,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
       __pyx_t_8 = __pyx_v_j;
       __pyx_v_V = fabs((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_A_r.data) + __pyx_t_8)) ))));
 
-      /* "disorder/correlation/radii.pyx":169
+      /* "disorder/correlation/radii.pyx":175
  *             V = fabs(A_r[j])
  * 
  *             if (not (iszero(U) or iszero(V))):             # <<<<<<<<<<<<<<
@@ -4060,7 +4102,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
       __pyx_t_13 = ((!__pyx_t_12) != 0);
       if (__pyx_t_13) {
 
-        /* "disorder/correlation/radii.pyx":171
+        /* "disorder/correlation/radii.pyx":177
  *             if (not (iszero(U) or iszero(V))):
  * 
  *                 S_corr[r] += (A_r[i]*A_r[j])/U/V             # <<<<<<<<<<<<<<
@@ -4078,7 +4120,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 171, __pyx_L1_error)
+          __PYX_ERR(0, 177, __pyx_L1_error)
         }
         __pyx_t_15 = (__pyx_t_14 / __pyx_v_U);
         if (unlikely(__pyx_v_V == 0)) {
@@ -4089,12 +4131,12 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 171, __pyx_L1_error)
+          __PYX_ERR(0, 177, __pyx_L1_error)
         }
         __pyx_t_9 = __pyx_v_r;
         *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_9)) )) += (__pyx_t_15 / __pyx_v_V);
 
-        /* "disorder/correlation/radii.pyx":169
+        /* "disorder/correlation/radii.pyx":175
  *             V = fabs(A_r[j])
  * 
  *             if (not (iszero(U) or iszero(V))):             # <<<<<<<<<<<<<<
@@ -4104,7 +4146,7 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
         goto __pyx_L7;
       }
 
-      /* "disorder/correlation/radii.pyx":175
+      /* "disorder/correlation/radii.pyx":181
  *             else:
  * 
  *                 count -= 1             # <<<<<<<<<<<<<<
@@ -4117,38 +4159,52 @@ static void __pyx_f_8disorder_11correlation_5radii_ordering(__Pyx_memviewslice _
       __pyx_L7:;
     }
 
-    /* "disorder/correlation/radii.pyx":177
+    /* "disorder/correlation/radii.pyx":183
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] /= count
- * 
+ *         else:
  */
     __pyx_t_13 = ((__pyx_v_count > 0) != 0);
     if (__pyx_t_13) {
 
-      /* "disorder/correlation/radii.pyx":178
+      /* "disorder/correlation/radii.pyx":184
  * 
  *         if (count > 0):
  *             S_corr[r] /= count             # <<<<<<<<<<<<<<
- * 
- * cpdef void fluctuating(double [::1] S_corr,
+ *         else:
+ *             S_corr[r] = 0
  */
       __pyx_t_4 = __pyx_v_r;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) /= __pyx_v_count;
 
-      /* "disorder/correlation/radii.pyx":177
+      /* "disorder/correlation/radii.pyx":183
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] /= count
- * 
+ *         else:
  */
+      goto __pyx_L10;
     }
+
+    /* "disorder/correlation/radii.pyx":186
+ *             S_corr[r] /= count
+ *         else:
+ *             S_corr[r] = 0             # <<<<<<<<<<<<<<
+ * 
+ * cpdef void fluctuating(double [::1] S_corr,
+ */
+    /*else*/ {
+      __pyx_t_4 = __pyx_v_r;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) = 0.0;
+    }
+    __pyx_L10:;
   }
 
-  /* "disorder/correlation/radii.pyx":144
- *             S_coll[r] /= count
+  /* "disorder/correlation/radii.pyx":150
+ *             S_coll[r] = 0
  * 
  * cpdef void ordering(double [::1] S_corr,             # <<<<<<<<<<<<<<
  *                     double [::1] A_r,
@@ -4205,29 +4261,29 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_7ordering(PyObject *__p
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_A_r)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, 1); __PYX_ERR(0, 144, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, 1); __PYX_ERR(0, 150, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_counts)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, 2); __PYX_ERR(0, 144, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, 2); __PYX_ERR(0, 150, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_search)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, 3); __PYX_ERR(0, 144, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, 3); __PYX_ERR(0, 150, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_coordinate)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, 4); __PYX_ERR(0, 144, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, 4); __PYX_ERR(0, 150, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "ordering") < 0)) __PYX_ERR(0, 144, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "ordering") < 0)) __PYX_ERR(0, 150, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -4238,15 +4294,15 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_7ordering(PyObject *__p
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
     }
-    __pyx_v_S_corr = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_corr.memview)) __PYX_ERR(0, 144, __pyx_L3_error)
-    __pyx_v_A_r = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_A_r.memview)) __PYX_ERR(0, 145, __pyx_L3_error)
-    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 146, __pyx_L3_error)
-    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 147, __pyx_L3_error)
-    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 148, __pyx_L3_error)
+    __pyx_v_S_corr = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_corr.memview)) __PYX_ERR(0, 150, __pyx_L3_error)
+    __pyx_v_A_r = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_A_r.memview)) __PYX_ERR(0, 151, __pyx_L3_error)
+    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 152, __pyx_L3_error)
+    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 153, __pyx_L3_error)
+    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 154, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 144, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("ordering", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 150, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("disorder.correlation.radii.ordering", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -4268,12 +4324,12 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_6ordering(CYTHON_UNUSED
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("ordering", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_S_corr.memview)) { __Pyx_RaiseUnboundLocalError("S_corr"); __PYX_ERR(0, 144, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_A_r.memview)) { __Pyx_RaiseUnboundLocalError("A_r"); __PYX_ERR(0, 144, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 144, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 144, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 144, __pyx_L1_error) }
-  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_ordering(__pyx_v_S_corr, __pyx_v_A_r, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
+  if (unlikely(!__pyx_v_S_corr.memview)) { __Pyx_RaiseUnboundLocalError("S_corr"); __PYX_ERR(0, 150, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_A_r.memview)) { __Pyx_RaiseUnboundLocalError("A_r"); __PYX_ERR(0, 150, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 150, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 150, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 150, __pyx_L1_error) }
+  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_ordering(__pyx_v_S_corr, __pyx_v_A_r, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 150, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -4295,8 +4351,8 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_6ordering(CYTHON_UNUSED
   return __pyx_r;
 }
 
-/* "disorder/correlation/radii.pyx":180
- *             S_corr[r] /= count
+/* "disorder/correlation/radii.pyx":188
+ *             S_corr[r] = 0
  * 
  * cpdef void fluctuating(double [::1] S_corr,             # <<<<<<<<<<<<<<
  *                        double [::1] A_r,
@@ -4334,7 +4390,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "disorder/correlation/radii.pyx":186
+  /* "disorder/correlation/radii.pyx":194
  *                        long [:,::1] coordinate) nogil:
  * 
  *     cdef Py_ssize_t D = S_corr.shape[0]             # <<<<<<<<<<<<<<
@@ -4343,7 +4399,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
  */
   __pyx_v_D = (__pyx_v_S_corr.shape[0]);
 
-  /* "disorder/correlation/radii.pyx":196
+  /* "disorder/correlation/radii.pyx":204
  *     cdef Py_ssize_t count
  * 
  *     for r in range(D):             # <<<<<<<<<<<<<<
@@ -4355,7 +4411,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_r = __pyx_t_3;
 
-    /* "disorder/correlation/radii.pyx":198
+    /* "disorder/correlation/radii.pyx":206
  *     for r in range(D):
  * 
  *         count = counts[r]             # <<<<<<<<<<<<<<
@@ -4365,7 +4421,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
     __pyx_t_4 = __pyx_v_r;
     __pyx_v_count = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_counts.data) + __pyx_t_4)) )));
 
-    /* "disorder/correlation/radii.pyx":200
+    /* "disorder/correlation/radii.pyx":208
  *         count = counts[r]
  * 
  *         S_i, S_j = 0, 0             # <<<<<<<<<<<<<<
@@ -4377,7 +4433,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
     __pyx_v_S_i = __pyx_t_5;
     __pyx_v_S_j = __pyx_t_6;
 
-    /* "disorder/correlation/radii.pyx":202
+    /* "disorder/correlation/radii.pyx":210
  *         S_i, S_j = 0, 0
  * 
  *         for s in range(search[r],search[r+1]):             # <<<<<<<<<<<<<<
@@ -4391,7 +4447,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
     for (__pyx_t_9 = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_search.data) + __pyx_t_4)) ))); __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
       __pyx_v_s = __pyx_t_9;
 
-      /* "disorder/correlation/radii.pyx":204
+      /* "disorder/correlation/radii.pyx":212
  *         for s in range(search[r],search[r+1]):
  * 
  *             i, j = coordinate[s,0], coordinate[s,1]             # <<<<<<<<<<<<<<
@@ -4407,7 +4463,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
       __pyx_v_i = __pyx_t_12;
       __pyx_v_j = __pyx_t_13;
 
-      /* "disorder/correlation/radii.pyx":206
+      /* "disorder/correlation/radii.pyx":214
  *             i, j = coordinate[s,0], coordinate[s,1]
  * 
  *             U = fabs(A_r[i])             # <<<<<<<<<<<<<<
@@ -4417,7 +4473,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
       __pyx_t_10 = __pyx_v_i;
       __pyx_v_U = fabs((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_A_r.data) + __pyx_t_10)) ))));
 
-      /* "disorder/correlation/radii.pyx":207
+      /* "disorder/correlation/radii.pyx":215
  * 
  *             U = fabs(A_r[i])
  *             V = fabs(A_r[j])             # <<<<<<<<<<<<<<
@@ -4427,7 +4483,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
       __pyx_t_10 = __pyx_v_j;
       __pyx_v_V = fabs((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_A_r.data) + __pyx_t_10)) ))));
 
-      /* "disorder/correlation/radii.pyx":209
+      /* "disorder/correlation/radii.pyx":217
  *             V = fabs(A_r[j])
  * 
  *             if (not (iszero(U) or iszero(V))):             # <<<<<<<<<<<<<<
@@ -4446,7 +4502,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
       __pyx_t_15 = ((!__pyx_t_14) != 0);
       if (__pyx_t_15) {
 
-        /* "disorder/correlation/radii.pyx":211
+        /* "disorder/correlation/radii.pyx":219
  *             if (not (iszero(U) or iszero(V))):
  * 
  *                 S_i += A_r[i]/U             # <<<<<<<<<<<<<<
@@ -4463,11 +4519,11 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 211, __pyx_L1_error)
+          __PYX_ERR(0, 219, __pyx_L1_error)
         }
         __pyx_v_S_i = (__pyx_v_S_i + (__pyx_t_6 / __pyx_v_U));
 
-        /* "disorder/correlation/radii.pyx":212
+        /* "disorder/correlation/radii.pyx":220
  * 
  *                 S_i += A_r[i]/U
  *                 S_j += A_r[j]/V             # <<<<<<<<<<<<<<
@@ -4484,11 +4540,11 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 212, __pyx_L1_error)
+          __PYX_ERR(0, 220, __pyx_L1_error)
         }
         __pyx_v_S_j = (__pyx_v_S_j + (__pyx_t_6 / __pyx_v_V));
 
-        /* "disorder/correlation/radii.pyx":209
+        /* "disorder/correlation/radii.pyx":217
  *             V = fabs(A_r[j])
  * 
  *             if (not (iszero(U) or iszero(V))):             # <<<<<<<<<<<<<<
@@ -4498,7 +4554,7 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
         goto __pyx_L7;
       }
 
-      /* "disorder/correlation/radii.pyx":216
+      /* "disorder/correlation/radii.pyx":224
  *             else:
  * 
  *                 count -= 1             # <<<<<<<<<<<<<<
@@ -4511,22 +4567,22 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
       __pyx_L7:;
     }
 
-    /* "disorder/correlation/radii.pyx":218
+    /* "disorder/correlation/radii.pyx":226
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] = S_i*S_j/count**2
- * 
+ *         else:
  */
     __pyx_t_15 = ((__pyx_v_count > 0) != 0);
     if (__pyx_t_15) {
 
-      /* "disorder/correlation/radii.pyx":219
+      /* "disorder/correlation/radii.pyx":227
  * 
  *         if (count > 0):
  *             S_corr[r] = S_i*S_j/count**2             # <<<<<<<<<<<<<<
- * 
- * cpdef void effect(double [::1] S_corr,
+ *         else:
+ *             S_corr[r] = 0
  */
       __pyx_t_6 = (__pyx_v_S_i * __pyx_v_S_j);
       __pyx_t_9 = __Pyx_pow_Py_ssize_t(__pyx_v_count, 2);
@@ -4538,23 +4594,37 @@ static void __pyx_f_8disorder_11correlation_5radii_fluctuating(__Pyx_memviewslic
         #ifdef WITH_THREAD
         __Pyx_PyGILState_Release(__pyx_gilstate_save);
         #endif
-        __PYX_ERR(0, 219, __pyx_L1_error)
+        __PYX_ERR(0, 227, __pyx_L1_error)
       }
       __pyx_t_4 = __pyx_v_r;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) = (__pyx_t_6 / ((double)__pyx_t_9));
 
-      /* "disorder/correlation/radii.pyx":218
+      /* "disorder/correlation/radii.pyx":226
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] = S_i*S_j/count**2
- * 
+ *         else:
  */
+      goto __pyx_L10;
     }
+
+    /* "disorder/correlation/radii.pyx":229
+ *             S_corr[r] = S_i*S_j/count**2
+ *         else:
+ *             S_corr[r] = 0             # <<<<<<<<<<<<<<
+ * 
+ * cpdef void effect(double [::1] S_corr,
+ */
+    /*else*/ {
+      __pyx_t_4 = __pyx_v_r;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) = 0.0;
+    }
+    __pyx_L10:;
   }
 
-  /* "disorder/correlation/radii.pyx":180
- *             S_corr[r] /= count
+  /* "disorder/correlation/radii.pyx":188
+ *             S_corr[r] = 0
  * 
  * cpdef void fluctuating(double [::1] S_corr,             # <<<<<<<<<<<<<<
  *                        double [::1] A_r,
@@ -4611,29 +4681,29 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_9fluctuating(PyObject *
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_A_r)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, 1); __PYX_ERR(0, 180, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, 1); __PYX_ERR(0, 188, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_counts)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, 2); __PYX_ERR(0, 180, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, 2); __PYX_ERR(0, 188, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_search)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, 3); __PYX_ERR(0, 180, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, 3); __PYX_ERR(0, 188, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_coordinate)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, 4); __PYX_ERR(0, 180, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, 4); __PYX_ERR(0, 188, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "fluctuating") < 0)) __PYX_ERR(0, 180, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "fluctuating") < 0)) __PYX_ERR(0, 188, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
       goto __pyx_L5_argtuple_error;
@@ -4644,15 +4714,15 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_9fluctuating(PyObject *
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
     }
-    __pyx_v_S_corr = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_corr.memview)) __PYX_ERR(0, 180, __pyx_L3_error)
-    __pyx_v_A_r = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_A_r.memview)) __PYX_ERR(0, 181, __pyx_L3_error)
-    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 182, __pyx_L3_error)
-    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 183, __pyx_L3_error)
-    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 184, __pyx_L3_error)
+    __pyx_v_S_corr = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_corr.memview)) __PYX_ERR(0, 188, __pyx_L3_error)
+    __pyx_v_A_r = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_A_r.memview)) __PYX_ERR(0, 189, __pyx_L3_error)
+    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 190, __pyx_L3_error)
+    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 191, __pyx_L3_error)
+    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 192, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 180, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("fluctuating", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 188, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("disorder.correlation.radii.fluctuating", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -4674,12 +4744,12 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_8fluctuating(CYTHON_UNU
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("fluctuating", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_S_corr.memview)) { __Pyx_RaiseUnboundLocalError("S_corr"); __PYX_ERR(0, 180, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_A_r.memview)) { __Pyx_RaiseUnboundLocalError("A_r"); __PYX_ERR(0, 180, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 180, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 180, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 180, __pyx_L1_error) }
-  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_fluctuating(__pyx_v_S_corr, __pyx_v_A_r, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 180, __pyx_L1_error)
+  if (unlikely(!__pyx_v_S_corr.memview)) { __Pyx_RaiseUnboundLocalError("S_corr"); __PYX_ERR(0, 188, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_A_r.memview)) { __Pyx_RaiseUnboundLocalError("A_r"); __PYX_ERR(0, 188, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 188, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 188, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 188, __pyx_L1_error) }
+  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_fluctuating(__pyx_v_S_corr, __pyx_v_A_r, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -4701,8 +4771,8 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_8fluctuating(CYTHON_UNU
   return __pyx_r;
 }
 
-/* "disorder/correlation/radii.pyx":221
- *             S_corr[r] = S_i*S_j/count**2
+/* "disorder/correlation/radii.pyx":231
+ *             S_corr[r] = 0
  * 
  * cpdef void effect(double [::1] S_corr,             # <<<<<<<<<<<<<<
  *                   double [::1] delta,
@@ -4748,7 +4818,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "disorder/correlation/radii.pyx":233
+  /* "disorder/correlation/radii.pyx":243
  *                   long [:,::1] coordinate) nogil:
  * 
  *     cdef Py_ssize_t D = S_corr.shape[0]             # <<<<<<<<<<<<<<
@@ -4757,7 +4827,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
  */
   __pyx_v_D = (__pyx_v_S_corr.shape[0]);
 
-  /* "disorder/correlation/radii.pyx":243
+  /* "disorder/correlation/radii.pyx":253
  *     cdef Py_ssize_t count
  * 
  *     for r in range(D):             # <<<<<<<<<<<<<<
@@ -4769,7 +4839,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_r = __pyx_t_3;
 
-    /* "disorder/correlation/radii.pyx":245
+    /* "disorder/correlation/radii.pyx":255
  *     for r in range(D):
  * 
  *         count = counts[r]             # <<<<<<<<<<<<<<
@@ -4779,7 +4849,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
     __pyx_t_4 = __pyx_v_r;
     __pyx_v_count = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_counts.data) + __pyx_t_4)) )));
 
-    /* "disorder/correlation/radii.pyx":247
+    /* "disorder/correlation/radii.pyx":257
  *         count = counts[r]
  * 
  *         for s in range(search[r],search[r+1]):             # <<<<<<<<<<<<<<
@@ -4793,7 +4863,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
     for (__pyx_t_7 = (*((PY_LONG_LONG *) ( /* dim=0 */ ((char *) (((PY_LONG_LONG *) __pyx_v_search.data) + __pyx_t_4)) ))); __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
       __pyx_v_s = __pyx_t_7;
 
-      /* "disorder/correlation/radii.pyx":249
+      /* "disorder/correlation/radii.pyx":259
  *         for s in range(search[r],search[r+1]):
  * 
  *             i, j = coordinate[s,0], coordinate[s,1]             # <<<<<<<<<<<<<<
@@ -4809,7 +4879,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_v_i = __pyx_t_10;
       __pyx_v_j = __pyx_t_11;
 
-      /* "disorder/correlation/radii.pyx":251
+      /* "disorder/correlation/radii.pyx":261
  *             i, j = coordinate[s,0], coordinate[s,1]
  * 
  *             rx_ij = rx[j]-rx[i]             # <<<<<<<<<<<<<<
@@ -4820,7 +4890,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_t_9 = __pyx_v_i;
       __pyx_v_rx_ij = ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_rx.data) + __pyx_t_8)) ))) - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_rx.data) + __pyx_t_9)) ))));
 
-      /* "disorder/correlation/radii.pyx":252
+      /* "disorder/correlation/radii.pyx":262
  * 
  *             rx_ij = rx[j]-rx[i]
  *             ry_ij = ry[j]-ry[i]             # <<<<<<<<<<<<<<
@@ -4831,7 +4901,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_t_8 = __pyx_v_i;
       __pyx_v_ry_ij = ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_ry.data) + __pyx_t_9)) ))) - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_ry.data) + __pyx_t_8)) ))));
 
-      /* "disorder/correlation/radii.pyx":253
+      /* "disorder/correlation/radii.pyx":263
  *             rx_ij = rx[j]-rx[i]
  *             ry_ij = ry[j]-ry[i]
  *             rz_ij = rz[j]-rz[i]             # <<<<<<<<<<<<<<
@@ -4842,7 +4912,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_t_9 = __pyx_v_i;
       __pyx_v_rz_ij = ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_rz.data) + __pyx_t_8)) ))) - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_rz.data) + __pyx_t_9)) ))));
 
-      /* "disorder/correlation/radii.pyx":255
+      /* "disorder/correlation/radii.pyx":265
  *             rz_ij = rz[j]-rz[i]
  * 
  *             Sx_ij = Sx[j]-Sx[i]             # <<<<<<<<<<<<<<
@@ -4853,7 +4923,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_t_8 = __pyx_v_i;
       __pyx_v_Sx_ij = ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_9)) ))) - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sx.data) + __pyx_t_8)) ))));
 
-      /* "disorder/correlation/radii.pyx":256
+      /* "disorder/correlation/radii.pyx":266
  * 
  *             Sx_ij = Sx[j]-Sx[i]
  *             Sy_ij = Sy[j]-Sy[i]             # <<<<<<<<<<<<<<
@@ -4864,7 +4934,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_t_9 = __pyx_v_i;
       __pyx_v_Sy_ij = ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_8)) ))) - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sy.data) + __pyx_t_9)) ))));
 
-      /* "disorder/correlation/radii.pyx":257
+      /* "disorder/correlation/radii.pyx":267
  *             Sx_ij = Sx[j]-Sx[i]
  *             Sy_ij = Sy[j]-Sy[i]
  *             Sz_ij = Sz[j]-Sz[i]             # <<<<<<<<<<<<<<
@@ -4875,7 +4945,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_t_8 = __pyx_v_i;
       __pyx_v_Sz_ij = ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_9)) ))) - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Sz.data) + __pyx_t_8)) ))));
 
-      /* "disorder/correlation/radii.pyx":259
+      /* "disorder/correlation/radii.pyx":269
  *             Sz_ij = Sz[j]-Sz[i]
  * 
  *             U = sqrt(rx_ij*rx_ij+ry_ij*ry_ij+rz_ij*rz_ij)             # <<<<<<<<<<<<<<
@@ -4884,7 +4954,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
  */
       __pyx_v_U = sqrt((((__pyx_v_rx_ij * __pyx_v_rx_ij) + (__pyx_v_ry_ij * __pyx_v_ry_ij)) + (__pyx_v_rz_ij * __pyx_v_rz_ij)));
 
-      /* "disorder/correlation/radii.pyx":260
+      /* "disorder/correlation/radii.pyx":270
  * 
  *             U = sqrt(rx_ij*rx_ij+ry_ij*ry_ij+rz_ij*rz_ij)
  *             V = sqrt(Sx_ij*Sx_ij+Sy_ij*Sy_ij+Sz_ij*Sz_ij)             # <<<<<<<<<<<<<<
@@ -4893,7 +4963,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
  */
       __pyx_v_V = sqrt((((__pyx_v_Sx_ij * __pyx_v_Sx_ij) + (__pyx_v_Sy_ij * __pyx_v_Sy_ij)) + (__pyx_v_Sz_ij * __pyx_v_Sz_ij)));
 
-      /* "disorder/correlation/radii.pyx":262
+      /* "disorder/correlation/radii.pyx":272
  *             V = sqrt(Sx_ij*Sx_ij+Sy_ij*Sy_ij+Sz_ij*Sz_ij)
  * 
  *             metric = delta[i]*(1-delta[j])+delta[j]*(1-delta[i])             # <<<<<<<<<<<<<<
@@ -4906,7 +4976,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_t_13 = __pyx_v_i;
       __pyx_v_metric = (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_delta.data) + __pyx_t_8)) ))) * (1.0 - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_delta.data) + __pyx_t_9)) ))))) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_delta.data) + __pyx_t_12)) ))) * (1.0 - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_delta.data) + __pyx_t_13)) ))))));
 
-      /* "disorder/correlation/radii.pyx":264
+      /* "disorder/correlation/radii.pyx":274
  *             metric = delta[i]*(1-delta[j])+delta[j]*(1-delta[i])
  * 
  *             if (not (iszero(U) or iszero(V)) and metric > 0.5):             # <<<<<<<<<<<<<<
@@ -4933,7 +5003,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_L8_bool_binop_done:;
       if (__pyx_t_14) {
 
-        /* "disorder/correlation/radii.pyx":266
+        /* "disorder/correlation/radii.pyx":276
  *             if (not (iszero(U) or iszero(V)) and metric > 0.5):
  * 
  *                 S_corr[r] += (rx_ij*Sx_ij+ry_ij*Sy_ij+rz_ij*Sz_ij)/U/V             # <<<<<<<<<<<<<<
@@ -4949,7 +5019,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 266, __pyx_L1_error)
+          __PYX_ERR(0, 276, __pyx_L1_error)
         }
         __pyx_t_18 = (__pyx_t_17 / __pyx_v_U);
         if (unlikely(__pyx_v_V == 0)) {
@@ -4960,12 +5030,12 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
           #ifdef WITH_THREAD
           __Pyx_PyGILState_Release(__pyx_gilstate_save);
           #endif
-          __PYX_ERR(0, 266, __pyx_L1_error)
+          __PYX_ERR(0, 276, __pyx_L1_error)
         }
         __pyx_t_13 = __pyx_v_r;
         *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_13)) )) += (__pyx_t_18 / __pyx_v_V);
 
-        /* "disorder/correlation/radii.pyx":264
+        /* "disorder/correlation/radii.pyx":274
  *             metric = delta[i]*(1-delta[j])+delta[j]*(1-delta[i])
  * 
  *             if (not (iszero(U) or iszero(V)) and metric > 0.5):             # <<<<<<<<<<<<<<
@@ -4975,7 +5045,7 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
         goto __pyx_L7;
       }
 
-      /* "disorder/correlation/radii.pyx":270
+      /* "disorder/correlation/radii.pyx":280
  *             else:
  * 
  *                 count -= 1             # <<<<<<<<<<<<<<
@@ -4988,34 +5058,50 @@ static void __pyx_f_8disorder_11correlation_5radii_effect(__Pyx_memviewslice __p
       __pyx_L7:;
     }
 
-    /* "disorder/correlation/radii.pyx":272
+    /* "disorder/correlation/radii.pyx":282
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] /= count
+ *         else:
  */
     __pyx_t_14 = ((__pyx_v_count > 0) != 0);
     if (__pyx_t_14) {
 
-      /* "disorder/correlation/radii.pyx":273
+      /* "disorder/correlation/radii.pyx":283
  * 
  *         if (count > 0):
  *             S_corr[r] /= count             # <<<<<<<<<<<<<<
+ *         else:
+ *             S_corr[r] = 0
  */
       __pyx_t_4 = __pyx_v_r;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) /= __pyx_v_count;
 
-      /* "disorder/correlation/radii.pyx":272
+      /* "disorder/correlation/radii.pyx":282
  *                 count -= 1
  * 
  *         if (count > 0):             # <<<<<<<<<<<<<<
  *             S_corr[r] /= count
+ *         else:
  */
+      goto __pyx_L12;
     }
+
+    /* "disorder/correlation/radii.pyx":285
+ *             S_corr[r] /= count
+ *         else:
+ *             S_corr[r] = 0             # <<<<<<<<<<<<<<
+ */
+    /*else*/ {
+      __pyx_t_4 = __pyx_v_r;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_S_corr.data) + __pyx_t_4)) )) = 0.0;
+    }
+    __pyx_L12:;
   }
 
-  /* "disorder/correlation/radii.pyx":221
- *             S_corr[r] = S_i*S_j/count**2
+  /* "disorder/correlation/radii.pyx":231
+ *             S_corr[r] = 0
  * 
  * cpdef void effect(double [::1] S_corr,             # <<<<<<<<<<<<<<
  *                   double [::1] delta,
@@ -5090,65 +5176,65 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_11effect(PyObject *__py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_delta)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 1); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 1); __PYX_ERR(0, 231, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sx)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 2); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 2); __PYX_ERR(0, 231, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sy)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 3); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 3); __PYX_ERR(0, 231, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sz)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 4); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 4); __PYX_ERR(0, 231, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rx)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 5); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 5); __PYX_ERR(0, 231, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ry)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 6); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 6); __PYX_ERR(0, 231, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rz)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 7); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 7); __PYX_ERR(0, 231, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_counts)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 8); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 8); __PYX_ERR(0, 231, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
         if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_search)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 9); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 9); __PYX_ERR(0, 231, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 10:
         if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_coordinate)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 10); __PYX_ERR(0, 221, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, 10); __PYX_ERR(0, 231, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "effect") < 0)) __PYX_ERR(0, 221, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "effect") < 0)) __PYX_ERR(0, 231, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 11) {
       goto __pyx_L5_argtuple_error;
@@ -5165,21 +5251,21 @@ static PyObject *__pyx_pw_8disorder_11correlation_5radii_11effect(PyObject *__py
       values[9] = PyTuple_GET_ITEM(__pyx_args, 9);
       values[10] = PyTuple_GET_ITEM(__pyx_args, 10);
     }
-    __pyx_v_S_corr = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_corr.memview)) __PYX_ERR(0, 221, __pyx_L3_error)
-    __pyx_v_delta = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_delta.memview)) __PYX_ERR(0, 222, __pyx_L3_error)
-    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 223, __pyx_L3_error)
-    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 224, __pyx_L3_error)
-    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 225, __pyx_L3_error)
-    __pyx_v_rx = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_rx.memview)) __PYX_ERR(0, 226, __pyx_L3_error)
-    __pyx_v_ry = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_ry.memview)) __PYX_ERR(0, 227, __pyx_L3_error)
-    __pyx_v_rz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[7], PyBUF_WRITABLE); if (unlikely(!__pyx_v_rz.memview)) __PYX_ERR(0, 228, __pyx_L3_error)
-    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[8], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 229, __pyx_L3_error)
-    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[9], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 230, __pyx_L3_error)
-    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[10], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 231, __pyx_L3_error)
+    __pyx_v_S_corr = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_S_corr.memview)) __PYX_ERR(0, 231, __pyx_L3_error)
+    __pyx_v_delta = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_delta.memview)) __PYX_ERR(0, 232, __pyx_L3_error)
+    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 233, __pyx_L3_error)
+    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 234, __pyx_L3_error)
+    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 235, __pyx_L3_error)
+    __pyx_v_rx = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_rx.memview)) __PYX_ERR(0, 236, __pyx_L3_error)
+    __pyx_v_ry = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_ry.memview)) __PYX_ERR(0, 237, __pyx_L3_error)
+    __pyx_v_rz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[7], PyBUF_WRITABLE); if (unlikely(!__pyx_v_rz.memview)) __PYX_ERR(0, 238, __pyx_L3_error)
+    __pyx_v_counts = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[8], PyBUF_WRITABLE); if (unlikely(!__pyx_v_counts.memview)) __PYX_ERR(0, 239, __pyx_L3_error)
+    __pyx_v_search = __Pyx_PyObject_to_MemoryviewSlice_dc_PY_LONG_LONG(values[9], PyBUF_WRITABLE); if (unlikely(!__pyx_v_search.memview)) __PYX_ERR(0, 240, __pyx_L3_error)
+    __pyx_v_coordinate = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[10], PyBUF_WRITABLE); if (unlikely(!__pyx_v_coordinate.memview)) __PYX_ERR(0, 241, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 221, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("effect", 1, 11, 11, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 231, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("disorder.correlation.radii.effect", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -5201,18 +5287,18 @@ static PyObject *__pyx_pf_8disorder_11correlation_5radii_10effect(CYTHON_UNUSED 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("effect", 0);
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_v_S_corr.memview)) { __Pyx_RaiseUnboundLocalError("S_corr"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_delta.memview)) { __Pyx_RaiseUnboundLocalError("delta"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_Sx.memview)) { __Pyx_RaiseUnboundLocalError("Sx"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_Sy.memview)) { __Pyx_RaiseUnboundLocalError("Sy"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_Sz.memview)) { __Pyx_RaiseUnboundLocalError("Sz"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_rx.memview)) { __Pyx_RaiseUnboundLocalError("rx"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_ry.memview)) { __Pyx_RaiseUnboundLocalError("ry"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_rz.memview)) { __Pyx_RaiseUnboundLocalError("rz"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 221, __pyx_L1_error) }
-  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_effect(__pyx_v_S_corr, __pyx_v_delta, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_rx, __pyx_v_ry, __pyx_v_rz, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 221, __pyx_L1_error)
+  if (unlikely(!__pyx_v_S_corr.memview)) { __Pyx_RaiseUnboundLocalError("S_corr"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_delta.memview)) { __Pyx_RaiseUnboundLocalError("delta"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_Sx.memview)) { __Pyx_RaiseUnboundLocalError("Sx"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_Sy.memview)) { __Pyx_RaiseUnboundLocalError("Sy"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_Sz.memview)) { __Pyx_RaiseUnboundLocalError("Sz"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_rx.memview)) { __Pyx_RaiseUnboundLocalError("rx"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_ry.memview)) { __Pyx_RaiseUnboundLocalError("ry"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_rz.memview)) { __Pyx_RaiseUnboundLocalError("rz"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_counts.memview)) { __Pyx_RaiseUnboundLocalError("counts"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_search.memview)) { __Pyx_RaiseUnboundLocalError("search"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  if (unlikely(!__pyx_v_coordinate.memview)) { __Pyx_RaiseUnboundLocalError("coordinate"); __PYX_ERR(0, 231, __pyx_L1_error) }
+  __pyx_t_1 = __Pyx_void_to_None(__pyx_f_8disorder_11correlation_5radii_effect(__pyx_v_S_corr, __pyx_v_delta, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_rx, __pyx_v_ry, __pyx_v_rz, __pyx_v_counts, __pyx_v_search, __pyx_v_coordinate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 231, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;

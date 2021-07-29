@@ -96,8 +96,6 @@ class Presenter:
         
         self.view.button_clicked_calc(self.recalculate_intensity)
 
-        self.threadpool = self.view.create_threadpool()
-        
         self.magnetic = False
         self.occupational = False
         self.displacive = False
@@ -851,7 +849,7 @@ class Presenter:
         rebin_data = self.view.worker(self.rebin_thread)
         self.view.result(rebin_data, self.rebin_process_output)
         self.view.finished(rebin_data, self.rebin_thread_complete)
-        self.threadpool.start(rebin_data) 
+        self.thread.start() 
         
     def crop_thread(self, h_range, k_range, l_range, callback):
                                    
@@ -922,7 +920,7 @@ class Presenter:
         crop_data = self.view.worker(self.crop_thread, *ranges)
         self.view.result(crop_data, self.crop_process_output)
         self.view.finished(crop_data, self.crop_thread_complete)
-        self.threadpool.start(crop_data) 
+        self.thread.start() 
         
     def populate_binning(self):
         
@@ -1288,7 +1286,7 @@ class Presenter:
         
         punch_data = self.view.worker(self.punch_thread)
         self.view.finished(punch_data, self.punch_thread_complete)
-        self.threadpool.start(punch_data) 
+        self.thread.start() 
         
     def reset_punch(self):
                 
@@ -1380,10 +1378,14 @@ class Presenter:
                 
                 self.fname_exp = name
                          
-                load_data = self.view.worker(self.load_data_thread, name)
-                self.view.progress(load_data, self.load_data_progress_update)
-                self.view.finished(load_data, self.load_data_thread_complete)
-                self.threadpool.start(load_data) 
+                self.thread = self.view.create_thread()
+                self.load = self.view.worker(self.load_data_thread, name)
+                self.thread.started.connect(self.load.run)
+                self.view.progress(self.load, self.load_data_progress_update)
+                self.view.finished(self.load, self.load_data_thread_complete)
+                self.view.offload(self.load, self.thread)
+                self.thread.start() 
+                self.thread.quit()
                                 
     def check_batch(self):
                 
@@ -1745,6 +1747,8 @@ class Presenter:
                                 
                 self.iteration = i+1
                 
+                self.view.process()
+                
                 if self.stop:
                     break
                                 
@@ -1778,6 +1782,7 @@ class Presenter:
             self.iteration = 0
         
         self.view.enable_refinement(True)
+        self.view.enable_reset_refinement(True)
         
     def run_refinement(self):
         
@@ -1811,11 +1816,16 @@ class Presenter:
                     self.allocated = True
             
                 self.view.enable_refinement(False)
-                             
-                ref = self.view.worker(self.run_refinement_thread)
-                self.view.progress(ref, self.run_refinement_progress_update)
-                self.view.finished(ref, self.run_refinement_thread_complete)
-                self.threadpool.start(ref)
+                self.view.enable_reset_refinement(False)
+                
+                self.thread = self.view.create_thread()
+                self.ref = self.view.worker(self.run_refinement_thread)
+                self.thread.started.connect(self.ref.run)
+                self.view.progress(self.ref, self.run_refinement_progress_update)
+                self.view.finished(self.ref, self.run_refinement_thread_complete)
+                self.view.offload(self.ref, self.thread)
+                self.thread.start() 
+                self.thread.quit()
                 
     def filter_sigma(self):
                 
@@ -1836,7 +1846,7 @@ class Presenter:
         if self.view.get_recalculation_table_row_count():
             if (self.iteration > 0 or self.view.get_run() > 0):
                 self.stop = True
-
+                
     def reset_refinement(self):
         
         if self.view.get_recalculation_table_row_count():
@@ -2158,7 +2168,7 @@ class Presenter:
             
             calc_1d = self.view.worker(self.calculate_1d_thread)
             self.view.finished(calc_1d, self.calculate_1d_thread_complete)
-            self.threadpool.start(calc_1d) 
+            self.thread.start() 
 
     def calculate_1d_thread(self, callback):
                 
@@ -2338,7 +2348,7 @@ class Presenter:
             calc_3d = self.view.worker(self.calculate_3d_thread)
             self.view.result(calc_3d, self.calculate_3d_process_output)
             self.view.finished(calc_3d, self.calculate_3d_thread_complete)
-            self.threadpool.start(calc_3d) 
+            self.thread.start() 
 
     def calculate_3d_thread(self, callback):
                 
@@ -2701,7 +2711,7 @@ class Presenter:
                 recalculate, self.recalculate_intensity_thread_complete
             )
             
-            self.threadpool.start(recalculate)
+            self.thread.start()
             
     def redraw_plot_calc(self):
         

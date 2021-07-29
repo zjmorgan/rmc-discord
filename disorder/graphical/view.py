@@ -285,8 +285,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                           'mu3': 'mu\u2083', 'g': 'g', 'u': 'x', 'v': 'y', 
                           'w': 'z', 'operator': 'operator', 'moment': 'moment'}
         
-    def create_threadpool(self):
-        return QtCore.QThreadPool()
+    def create_thread(self):
+        return QtCore.QThread()
     
     def worker(self, *args, **kwargs):
         return Worker(*args, **kwargs)
@@ -299,6 +299,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def finished(self, worker, slot):
         worker.signals.finished.connect(slot)
+        
+    def offload(self, worker, thread):
+        worker.moveToThread(thread)
+        
+    def process(self):
+        QtGui.QApplication.processEvents()  
         
     def new_triggered(self, slot): 
         self.actionNew.triggered.connect(slot)    
@@ -1767,6 +1773,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def enable_refinement(self, visible):
         self.pushButton_run.setEnabled(visible)
+        
+    def enable_reset_refinement(self, visible):
+        self.pushButton_reset_run.setEnabled(visible)
         
     def get_runs(self):
         return int(self.lineEdit_runs.text())
