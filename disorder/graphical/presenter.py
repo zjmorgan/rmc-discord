@@ -706,6 +706,8 @@ class Presenter:
         dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
         dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
         
+        data = nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l
+        
         h_range = [min_h, max_h]
         k_range = [min_k, max_k]
         l_range = [min_l, max_l]
@@ -726,7 +728,7 @@ class Presenter:
             elif (row == 1): binning[1] = n         
             elif (row == 2): binning[2] = n         
             if (size < n and size > 1): 
-                self.rebin()
+                self.rebin(data)
             else:
                 self.view.set_experiment_binning_h(binning[0], min_h, max_h)
                 self.view.set_experiment_binning_k(binning[1], min_k, max_k)
@@ -740,7 +742,7 @@ class Presenter:
             elif (row == 1): k_range = [low, max_k]
             elif (row == 2): l_range = [low, max_l]
             if (minimum > low and minimum < maximum): 
-                self.crop(h_range, k_range, l_range)
+                self.crop(data, h_range, k_range, l_range)
             else:
                 self.view.set_experiment_binning_h(nh, h_range[0], max_h)
                 self.view.set_experiment_binning_k(nk, k_range[0], max_k)
@@ -754,7 +756,7 @@ class Presenter:
             elif (row == 1): k_range = [min_k, high]
             elif (row == 2): l_range = [min_l, high]
             if (maximum < high and maximum > minimum): 
-                self.crop(h_range, k_range, l_range)    
+                self.crop(data, h_range, k_range, l_range)    
             else:
                 self.view.set_experiment_binning_h(nh, min_h, h_range[1])
                 self.view.set_experiment_binning_k(nk, min_k, k_range[1])
@@ -804,14 +806,12 @@ class Presenter:
         if (nl is not None):
             self.view.set_experiment_table_item(2, 1, nl)
             
-    def rebin_thread(self, callback):
+    def rebin_thread(self, data, callback):
             
         signal = self.signal_m 
         error_sq = self.error_sq_m 
         
-        dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
-        dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
-        dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
+        nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l = data
         
         binsize = [nh, nk, nl]
         
@@ -825,7 +825,7 @@ class Presenter:
         self.error_sq_m = self.model.mask_array(error_sq)
         
         return nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l
-            
+        
     def rebin_process_output(self, data):
         
         nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l = data
@@ -833,6 +833,7 @@ class Presenter:
         self.view.set_experiment_binning_h(nh, min_h, max_h)
         self.view.set_experiment_binning_k(nk, min_k, max_k)
         self.view.set_experiment_binning_l(nl, min_l, max_l)
+        self.view.format_experiment_table()
         
     def rebin_complete(self):
                                 
@@ -844,25 +845,24 @@ class Presenter:
         self.redraw_plot_exp()
         self.view.unblock_experiment_table_signals()
                     
-    def rebin(self):
+    def rebin(self, data):
         
         self.thread = self.view.create_thread()
-        self.rebin_data = self.view.worker(self.rebin_thread)
+        self.rebin_data = self.view.worker(self.rebin_thread, data)
         self.thread.started.connect(self.rebin_data.run)
+        self.view.result(self.rebin_data, self.rebin_process_output)
         self.view.finished(self.rebin_data, self.rebin_complete)
         self.view.offload(self.rebin_data, self.thread)
         self.thread.start() 
         self.thread.quit()
         
-    def crop_thread(self, h_range, k_range, l_range, callback):
+    def crop_thread(self, data, h_range, k_range, l_range, callback):
                                    
         signal = self.signal_m 
         error_sq = self.error_sq_m 
         
-        dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
-        dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
-        dl, nl, min_l, max_l = self.view.get_experiment_binning_l()
-        
+        nh, nk, nl, min_h, min_k, min_l, max_h, max_k, max_l = data
+                
         ih_min = self.model.slice_index(h_range[0], h_range[1], nh, min_h)
         ik_min = self.model.slice_index(k_range[0], k_range[1], nk, min_k)
         il_min = self.model.slice_index(l_range[0], l_range[1], nl, min_l)
@@ -905,6 +905,7 @@ class Presenter:
         self.view.set_experiment_binning_h(nh, min_h, max_h)
         self.view.set_experiment_binning_k(nk, min_k, max_k)
         self.view.set_experiment_binning_l(nl, min_l, max_l)
+        self.view.format_experiment_table()
         
     def crop_complete(self):
                                 
@@ -916,13 +917,13 @@ class Presenter:
         self.redraw_plot_exp()
         self.view.unblock_experiment_table_signals()        
                 
-    def crop(self, h_range, k_range, l_range):
-        
-        ranges = [h_range, k_range, l_range]
-        
+    def crop(self, data, h_range, k_range, l_range):
+                        
         self.thread = self.view.create_thread()
-        self.crop_data = self.view.worker(self.crop_thread, *ranges)
+        self.crop_data = self.view.worker(self.crop_thread, data, 
+                                          h_range, k_range, l_range)
         self.thread.started.connect(self.crop_data.run)
+        self.view.result(self.crop_data, self.crop_process_output)
         self.view.finished(self.crop_data, self.crop_complete)
         self.view.offload(self.crop_data, self.thread)
         self.thread.start() 
