@@ -303,9 +303,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def offload(self, worker, thread):
         worker.moveToThread(thread)
         
-    def process(self):
-        QtGui.QApplication.processEvents()  
-        
     def new_triggered(self, slot): 
         self.actionNew.triggered.connect(slot)    
         

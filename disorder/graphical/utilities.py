@@ -61,7 +61,9 @@ class Worker(QtCore.QThread):
         self.kwargs = kwargs
         self.signals = WorkerSignals()    
 
-        self.kwargs['callback'] = self.signals.progress        
+        self.kwargs['callback'] = self.signals.progress   
+        
+        self.stop = False
 
     @QtCore.pyqtSlot()
     def run(self):
@@ -76,6 +78,12 @@ class Worker(QtCore.QThread):
             self.signals.result.emit(result)
         finally:
             self.signals.finished.emit()
+            
+    def abort(self):
+        self.stop = True
+        
+    def proceed(self):
+        return not self.stop
     
 def save_gui(ui, settings):
     

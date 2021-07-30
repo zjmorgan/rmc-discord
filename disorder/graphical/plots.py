@@ -3,12 +3,26 @@
 import re
 import numpy as np
 
+import matplotlib
+matplotlib.use('Qt5Agg')
+
+import matplotlib.style as mplstyle
+mplstyle.use('fast')
+
 import matplotlib.pyplot as plt
 import matplotlib.colors as colors
 import matplotlib.transforms as mtransforms
 
 from matplotlib import ticker
 from matplotlib.ticker import Locator
+
+matplotlib.rcParams['mathtext.fontset'] = 'custom'
+matplotlib.rcParams['mathtext.it'] = 'STIXGeneral:italic'
+matplotlib.rcParams['mathtext.bf'] = 'STIXGeneral:italic:bold'
+matplotlib.rcParams['mathtext.cal'] = 'sans'
+matplotlib.rcParams['mathtext.rm'] = 'sans'
+matplotlib.rcParams['mathtext.sf'] = 'sans'
+matplotlib.rcParams['mathtext.tt'] = 'monospace'
 
 def _extents(min_x, min_y, max_x, max_y, size_x, size_y):
         
