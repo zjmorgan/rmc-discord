@@ -130,12 +130,13 @@ dmypy.json
 
 # NumPy
 *.npy
+*.npz
 
 # Matplotlib
 *.pdf
 
 # NeXus
-#*.nxs
+*.nxs
 
 # INI
 *.ini

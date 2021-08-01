@@ -167,7 +167,7 @@ def coefficients(p):
 
 def products(Vx, Vy, Vz, p):
     
-    if (np.size(Vx) > 1):    
+    if (type(Vx) is np.ndarray):    
         n = Vx.shape[0]
     else:
         n = 1

@@ -1,4 +1,5 @@
-from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas 
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as \
+                                               FigureCanvas 
 import matplotlib.pyplot as plt
 
 class Canvas(FigureCanvas):

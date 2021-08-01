@@ -102,6 +102,7 @@ class Presenter:
         
         self.allocated = False
         self.iteration = 0
+        self.ref = None
         
         self.intensity = None
         
@@ -130,20 +131,103 @@ class Presenter:
             
         self.fname = fname.split('.ini')[0]
         
-        # self.fname_cif 
-                        
+        if (self.view.get_atom_site_table_row_count() > 0):
+            self.model.save_crystal(self.fname_cif, self.fname+'.cif')
+            
+        if (self.view.get_experiment_table_row_count() > 0):
+            signal_raw = self.signal_raw_m.data 
+            error_sq_raw = self.error_sq_raw_m.data
+            
+            h_range = self.h_range_raw_m
+            k_range = self.k_range_raw_m
+            l_range = self.l_range_raw_m
+            
+            nh, nk, nl = self.nh_raw_m, self.nk_raw_m, self.nl_raw_m
+            
+            self.model.save_data(self.fname, signal_raw, error_sq_raw, 
+                                 h_range, k_range, l_range, nh, nk, nl)
+            
+            signal, error_sq = self.signal_m.data, self.error_sq_m.data
+            
+            self.model.save_region_of_interest(self.fname, signal, error_sq)
+        
     def load_application(self):
                 
         self.fname = self.view.open_dialog_load()
         if self.fname:
             self.view.clear_application()
             self.view.load_widgets(self.fname)
-            if (self.view.get_atom_site_table_col_count() > 0):
+            fname = self.fname
+            if not fname.endswith('.ini'): fname += '.ini'
+            self.fname = fname.split('.ini')[0]
+            fname = self.fname
+            if (self.view.get_atom_site_table_row_count() > 0):
                 atom = self.view.get_atom_combo()
                 ion = self.view.get_ion_combo()
                 self.connect_table_signals()
                 self.view.set_atom_combo(atom)
-                self.view.set_ion_combo(ion) 
+                self.view.set_ion_combo(ion)
+                lat = self.view.get_lattice()
+                self.lattice_variables(lat)
+                self.fname_cif = self.fname+'.cif'
+            if (self.view.get_experiment_table_row_count() > 0):
+                self.load_data_thread('{}-intensity.npz'.format(fname), None)
+                signal, error_sq =self.model.load_region_of_interest(fname)
+                self.signal_m, self.error_sq_m = signal, error_sq
+                self.view.format_experiment_table()
+                self.view.format_recalculation_table()
+                self.connect_experiment_buttons()
+                self.connect_experiment_table_signals()
+            if (self.view.get_progress() > 0 or self.view.get_run() > 0):
+                run = self.view.get_run()
+                if (self.view.get_progress() == 100): run -= 1
+                Sx, Sy, Sz = self.model.load_magnetic(fname, run)
+                A_r = self.model.load_occupational(fname, run)
+                Ux, Uy, Uz = self.model.load_displacive(fname, run)
+                self.Sx, self.Sy, self.Sz = Sx, Sy, Sz
+                self.A_r = A_r
+                self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
+                self.preprocess_supercell()
+                self.initialize_intensity()
+                self.filter_sigma()
+                stats = self.model.load_refinement(fname, run)
+                self.I_obs, self.chi_sq, self.energy, self.temperature, \
+                self.scale, self.acc_moves, self.rej_moves, \
+                self.acc_temps, self.rej_temps = stats
+                self.iteration = len(self.scale) // (self.n_uvw*self.n_atm)
+                self.refinement_m = self.model.mask_array(self.I_obs)
+                self.allocated = True
+                plot_type = self.view.get_plot_ref()
+                if (plot_type == 'Calculated'):
+                    self.ref_arr_m = self.refinement_m
+                elif (plot_type == 'Experimental'):
+                    self.ref_arr_m = self.signal_m 
+                else:
+                    self.ref_arr_m = self.error_sq_m 
+                self.draw_plot_ref()
+                self.draw_plot_chi_sq()
+                technique = self.view.get_type()
+                self.view.set_type_recalc(technique)
+                magnetic = True if technique == 'Neutron' else False
+                self.view.enable_disorder_mag_recalc(magnetic)
+                self.view.enable_disorder_occ_recalc(True)
+                self.view.enable_disorder_dis_recalc(True)
+            if (self.view.get_pairs_1d_table_row_count() > 0):
+                self.calculate_1d_thread(None)
+                visible = False if self.view.get_average_1d() else True   
+                self.view.enable_pairs_1d(visible)
+                self.view.check_clicked_pairs_1d(self.plot_1d)
+                self.view.format_pairs_1d_table()
+                self.plot_1d()
+            if (self.view.get_pairs_3d_table_row_count() > 0):
+                self.calculate_3d_thread(None)
+                visible = False if self.view.get_average_3d() else True   
+                self.view.enable_pairs_3d(visible)
+                self.view.check_clicked_pairs_3d(self.plot_3d)
+                self.view.format_pairs_3d_table()
+                self.plot_3d()
+            if (self.view.get_atom_site_recalculation_row_count() > 0):
+                self.view.format_atom_site_recalculation_table()
                 
     def exit_application(self):
         
@@ -473,6 +557,45 @@ class Presenter:
         
         self.view.set_lattice_parameters(a, b, c, alpha, beta, gamma)
         
+    def lattice_variables(self, lat):
+    
+        self.view.set_lattice(lat)
+        
+        self.view.set_a_visible(False)
+        self.view.set_b_visible(False)
+        self.view.set_c_visible(False)
+        self.view.set_alpha_visible(False)
+        self.view.set_beta_visible(False)
+        self.view.set_gamma_visible(False)
+        
+        if (lat == 'Cubic'):
+            self.view.set_a_visible(True)
+        elif (lat == 'Hexagonal' or lat == 'Tetragonal'):
+            self.view.set_a_visible(True)
+            self.view.set_c_visible(True)
+        elif (lat == 'Rhobmohedral'):
+            self.view.set_a_visible(True)
+            self.view.set_alpha_visible(True)
+        elif (lat == 'Orthorhombic'):
+            self.view.set_a_visible(True)
+            self.view.set_b_visible(True)
+            self.view.set_c_visible(True)
+        elif (lat == 'Monoclinic'):
+            self.view.set_a_visible(True)
+            self.view.set_b_visible(True)
+            self.view.set_c_visible(True)
+            if (not np.isclose(beta, np.pi/2)):
+                self.view.set_beta_visible(True)
+            else:
+                self.view.set_gamma_visible(True)                
+        else:
+            self.view.set_a_visible(False)
+            self.view.set_b_visible(False)
+            self.view.set_c_visible(False)                   
+            self.view.set_alpha_visible(False)
+            self.view.set_beta_visible(False)
+            self.view.set_gamma_visible(False)
+        
     def load_CIF(self):
         
         name = self.view.open_dialog_cif()
@@ -492,42 +615,7 @@ class Presenter:
             
             lat = self.model.find_lattice(a, b, c, alpha, beta, gamma)
             
-            self.view.set_lattice(lat)
-            
-            self.view.set_a_visible(False)
-            self.view.set_b_visible(False)
-            self.view.set_c_visible(False)
-            self.view.set_alpha_visible(False)
-            self.view.set_beta_visible(False)
-            self.view.set_gamma_visible(False)
-            
-            if (lat == 'Cubic'):
-                self.view.set_a_visible(True)
-            elif (lat == 'Hexagonal' or lat == 'Tetragonal'):
-                self.view.set_a_visible(True)
-                self.view.set_c_visible(True)
-            elif (lat == 'Rhobmohedral'):
-                self.view.set_a_visible(True)
-                self.view.set_alpha_visible(True)
-            elif (lat == 'Orthorhombic'):
-                self.view.set_a_visible(True)
-                self.view.set_b_visible(True)
-                self.view.set_c_visible(True)
-            elif (lat == 'Monoclinic'):
-                self.view.set_a_visible(True)
-                self.view.set_b_visible(True)
-                self.view.set_c_visible(True)
-                if (not np.isclose(beta, np.pi/2)):
-                    self.view.set_beta_visible(True)
-                else:
-                    self.view.set_gamma_visible(True)                
-            else:
-                self.view.set_a_visible(False)
-                self.view.set_b_visible(False)
-                self.view.set_c_visible(False)                   
-                self.view.set_alpha_visible(False)
-                self.view.set_beta_visible(False)
-                self.view.set_gamma_visible(False)
+            self.lattice_variables(lat)
           
             self.view.set_lattice_parameters(a, b, c, alpha, beta, gamma)
             
@@ -639,7 +727,7 @@ class Presenter:
         
     def draw_plot_exp(self):
                 
-        canvas = self.view.get_plot_exp_canvas()
+        canvas_h, canvas_k, canvas_l = self.view.get_plot_exp_canvas()
         data = self.exp_arr_m 
         
         constants = self.view.get_lattice_parameters()        
@@ -681,11 +769,15 @@ class Presenter:
         self.view.validate_min_exp()
         self.view.validate_max_exp()
         
-        plots.plot_exp(canvas, data, h, k, l, ih, ik, il, 
-                       min_h, min_k, min_l, max_h, max_k, max_l, nh, nk, nl, 
-                       matrix_h, matrix_k, matrix_l, scale_h, scale_k, scale_l,
-                       norm, vmin, vmax)
-                
+        plots.plot_exp_h(canvas_h, data, h, ih, min_k, min_l, max_k, max_l, 
+                         nk, nl, matrix_h, scale_h, norm, vmin, vmax)
+        
+        plots.plot_exp_k(canvas_k, data, k, ik, min_h, min_l, max_h, max_l, 
+                         nh, nl, matrix_k, scale_k, norm, vmin, vmax)
+        
+        plots.plot_exp_l(canvas_l, data, l, il, min_h, min_k, max_h, max_k, 
+                         nh, nk, matrix_l, scale_l, norm, vmin, vmax)
+                        
     def redraw_plot_exp(self):
         
         if (self.view.get_plot_exp() == 'Intensity'):
@@ -843,18 +935,22 @@ class Presenter:
  
         self.view.format_experiment_table()
         self.redraw_plot_exp()
+        
+        self.view.enable_cropbin_signals(True)
         self.view.unblock_experiment_table_signals()
                     
     def rebin(self, data):
         
-        self.thread = self.view.create_thread()
+        self.view.enable_cropbin_signals(False)
+        
+        self.thread_rebin = self.view.create_thread()
         self.rebin_data = self.view.worker(self.rebin_thread, data)
-        self.thread.started.connect(self.rebin_data.run)
+        self.thread_rebin.started.connect(self.rebin_data.run)
         self.view.result(self.rebin_data, self.rebin_process_output)
         self.view.finished(self.rebin_data, self.rebin_complete)
-        self.view.offload(self.rebin_data, self.thread)
-        self.thread.start() 
-        self.thread.quit()
+        self.view.offload(self.rebin_data, self.thread_rebin)
+        self.thread_rebin.start() 
+        self.thread_rebin.quit()
         
     def crop_thread(self, data, h_range, k_range, l_range, callback):
                                    
@@ -915,19 +1011,23 @@ class Presenter:
 
         self.view.format_experiment_table()
         self.redraw_plot_exp()
-        self.view.unblock_experiment_table_signals()        
+        
+        self.view.enable_cropbin_signals(True)
+        self.view.unblock_experiment_table_signals()
                 
     def crop(self, data, h_range, k_range, l_range):
+        
+        self.view.enable_cropbin_signals(False)
                         
-        self.thread = self.view.create_thread()
+        self.thread_crop = self.view.create_thread()
         self.crop_data = self.view.worker(self.crop_thread, data, 
                                           h_range, k_range, l_range)
-        self.thread.started.connect(self.crop_data.run)
+        self.thread_crop.started.connect(self.crop_data.run)
         self.view.result(self.crop_data, self.crop_process_output)
         self.view.finished(self.crop_data, self.crop_complete)
-        self.view.offload(self.crop_data, self.thread)
-        self.thread.start() 
-        self.thread.quit()
+        self.view.offload(self.crop_data, self.thread_crop)
+        self.thread_crop.start() 
+        self.thread_crop.quit()
         
     def populate_binning(self):
         
@@ -1069,6 +1169,7 @@ class Presenter:
         
     def reset_data(self):
         
+        self.view.enable_cropbin_signals(False)
         self.view.block_experiment_table_signals()
         
         self.view.clear_experiment_table()
@@ -1097,6 +1198,7 @@ class Presenter:
         self.connect_experiment_table_signals()
         self.view.format_experiment_table()
         
+        self.view.enable_cropbin_signals(True)
         self.view.unblock_experiment_table_signals()
 
     def cropbin(self, h_range, k_range, l_range, binsize):
@@ -1143,6 +1245,7 @@ class Presenter:
         
     def reset_data_h(self):
         
+        self.view.enable_cropbin_signals(False)
         self.view.block_experiment_table_signals()
         
         dk, nk, min_k, max_k = self.view.get_experiment_binning_k()
@@ -1161,7 +1264,7 @@ class Presenter:
                      [min_l, max_l], [nh, nk, nl])
         
         self.view.create_experiment_table()
-        
+                
         self.view.set_experiment_binning_h(nh, min_h, max_h)
         self.view.set_experiment_binning_k(nk, min_k, max_k)
         self.view.set_experiment_binning_l(nl, min_l, max_l)
@@ -1174,11 +1277,13 @@ class Presenter:
         
         self.connect_experiment_table_signals()
         self.view.format_experiment_table()
-        
+
+        self.view.enable_cropbin_signals(True)        
         self.view.unblock_experiment_table_signals()
-        
+                
     def reset_data_k(self):
         
+        self.view.enable_cropbin_signals(False)
         self.view.block_experiment_table_signals()
         
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
@@ -1210,11 +1315,13 @@ class Presenter:
         
         self.connect_experiment_table_signals()
         self.view.format_experiment_table()
-        
+
+        self.view.enable_cropbin_signals(True)        
         self.view.unblock_experiment_table_signals()
         
     def reset_data_l(self):
         
+        self.view.enable_cropbin_signals(False)
         self.view.block_experiment_table_signals()
         
         dh, nh, min_h, max_h = self.view.get_experiment_binning_h()
@@ -1232,6 +1339,8 @@ class Presenter:
         self.cropbin([min_h, max_h], [min_k, max_k], 
                      [min_l, max_l], [nh, nk, nl])
         
+        self.view.create_experiment_table()
+        
         self.view.set_experiment_binning_h(nh, min_h, max_h)
         self.view.set_experiment_binning_k(nk, min_k, max_k)
         self.view.set_experiment_binning_l(nl, min_l, max_l)
@@ -1244,7 +1353,8 @@ class Presenter:
         
         self.connect_experiment_table_signals()
         self.view.format_experiment_table()
-        
+
+        self.view.enable_cropbin_signals(True)        
         self.view.unblock_experiment_table_signals()
         
     def punch_thread(self, callback):
@@ -1271,11 +1381,7 @@ class Presenter:
         self.model.punch(signal, radius_h, radius_k, radius_l, 
                          dh, dk, dl, h_range, k_range, l_range,
                          centering, outlier, punch)
-        
-        self.model.punch(error_sq, radius_h, radius_k, radius_l, 
-                         dh, dk, dl, h_range, k_range, l_range,
-                         centering, outlier, punch)
-        
+                
         self.signal_m = signal
         self.error_sq_m = error_sq
         
@@ -1288,18 +1394,25 @@ class Presenter:
     def punch_complete(self):
                                 
         self.redraw_plot_exp()
+        
+        self.view.enable_cropbin_signals(True)
+        self.view.unblock_experiment_table_signals()
                     
     def punch(self):
         
-        self.thread = self.view.create_thread()
+        self.view.enable_cropbin_signals(False)
+        
+        self.thread_punch = self.view.create_thread()
         self.punch_data = self.view.worker(self.punch_thread)
-        self.thread.started.connect(self.punch_data.run)
+        self.thread_punch.started.connect(self.punch_data.run)
         self.view.finished(self.punch_data, self.punch_complete)
-        self.view.offload(self.punch_data, self.thread)
-        self.thread.start() 
-        self.thread.quit()
+        self.view.offload(self.punch_data, self.thread_punch)
+        self.thread_punch.start() 
+        self.thread_punch.quit()
         
     def reset_punch(self):
+        
+        self.view.enable_cropbin_signals(False)
                 
         self.signal_m = self.signal_raw_m.copy()
         self.error_sq_m = self.error_sq_raw_m.copy()
@@ -1312,6 +1425,8 @@ class Presenter:
                      [min_l, max_l], [nh, nk, nl])
         
         self.redraw_plot_exp()
+        
+        self.view.enable_cropbin_signals(True)
                 
     def populate_recalculation_table(self):
         
@@ -1328,7 +1443,7 @@ class Presenter:
         self.view.item_changed_recalculation_table(
             self.update_recalculation_table
         )
-
+        
     def update_recalculation_table(self):
                 
         dh, nh, min_h, max_h = self.view.get_recalculation_binning_h()
@@ -1347,17 +1462,17 @@ class Presenter:
     def load_data_thread(self, name, callback):
                            
         signal, error_sq, \
-        h_range, k_range, l_range, nh, nk, nl = self.model.data(name)
+        h_range, k_range, l_range, nh, nk, nl = self.model.load_data(name)
         
         self.signal_m = self.model.mask_array(signal)
         self.error_sq_m = self.model.mask_array(error_sq)
-                
+        
         self.signal_raw_m = self.signal_m.copy()
         self.error_sq_raw_m = self.error_sq_m.copy()
         
-        self.h_range_raw_m =  h_range.copy()
-        self.k_range_raw_m =  k_range.copy()
-        self.l_range_raw_m =  l_range.copy()
+        self.h_range_raw_m = h_range.copy()
+        self.k_range_raw_m = k_range.copy()
+        self.l_range_raw_m = l_range.copy()
         
         self.nh_raw_m, self.nk_raw_m, self.nl_raw_m = nh, nk, nl
                              
@@ -1368,6 +1483,10 @@ class Presenter:
     def load_data_complete(self):
                 
         self.reset_data()
+        self.connect_experiment_buttons()
+        self.populate_recalculation_table()
+            
+    def connect_experiment_buttons(self):
         
         self.view.button_clicked_reset(self.reset_data)
         self.view.button_clicked_reset_h(self.reset_data_h)
@@ -1376,9 +1495,7 @@ class Presenter:
         
         self.view.button_clicked_punch(self.punch)
         self.view.button_clicked_reset_punch(self.reset_punch)
-        
-        self.populate_recalculation_table()
-                        
+
     def load_NXS(self):
 
         if (self.view.get_atom_site_table_col_count() > 0):
@@ -1388,15 +1505,15 @@ class Presenter:
             if name:
                 
                 self.fname_exp = name
-                         
-                self.thread = self.view.create_thread()
+                
+                self.thread_load = self.view.create_thread()
                 self.load = self.view.worker(self.load_data_thread, name)
-                self.thread.started.connect(self.load.run)
+                self.thread_load.started.connect(self.load.run)
                 self.view.progress(self.load, self.load_data_progress)
                 self.view.finished(self.load, self.load_data_complete)
-                self.view.offload(self.load, self.thread)
-                self.thread.start() 
-                self.thread.quit()
+                self.view.offload(self.load, self.thread_load)
+                self.thread_load.start() 
+                self.thread_load.quit()
                                 
     def check_batch(self):
                 
@@ -1625,6 +1742,19 @@ class Presenter:
         self.temperature = [self.view.get_prefactor()]
         self.scale = []
         
+    def populate_atom_site_recalculation_table(self):
+    
+        occupancy, Uiso, moment = self.occupancy, self.Uiso, self.mu
+    
+        self.view.clear_atom_site_recalculation_table()
+        
+        site, atm = self.site, self.atm
+        _, ind = np.unique(site, return_index=True)
+        
+        data = atm[ind], occupancy[ind], Uiso[ind], moment[ind]
+                
+        self.view.create_atom_site_recalculation_table(*data)
+        
     def initialize_disorder(self):
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
@@ -1632,7 +1762,7 @@ class Presenter:
         moment = self.mu
         
         Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm, moment)
-        
+                
         self.Sx, self.Sy, self.Sz = Sx, Sy, Sz 
         
         occupancy = self.occupancy
@@ -1646,7 +1776,7 @@ class Presenter:
         Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, Uiso)
         
         self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
-                
+
     def initialize_magnetic(self):
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
@@ -1754,31 +1884,41 @@ class Presenter:
                 p = int(round(100*(i+1)/n))
                 if (p <= 0): p = 1
                 elif (p > 100): p = 100
-                callback.emit([p, b])
-                                
-                self.iteration = i+1
                 
+                x = self.chi_sq[-1]
+                
+                callback.emit([p, b, x])
+                                                
+                self.iteration = i+1
+                                
                 if not self.ref.proceed():
                     break
                                 
-            Sx, Sy, Sx = self.Sx, self.Sy, self.Sz
-            self.model.save_magnetic(self.fname, b, Sx, Sy, Sx)
+            Sx, Sy, Sz = self.Sx, self.Sy, self.Sz
+            self.model.save_magnetic(self.fname, b, Sx, Sy, Sz)
             
             A_r = self.A_r
             self.model.save_occupational(self.fname, b, A_r)
             
-            Ux, Uy, Ux = self.Ux, self.Uy, self.Uz
-            self.model.save_displacive(self.fname, b, Ux, Uy, Ux)
+            Ux, Uy, Uz = self.Ux, self.Uy, self.Uz
+            self.model.save_displacive(self.fname, b, Ux, Uy, Uz)
+            
+            self.model.save_refinement(self.fname, b, self.I_obs, self.chi_sq, 
+                                       self.energy, self.temperature, 
+                                       self.scale, self.acc_moves, 
+                                       self.rej_moves, self.acc_temps,
+                                       self.rej_temps)
                             
             if not self.ref.proceed():
                 break
                              
     def run_refinement_progress(self, data):
         
-        progress, batch = data
+        progress, batch, chi_sq = data
         
         self.view.set_progress(progress)
         self.view.set_run(batch)
+        self.view.set_chi_sq(chi_sq)
         
         self.redraw_plot_ref()
         self.draw_plot_chi_sq()
@@ -1798,8 +1938,8 @@ class Presenter:
         if self.view.get_recalculation_table_row_count():
             
             self.save_application()
-            
-            if (self.fname):
+                                    
+            if self.fname:
                 self.magnetic = self.view.get_disorder_mag()
                 self.occupational = self.view.get_disorder_occ()
                 self.displacive = self.view.get_disorder_dis()
@@ -1822,19 +1962,23 @@ class Presenter:
                     self.filter_sigma()
                     
                     self.allocated = True
+                    
+                if (not self.view.get_atom_site_recalculation_row_count()):
+                    
+                    self.populate_atom_site_recalculation_table()
             
                 self.view.enable_refinement(False)
                 self.view.enable_reset_refinement(False)
-                
-                self.thread = self.view.create_thread()
+                                
+                self.thread_ref = self.view.create_thread()
                 self.ref = self.view.worker(self.run_refinement_thread)
                 self.ref.stop = False
-                self.thread.started.connect(self.ref.run)
+                self.thread_ref.started.connect(self.ref.run)
                 self.view.progress(self.ref, self.run_refinement_progress)
                 self.view.finished(self.ref, self.run_refinement_complete)
-                self.view.offload(self.ref, self.thread)
-                self.thread.start() 
-                self.thread.quit()
+                self.view.offload(self.ref, self.thread_ref)
+                self.thread_ref.start() 
+                self.thread_ref.quit()
                 
     def filter_sigma(self):
                 
@@ -1854,7 +1998,9 @@ class Presenter:
         
         if self.view.get_recalculation_table_row_count():
             if (self.iteration > 0 or self.view.get_run() > 0):
-                self.ref.abort()
+                if self.allocated: 
+                    if (self.ref is not None):
+                        self.ref.abort()
                 
     def reset_refinement(self):
         
@@ -1870,6 +2016,7 @@ class Presenter:
         
             self.view.clear_plot_ref_canvas()
             self.view.clear_plot_chi_sq_canvas()
+            self.view.clear_atom_site_recalculation_table()
             
     def refinement_cycle(self):
         
@@ -2110,9 +2257,9 @@ class Presenter:
             
             self.view.set_min_ref(self.ref_arr_m.min())
             self.view.set_max_ref(self.ref_arr_m.max())
-            
+                        
             self.draw_plot_ref()
-            
+                
     def draw_plot_chi_sq(self):
         
         if self.allocated:
@@ -2175,13 +2322,13 @@ class Presenter:
             
             self.view.enable_calculate_1d(False)
             
-            self.thread = self.view.create_thread()
+            self.thread_corr1d = self.view.create_thread()
             self.calc_1d = self.view.worker(self.calculate_1d_thread)
-            self.thread.started.connect(self.calc_1d.run)
+            self.thread_corr1d.started.connect(self.calc_1d.run)
             self.view.finished(self.calc_1d, self.calculate_1d_complete)
-            self.view.offload(self.calc_1d, self.thread)
-            self.thread.start() 
-            self.thread.quit()
+            self.view.offload(self.calc_1d, self.thread_corr1d)
+            self.thread_corr1d.start() 
+            self.thread_corr1d.quit()
 
     def calculate_1d_thread(self, callback):
                 
@@ -2358,13 +2505,13 @@ class Presenter:
             
             self.view.enable_calculate_3d(False)
             
-            self.thread = self.view.create_thread()
+            self.thread_corr3d = self.view.create_thread()
             self.calc_3d = self.view.worker(self.calculate_3d_thread)
-            self.thread.started.connect(self.calc_3d.run)
+            self.thread_corr3d.started.connect(self.calc_3d.run)
             self.view.finished(self.calc_3d, self.calculate_3d_complete)
-            self.view.offload(self.calc_3d, self.thread)
-            self.thread.start() 
-            self.thread.quit()
+            self.view.offload(self.calc_3d, self.thread_corr3d)
+            self.thread_corr3d.start() 
+            self.thread_corr3d.quit()
 
     def calculate_3d_thread(self, callback):
                 
@@ -2597,9 +2744,17 @@ class Presenter:
             k_range = [min_k, max_k]
             l_range = [min_l, max_l]
             
-            ux, uy, uz, atm = self.ux, self.uy, self.uz, self.atm
+            active = self.view.get_active_atom_site()
             
-            nuc, ion = self.nuc, self.ion
+            site = self.site
+            
+            _, inv = np.unique(site, return_inverse=True)
+                        
+            mask = active[inv]
+            
+            ux, uy, uz = self.ux[mask], self.uy[mask], self.uz[mask]
+            
+            nuc, ion = self.nuc[mask], self.ion[mask]
             
             atm = nuc if (self.view.get_type_recalc() == 'Neutron') else ion
                                         
@@ -2614,7 +2769,7 @@ class Presenter:
             
             B, R, = self.B, self.R
             
-            occupancy, g = self.occupancy, self.g
+            occupancy, g = self.occupancy[mask], self.g[mask]
             
             # ---
             
@@ -2669,7 +2824,7 @@ class Presenter:
                                  fname, run, ux, uy, uz, ion,
                                  h_range, k_range, l_range, indices, symop,
                                  T, B, R, twins, variants, nh, nk, nl, 
-                                 nu, nv, nw, Nu, Nv, Nw, g)
+                                 nu, nv, nw, Nu, Nv, Nw, g, mask)
                     
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
                                             
@@ -2679,7 +2834,7 @@ class Presenter:
                                  fname, run, occupancy, ux, uy, uz, atm,
                                  h_range, k_range, l_range, indices, symop,
                                  T, B, R, twins, variants, nh, nk, nl,
-                                 nu, nv, nw, Nu, Nv, Nw)
+                                 nu, nv, nw, Nu, Nv, Nw, mask)
                                                             
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
                     
@@ -2689,7 +2844,7 @@ class Presenter:
                                  fname, run, coeffs, ux, uy, uz, atm,
                                  h_range, k_range, l_range, indices, symop,
                                  T, B, R, twins, variants, nh, nk, nl,
-                                 nu, nv, nw, Nu, Nv, Nw, p, even, cntr)
+                                 nu, nv, nw, Nu, Nv, Nw, p, even, cntr, mask)
                                         
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
                                   
@@ -2721,14 +2876,14 @@ class Presenter:
         
             self.view.enable_recalculation(False)
                         
-            self.thread = self.view.create_thread()
+            self.thread_recalc = self.view.create_thread()
             self.recalc = self.view.worker(self.recalculate_intensity_thread)
-            self.thread.started.connect(self.recalc.run)
+            self.thread_recalc.started.connect(self.recalc.run)
             self.view.finished(self.recalc,
                                self.recalculate_intensity_complete)
-            self.view.offload(self.recalc, self.thread)
-            self.thread.start() 
-            self.thread.quit()
+            self.view.offload(self.recalc, self.thread_recalc)
+            self.thread_recalc.start() 
+            self.thread_recalc.quit()
             
     def redraw_plot_calc(self):
         

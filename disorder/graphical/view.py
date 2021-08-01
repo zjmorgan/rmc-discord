@@ -67,7 +67,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_nu.setValidator(QtGui.QIntValidator(1, 32))
         self.lineEdit_nv.setValidator(QtGui.QIntValidator(1, 32))
         self.lineEdit_nw.setValidator(QtGui.QIntValidator(1, 32))
-        
+                
         # ---
                 
         self.comboBox_centering.addItem('P')
@@ -327,9 +327,21 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_gamma.setText('')
         
         self.lineEdit_lat.setText('')
-        
-        self.clear_atom_site_table()
-        self.clear_unit_cell_table()
+
+        self.tableWidget_CIF.clearContents()        
+        self.tableWidget_CIF.setRowCount(0)
+        self.tableWidget_CIF.setColumnCount(0)
+
+        self.tableWidget_atm.clearContents()        
+        self.tableWidget_atm.setRowCount(0)
+        self.tableWidget_atm.setColumnCount(0)
+           
+        self.set_a_visible(False)
+        self.set_b_visible(False)
+        self.set_c_visible(False)
+        self.set_alpha_visible(False)
+        self.set_beta_visible(False)
+        self.set_gamma_visible(False)
         
         # ---
         
@@ -358,7 +370,19 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_min_exp.setText('')       
         self.lineEdit_max_exp.setText('')       
 
-        self.clear_experiment_table()
+        try: self.tableWidget_exp.disconnect() 
+        except Exception: pass  
+      
+        self.tableWidget_exp.clearContents()
+        self.tableWidget_exp.setRowCount(0)
+        self.tableWidget_exp.setColumnCount(0)
+        
+        self.canvas_exp_h.figure.clear()
+        self.canvas_exp_k.figure.clear()
+        self.canvas_exp_l.figure.clear()
+        self.canvas_exp_h.draw()
+        self.canvas_exp_k.draw()
+        self.canvas_exp_l.draw()
         
         # ---
                 
@@ -404,11 +428,18 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.checkBox_occ.setCheckState(QtCore.Qt.Checked)
         self.checkBox_dis.setCheckState(QtCore.Qt.Unchecked)
         
+        self.canvas_ref.figure.clear()
+        self.canvas_chi_sq.figure.clear()
+        self.canvas_ref.draw()
+        self.canvas_chi_sq.draw()
+        
         # ---
-                        
+    
+        self.tableWidget_pairs_1d.clearContents()
         self.tableWidget_pairs_1d.setRowCount(0)
         self.tableWidget_pairs_1d.setColumnCount(0)
         
+        self.tableWidget_pairs_3d.clearContents()
         self.tableWidget_pairs_3d.setRowCount(0)
         self.tableWidget_pairs_3d.setColumnCount(0)
         
@@ -437,6 +468,11 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.checkBox_average_1d.setCheckState(QtCore.Qt.Checked)
         self.checkBox_average_3d.setCheckState(QtCore.Qt.Checked)
         
+        self.canvas_1d.figure.clear()
+        self.canvas_3d.figure.clear()
+        self.canvas_1d.draw()
+        self.canvas_3d.draw()
+        
         # ---
         
         self.checkBox_mag_recalc.setEnabled(False)
@@ -448,8 +484,21 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.checkBox_mag_recalc.setCheckState(QtCore.Qt.Unchecked)
         self.checkBox_occ_recalc.setCheckState(QtCore.Qt.Unchecked)
         self.checkBox_dis_recalc.setCheckState(QtCore.Qt.Unchecked)
+        
+        try: self.tableWidget_calc.disconnect() 
+        except Exception: pass
                         
-        self.clear_recalculation_table()
+        self.tableWidget_calc.clearContents()
+        self.tableWidget_calc.setRowCount(0)
+        self.tableWidget_calc.setColumnCount(0)
+
+        self.tableWidget_recalc.clearContents()
+        self.tableWidget_recalc.setRowCount(0)
+        self.tableWidget_recalc.setColumnCount(0)
+        
+        self.tableWidget_recalc.clearContents()
+        self.tableWidget_recalc.setRowCount(0)
+        self.tableWidget_recalc.setColumnCount(0)
         
         self.lineEdit_order_calc.setText('2')
         
@@ -463,6 +512,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.checkBox_batch_calc.setCheckState(QtCore.Qt.Unchecked)
         self.lineEdit_runs_calc.setText('1')
         self.lineEdit_runs_calc.setEnabled(False)
+        
+        self.canvas_calc.figure.clear()
+        self.canvas_calc.draw()
         
     def save_as_triggered(self, slot):
         self.actionSave_As.triggered.connect(slot)
@@ -1278,6 +1330,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tableWidget_atm.itemChanged.connect(slot)
                 
     # ---
+    
+    def get_experiment_table_row_count(self):
+        return self.tableWidget_exp.rowCount()
         
     def create_experiment_table(self):
         self.tableWidget_exp.setRowCount(3)
@@ -1290,8 +1345,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tableWidget_exp.setVerticalHeaderLabels(vert_lbl)
         
     def clear_experiment_table(self):
+        try: self.tableWidget_exp.disconnect() 
+        except Exception: pass  
         self.tableWidget_exp.clearContents()
-        self.tableWidget_exp.disconnect()
         self.tableWidget_exp.setRowCount(0)
         self.tableWidget_exp.setColumnCount(0)
         
@@ -1392,6 +1448,38 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def unblock_experiment_table_signals(self):
         self.tableWidget_exp.blockSignals(False)
         
+    def enable_cropbin_signals(self, visible):
+        self.comboBox_rebin_h.setEnabled(visible)
+        self.comboBox_rebin_k.setEnabled(visible)
+        self.comboBox_rebin_l.setEnabled(visible)
+        self.checkBox_centered_h.setEnabled(visible)
+        self.checkBox_centered_k.setEnabled(visible)
+        self.checkBox_centered_l.setEnabled(visible)
+        self.lineEdit_min_h.setEnabled(visible)
+        self.lineEdit_min_k.setEnabled(visible)
+        self.lineEdit_min_l.setEnabled(visible)
+        self.lineEdit_max_h.setEnabled(visible)
+        self.lineEdit_max_k.setEnabled(visible)
+        self.lineEdit_max_l.setEnabled(visible)
+        self.pushButton_punch.setEnabled(visible)
+        self.pushButton_reset_punch.setEnabled(visible)
+        self.pushButton_reset.setEnabled(visible)
+        self.pushButton_reset_h.setEnabled(visible)
+        self.pushButton_reset_k.setEnabled(visible)
+        self.pushButton_reset_l.setEnabled(visible)
+        
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        
+        for i in range(self.tableWidget_exp.rowCount()):
+            for j in range(self.tableWidget_exp.columnCount()):
+                item = self.tableWidget_exp.item(i, j)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    if visible:
+                        item.setFlags(item.flags() | QtCore.Qt.ItemIsEnabled)
+                    else:
+                        item.setFlags(item.flags() & ~QtCore.Qt.ItemIsEnabled)                        
+                        
     def set_rebin_combo_h(self, steps, sizes):
         for step, size in zip(steps, sizes):            
             parameters = 'h-step : {}, h-size: {}'.format(step,size)
@@ -1624,11 +1712,17 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         return self.comboBox_norm_exp.itemText(index)
     
     def get_plot_exp_canvas(self):
-        return self.canvas_exp
+        return self.canvas_exp_h, self.canvas_exp_k, self.canvas_exp_l
     
     def clear_plot_exp_canvas(self):
-        self.canvas_exp.figure.clear()
-        self.canvas_exp.draw()
+        self.canvas_exp_h.figure.clear()
+        self.canvas_exp_k.figure.clear()
+        self.canvas_exp_l.figure.clear()
+        self.canvas_exp_cb.figure.clear()
+        self.canvas_exp_h.draw()
+        self.canvas_exp_k.draw()
+        self.canvas_exp_l.draw()
+        self.canvas_exp_cb.draw()
         self.lineEdit_min_exp.setText('')       
         self.lineEdit_max_exp.setText('')    
 
@@ -1681,6 +1775,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         filename, \
         filters = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '.', 
                                                         'NeXus files *.nxs',
+                                                        'NumPy files *.npz',
                                                         options=options)
         
         return filename            
@@ -2146,7 +2241,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         item = QtWidgets.QTableWidgetItem(data[1])
         self.tableWidget_pairs_1d.setItem(i, 1, item)        
         check = QtWidgets.QCheckBox()
-        check.setObjectName('checkBox_pairs_3d_'+str(i))
+        check.setObjectName('checkBox_pairs_1d_'+str(i))
         check.setCheckState(QtCore.Qt.Checked) 
         self.tableWidget_pairs_1d.setCellWidget(i, 2, check)
     
@@ -2292,6 +2387,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tableWidget_calc.setVerticalHeaderLabels(lbl)
         
     def clear_recalculation_table(self):
+        try: self.tableWidget_calc.disconnect() 
+        except Exception: pass  
         self.tableWidget_calc.clearContents()
         self.tableWidget_calc.setRowCount(0)
         self.tableWidget_calc.setColumnCount(0)
@@ -2511,3 +2608,71 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def get_centering_calc(self):
         return self.comboBox_centering_calc.currentText()
+    
+    def clear_atom_site_recalculation_table(self):
+        self.tableWidget_recalc.clearContents()
+        self.tableWidget_recalc.setRowCount(0)
+        self.tableWidget_recalc.setColumnCount(0)
+        
+    def format_atom_site_recalculation_table(self):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+        stretch = QtWidgets.QHeaderView.Stretch
+        resize = QtWidgets.QHeaderView.ResizeToContents
+
+        for i in range(self.tableWidget_recalc.rowCount()):
+            for j in range(self.tableWidget_recalc.columnCount()-1):
+                item = self.tableWidget_recalc.item(i, j)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    item.setFlags(flags)
+                    
+        horiz_hdr = self.tableWidget_recalc.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        horiz_hdr.setSectionResizeMode(1, resize)
+    
+    def create_atom_site_recalculation_table(self, atom, occupancy, Uiso, mu):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+        stretch = QtWidgets.QHeaderView.Stretch
+        resize = QtWidgets.QHeaderView.ResizeToContents
+                    
+        n_site = len(atom)
+        
+        self.tableWidget_recalc.setRowCount(n_site)
+        self.tableWidget_recalc.setColumnCount(5)
+        
+        data = [atom, occupancy, Uiso, mu]
+        
+        for i in range(self.tableWidget_recalc.rowCount()):
+            for j in range(self.tableWidget_recalc.columnCount()-1):
+                item = QtWidgets.QTableWidgetItem(str(data[j][i]))
+                self.tableWidget_recalc.setItem(i, j, item)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    item.setFlags(flags)
+            check = QtWidgets.QCheckBox()
+            check.setObjectName('checkBox_atom_site_recalculation_'+str(i))
+            check.setCheckState(QtCore.Qt.Checked) 
+            self.tableWidget_recalc.setCellWidget(i, 4, check)
+                    
+        horiz_lbl = 'atom,occupancy,Uiso,mu,active'    
+        horiz_lbl = horiz_lbl.split(',')
+        self.tableWidget_recalc.setHorizontalHeaderLabels(horiz_lbl)
+        
+        vert_lbl = ['{}'.format(s+1) for s in range(n_site)]
+        self.tableWidget_recalc.setVerticalHeaderLabels(vert_lbl)
+        
+        horiz_hdr = self.tableWidget_recalc.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        horiz_hdr.setSectionResizeMode(1, resize)
+        
+    def get_atom_site_recalculation_row_count(self):
+        return self.tableWidget_recalc.rowCount()
+ 
+    def get_active_atom_site(self):
+        data = []
+        for i in range(self.tableWidget_recalc.rowCount()):
+            active = self.tableWidget_recalc.cellWidget(i, 4).isChecked()
+            data.append(active)
+        return np.array(data)

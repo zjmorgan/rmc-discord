@@ -104,8 +104,13 @@ def magnetic(double [::1] Sx,
     cdef Py_ssize_t n_uvw = nu*nv*nw
     cdef Py_ssize_t n = n_uvw*n_atm
     
-    cdef double factor = 1.0/n
-
+    cdef double factor
+    
+    if (n == 0):
+        factor = 0
+    else:
+        factor = 1.0/n
+    
     cdef double x_, y_, z_   
     cdef double h_, k_, l_   
 
@@ -400,8 +405,13 @@ def occupational(double [::1] A_r,
     cdef Py_ssize_t n_uvw = nu*nv*nw
     cdef Py_ssize_t n = n_uvw*n_atm
     
-    cdef double factor = 1.0/n
-
+    cdef double factor
+    
+    if (n == 0):
+        factor = 0
+    else:
+        factor = 1.0/n
+        
     cdef double x_, y_, z_
     cdef double h_, k_, l_   
 
@@ -654,7 +664,12 @@ def displacive(double [::1] U_r,
     cdef Py_ssize_t n_uvw = nu*nv*nw
     cdef Py_ssize_t n = n_uvw*n_atm
     
-    cdef double factor = 1.0/n
+    cdef double factor
+    
+    if (n == 0):
+        factor = 0
+    else:
+        factor = 1.0/n
  
     cdef double x_, y_, z_   
     cdef double h_, k_, l_   
@@ -940,8 +955,13 @@ def structure(double [::1] ux,
     cdef Py_ssize_t n_uvw = nu*nv*nw
     cdef Py_ssize_t n = n_uvw*n_atm
     
-    cdef double factor = 1.0/n
-
+    cdef double factor
+    
+    if (n == 0):
+        factor = 0
+    else:
+        factor = 1.0/n
+        
     cdef double x_, y_, z_
     cdef double h_, k_, l_   
 

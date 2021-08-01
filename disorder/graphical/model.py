@@ -1,6 +1,7 @@
 #!/usr/bin/env/python3
 
 import re
+import os
 
 import numpy as np
 
@@ -10,11 +11,13 @@ from disorder.material import crystal, symmetry, tables
 
 import disorder.correlation.functions as correlations
 
+from shutil import copyfile
+
 class Model:
 
     def __init__(self):
         pass
-
+    
     def supercell_size(self, n_atm, nu, nv, nw):
         
         return n_atm*nu*nv*nw
@@ -180,13 +183,54 @@ class Model:
         
         return [c+(c < 0)-(c > 1) for c in coord]
     
-    def data(self, filename):
+    def save_crystal(self, filename, fname):
         
-        signal, sigma_sq, \
-        h_range, k_range, l_range, \
-        nh, nk, nl = experimental.data(filename)        
+        if (filename != fname):
+            copyfile(filename, fname)
+    
+    def load_data(self, fname):
+        
+        if fname.endswith('.nxs'):
+            signal, sigma_sq, \
+            h_range, k_range, l_range, \
+            nh, nk, nl = experimental.data(fname)
+        elif fname.endswith('.npz'):
+            npzfile = np.load(fname, allow_pickle=True)
+            signal = npzfile['signal']
+            sigma_sq = npzfile['sigma_sq']
+            limits = npzfile['limits']
+            min_h, max_h, nh, min_k, max_k, nk, min_l, max_l, nl = limits
+            h_range = [min_h, max_h]
+            k_range = [min_k, max_k]
+            l_range = [min_l, max_l]
         
         return signal, sigma_sq, h_range, k_range, l_range, nh, nk, nl
+    
+    def save_data(self, fname, signal, sigma_sq, 
+                  h_range, k_range, l_range, nh, nk, nl):
+        
+        min_h, max_h = h_range
+        min_k, max_k = k_range
+        min_l, max_l = l_range
+        
+        limits = np.array([min_h, max_h, nh, 
+                           min_k, max_k, nk, 
+                           min_l, max_l, nl], dtype=object)
+        
+        np.savez('{}-intensity.npz'.format(fname), 
+                 signal=signal, sigma_sq=sigma_sq, limits=limits)
+        
+    def load_region_of_interest(self, fname):
+        
+        signal = np.load('{}-intensity-roi.npy'.format(fname))
+        sigma_sq = np.load('{}-error-roi.npy'.format(fname))
+        
+        return signal, sigma_sq
+      
+    def save_region_of_interest(self, fname, signal, sigma_sq):
+        
+        np.save('{}-intensity-roi.npy'.format(fname), signal)
+        np.save('{}-error-roi.npy'.format(fname), sigma_sq)
     
     def rebin_parameters(self, size, minimum, maximum, centered=True):
         
@@ -275,8 +319,7 @@ class Model:
     
     def mask_array(self, array):
         
-        return np.ma.masked_less_equal(np.ma.masked_invalid(array, 
-                                                            copy=False), 
+        return np.ma.masked_less_equal(np.ma.masked_invalid(array, copy=False),
                                        0, copy=False)
         
     def crop(self, array, h_slice, k_slice, l_slice):
@@ -333,7 +376,7 @@ class Model:
         
         Qx_norm, Qy_norm, Qz_norm, Q = space.unit(Qx, Qy, Qz)
         
-        return Qx, Qy, Qx, Qx_norm, Qy_norm, Qz_norm, Q 
+        return Qx, Qy, Qz, Qx_norm, Qy_norm, Qz_norm, Q 
     
     def real_space_coordinate_transform(self, u, v, w, atm, A, nu, nv, nw):
         
@@ -603,64 +646,96 @@ class Model:
     
     def save_magnetic(self, fname, run, Sx, Sy, Sz):
 
-        np.save('{}-calculated-spin-x-{}.npy'.format(fname, run), Sx)
-        np.save('{}-calculated-spin-y-{}.npy'.format(fname, run), Sy)
-        np.save('{}-calculated-spin-z-{}.npy'.format(fname, run), Sz)
+        np.save('{}-calculated-spin-x-{}.npy'.format(fname,run), Sx)
+        np.save('{}-calculated-spin-y-{}.npy'.format(fname,run), Sy)
+        np.save('{}-calculated-spin-z-{}.npy'.format(fname,run), Sz)
         
     def save_occupational(self, fname, run, A_r):
         
-        np.save('{}-calculated-composition-{}.npy'.format(fname, run), A_r)
+        np.save('{}-calculated-composition-{}.npy'.format(fname,run), A_r)
     
     def save_displacive(self, fname, run, Ux, Uy, Uz):
 
-        np.save('{}-calculated-displacement-x-{}.npy'.format(fname, run), Ux)
-        np.save('{}-calculated-displacement-y-{}.npy'.format(fname, run), Uy)
-        np.save('{}-calculated-displacement-z-{}.npy'.format(fname, run), Uz)
+        np.save('{}-calculated-displacement-x-{}.npy'.format(fname,run), Ux)
+        np.save('{}-calculated-displacement-y-{}.npy'.format(fname,run), Uy)
+        np.save('{}-calculated-displacement-z-{}.npy'.format(fname,run), Uz)
         
     def load_magnetic(self, fname, run):
     
-        Sx = np.load('{}-calculated-spin-x-{}.npy'.format(fname, run))
-        Sy = np.load('{}-calculated-spin-y-{}.npy'.format(fname, run))
-        Sz = np.load('{}-calculated-spin-z-{}.npy'.format(fname, run))
+        Sx = np.load('{}-calculated-spin-x-{}.npy'.format(fname,run))
+        Sy = np.load('{}-calculated-spin-y-{}.npy'.format(fname,run))
+        Sz = np.load('{}-calculated-spin-z-{}.npy'.format(fname,run))
         
         return Sx, Sy, Sz
                                 
     def load_occupational(self, fname, run):
                     
-        A_r = np.load('{}-calculated-composition-{}.npy'.format(fname, run))
+        A_r = np.load('{}-calculated-composition-{}.npy'.format(fname,run))
         
         return A_r
 
     def load_displacive(self, fname, run):
                 
-        Ux = np.load('{}-calculated-displacement-x-{}.npy'.format(fname, run))
-        Uy = np.load('{}-calculated-displacement-y-{}.npy'.format(fname, run))
-        Uz = np.load('{}-calculated-displacement-z-{}.npy'.format(fname, run))   
+        Ux = np.load('{}-calculated-displacement-x-{}.npy'.format(fname,run))
+        Uy = np.load('{}-calculated-displacement-y-{}.npy'.format(fname,run))
+        Uz = np.load('{}-calculated-displacement-z-{}.npy'.format(fname,run))   
         
         return Ux, Uy, Uz
             
     def save_refinement(self, fname, run, I_obs, chi_sq, energy, temperature, 
                         scale, acc_moves, rej_moves, acc_temps, rej_temps):
         
-        np.save('{}-calculated-intensity-{}.npy'.format(fname, run), I_obs)
+        np.save('{}-calculated-intensity-{}.npy'.format(fname,run), I_obs)
             
-        np.save('{}-goodness-of-fit-{}.npy'.format(fname, run), chi_sq)
-        np.save('{}-energy-{}.npy'.format(fname, run), energy)        
-        np.save('{}-temperature-{}.npy'.format(fname, run), temperature)
-        np.save('{}-scale-factor-{}.npy'.format(fname, run), scale)
+        np.save('{}-goodness-of-fit-{}.npy'.format(fname,run), chi_sq)
+        np.save('{}-energy-{}.npy'.format(fname,run), energy)        
+        np.save('{}-temperature-{}.npy'.format(fname,run), temperature)
+        np.save('{}-scale-factor-{}.npy'.format(fname,run), scale)
 
-        np.save('{}-accepted-moves-{}.npy'.format(fname, run), acc_moves)
-        np.save('{}-rejected-moves-{}.npy'.format(fname, run), rej_moves)     
+        np.save('{}-accepted-moves-{}.npy'.format(fname,run), acc_moves)
+        np.save('{}-rejected-moves-{}.npy'.format(fname,run), rej_moves)     
         
-        np.save('{}-accepted-temperature-{}.npy'.format(fname, run), acc_temps)
-        np.save('{}-rejected-temperature-{}.npy'.format(fname, run), rej_temps)
+        np.save('{}-accepted-temperature-{}.npy'.format(fname,run), acc_temps)
+        np.save('{}-rejected-temperature-{}.npy'.format(fname,run), rej_temps)
+        
+    def load_refinement(self, fname, run):
+        
+        I_obs = np.load('{}-calculated-intensity-{}.npy'.format(fname,run))
+                    
+        chi_sq = np.load('{}-goodness-of-fit-{}.npy'.format(fname,run))
+        energy = np.load('{}-energy-{}.npy'.format(fname,run))        
+        temperature = np.load('{}-temperature-{}.npy'.format(fname,run))
+        scale = np.load('{}-scale-factor-{}.npy'.format(fname,run))
+
+        acc_moves = np.load('{}-accepted-moves-{}.npy'.format(fname,run))
+        rej_moves = np.load('{}-rejected-moves-{}.npy'.format(fname,run))     
+        
+        acc_temps = np.load('{}-accepted-temperature-{}.npy'.format(fname,run))
+        rej_temps = np.load('{}-rejected-temperature-{}.npy'.format(fname,run))
+        
+        return I_obs, chi_sq.tolist(), energy.tolist(), \
+               temperature.tolist(), scale.tolist(), \
+               acc_moves.tolist(), rej_moves.tolist(), \
+               acc_temps.tolist(), rej_temps.tolist()
+               
+    def save_recalculation(self, fname, I_recalc):
+
+        np.save('{}-intensity-recalc.npy'.format(fname), I_recalc)
+        
+    def load_recalculation(self, fname):
+
+        I_recalc = np.load('{}-intensity-recalc.npy'.format(fname)) 
+       
+        return I_recalc
     
     def magnetic_intensity(self, fname, run, ux, uy, uz, atm,
                            h_range, k_range, l_range, indices, symop,
                            T, B, R, twins, variants, nh, nk, nl, nu, nv, nw,
-                           Nu, Nv, Nw, g):
+                           Nu, Nv, Nw, g, mask):
             
         Sx, Sy, Sz = self.load_magnetic(fname, run)
+        
+        Sx, Sy, Sz = Sx[mask], Sy[mask], Sz[mask]
         
         I_calc = monocrystal.magnetic(Sx, Sy, Sz, ux, uy, uz, atm,
                                       h_range, k_range, l_range, indices,
@@ -672,9 +747,11 @@ class Model:
     def occupational_intensity(self, fname, run, occupancy, ux, uy, uz, atm,
                                h_range, k_range, l_range, indices, symop,
                                T, B, R, twins, variants, nh, nk, nl, 
-                               nu, nv, nw, Nu, Nv, Nw):
+                               nu, nv, nw, Nu, Nv, Nw, mask):
                     
         A_r = self.load_occupational(fname, run)
+        
+        A_r = A_r[mask]
                 
         I_calc = monocrystal.occupational(A_r, occupancy, ux, uy, uz, atm,
                                           h_range, k_range, l_range, indices, 
@@ -686,9 +763,11 @@ class Model:
     def displacive_intensity(self, fname, run, coeffs, ux, uy, uz, atm,
                              h_range, k_range, l_range, indices, symop,
                              T, B, R, twins, variants, nh, nk, nl, nu, nv, nw,
-                             Nu, Nv, Nw, p, even, cntr):
+                             Nu, Nv, Nw, p, even, cntr, mask):
                 
         Ux, Uy, Uz = self.load_displacive(fname, run)
+        
+        Ux, Uy, Uz = Ux[mask], Uy[mask], Uz[mask]
             
         U_r = displacive.products(Ux, Uy, Uz, p)
                 
