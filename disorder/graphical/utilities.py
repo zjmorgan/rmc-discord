@@ -51,7 +51,7 @@ class WorkerSignals(QtCore.QObject):
     result = QtCore.pyqtSignal(object)
     progress = QtCore.pyqtSignal(list)
 
-class Worker(QtCore.QThread):
+class Worker(QtCore.QRunnable):
 
     def __init__(self, fn, *args, **kwargs):
         super(Worker, self).__init__()

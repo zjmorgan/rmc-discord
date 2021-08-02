@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from disorder import gui
+from disorder import application
 
-if (__name__ == "__main__"):
-    gui.run()
+if __name__ == "__main__":
+    application.run()

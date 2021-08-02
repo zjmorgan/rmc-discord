@@ -17,7 +17,7 @@ class Window:
   def show(self):
       self.view.show()
      
-if __name__ == '__main__':
+def run():
     app = QtWidgets.QApplication(sys.argv)
     view = View()
     adder = Presenter(Model(), view)

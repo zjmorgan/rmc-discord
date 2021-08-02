@@ -288,6 +288,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def create_thread(self):
         return QtCore.QThread()
     
+    def create_thread_pool(self):
+        return QtCore.QThreadPool()
+    
     def worker(self, *args, **kwargs):
         return Worker(*args, **kwargs)
         
