@@ -9,8 +9,6 @@ from disorder.diffuse import experimental, space, scattering, monocrystal
 from disorder.diffuse import magnetic, occupational, displacive, refinement
 from disorder.material import crystal, symmetry, tables
 
-scattering.parallelism()
-
 import disorder.correlation.functions as correlations
 
 from shutil import copyfile
