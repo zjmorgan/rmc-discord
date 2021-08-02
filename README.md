@@ -4,7 +4,7 @@
 *cor*related *d*isorder from single crystals
 
 <p align="center">
-<img src="docs/banner.svg" alt="Disorder" width="512">
+<img src="https://github.com/zjmorgan/rmc-discord/blob/master/docs/banner.svg" alt="Disorder" width="512">
 <br />
 </p>
 

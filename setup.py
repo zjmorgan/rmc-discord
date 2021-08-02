@@ -134,7 +134,7 @@ setuptools.setup(
     ext_modules=ext_modules,
     entry_points={
         'console_scripts': [
-            'rmc-discord=disorder.gui:run',
+            'rmc-discord=disorder.application:run',
         ],
     },
     package_data={
