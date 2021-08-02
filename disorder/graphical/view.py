@@ -530,7 +530,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
                                                         'ini files *.ini',
                                                         options=options)   
-        
         return filename
         
     def save_widgets(self, filename):
@@ -548,7 +547,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         filters = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '.', 
                                                         'ini files *.ini',
                                                         options=options)   
-
         return filename
         
     def load_widgets(self, filename):
@@ -559,10 +557,11 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.actionExit.triggered.connect(slot)
 
     def close_application(self):
-        choice = QtWidgets.QMessageBox.question(self, 'Quit?', 'Are you sure?',
-                                               QtWidgets.QMessageBox.Yes |
-                                               QtWidgets.QMessageBox.No,
-                                               QtWidgets.QMessageBox.Yes)
+        choice = QtWidgets.QMessageBox.question(self, 'Exit application', 
+                                                'Are you sure?',
+                                                QtWidgets.QMessageBox.Yes |
+                                                QtWidgets.QMessageBox.No,
+                                                QtWidgets.QMessageBox.Yes)
         
         return choice == QtWidgets.QMessageBox.Yes
     
@@ -838,7 +837,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                                                         'CIF files *.cif;;'\
                                                         'mCIF files *.mcif',
                                                         options=options)
-        
         return filename
     
     def button_clicked_CIF(self, slot):
@@ -1777,11 +1775,25 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                                                         'NeXus files *.nxs',
                                                         'NumPy files *.npz',
                                                         options=options)
-        
         return filename            
     
     def button_clicked_NXS(self, slot):
         self.pushButton_load_NXS.clicked.connect(slot)
+        
+    def save_intensity_exp(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+                                                        'pdf files *.pdf;;'+
+                                                        'png files *.png',
+                                                         options=options)
+        
+        return filename
+            
+    def button_clicked_save_intensity_exp(self, slot):
+        self.pushButton_save_intensity_exp.clicked.connect(slot)
         
     # ---
     
@@ -1994,6 +2006,34 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def fixed_displacement_check(self):
         return self.checkBox_fixed_displacement.isChecked()
+    
+    def save_intensity_ref(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+                                                        'pdf files *.pdf;;'+
+                                                        'png files *.png',
+                                                         options=options)
+        return filename
+            
+    def save_chi_sq(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+                                                        'pdf files *.pdf;;'+
+                                                        'png files *.png',
+                                                         options=options)
+        return filename
+               
+    def button_clicked_save_intensity_ref(self, slot):
+        self.pushButton_save_intensity_ref.clicked.connect(slot)
+        
+    def button_clicked_save_chi_sq(self, slot):
+        self.pushButton_save_chi_sq.clicked.connect(slot)
         
     # ---
         
@@ -2320,6 +2360,34 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             
     def finished_editing_d(self, slot):
         self.lineEdit_plane_d.editingFinished.connect(slot)
+        
+    def save_correlations_1d(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+                                                        'pdf files *.pdf;;'+
+                                                        'png files *.png',
+                                                         options=options)
+        return filename
+            
+    def save_correlations_3d(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+                                                        'pdf files *.pdf;;'+
+                                                        'png files *.png',
+                                                         options=options)
+        return filename
+            
+    def button_clicked_save_1d(self, slot):
+        self.pushButton_save_1d.clicked.connect(slot)
+        
+    def button_clicked_save_3d(self, slot):
+        self.pushButton_save_3d.clicked.connect(slot)
                
     # ---
     
@@ -2676,3 +2744,66 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             active = self.tableWidget_recalc.cellWidget(i, 4).isChecked()
             data.append(active)
         return np.array(data)
+    
+    def save_intensity_calc(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+                                                        'pdf files *.pdf;;'+
+                                                        'png files *.png',
+                                                         options=options)
+        return filename
+            
+    def button_clicked_save_calc(self, slot):
+        self.pushButton_save_calc.clicked.connect(slot)
+        
+    # ---
+    
+    def save_CIF(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+                      
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+                                                        'CIF files *.cif;;'\
+                                                        'mCIF files *.mcif',
+                                                        options=options)
+        return filename
+    
+    def save_correlations_CSV(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+                      
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+                                                        'CSV files *.csv',
+                                                        options=options)
+        return filename
+    
+    def save_correlations_VTK(self):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+                      
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+                                                        'VTK files *.vtm',
+                                                        options=options)
+        return filename
+    
+    def button_clicked_save_CIF(self, slot):
+        
+        self.pushButton_save_CIF.clicked.connect(slot)
+    
+    def button_clicked_save_dis_CIF(self, slot):
+        
+        self.pushButton_save_CIF_dis.clicked.connect(slot)
+ 
+    def button_clicked_save_CSV(self, slot):
+
+        self.pushButton_save_CSV_correlations.clicked.connect(slot) 
+
+    def button_clicked_save_VTK(self, slot):
+                           
+        self.pushButton_save_VTK_correlations.clicked.connect(slot)

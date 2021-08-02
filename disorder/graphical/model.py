@@ -13,6 +13,8 @@ import disorder.correlation.functions as correlations
 
 from shutil import copyfile
 
+import pyvista as pv
+
 class Model:
 
     def __init__(self):
@@ -187,6 +189,12 @@ class Model:
         
         if (filename != fname):
             copyfile(filename, fname)
+            
+    def save_supercell(self, fname, atm, occ, disp, mom,
+                       u, v, w, nu, nv, nw, folder, filename):
+        
+        crystal.supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
+                          fname, folder=folder, filename=filename)
     
     def load_data(self, fname):
         
@@ -334,7 +342,7 @@ class Model:
         
         binning = np.linspace(minimum, maximum, size)
         i_min = np.where(binning <= xmin)[0][-1]
-        i_max = np.where(binning >= xmax)[0][-1]
+        i_max = np.where(binning <= xmax)[0][-1]
         
         return i_min, i_max
 
@@ -723,10 +731,54 @@ class Model:
         np.save('{}-intensity-recalc.npy'.format(fname), I_recalc)
         
     def load_recalculation(self, fname):
+        
+        if os.path.isfile('{}-intensity-recalc.npy'.format(fname)):
 
-        I_recalc = np.load('{}-intensity-recalc.npy'.format(fname)) 
-       
-        return I_recalc
+            I_recalc = np.load('{}-intensity-recalc.npy'.format(fname)) 
+            
+            return I_recalc
+        
+        else:
+            
+            return None
+        
+    def save_correlations_1d(self, fname, data, header):
+        
+        np.savetxt(fname, np.column_stack(data), delimiter=',',
+                   fmt='%s', header=header)
+        
+    def save_correlations_3d(self, fname, data, label):
+        
+        blocks = pv.MultiBlock()
+        points = np.column_stack((data[0],data[1],data[2]))
+        
+        vectors = ['Correlation', 'Collinearity']
+        scalars = ['Correlation']
+        
+        if (label == 'vector-pair'):
+            datasets = [data[3], data[4]]
+            pairs = data[5]
+        elif (label == 'scalar-pair'):
+            datasets = [data[3]]
+            pairs = data[4]
+        elif (label == 'vector'):
+            datasets = [data[3], data[4]]
+        elif (label == 'scalar'):
+            datasets = [data[3]]
+            
+        if label.endswith('pair'):
+            labels = np.unique(pairs)
+            for t, array in zip(vectors, datasets):
+                for label in labels:
+                    mask = pairs == label
+                    blocks[t+'-'+label] = pv.PolyData(points[mask])
+                    blocks[t+'-'+label].point_arrays[t] = array[mask]
+        else:
+            for t, array in zip(vectors, datasets):
+                blocks[t] = pv.PolyData(points)
+                blocks[t].point_arrays[t] = array
+                    
+        blocks.save(fname, binary=False)
     
     def magnetic_intensity(self, fname, run, ux, uy, uz, atm,
                            h_range, k_range, l_range, indices, symop,
@@ -735,8 +787,12 @@ class Model:
             
         Sx, Sy, Sz = self.load_magnetic(fname, run)
         
-        Sx, Sy, Sz = Sx[mask], Sy[mask], Sz[mask]
+        n_atm = np.size(Sx) // (nu*nv*nw)
         
+        Sx = Sx.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        Sy = Sy.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        Sz = Sz.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+                
         I_calc = monocrystal.magnetic(Sx, Sy, Sz, ux, uy, uz, atm,
                                       h_range, k_range, l_range, indices,
                                       symop, T, B, R, twins, variants,
@@ -751,7 +807,9 @@ class Model:
                     
         A_r = self.load_occupational(fname, run)
         
-        A_r = A_r[mask]
+        n_atm = np.size(A_r) // (nu*nv*nw)
+        
+        A_r = A_r.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
                 
         I_calc = monocrystal.occupational(A_r, occupancy, ux, uy, uz, atm,
                                           h_range, k_range, l_range, indices, 
@@ -767,7 +825,11 @@ class Model:
                 
         Ux, Uy, Uz = self.load_displacive(fname, run)
         
-        Ux, Uy, Uz = Ux[mask], Uy[mask], Uz[mask]
+        n_atm = np.size(Ux) // (nu*nv*nw)
+        
+        Ux = Ux.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        Uy = Uy.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        Uz = Uz.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
             
         U_r = displacive.products(Ux, Uy, Uz, p)
                 

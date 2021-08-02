@@ -95,6 +95,22 @@ class Presenter:
         self.view.index_changed_norm_calc(self.redraw_plot_calc)
         
         self.view.button_clicked_calc(self.recalculate_intensity)
+        
+        # ---
+        
+        self.view.button_clicked_save_intensity_exp(self.save_intensity_exp)
+        self.view.button_clicked_save_intensity_ref(self.save_intensity_ref)
+        self.view.button_clicked_save_chi_sq(self.save_chi_sq)
+        self.view.button_clicked_save_1d(self.save_correlations_1d)
+        self.view.button_clicked_save_3d(self.save_correlations_3d)
+        self.view.button_clicked_save_calc(self.save_intensity_calc)
+        
+        self.view.button_clicked_save_CIF(self.save_CIF)
+        # self.view.button_clicked_save_dis_CIF(self.save_dis_CIF)
+        self.view.button_clicked_save_CSV(self.save_correlations_CSV)
+        self.view.button_clicked_save_VTK(self.save_correlations_VTK)
+        
+        # ---
 
         self.magnetic = False
         self.occupational = False
@@ -150,7 +166,11 @@ class Presenter:
             signal, error_sq = self.signal_m.data, self.error_sq_m.data
             
             self.model.save_region_of_interest(self.fname, signal, error_sq)
-        
+            
+        if (self.view.get_atom_site_recalculation_row_count() > 0):
+            if (self.intensity is not None):
+                self.model.save_recalculation(self.fname, self.intensity)
+    
     def load_application(self):
                 
         self.fname = self.view.open_dialog_load()
@@ -167,13 +187,15 @@ class Presenter:
                 self.connect_table_signals()
                 self.view.set_atom_combo(atom)
                 self.view.set_ion_combo(ion)
+                self.view.change_site_check()
                 lat = self.view.get_lattice()
                 self.lattice_variables(lat)
-                self.fname_cif = self.fname+'.cif'
+                self.fname_cif = fname+'.cif'
             if (self.view.get_experiment_table_row_count() > 0):
                 self.load_data_thread('{}-intensity.npz'.format(fname), None)
                 signal, error_sq =self.model.load_region_of_interest(fname)
-                self.signal_m, self.error_sq_m = signal, error_sq
+                self.signal_m = self.model.mask_array(signal)
+                self.error_sq_m = self.model.mask_array(error_sq)
                 self.view.format_experiment_table()
                 self.view.format_recalculation_table()
                 self.connect_experiment_buttons()
@@ -228,7 +250,212 @@ class Presenter:
                 self.plot_3d()
             if (self.view.get_atom_site_recalculation_row_count() > 0):
                 self.view.format_atom_site_recalculation_table()
+                intensity = self.model.load_recalculation(fname)
+                if (intensity is not None):
+                    self.intensity = intensity
+                    self.redraw_plot_calc()    
+                    
+    def save_intensity_exp(self):
+        
+        filename = self.view.save_intensity_exp()
+        
+        if filename:
+            
+            if (filename.endswith('.png') or filename.endswith('.pdf')):
+                parse = filename.split('.')
+                filename, ext = '.'.join(parse[0:-1]), parse[-1]
+            else:
+                ext =  '.pdf'
                 
+            fig_h = self.canvas_exp_h.figure
+            fig_k = self.canvas_exp_k.figure
+            fig_l = self.canvas_exp_l.figure
+            
+            fig_h.savefig(filename+'-0kl'+ext)
+            fig_k.savefig(filename+'-h0l'+ext)
+            fig_l.savefig(filename+'-hk0'+ext)
+            
+    def save_intensity_ref(self):
+        
+        filename = self.view.save_intensity_ref()
+        
+        if filename:
+            
+            if (filename.endswith('.png') or filename.endswith('.pdf')):
+                parse = filename.split('.')
+                filename, ext = '.'.join(parse[0:-1]), parse[-1]
+            else:
+                ext =  '.pdf'
+                
+            fig = self.canvas_ref.figure
+            fig.savefig(filename+ext)
+            
+    def save_chi_sq(self):
+        
+        filename = self.view.save_chi_sq()
+        
+        if filename:
+            
+            if (filename.endswith('.png') or filename.endswith('.pdf')):
+                parse = filename.split('.')
+                filename, ext = '.'.join(parse[0:-1]), parse[-1]
+            else:
+                ext =  '.pdf'
+            
+            fig = self.canvas_chi_sq.figure
+            fig.savefig(filename+ext)
+            
+    def save_correlations_1d(self):
+        
+        filename = self.view.save_correlations_1d()
+            
+        if filename:
+            
+            if (filename.endswith('.png') or filename.endswith('.pdf')):
+                parse = filename.split('.')
+                filename, ext = '.'.join(parse[0:-1]), parse[-1]
+            else:
+                ext =  '.pdf'
+            
+            fig = self.canvas_1d.figure
+            fig.savefig(filename+ext)
+            
+    def save_correlations_3d(self):
+        
+        filename = self.view.save_correlations_3d()
+            
+        if filename:
+            
+            if (filename.endswith('.png') or filename.endswith('.pdf')):
+                parse = filename.split('.')
+                filename, ext = '.'.join(parse[0:-1]), parse[-1]
+            else:
+                ext =  '.pdf'
+                
+            fig = self.canvas_3d.figure
+            fig.savefig(filename+ext)
+      
+    def save_intensity_calc(self):
+        
+        filename = self.view.save_intensity_calc()              
+            
+        if filename:
+            
+            fig = self.canvas_calc.figure
+            fig.savefig(filename)
+            
+    def save_CIF(self):
+        
+        if (self.view.get_unit_cell_table_row_count() > 0):
+        
+            fname = self.view.save_CIF()
+            
+            if fname:
+                
+                if (not fname.endswith('.cif')): fname += '.cif'
+                                        
+                folder, filename = self.fname_cif.rsplit('/', 1)
+                
+                atm = self.view.get_atom()
+                
+                u = self.view.get_u()    
+                v = self.view.get_v()    
+                w = self.view.get_w()
+                
+                nu = self.view.get_nu()
+                nv = self.view.get_nv()
+                nw = self.view.get_nw()
+                
+                occ = self.view.get_occupancy()
+
+                U11 = self.view.get_U11()    
+                U22 = self.view.get_U22()    
+                U33 = self.view.get_U33()    
+                U23 = self.view.get_U23()    
+                U13 = self.view.get_U13()    
+                U12 = self.view.get_U12() 
+                
+                disp = np.column_stack((U11,U22,U33,U23,U13,U12))
+                
+                mu1 = self.view.get_mu1()    
+                mu2 = self.view.get_mu2()    
+                mu3 = self.view.get_mu3()
+                
+                mom = np.column_stack((mu1,mu2,mu3))
+                
+                self.model.save_supercell(fname, atm, occ, disp, mom, u, v, w, 
+                                          nu, nv, nw, folder, filename)
+        
+    # def save_dis_CIF(self):
+        
+    #     filename = self.view.save_CIF()
+        
+    #     if filename:
+        
+    def save_correlations_CSV(self):
+        
+        if (self.view.get_pairs_1d_table_row_count() > 0):
+        
+            filename = self.view.save_correlations_CSV()
+            
+            if filename:
+                
+                if (not filename.endswith('.csv')): filename += '.csv'
+                
+                disorder = self.view.get_correlations_1d()
+                average = self.view.average_1d_checked()
+                
+                if (disorder != 'Occupancy'):
+                    if average:
+                        data = self.d, self.corr1d, self.coll1d
+                        header = 'd,corr,coll'
+                    else:
+                        data = self.d, self.corr1d, self.coll1d, \
+                               self.atm_pair1d
+                        header = 'd,corr,coll,pair'
+                else:
+                    if average:
+                        data = self.d, self.corr1d
+                        header = 'd,corr'
+                    else:
+                        data = self.d, self.corr1d, self.atm_pair1d
+                        header = 'd,corr,pair'
+                    
+                self.model.save_correlations_1d(filename, data, header)
+        
+    def save_correlations_VTK(self):
+        
+        if (self.view.get_pairs_3d_table_row_count() > 0):
+        
+            filename = self.view.save_correlations_VTK()
+            
+            if filename:
+                
+                if (not filename.endswith('.vtm')): filename += '.vtm'
+                
+                disorder = self.view.get_correlations_3d()
+                average = self.view.average_3d_checked()
+                
+                if (disorder != 'Occupancy'):
+                    if average:
+                        data = self.dx, self.dy, self.dz, \
+                               self.corr3d, self.coll3d
+                        label = 'vector-pair'
+                    else:
+                        data = self.dx, self.dy, self.dz, \
+                               self.corr3d, self.coll3d, self.atm_pair3d
+                        label = 'vector'
+                else:
+                    if average:
+                        data = self.dx, self.dy, self.dz, self.corr3d
+                        label = 'scalar-pair'
+                    else:
+                        data = self.dx, self.dy, self.dz, \
+                               self.corr3d, self.atm_pair3d
+                        label = 'scalar'
+                        
+                self.model.save_correlations_3d(filename, data, label)
+            
     def exit_application(self):
         
         if self.view.close_application():
@@ -549,8 +776,10 @@ class Presenter:
 
         lat = self.view.get_lattice()
                 
-        if (lat == 'Cubic' or lat == 'Hexagonal'):
+        if (lat == 'Tetragonal' or lat == 'Hexagonal'):
             b = a
+        elif (lat == 'Cubic'):
+            c = b = a
         elif (lat == 'Rhobmohedral'):
             c = b = a
             gamma = beta = alpha
@@ -1218,7 +1447,7 @@ class Presenter:
         
         min_h_raw, max_h_raw = h_range_raw
         min_k_raw, max_k_raw = k_range_raw
-        min_l_raw, max_l_raw = l_range_raw     
+        min_l_raw, max_l_raw = l_range_raw   
                 
         ih_min, \
         ih_max = self.model.crop_parameters(min_h, max_h,
@@ -1233,9 +1462,9 @@ class Presenter:
         h_slice = [ih_min, ih_max+1]
         k_slice = [ik_min, ik_max+1]
         l_slice = [il_min, il_max+1]
-                
-        self.signal_m  = self.model.crop(signal, h_slice, k_slice, l_slice)
-        self.error_sq_m  = self.model.crop(error_sq, h_slice, k_slice, l_slice)
+                        
+        self.signal_m = self.model.crop(signal, h_slice, k_slice, l_slice)
+        self.error_sq_m = self.model.crop(error_sq, h_slice, k_slice, l_slice)
         
         signal = self.signal_m 
         error_sq = self.error_sq_m 
@@ -1262,6 +1491,12 @@ class Presenter:
         
         self.cropbin([min_h, max_h], [min_k, max_k], 
                      [min_l, max_l], [nh, nk, nl])
+        
+        signal = self.signal_m
+        error_sq = self.error_sq_m
+        
+        self.signal_m = self.model.mask_array(signal)
+        self.error_sq_m = self.model.mask_array(error_sq)
         
         self.view.create_experiment_table()
                 
@@ -1300,6 +1535,12 @@ class Presenter:
         
         self.cropbin([min_h, max_h], [min_k, max_k], 
                      [min_l, max_l], [nh, nk, nl])
+        
+        signal = self.signal_m
+        error_sq = self.error_sq_m
+        
+        self.signal_m = self.model.mask_array(signal)
+        self.error_sq_m = self.model.mask_array(error_sq)
     
         self.view.create_experiment_table()
         
@@ -1338,6 +1579,12 @@ class Presenter:
         
         self.cropbin([min_h, max_h], [min_k, max_k], 
                      [min_l, max_l], [nh, nk, nl])
+        
+        signal = self.signal_m
+        error_sq = self.error_sq_m
+        
+        self.signal_m = self.model.mask_array(signal)
+        self.error_sq_m = self.model.mask_array(error_sq)
         
         self.view.create_experiment_table()
         
@@ -1387,10 +1634,10 @@ class Presenter:
         
         signal = self.signal_m
         error_sq = self.error_sq_m
-
+        
         self.signal_m = self.model.mask_array(signal)
         self.error_sq_m = self.model.mask_array(error_sq)
-        
+                
     def punch_complete(self):
                                 
         self.redraw_plot_exp()
@@ -1424,8 +1671,14 @@ class Presenter:
         self.cropbin([min_h, max_h], [min_k, max_k], 
                      [min_l, max_l], [nh, nk, nl])
         
-        self.redraw_plot_exp()
+        signal = self.signal_m
+        error_sq = self.error_sq_m
         
+        self.signal_m = self.model.mask_array(signal)
+        self.error_sq_m = self.model.mask_array(error_sq)
+
+        self.redraw_plot_exp()
+                
         self.view.enable_cropbin_signals(True)
                 
     def populate_recalculation_table(self):
@@ -1652,8 +1905,8 @@ class Presenter:
         
         self.mu, self.mu1, self.mu2, self.mu3, self.g = mu, mu1, mu2, mu3, g
         
-        u = self.view.get_u()    
-        v = self.view.get_v()    
+        u = self.view.get_u()
+        v = self.view.get_v()
         w = self.view.get_w()
         
         self.u, self.v, self.w = u, v, w
@@ -2862,7 +3115,7 @@ class Presenter:
         
         I_recalc = self.model.blurring(intensity, sigma)
         
-        self.I_recalc = I_recalc
+        self.intensity = I_recalc
 
     def recalculate_intensity_complete(self):
         
@@ -2889,8 +3142,8 @@ class Presenter:
         
         if self.intensity is not None:
         
-            self.view.set_min_calc(self.I_recalc.min())
-            self.view.set_max_calc(self.I_recalc.max())
+            self.view.set_min_calc(self.intensity.min())
+            self.view.set_max_calc(self.intensity.max())
             
             self.draw_plot_calc()
         

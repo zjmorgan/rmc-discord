@@ -44,7 +44,7 @@ def _offset(matrix, minimum):
 
 def plot_exp_h(canvas, data, h, ih, min_k, min_l, max_k, max_l, size_k, size_l, 
                matrix_h, scale_h, norm, vmin, vmax):
-    
+        
     extents_h = [min_k, max_k, min_l, max_l]
     
     ext_min_h, ext_max_h = _transform_extents(matrix_h, extents_h)
@@ -96,9 +96,9 @@ def plot_exp_h(canvas, data, h, ih, min_k, min_l, max_k, max_l, size_k, size_l,
     
     ax_h.minorticks_on()
     
-    fig.tight_layout(pad=1.08)
+    fig.tight_layout(pad=2.16)
     
-    cb = fig.colorbar(im_h, ax=ax_h, orientation='horizontal')
+    cb = fig.colorbar(im_h, ax=ax_h, orientation='horizontal', pad=0.2)
     cb.ax.minorticks_on()
     
     if (norm == 'Linear'):
@@ -161,9 +161,9 @@ def plot_exp_k(canvas, data, k, ik, min_h, min_l, max_h, max_l, size_h, size_l,
     
     ax_k.minorticks_on()
     
-    fig.tight_layout(pad=1.08)
+    fig.tight_layout(pad=2.16)
     
-    cb = fig.colorbar(im_k, ax=ax_k, orientation='horizontal')
+    cb = fig.colorbar(im_k, ax=ax_k, orientation='horizontal', pad=0.2)
     cb.ax.minorticks_on()
     
     if (norm == 'Linear'):
@@ -226,9 +226,9 @@ def plot_exp_l(canvas, data, l, il, min_h, min_k, max_h, max_k, size_h, size_k,
     
     ax_l.minorticks_on()
     
-    fig.tight_layout(pad=1.08)
+    fig.tight_layout(pad=2.16)
  
-    cb = fig.colorbar(im_l, ax=ax_l, orientation='horizontal')
+    cb = fig.colorbar(im_l, ax=ax_l, orientation='horizontal', pad=0.2)
     cb.ax.minorticks_on()
     
     if (norm == 'Linear'):
@@ -339,7 +339,7 @@ def plot_ref(canvas, data, hkl, slice_hkl, i_hkl,
     
     ax.axes.tick_params(labelsize='small')
 
-    fig.tight_layout(pad=3.24)
+    fig.tight_layout(pad=2.16)
     
     cb = fig.colorbar(im, ax=ax)
     cb.ax.minorticks_on()
@@ -442,7 +442,7 @@ def chi_sq(canvas, plot0, plot1, acc_moves, rej_moves,
 
     #ax.set_title(r'\chi^2$', fontsize='small') 
     
-    fig.tight_layout(pad=3.24)
+    fig.tight_layout(pad=2.16)
     canvas.draw()
     
 class MinorSymLogLocator(Locator):
@@ -577,7 +577,7 @@ def correlations_1d(canvas, d, data, error, atm_pair, disorder,
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     
-    fig.tight_layout(pad=3.24)
+    fig.tight_layout(pad=2.16)
     canvas.draw()
     
 def _mask_plane(dx, dy, dz, h, k, l, d, A, B, tol):
@@ -764,7 +764,7 @@ def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, atm_pair3d,
 
     ax.axes.tick_params(labelsize='small')
     
-    fig.tight_layout(pad=3.24)
+    fig.tight_layout(pad=2.16)
     canvas.draw()
     
     return H, K, L, d
@@ -885,7 +885,7 @@ def plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T,
     
     ax.axes.tick_params(labelsize='small')
 
-    fig.tight_layout(pad=3.24)
+    fig.tight_layout(pad=2.16)
     
     cb = fig.colorbar(im, ax=ax)
     cb.ax.minorticks_on()
