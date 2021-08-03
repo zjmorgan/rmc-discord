@@ -77,7 +77,48 @@ Once a supercell is defined, the experimental data can be loaded and preprocesse
   - The *Punch* can be done in multiple passes.
   - The removal can be *Reset*.
 
+  <p align="center">
+  <img src="bixbyite-gui-intensity.png" alt="Bixbyite GUI crystal tab" width="640">
+  <br />
+  Crystal tab
+  </p>
+
 **Hints**
 - View the data in logarithmic scale to better observe the diffuse scattering.
 - Select a region of interest that covers at least the primitive features of the observed diffuse scattering.
 - Check for complete Bragg peak removal by switching between linear and logarithmic scaling.
+
+### **Refinement tab**
+
+Setup and run a refinement.
+
+1. Choose the refinement type by selecting the *Magnetic*, *Occupational*, or *Displacive* check box
+  - Under each corresponding tab is a set of options relevant to that disorder type.
+  - Choose *Magnetic* and leave the check box marked for *Fixed moment*
+2. Set the refinement temperature prefactor and decay constant
+  - The temperature *Prefactor* is the initial temperature.
+  - The decay *Constant* is the rate at which the temperature decreases with each move as a Newtonian cooling function.
+3. Choose between a single run or *Batch* job by specifying the number of runs.
+4. Choose the Gaussian filter size for each $$h$$, $$k$$, and $$l$$ size in number of pixels
+  - Using Gaussian filtering reduces the noise at the expense of increasing the time of the refinement.
+5. Start the refinement by clicking *Run*
+  - The refinement may be stopped by clicking *Stop*.
+  - Once stopped, the refinement may be continued or *Reset* for a new refinement.
+  - View the intensity plot type to compare the *Calculated* and *Experiment* datasets.
+  - Change the slice, scaling, and colorbar limits.
+  - View different refinement static plots.
+
+<p align="center">
+<img src="bixbyite-gui-refinement.png" alt="Bixbyite GUI crystal tab" width="640">
+<br />
+Crystal tab
+</p>
+
+**Hints**
+- One cycle is defined as the number of moves equal to the number of atoms in the supercell.
+  - Typically 100 cycles is sufficient to obtain a good refinement.
+- Start off with only a few cycles (e.g. 10) to check the temperature prefactor and decay constant.
+  - At the beginning, the temperature needs to be high enough such that most bad moves are accepted and very few are rejected.
+  - The decay rate should be cool the system gradually such that more and more bad moves are rejected, and by the end, nearly any bad moves are accepted.
+  - Increasing the number of cycles by 10 typically requires decreasing the decay rate by a factor of 10 to keep a similar cooling schedule.
+- Increasing the number of batch jobs improves the statistics of the correlations and the recalculated diffuse scattering pattern.
