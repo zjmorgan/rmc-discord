@@ -78,7 +78,7 @@ Once a supercell is defined, the experimental data can be loaded and preprocesse
   - The removal can be *Reset*.
 
   <p align="center">
-  <img src="bixbyite-gui-intensity.png" alt="Bixbyite GUI crystal tab" width="640">
+  <img src="bixbyite-gui-intensity.png" alt="Bixbyite GUI intensity tab" width="640">
   <br />
   Crystal tab
   </p>
@@ -109,7 +109,7 @@ Setup and run a refinement.
   - View different refinement static plots.
 
 <p align="center">
-<img src="bixbyite-gui-refinement.png" alt="Bixbyite GUI crystal tab" width="640">
+<img src="bixbyite-gui-refinement.png" alt="Bixbyite GUI refinement tab" width="640">
 <br />
 Crystal tab
 </p>
@@ -120,5 +120,55 @@ Crystal tab
 - Start off with only a few cycles (e.g. 10) to check the temperature prefactor and decay constant.
   - At the beginning, the temperature needs to be high enough such that most bad moves are accepted and very few are rejected.
   - The decay rate should be cool the system gradually such that more and more bad moves are rejected, and by the end, nearly any bad moves are accepted.
+  - Cooling too quickly can quench the system into a metastable state.
   - Increasing the number of cycles by 10 typically requires decreasing the decay rate by a factor of 10 to keep a similar cooling schedule.
 - Increasing the number of batch jobs improves the statistics of the correlations and the recalculated diffuse scattering pattern.
+
+### **Correlations tab**
+
+After completing a refinement, the pair correlations can be calculated.
+
+1. There are two tabs for calculating correlations: *Spherical average* and *Three-dimensional*
+  - In each, the *Fraction* determines the largest separation vector that can be constructed multiplying this value by the longest separation vector possible in the supercell.
+  - In each, the *Tolerance* corresponds to the maximum number of decimal places for distinguishing unique pairs.
+    - Specifying 1e-2, for example, means that distances 0.333 and 0.334 are equivalent distances since they round to 0.33 using two decimal places.
+  - The *Average* check box averages common separation vectors with different atom-pair types.
+    - By unclicking *Average*, it is possible to only plot certain atom-pair types by utilizing the check boxes in the table.
+  - The correlations may be saved as either a CSV file or VTK file which can be opened in external programs like [ParaView](https://www.paraview.org/) for visualization.
+2. Calculate the one-dimensional and three-dimensional correlations
+  - In the upper right of each tab are the different correlation options: *Magnetic*, *Occupancy*, and *Displacement*
+    - Select *Magnetic* type to and click *Calculate* to obtain the correlations.
+    - Increase the *Fraction* to 0.175.
+  - In the upper left of each tab is the option to plot the *Correlations* or *Collinearity* (if *Magnetic* or *Displacement*).
+  - In the bottom left is the option to plot in *Linear* or *Logarithmic* scale.
+
+3. The additional options for *Three-dimensional* correlations include choosing an $$hkl$$ slice
+ - Use integer $$h$$, $$k$$, and $$l$$ to specify the Miller plane.
+ - Choose a distance $$d$$ from the origin where $$(hkl)\cdot[uvw]=d$$.
+
+<p align="center">
+<img src="bixbyite-gui-correlations.png" alt="Bixbyite GUI correlations tab" width="640">
+<br />
+Crystal tab
+</p>
+
+**Hints**
+- Start with a small *Fraction* (e.g. 0.125) and gradually increase it by increments of 0.025 to 0.05 to extend the cutoff distance of pair correlation calculation.
+   - Specifying too large a fraction will consume more memory than may be available.
+- Increase the *Tolerance* (e.g. 1e-4 to 1e-3) if more unique pairs by separation vector are identified than actually exist.
+   - Unique pairs are identified by common atom pair type and separation distance(s).
+
+### **Recalculation tab**
+
+<p align="center">
+<img src="bixbyite-gui-recalculation.png" alt="Bixbyite GUI recalculation tab" width="640">
+<br />
+Crystal tab
+</p>
+
+**Hints**
+- Although it is possible to recalculate the full volume of reciprocal space, it requires more time than simply calculating a slice.
+  - If specifying a slice, make one of the sizes of $$h$$, $$k$$, and $$l$$ equal to 1 and set the minimum value for the slice.
+- Applying *Laue* symmetry to the data can improve the recalculated pattern.
+  - At most, the diffuse scattering will have at most the Laue symmetry of the crystal.
+  - The nature of the short range ordering can have lower symmetry than that of the average structure.
