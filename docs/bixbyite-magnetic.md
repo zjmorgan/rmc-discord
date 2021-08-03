@@ -34,28 +34,50 @@ To define a supercell, it is first necessary to construct a unit cell from the a
      - Create a supercell with size $$N_1=4$$, $$N_2=4$$, and $$N_3=4$$ by entering the number of cells along each crystal axes.
 3. Optionally save the CIF file of the supercell and visualize it in external program [VESTA](https://jp-minerals.org/vesta/en/)
 
+<p align="center">
+<img src="bixbyite-gui-crystal.png" alt="Bixbyite GUI crystal tab" width="640">
+<br />
+Crystal tab
+</p>
+
 **Hints**
-- The size of the supercell defines the maximum resolution of the refined reciprocal space pattern
+- The size of the supercell defines the maximum resolution of the refined reciprocal space pattern.
   - A larger supercell is needed to refine finer reciprocal space features.
     - Along each dimension $$i$$, the resolution in reciprocal lattice units is $$1/N_i$$.
   - Start with a small number (e.g. $$4\times4\times4$$) and increase as needed.
     - Too large of a supercell uses more memory and takes longer to refine.
+    - Too small of a supercell may not resolve the diffuse scattering features.
 
 ### **Intensity tab**
 
 Once a supercell is defined, the experimental data can be loaded and preprocessed for refinement
 
+1. Load a NeXus (NXS) with the diffuse scattering data
+  - The button is located on the upper left corner of window *Load NeXus file*.
+  - The loaded data are displayed as three separate reciprocal space slices: $$(0kl)$$, $$(h0l)$$, and $$(hk0)$$.
+    - The table displays the binning information along each reciprocal space dimension.
+    - The tabs give basic options for rebinning, cropping, and punching out Bragg peaks.
+2. View the data
+  - In the upper left corner of the plots, select between the *Intensity* and *Error*.
+  - In the lower right corner of the plots, choose between *Linear* and *Logarithmic* scaling.
+  - Change the *Min* and *Max* limits of the colorbar.
+  - Change the index of the slices displayed for $$h$$, $$k$$, and $$l$$.
+3. Rebin and crop the data (if necessary)
+  - The table can be directly modified updating the *size*, *min*, and *max* values.
+  - The *Rebin* tab gives binning options that bins the data into equal sizes.
+     - The *Centered at integer* check boxes give only the options where the binning is centered over each integer $$h$$, $$k$$, and $$l$$.
+  - The *Crop* table allows the $$h$$-, $$k$$-, and $$l$$-range to be specified.
+     - The *Reset* button resets the binning and cropping to the original values of the loaded data.
+  - Rebin the data to $$0.08\times0.08\times0.08$$ and crop to 0-4 along each dimension.
+3. Remove the Bragg peaks
+  - Select the *Centering* of the crystal (*I* for body centering).
+  - Choose between *Box* and *Ellipsoid*.
+  - Choose the size for each radius in number of pixels.
+  - Decrease the *Outlier* parameter to remove more data.
+  - The *Punch* can be done in multiple passes.
+  - The removal can be *Reset*.
 
 **Hints**
-
-
-### **Refinement tab**
-
-
-
-### **Correlations tab**
-
-
-
-
-### **Recalculation tab**
+- View the data in logarithmic scale to better observe the diffuse scattering.
+- Select a region of interest that covers at least the primitive features of the observed diffuse scattering.
+- Check for complete Bragg peak removal by switching between linear and logarithmic scaling.

@@ -1,0 +1,74 @@
+data_global
+_chemical_name_mineral 'Ice Ih deuterated'
+loop_
+_publ_author_name
+'Peterson S'
+'Levy H'
+_journal_name_full 'Acta Crystallographica'
+_journal_volume 10 
+_journal_year 1957
+_journal_page_first 70
+_journal_page_last 76
+_publ_section_title
+;
+ A Single-Crystal Neutron Diffraction Study of Heavy Ice
+ _cod_database_code 1008748
+;
+_database_code_amcsd 0016627
+_chemical_formula_sum 'O D2'
+_cell_length_a 4.513
+_cell_length_b 4.513
+_cell_length_c 7.355
+_cell_angle_alpha 90
+_cell_angle_beta 90
+_cell_angle_gamma 120
+_cell_volume 129.731
+_exptl_crystal_density_diffrn      1.025
+_symmetry_space_group_name_H-M 'P 63/m m c'
+loop_
+_space_group_symop_operation_xyz
+  'x,y,z'
+  '-x,-x+y,1/2+z'
+  'x,x-y,1/2-z'
+  '-x+y,-x,1/2-z'
+  'x-y,x,1/2+z'
+  '-y,-x,z'
+  'y,x,-z'
+  'y,-x+y,-z'
+  '-y,x-y,z'
+  'x-y,-y,1/2+z'
+  '-x+y,y,1/2-z'
+  'x,y,1/2-z'
+  '-x,-y,1/2+z'
+  'x,x-y,z'
+  '-x,-x+y,-z'
+  'x-y,x,-z'
+  '-x+y,-x,z'
+  'y,x,1/2+z'
+  '-y,-x,1/2-z'
+  '-y,x-y,1/2-z'
+  'y,-x+y,1/2+z'
+  '-x+y,y,z'
+  'x-y,-y,-z'
+  '-x,-y,-z'
+loop_
+_atom_site_label
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_occupancy
+O1   0.33333   0.66667   0.06290   1.00000
+D1   0.33333   0.66667   0.19890   0.50000
+D2   0.45510   0.91020   0.01820   0.50000
+loop_
+_atom_site_aniso_label
+_atom_site_aniso_U_11
+_atom_site_aniso_U_22
+_atom_site_aniso_U_33
+_atom_site_aniso_U_12
+_atom_site_aniso_U_13
+_atom_site_aniso_U_23
+O1 1.84952 1.84952 6.54988 0.92863 0.00000 0.00000
+D1 2.49957 2.49957 8.13939 1.25365 0.00000 0.00000
+D2 2.55374 2.16681 8.35864 1.08340 0.34951 0.69902
+
