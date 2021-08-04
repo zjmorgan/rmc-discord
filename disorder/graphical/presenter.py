@@ -269,9 +269,9 @@ class Presenter:
             else:
                 ext =  '.pdf'
                 
-            fig_h = self.canvas_exp_h.figure
-            fig_k = self.canvas_exp_k.figure
-            fig_l = self.canvas_exp_l.figure
+            fig_h = self.view.canvas_exp_h.figure
+            fig_k = self.view.canvas_exp_k.figure
+            fig_l = self.view.canvas_exp_l.figure
             
             fig_h.savefig(filename+'-0kl'+ext)
             fig_k.savefig(filename+'-h0l'+ext)
@@ -289,7 +289,7 @@ class Presenter:
             else:
                 ext =  '.pdf'
                 
-            fig = self.canvas_ref.figure
+            fig = self.view.canvas_ref.figure
             fig.savefig(filename+ext)
             
     def save_chi_sq(self):
@@ -304,7 +304,7 @@ class Presenter:
             else:
                 ext =  '.pdf'
             
-            fig = self.canvas_chi_sq.figure
+            fig = self.view.canvas_chi_sq.figure
             fig.savefig(filename+ext)
             
     def save_correlations_1d(self):
@@ -319,7 +319,7 @@ class Presenter:
             else:
                 ext =  '.pdf'
             
-            fig = self.canvas_1d.figure
+            fig = self.view.canvas_1d.figure
             fig.savefig(filename+ext)
             
     def save_correlations_3d(self):
@@ -334,7 +334,7 @@ class Presenter:
             else:
                 ext =  '.pdf'
                 
-            fig = self.canvas_3d.figure
+            fig = self.view.canvas_3d.figure
             fig.savefig(filename+ext)
       
     def save_intensity_calc(self):
@@ -343,7 +343,7 @@ class Presenter:
             
         if filename:
             
-            fig = self.canvas_calc.figure
+            fig = self.view.canvas_calc.figure
             fig.savefig(filename)
             
     def save_CIF(self):
