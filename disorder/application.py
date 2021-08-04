@@ -8,6 +8,8 @@ from disorder.graphical.model import Model
 from disorder.graphical.view import View
 from disorder.graphical.presenter import Presenter
 
+from disorder.diffuse.scattering import parallelism
+
 class Window:
 
   def __init__(self, view, adder):
@@ -19,6 +21,7 @@ class Window:
      
 def run():
     app = QtWidgets.QApplication(sys.argv)
+    parallelism()
     view = View()
     adder = Presenter(Model(), view)
     window = Window(view, adder)

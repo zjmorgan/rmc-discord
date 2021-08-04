@@ -22,6 +22,8 @@ Encountering the error `error: Microsoft Visual C++ 14.0 is required` when build
 2.	Open *Visual Studio Installer*, click *Modify* on the installed version, check *Desktop development with C++*, and install the default tools shown by clicking *Modify*.
 3.	Relaunch Anaconda or Miniconda and try `pip install rmc-discord` again.
 
+Encountering the error `ValueError: numpy.ndarray size changed, may indicate binary incompatibility. Expected 88 from C header, got 80 from PyObject` may require upgrading NumPy. Type `pip install numpy -U` to resolve the issue.
+
 Alternatively, the program can be build directly from source.
 
 ## **Build from source**
