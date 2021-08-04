@@ -18,7 +18,7 @@ import pyvista as pv
 class Model:
 
     def __init__(self):
-        pass
+        scattering.parallelism()
     
     def supercell_size(self, n_atm, nu, nv, nw):
         

@@ -19,7 +19,7 @@ class Window:
   def show(self):
       self.view.show()
      
-def run():
+def run(): 
     app = QtWidgets.QApplication(sys.argv)
     parallelism()
     view = View()
