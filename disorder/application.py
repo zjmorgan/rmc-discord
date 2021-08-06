@@ -7,6 +7,7 @@ import sys
 from disorder.graphical.model import Model
 from disorder.graphical.view import View
 from disorder.graphical.presenter import Presenter
+from disorder.graphical.utilities import report_exception
 
 from disorder.diffuse.scattering import parallelism
 
@@ -26,4 +27,5 @@ def run():
     adder = Presenter(Model(), view)
     window = Window(view, adder)
     window.show()    
+    sys.excepthook = report_exception
     sys.exit(app.exec_())

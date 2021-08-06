@@ -1,12 +1,16 @@
 #!/ur/bin/env/python3
 
+import re
 import sys
 import traceback
+import logging
 import inspect
 
 from PyQt5 import QtWidgets, QtGui, QtCore
 
 from distutils.util import strtobool
+
+from IPython.core.ultratb import ColorTB
 
 class FractionalDelegate(QtWidgets.QItemDelegate):
     
@@ -223,3 +227,21 @@ def load_gui(ui, settings):
                     else:
                         item = QtWidgets.QTableWidgetItem(cellText)
                         obj.setItem(row, col, item)
+
+def report_exception(*args):
+    ansi = re.compile('\x1b' + r'\[([\dA-Fa-f;]*?)m')
+    if len(args) == 3:
+        error_type, error, trace = args[:3]
+    elif len(args) == 1:
+        exc = args[0]
+        error_type, error, trace = exc.__class__, exc, exc.__traceback__
+    message = ''.join(traceback.format_exception_only(error_type, error))
+    information = ColorTB(mode="Context").text(error_type, error, trace)
+    logging.error('Exception in GUI event loop\n'+information+'\n')
+    message_box = QtWidgets.QMessageBox()
+    message_box.setText(message)
+    message_box.setInformativeText(ansi.sub('', information))
+    message_box.setIcon(QtWidgets.QMessageBox.Warning)
+    layout = message_box.layout()
+    layout.setColumnMinimumWidth(layout.columnCount()-1, 600)
+    return message_box.exec_()
