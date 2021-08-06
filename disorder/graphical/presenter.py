@@ -106,7 +106,7 @@ class Presenter:
         self.view.button_clicked_save_calc(self.save_intensity_calc)
         
         self.view.button_clicked_save_CIF(self.save_CIF)
-        # self.view.button_clicked_save_dis_CIF(self.save_dis_CIF)
+        self.view.button_clicked_save_dis_CIF(self.save_dis_CIF)
         self.view.button_clicked_save_CSV(self.save_correlations_CSV)
         self.view.button_clicked_save_VTK(self.save_correlations_VTK)
         
@@ -388,11 +388,34 @@ class Presenter:
                 self.model.save_supercell(fname, atm, occ, disp, mom, u, v, w, 
                                           nu, nv, nw, folder, filename)
         
-    # def save_dis_CIF(self):
+    def save_dis_CIF(self):
         
-    #     filename = self.view.save_CIF()
+        if self.allocated:
+            
+            fname = self.view.save_dis_CIF()
+            
+            if fname:
+                
+                if (not fname.endswith('.cif')): fname += '.cif'
+                                            
+                folder, filename = self.fname_cif.rsplit('/', 1)
+                
+                Sx, Sy, Sz = self.Sx, self.Sy, self.Sz
+            
+                occupancy = self.occupancy
+                            
+                A_r = self.A_r
+                                        
+                Ux, Uy, Uz = self.Ux, self.Uy, self.Uz
+                
+                n_atm = self.n_atm
+                
+                delta = ((A_r.reshape(A_r.size // n_atm, n_atm)+1)*occupancy)
+                delta = delta.flatten()
         
-    #     if filename:
+                self.model.save_disorder(fname, Sx, Sy, Sz, delta, Ux, Uy, Uz, 
+                                         rx, ry, rz, nu, nv, nw, atm, A, 
+                                         folder, filename)
         
     def save_correlations_CSV(self):
         

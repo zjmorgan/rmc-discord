@@ -205,7 +205,7 @@ def unitcell(folder=None,
                             
             mom = symmetry.evaluate_mag(mag_symop, [Mx,My,Mz])
             
-            transformed = [tf+(tf < 0)-(tf > 1) for tf in transformed]
+            transformed = [tf+(tf < 0)-(tf >= 1) for tf in transformed]
 
             total.append(transformed)
             types.append(symbol)
@@ -1392,10 +1392,8 @@ def supercell(atm,
                              map(list, zip(*magn))))
             
             if (name.split('.')[-1] == 'cif'):
-                name = name.replace('cif','mcif')
-            else:
-                name = name
-            
+                name = name.replace('cif', 'mcif')
+
         outfile = open(name, mode='w')
         
         # supress cf.WriteOut() output
@@ -1408,26 +1406,31 @@ def supercell(atm,
         sys.stderr = sys.__stderr__
         
         outfile.close()
-
-def magnetic(Sx, 
-             Sy, 
-             Sz, 
-             rx, 
-             ry, 
-             rz,
-             nu,
-             nv,
-             nw,
-             atm, 
-             A,
-             folder=None,
-             filename=None,
-             xlim=[0,1], 
-             ylim=[0,1], 
-             zlim=[0,1]):
+        
+def disordered(Ux,
+               Uy, 
+               Uz, 
+               delta,
+               Sx,
+               Sy,
+               Sz,
+               rx, 
+               ry, 
+               rz,
+               nu,
+               nv,
+               nw,
+               atm, 
+               A,
+               name,
+               folder=None,
+               filename=None,
+               ulim=[0,1], 
+               vlim=[0,1], 
+               wlim=[0,1]):
     
     if (filename != None):
-        
+                
         cf = CifFile.ReadCif(os.path.join(folder, filename))
         cb = cf[[key for key in cf.keys() \
                  if cf[key].get('_cell_length_a') is not None][0]]
@@ -1452,7 +1455,7 @@ def magnetic(Sx,
                     combine.append(symmetry.binary(
                                    ','.join(symop.split(',')[:3]),
                                    ','.join(add_symop.split(',')[:3])))
-            symops = combine    
+            symops = combine
         
         for symop in symops:
             cb.RemoveLoopItem(symop)     
@@ -1464,9 +1467,9 @@ def magnetic(Sx,
               
         n_atm = atm.shape[0]
         
-        i0, i1 = xlim[0], xlim[1]
-        j0, j1 = ylim[0], ylim[1]
-        k0, k1 = zlim[0], zlim[1]
+        i0, i1 = ulim[0], ulim[1]
+        j0, j1 = vlim[0], vlim[1]
+        k0, k1 = wlim[0], wlim[1]
         
         na, nb, nc = i1-i0, j1-j0, k1-k0
                 
@@ -1482,20 +1485,16 @@ def magnetic(Sx,
         mask[i0:i1,j0:j1,k0:k1,:] = True
         mask = mask.flatten()
         
-        ux = rx[mask]
-        uy = ry[mask]
-        uz = rz[mask]
+        ux = rx[mask]+Ux[mask]
+        uy = ry[mask]+Uy[mask]
+        uz = rz[mask]+Uz[mask]
         
         A_inv = np.linalg.inv(A)
         
         u = A_inv[0,0]*ux+A_inv[0,1]*uy+A_inv[0,2]*uz
         v = A_inv[1,0]*ux+A_inv[1,1]*uy+A_inv[1,2]*uz
         w = A_inv[2,0]*ux+A_inv[2,1]*uy+A_inv[2,2]*uz
-    
-        #u = np.round(u,4)
-        #v = np.round(v,4)
-        #w = np.round(w,4)
-
+        
         mx = np.round(Sx[mask],4)
         my = np.round(Sy[mask],4)
         mz = np.round(Sz[mask],4)
@@ -1508,398 +1507,14 @@ def magnetic(Sx,
         moment = []
         for i in range(atom.shape[0]):
                                 
-            site.append([atom[i]+str(i), u[i]/na, v[i]/nb, w[i]/nc, atom[i]])
-            moment.append([atom[i]+str(i), mu[i], mv[i], mw[i], 'mx, my, mz'])
-        
-        cb.AddLoopItem((['_space_group_symop_operation_xyz'],
-                         ['']))
-        
-        cb['_space_group_symop_operation_xyz'] = ['x, y, z']
-    
-        cb.AddLoopItem((['_atom_site_label',
-                         '_atom_site_fract_x',
-                         '_atom_site_fract_y',
-                         '_atom_site_fract_z',
-                         '_atom_site_type_symbol'],
-                         map(list, zip(*site))))
-        
-        cb.AddLoopItem((['_atom_site_moment_label',
-                         '_atom_site_moment_crystalaxis_x',
-                         '_atom_site_moment_crystalaxis_y',
-                         '_atom_site_moment_crystalaxis_z',
-                         '_atom_site_moment_symmform'],
-                         map(list, zip(*moment))))
-        
-        if (filename.split('.')[-1] == 'cif'):
-            mfilename = filename.replace('cif','mcif')
-        else:
-            mfilename = filename
-        
-        outfile = open(folder+mfilename, mode='w')
-        
-        # supress cf.WriteOut() output
-        sys.stdout = io.StringIO()
-        sys.stderr = io.StringIO()
-        
-        outfile.write(cf.WriteOut())
-        
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
-        
-        outfile.close()
-        
-def occupational(delta, 
-                 rx, 
-                 ry, 
-                 rz,
-                 nu,
-                 nv,
-                 nw,
-                 atm, 
-                 A,
-                 folder=None,
-                 filename=None,
-                 xlim=[0,1], 
-                 ylim=[0,1], 
-                 zlim=[0,1]):
-    
-    if (filename != None):
-                
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf[[key for key in cf.keys() \
-                 if cf[key].get('_cell_length_a') is not None][0]]
-            
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
-        
-        loop_ops = ['_space_group_symop_operation_xyz',
-                    '_symmetry_equiv_pos_as_xyz',
-                    '_space_group_symop_magn_operation_xyz']
-                
-        ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                        if loop_key in cif_dict), None)          
-        
-        symops = cif_dict[loop_ops[ind_ops]]
-        
-        if (ind_ops == 2):
-            add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
-            combine = []
-            for symop in symops:
-                for add_symop in add_symops:
-                    combine.append(symmetry.binary(
-                                   ','.join(symop.split(',')[:3]),
-                                   ','.join(add_symop.split(',')[:3])))
-            symops = combine
-        
-        for symop in symops:
-            cb.RemoveLoopItem(symop)     
-        
-        atomic_sites = cb.GetLoopNames('_atom_site_label')
-        
-        for asite in atomic_sites:
-            cb.RemoveLoopItem(asite)
-              
-        n_atm = atm.shape[0]
-        
-        i0, i1 = xlim[0], xlim[1]
-        j0, j1 = ylim[0], ylim[1]
-        k0, k1 = zlim[0], zlim[1]
-        
-        na, nb, nc = i1-i0, j1-j0, k1-k0
-                
-        a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
-        b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
-        c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
-                        
-        cb['_cell_length_a'] = str(a*na)
-        cb['_cell_length_b'] = str(b*nb)
-        cb['_cell_length_c'] = str(c*nc)
-        
-        mask = np.full((nu,nv,nw,n_atm), fill_value=False)
-        mask[i0:i1,j0:j1,k0:k1,:] = True
-        mask = mask.flatten()
-        
-        ux = rx[mask]
-        uy = ry[mask]
-        uz = rz[mask]
-        
-        A_inv = np.linalg.inv(A)
-        
-        u = A_inv[0,0]*ux+A_inv[0,1]*uy+A_inv[0,2]*uz
-        v = A_inv[1,0]*ux+A_inv[1,1]*uy+A_inv[1,2]*uz
-        w = A_inv[2,0]*ux+A_inv[2,1]*uy+A_inv[2,2]*uz
-    
-        #u = np.round(u,4)
-        #v = np.round(v,4)
-        #w = np.round(w,4)
-        
-        atom = np.tile(atm, na*nb*nc)
-        
-        #sort = np.lexsort(np.stack((u,v,w,atom)))
-        
-        #u = u[sort]
-        #v = v[sort]
-        #w = w[sort]
-        #atom = atom[sort]
-                 
-        site = []
-        for i in range(atom.shape[0]):
-                                
-            site.append([atom[i]+str(i), 
-                         u[i]/na, 
-                         v[i]/nb, 
-                         w[i]/nc, 
-                         atom[i], 
-                         delta[i]])
-        
-        cb.AddLoopItem((['_space_group_symop_operation_xyz'],
-                         ['']))
-        
-        cb['_space_group_symop_operation_xyz'] = ['x, y, z']
-    
-        cb.AddLoopItem((['_atom_site_label',
-                         '_atom_site_fract_x',
-                         '_atom_site_fract_y',
-                         '_atom_site_fract_z',
-                         '_atom_site_type_symbol',
-                         '_atom_site_occupancy'],
-                         map(list, zip(*site))))
-        
-        mfilename = filename.replace('.cif','.occ.cif')
-        
-        outfile = open(folder+mfilename, mode='w')
-        
-        # supress cf.WriteOut() output
-        sys.stdout = io.StringIO()
-        sys.stderr = io.StringIO()
-        
-        outfile.write(cf.WriteOut())
-        
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
-        
-        outfile.close()
-        
-def displacive(Ux, 
-               Uy, 
-               Uz, 
-               rx, 
-               ry, 
-               rz,
-               nu,
-               nv,
-               nw,
-               atm, 
-               A,
-               folder=None,
-               filename=None,
-               xlim=[0,1], 
-               ylim=[0,1], 
-               zlim=[0,1]):
-    
-    if (filename != None):
-                
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf[[key for key in cf.keys() \
-                 if cf[key].get('_cell_length_a') is not None][0]]
-                    
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
-        
-        loop_ops = ['_space_group_symop_operation_xyz',
-                    '_symmetry_equiv_pos_as_xyz',
-                    '_space_group_symop_magn_operation_xyz']
-                
-        ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                        if loop_key in cif_dict), None)          
-        
-        symops = cif_dict[loop_ops[ind_ops]]
-        
-        if (ind_ops == 2):
-            add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
-            combine = []
-            for symop in symops:
-                for add_symop in add_symops:
-                    combine.append(symmetry.binary(
-                                   ','.join(symop.split(',')[:3]),
-                                   ','.join(add_symop.split(',')[:3])))
-            symops = combine
-        
-        for symop in symops:
-            cb.RemoveLoopItem(symop)     
-        
-        atomic_sites = cb.GetLoopNames('_atom_site_label')
-        
-        for asite in atomic_sites:
-            cb.RemoveLoopItem(asite)
-              
-        n_atm = atm.shape[0]
-        
-        i0, i1 = xlim[0], xlim[1]
-        j0, j1 = ylim[0], ylim[1]
-        k0, k1 = zlim[0], zlim[1]
-        
-        na, nb, nc = i1-i0, j1-j0, k1-k0
-
-        a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
-        b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
-        c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
-                        
-        cb['_cell_length_a'] = str(a*na)
-        cb['_cell_length_b'] = str(b*nb)
-        cb['_cell_length_c'] = str(c*nc)
-        
-        mask = np.full((nu,nv,nw,n_atm), fill_value=False)
-        mask[i0:i1,j0:j1,k0:k1,:] = True
-        mask = mask.flatten()
-        
-        ux = rx[mask]+Ux[mask]
-        uy = ry[mask]+Uy[mask]
-        uz = rz[mask]+Uz[mask]
-        
-        A_inv = np.linalg.inv(A)
-        
-        u = A_inv[0,0]*ux+A_inv[0,1]*uy+A_inv[0,2]*uz
-        v = A_inv[1,0]*ux+A_inv[1,1]*uy+A_inv[1,2]*uz
-        w = A_inv[2,0]*ux+A_inv[2,1]*uy+A_inv[2,2]*uz
-    
-        #u = np.round(u,4)
-        #v = np.round(v,4)
-        #w = np.round(w,4)
-        
-        atom = np.tile(atm, na*nb*nc)
-                 
-        site = []
-        for i in range(atom.shape[0]):
-                                
-            site.append([atom[i]+str(i), u[i]/na, v[i]/nb, w[i]/nc, atom[i]])
-        
-        cb.AddLoopItem((['_space_group_symop_operation_xyz'],
-                         ['']))
-        
-        cb['_space_group_symop_operation_xyz'] = ['x, y, z']
-    
-        cb.AddLoopItem((['_atom_site_label',
-                         '_atom_site_fract_x',
-                         '_atom_site_fract_y',
-                         '_atom_site_fract_z',
-                         '_atom_site_type_symbol'],
-                         map(list, zip(*site))))
-        
-        mfilename = filename.replace('.cif','.dis.cif')
-        
-        outfile = open(folder+mfilename, mode='w')
-        
-        # supress cf.WriteOut() output
-        sys.stdout = io.StringIO()
-        sys.stderr = io.StringIO()
-        
-        outfile.write(cf.WriteOut())
-        
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
-        
-        outfile.close()
-        
-def nonmagnetic(Ux,
-                Uy, 
-                Uz, 
-                delta,
-                rx, 
-                ry, 
-                rz,
-                nu,
-                nv,
-                nw,
-                atm, 
-                A,
-                folder=None,
-                filename=None,
-                xlim=[0,1], 
-                ylim=[0,1], 
-                zlim=[0,1]):
-    
-    if (filename != None):
-                
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf[[key for key in cf.keys() \
-                 if cf[key].get('_cell_length_a') is not None][0]]
-                 
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
-        
-        loop_ops = ['_space_group_symop_operation_xyz',
-                    '_symmetry_equiv_pos_as_xyz',
-                    '_space_group_symop_magn_operation_xyz']
-                
-        ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                        if loop_key in cif_dict), None)          
-        
-        symops = cif_dict[loop_ops[ind_ops]]
-        
-        if (ind_ops == 2):
-            add_symops = cif_dict['_space_group_symop_magn_centering_xyz']   
-            combine = []
-            for symop in symops:
-                for add_symop in add_symops:
-                    combine.append(symmetry.binary(
-                                   ','.join(symop.split(',')[:3]),
-                                   ','.join(add_symop.split(',')[:3])))
-            symops = combine
-        
-        for symop in symops:
-            cb.RemoveLoopItem(symop)     
-        
-        atomic_sites = cb.GetLoopNames('_atom_site_label')
-        
-        for asite in atomic_sites:
-            cb.RemoveLoopItem(asite)
-              
-        n_atm = atm.shape[0]
-        
-        i0, i1 = xlim[0], xlim[1]
-        j0, j1 = ylim[0], ylim[1]
-        k0, k1 = zlim[0], zlim[1]
-        
-        na, nb, nc = i1-i0, j1-j0, k1-k0
-                
-        a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
-        b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
-        c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
-                        
-        cb['_cell_length_a'] = str(a*na)
-        cb['_cell_length_b'] = str(b*nb)
-        cb['_cell_length_c'] = str(c*nc)
-        
-        mask = np.full((nu,nv,nw,n_atm), fill_value=False)
-        mask[i0:i1,j0:j1,k0:k1,:] = True
-        mask = mask.flatten()
-        
-        ux = rx[mask]+Ux[mask]
-        uy = ry[mask]+Uy[mask]
-        uz = rz[mask]+Uz[mask]
-        
-        A_inv = np.linalg.inv(A)
-        
-        u = A_inv[0,0]*ux+A_inv[0,1]*uy+A_inv[0,2]*uz
-        v = A_inv[1,0]*ux+A_inv[1,1]*uy+A_inv[1,2]*uz
-        w = A_inv[2,0]*ux+A_inv[2,1]*uy+A_inv[2,2]*uz
-    
-        #u = np.round(u,4)
-        #v = np.round(v,4)
-        #w = np.round(w,4)
-        
-        atom = np.tile(atm, na*nb*nc)
-                 
-        site = []
-        for i in range(atom.shape[0]):
-                                
            site.append([atom[i]+str(i), 
-                         u[i]/na, 
-                         v[i]/nb, 
-                         w[i]/nc, 
-                         atom[i], 
-                         delta[i]])
+                        u[i]/na, 
+                        v[i]/nb, 
+                        w[i]/nc, 
+                        atom[i], 
+                        delta[i]])
+           
+           moment.append([atom[i]+str(i), mu[i], mv[i], mw[i], 'mx, my, mz'])
             
         cb.AddLoopItem((['_space_group_symop_operation_xyz'],
                          ['']))
@@ -1913,10 +1528,20 @@ def nonmagnetic(Ux,
                          '_atom_site_type_symbol',
                          '_atom_site_occupancy'],
                          map(list, zip(*site))))
+     
+        if (not np.allclose((mx,my,mz), 0)):  
+            
+            cb.AddLoopItem((['_atom_site_moment_label',
+                             '_atom_site_moment_crystalaxis_x',
+                             '_atom_site_moment_crystalaxis_y',
+                             '_atom_site_moment_crystalaxis_z',
+                             '_atom_site_moment_symmform'],
+                             map(list, zip(*moment))))
         
-        mfilename = filename.replace('.cif','.non.cif')
+            if (name.split('.')[-1] == 'cif'):
+                name = filename.replace('cif', 'mcif')
         
-        outfile = open(folder+mfilename, mode='w')
+        outfile = open(name, mode='w')
         
         # supress cf.WriteOut() output
         sys.stdout = io.StringIO()

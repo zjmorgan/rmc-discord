@@ -306,7 +306,7 @@ def magnetic(double [::1] Sx,
                 
                 Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)
                 
-                if (iszero(Q)):
+                if iszero(Q):
                     Qx_norm, Qy_norm, Qz_norm = 0, 0, 0
                 else:
                     Qx_norm, Qy_norm, Qz_norm = Qx/Q, Qy/Q, Qz/Q   

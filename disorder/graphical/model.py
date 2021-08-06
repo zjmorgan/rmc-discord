@@ -195,6 +195,13 @@ class Model:
         
         crystal.supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
                           fname, folder=folder, filename=filename)
+        
+    def save_disorder(self, fname, Sx, Sy, Sz, delta, Ux, Uy, Uz, rx, ry, rz,
+                      nu, nv, nw, atm, A, folder, filename):
+        
+        crystal.disordered(Ux, Uy, Uz, delta, Sx, Sy, Sz, rx, ry, rz,
+                           atm, A, fname, folder=folder, filename=filename,
+                           ulim=[0,nu], vlim=[0,nv], wlim=[0,nw])
     
     def load_data(self, fname):
         

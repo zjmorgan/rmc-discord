@@ -12,8 +12,8 @@ def data(filename):
     
     data = nxload(filename)
         
-    signal = np.array(data.MDHistoWorkspace.data.signal.nxdata)
-    error_sq = np.array(data.MDHistoWorkspace.data.errors_squared.nxdata)
+    signal = np.array(data.MDHistoWorkspace.data.signal.nxdata.T)
+    error_sq = np.array(data.MDHistoWorkspace.data.errors_squared.nxdata.T)
             
     if ('Q1' in data.MDHistoWorkspace.data.keys()):
         Qh = data.MDHistoWorkspace.data['Q1']
