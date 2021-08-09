@@ -76,17 +76,6 @@ class test_annealing(unittest.TestCase):
         
         self.assertGreater(value**2, A_cand**2+B_cand**2+C_cand**2)
         
-        A_cand, B_cand, C_cand = annealing.candidate(A_orig, 
-                                                     B_orig, 
-                                                     C_orig, 
-                                                     delta=0)
-        
-        value = np.sqrt(A_orig**2+B_orig**2+C_orig**2)
-        
-        self.assertAlmostEqual(A_orig/value, A_cand)
-        self.assertAlmostEqual(B_orig/value, B_cand)
-        self.assertAlmostEqual(C_orig/value, C_cand)
-        
     def test_test(self):
                 
         beta, E = 13, 17
