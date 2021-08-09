@@ -3,10 +3,8 @@
 *R*everse *M*onte *C*arlo refinement of *di*ffuse *sc*attering and
 *cor*related *d*isorder from single crystals
 
-<p align="center">
-<img src="https://github.com/zjmorgan/rmc-discord/blob/master/docs/banner.svg" alt="Disorder" width="512">
-<br />
-</p>
+![](https://github.com/zjmorgan/rmc-discord/blob/master/docs/banner.svg)
+
 
 [*rmc-discord*](https://zjmorgan.github.io/rmc-discord/) is an atomistic program for the analysis of single crystal diffuse scattering from disordered materials capable of extracting short-range magnetic, occupational, and displacive correlations.
 
