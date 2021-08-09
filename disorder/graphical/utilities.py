@@ -234,9 +234,9 @@ def load_gui(ui, settings):
 def report_exception(*args):
     ansi = re.compile('\x1b' + r'\[([\dA-Fa-f;]*?)m')
     icon = os.path.join(_root, 'logo.png')
-    if len(args) == 3:
+    if (len(args) == 3):
         error_type, error, trace = args[:3]
-    elif len(args) == 1:
+    elif (len(args) == 1):
         exc = args[0]
         error_type, error, trace = exc.__class__, exc, exc.__traceback__
     message = ''.join(traceback.format_exception_only(error_type, error))

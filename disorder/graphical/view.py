@@ -1756,6 +1756,11 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_centering(self):
         return self.comboBox_centering.currentText()
     
+    def set_centering(self, centering):
+        match = QtCore.Qt.MatchFixedString
+        index = self.comboBox_centering.findText(centering, match)
+        self.comboBox_centering.setCurrentIndex(index)
+    
     def get_radius_h(self):
         return float(self.lineEdit_radius_h.text())
     
@@ -1877,6 +1882,11 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def get_centering_ref(self):
         return self.comboBox_centering_ref.currentText()
+    
+    def set_centering_ref(self, centering):
+        match = QtCore.Qt.MatchFixedString
+        index = self.comboBox_centering_ref.findText(centering, match)
+        self.comboBox_centering_ref.setCurrentIndex(index)
     
     def get_filter_ref_h(self):
         return int(self.lineEdit_filter_ref_h.text())
@@ -2199,7 +2209,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def get_symmetrize(self):
         return self.comboBox_laue_corr.currentText()
-    
+        
     def set_symmetrize(self, laue):
         match = QtCore.Qt.MatchFixedString
         index = self.comboBox_laue_corr.findText(laue, match)
@@ -2729,6 +2739,11 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def get_centering_calc(self):
         return self.comboBox_centering_calc.currentText()
+    
+    def set_centering_calc(self, centering):
+        match = QtCore.Qt.MatchFixedString
+        index = self.comboBox_centering_calc.findText(centering, match)
+        self.comboBox_centering_calc.setCurrentIndex(index)
     
     def clear_atom_site_recalculation_table(self):
         self.tableWidget_recalc.clearContents()

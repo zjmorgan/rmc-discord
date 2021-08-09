@@ -940,6 +940,12 @@ class Presenter:
             group, hm = self.model.load_space_group(folder, filename)
             
             self.view.set_space_group(group, hm)
+            
+            if (len(hm) > 1):
+                centering = hm[0]
+                self.view.set_centering(centering)
+                self.view.set_centering_ref(centering)
+                self.view.set_centering_calc(centering)
                 
             u, v, w, occupancy, \
             displacement, moment, \
@@ -2390,6 +2396,12 @@ class Presenter:
         
             self.view.clear_plot_ref_canvas()
             self.view.clear_plot_chi_sq_canvas()
+            self.view.clear_plot_1d_canvas()
+            self.view.clear_plot_3d_canvas()
+            self.view.clear_canvas_calc_canvas()
+            
+            self.view.clear_pairs_1d_table()
+            self.view.clear_pairs_3d_table()
             self.view.clear_atom_site_recalculation_table()
             
     def refinement_cycle(self):
@@ -2950,6 +2962,7 @@ class Presenter:
             
             self.calc_3d = self.view.worker(self.calculate_3d_thread)
             self.view.finished(self.calc_3d, self.calculate_3d_complete)
+            self.view.result(self.calc_3d, self.calculate_3d_process_output)
             self.threadpool.start(self.calc_3d)
 
     def calculate_3d_thread(self, callback):
@@ -3252,10 +3265,8 @@ class Presenter:
                     
             if (laue == 'cif'):
                 
-                symm = self.model.find_laue(folder, filename)
-                
-                self.view.set_laue(symm)
-            
+                laue = self.model.find_laue(folder, filename)
+                            
             self.intensity = np.zeros((nh,nk,nl))
                         
             indices, inverses, operators, \
@@ -3323,6 +3334,8 @@ class Presenter:
                 
                 self.recalculation_blur()
                 
+            return laue
+                
     def recalculation_blur(self):
                 
         sigma_h, sigma_k, sigma_l = self.view.get_recalculation_filter()
@@ -3334,9 +3347,13 @@ class Presenter:
         I_recalc = self.model.blurring(intensity, sigma)
         
         self.intensity = I_recalc
+        
+    def recalculate_intensity_output(self, data):
+        
+        self.view.set_laue(data)
 
     def recalculate_intensity_complete(self):
-        
+                
         self.redraw_plot_calc()
         
         self.view.enable_recalculation(True)        
@@ -3350,6 +3367,7 @@ class Presenter:
             self.recalc = self.view.worker(self.recalculate_intensity_thread)
             self.view.finished(self.recalc,
                                self.recalculate_intensity_complete)
+            self.view.result(self.recalc, self.recalculate_intensity_output)
             self.threadpool.start(self.recalc)
             
     def redraw_plot_calc(self):

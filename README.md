@@ -5,7 +5,6 @@
 
 ![](https://github.com/zjmorgan/rmc-discord/blob/master/docs/banner.svg)
 
-
 [*rmc-discord*](https://zjmorgan.github.io/rmc-discord/) is an atomistic program for the analysis of single crystal diffuse scattering from disordered materials capable of extracting short-range magnetic, occupational, and displacive correlations.
 
 There are two required inputs:

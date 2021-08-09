@@ -2299,67 +2299,46 @@
                </layout>
               </item>
               <item row="0" column="1">
-               <layout class="QGridLayout" name="gridLayout_53">
-                <item row="1" column="0">
-                 <layout class="QGridLayout" name="gridLayout_49">
-                  <item row="0" column="1">
-                   <widget class="QLabel" name="label_centering_ref">
-                    <property name="text">
-                     <string>Centering :</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="2">
-                   <widget class="QComboBox" name="comboBox_centering_ref"/>
-                  </item>
-                  <item row="0" column="0">
-                   <spacer name="horizontalSpacer_46">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                 </layout>
+               <layout class="QGridLayout" name="gridLayout_49">
+                <item row="0" column="1">
+                 <widget class="QLabel" name="label_order">
+                  <property name="text">
+                   <string>Order :</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="4">
+                 <widget class="QComboBox" name="comboBox_centering_ref"/>
+                </item>
+                <item row="0" column="3">
+                 <widget class="QLabel" name="label_centering_ref">
+                  <property name="text">
+                   <string>Centering :</string>
+                  </property>
+                 </widget>
                 </item>
                 <item row="0" column="0">
-                 <layout class="QGridLayout" name="gridLayout_45">
-                  <item row="0" column="1">
-                   <widget class="QLabel" name="label_order">
-                    <property name="text">
-                     <string>Order :</string>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="2">
-                   <widget class="QLineEdit" name="lineEdit_order">
-                    <property name="maximumSize">
-                     <size>
-                      <width>50</width>
-                      <height>16777215</height>
-                     </size>
-                    </property>
-                   </widget>
-                  </item>
-                  <item row="0" column="0">
-                   <spacer name="horizontalSpacer_43">
-                    <property name="orientation">
-                     <enum>Qt::Horizontal</enum>
-                    </property>
-                    <property name="sizeHint" stdset="0">
-                     <size>
-                      <width>40</width>
-                      <height>20</height>
-                     </size>
-                    </property>
-                   </spacer>
-                  </item>
-                 </layout>
+                 <spacer name="horizontalSpacer_46">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>40</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="0" column="2">
+                 <widget class="QLineEdit" name="lineEdit_order">
+                  <property name="maximumSize">
+                   <size>
+                    <width>50</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                 </widget>
                 </item>
                </layout>
               </item>
