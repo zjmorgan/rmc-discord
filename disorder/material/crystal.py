@@ -1189,8 +1189,8 @@ def orthogonalized(a, b, c, alpha, beta, gamma):
 
 def transform(p, q, r, U):
         
-    return U[0,0]*p+U[0,1]*q+U[0,2]*r, \
-           U[1,0]*p+U[1,1]*q+U[1,2]*r, \
+    return U[0,0]*p+U[0,1]*q+U[0,2]*r,\
+           U[1,0]*p+U[1,1]*q+U[1,2]*r,\
            U[2,0]*p+U[2,1]*q+U[2,2]*r
             
 def supercell(atm,
@@ -1407,10 +1407,10 @@ def supercell(atm,
         
         outfile.close()
         
-def disordered(Ux,
+def disordered(delta,
+               Ux,
                Uy, 
                Uz, 
-               delta,
                Sx,
                Sy,
                Sz,
@@ -1539,7 +1539,7 @@ def disordered(Ux,
                              map(list, zip(*moment))))
         
             if (name.split('.')[-1] == 'cif'):
-                name = filename.replace('cif', 'mcif')
+                name = name.replace('cif', 'mcif')
         
         outfile = open(name, mode='w')
         

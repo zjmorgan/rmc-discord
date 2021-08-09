@@ -160,6 +160,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         disorder.setTabButton(0, QtWidgets.QTabBar.LeftSide, self.checkBox_mag)
         disorder.setTabButton(1, QtWidgets.QTabBar.LeftSide, self.checkBox_occ)
         disorder.setTabButton(2, QtWidgets.QTabBar.LeftSide, self.checkBox_dis)
+        
+        # self.comboBox_moment_constraint.addItem('Heisenberg')
+        # self.comboBox_moment_constraint.addItem('Ising')
+        
+        # self.comboBox_displacement_parameters.addItem('Isotropic')
+        # self.comboBox_displacement_parameters.addItem('Anisotropic')
 
         # ---
 
@@ -307,7 +313,13 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         worker.moveToThread(thread)
         
     def new_triggered(self, slot): 
-        self.actionNew.triggered.connect(slot)    
+        self.actionNew.triggered.connect(slot)
+    
+    def timer(parent):
+        return QtCore.QTimer(parent)
+    
+    def timeout(self, timer, slot):
+        timer.timeout.connect(slot)
         
     def clear_application(self):
         self.lineEdit_n_atm.setText('')
@@ -525,12 +537,13 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def save_triggered(self, slot):
         self.actionSave.triggered.connect(slot)
         
-    def open_dialog_save(self):
+    def open_dialog_save(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
             
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder,
                                                         'ini files *.ini',
                                                         options=options)   
         return filename
@@ -542,12 +555,13 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def open_triggered(self, slot):
         self.actionOpen.triggered.connect(slot)
         
-    def open_dialog_load(self):
+    def open_dialog_load(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
             
         filename, \
-        filters = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '.', 
+        filters = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 
+                                                        folder, 
                                                         'ini files *.ini',
                                                         options=options)   
         return filename
@@ -831,12 +845,13 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_space_group.setText(str(group))
         self.lineEdit_space_group_hm.setText(hm)
         
-    def open_dialog_cif(self):
+    def open_dialog_cif(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
             
         filename, \
-        filters = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '.', 
+        filters = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', 
+                                                        folder, 
                                                         'CIF files *.cif;;'\
                                                         'mCIF files *.mcif',
                                                         options=options)
@@ -844,6 +859,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def button_clicked_CIF(self, slot):
         self.pushButton_load_CIF.clicked.connect(slot)
+        
+    def enable_load_CIF(self, visible):
+        self.pushButton_load_CIF.setEnabled(visible)
         
     def get_every_unit_cell_table_col(self, j, dtype):       
         data = []
@@ -1437,9 +1455,11 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.tableWidget_exp.setItem(i, 3, item)  
     
     def set_experiment_table_item(self, i, j, value):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         item = QtWidgets.QTableWidgetItem(str(value))
+        item.setTextAlignment(alignment)
         self.tableWidget_exp.setItem(i, j, item)
-        
+                    
     def item_changed_experiment_table(self, slot):
         self.tableWidget_exp.itemChanged.connect(slot)
         
@@ -1783,12 +1803,16 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def button_clicked_NXS(self, slot):
         self.pushButton_load_NXS.clicked.connect(slot)
         
-    def save_intensity_exp(self):
+    def enable_load_NXS(self, visible):
+        self.pushButton_load_NXS.setEnabled(visible)
+        
+    def save_intensity_exp(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder, 
                                                         'pdf files *.pdf;;'+
                                                         'png files *.png',
                                                          options=options)
@@ -1884,6 +1908,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def enable_reset_refinement(self, visible):
         self.pushButton_reset_run.setEnabled(visible)
         
+    def enable_continue_refinement(self, visible):
+        self.pushButton_continue.setEnabled(visible)
+        
     def get_runs(self):
         return int(self.lineEdit_runs.text())
     
@@ -1893,6 +1920,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_cycles(self):
         return int(self.lineEdit_cycles.text())
     
+    def set_cycles(self, cycles):
+        self.lineEdit_cycles.setText(str(cycles))
+    
     def clicked_run(self, slot):
         self.pushButton_run.clicked.connect(slot)
     
@@ -1901,6 +1931,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def clicked_reset(self, slot):
         self.pushButton_reset_run.clicked.connect(slot)
+        
+    def clicked_continue(self, slot):
+        self.pushButton_continue.clicked.connect(slot)
         
     def get_filter_h(self):
         return float(self.lineEdit_filter_ref_h.text())
@@ -2010,23 +2043,25 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def fixed_displacement_check(self):
         return self.checkBox_fixed_displacement.isChecked()
     
-    def save_intensity_ref(self):
+    def save_intensity_ref(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder, 
                                                         'pdf files *.pdf;;'+
                                                         'png files *.png',
                                                          options=options)
         return filename
             
-    def save_chi_sq(self):
+    def save_chi_sq(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder, 
                                                         'pdf files *.pdf;;'+
                                                         'png files *.png',
                                                          options=options)
@@ -2364,23 +2399,25 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def finished_editing_d(self, slot):
         self.lineEdit_plane_d.editingFinished.connect(slot)
         
-    def save_correlations_1d(self):
+    def save_correlations_1d(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder, 
                                                         'pdf files *.pdf;;'+
                                                         'png files *.png',
                                                          options=options)
         return filename
             
-    def save_correlations_3d(self):
+    def save_correlations_3d(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder, 
                                                         'pdf files *.pdf;;'+
                                                         'png files *.png',
                                                          options=options)
@@ -2403,6 +2440,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def enable_disorder_dis_recalc(self, visible):
         self.checkBox_dis_recalc.setEnabled(visible)
         
+    def enable_disorder_struct_recalc(self, visible):
+        self.checkBox_struct_recalc.setEnabled(visible)
+        
     def clicked_disorder_mag_recalc(self, slot):
         self.checkBox_mag_recalc.clicked.connect(slot)
 
@@ -2411,6 +2451,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def clicked_disorder_dis_recalc(self, slot):
         self.checkBox_dis_recalc.clicked.connect(slot)
+        
+    def clicked_disorder_struct_recalc(self, slot):
+        self.checkBox_struct_recalc.clicked.connect(slot)
         
     def set_disorder_mag_recalc(self, state):
         check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
@@ -2423,6 +2466,10 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def set_disorder_dis_recalc(self, state):
         check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
         self.checkBox_dis_recalc.setCheckState(check)
+        
+    def set_disorder_struct_recalc(self, state):
+        check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        self.checkBox_struct_recalc.setCheckState(check)
 
     def get_disorder_mag_recalc(self):
         return self.checkBox_mag_recalc.isChecked()
@@ -2432,6 +2479,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     
     def get_disorder_dis_recalc(self):
         return self.checkBox_dis_recalc.isChecked()
+    
+    def get_disorder_struct_recalc(self):
+        return self.checkBox_struct_recalc.isChecked()
         
     def create_recalculation_table(self, dh, nh, min_h, max_h, 
                                          dk, nk, min_k, max_k, 
@@ -2748,12 +2798,13 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             data.append(active)
         return np.array(data)
     
-    def save_intensity_calc(self):
+    def save_intensity_calc(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder, 
                                                         'pdf files *.pdf;;'+
                                                         'png files *.png',
                                                          options=options)
@@ -2764,49 +2815,62 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     # ---
     
-    def save_CIF(self):
+    def save_CIF(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
                       
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder,
                                                         'CIF files *.cif;;'\
                                                         'mCIF files *.mcif',
                                                         options=options)
         return filename
     
-    def save_correlations_CSV(self):
+    def save_correlations_CSV(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
                       
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder,
                                                         'CSV files *.csv',
                                                         options=options)
         return filename
     
-    def save_correlations_VTK(self):
+    def save_correlations_VTK(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
                       
         filename, \
-        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', '.', 
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder,
                                                         'VTK files *.vtm',
                                                         options=options)
         return filename
     
+    def save_VTK(self, folder='.'):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+                      
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder,
+                                                        'VTK files *.vtm',
+                                                        options=options)
+        return filename        
+    
     def button_clicked_save_CIF(self, slot):
-        
         self.pushButton_save_CIF.clicked.connect(slot)
     
     def button_clicked_save_dis_CIF(self, slot):
-        
         self.pushButton_save_CIF_dis.clicked.connect(slot)
  
     def button_clicked_save_CSV(self, slot):
-
         self.pushButton_save_CSV_correlations.clicked.connect(slot) 
 
     def button_clicked_save_VTK(self, slot):
-                           
         self.pushButton_save_VTK_correlations.clicked.connect(slot)
+        
+    def button_clicked_save_recalc_VTK(self, slot):
+        self.pushButton_save_VTK.clicked.connect(slot)

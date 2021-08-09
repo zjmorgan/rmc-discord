@@ -1,6 +1,7 @@
 #!/ur/bin/env/python3
 
 import re
+import os
 import sys
 import traceback
 import logging
@@ -11,6 +12,8 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from distutils.util import strtobool
 
 from IPython.core.ultratb import ColorTB
+
+_root = os.path.abspath(os.path.dirname(__file__))
 
 class FractionalDelegate(QtWidgets.QItemDelegate):
     
@@ -230,6 +233,7 @@ def load_gui(ui, settings):
 
 def report_exception(*args):
     ansi = re.compile('\x1b' + r'\[([\dA-Fa-f;]*?)m')
+    icon = os.path.join(_root, 'logo.png')
     if len(args) == 3:
         error_type, error, trace = args[:3]
     elif len(args) == 1:
@@ -239,6 +243,8 @@ def report_exception(*args):
     information = ColorTB(mode="Context").text(error_type, error, trace)
     logging.error('Exception in GUI event loop\n'+information+'\n')
     message_box = QtWidgets.QMessageBox()
+    message_box.setWindowIcon(QtGui.QIcon(icon))
+    message_box.setWindowTitle('rmc-discord')
     message_box.setText(message)
     message_box.setInformativeText(ansi.sub('', information))
     message_box.setIcon(QtWidgets.QMessageBox.Warning)

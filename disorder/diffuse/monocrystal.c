@@ -2503,13 +2503,13 @@ static const char __pyx_k_occupancy[] = "occupancy";
 static const char __pyx_k_pyx_state[] = "__pyx_state";
 static const char __pyx_k_reduce_ex[] = "__reduce_ex__";
 static const char __pyx_k_setdiff1d[] = "setdiff1d";
-static const char __pyx_k_structure[] = "structure";
 static const char __pyx_k_technique[] = "technique";
 static const char __pyx_k_IndexError[] = "IndexError";
 static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_displacive[] = "displacive";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
+static const char __pyx_k_structural[] = "structural";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_PickleError[] = "PickleError";
@@ -2854,7 +2854,7 @@ static PyObject *__pyx_kp_s_strided_and_direct_or_indirect;
 static PyObject *__pyx_kp_s_strided_and_indirect;
 static PyObject *__pyx_kp_s_stringsource;
 static PyObject *__pyx_n_s_struct;
-static PyObject *__pyx_n_s_structure;
+static PyObject *__pyx_n_s_structural;
 static PyObject *__pyx_n_s_sym;
 static PyObject *__pyx_n_s_symop;
 static PyObject *__pyx_n_s_t;
@@ -2884,7 +2884,7 @@ static PyObject *__pyx_n_s_zeros;
 static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_magnetic(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_ux, __Pyx_memviewslice __pyx_v_uy, __Pyx_memviewslice __pyx_v_uz, PyObject *__pyx_v_ions, PyObject *__pyx_v_h_range, PyObject *__pyx_v_k_range, PyObject *__pyx_v_l_range, __Pyx_memviewslice __pyx_v_indices, PyObject *__pyx_v_symop, __Pyx_memviewslice __pyx_v_T, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_R, __Pyx_memviewslice __pyx_v_domains, __Pyx_memviewslice __pyx_v_variants, Py_ssize_t __pyx_v_nh, Py_ssize_t __pyx_v_nk, Py_ssize_t __pyx_v_nl, Py_ssize_t __pyx_v_nu, Py_ssize_t __pyx_v_nv, Py_ssize_t __pyx_v_nw, Py_ssize_t __pyx_v_Nu, Py_ssize_t __pyx_v_Nv, Py_ssize_t __pyx_v_Nw, __Pyx_memviewslice __pyx_v_g); /* proto */
 static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_2occupational(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_A_r, __Pyx_memviewslice __pyx_v_occupancy, __Pyx_memviewslice __pyx_v_ux, __Pyx_memviewslice __pyx_v_uy, __Pyx_memviewslice __pyx_v_uz, PyObject *__pyx_v_atms, PyObject *__pyx_v_h_range, PyObject *__pyx_v_k_range, PyObject *__pyx_v_l_range, __Pyx_memviewslice __pyx_v_indices, PyObject *__pyx_v_symop, __Pyx_memviewslice __pyx_v_T, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_R, __Pyx_memviewslice __pyx_v_domains, __Pyx_memviewslice __pyx_v_variants, Py_ssize_t __pyx_v_nh, Py_ssize_t __pyx_v_nk, Py_ssize_t __pyx_v_nl, Py_ssize_t __pyx_v_nu, Py_ssize_t __pyx_v_nv, Py_ssize_t __pyx_v_nw, Py_ssize_t __pyx_v_Nu, Py_ssize_t __pyx_v_Nv, Py_ssize_t __pyx_v_Nw, PyObject *__pyx_v_technique); /* proto */
 static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_U_r, __Pyx_memviewslice __pyx_v_coeffs, __Pyx_memviewslice __pyx_v_ux, __Pyx_memviewslice __pyx_v_uy, __Pyx_memviewslice __pyx_v_uz, PyObject *__pyx_v_atms, PyObject *__pyx_v_h_range, PyObject *__pyx_v_k_range, PyObject *__pyx_v_l_range, __Pyx_memviewslice __pyx_v_indices, PyObject *__pyx_v_symop, __Pyx_memviewslice __pyx_v_T, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_R, __Pyx_memviewslice __pyx_v_domains, __Pyx_memviewslice __pyx_v_variants, Py_ssize_t __pyx_v_nh, Py_ssize_t __pyx_v_nk, Py_ssize_t __pyx_v_nl, Py_ssize_t __pyx_v_nu, Py_ssize_t __pyx_v_nv, Py_ssize_t __pyx_v_nw, Py_ssize_t __pyx_v_Nu, Py_ssize_t __pyx_v_Nv, Py_ssize_t __pyx_v_Nw, Py_ssize_t __pyx_v_p, __Pyx_memviewslice __pyx_v_even, Py_ssize_t __pyx_v_centering, PyObject *__pyx_v_technique); /* proto */
-static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_ux, __Pyx_memviewslice __pyx_v_uy, __Pyx_memviewslice __pyx_v_uz, PyObject *__pyx_v_atms, PyObject *__pyx_v_h_range, PyObject *__pyx_v_k_range, PyObject *__pyx_v_l_range, __Pyx_memviewslice __pyx_v_indices, PyObject *__pyx_v_symop, __Pyx_memviewslice __pyx_v_T, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_R, __Pyx_memviewslice __pyx_v_domains, __Pyx_memviewslice __pyx_v_variants, Py_ssize_t __pyx_v_nh, Py_ssize_t __pyx_v_nk, Py_ssize_t __pyx_v_nl, Py_ssize_t __pyx_v_nu, Py_ssize_t __pyx_v_nv, Py_ssize_t __pyx_v_nw, Py_ssize_t __pyx_v_Nu, Py_ssize_t __pyx_v_Nv, Py_ssize_t __pyx_v_Nw); /* proto */
+static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structural(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_occupancy, __Pyx_memviewslice __pyx_v_ux, __Pyx_memviewslice __pyx_v_uy, __Pyx_memviewslice __pyx_v_uz, PyObject *__pyx_v_atms, PyObject *__pyx_v_h_range, PyObject *__pyx_v_k_range, PyObject *__pyx_v_l_range, __Pyx_memviewslice __pyx_v_indices, PyObject *__pyx_v_symop, __Pyx_memviewslice __pyx_v_T, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_R, __Pyx_memviewslice __pyx_v_domains, __Pyx_memviewslice __pyx_v_variants, Py_ssize_t __pyx_v_nh, Py_ssize_t __pyx_v_nk, Py_ssize_t __pyx_v_nl, Py_ssize_t __pyx_v_nu, Py_ssize_t __pyx_v_nv, Py_ssize_t __pyx_v_nw, Py_ssize_t __pyx_v_Nu, Py_ssize_t __pyx_v_Nv, Py_ssize_t __pyx_v_Nw, PyObject *__pyx_v_technique); /* proto */
 static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_X, PyObject *__pyx_v_Nu, PyObject *__pyx_v_Nv, PyObject *__pyx_v_Nw); /* proto */
 static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_X, PyObject *__pyx_v_Nu, PyObject *__pyx_v_Nv, PyObject *__pyx_v_Nw); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
@@ -6650,14 +6650,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_magnetic(CYTHON_UNUSE
  * 
  *                 Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)             # <<<<<<<<<<<<<<
  * 
- *                 if (iszero(Q)):
+ *                 if iszero(Q):
  */
                                 __pyx_v_Q = sqrt((((__pyx_v_Qx * __pyx_v_Qx) + (__pyx_v_Qy * __pyx_v_Qy)) + (__pyx_v_Qz * __pyx_v_Qz)));
 
                                 /* "disorder/diffuse/monocrystal.pyx":309
  *                 Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)
  * 
- *                 if (iszero(Q)):             # <<<<<<<<<<<<<<
+ *                 if iszero(Q):             # <<<<<<<<<<<<<<
  *                     Qx_norm, Qy_norm, Qz_norm = 0, 0, 0
  *                 else:
  */
@@ -6666,7 +6666,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_magnetic(CYTHON_UNUSE
 
                                   /* "disorder/diffuse/monocrystal.pyx":310
  * 
- *                 if (iszero(Q)):
+ *                 if iszero(Q):
  *                     Qx_norm, Qy_norm, Qz_norm = 0, 0, 0             # <<<<<<<<<<<<<<
  *                 else:
  *                     Qx_norm, Qy_norm, Qz_norm = Qx/Q, Qy/Q, Qz/Q
@@ -6681,7 +6681,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_magnetic(CYTHON_UNUSE
                                   /* "disorder/diffuse/monocrystal.pyx":309
  *                 Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)
  * 
- *                 if (iszero(Q)):             # <<<<<<<<<<<<<<
+ *                 if iszero(Q):             # <<<<<<<<<<<<<<
  *                     Qx_norm, Qy_norm, Qz_norm = 0, 0, 0
  *                 else:
  */
@@ -10768,359 +10768,359 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   }
   __pyx_L3:;
 
-  /* "disorder/diffuse/monocrystal.pyx":689
+  /* "disorder/diffuse/monocrystal.pyx":691
  *     cdef double complex scattering_length
  * 
  *     cdef double complex [::1] b = np.zeros(n_atm, dtype=complex)             # <<<<<<<<<<<<<<
  * 
  *     cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 689, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 691, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 689, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 691, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 689, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 691, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 689, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 691, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 689, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 691, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 689, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 689, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 691, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_dc___pyx_t_double_complex(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 689, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_dc___pyx_t_double_complex(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 691, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_b = __pyx_t_7;
   __pyx_t_7.memview = NULL;
   __pyx_t_7.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":691
+  /* "disorder/diffuse/monocrystal.pyx":693
  *     cdef double complex [::1] b = np.zeros(n_atm, dtype=complex)
  * 
  *     cdef double [::1] a1 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
  *     cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 691, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 693, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 693, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 693, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 693, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
   __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 693, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 691, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 691, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 693, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 693, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 691, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 693, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_a1 = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":692
+  /* "disorder/diffuse/monocrystal.pyx":694
  * 
  *     cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b1 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
  *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 694, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 694, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 694, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 694, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 694, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 692, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 692, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 694, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 694, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 692, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 694, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_b1 = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":693
+  /* "disorder/diffuse/monocrystal.pyx":695
  *     cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
  *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 693, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 695, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 693, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 695, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 693, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 695, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 693, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 695, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 693, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 695, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 693, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 693, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 695, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 695, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 693, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 695, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_a2 = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":694
+  /* "disorder/diffuse/monocrystal.pyx":696
  *     cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
  *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 694, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 696, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 694, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 696, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 694, __pyx_L1_error)
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 696, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 694, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 696, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
   __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 694, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 696, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 694, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 694, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 696, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 696, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 694, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 696, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_b2 = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":695
+  /* "disorder/diffuse/monocrystal.pyx":697
  *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
  *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 695, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 697, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 695, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 697, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 695, __pyx_L1_error)
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 697, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 695, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 697, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 695, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 697, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 695, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 695, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 697, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 697, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 695, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 697, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_a3 = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":696
+  /* "disorder/diffuse/monocrystal.pyx":698
  *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
  *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 696, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 698, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 696, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 698, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 696, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 698, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 696, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 698, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 696, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 698, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 696, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 696, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 698, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 698, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 696, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 698, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_b3 = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":697
+  /* "disorder/diffuse/monocrystal.pyx":699
  *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
  *     cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] c  = np.zeros(n_atm, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 697, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 699, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 697, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 699, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 697, __pyx_L1_error)
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 699, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 697, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 699, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
   __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 697, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 699, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 697, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 697, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 699, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 699, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 697, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 699, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_a4 = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":698
+  /* "disorder/diffuse/monocrystal.pyx":700
  *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b4 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
  *     cdef double [::1] c  = np.zeros(n_atm, dtype=float)
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 698, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 700, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 698, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 700, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 698, __pyx_L1_error)
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 700, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 698, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 700, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 698, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 700, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 698, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 698, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 700, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 700, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 698, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 700, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_b4 = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":699
+  /* "disorder/diffuse/monocrystal.pyx":701
  *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
  *     cdef double [::1] c  = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
  * 
  *     I_np = np.zeros(n_hkl, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 699, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 701, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 699, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 701, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 699, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 701, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 699, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 701, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 699, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 701, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 699, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 699, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 701, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 699, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 701, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_c = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":701
+  /* "disorder/diffuse/monocrystal.pyx":703
  *     cdef double [::1] c  = np.zeros(n_atm, dtype=float)
  * 
  *     I_np = np.zeros(n_hkl, dtype=float)             # <<<<<<<<<<<<<<
  * 
  *     cdef double [::1] I = I_np
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 703, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 701, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 703, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_hkl); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_hkl); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 703, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 701, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 703, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
   __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 703, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 701, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 701, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 703, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 703, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -11128,41 +11128,41 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   __pyx_v_I_np = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":703
+  /* "disorder/diffuse/monocrystal.pyx":705
  *     I_np = np.zeros(n_hkl, dtype=float)
  * 
  *     cdef double [::1] I = I_np             # <<<<<<<<<<<<<<
  * 
  *     U_r_np = np.copy(U_r, order='C')
  */
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_v_I_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 703, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_v_I_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 705, __pyx_L1_error)
   __pyx_v_I = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":705
+  /* "disorder/diffuse/monocrystal.pyx":707
  *     cdef double [::1] I = I_np
  * 
  *     U_r_np = np.copy(U_r, order='C')             # <<<<<<<<<<<<<<
  * 
  *     U_r_np = U_r_np.reshape(n_prod,nu,nv,nw,n_atm)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 705, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 707, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_copy); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 705, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_copy); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 707, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_U_r, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 705, __pyx_L1_error)
+  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_U_r, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 707, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 705, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 707, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 705, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 707, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_order, __pyx_n_u_C) < 0) __PYX_ERR(0, 705, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 705, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_order, __pyx_n_u_C) < 0) __PYX_ERR(0, 707, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 707, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -11170,24 +11170,24 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   __pyx_v_U_r_np = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":707
+  /* "disorder/diffuse/monocrystal.pyx":709
  *     U_r_np = np.copy(U_r, order='C')
  * 
  *     U_r_np = U_r_np.reshape(n_prod,nu,nv,nw,n_atm)             # <<<<<<<<<<<<<<
  * 
  *     cdef double h_min_, k_min_, l_min_
  */
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_U_r_np, __pyx_n_s_reshape); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 707, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_v_U_r_np, __pyx_n_s_reshape); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 709, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_n_prod); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 707, __pyx_L1_error)
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_n_prod); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 709, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_nu); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 707, __pyx_L1_error)
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_nu); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 709, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_nv); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 707, __pyx_L1_error)
+  __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_nv); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 709, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyInt_FromSsize_t(__pyx_v_nw); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 707, __pyx_L1_error)
+  __pyx_t_10 = PyInt_FromSsize_t(__pyx_v_nw); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 709, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_11 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 707, __pyx_L1_error)
+  __pyx_t_11 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 709, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __pyx_t_12 = NULL;
   __pyx_t_13 = 0;
@@ -11204,7 +11204,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[6] = {__pyx_t_12, __pyx_t_5, __pyx_t_6, __pyx_t_9, __pyx_t_10, __pyx_t_11};
-    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_13, 5+__pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 707, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_13, 5+__pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 709, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -11217,7 +11217,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
     PyObject *__pyx_temp[6] = {__pyx_t_12, __pyx_t_5, __pyx_t_6, __pyx_t_9, __pyx_t_10, __pyx_t_11};
-    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_13, 5+__pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 707, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_13, 5+__pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 709, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -11228,7 +11228,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   } else
   #endif
   {
-    __pyx_t_14 = PyTuple_New(5+__pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 707, __pyx_L1_error)
+    __pyx_t_14 = PyTuple_New(5+__pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 709, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
     if (__pyx_t_12) {
       __Pyx_GIVEREF(__pyx_t_12); PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_12); __pyx_t_12 = NULL;
@@ -11248,7 +11248,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     __pyx_t_9 = 0;
     __pyx_t_10 = 0;
     __pyx_t_11 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 707, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 709, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   }
@@ -11256,30 +11256,30 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   __Pyx_DECREF_SET(__pyx_v_U_r_np, __pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":714
+  /* "disorder/diffuse/monocrystal.pyx":716
  *     cdef double h_step_, k_step_, l_step_
  * 
  *     h_min_, k_min_, l_min_ = h_range[0], k_range[0], l_range[0]             # <<<<<<<<<<<<<<
  * 
  *     if (nh == 1):
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 714, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 716, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_15 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_15 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 714, __pyx_L1_error)
+  __pyx_t_15 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_15 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 716, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 714, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 716, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_16 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_16 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 714, __pyx_L1_error)
+  __pyx_t_16 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_16 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 716, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 714, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 716, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 714, __pyx_L1_error)
+  __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 716, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_h_min_ = __pyx_t_15;
   __pyx_v_k_min_ = __pyx_t_16;
   __pyx_v_l_min_ = __pyx_t_17;
 
-  /* "disorder/diffuse/monocrystal.pyx":716
+  /* "disorder/diffuse/monocrystal.pyx":718
  *     h_min_, k_min_, l_min_ = h_range[0], k_range[0], l_range[0]
  * 
  *     if (nh == 1):             # <<<<<<<<<<<<<<
@@ -11289,20 +11289,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   __pyx_t_3 = ((__pyx_v_nh == 1) != 0);
   if (__pyx_t_3) {
 
-    /* "disorder/diffuse/monocrystal.pyx":717
+    /* "disorder/diffuse/monocrystal.pyx":719
  * 
  *     if (nh == 1):
  *         h_max_ = h_range[0]             # <<<<<<<<<<<<<<
  *         h_step_ = 0
  *     else:
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 717, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 719, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 717, __pyx_L1_error)
+    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 719, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_h_max_ = __pyx_t_17;
 
-    /* "disorder/diffuse/monocrystal.pyx":718
+    /* "disorder/diffuse/monocrystal.pyx":720
  *     if (nh == 1):
  *         h_max_ = h_range[0]
  *         h_step_ = 0             # <<<<<<<<<<<<<<
@@ -11311,7 +11311,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
     __pyx_v_h_step_ = 0.0;
 
-    /* "disorder/diffuse/monocrystal.pyx":716
+    /* "disorder/diffuse/monocrystal.pyx":718
  *     h_min_, k_min_, l_min_ = h_range[0], k_range[0], l_range[0]
  * 
  *     if (nh == 1):             # <<<<<<<<<<<<<<
@@ -11321,7 +11321,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     goto __pyx_L4;
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":720
+  /* "disorder/diffuse/monocrystal.pyx":722
  *         h_step_ = 0
  *     else:
  *         h_max_ = h_range[1]             # <<<<<<<<<<<<<<
@@ -11329,13 +11329,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  * 
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 720, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 722, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 720, __pyx_L1_error)
+    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 722, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_h_max_ = __pyx_t_17;
 
-    /* "disorder/diffuse/monocrystal.pyx":721
+    /* "disorder/diffuse/monocrystal.pyx":723
  *     else:
  *         h_max_ = h_range[1]
  *         h_step_ = (h_max_-h_min_)/(nh-1)             # <<<<<<<<<<<<<<
@@ -11346,7 +11346,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   }
   __pyx_L4:;
 
-  /* "disorder/diffuse/monocrystal.pyx":723
+  /* "disorder/diffuse/monocrystal.pyx":725
  *         h_step_ = (h_max_-h_min_)/(nh-1)
  * 
  *     if (nk == 1):             # <<<<<<<<<<<<<<
@@ -11356,20 +11356,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   __pyx_t_3 = ((__pyx_v_nk == 1) != 0);
   if (__pyx_t_3) {
 
-    /* "disorder/diffuse/monocrystal.pyx":724
+    /* "disorder/diffuse/monocrystal.pyx":726
  * 
  *     if (nk == 1):
  *         k_max_ = k_range[0]             # <<<<<<<<<<<<<<
  *         k_step_ = 0
  *     else:
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 724, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 726, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 724, __pyx_L1_error)
+    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 726, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_k_max_ = __pyx_t_17;
 
-    /* "disorder/diffuse/monocrystal.pyx":725
+    /* "disorder/diffuse/monocrystal.pyx":727
  *     if (nk == 1):
  *         k_max_ = k_range[0]
  *         k_step_ = 0             # <<<<<<<<<<<<<<
@@ -11378,7 +11378,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
     __pyx_v_k_step_ = 0.0;
 
-    /* "disorder/diffuse/monocrystal.pyx":723
+    /* "disorder/diffuse/monocrystal.pyx":725
  *         h_step_ = (h_max_-h_min_)/(nh-1)
  * 
  *     if (nk == 1):             # <<<<<<<<<<<<<<
@@ -11388,7 +11388,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     goto __pyx_L5;
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":727
+  /* "disorder/diffuse/monocrystal.pyx":729
  *         k_step_ = 0
  *     else:
  *         k_max_ = k_range[1]             # <<<<<<<<<<<<<<
@@ -11396,13 +11396,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  * 
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 727, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 729, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 727, __pyx_L1_error)
+    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 729, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_k_max_ = __pyx_t_17;
 
-    /* "disorder/diffuse/monocrystal.pyx":728
+    /* "disorder/diffuse/monocrystal.pyx":730
  *     else:
  *         k_max_ = k_range[1]
  *         k_step_ = (k_max_-k_min_)/(nk-1)             # <<<<<<<<<<<<<<
@@ -11413,7 +11413,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   }
   __pyx_L5:;
 
-  /* "disorder/diffuse/monocrystal.pyx":730
+  /* "disorder/diffuse/monocrystal.pyx":732
  *         k_step_ = (k_max_-k_min_)/(nk-1)
  * 
  *     if (nl == 1):             # <<<<<<<<<<<<<<
@@ -11423,20 +11423,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   __pyx_t_3 = ((__pyx_v_nl == 1) != 0);
   if (__pyx_t_3) {
 
-    /* "disorder/diffuse/monocrystal.pyx":731
+    /* "disorder/diffuse/monocrystal.pyx":733
  * 
  *     if (nl == 1):
  *         l_max_ = l_range[0]             # <<<<<<<<<<<<<<
  *         l_step_ = 0
  *     else:
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 733, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 731, __pyx_L1_error)
+    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 733, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_l_max_ = __pyx_t_17;
 
-    /* "disorder/diffuse/monocrystal.pyx":732
+    /* "disorder/diffuse/monocrystal.pyx":734
  *     if (nl == 1):
  *         l_max_ = l_range[0]
  *         l_step_ = 0             # <<<<<<<<<<<<<<
@@ -11445,7 +11445,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
     __pyx_v_l_step_ = 0.0;
 
-    /* "disorder/diffuse/monocrystal.pyx":730
+    /* "disorder/diffuse/monocrystal.pyx":732
  *         k_step_ = (k_max_-k_min_)/(nk-1)
  * 
  *     if (nl == 1):             # <<<<<<<<<<<<<<
@@ -11455,7 +11455,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     goto __pyx_L6;
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":734
+  /* "disorder/diffuse/monocrystal.pyx":736
  *         l_step_ = 0
  *     else:
  *         l_max_ = l_range[1]             # <<<<<<<<<<<<<<
@@ -11463,13 +11463,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  * 
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 734, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 736, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 734, __pyx_L1_error)
+    __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 736, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_l_max_ = __pyx_t_17;
 
-    /* "disorder/diffuse/monocrystal.pyx":735
+    /* "disorder/diffuse/monocrystal.pyx":737
  *     else:
  *         l_max_ = l_range[1]
  *         l_step_ = (l_max_-l_min_)/(nl-1)             # <<<<<<<<<<<<<<
@@ -11480,7 +11480,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   }
   __pyx_L6:;
 
-  /* "disorder/diffuse/monocrystal.pyx":737
+  /* "disorder/diffuse/monocrystal.pyx":739
  *         l_step_ = (l_max_-l_min_)/(nl-1)
  * 
  *     cdef Py_ssize_t Fu = Nu // nu             # <<<<<<<<<<<<<<
@@ -11489,7 +11489,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_Fu = (__pyx_v_Nu / __pyx_v_nu);
 
-  /* "disorder/diffuse/monocrystal.pyx":738
+  /* "disorder/diffuse/monocrystal.pyx":740
  * 
  *     cdef Py_ssize_t Fu = Nu // nu
  *     cdef Py_ssize_t Fv = Nv // nv             # <<<<<<<<<<<<<<
@@ -11498,7 +11498,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_Fv = (__pyx_v_Nv / __pyx_v_nv);
 
-  /* "disorder/diffuse/monocrystal.pyx":739
+  /* "disorder/diffuse/monocrystal.pyx":741
  *     cdef Py_ssize_t Fu = Nu // nu
  *     cdef Py_ssize_t Fv = Nv // nv
  *     cdef Py_ssize_t Fw = Nw // nw             # <<<<<<<<<<<<<<
@@ -11507,7 +11507,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_Fw = (__pyx_v_Nw / __pyx_v_nw);
 
-  /* "disorder/diffuse/monocrystal.pyx":743
+  /* "disorder/diffuse/monocrystal.pyx":745
  *     cdef double f_H, f_K, f_L
  * 
  *     cdef double f_Nu = float(Nu)             # <<<<<<<<<<<<<<
@@ -11516,7 +11516,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_f_Nu = ((double)__pyx_v_Nu);
 
-  /* "disorder/diffuse/monocrystal.pyx":744
+  /* "disorder/diffuse/monocrystal.pyx":746
  * 
  *     cdef double f_Nu = float(Nu)
  *     cdef double f_Nv = float(Nv)             # <<<<<<<<<<<<<<
@@ -11525,7 +11525,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_f_Nv = ((double)__pyx_v_Nv);
 
-  /* "disorder/diffuse/monocrystal.pyx":745
+  /* "disorder/diffuse/monocrystal.pyx":747
  *     cdef double f_Nu = float(Nu)
  *     cdef double f_Nv = float(Nv)
  *     cdef double f_Nw = float(Nw)             # <<<<<<<<<<<<<<
@@ -11534,20 +11534,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_f_Nw = ((double)__pyx_v_Nw);
 
-  /* "disorder/diffuse/monocrystal.pyx":747
+  /* "disorder/diffuse/monocrystal.pyx":749
  *     cdef double f_Nw = float(Nw)
  * 
  *     U_k_np = idft_many(U_r_np, Nu, Nv, Nw).flatten()*n_uvw             # <<<<<<<<<<<<<<
  * 
  *     cdef double complex [::1] U_k = U_k_np
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_idft_many); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 747, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_idft_many); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 749, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
-  __pyx_t_11 = PyInt_FromSsize_t(__pyx_v_Nu); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 747, __pyx_L1_error)
+  __pyx_t_11 = PyInt_FromSsize_t(__pyx_v_Nu); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 749, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
-  __pyx_t_10 = PyInt_FromSsize_t(__pyx_v_Nv); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 747, __pyx_L1_error)
+  __pyx_t_10 = PyInt_FromSsize_t(__pyx_v_Nv); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 749, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_Nw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 747, __pyx_L1_error)
+  __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_Nw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 749, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __pyx_t_6 = NULL;
   __pyx_t_13 = 0;
@@ -11564,7 +11564,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_14)) {
     PyObject *__pyx_temp[5] = {__pyx_t_6, __pyx_v_U_r_np, __pyx_t_11, __pyx_t_10, __pyx_t_9};
-    __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_14, __pyx_temp+1-__pyx_t_13, 4+__pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 747, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyFunction_FastCall(__pyx_t_14, __pyx_temp+1-__pyx_t_13, 4+__pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 749, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
@@ -11575,7 +11575,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_14)) {
     PyObject *__pyx_temp[5] = {__pyx_t_6, __pyx_v_U_r_np, __pyx_t_11, __pyx_t_10, __pyx_t_9};
-    __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_14, __pyx_temp+1-__pyx_t_13, 4+__pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 747, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyCFunction_FastCall(__pyx_t_14, __pyx_temp+1-__pyx_t_13, 4+__pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 749, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
@@ -11584,7 +11584,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(4+__pyx_t_13); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 747, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(4+__pyx_t_13); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 749, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_6) {
       __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -11601,12 +11601,12 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     __pyx_t_11 = 0;
     __pyx_t_10 = 0;
     __pyx_t_9 = 0;
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 747, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_5, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 749, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_flatten); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 747, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_flatten); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 749, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -11621,31 +11621,31 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   }
   __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 747, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 749, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __pyx_t_14 = PyInt_FromSsize_t(__pyx_v_n_uvw); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 747, __pyx_L1_error)
+  __pyx_t_14 = PyInt_FromSsize_t(__pyx_v_n_uvw); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 749, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
-  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_14); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 747, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_Multiply(__pyx_t_2, __pyx_t_14); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 749, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   __pyx_v_U_k_np = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":749
+  /* "disorder/diffuse/monocrystal.pyx":751
  *     U_k_np = idft_many(U_r_np, Nu, Nv, Nw).flatten()*n_uvw
  * 
  *     cdef double complex [::1] U_k = U_k_np             # <<<<<<<<<<<<<<
  * 
  *     cdef Py_ssize_t F_uvw = Fu*Fv*Fw
  */
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_dc___pyx_t_double_complex(__pyx_v_U_k_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 749, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_dc___pyx_t_double_complex(__pyx_v_U_k_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 751, __pyx_L1_error)
   __pyx_v_U_k = __pyx_t_7;
   __pyx_t_7.memview = NULL;
   __pyx_t_7.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":751
+  /* "disorder/diffuse/monocrystal.pyx":753
  *     cdef double complex [::1] U_k = U_k_np
  * 
  *     cdef Py_ssize_t F_uvw = Fu*Fv*Fw             # <<<<<<<<<<<<<<
@@ -11654,7 +11654,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_F_uvw = ((__pyx_v_Fu * __pyx_v_Fv) * __pyx_v_Fw);
 
-  /* "disorder/diffuse/monocrystal.pyx":752
+  /* "disorder/diffuse/monocrystal.pyx":754
  * 
  *     cdef Py_ssize_t F_uvw = Fu*Fv*Fw
  *     cdef Py_ssize_t N_uvw = Nu*Nv*Nw             # <<<<<<<<<<<<<<
@@ -11663,21 +11663,21 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_N_uvw = ((__pyx_v_Nu * __pyx_v_Nv) * __pyx_v_Nw);
 
-  /* "disorder/diffuse/monocrystal.pyx":756
+  /* "disorder/diffuse/monocrystal.pyx":758
  *     cdef double Q_k
  * 
  *     cdef long [:,::1] exponents = np.zeros((n_prod,3), dtype=np.int)             # <<<<<<<<<<<<<<
  * 
  *     cdef double complex prod
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_prod); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_prod); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_4);
@@ -11685,51 +11685,51 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   __Pyx_GIVEREF(__pyx_int_3);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_int_3);
   __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_int); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_int); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_t_9) < 0) __PYX_ERR(0, 756, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_t_9) < 0) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_14, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(__pyx_t_9, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 756, __pyx_L1_error)
+  __pyx_t_18 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(__pyx_t_9, PyBUF_WRITABLE); if (unlikely(!__pyx_t_18.memview)) __PYX_ERR(0, 758, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_exponents = __pyx_t_18;
   __pyx_t_18.memview = NULL;
   __pyx_t_18.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":772
+  /* "disorder/diffuse/monocrystal.pyx":774
  *     cdef Py_ssize_t f, g, q, r, s, t
  * 
  *     cdef double M_TAU = 2*np.pi             # <<<<<<<<<<<<<<
  *     cdef double complex M_I = 1j
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 774, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_pi); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_pi); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 774, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyNumber_Multiply(__pyx_int_2, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 772, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_int_2, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 774, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 772, __pyx_L1_error)
+  __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 774, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_M_TAU = __pyx_t_17;
 
-  /* "disorder/diffuse/monocrystal.pyx":773
+  /* "disorder/diffuse/monocrystal.pyx":775
  * 
  *     cdef double M_TAU = 2*np.pi
  *     cdef double complex M_I = 1j             # <<<<<<<<<<<<<<
@@ -11738,29 +11738,29 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_M_I = __pyx_t_double_complex_from_parts(0, 1.0);
 
-  /* "disorder/diffuse/monocrystal.pyx":775
+  /* "disorder/diffuse/monocrystal.pyx":777
  *     cdef double complex M_I = 1j
  * 
  *     cdef double inv_M_SP = 1/(4*np.pi)             # <<<<<<<<<<<<<<
  * 
  *     for j in range(n_atm):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 775, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 777, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_pi); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 775, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_pi); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 777, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyNumber_Multiply(__pyx_int_4, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 775, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_Multiply(__pyx_int_4, __pyx_t_2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 777, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 775, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_9); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 777, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 775, __pyx_L1_error)
+  __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 777, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_inv_M_SP = __pyx_t_17;
 
-  /* "disorder/diffuse/monocrystal.pyx":777
+  /* "disorder/diffuse/monocrystal.pyx":779
  *     cdef double inv_M_SP = 1/(4*np.pi)
  * 
  *     for j in range(n_atm):             # <<<<<<<<<<<<<<
@@ -11772,41 +11772,41 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   for (__pyx_t_20 = 0; __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
     __pyx_v_j = __pyx_t_20;
 
-    /* "disorder/diffuse/monocrystal.pyx":779
+    /* "disorder/diffuse/monocrystal.pyx":781
  *     for j in range(n_atm):
  * 
  *         atm = atms[j]             # <<<<<<<<<<<<<<
  * 
  *         if (technique == 'Neutron'):
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_atms, __pyx_v_j, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 779, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_atms, __pyx_v_j, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 781, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_XDECREF_SET(__pyx_v_atm, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":781
+    /* "disorder/diffuse/monocrystal.pyx":783
  *         atm = atms[j]
  * 
  *         if (technique == 'Neutron'):             # <<<<<<<<<<<<<<
  * 
  *             b[j] = tables.bc.get(atm)
  */
-    __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_technique, __pyx_n_u_Neutron, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 781, __pyx_L1_error)
+    __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_technique, __pyx_n_u_Neutron, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 783, __pyx_L1_error)
     if (__pyx_t_3) {
 
-      /* "disorder/diffuse/monocrystal.pyx":783
+      /* "disorder/diffuse/monocrystal.pyx":785
  *         if (technique == 'Neutron'):
  * 
  *             b[j] = tables.bc.get(atm)             # <<<<<<<<<<<<<<
  * 
  *         else:
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_tables); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 783, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_tables); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 785, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_bc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 783, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_bc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 785, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_get); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 783, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_get); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 785, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_4 = NULL;
@@ -11821,15 +11821,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
       }
       __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_4, __pyx_v_atm) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_v_atm);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 783, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 785, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_21 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_t_2); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 783, __pyx_L1_error)
+      __pyx_t_21 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_t_2); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 785, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_22 = __pyx_v_j;
       *((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_b.data) + __pyx_t_22)) )) = __pyx_t_21;
 
-      /* "disorder/diffuse/monocrystal.pyx":781
+      /* "disorder/diffuse/monocrystal.pyx":783
  *         atm = atms[j]
  * 
  *         if (technique == 'Neutron'):             # <<<<<<<<<<<<<<
@@ -11839,7 +11839,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
       goto __pyx_L9;
     }
 
-    /* "disorder/diffuse/monocrystal.pyx":791
+    /* "disorder/diffuse/monocrystal.pyx":793
  *             a3[j], b3[j], \
  *             a4[j], b4[j], \
  *             c[j] = tables.X.get(atm)             # <<<<<<<<<<<<<<
@@ -11847,12 +11847,12 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  *     g = 0
  */
     /*else*/ {
-      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_tables); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 791, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_tables); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 793, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_X); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 791, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_X); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 793, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_get); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 791, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_get); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 793, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_4 = NULL;
@@ -11867,7 +11867,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
       }
       __pyx_t_2 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_4, __pyx_v_atm) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_v_atm);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 791, __pyx_L1_error)
+      if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 793, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       if ((likely(PyTuple_CheckExact(__pyx_t_2))) || (PyList_CheckExact(__pyx_t_2))) {
@@ -11876,7 +11876,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
         if (unlikely(size != 9)) {
           if (size > 9) __Pyx_RaiseTooManyValuesError(9);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 787, __pyx_L1_error)
+          __PYX_ERR(0, 789, __pyx_L1_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         if (likely(PyTuple_CheckExact(sequence))) {
@@ -11914,7 +11914,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
           Py_ssize_t i;
           PyObject** temps[9] = {&__pyx_t_9,&__pyx_t_4,&__pyx_t_14,&__pyx_t_5,&__pyx_t_10,&__pyx_t_11,&__pyx_t_6,&__pyx_t_12,&__pyx_t_23};
           for (i=0; i < 9; i++) {
-            PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 787, __pyx_L1_error)
+            PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 789, __pyx_L1_error)
             __Pyx_GOTREF(item);
             *(temps[i]) = item;
           }
@@ -11924,7 +11924,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
       } else {
         Py_ssize_t index = -1;
         PyObject** temps[9] = {&__pyx_t_9,&__pyx_t_4,&__pyx_t_14,&__pyx_t_5,&__pyx_t_10,&__pyx_t_11,&__pyx_t_6,&__pyx_t_12,&__pyx_t_23};
-        __pyx_t_24 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 787, __pyx_L1_error)
+        __pyx_t_24 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_24)) __PYX_ERR(0, 789, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_24);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_t_25 = Py_TYPE(__pyx_t_24)->tp_iternext;
@@ -11933,7 +11933,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
           __Pyx_GOTREF(item);
           *(temps[index]) = item;
         }
-        if (__Pyx_IternextUnpackEndCheck(__pyx_t_25(__pyx_t_24), 9) < 0) __PYX_ERR(0, 787, __pyx_L1_error)
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_25(__pyx_t_24), 9) < 0) __PYX_ERR(0, 789, __pyx_L1_error)
         __pyx_t_25 = NULL;
         __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
         goto __pyx_L11_unpacking_done;
@@ -11941,41 +11941,41 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
         __Pyx_DECREF(__pyx_t_24); __pyx_t_24 = 0;
         __pyx_t_25 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        __PYX_ERR(0, 787, __pyx_L1_error)
+        __PYX_ERR(0, 789, __pyx_L1_error)
         __pyx_L11_unpacking_done:;
       }
 
-      /* "disorder/diffuse/monocrystal.pyx":787
+      /* "disorder/diffuse/monocrystal.pyx":789
  *         else:
  * 
  *             a1[j], b1[j], \             # <<<<<<<<<<<<<<
  *             a2[j], b2[j], \
  *             a3[j], b3[j], \
  */
-      __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_17 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_17 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_16 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_16 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_16 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_16 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_15 = __pyx_PyFloat_AsDouble(__pyx_t_14); if (unlikely((__pyx_t_15 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_15 = __pyx_PyFloat_AsDouble(__pyx_t_14); if (unlikely((__pyx_t_15 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __pyx_t_26 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_26 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_26 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_26 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_27 = __pyx_PyFloat_AsDouble(__pyx_t_10); if (unlikely((__pyx_t_27 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_27 = __pyx_PyFloat_AsDouble(__pyx_t_10); if (unlikely((__pyx_t_27 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_28 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_28 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_28 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_28 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-      __pyx_t_29 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_29 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_29 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_29 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_30 = __pyx_PyFloat_AsDouble(__pyx_t_12); if (unlikely((__pyx_t_30 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_30 = __pyx_PyFloat_AsDouble(__pyx_t_12); if (unlikely((__pyx_t_30 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_31 = __pyx_PyFloat_AsDouble(__pyx_t_23); if (unlikely((__pyx_t_31 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_31 = __pyx_PyFloat_AsDouble(__pyx_t_23); if (unlikely((__pyx_t_31 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 789, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
       __pyx_t_22 = __pyx_v_j;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_a1.data) + __pyx_t_22)) )) = __pyx_t_17;
       __pyx_t_22 = __pyx_v_j;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b1.data) + __pyx_t_22)) )) = __pyx_t_16;
 
-      /* "disorder/diffuse/monocrystal.pyx":788
+      /* "disorder/diffuse/monocrystal.pyx":790
  * 
  *             a1[j], b1[j], \
  *             a2[j], b2[j], \             # <<<<<<<<<<<<<<
@@ -11987,7 +11987,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
       __pyx_t_22 = __pyx_v_j;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b2.data) + __pyx_t_22)) )) = __pyx_t_26;
 
-      /* "disorder/diffuse/monocrystal.pyx":789
+      /* "disorder/diffuse/monocrystal.pyx":791
  *             a1[j], b1[j], \
  *             a2[j], b2[j], \
  *             a3[j], b3[j], \             # <<<<<<<<<<<<<<
@@ -11999,7 +11999,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
       __pyx_t_22 = __pyx_v_j;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b3.data) + __pyx_t_22)) )) = __pyx_t_28;
 
-      /* "disorder/diffuse/monocrystal.pyx":790
+      /* "disorder/diffuse/monocrystal.pyx":792
  *             a2[j], b2[j], \
  *             a3[j], b3[j], \
  *             a4[j], b4[j], \             # <<<<<<<<<<<<<<
@@ -12011,7 +12011,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
       __pyx_t_22 = __pyx_v_j;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b4.data) + __pyx_t_22)) )) = __pyx_t_30;
 
-      /* "disorder/diffuse/monocrystal.pyx":791
+      /* "disorder/diffuse/monocrystal.pyx":793
  *             a3[j], b3[j], \
  *             a4[j], b4[j], \
  *             c[j] = tables.X.get(atm)             # <<<<<<<<<<<<<<
@@ -12024,7 +12024,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     __pyx_L9:;
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":793
+  /* "disorder/diffuse/monocrystal.pyx":795
  *             c[j] = tables.X.get(atm)
  * 
  *     g = 0             # <<<<<<<<<<<<<<
@@ -12033,7 +12033,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_g = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":794
+  /* "disorder/diffuse/monocrystal.pyx":796
  * 
  *     g = 0
  *     for f in range(p+1):             # <<<<<<<<<<<<<<
@@ -12045,7 +12045,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   for (__pyx_t_20 = 0; __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
     __pyx_v_f = __pyx_t_20;
 
-    /* "disorder/diffuse/monocrystal.pyx":795
+    /* "disorder/diffuse/monocrystal.pyx":797
  *     g = 0
  *     for f in range(p+1):
  *         for t in range(f+1):             # <<<<<<<<<<<<<<
@@ -12057,7 +12057,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     for (__pyx_t_34 = 0; __pyx_t_34 < __pyx_t_33; __pyx_t_34+=1) {
       __pyx_v_t = __pyx_t_34;
 
-      /* "disorder/diffuse/monocrystal.pyx":796
+      /* "disorder/diffuse/monocrystal.pyx":798
  *     for f in range(p+1):
  *         for t in range(f+1):
  *             for s in range(f+1):             # <<<<<<<<<<<<<<
@@ -12069,7 +12069,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
       for (__pyx_t_37 = 0; __pyx_t_37 < __pyx_t_36; __pyx_t_37+=1) {
         __pyx_v_s = __pyx_t_37;
 
-        /* "disorder/diffuse/monocrystal.pyx":797
+        /* "disorder/diffuse/monocrystal.pyx":799
  *         for t in range(f+1):
  *             for s in range(f+1):
  *                 for r in range(f+1):             # <<<<<<<<<<<<<<
@@ -12081,7 +12081,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
         for (__pyx_t_40 = 0; __pyx_t_40 < __pyx_t_39; __pyx_t_40+=1) {
           __pyx_v_r = __pyx_t_40;
 
-          /* "disorder/diffuse/monocrystal.pyx":798
+          /* "disorder/diffuse/monocrystal.pyx":800
  *             for s in range(f+1):
  *                 for r in range(f+1):
  *                     if (r+s+t == f):             # <<<<<<<<<<<<<<
@@ -12091,7 +12091,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
           __pyx_t_3 = ((((__pyx_v_r + __pyx_v_s) + __pyx_v_t) == __pyx_v_f) != 0);
           if (__pyx_t_3) {
 
-            /* "disorder/diffuse/monocrystal.pyx":799
+            /* "disorder/diffuse/monocrystal.pyx":801
  *                 for r in range(f+1):
  *                     if (r+s+t == f):
  *                         exponents[g,0] = r             # <<<<<<<<<<<<<<
@@ -12102,7 +12102,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
             __pyx_t_41 = 0;
             *((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_exponents.data + __pyx_t_22 * __pyx_v_exponents.strides[0]) )) + __pyx_t_41)) )) = __pyx_v_r;
 
-            /* "disorder/diffuse/monocrystal.pyx":800
+            /* "disorder/diffuse/monocrystal.pyx":802
  *                     if (r+s+t == f):
  *                         exponents[g,0] = r
  *                         exponents[g,1] = s             # <<<<<<<<<<<<<<
@@ -12113,7 +12113,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
             __pyx_t_22 = 1;
             *((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_exponents.data + __pyx_t_41 * __pyx_v_exponents.strides[0]) )) + __pyx_t_22)) )) = __pyx_v_s;
 
-            /* "disorder/diffuse/monocrystal.pyx":801
+            /* "disorder/diffuse/monocrystal.pyx":803
  *                         exponents[g,0] = r
  *                         exponents[g,1] = s
  *                         exponents[g,2] = t             # <<<<<<<<<<<<<<
@@ -12124,7 +12124,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
             __pyx_t_41 = 2;
             *((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_exponents.data + __pyx_t_22 * __pyx_v_exponents.strides[0]) )) + __pyx_t_41)) )) = __pyx_v_t;
 
-            /* "disorder/diffuse/monocrystal.pyx":802
+            /* "disorder/diffuse/monocrystal.pyx":804
  *                         exponents[g,1] = s
  *                         exponents[g,2] = t
  *                         g += 1             # <<<<<<<<<<<<<<
@@ -12133,7 +12133,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
             __pyx_v_g = (__pyx_v_g + 1);
 
-            /* "disorder/diffuse/monocrystal.pyx":798
+            /* "disorder/diffuse/monocrystal.pyx":800
  *             for s in range(f+1):
  *                 for r in range(f+1):
  *                     if (r+s+t == f):             # <<<<<<<<<<<<<<
@@ -12146,31 +12146,31 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     }
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":804
+  /* "disorder/diffuse/monocrystal.pyx":806
  *                         g += 1
  * 
  *     cdef long [::1] odd = np.setdiff1d(np.union1d(even, np.arange(n_prod)), \             # <<<<<<<<<<<<<<
  *                                        np.intersect1d(even, np.arange(n_prod)))
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_23, __pyx_n_s_np); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_23, __pyx_n_s_np); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_23);
-  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_23, __pyx_n_s_setdiff1d); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_23, __pyx_n_s_setdiff1d); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_12);
   __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_union1d); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_union1d); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_11);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __pyx_memoryview_fromslice(__pyx_v_even, 1, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __pyx_t_6 = __pyx_memoryview_fromslice(__pyx_v_even, 1, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_arange); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __pyx_t_14 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_arange); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_n_prod); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_n_prod); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_t_4 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_14))) {
@@ -12185,7 +12185,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   __pyx_t_10 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_14, __pyx_t_4, __pyx_t_5) : __Pyx_PyObject_CallOneArg(__pyx_t_14, __pyx_t_5);
   __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 804, __pyx_L1_error)
+  if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   __pyx_t_14 = NULL;
@@ -12203,7 +12203,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_11)) {
     PyObject *__pyx_temp[3] = {__pyx_t_14, __pyx_t_6, __pyx_t_10};
-    __pyx_t_23 = __Pyx_PyFunction_FastCall(__pyx_t_11, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 804, __pyx_L1_error)
+    __pyx_t_23 = __Pyx_PyFunction_FastCall(__pyx_t_11, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 806, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
     __Pyx_GOTREF(__pyx_t_23);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -12213,7 +12213,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_11)) {
     PyObject *__pyx_temp[3] = {__pyx_t_14, __pyx_t_6, __pyx_t_10};
-    __pyx_t_23 = __Pyx_PyCFunction_FastCall(__pyx_t_11, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 804, __pyx_L1_error)
+    __pyx_t_23 = __Pyx_PyCFunction_FastCall(__pyx_t_11, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 806, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
     __Pyx_GOTREF(__pyx_t_23);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -12221,7 +12221,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   } else
   #endif
   {
-    __pyx_t_5 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 804, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 806, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     if (__pyx_t_14) {
       __Pyx_GIVEREF(__pyx_t_14); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_14); __pyx_t_14 = NULL;
@@ -12232,32 +12232,32 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_13, __pyx_t_10);
     __pyx_t_6 = 0;
     __pyx_t_10 = 0;
-    __pyx_t_23 = __Pyx_PyObject_Call(__pyx_t_11, __pyx_t_5, NULL); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 804, __pyx_L1_error)
+    __pyx_t_23 = __Pyx_PyObject_Call(__pyx_t_11, __pyx_t_5, NULL); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 806, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_23);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   }
   __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":805
+  /* "disorder/diffuse/monocrystal.pyx":807
  * 
  *     cdef long [::1] odd = np.setdiff1d(np.union1d(even, np.arange(n_prod)), \
  *                                        np.intersect1d(even, np.arange(n_prod)))             # <<<<<<<<<<<<<<
  * 
  *     cdef Py_ssize_t n_odd = odd.shape[0]
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 805, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 807, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_intersect1d); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 805, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_intersect1d); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 807, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __pyx_t_5 = __pyx_memoryview_fromslice(__pyx_v_even, 1, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 805, __pyx_L1_error)
+  __pyx_t_5 = __pyx_memoryview_fromslice(__pyx_v_even, 1, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 807, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 805, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 807, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_arange); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 805, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_arange); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 807, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  __pyx_t_14 = PyInt_FromSsize_t(__pyx_v_n_prod); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 805, __pyx_L1_error)
+  __pyx_t_14 = PyInt_FromSsize_t(__pyx_v_n_prod); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 807, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_14);
   __pyx_t_9 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -12272,7 +12272,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   __pyx_t_6 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_9, __pyx_t_14) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_14);
   __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
   __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 805, __pyx_L1_error)
+  if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 807, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_4 = NULL;
@@ -12290,7 +12290,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_10)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_5, __pyx_t_6};
-    __pyx_t_11 = __Pyx_PyFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 805, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 807, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -12300,7 +12300,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_10)) {
     PyObject *__pyx_temp[3] = {__pyx_t_4, __pyx_t_5, __pyx_t_6};
-    __pyx_t_11 = __Pyx_PyCFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 805, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyCFunction_FastCall(__pyx_t_10, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 807, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -12308,7 +12308,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   } else
   #endif
   {
-    __pyx_t_14 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 805, __pyx_L1_error)
+    __pyx_t_14 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 807, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
     if (__pyx_t_4) {
       __Pyx_GIVEREF(__pyx_t_4); PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_4); __pyx_t_4 = NULL;
@@ -12319,7 +12319,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     PyTuple_SET_ITEM(__pyx_t_14, 1+__pyx_t_13, __pyx_t_6);
     __pyx_t_5 = 0;
     __pyx_t_6 = 0;
-    __pyx_t_11 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_14, NULL); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 805, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_14, NULL); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 807, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   }
@@ -12339,7 +12339,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_12)) {
     PyObject *__pyx_temp[3] = {__pyx_t_10, __pyx_t_23, __pyx_t_11};
-    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_12, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 804, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_12, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 806, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
@@ -12349,7 +12349,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_12)) {
     PyObject *__pyx_temp[3] = {__pyx_t_10, __pyx_t_23, __pyx_t_11};
-    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_12, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 804, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_12, __pyx_temp+1-__pyx_t_13, 2+__pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 806, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
@@ -12357,7 +12357,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   } else
   #endif
   {
-    __pyx_t_14 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 804, __pyx_L1_error)
+    __pyx_t_14 = PyTuple_New(2+__pyx_t_13); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 806, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_14);
     if (__pyx_t_10) {
       __Pyx_GIVEREF(__pyx_t_10); PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_10); __pyx_t_10 = NULL;
@@ -12368,26 +12368,26 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
     PyTuple_SET_ITEM(__pyx_t_14, 1+__pyx_t_13, __pyx_t_11);
     __pyx_t_23 = 0;
     __pyx_t_11 = 0;
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_12, __pyx_t_14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 804, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_12, __pyx_t_14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 806, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
   }
   __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":804
+  /* "disorder/diffuse/monocrystal.pyx":806
  *                         g += 1
  * 
  *     cdef long [::1] odd = np.setdiff1d(np.union1d(even, np.arange(n_prod)), \             # <<<<<<<<<<<<<<
  *                                        np.intersect1d(even, np.arange(n_prod)))
  * 
  */
-  __pyx_t_42 = __Pyx_PyObject_to_MemoryviewSlice_dc_long(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_42.memview)) __PYX_ERR(0, 804, __pyx_L1_error)
+  __pyx_t_42 = __Pyx_PyObject_to_MemoryviewSlice_dc_long(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_42.memview)) __PYX_ERR(0, 806, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_odd = __pyx_t_42;
   __pyx_t_42.memview = NULL;
   __pyx_t_42.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":807
+  /* "disorder/diffuse/monocrystal.pyx":809
  *                                        np.intersect1d(even, np.arange(n_prod)))
  * 
  *     cdef Py_ssize_t n_odd = odd.shape[0]             # <<<<<<<<<<<<<<
@@ -12396,7 +12396,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
   __pyx_v_n_odd = (__pyx_v_odd.shape[0]);
 
-  /* "disorder/diffuse/monocrystal.pyx":809
+  /* "disorder/diffuse/monocrystal.pyx":811
  *     cdef Py_ssize_t n_odd = odd.shape[0]
  * 
  *     for i in prange(n_hkl, nogil=True):             # <<<<<<<<<<<<<<
@@ -12539,7 +12539,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                             __pyx_v_z = ((double)__PYX_NAN());
                             __pyx_v_z_ = ((double)__PYX_NAN());
 
-                            /* "disorder/diffuse/monocrystal.pyx":811
+                            /* "disorder/diffuse/monocrystal.pyx":813
  *     for i in prange(n_hkl, nogil=True):
  * 
  *         i_ind = indices[i]             # <<<<<<<<<<<<<<
@@ -12549,7 +12549,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                             __pyx_t_41 = __pyx_v_i;
                             __pyx_v_i_ind = (*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_indices.data) + __pyx_t_41)) )));
 
-                            /* "disorder/diffuse/monocrystal.pyx":813
+                            /* "disorder/diffuse/monocrystal.pyx":815
  *         i_ind = indices[i]
  * 
  *         w = i_ind % nl             # <<<<<<<<<<<<<<
@@ -12558,7 +12558,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                             __pyx_v_w = (__pyx_v_i_ind % __pyx_v_nl);
 
-                            /* "disorder/diffuse/monocrystal.pyx":814
+                            /* "disorder/diffuse/monocrystal.pyx":816
  * 
  *         w = i_ind % nl
  *         v = i_ind // nl % nk             # <<<<<<<<<<<<<<
@@ -12567,7 +12567,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                             __pyx_v_v = ((__pyx_v_i_ind / __pyx_v_nl) % __pyx_v_nk);
 
-                            /* "disorder/diffuse/monocrystal.pyx":815
+                            /* "disorder/diffuse/monocrystal.pyx":817
  *         w = i_ind % nl
  *         v = i_ind // nl % nk
  *         u = i_ind // nl // nk % nh             # <<<<<<<<<<<<<<
@@ -12576,7 +12576,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                             __pyx_v_u = (((__pyx_v_i_ind / __pyx_v_nl) / __pyx_v_nk) % __pyx_v_nh);
 
-                            /* "disorder/diffuse/monocrystal.pyx":817
+                            /* "disorder/diffuse/monocrystal.pyx":819
  *         u = i_ind // nl // nk % nh
  * 
  *         h_ = h_min_+h_step_*u             # <<<<<<<<<<<<<<
@@ -12585,7 +12585,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                             __pyx_v_h_ = (__pyx_v_h_min_ + (__pyx_v_h_step_ * __pyx_v_u));
 
-                            /* "disorder/diffuse/monocrystal.pyx":818
+                            /* "disorder/diffuse/monocrystal.pyx":820
  * 
  *         h_ = h_min_+h_step_*u
  *         k_ = k_min_+k_step_*v             # <<<<<<<<<<<<<<
@@ -12594,7 +12594,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                             __pyx_v_k_ = (__pyx_v_k_min_ + (__pyx_v_k_step_ * __pyx_v_v));
 
-                            /* "disorder/diffuse/monocrystal.pyx":819
+                            /* "disorder/diffuse/monocrystal.pyx":821
  *         h_ = h_min_+h_step_*u
  *         k_ = k_min_+k_step_*v
  *         l_ = l_min_+l_step_*w             # <<<<<<<<<<<<<<
@@ -12603,7 +12603,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                             __pyx_v_l_ = (__pyx_v_l_min_ + (__pyx_v_l_step_ * __pyx_v_w));
 
-                            /* "disorder/diffuse/monocrystal.pyx":821
+                            /* "disorder/diffuse/monocrystal.pyx":823
  *         l_ = l_min_+l_step_*w
  * 
  *         x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_             # <<<<<<<<<<<<<<
@@ -12618,7 +12618,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                             __pyx_t_46 = 2;
                             __pyx_v_x = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_41 * __pyx_v_T.strides[0]) ) + __pyx_t_22 * __pyx_v_T.strides[1]) ))) * __pyx_v_h_) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_43 * __pyx_v_T.strides[0]) ) + __pyx_t_44 * __pyx_v_T.strides[1]) ))) * __pyx_v_k_)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_45 * __pyx_v_T.strides[0]) ) + __pyx_t_46 * __pyx_v_T.strides[1]) ))) * __pyx_v_l_));
 
-                            /* "disorder/diffuse/monocrystal.pyx":822
+                            /* "disorder/diffuse/monocrystal.pyx":824
  * 
  *         x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
  *         y = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_             # <<<<<<<<<<<<<<
@@ -12633,7 +12633,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                             __pyx_t_41 = 2;
                             __pyx_v_y = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_46 * __pyx_v_T.strides[0]) ) + __pyx_t_45 * __pyx_v_T.strides[1]) ))) * __pyx_v_h_) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_44 * __pyx_v_T.strides[0]) ) + __pyx_t_43 * __pyx_v_T.strides[1]) ))) * __pyx_v_k_)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_22 * __pyx_v_T.strides[0]) ) + __pyx_t_41 * __pyx_v_T.strides[1]) ))) * __pyx_v_l_));
 
-                            /* "disorder/diffuse/monocrystal.pyx":823
+                            /* "disorder/diffuse/monocrystal.pyx":825
  *         x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
  *         y = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
  *         z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_             # <<<<<<<<<<<<<<
@@ -12648,7 +12648,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                             __pyx_t_46 = 2;
                             __pyx_v_z = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_41 * __pyx_v_T.strides[0]) ) + __pyx_t_22 * __pyx_v_T.strides[1]) ))) * __pyx_v_h_) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_43 * __pyx_v_T.strides[0]) ) + __pyx_t_44 * __pyx_v_T.strides[1]) ))) * __pyx_v_k_)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_45 * __pyx_v_T.strides[0]) ) + __pyx_t_46 * __pyx_v_T.strides[1]) ))) * __pyx_v_l_));
 
-                            /* "disorder/diffuse/monocrystal.pyx":825
+                            /* "disorder/diffuse/monocrystal.pyx":827
  *         z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
  * 
  *         for var in range(n_vars):             # <<<<<<<<<<<<<<
@@ -12660,7 +12660,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                             for (__pyx_t_34 = 0; __pyx_t_34 < __pyx_t_33; __pyx_t_34+=1) {
                               __pyx_v_var = __pyx_t_34;
 
-                              /* "disorder/diffuse/monocrystal.pyx":827
+                              /* "disorder/diffuse/monocrystal.pyx":829
  *         for var in range(n_vars):
  * 
  *             x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z             # <<<<<<<<<<<<<<
@@ -12678,7 +12678,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                               __pyx_t_49 = 2;
                               __pyx_v_x_ = ((((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_46 * __pyx_v_domains.strides[0]) ) + __pyx_t_45 * __pyx_v_domains.strides[1]) ) + __pyx_t_44 * __pyx_v_domains.strides[2]) ))) * __pyx_v_x) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_43 * __pyx_v_domains.strides[0]) ) + __pyx_t_22 * __pyx_v_domains.strides[1]) ) + __pyx_t_41 * __pyx_v_domains.strides[2]) ))) * __pyx_v_y)) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_47 * __pyx_v_domains.strides[0]) ) + __pyx_t_48 * __pyx_v_domains.strides[1]) ) + __pyx_t_49 * __pyx_v_domains.strides[2]) ))) * __pyx_v_z));
 
-                              /* "disorder/diffuse/monocrystal.pyx":828
+                              /* "disorder/diffuse/monocrystal.pyx":830
  * 
  *             x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z
  *             y_ = domains[var,1,0]*x+domains[var,1,1]*y+domains[var,1,2]*z             # <<<<<<<<<<<<<<
@@ -12696,7 +12696,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                               __pyx_t_46 = 2;
                               __pyx_v_y_ = ((((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_49 * __pyx_v_domains.strides[0]) ) + __pyx_t_48 * __pyx_v_domains.strides[1]) ) + __pyx_t_47 * __pyx_v_domains.strides[2]) ))) * __pyx_v_x) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_41 * __pyx_v_domains.strides[0]) ) + __pyx_t_22 * __pyx_v_domains.strides[1]) ) + __pyx_t_43 * __pyx_v_domains.strides[2]) ))) * __pyx_v_y)) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_44 * __pyx_v_domains.strides[0]) ) + __pyx_t_45 * __pyx_v_domains.strides[1]) ) + __pyx_t_46 * __pyx_v_domains.strides[2]) ))) * __pyx_v_z));
 
-                              /* "disorder/diffuse/monocrystal.pyx":829
+                              /* "disorder/diffuse/monocrystal.pyx":831
  *             x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z
  *             y_ = domains[var,1,0]*x+domains[var,1,1]*y+domains[var,1,2]*z
  *             z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z             # <<<<<<<<<<<<<<
@@ -12714,7 +12714,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                               __pyx_t_49 = 2;
                               __pyx_v_z_ = ((((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_46 * __pyx_v_domains.strides[0]) ) + __pyx_t_45 * __pyx_v_domains.strides[1]) ) + __pyx_t_44 * __pyx_v_domains.strides[2]) ))) * __pyx_v_x) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_43 * __pyx_v_domains.strides[0]) ) + __pyx_t_22 * __pyx_v_domains.strides[1]) ) + __pyx_t_41 * __pyx_v_domains.strides[2]) ))) * __pyx_v_y)) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_47 * __pyx_v_domains.strides[0]) ) + __pyx_t_48 * __pyx_v_domains.strides[1]) ) + __pyx_t_49 * __pyx_v_domains.strides[2]) ))) * __pyx_v_z));
 
-                              /* "disorder/diffuse/monocrystal.pyx":831
+                              /* "disorder/diffuse/monocrystal.pyx":833
  *             z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z
  * 
  *             for op in range(n_ops):             # <<<<<<<<<<<<<<
@@ -12726,7 +12726,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                               for (__pyx_t_37 = 0; __pyx_t_37 < __pyx_t_36; __pyx_t_37+=1) {
                                 __pyx_v_op = __pyx_t_37;
 
-                                /* "disorder/diffuse/monocrystal.pyx":833
+                                /* "disorder/diffuse/monocrystal.pyx":835
  *             for op in range(n_ops):
  * 
  *                 h, k, l = transform(x_, y_, z_, sym, op)             # <<<<<<<<<<<<<<
@@ -12741,7 +12741,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_v_k = __pyx_t_30;
                                 __pyx_v_l = __pyx_t_29;
 
-                                /* "disorder/diffuse/monocrystal.pyx":835
+                                /* "disorder/diffuse/monocrystal.pyx":837
  *                 h, k, l = transform(x_, y_, z_, sym, op)
  * 
  *                 f_H, f_K, f_L = h*Nu, k*Nv, l*Nw             # <<<<<<<<<<<<<<
@@ -12755,7 +12755,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_v_f_K = __pyx_t_30;
                                 __pyx_v_f_L = __pyx_t_31;
 
-                                /* "disorder/diffuse/monocrystal.pyx":837
+                                /* "disorder/diffuse/monocrystal.pyx":839
  *                 f_H, f_K, f_L = h*Nu, k*Nv, l*Nw
  * 
  *                 H = int(round2even(f_H))             # <<<<<<<<<<<<<<
@@ -12764,7 +12764,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 __pyx_v_H = ((Py_ssize_t)__pyx_f_8disorder_7diffuse_11monocrystal_round2even(__pyx_v_f_H));
 
-                                /* "disorder/diffuse/monocrystal.pyx":838
+                                /* "disorder/diffuse/monocrystal.pyx":840
  * 
  *                 H = int(round2even(f_H))
  *                 K = int(round2even(f_K))             # <<<<<<<<<<<<<<
@@ -12773,7 +12773,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 __pyx_v_K = ((Py_ssize_t)__pyx_f_8disorder_7diffuse_11monocrystal_round2even(__pyx_v_f_K));
 
-                                /* "disorder/diffuse/monocrystal.pyx":839
+                                /* "disorder/diffuse/monocrystal.pyx":841
  *                 H = int(round2even(f_H))
  *                 K = int(round2even(f_K))
  *                 L = int(round2even(f_L))             # <<<<<<<<<<<<<<
@@ -12782,7 +12782,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 __pyx_v_L = ((Py_ssize_t)__pyx_f_8disorder_7diffuse_11monocrystal_round2even(__pyx_v_f_L));
 
-                                /* "disorder/diffuse/monocrystal.pyx":841
+                                /* "disorder/diffuse/monocrystal.pyx":843
  *                 L = int(round2even(f_L))
  * 
  *                 iH = (H % Nu+Nu) % Nu             # <<<<<<<<<<<<<<
@@ -12791,7 +12791,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 __pyx_v_iH = (((__pyx_v_H % __pyx_v_Nu) + __pyx_v_Nu) % __pyx_v_Nu);
 
-                                /* "disorder/diffuse/monocrystal.pyx":842
+                                /* "disorder/diffuse/monocrystal.pyx":844
  * 
  *                 iH = (H % Nu+Nu) % Nu
  *                 iK = (K % Nv+Nv) % Nv             # <<<<<<<<<<<<<<
@@ -12800,7 +12800,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 __pyx_v_iK = (((__pyx_v_K % __pyx_v_Nv) + __pyx_v_Nv) % __pyx_v_Nv);
 
-                                /* "disorder/diffuse/monocrystal.pyx":843
+                                /* "disorder/diffuse/monocrystal.pyx":845
  *                 iH = (H % Nu+Nu) % Nu
  *                 iK = (K % Nv+Nv) % Nv
  *                 iL = (L % Nw+Nw) % Nw             # <<<<<<<<<<<<<<
@@ -12809,7 +12809,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 __pyx_v_iL = (((__pyx_v_L % __pyx_v_Nw) + __pyx_v_Nw) % __pyx_v_Nw);
 
-                                /* "disorder/diffuse/monocrystal.pyx":845
+                                /* "disorder/diffuse/monocrystal.pyx":847
  *                 iL = (L % Nw+Nw) % Nw
  * 
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):             # <<<<<<<<<<<<<<
@@ -12833,7 +12833,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_L33_bool_binop_done:;
                                 if (__pyx_t_3) {
 
-                                  /* "disorder/diffuse/monocrystal.pyx":846
+                                  /* "disorder/diffuse/monocrystal.pyx":848
  * 
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
  *                     iH = iH+Fu             # <<<<<<<<<<<<<<
@@ -12842,7 +12842,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                   __pyx_v_iH = (__pyx_v_iH + __pyx_v_Fu);
 
-                                  /* "disorder/diffuse/monocrystal.pyx":845
+                                  /* "disorder/diffuse/monocrystal.pyx":847
  *                 iL = (L % Nw+Nw) % Nw
  * 
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):             # <<<<<<<<<<<<<<
@@ -12851,7 +12851,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 }
 
-                                /* "disorder/diffuse/monocrystal.pyx":847
+                                /* "disorder/diffuse/monocrystal.pyx":849
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
  *                     iH = iH+Fu
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):             # <<<<<<<<<<<<<<
@@ -12875,7 +12875,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_L37_bool_binop_done:;
                                 if (__pyx_t_3) {
 
-                                  /* "disorder/diffuse/monocrystal.pyx":848
+                                  /* "disorder/diffuse/monocrystal.pyx":850
  *                     iH = iH+Fu
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
  *                     iK = iK+Fv             # <<<<<<<<<<<<<<
@@ -12884,7 +12884,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                   __pyx_v_iK = (__pyx_v_iK + __pyx_v_Fv);
 
-                                  /* "disorder/diffuse/monocrystal.pyx":847
+                                  /* "disorder/diffuse/monocrystal.pyx":849
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
  *                     iH = iH+Fu
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):             # <<<<<<<<<<<<<<
@@ -12893,7 +12893,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 }
 
-                                /* "disorder/diffuse/monocrystal.pyx":849
+                                /* "disorder/diffuse/monocrystal.pyx":851
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
  *                     iK = iK+Fv
  *                 if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):             # <<<<<<<<<<<<<<
@@ -12917,7 +12917,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_L41_bool_binop_done:;
                                 if (__pyx_t_3) {
 
-                                  /* "disorder/diffuse/monocrystal.pyx":850
+                                  /* "disorder/diffuse/monocrystal.pyx":852
  *                     iK = iK+Fv
  *                 if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):
  *                     iL = iL+Fw             # <<<<<<<<<<<<<<
@@ -12926,7 +12926,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                   __pyx_v_iL = (__pyx_v_iL + __pyx_v_Fw);
 
-                                  /* "disorder/diffuse/monocrystal.pyx":849
+                                  /* "disorder/diffuse/monocrystal.pyx":851
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
  *                     iK = iK+Fv
  *                 if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):             # <<<<<<<<<<<<<<
@@ -12935,7 +12935,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 }
 
-                                /* "disorder/diffuse/monocrystal.pyx":852
+                                /* "disorder/diffuse/monocrystal.pyx":854
  *                     iL = iL+Fw
  * 
  *                 i_dft = iL+Nw*(iK+Nv*iH)             # <<<<<<<<<<<<<<
@@ -12944,7 +12944,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 __pyx_v_i_dft = (__pyx_v_iL + (__pyx_v_Nw * (__pyx_v_iK + (__pyx_v_Nv * __pyx_v_iH))));
 
-                                /* "disorder/diffuse/monocrystal.pyx":854
+                                /* "disorder/diffuse/monocrystal.pyx":856
  *                 i_dft = iL+Nw*(iK+Nv*iH)
  * 
  *                 Qh = M_TAU*(B[0,0]*h+B[0,1]*k+B[0,2]*l)             # <<<<<<<<<<<<<<
@@ -12959,7 +12959,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_t_43 = 2;
                                 __pyx_v_Qh = (__pyx_v_M_TAU * ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_49 * __pyx_v_B.strides[0]) ) + __pyx_t_48 * __pyx_v_B.strides[1]) ))) * __pyx_v_h) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_47 * __pyx_v_B.strides[0]) ) + __pyx_t_41 * __pyx_v_B.strides[1]) ))) * __pyx_v_k)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_22 * __pyx_v_B.strides[0]) ) + __pyx_t_43 * __pyx_v_B.strides[1]) ))) * __pyx_v_l)));
 
-                                /* "disorder/diffuse/monocrystal.pyx":855
+                                /* "disorder/diffuse/monocrystal.pyx":857
  * 
  *                 Qh = M_TAU*(B[0,0]*h+B[0,1]*k+B[0,2]*l)
  *                 Qk = M_TAU*(B[1,0]*h+B[1,1]*k+B[1,2]*l)             # <<<<<<<<<<<<<<
@@ -12974,7 +12974,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_t_49 = 2;
                                 __pyx_v_Qk = (__pyx_v_M_TAU * ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_43 * __pyx_v_B.strides[0]) ) + __pyx_t_22 * __pyx_v_B.strides[1]) ))) * __pyx_v_h) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_41 * __pyx_v_B.strides[0]) ) + __pyx_t_47 * __pyx_v_B.strides[1]) ))) * __pyx_v_k)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_48 * __pyx_v_B.strides[0]) ) + __pyx_t_49 * __pyx_v_B.strides[1]) ))) * __pyx_v_l)));
 
-                                /* "disorder/diffuse/monocrystal.pyx":856
+                                /* "disorder/diffuse/monocrystal.pyx":858
  *                 Qh = M_TAU*(B[0,0]*h+B[0,1]*k+B[0,2]*l)
  *                 Qk = M_TAU*(B[1,0]*h+B[1,1]*k+B[1,2]*l)
  *                 Ql = M_TAU*(B[2,0]*h+B[2,1]*k+B[2,2]*l)             # <<<<<<<<<<<<<<
@@ -12989,7 +12989,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_t_43 = 2;
                                 __pyx_v_Ql = (__pyx_v_M_TAU * ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_49 * __pyx_v_B.strides[0]) ) + __pyx_t_48 * __pyx_v_B.strides[1]) ))) * __pyx_v_h) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_47 * __pyx_v_B.strides[0]) ) + __pyx_t_41 * __pyx_v_B.strides[1]) ))) * __pyx_v_k)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_22 * __pyx_v_B.strides[0]) ) + __pyx_t_43 * __pyx_v_B.strides[1]) ))) * __pyx_v_l)));
 
-                                /* "disorder/diffuse/monocrystal.pyx":858
+                                /* "disorder/diffuse/monocrystal.pyx":860
  *                 Ql = M_TAU*(B[2,0]*h+B[2,1]*k+B[2,2]*l)
  * 
  *                 Qx = R[0,0]*Qh+R[0,1]*Qk+R[0,2]*Ql             # <<<<<<<<<<<<<<
@@ -13004,7 +13004,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_t_49 = 2;
                                 __pyx_v_Qx = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_43 * __pyx_v_R.strides[0]) ) + __pyx_t_22 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qh) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_41 * __pyx_v_R.strides[0]) ) + __pyx_t_47 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qk)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_48 * __pyx_v_R.strides[0]) ) + __pyx_t_49 * __pyx_v_R.strides[1]) ))) * __pyx_v_Ql));
 
-                                /* "disorder/diffuse/monocrystal.pyx":859
+                                /* "disorder/diffuse/monocrystal.pyx":861
  * 
  *                 Qx = R[0,0]*Qh+R[0,1]*Qk+R[0,2]*Ql
  *                 Qy = R[1,0]*Qh+R[1,1]*Qk+R[1,2]*Ql             # <<<<<<<<<<<<<<
@@ -13019,7 +13019,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_t_43 = 2;
                                 __pyx_v_Qy = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_49 * __pyx_v_R.strides[0]) ) + __pyx_t_48 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qh) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_47 * __pyx_v_R.strides[0]) ) + __pyx_t_41 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qk)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_22 * __pyx_v_R.strides[0]) ) + __pyx_t_43 * __pyx_v_R.strides[1]) ))) * __pyx_v_Ql));
 
-                                /* "disorder/diffuse/monocrystal.pyx":860
+                                /* "disorder/diffuse/monocrystal.pyx":862
  *                 Qx = R[0,0]*Qh+R[0,1]*Qk+R[0,2]*Ql
  *                 Qy = R[1,0]*Qh+R[1,1]*Qk+R[1,2]*Ql
  *                 Qz = R[2,0]*Qh+R[2,1]*Qk+R[2,2]*Ql             # <<<<<<<<<<<<<<
@@ -13034,7 +13034,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_t_49 = 2;
                                 __pyx_v_Qz = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_43 * __pyx_v_R.strides[0]) ) + __pyx_t_22 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qh) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_41 * __pyx_v_R.strides[0]) ) + __pyx_t_47 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qk)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_48 * __pyx_v_R.strides[0]) ) + __pyx_t_49 * __pyx_v_R.strides[1]) ))) * __pyx_v_Ql));
 
-                                /* "disorder/diffuse/monocrystal.pyx":862
+                                /* "disorder/diffuse/monocrystal.pyx":864
  *                 Qz = R[2,0]*Qh+R[2,1]*Qk+R[2,2]*Ql
  * 
  *                 prod = 0             # <<<<<<<<<<<<<<
@@ -13043,7 +13043,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 __pyx_v_prod = __pyx_t_double_complex_from_parts(0, 0);
 
-                                /* "disorder/diffuse/monocrystal.pyx":864
+                                /* "disorder/diffuse/monocrystal.pyx":866
  *                 prod = 0
  * 
  *                 for j in range(n_atm):             # <<<<<<<<<<<<<<
@@ -13055,17 +13055,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 for (__pyx_t_40 = 0; __pyx_t_40 < __pyx_t_39; __pyx_t_40+=1) {
                                   __pyx_v_j = __pyx_t_40;
 
-                                  /* "disorder/diffuse/monocrystal.pyx":866
+                                  /* "disorder/diffuse/monocrystal.pyx":868
  *                 for j in range(n_atm):
  * 
  *                     if (technique == 'Neutron'):             # <<<<<<<<<<<<<<
  * 
  *                         scattering_length = b[j]
  */
-                                  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_technique, __pyx_n_u_Neutron, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 866, __pyx_L26_error)
+                                  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_technique, __pyx_n_u_Neutron, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 868, __pyx_L26_error)
                                   if (__pyx_t_3) {
 
-                                    /* "disorder/diffuse/monocrystal.pyx":868
+                                    /* "disorder/diffuse/monocrystal.pyx":870
  *                     if (technique == 'Neutron'):
  * 
  *                         scattering_length = b[j]             # <<<<<<<<<<<<<<
@@ -13075,7 +13075,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     __pyx_t_49 = __pyx_v_j;
                                     __pyx_v_scattering_length = (*((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_b.data) + __pyx_t_49)) )));
 
-                                    /* "disorder/diffuse/monocrystal.pyx":866
+                                    /* "disorder/diffuse/monocrystal.pyx":868
  *                 for j in range(n_atm):
  * 
  *                     if (technique == 'Neutron'):             # <<<<<<<<<<<<<<
@@ -13085,7 +13085,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     goto __pyx_L46;
                                   }
 
-                                  /* "disorder/diffuse/monocrystal.pyx":872
+                                  /* "disorder/diffuse/monocrystal.pyx":874
  *                     else:
  * 
  *                         Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)             # <<<<<<<<<<<<<<
@@ -13095,7 +13095,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                   /*else*/ {
                                     __pyx_v_Q = sqrt((((__pyx_v_Qx * __pyx_v_Qx) + (__pyx_v_Qy * __pyx_v_Qy)) + (__pyx_v_Qz * __pyx_v_Qz)));
 
-                                    /* "disorder/diffuse/monocrystal.pyx":874
+                                    /* "disorder/diffuse/monocrystal.pyx":876
  *                         Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)
  * 
  *                         s_ = Q*inv_M_SP             # <<<<<<<<<<<<<<
@@ -13104,7 +13104,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                     __pyx_v_s_ = (__pyx_v_Q * __pyx_v_inv_M_SP);
 
-                                    /* "disorder/diffuse/monocrystal.pyx":875
+                                    /* "disorder/diffuse/monocrystal.pyx":877
  * 
  *                         s_ = Q*inv_M_SP
  *                         s_sq = s_*s_             # <<<<<<<<<<<<<<
@@ -13113,7 +13113,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                     __pyx_v_s_sq = (__pyx_v_s_ * __pyx_v_s_);
 
-                                    /* "disorder/diffuse/monocrystal.pyx":877
+                                    /* "disorder/diffuse/monocrystal.pyx":879
  *                         s_sq = s_*s_
  * 
  *                         scattering_length = a1[j]*iexp(-b1[j]*s_sq)\             # <<<<<<<<<<<<<<
@@ -13123,7 +13123,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     __pyx_t_49 = __pyx_v_j;
                                     __pyx_t_48 = __pyx_v_j;
 
-                                    /* "disorder/diffuse/monocrystal.pyx":878
+                                    /* "disorder/diffuse/monocrystal.pyx":880
  * 
  *                         scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
  *                                           + a2[j]*iexp(-b2[j]*s_sq)\             # <<<<<<<<<<<<<<
@@ -13133,7 +13133,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     __pyx_t_47 = __pyx_v_j;
                                     __pyx_t_41 = __pyx_v_j;
 
-                                    /* "disorder/diffuse/monocrystal.pyx":879
+                                    /* "disorder/diffuse/monocrystal.pyx":881
  *                         scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
  *                                           + a2[j]*iexp(-b2[j]*s_sq)\
  *                                           + a3[j]*iexp(-b3[j]*s_sq)\             # <<<<<<<<<<<<<<
@@ -13143,7 +13143,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     __pyx_t_22 = __pyx_v_j;
                                     __pyx_t_43 = __pyx_v_j;
 
-                                    /* "disorder/diffuse/monocrystal.pyx":880
+                                    /* "disorder/diffuse/monocrystal.pyx":882
  *                                           + a2[j]*iexp(-b2[j]*s_sq)\
  *                                           + a3[j]*iexp(-b3[j]*s_sq)\
  *                                           + a4[j]*iexp(-b4[j]*s_sq)\             # <<<<<<<<<<<<<<
@@ -13153,7 +13153,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     __pyx_t_44 = __pyx_v_j;
                                     __pyx_t_45 = __pyx_v_j;
 
-                                    /* "disorder/diffuse/monocrystal.pyx":881
+                                    /* "disorder/diffuse/monocrystal.pyx":883
  *                                           + a3[j]*iexp(-b3[j]*s_sq)\
  *                                           + a4[j]*iexp(-b4[j]*s_sq)\
  *                                           + c[j]             # <<<<<<<<<<<<<<
@@ -13165,7 +13165,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                   }
                                   __pyx_L46:;
 
-                                  /* "disorder/diffuse/monocrystal.pyx":883
+                                  /* "disorder/diffuse/monocrystal.pyx":885
  *                                           + c[j]
  * 
  *                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])             # <<<<<<<<<<<<<<
@@ -13177,7 +13177,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                   __pyx_t_44 = __pyx_v_j;
                                   __pyx_v_phase_factor = __pyx_f_8disorder_7diffuse_11monocrystal_iexp((((__pyx_v_Qx * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_ux.data) + __pyx_t_46)) )))) + (__pyx_v_Qy * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_uy.data) + __pyx_t_45)) ))))) + (__pyx_v_Qz * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_uz.data) + __pyx_t_44)) ))))));
 
-                                  /* "disorder/diffuse/monocrystal.pyx":885
+                                  /* "disorder/diffuse/monocrystal.pyx":887
  *                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
  * 
  *                     factors = scattering_length*phase_factor             # <<<<<<<<<<<<<<
@@ -13186,7 +13186,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                   __pyx_v_factors = __Pyx_c_prod_double(__pyx_v_scattering_length, __pyx_v_phase_factor);
 
-                                  /* "disorder/diffuse/monocrystal.pyx":887
+                                  /* "disorder/diffuse/monocrystal.pyx":889
  *                     factors = scattering_length*phase_factor
  * 
  *                     if ((iH <= Fu and iK <= Fv and iL <= Fw) and \             # <<<<<<<<<<<<<<
@@ -13212,7 +13212,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     goto __pyx_L48_bool_binop_done;
                                   }
 
-                                  /* "disorder/diffuse/monocrystal.pyx":888
+                                  /* "disorder/diffuse/monocrystal.pyx":890
  * 
  *                     if ((iH <= Fu and iK <= Fv and iL <= Fw) and \
  *                         nuclear(h, k, l, centering)):             # <<<<<<<<<<<<<<
@@ -13223,7 +13223,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                   __pyx_t_3 = __pyx_t_51;
                                   __pyx_L48_bool_binop_done:;
 
-                                  /* "disorder/diffuse/monocrystal.pyx":887
+                                  /* "disorder/diffuse/monocrystal.pyx":889
  *                     factors = scattering_length*phase_factor
  * 
  *                     if ((iH <= Fu and iK <= Fv and iL <= Fw) and \             # <<<<<<<<<<<<<<
@@ -13232,7 +13232,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                   if (__pyx_t_3) {
 
-                                    /* "disorder/diffuse/monocrystal.pyx":890
+                                    /* "disorder/diffuse/monocrystal.pyx":892
  *                         nuclear(h, k, l, centering)):
  * 
  *                         for g in range(n_odd):             # <<<<<<<<<<<<<<
@@ -13244,7 +13244,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     for (__pyx_t_54 = 0; __pyx_t_54 < __pyx_t_53; __pyx_t_54+=1) {
                                       __pyx_v_g = __pyx_t_54;
 
-                                      /* "disorder/diffuse/monocrystal.pyx":892
+                                      /* "disorder/diffuse/monocrystal.pyx":894
  *                         for g in range(n_odd):
  * 
  *                             q = odd[g]             # <<<<<<<<<<<<<<
@@ -13254,7 +13254,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                       __pyx_t_44 = __pyx_v_g;
                                       __pyx_v_q = (*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_odd.data) + __pyx_t_44)) )));
 
-                                      /* "disorder/diffuse/monocrystal.pyx":894
+                                      /* "disorder/diffuse/monocrystal.pyx":896
  *                             q = odd[g]
  * 
  *                             j_dft = j+n_atm*(i_dft+N_uvw*q)             # <<<<<<<<<<<<<<
@@ -13263,7 +13263,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                       __pyx_v_j_dft = (__pyx_v_j + (__pyx_v_n_atm * (__pyx_v_i_dft + (__pyx_v_N_uvw * __pyx_v_q))));
 
-                                      /* "disorder/diffuse/monocrystal.pyx":896
+                                      /* "disorder/diffuse/monocrystal.pyx":898
  *                             j_dft = j+n_atm*(i_dft+N_uvw*q)
  * 
  *                             Q_k = Qx**exponents[q,0]\             # <<<<<<<<<<<<<<
@@ -13273,7 +13273,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                       __pyx_t_44 = __pyx_v_q;
                                       __pyx_t_45 = 0;
 
-                                      /* "disorder/diffuse/monocrystal.pyx":897
+                                      /* "disorder/diffuse/monocrystal.pyx":899
  * 
  *                             Q_k = Qx**exponents[q,0]\
  *                                 * Qy**exponents[q,1]\             # <<<<<<<<<<<<<<
@@ -13283,7 +13283,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                       __pyx_t_46 = __pyx_v_q;
                                       __pyx_t_43 = 1;
 
-                                      /* "disorder/diffuse/monocrystal.pyx":898
+                                      /* "disorder/diffuse/monocrystal.pyx":900
  *                             Q_k = Qx**exponents[q,0]\
  *                                 * Qy**exponents[q,1]\
  *                                 * Qz**exponents[q,2]             # <<<<<<<<<<<<<<
@@ -13294,7 +13294,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                       __pyx_t_41 = 2;
                                       __pyx_v_Q_k = ((pow(__pyx_v_Qx, ((double)(*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_exponents.data + __pyx_t_44 * __pyx_v_exponents.strides[0]) )) + __pyx_t_45)) ))))) * pow(__pyx_v_Qy, ((double)(*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_exponents.data + __pyx_t_46 * __pyx_v_exponents.strides[0]) )) + __pyx_t_43)) )))))) * pow(__pyx_v_Qz, ((double)(*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_exponents.data + __pyx_t_22 * __pyx_v_exponents.strides[0]) )) + __pyx_t_41)) ))))));
 
-                                      /* "disorder/diffuse/monocrystal.pyx":900
+                                      /* "disorder/diffuse/monocrystal.pyx":902
  *                                 * Qz**exponents[q,2]
  * 
  *                             prod = prod+factors*coeffs[q]*U_k[j_dft]*Q_k             # <<<<<<<<<<<<<<
@@ -13306,7 +13306,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                       __pyx_v_prod = __Pyx_c_sum_double(__pyx_v_prod, __Pyx_c_prod_double(__Pyx_c_prod_double(__Pyx_c_prod_double(__pyx_v_factors, (*((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_coeffs.data) + __pyx_t_41)) )))), (*((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_U_k.data) + __pyx_t_22)) )))), __pyx_t_double_complex_from_parts(__pyx_v_Q_k, 0)));
                                     }
 
-                                    /* "disorder/diffuse/monocrystal.pyx":887
+                                    /* "disorder/diffuse/monocrystal.pyx":889
  *                     factors = scattering_length*phase_factor
  * 
  *                     if ((iH <= Fu and iK <= Fv and iL <= Fw) and \             # <<<<<<<<<<<<<<
@@ -13316,7 +13316,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     goto __pyx_L47;
                                   }
 
-                                  /* "disorder/diffuse/monocrystal.pyx":904
+                                  /* "disorder/diffuse/monocrystal.pyx":906
  *                     else:
  * 
  *                         for q in range(n_prod):             # <<<<<<<<<<<<<<
@@ -13329,7 +13329,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                     for (__pyx_t_54 = 0; __pyx_t_54 < __pyx_t_53; __pyx_t_54+=1) {
                                       __pyx_v_q = __pyx_t_54;
 
-                                      /* "disorder/diffuse/monocrystal.pyx":906
+                                      /* "disorder/diffuse/monocrystal.pyx":908
  *                         for q in range(n_prod):
  * 
  *                             j_dft = j+n_atm*(i_dft+N_uvw*q)             # <<<<<<<<<<<<<<
@@ -13338,7 +13338,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                       __pyx_v_j_dft = (__pyx_v_j + (__pyx_v_n_atm * (__pyx_v_i_dft + (__pyx_v_N_uvw * __pyx_v_q))));
 
-                                      /* "disorder/diffuse/monocrystal.pyx":908
+                                      /* "disorder/diffuse/monocrystal.pyx":910
  *                             j_dft = j+n_atm*(i_dft+N_uvw*q)
  * 
  *                             Q_k = Qx**exponents[q,0]\             # <<<<<<<<<<<<<<
@@ -13348,7 +13348,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                       __pyx_t_22 = __pyx_v_q;
                                       __pyx_t_41 = 0;
 
-                                      /* "disorder/diffuse/monocrystal.pyx":909
+                                      /* "disorder/diffuse/monocrystal.pyx":911
  * 
  *                             Q_k = Qx**exponents[q,0]\
  *                                 * Qy**exponents[q,1]\             # <<<<<<<<<<<<<<
@@ -13358,7 +13358,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                       __pyx_t_43 = __pyx_v_q;
                                       __pyx_t_46 = 1;
 
-                                      /* "disorder/diffuse/monocrystal.pyx":910
+                                      /* "disorder/diffuse/monocrystal.pyx":912
  *                             Q_k = Qx**exponents[q,0]\
  *                                 * Qy**exponents[q,1]\
  *                                 * Qz**exponents[q,2]             # <<<<<<<<<<<<<<
@@ -13369,7 +13369,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                       __pyx_t_44 = 2;
                                       __pyx_v_Q_k = ((pow(__pyx_v_Qx, ((double)(*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_exponents.data + __pyx_t_22 * __pyx_v_exponents.strides[0]) )) + __pyx_t_41)) ))))) * pow(__pyx_v_Qy, ((double)(*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_exponents.data + __pyx_t_43 * __pyx_v_exponents.strides[0]) )) + __pyx_t_46)) )))))) * pow(__pyx_v_Qz, ((double)(*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_exponents.data + __pyx_t_45 * __pyx_v_exponents.strides[0]) )) + __pyx_t_44)) ))))));
 
-                                      /* "disorder/diffuse/monocrystal.pyx":912
+                                      /* "disorder/diffuse/monocrystal.pyx":914
  *                                 * Qz**exponents[q,2]
  * 
  *                             prod = prod+factors*coeffs[q]*U_k[j_dft]*Q_k             # <<<<<<<<<<<<<<
@@ -13384,7 +13384,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                   __pyx_L47:;
                                 }
 
-                                /* "disorder/diffuse/monocrystal.pyx":914
+                                /* "disorder/diffuse/monocrystal.pyx":916
  *                             prod = prod+factors*coeffs[q]*U_k[j_dft]*Q_k
  * 
  *                 F = prod             # <<<<<<<<<<<<<<
@@ -13393,7 +13393,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
  */
                                 __pyx_v_F = __pyx_v_prod;
 
-                                /* "disorder/diffuse/monocrystal.pyx":916
+                                /* "disorder/diffuse/monocrystal.pyx":918
  *                 F = prod
  * 
  *                 F_real, F_imag = F.real, F.imag             # <<<<<<<<<<<<<<
@@ -13405,7 +13405,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
                                 __pyx_v_F_real = __pyx_t_31;
                                 __pyx_v_F_imag = __pyx_t_30;
 
-                                /* "disorder/diffuse/monocrystal.pyx":918
+                                /* "disorder/diffuse/monocrystal.pyx":920
  *                 F_real, F_imag = F.real, F.imag
  * 
  *                 I[i] += (F_real*F_real+F_imag*F_imag)*factor*variants[var]             # <<<<<<<<<<<<<<
@@ -13596,7 +13596,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
         #endif
       }
 
-      /* "disorder/diffuse/monocrystal.pyx":809
+      /* "disorder/diffuse/monocrystal.pyx":811
  *     cdef Py_ssize_t n_odd = odd.shape[0]
  * 
  *     for i in prange(n_hkl, nogil=True):             # <<<<<<<<<<<<<<
@@ -13622,12 +13622,12 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
       }
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":920
+  /* "disorder/diffuse/monocrystal.pyx":922
  *                 I[i] += (F_real*F_real+F_imag*F_imag)*factor*variants[var]
  * 
  *     return I_np             # <<<<<<<<<<<<<<
  * 
- * def structure(double [::1] ux,
+ * def structural(double [::1] occupancy,
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_I_np);
@@ -13697,18 +13697,19 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_4displacive(CYTHON_UN
   return __pyx_r;
 }
 
-/* "disorder/diffuse/monocrystal.pyx":922
+/* "disorder/diffuse/monocrystal.pyx":924
  *     return I_np
  * 
- * def structure(double [::1] ux,             # <<<<<<<<<<<<<<
- *               double [::1] uy,
- *               double [::1] uz,
+ * def structural(double [::1] occupancy,             # <<<<<<<<<<<<<<
+ *                double [::1] ux,
+ *                double [::1] uy,
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_7structure(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8disorder_7diffuse_11monocrystal_7structure = {"structure", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_11monocrystal_7structure, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_7structure(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_7structural(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8disorder_7diffuse_11monocrystal_7structural = {"structural", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_11monocrystal_7structural, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_7structural(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  __Pyx_memviewslice __pyx_v_occupancy = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_ux = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_uy = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_uz = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -13732,19 +13733,25 @@ static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_7structure(PyObject *
   Py_ssize_t __pyx_v_Nu;
   Py_ssize_t __pyx_v_Nv;
   Py_ssize_t __pyx_v_Nw;
+  PyObject *__pyx_v_technique = 0;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("structure (wrapper)", 0);
+  __Pyx_RefNannySetupContext("structural (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_ux,&__pyx_n_s_uy,&__pyx_n_s_uz,&__pyx_n_s_atms,&__pyx_n_s_h_range,&__pyx_n_s_k_range,&__pyx_n_s_l_range,&__pyx_n_s_indices,&__pyx_n_s_symop,&__pyx_n_s_T,&__pyx_n_s_B,&__pyx_n_s_R,&__pyx_n_s_domains,&__pyx_n_s_variants,&__pyx_n_s_nh,&__pyx_n_s_nk,&__pyx_n_s_nl,&__pyx_n_s_nu,&__pyx_n_s_nv,&__pyx_n_s_nw,&__pyx_n_s_Nu,&__pyx_n_s_Nv,&__pyx_n_s_Nw,0};
-    PyObject* values[23] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_occupancy,&__pyx_n_s_ux,&__pyx_n_s_uy,&__pyx_n_s_uz,&__pyx_n_s_atms,&__pyx_n_s_h_range,&__pyx_n_s_k_range,&__pyx_n_s_l_range,&__pyx_n_s_indices,&__pyx_n_s_symop,&__pyx_n_s_T,&__pyx_n_s_B,&__pyx_n_s_R,&__pyx_n_s_domains,&__pyx_n_s_variants,&__pyx_n_s_nh,&__pyx_n_s_nk,&__pyx_n_s_nl,&__pyx_n_s_nu,&__pyx_n_s_nv,&__pyx_n_s_nw,&__pyx_n_s_Nu,&__pyx_n_s_Nv,&__pyx_n_s_Nw,&__pyx_n_s_technique,0};
+    PyObject* values[25] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    values[24] = ((PyObject *)__pyx_n_u_Neutron);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case 25: values[24] = PyTuple_GET_ITEM(__pyx_args, 24);
+        CYTHON_FALLTHROUGH;
+        case 24: values[23] = PyTuple_GET_ITEM(__pyx_args, 23);
+        CYTHON_FALLTHROUGH;
         case 23: values[22] = PyTuple_GET_ITEM(__pyx_args, 22);
         CYTHON_FALLTHROUGH;
         case 22: values[21] = PyTuple_GET_ITEM(__pyx_args, 21);
@@ -13797,211 +13804,230 @@ static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_7structure(PyObject *
       kw_args = PyDict_Size(__pyx_kwds);
       switch (pos_args) {
         case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ux)) != 0)) kw_args--;
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_occupancy)) != 0)) kw_args--;
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_uy)) != 0)) kw_args--;
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_ux)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 1); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 1); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_uz)) != 0)) kw_args--;
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_uy)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 2); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 2); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_atms)) != 0)) kw_args--;
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_uz)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 3); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 3); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_h_range)) != 0)) kw_args--;
+        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_atms)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 4); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 4); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_k_range)) != 0)) kw_args--;
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_h_range)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 5); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 5); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
-        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_l_range)) != 0)) kw_args--;
+        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_k_range)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 6); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 6); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
-        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_indices)) != 0)) kw_args--;
+        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_l_range)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 7); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 7); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
-        if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_symop)) != 0)) kw_args--;
+        if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_indices)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 8); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 8); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
-        if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T)) != 0)) kw_args--;
+        if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_symop)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 9); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 9); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 10:
-        if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_B)) != 0)) kw_args--;
+        if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 10); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 10); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 11:
-        if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_R)) != 0)) kw_args--;
+        if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_B)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 11); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 11); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 12:
-        if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_domains)) != 0)) kw_args--;
+        if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_R)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 12); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 12); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 13:
-        if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_variants)) != 0)) kw_args--;
+        if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_domains)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 13); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 13); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 14:
-        if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nh)) != 0)) kw_args--;
+        if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_variants)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 14); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 14); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 15:
-        if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nk)) != 0)) kw_args--;
+        if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nh)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 15); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 15); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 16:
-        if (likely((values[16] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nl)) != 0)) kw_args--;
+        if (likely((values[16] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nk)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 16); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 16); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 17:
-        if (likely((values[17] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nu)) != 0)) kw_args--;
+        if (likely((values[17] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nl)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 17); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 17); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 18:
-        if (likely((values[18] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nv)) != 0)) kw_args--;
+        if (likely((values[18] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nu)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 18); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 18); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 19:
-        if (likely((values[19] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nw)) != 0)) kw_args--;
+        if (likely((values[19] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nv)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 19); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 19); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 20:
-        if (likely((values[20] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nu)) != 0)) kw_args--;
+        if (likely((values[20] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_nw)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 20); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 20); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 21:
-        if (likely((values[21] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nv)) != 0)) kw_args--;
+        if (likely((values[21] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nu)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 21); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 21); __PYX_ERR(0, 924, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 22:
-        if (likely((values[22] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nw)) != 0)) kw_args--;
+        if (likely((values[22] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nv)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, 22); __PYX_ERR(0, 922, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 22); __PYX_ERR(0, 924, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 23:
+        if (likely((values[23] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nw)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, 23); __PYX_ERR(0, 924, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 24:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_technique);
+          if (value) { values[24] = value; kw_args--; }
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "structure") < 0)) __PYX_ERR(0, 922, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "structural") < 0)) __PYX_ERR(0, 924, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 23) {
-      goto __pyx_L5_argtuple_error;
     } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
-      values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
-      values[9] = PyTuple_GET_ITEM(__pyx_args, 9);
-      values[10] = PyTuple_GET_ITEM(__pyx_args, 10);
-      values[11] = PyTuple_GET_ITEM(__pyx_args, 11);
-      values[12] = PyTuple_GET_ITEM(__pyx_args, 12);
-      values[13] = PyTuple_GET_ITEM(__pyx_args, 13);
-      values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
-      values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
-      values[16] = PyTuple_GET_ITEM(__pyx_args, 16);
-      values[17] = PyTuple_GET_ITEM(__pyx_args, 17);
-      values[18] = PyTuple_GET_ITEM(__pyx_args, 18);
-      values[19] = PyTuple_GET_ITEM(__pyx_args, 19);
-      values[20] = PyTuple_GET_ITEM(__pyx_args, 20);
-      values[21] = PyTuple_GET_ITEM(__pyx_args, 21);
-      values[22] = PyTuple_GET_ITEM(__pyx_args, 22);
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case 25: values[24] = PyTuple_GET_ITEM(__pyx_args, 24);
+        CYTHON_FALLTHROUGH;
+        case 24: values[23] = PyTuple_GET_ITEM(__pyx_args, 23);
+        values[22] = PyTuple_GET_ITEM(__pyx_args, 22);
+        values[21] = PyTuple_GET_ITEM(__pyx_args, 21);
+        values[20] = PyTuple_GET_ITEM(__pyx_args, 20);
+        values[19] = PyTuple_GET_ITEM(__pyx_args, 19);
+        values[18] = PyTuple_GET_ITEM(__pyx_args, 18);
+        values[17] = PyTuple_GET_ITEM(__pyx_args, 17);
+        values[16] = PyTuple_GET_ITEM(__pyx_args, 16);
+        values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
+        values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
+        values[13] = PyTuple_GET_ITEM(__pyx_args, 13);
+        values[12] = PyTuple_GET_ITEM(__pyx_args, 12);
+        values[11] = PyTuple_GET_ITEM(__pyx_args, 11);
+        values[10] = PyTuple_GET_ITEM(__pyx_args, 10);
+        values[9] = PyTuple_GET_ITEM(__pyx_args, 9);
+        values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
+        values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
+        values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+        values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
     }
-    __pyx_v_ux = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_ux.memview)) __PYX_ERR(0, 922, __pyx_L3_error)
-    __pyx_v_uy = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_uy.memview)) __PYX_ERR(0, 923, __pyx_L3_error)
-    __pyx_v_uz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_uz.memview)) __PYX_ERR(0, 924, __pyx_L3_error)
-    __pyx_v_atms = values[3];
-    __pyx_v_h_range = values[4];
-    __pyx_v_k_range = values[5];
-    __pyx_v_l_range = values[6];
-    __pyx_v_indices = __Pyx_PyObject_to_MemoryviewSlice_dc_long(values[7], PyBUF_WRITABLE); if (unlikely(!__pyx_v_indices.memview)) __PYX_ERR(0, 929, __pyx_L3_error)
-    __pyx_v_symop = values[8];
-    __pyx_v_T = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(values[9], PyBUF_WRITABLE); if (unlikely(!__pyx_v_T.memview)) __PYX_ERR(0, 931, __pyx_L3_error)
-    __pyx_v_B = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(values[10], PyBUF_WRITABLE); if (unlikely(!__pyx_v_B.memview)) __PYX_ERR(0, 932, __pyx_L3_error)
-    __pyx_v_R = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(values[11], PyBUF_WRITABLE); if (unlikely(!__pyx_v_R.memview)) __PYX_ERR(0, 933, __pyx_L3_error)
-    __pyx_v_domains = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(values[12], PyBUF_WRITABLE); if (unlikely(!__pyx_v_domains.memview)) __PYX_ERR(0, 934, __pyx_L3_error)
-    __pyx_v_variants = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[13], PyBUF_WRITABLE); if (unlikely(!__pyx_v_variants.memview)) __PYX_ERR(0, 935, __pyx_L3_error)
-    __pyx_v_nh = __Pyx_PyIndex_AsSsize_t(values[14]); if (unlikely((__pyx_v_nh == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 936, __pyx_L3_error)
-    __pyx_v_nk = __Pyx_PyIndex_AsSsize_t(values[15]); if (unlikely((__pyx_v_nk == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 937, __pyx_L3_error)
-    __pyx_v_nl = __Pyx_PyIndex_AsSsize_t(values[16]); if (unlikely((__pyx_v_nl == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 938, __pyx_L3_error)
-    __pyx_v_nu = __Pyx_PyIndex_AsSsize_t(values[17]); if (unlikely((__pyx_v_nu == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 939, __pyx_L3_error)
-    __pyx_v_nv = __Pyx_PyIndex_AsSsize_t(values[18]); if (unlikely((__pyx_v_nv == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 940, __pyx_L3_error)
-    __pyx_v_nw = __Pyx_PyIndex_AsSsize_t(values[19]); if (unlikely((__pyx_v_nw == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 941, __pyx_L3_error)
-    __pyx_v_Nu = __Pyx_PyIndex_AsSsize_t(values[20]); if (unlikely((__pyx_v_Nu == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 942, __pyx_L3_error)
-    __pyx_v_Nv = __Pyx_PyIndex_AsSsize_t(values[21]); if (unlikely((__pyx_v_Nv == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 943, __pyx_L3_error)
-    __pyx_v_Nw = __Pyx_PyIndex_AsSsize_t(values[22]); if (unlikely((__pyx_v_Nw == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 944, __pyx_L3_error)
+    __pyx_v_occupancy = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_occupancy.memview)) __PYX_ERR(0, 924, __pyx_L3_error)
+    __pyx_v_ux = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_ux.memview)) __PYX_ERR(0, 925, __pyx_L3_error)
+    __pyx_v_uy = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_uy.memview)) __PYX_ERR(0, 926, __pyx_L3_error)
+    __pyx_v_uz = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_uz.memview)) __PYX_ERR(0, 927, __pyx_L3_error)
+    __pyx_v_atms = values[4];
+    __pyx_v_h_range = values[5];
+    __pyx_v_k_range = values[6];
+    __pyx_v_l_range = values[7];
+    __pyx_v_indices = __Pyx_PyObject_to_MemoryviewSlice_dc_long(values[8], PyBUF_WRITABLE); if (unlikely(!__pyx_v_indices.memview)) __PYX_ERR(0, 932, __pyx_L3_error)
+    __pyx_v_symop = values[9];
+    __pyx_v_T = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(values[10], PyBUF_WRITABLE); if (unlikely(!__pyx_v_T.memview)) __PYX_ERR(0, 934, __pyx_L3_error)
+    __pyx_v_B = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(values[11], PyBUF_WRITABLE); if (unlikely(!__pyx_v_B.memview)) __PYX_ERR(0, 935, __pyx_L3_error)
+    __pyx_v_R = __Pyx_PyObject_to_MemoryviewSlice_dsds_double(values[12], PyBUF_WRITABLE); if (unlikely(!__pyx_v_R.memview)) __PYX_ERR(0, 936, __pyx_L3_error)
+    __pyx_v_domains = __Pyx_PyObject_to_MemoryviewSlice_dsdsds_double(values[13], PyBUF_WRITABLE); if (unlikely(!__pyx_v_domains.memview)) __PYX_ERR(0, 937, __pyx_L3_error)
+    __pyx_v_variants = __Pyx_PyObject_to_MemoryviewSlice_ds_double(values[14], PyBUF_WRITABLE); if (unlikely(!__pyx_v_variants.memview)) __PYX_ERR(0, 938, __pyx_L3_error)
+    __pyx_v_nh = __Pyx_PyIndex_AsSsize_t(values[15]); if (unlikely((__pyx_v_nh == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 939, __pyx_L3_error)
+    __pyx_v_nk = __Pyx_PyIndex_AsSsize_t(values[16]); if (unlikely((__pyx_v_nk == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 940, __pyx_L3_error)
+    __pyx_v_nl = __Pyx_PyIndex_AsSsize_t(values[17]); if (unlikely((__pyx_v_nl == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 941, __pyx_L3_error)
+    __pyx_v_nu = __Pyx_PyIndex_AsSsize_t(values[18]); if (unlikely((__pyx_v_nu == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 942, __pyx_L3_error)
+    __pyx_v_nv = __Pyx_PyIndex_AsSsize_t(values[19]); if (unlikely((__pyx_v_nv == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 943, __pyx_L3_error)
+    __pyx_v_nw = __Pyx_PyIndex_AsSsize_t(values[20]); if (unlikely((__pyx_v_nw == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 944, __pyx_L3_error)
+    __pyx_v_Nu = __Pyx_PyIndex_AsSsize_t(values[21]); if (unlikely((__pyx_v_Nu == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 945, __pyx_L3_error)
+    __pyx_v_Nv = __Pyx_PyIndex_AsSsize_t(values[22]); if (unlikely((__pyx_v_Nv == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 946, __pyx_L3_error)
+    __pyx_v_Nw = __Pyx_PyIndex_AsSsize_t(values[23]); if (unlikely((__pyx_v_Nw == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 947, __pyx_L3_error)
+    __pyx_v_technique = values[24];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("structure", 1, 23, 23, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 922, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("structural", 0, 24, 25, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 924, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("disorder.diffuse.monocrystal.structure", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("disorder.diffuse.monocrystal.structural", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8disorder_7diffuse_11monocrystal_6structure(__pyx_self, __pyx_v_ux, __pyx_v_uy, __pyx_v_uz, __pyx_v_atms, __pyx_v_h_range, __pyx_v_k_range, __pyx_v_l_range, __pyx_v_indices, __pyx_v_symop, __pyx_v_T, __pyx_v_B, __pyx_v_R, __pyx_v_domains, __pyx_v_variants, __pyx_v_nh, __pyx_v_nk, __pyx_v_nl, __pyx_v_nu, __pyx_v_nv, __pyx_v_nw, __pyx_v_Nu, __pyx_v_Nv, __pyx_v_Nw);
+  __pyx_r = __pyx_pf_8disorder_7diffuse_11monocrystal_6structural(__pyx_self, __pyx_v_occupancy, __pyx_v_ux, __pyx_v_uy, __pyx_v_uz, __pyx_v_atms, __pyx_v_h_range, __pyx_v_k_range, __pyx_v_l_range, __pyx_v_indices, __pyx_v_symop, __pyx_v_T, __pyx_v_B, __pyx_v_R, __pyx_v_domains, __pyx_v_variants, __pyx_v_nh, __pyx_v_nk, __pyx_v_nl, __pyx_v_nu, __pyx_v_nv, __pyx_v_nw, __pyx_v_Nu, __pyx_v_Nv, __pyx_v_Nw, __pyx_v_technique);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_ux, __Pyx_memviewslice __pyx_v_uy, __Pyx_memviewslice __pyx_v_uz, PyObject *__pyx_v_atms, PyObject *__pyx_v_h_range, PyObject *__pyx_v_k_range, PyObject *__pyx_v_l_range, __Pyx_memviewslice __pyx_v_indices, PyObject *__pyx_v_symop, __Pyx_memviewslice __pyx_v_T, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_R, __Pyx_memviewslice __pyx_v_domains, __Pyx_memviewslice __pyx_v_variants, Py_ssize_t __pyx_v_nh, Py_ssize_t __pyx_v_nk, Py_ssize_t __pyx_v_nl, Py_ssize_t __pyx_v_nu, Py_ssize_t __pyx_v_nv, Py_ssize_t __pyx_v_nw, Py_ssize_t __pyx_v_Nu, Py_ssize_t __pyx_v_Nv, Py_ssize_t __pyx_v_Nw) {
+static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structural(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_occupancy, __Pyx_memviewslice __pyx_v_ux, __Pyx_memviewslice __pyx_v_uy, __Pyx_memviewslice __pyx_v_uz, PyObject *__pyx_v_atms, PyObject *__pyx_v_h_range, PyObject *__pyx_v_k_range, PyObject *__pyx_v_l_range, __Pyx_memviewslice __pyx_v_indices, PyObject *__pyx_v_symop, __Pyx_memviewslice __pyx_v_T, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_R, __Pyx_memviewslice __pyx_v_domains, __Pyx_memviewslice __pyx_v_variants, Py_ssize_t __pyx_v_nh, Py_ssize_t __pyx_v_nk, Py_ssize_t __pyx_v_nl, Py_ssize_t __pyx_v_nu, Py_ssize_t __pyx_v_nv, Py_ssize_t __pyx_v_nw, Py_ssize_t __pyx_v_Nu, Py_ssize_t __pyx_v_Nv, Py_ssize_t __pyx_v_Nw, PyObject *__pyx_v_technique) {
   Py_ssize_t __pyx_v_n_atm;
   Py_ssize_t __pyx_v_n_hkl;
   Py_ssize_t __pyx_v_sym;
@@ -14030,8 +14056,21 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   double __pyx_v_Qz;
   __pyx_t_double_complex __pyx_v_phase_factor;
   __pyx_t_double_complex __pyx_v_factors;
+  double __pyx_v_Q;
+  double __pyx_v_s_;
+  double __pyx_v_s_sq;
+  double __pyx_v_occ;
   __pyx_t_double_complex __pyx_v_scattering_length;
   __Pyx_memviewslice __pyx_v_b = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_a1 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_b1 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_a2 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_b2 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_a3 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_b3 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_a4 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_b4 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_c = { 0, 0, { 0 }, { 0 }, { 0 } };
   PyObject *__pyx_v_I_np = NULL;
   __Pyx_memviewslice __pyx_v_I = { 0, 0, { 0 }, { 0 }, { 0 } };
   PyObject *__pyx_v_A_r_np = NULL;
@@ -14079,6 +14118,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   Py_ssize_t __pyx_v_w;
   double __pyx_v_M_TAU;
   CYTHON_UNUSED __pyx_t_double_complex __pyx_v_M_I;
+  double __pyx_v_inv_M_SP;
   PyObject *__pyx_v_atm = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -14102,41 +14142,51 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   Py_ssize_t __pyx_t_18;
   __pyx_t_double_complex __pyx_t_19;
   Py_ssize_t __pyx_t_20;
-  Py_ssize_t __pyx_t_21;
-  Py_ssize_t __pyx_t_22;
-  Py_ssize_t __pyx_t_23;
-  Py_ssize_t __pyx_t_24;
-  Py_ssize_t __pyx_t_25;
-  Py_ssize_t __pyx_t_26;
-  Py_ssize_t __pyx_t_27;
-  Py_ssize_t __pyx_t_28;
-  Py_ssize_t __pyx_t_29;
-  Py_ssize_t __pyx_t_30;
+  PyObject *__pyx_t_21 = NULL;
+  PyObject *__pyx_t_22 = NULL;
+  PyObject *__pyx_t_23 = NULL;
+  PyObject *(*__pyx_t_24)(PyObject *);
+  double __pyx_t_25;
+  double __pyx_t_26;
+  double __pyx_t_27;
+  double __pyx_t_28;
+  double __pyx_t_29;
+  double __pyx_t_30;
   Py_ssize_t __pyx_t_31;
   Py_ssize_t __pyx_t_32;
   Py_ssize_t __pyx_t_33;
   Py_ssize_t __pyx_t_34;
-  __pyx_ctuple_double__and_double__and_double __pyx_t_35;
-  int __pyx_t_36;
+  Py_ssize_t __pyx_t_35;
+  Py_ssize_t __pyx_t_36;
   Py_ssize_t __pyx_t_37;
   Py_ssize_t __pyx_t_38;
   Py_ssize_t __pyx_t_39;
+  Py_ssize_t __pyx_t_40;
+  Py_ssize_t __pyx_t_41;
+  Py_ssize_t __pyx_t_42;
+  Py_ssize_t __pyx_t_43;
+  Py_ssize_t __pyx_t_44;
+  __pyx_ctuple_double__and_double__and_double __pyx_t_45;
+  int __pyx_t_46;
+  Py_ssize_t __pyx_t_47;
+  Py_ssize_t __pyx_t_48;
+  Py_ssize_t __pyx_t_49;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("structure", 0);
+  __Pyx_RefNannySetupContext("structural", 0);
 
-  /* "disorder/diffuse/monocrystal.pyx":946
- *               Py_ssize_t Nw):
+  /* "disorder/diffuse/monocrystal.pyx":950
+ *                technique='Neutron'):
  * 
  *     cdef Py_ssize_t n_atm = len(atms)             # <<<<<<<<<<<<<<
  * 
  *     cdef Py_ssize_t n_hkl = indices.shape[0]
  */
-  __pyx_t_1 = PyObject_Length(__pyx_v_atms); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 946, __pyx_L1_error)
+  __pyx_t_1 = PyObject_Length(__pyx_v_atms); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 950, __pyx_L1_error)
   __pyx_v_n_atm = __pyx_t_1;
 
-  /* "disorder/diffuse/monocrystal.pyx":948
+  /* "disorder/diffuse/monocrystal.pyx":952
  *     cdef Py_ssize_t n_atm = len(atms)
  * 
  *     cdef Py_ssize_t n_hkl = indices.shape[0]             # <<<<<<<<<<<<<<
@@ -14145,33 +14195,33 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_n_hkl = (__pyx_v_indices.shape[0]);
 
-  /* "disorder/diffuse/monocrystal.pyx":950
+  /* "disorder/diffuse/monocrystal.pyx":954
  *     cdef Py_ssize_t n_hkl = indices.shape[0]
  * 
  *     cdef Py_ssize_t sym = symop[0]             # <<<<<<<<<<<<<<
  *     cdef Py_ssize_t n_ops = symop[1]
  * 
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_symop, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 950, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_symop, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 954, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_1 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 950, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_1 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 954, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_sym = __pyx_t_1;
 
-  /* "disorder/diffuse/monocrystal.pyx":951
+  /* "disorder/diffuse/monocrystal.pyx":955
  * 
  *     cdef Py_ssize_t sym = symop[0]
  *     cdef Py_ssize_t n_ops = symop[1]             # <<<<<<<<<<<<<<
  * 
  *     cdef Py_ssize_t n_vars = variants.shape[0]
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_symop, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 951, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_symop, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 955, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_1 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 951, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyIndex_AsSsize_t(__pyx_t_2); if (unlikely((__pyx_t_1 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 955, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_n_ops = __pyx_t_1;
 
-  /* "disorder/diffuse/monocrystal.pyx":953
+  /* "disorder/diffuse/monocrystal.pyx":957
  *     cdef Py_ssize_t n_ops = symop[1]
  * 
  *     cdef Py_ssize_t n_vars = variants.shape[0]             # <<<<<<<<<<<<<<
@@ -14180,7 +14230,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_n_vars = (__pyx_v_variants.shape[0]);
 
-  /* "disorder/diffuse/monocrystal.pyx":955
+  /* "disorder/diffuse/monocrystal.pyx":959
  *     cdef Py_ssize_t n_vars = variants.shape[0]
  * 
  *     cdef Py_ssize_t n_uvw = nu*nv*nw             # <<<<<<<<<<<<<<
@@ -14189,7 +14239,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_n_uvw = ((__pyx_v_nu * __pyx_v_nv) * __pyx_v_nw);
 
-  /* "disorder/diffuse/monocrystal.pyx":956
+  /* "disorder/diffuse/monocrystal.pyx":960
  * 
  *     cdef Py_ssize_t n_uvw = nu*nv*nw
  *     cdef Py_ssize_t n = n_uvw*n_atm             # <<<<<<<<<<<<<<
@@ -14198,7 +14248,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_n = (__pyx_v_n_uvw * __pyx_v_n_atm);
 
-  /* "disorder/diffuse/monocrystal.pyx":960
+  /* "disorder/diffuse/monocrystal.pyx":964
  *     cdef double factor
  * 
  *     if (n == 0):             # <<<<<<<<<<<<<<
@@ -14208,7 +14258,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   __pyx_t_3 = ((__pyx_v_n == 0) != 0);
   if (__pyx_t_3) {
 
-    /* "disorder/diffuse/monocrystal.pyx":961
+    /* "disorder/diffuse/monocrystal.pyx":965
  * 
  *     if (n == 0):
  *         factor = 0             # <<<<<<<<<<<<<<
@@ -14217,7 +14267,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
     __pyx_v_factor = 0.0;
 
-    /* "disorder/diffuse/monocrystal.pyx":960
+    /* "disorder/diffuse/monocrystal.pyx":964
  *     cdef double factor
  * 
  *     if (n == 0):             # <<<<<<<<<<<<<<
@@ -14227,7 +14277,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
     goto __pyx_L3;
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":963
+  /* "disorder/diffuse/monocrystal.pyx":967
  *         factor = 0
  *     else:
  *         factor = 1.0/n             # <<<<<<<<<<<<<<
@@ -14239,62 +14289,359 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   }
   __pyx_L3:;
 
-  /* "disorder/diffuse/monocrystal.pyx":978
+  /* "disorder/diffuse/monocrystal.pyx":986
  *     cdef double complex scattering_length
  * 
  *     cdef double complex [::1] b = np.zeros(n_atm, dtype=complex)             # <<<<<<<<<<<<<<
  * 
- *     I_np = np.zeros(n_hkl, dtype=float)
+ *     cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 978, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 986, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 978, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 986, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 978, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 986, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 978, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 986, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 978, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 986, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 978, __pyx_L1_error)
-  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 978, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 986, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 986, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_dc___pyx_t_double_complex(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 978, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_dc___pyx_t_double_complex(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 986, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __pyx_v_b = __pyx_t_7;
   __pyx_t_7.memview = NULL;
   __pyx_t_7.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":980
+  /* "disorder/diffuse/monocrystal.pyx":988
  *     cdef double complex [::1] b = np.zeros(n_atm, dtype=complex)
+ * 
+ *     cdef double [::1] a1 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 988, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 988, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 988, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 988, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_6);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
+  __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 988, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 988, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 988, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 988, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_v_a1 = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
+
+  /* "disorder/diffuse/monocrystal.pyx":989
+ * 
+ *     cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b1 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 989, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 989, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 989, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 989, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
+  __pyx_t_4 = 0;
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 989, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 989, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 989, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 989, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_b1 = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
+
+  /* "disorder/diffuse/monocrystal.pyx":990
+ *     cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
+  __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 990, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 990, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_v_a2 = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
+
+  /* "disorder/diffuse/monocrystal.pyx":991
+ *     cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_6);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
+  __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_v_b2 = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
+
+  /* "disorder/diffuse/monocrystal.pyx":992
+ *     cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 992, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 992, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 992, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 992, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
+  __pyx_t_4 = 0;
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 992, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 992, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 992, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 992, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_a3 = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
+
+  /* "disorder/diffuse/monocrystal.pyx":993
+ *     cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 993, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 993, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 993, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 993, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
+  __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 993, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 993, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 993, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 993, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_v_b3 = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
+
+  /* "disorder/diffuse/monocrystal.pyx":994
+ *     cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] c  = np.zeros(n_atm, dtype=float)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 994, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 994, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 994, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 994, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_6);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
+  __pyx_t_6 = 0;
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 994, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 994, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 994, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 994, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_v_a4 = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
+
+  /* "disorder/diffuse/monocrystal.pyx":995
+ *     cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b4 = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] c  = np.zeros(n_atm, dtype=float)
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 995, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 995, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 995, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 995, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_4);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_4);
+  __pyx_t_4 = 0;
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 995, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 995, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_5, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 995, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 995, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_b4 = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
+
+  /* "disorder/diffuse/monocrystal.pyx":996
+ *     cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
+ *     cdef double [::1] c  = np.zeros(n_atm, dtype=float)             # <<<<<<<<<<<<<<
+ * 
+ *     I_np = np.zeros(n_hkl, dtype=float)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 996, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 996, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 996, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 996, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_2);
+  __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 996, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 996, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_5, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 996, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_6, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 996, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  __pyx_v_c = __pyx_t_8;
+  __pyx_t_8.memview = NULL;
+  __pyx_t_8.data = NULL;
+
+  /* "disorder/diffuse/monocrystal.pyx":998
+ *     cdef double [::1] c  = np.zeros(n_atm, dtype=float)
  * 
  *     I_np = np.zeros(n_hkl, dtype=float)             # <<<<<<<<<<<<<<
  * 
  *     cdef double [::1] I = I_np
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 980, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 998, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 980, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 998, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_hkl); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 980, __pyx_L1_error)
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_hkl); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 998, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 980, __pyx_L1_error)
+  __pyx_t_5 = PyTuple_New(1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 998, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
   __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 980, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 998, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 980, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 980, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_6, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 998, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_5, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 998, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -14302,39 +14649,39 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   __pyx_v_I_np = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":982
+  /* "disorder/diffuse/monocrystal.pyx":1000
  *     I_np = np.zeros(n_hkl, dtype=float)
  * 
  *     cdef double [::1] I = I_np             # <<<<<<<<<<<<<<
  * 
  *     A_r_np = np.ones((nu,nv,nw,n_atm), dtype=float)
  */
-  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_v_I_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 982, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_v_I_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 1000, __pyx_L1_error)
   __pyx_v_I = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":984
+  /* "disorder/diffuse/monocrystal.pyx":1002
  *     cdef double [::1] I = I_np
  * 
  *     A_r_np = np.ones((nu,nv,nw,n_atm), dtype=float)             # <<<<<<<<<<<<<<
  * 
  *     cdef double h_min_, k_min_, l_min_
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_ones); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_ones); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_nu); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_nu); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_nv); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_nv); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_nw); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_nw); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_4);
@@ -14348,15 +14695,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   __pyx_t_5 = 0;
   __pyx_t_2 = 0;
   __pyx_t_9 = 0;
-  __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_GIVEREF(__pyx_t_10);
   PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_10);
   __pyx_t_10 = 0;
-  __pyx_t_10 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 984, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 984, __pyx_L1_error)
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 984, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 1002, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_6, __pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1002, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -14364,30 +14711,30 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   __pyx_v_A_r_np = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":991
+  /* "disorder/diffuse/monocrystal.pyx":1009
  *     cdef double h_step_, k_step_, l_step_
  * 
  *     h_min_, k_min_, l_min_ = h_range[0], k_range[0], l_range[0]             # <<<<<<<<<<<<<<
  * 
  *     if (nh == 1):
  */
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1009, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_11 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_11 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_11 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_11 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1009, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1009, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1009, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1009, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 991, __pyx_L1_error)
+  __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1009, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_h_min_ = __pyx_t_11;
   __pyx_v_k_min_ = __pyx_t_12;
   __pyx_v_l_min_ = __pyx_t_13;
 
-  /* "disorder/diffuse/monocrystal.pyx":993
+  /* "disorder/diffuse/monocrystal.pyx":1011
  *     h_min_, k_min_, l_min_ = h_range[0], k_range[0], l_range[0]
  * 
  *     if (nh == 1):             # <<<<<<<<<<<<<<
@@ -14397,20 +14744,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   __pyx_t_3 = ((__pyx_v_nh == 1) != 0);
   if (__pyx_t_3) {
 
-    /* "disorder/diffuse/monocrystal.pyx":994
+    /* "disorder/diffuse/monocrystal.pyx":1012
  * 
  *     if (nh == 1):
  *         h_max_ = h_range[0]             # <<<<<<<<<<<<<<
  *         h_step_ = 0
  *     else:
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 994, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1012, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 994, __pyx_L1_error)
+    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1012, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_h_max_ = __pyx_t_13;
 
-    /* "disorder/diffuse/monocrystal.pyx":995
+    /* "disorder/diffuse/monocrystal.pyx":1013
  *     if (nh == 1):
  *         h_max_ = h_range[0]
  *         h_step_ = 0             # <<<<<<<<<<<<<<
@@ -14419,7 +14766,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
     __pyx_v_h_step_ = 0.0;
 
-    /* "disorder/diffuse/monocrystal.pyx":993
+    /* "disorder/diffuse/monocrystal.pyx":1011
  *     h_min_, k_min_, l_min_ = h_range[0], k_range[0], l_range[0]
  * 
  *     if (nh == 1):             # <<<<<<<<<<<<<<
@@ -14429,7 +14776,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
     goto __pyx_L4;
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":997
+  /* "disorder/diffuse/monocrystal.pyx":1015
  *         h_step_ = 0
  *     else:
  *         h_max_ = h_range[1]             # <<<<<<<<<<<<<<
@@ -14437,13 +14784,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  * 
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 997, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_h_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1015, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 997, __pyx_L1_error)
+    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1015, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_h_max_ = __pyx_t_13;
 
-    /* "disorder/diffuse/monocrystal.pyx":998
+    /* "disorder/diffuse/monocrystal.pyx":1016
  *     else:
  *         h_max_ = h_range[1]
  *         h_step_ = (h_max_-h_min_)/(nh-1)             # <<<<<<<<<<<<<<
@@ -14454,7 +14801,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   }
   __pyx_L4:;
 
-  /* "disorder/diffuse/monocrystal.pyx":1000
+  /* "disorder/diffuse/monocrystal.pyx":1018
  *         h_step_ = (h_max_-h_min_)/(nh-1)
  * 
  *     if (nk == 1):             # <<<<<<<<<<<<<<
@@ -14464,20 +14811,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   __pyx_t_3 = ((__pyx_v_nk == 1) != 0);
   if (__pyx_t_3) {
 
-    /* "disorder/diffuse/monocrystal.pyx":1001
+    /* "disorder/diffuse/monocrystal.pyx":1019
  * 
  *     if (nk == 1):
  *         k_max_ = k_range[0]             # <<<<<<<<<<<<<<
  *         k_step_ = 0
  *     else:
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1001, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1019, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1001, __pyx_L1_error)
+    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1019, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_k_max_ = __pyx_t_13;
 
-    /* "disorder/diffuse/monocrystal.pyx":1002
+    /* "disorder/diffuse/monocrystal.pyx":1020
  *     if (nk == 1):
  *         k_max_ = k_range[0]
  *         k_step_ = 0             # <<<<<<<<<<<<<<
@@ -14486,7 +14833,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
     __pyx_v_k_step_ = 0.0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1000
+    /* "disorder/diffuse/monocrystal.pyx":1018
  *         h_step_ = (h_max_-h_min_)/(nh-1)
  * 
  *     if (nk == 1):             # <<<<<<<<<<<<<<
@@ -14496,7 +14843,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
     goto __pyx_L5;
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":1004
+  /* "disorder/diffuse/monocrystal.pyx":1022
  *         k_step_ = 0
  *     else:
  *         k_max_ = k_range[1]             # <<<<<<<<<<<<<<
@@ -14504,13 +14851,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  * 
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1004, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_k_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1022, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1004, __pyx_L1_error)
+    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1022, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_k_max_ = __pyx_t_13;
 
-    /* "disorder/diffuse/monocrystal.pyx":1005
+    /* "disorder/diffuse/monocrystal.pyx":1023
  *     else:
  *         k_max_ = k_range[1]
  *         k_step_ = (k_max_-k_min_)/(nk-1)             # <<<<<<<<<<<<<<
@@ -14521,7 +14868,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   }
   __pyx_L5:;
 
-  /* "disorder/diffuse/monocrystal.pyx":1007
+  /* "disorder/diffuse/monocrystal.pyx":1025
  *         k_step_ = (k_max_-k_min_)/(nk-1)
  * 
  *     if (nl == 1):             # <<<<<<<<<<<<<<
@@ -14531,20 +14878,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   __pyx_t_3 = ((__pyx_v_nl == 1) != 0);
   if (__pyx_t_3) {
 
-    /* "disorder/diffuse/monocrystal.pyx":1008
+    /* "disorder/diffuse/monocrystal.pyx":1026
  * 
  *     if (nl == 1):
  *         l_max_ = l_range[0]             # <<<<<<<<<<<<<<
  *         l_step_ = 0
  *     else:
  */
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1008, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1026, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1008, __pyx_L1_error)
+    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1026, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_l_max_ = __pyx_t_13;
 
-    /* "disorder/diffuse/monocrystal.pyx":1009
+    /* "disorder/diffuse/monocrystal.pyx":1027
  *     if (nl == 1):
  *         l_max_ = l_range[0]
  *         l_step_ = 0             # <<<<<<<<<<<<<<
@@ -14553,7 +14900,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
     __pyx_v_l_step_ = 0.0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1007
+    /* "disorder/diffuse/monocrystal.pyx":1025
  *         k_step_ = (k_max_-k_min_)/(nk-1)
  * 
  *     if (nl == 1):             # <<<<<<<<<<<<<<
@@ -14563,7 +14910,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
     goto __pyx_L6;
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":1011
+  /* "disorder/diffuse/monocrystal.pyx":1029
  *         l_step_ = 0
  *     else:
  *         l_max_ = l_range[1]             # <<<<<<<<<<<<<<
@@ -14571,13 +14918,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  * 
  */
   /*else*/ {
-    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1011, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt(__pyx_v_l_range, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1029, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1011, __pyx_L1_error)
+    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1029, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_v_l_max_ = __pyx_t_13;
 
-    /* "disorder/diffuse/monocrystal.pyx":1012
+    /* "disorder/diffuse/monocrystal.pyx":1030
  *     else:
  *         l_max_ = l_range[1]
  *         l_step_ = (l_max_-l_min_)/(nl-1)             # <<<<<<<<<<<<<<
@@ -14588,7 +14935,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   }
   __pyx_L6:;
 
-  /* "disorder/diffuse/monocrystal.pyx":1014
+  /* "disorder/diffuse/monocrystal.pyx":1032
  *         l_step_ = (l_max_-l_min_)/(nl-1)
  * 
  *     cdef Py_ssize_t Fu = Nu // nu             # <<<<<<<<<<<<<<
@@ -14597,7 +14944,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_Fu = (__pyx_v_Nu / __pyx_v_nu);
 
-  /* "disorder/diffuse/monocrystal.pyx":1015
+  /* "disorder/diffuse/monocrystal.pyx":1033
  * 
  *     cdef Py_ssize_t Fu = Nu // nu
  *     cdef Py_ssize_t Fv = Nv // nv             # <<<<<<<<<<<<<<
@@ -14606,7 +14953,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_Fv = (__pyx_v_Nv / __pyx_v_nv);
 
-  /* "disorder/diffuse/monocrystal.pyx":1016
+  /* "disorder/diffuse/monocrystal.pyx":1034
  *     cdef Py_ssize_t Fu = Nu // nu
  *     cdef Py_ssize_t Fv = Nv // nv
  *     cdef Py_ssize_t Fw = Nw // nw             # <<<<<<<<<<<<<<
@@ -14615,7 +14962,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_Fw = (__pyx_v_Nw / __pyx_v_nw);
 
-  /* "disorder/diffuse/monocrystal.pyx":1020
+  /* "disorder/diffuse/monocrystal.pyx":1038
  *     cdef double f_H, f_K, f_L
  * 
  *     cdef double f_Nu = float(Nu)             # <<<<<<<<<<<<<<
@@ -14624,7 +14971,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_f_Nu = ((double)__pyx_v_Nu);
 
-  /* "disorder/diffuse/monocrystal.pyx":1021
+  /* "disorder/diffuse/monocrystal.pyx":1039
  * 
  *     cdef double f_Nu = float(Nu)
  *     cdef double f_Nv = float(Nv)             # <<<<<<<<<<<<<<
@@ -14633,7 +14980,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_f_Nv = ((double)__pyx_v_Nv);
 
-  /* "disorder/diffuse/monocrystal.pyx":1022
+  /* "disorder/diffuse/monocrystal.pyx":1040
  *     cdef double f_Nu = float(Nu)
  *     cdef double f_Nv = float(Nv)
  *     cdef double f_Nw = float(Nw)             # <<<<<<<<<<<<<<
@@ -14642,20 +14989,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_f_Nw = ((double)__pyx_v_Nw);
 
-  /* "disorder/diffuse/monocrystal.pyx":1024
+  /* "disorder/diffuse/monocrystal.pyx":1042
  *     cdef double f_Nw = float(Nw)
  * 
  *     A_k_np = idft(A_r_np, Nu, Nv, Nw).flatten()*n_uvw             # <<<<<<<<<<<<<<
  * 
  *     cdef double complex [::1] A_k = A_k_np
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_idft); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1024, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_idft); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1042, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_Nu); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1024, __pyx_L1_error)
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_Nu); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1042, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_Nv); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1024, __pyx_L1_error)
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_Nv); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1042, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_Nw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1024, __pyx_L1_error)
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_Nw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1042, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __pyx_t_14 = NULL;
   __pyx_t_15 = 0;
@@ -14672,7 +15019,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   #if CYTHON_FAST_PYCALL
   if (PyFunction_Check(__pyx_t_9)) {
     PyObject *__pyx_temp[5] = {__pyx_t_14, __pyx_v_A_r_np, __pyx_t_6, __pyx_t_5, __pyx_t_4};
-    __pyx_t_10 = __Pyx_PyFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_15, 4+__pyx_t_15); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1024, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_15, 4+__pyx_t_15); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1042, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -14683,7 +15030,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   #if CYTHON_FAST_PYCCALL
   if (__Pyx_PyFastCFunction_Check(__pyx_t_9)) {
     PyObject *__pyx_temp[5] = {__pyx_t_14, __pyx_v_A_r_np, __pyx_t_6, __pyx_t_5, __pyx_t_4};
-    __pyx_t_10 = __Pyx_PyCFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_15, 4+__pyx_t_15); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1024, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyCFunction_FastCall(__pyx_t_9, __pyx_temp+1-__pyx_t_15, 4+__pyx_t_15); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1042, __pyx_L1_error)
     __Pyx_XDECREF(__pyx_t_14); __pyx_t_14 = 0;
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -14692,7 +15039,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   } else
   #endif
   {
-    __pyx_t_16 = PyTuple_New(4+__pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 1024, __pyx_L1_error)
+    __pyx_t_16 = PyTuple_New(4+__pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 1042, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_16);
     if (__pyx_t_14) {
       __Pyx_GIVEREF(__pyx_t_14); PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_14); __pyx_t_14 = NULL;
@@ -14709,12 +15056,12 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
     __pyx_t_6 = 0;
     __pyx_t_5 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_16, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1024, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_16, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1042, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
   }
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_flatten); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1024, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_flatten); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1042, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   __pyx_t_10 = NULL;
@@ -14729,31 +15076,31 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   }
   __pyx_t_2 = (__pyx_t_10) ? __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_10) : __Pyx_PyObject_CallNoArg(__pyx_t_9);
   __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1024, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1042, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_n_uvw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1024, __pyx_L1_error)
+  __pyx_t_9 = PyInt_FromSsize_t(__pyx_v_n_uvw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1042, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_10 = PyNumber_Multiply(__pyx_t_2, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1024, __pyx_L1_error)
+  __pyx_t_10 = PyNumber_Multiply(__pyx_t_2, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1042, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   __pyx_v_A_k_np = __pyx_t_10;
   __pyx_t_10 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1026
+  /* "disorder/diffuse/monocrystal.pyx":1044
  *     A_k_np = idft(A_r_np, Nu, Nv, Nw).flatten()*n_uvw
  * 
  *     cdef double complex [::1] A_k = A_k_np             # <<<<<<<<<<<<<<
  * 
  *     cdef Py_ssize_t F_uvw = Fu*Fv*Fw
  */
-  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_dc___pyx_t_double_complex(__pyx_v_A_k_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 1026, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_to_MemoryviewSlice_dc___pyx_t_double_complex(__pyx_v_A_k_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_7.memview)) __PYX_ERR(0, 1044, __pyx_L1_error)
   __pyx_v_A_k = __pyx_t_7;
   __pyx_t_7.memview = NULL;
   __pyx_t_7.data = NULL;
 
-  /* "disorder/diffuse/monocrystal.pyx":1028
+  /* "disorder/diffuse/monocrystal.pyx":1046
  *     cdef double complex [::1] A_k = A_k_np
  * 
  *     cdef Py_ssize_t F_uvw = Fu*Fv*Fw             # <<<<<<<<<<<<<<
@@ -14762,7 +15109,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_F_uvw = ((__pyx_v_Fu * __pyx_v_Fv) * __pyx_v_Fw);
 
-  /* "disorder/diffuse/monocrystal.pyx":1029
+  /* "disorder/diffuse/monocrystal.pyx":1047
  * 
  *     cdef Py_ssize_t F_uvw = Fu*Fv*Fw
  *     cdef Py_ssize_t N_uvw = Nu*Nv*Nw             # <<<<<<<<<<<<<<
@@ -14771,36 +15118,58 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
   __pyx_v_N_uvw = ((__pyx_v_Nu * __pyx_v_Nv) * __pyx_v_Nw);
 
-  /* "disorder/diffuse/monocrystal.pyx":1043
+  /* "disorder/diffuse/monocrystal.pyx":1061
  *     cdef Py_ssize_t u, v, w
  * 
  *     cdef double M_TAU = 2*np.pi             # <<<<<<<<<<<<<<
  *     cdef double complex M_I = 1j
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1043, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1061, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_pi); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1043, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_pi); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1061, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-  __pyx_t_10 = PyNumber_Multiply(__pyx_int_2, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1043, __pyx_L1_error)
+  __pyx_t_10 = PyNumber_Multiply(__pyx_int_2, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1061, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_10); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1043, __pyx_L1_error)
+  __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_10); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1061, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   __pyx_v_M_TAU = __pyx_t_13;
 
-  /* "disorder/diffuse/monocrystal.pyx":1044
+  /* "disorder/diffuse/monocrystal.pyx":1062
  * 
  *     cdef double M_TAU = 2*np.pi
  *     cdef double complex M_I = 1j             # <<<<<<<<<<<<<<
  * 
- *     for j in range(n_atm):
+ *     cdef double inv_M_SP = 1/(4*np.pi)
  */
   __pyx_v_M_I = __pyx_t_double_complex_from_parts(0, 1.0);
 
-  /* "disorder/diffuse/monocrystal.pyx":1046
+  /* "disorder/diffuse/monocrystal.pyx":1064
  *     cdef double complex M_I = 1j
+ * 
+ *     cdef double inv_M_SP = 1/(4*np.pi)             # <<<<<<<<<<<<<<
+ * 
+ *     for j in range(n_atm):
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1064, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_pi); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1064, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+  __pyx_t_10 = PyNumber_Multiply(__pyx_int_4, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1064, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_t_9 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_10); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1064, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+  __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_9); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1064, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+  __pyx_v_inv_M_SP = __pyx_t_13;
+
+  /* "disorder/diffuse/monocrystal.pyx":1066
+ *     cdef double inv_M_SP = 1/(4*np.pi)
  * 
  *     for j in range(n_atm):             # <<<<<<<<<<<<<<
  * 
@@ -14811,56 +15180,260 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
     __pyx_v_j = __pyx_t_18;
 
-    /* "disorder/diffuse/monocrystal.pyx":1048
+    /* "disorder/diffuse/monocrystal.pyx":1068
  *     for j in range(n_atm):
  * 
  *         atm = atms[j]             # <<<<<<<<<<<<<<
  * 
- *         b[j] = tables.bc.get(atm)
+ *         if (technique == 'Neutron'):
  */
-    __pyx_t_10 = __Pyx_GetItemInt(__pyx_v_atms, __pyx_v_j, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1048, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_XDECREF_SET(__pyx_v_atm, __pyx_t_10);
-    __pyx_t_10 = 0;
+    __pyx_t_9 = __Pyx_GetItemInt(__pyx_v_atms, __pyx_v_j, Py_ssize_t, 1, PyInt_FromSsize_t, 0, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1068, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_9);
+    __Pyx_XDECREF_SET(__pyx_v_atm, __pyx_t_9);
+    __pyx_t_9 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1050
+    /* "disorder/diffuse/monocrystal.pyx":1070
  *         atm = atms[j]
  * 
- *         b[j] = tables.bc.get(atm)             # <<<<<<<<<<<<<<
+ *         if (technique == 'Neutron'):             # <<<<<<<<<<<<<<
+ * 
+ *             b[j] = tables.bc.get(atm)
+ */
+    __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_technique, __pyx_n_u_Neutron, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 1070, __pyx_L1_error)
+    if (__pyx_t_3) {
+
+      /* "disorder/diffuse/monocrystal.pyx":1072
+ *         if (technique == 'Neutron'):
+ * 
+ *             b[j] = tables.bc.get(atm)             # <<<<<<<<<<<<<<
+ * 
+ *         else:
+ */
+      __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_tables); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1072, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_bc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1072, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_get); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1072, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_t_2 = NULL;
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_10))) {
+        __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_10);
+        if (likely(__pyx_t_2)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
+          __Pyx_INCREF(__pyx_t_2);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_10, function);
+        }
+      }
+      __pyx_t_9 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_10, __pyx_t_2, __pyx_v_atm) : __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_v_atm);
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1072, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_t_19 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_t_9); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1072, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      __pyx_t_20 = __pyx_v_j;
+      *((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_b.data) + __pyx_t_20)) )) = __pyx_t_19;
+
+      /* "disorder/diffuse/monocrystal.pyx":1070
+ *         atm = atms[j]
+ * 
+ *         if (technique == 'Neutron'):             # <<<<<<<<<<<<<<
+ * 
+ *             b[j] = tables.bc.get(atm)
+ */
+      goto __pyx_L9;
+    }
+
+    /* "disorder/diffuse/monocrystal.pyx":1080
+ *             a3[j], b3[j], \
+ *             a4[j], b4[j], \
+ *             c[j] = tables.X.get(atm)             # <<<<<<<<<<<<<<
  * 
  *     for i in prange(n_hkl, nogil=True):
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_tables); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1050, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_bc); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1050, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_2);
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_get); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1050, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_9);
-    __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = NULL;
-    if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
-      __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_9);
-      if (likely(__pyx_t_2)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_9);
-        __Pyx_INCREF(__pyx_t_2);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_9, function);
+    /*else*/ {
+      __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_tables); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1080, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_X); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1080, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_2);
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_get); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1080, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_10);
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_t_2 = NULL;
+      if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_10))) {
+        __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_10);
+        if (likely(__pyx_t_2)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_10);
+          __Pyx_INCREF(__pyx_t_2);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_10, function);
+        }
       }
+      __pyx_t_9 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_10, __pyx_t_2, __pyx_v_atm) : __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_v_atm);
+      __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
+      if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1080, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_9);
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      if ((likely(PyTuple_CheckExact(__pyx_t_9))) || (PyList_CheckExact(__pyx_t_9))) {
+        PyObject* sequence = __pyx_t_9;
+        Py_ssize_t size = __Pyx_PySequence_SIZE(sequence);
+        if (unlikely(size != 9)) {
+          if (size > 9) __Pyx_RaiseTooManyValuesError(9);
+          else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
+          __PYX_ERR(0, 1076, __pyx_L1_error)
+        }
+        #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+        if (likely(PyTuple_CheckExact(sequence))) {
+          __pyx_t_10 = PyTuple_GET_ITEM(sequence, 0); 
+          __pyx_t_2 = PyTuple_GET_ITEM(sequence, 1); 
+          __pyx_t_16 = PyTuple_GET_ITEM(sequence, 2); 
+          __pyx_t_4 = PyTuple_GET_ITEM(sequence, 3); 
+          __pyx_t_5 = PyTuple_GET_ITEM(sequence, 4); 
+          __pyx_t_6 = PyTuple_GET_ITEM(sequence, 5); 
+          __pyx_t_14 = PyTuple_GET_ITEM(sequence, 6); 
+          __pyx_t_21 = PyTuple_GET_ITEM(sequence, 7); 
+          __pyx_t_22 = PyTuple_GET_ITEM(sequence, 8); 
+        } else {
+          __pyx_t_10 = PyList_GET_ITEM(sequence, 0); 
+          __pyx_t_2 = PyList_GET_ITEM(sequence, 1); 
+          __pyx_t_16 = PyList_GET_ITEM(sequence, 2); 
+          __pyx_t_4 = PyList_GET_ITEM(sequence, 3); 
+          __pyx_t_5 = PyList_GET_ITEM(sequence, 4); 
+          __pyx_t_6 = PyList_GET_ITEM(sequence, 5); 
+          __pyx_t_14 = PyList_GET_ITEM(sequence, 6); 
+          __pyx_t_21 = PyList_GET_ITEM(sequence, 7); 
+          __pyx_t_22 = PyList_GET_ITEM(sequence, 8); 
+        }
+        __Pyx_INCREF(__pyx_t_10);
+        __Pyx_INCREF(__pyx_t_2);
+        __Pyx_INCREF(__pyx_t_16);
+        __Pyx_INCREF(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_5);
+        __Pyx_INCREF(__pyx_t_6);
+        __Pyx_INCREF(__pyx_t_14);
+        __Pyx_INCREF(__pyx_t_21);
+        __Pyx_INCREF(__pyx_t_22);
+        #else
+        {
+          Py_ssize_t i;
+          PyObject** temps[9] = {&__pyx_t_10,&__pyx_t_2,&__pyx_t_16,&__pyx_t_4,&__pyx_t_5,&__pyx_t_6,&__pyx_t_14,&__pyx_t_21,&__pyx_t_22};
+          for (i=0; i < 9; i++) {
+            PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 1076, __pyx_L1_error)
+            __Pyx_GOTREF(item);
+            *(temps[i]) = item;
+          }
+        }
+        #endif
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+      } else {
+        Py_ssize_t index = -1;
+        PyObject** temps[9] = {&__pyx_t_10,&__pyx_t_2,&__pyx_t_16,&__pyx_t_4,&__pyx_t_5,&__pyx_t_6,&__pyx_t_14,&__pyx_t_21,&__pyx_t_22};
+        __pyx_t_23 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_23)) __PYX_ERR(0, 1076, __pyx_L1_error)
+        __Pyx_GOTREF(__pyx_t_23);
+        __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+        __pyx_t_24 = Py_TYPE(__pyx_t_23)->tp_iternext;
+        for (index=0; index < 9; index++) {
+          PyObject* item = __pyx_t_24(__pyx_t_23); if (unlikely(!item)) goto __pyx_L10_unpacking_failed;
+          __Pyx_GOTREF(item);
+          *(temps[index]) = item;
+        }
+        if (__Pyx_IternextUnpackEndCheck(__pyx_t_24(__pyx_t_23), 9) < 0) __PYX_ERR(0, 1076, __pyx_L1_error)
+        __pyx_t_24 = NULL;
+        __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
+        goto __pyx_L11_unpacking_done;
+        __pyx_L10_unpacking_failed:;
+        __Pyx_DECREF(__pyx_t_23); __pyx_t_23 = 0;
+        __pyx_t_24 = NULL;
+        if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
+        __PYX_ERR(0, 1076, __pyx_L1_error)
+        __pyx_L11_unpacking_done:;
+      }
+
+      /* "disorder/diffuse/monocrystal.pyx":1076
+ *         else:
+ * 
+ *             a1[j], b1[j], \             # <<<<<<<<<<<<<<
+ *             a2[j], b2[j], \
+ *             a3[j], b3[j], \
+ */
+      __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_10); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1076, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+      __pyx_t_12 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_12 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1076, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+      __pyx_t_11 = __pyx_PyFloat_AsDouble(__pyx_t_16); if (unlikely((__pyx_t_11 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1076, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+      __pyx_t_25 = __pyx_PyFloat_AsDouble(__pyx_t_4); if (unlikely((__pyx_t_25 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1076, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_t_26 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_26 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1076, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+      __pyx_t_27 = __pyx_PyFloat_AsDouble(__pyx_t_6); if (unlikely((__pyx_t_27 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1076, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_28 = __pyx_PyFloat_AsDouble(__pyx_t_14); if (unlikely((__pyx_t_28 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1076, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+      __pyx_t_29 = __pyx_PyFloat_AsDouble(__pyx_t_21); if (unlikely((__pyx_t_29 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1076, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_21); __pyx_t_21 = 0;
+      __pyx_t_30 = __pyx_PyFloat_AsDouble(__pyx_t_22); if (unlikely((__pyx_t_30 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 1076, __pyx_L1_error)
+      __Pyx_DECREF(__pyx_t_22); __pyx_t_22 = 0;
+      __pyx_t_20 = __pyx_v_j;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_a1.data) + __pyx_t_20)) )) = __pyx_t_13;
+      __pyx_t_20 = __pyx_v_j;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b1.data) + __pyx_t_20)) )) = __pyx_t_12;
+
+      /* "disorder/diffuse/monocrystal.pyx":1077
+ * 
+ *             a1[j], b1[j], \
+ *             a2[j], b2[j], \             # <<<<<<<<<<<<<<
+ *             a3[j], b3[j], \
+ *             a4[j], b4[j], \
+ */
+      __pyx_t_20 = __pyx_v_j;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_a2.data) + __pyx_t_20)) )) = __pyx_t_11;
+      __pyx_t_20 = __pyx_v_j;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b2.data) + __pyx_t_20)) )) = __pyx_t_25;
+
+      /* "disorder/diffuse/monocrystal.pyx":1078
+ *             a1[j], b1[j], \
+ *             a2[j], b2[j], \
+ *             a3[j], b3[j], \             # <<<<<<<<<<<<<<
+ *             a4[j], b4[j], \
+ *             c[j] = tables.X.get(atm)
+ */
+      __pyx_t_20 = __pyx_v_j;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_a3.data) + __pyx_t_20)) )) = __pyx_t_26;
+      __pyx_t_20 = __pyx_v_j;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b3.data) + __pyx_t_20)) )) = __pyx_t_27;
+
+      /* "disorder/diffuse/monocrystal.pyx":1079
+ *             a2[j], b2[j], \
+ *             a3[j], b3[j], \
+ *             a4[j], b4[j], \             # <<<<<<<<<<<<<<
+ *             c[j] = tables.X.get(atm)
+ * 
+ */
+      __pyx_t_20 = __pyx_v_j;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_a4.data) + __pyx_t_20)) )) = __pyx_t_28;
+      __pyx_t_20 = __pyx_v_j;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b4.data) + __pyx_t_20)) )) = __pyx_t_29;
+
+      /* "disorder/diffuse/monocrystal.pyx":1080
+ *             a3[j], b3[j], \
+ *             a4[j], b4[j], \
+ *             c[j] = tables.X.get(atm)             # <<<<<<<<<<<<<<
+ * 
+ *     for i in prange(n_hkl, nogil=True):
+ */
+      __pyx_t_20 = __pyx_v_j;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_c.data) + __pyx_t_20)) )) = __pyx_t_30;
     }
-    __pyx_t_10 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_9, __pyx_t_2, __pyx_v_atm) : __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_v_atm);
-    __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1050, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_10);
-    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_19 = __Pyx_PyComplex_As___pyx_t_double_complex(__pyx_t_10); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 1050, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_20 = __pyx_v_j;
-    *((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_b.data) + __pyx_t_20)) )) = __pyx_t_19;
+    __pyx_L9:;
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":1052
- *         b[j] = tables.bc.get(atm)
+  /* "disorder/diffuse/monocrystal.pyx":1082
+ *             c[j] = tables.X.get(atm)
  * 
  *     for i in prange(n_hkl, nogil=True):             # <<<<<<<<<<<<<<
  * 
@@ -14876,6 +15449,58 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
         __pyx_t_1 = __pyx_v_n_hkl;
         if ((1 == 0)) abort();
         {
+            __pyx_t_double_complex __pyx_parallel_temp0;
+            double __pyx_parallel_temp1 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp2 = ((double)__PYX_NAN());
+            Py_ssize_t __pyx_parallel_temp3 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp4 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp5 = ((Py_ssize_t)0xbad0bad0);
+            double __pyx_parallel_temp6 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp7 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp8 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp9 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp10 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp11 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp12 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp13 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp14 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp15 = ((double)__PYX_NAN());
+            __pyx_t_double_complex __pyx_parallel_temp16;
+            double __pyx_parallel_temp17 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp18 = ((double)__PYX_NAN());
+            Py_ssize_t __pyx_parallel_temp19 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp20 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp21 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp22 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp23 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp24 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp25 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp26 = ((Py_ssize_t)0xbad0bad0);
+            double __pyx_parallel_temp27 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp28 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp29 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp30 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp31 = ((double)__PYX_NAN());
+            Py_ssize_t __pyx_parallel_temp32 = ((Py_ssize_t)0xbad0bad0);
+            __pyx_t_double_complex __pyx_parallel_temp33;
+            __pyx_t_double_complex __pyx_parallel_temp34;
+            double __pyx_parallel_temp35 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp36 = ((double)__PYX_NAN());
+            __pyx_t_double_complex __pyx_parallel_temp37;
+            Py_ssize_t __pyx_parallel_temp38 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp39 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp40 = ((Py_ssize_t)0xbad0bad0);
+            Py_ssize_t __pyx_parallel_temp41 = ((Py_ssize_t)0xbad0bad0);
+            double __pyx_parallel_temp42 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp43 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp44 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp45 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp46 = ((double)__PYX_NAN());
+            double __pyx_parallel_temp47 = ((double)__PYX_NAN());
+            const char *__pyx_parallel_filename = NULL; int __pyx_parallel_lineno = 0, __pyx_parallel_clineno = 0;
+            PyObject *__pyx_parallel_exc_type = NULL, *__pyx_parallel_exc_value = NULL, *__pyx_parallel_exc_tb = NULL;
+            int __pyx_parallel_why;
+            __pyx_parallel_why = 0;
             #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
                 #undef likely
                 #undef unlikely
@@ -14886,13 +15511,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
             if (__pyx_t_18 > 0)
             {
                 #ifdef _OPENMP
-                #pragma omp parallel private(__pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_20, __pyx_t_21, __pyx_t_22, __pyx_t_23, __pyx_t_24, __pyx_t_25, __pyx_t_26, __pyx_t_27, __pyx_t_28, __pyx_t_29, __pyx_t_3, __pyx_t_30, __pyx_t_31, __pyx_t_32, __pyx_t_33, __pyx_t_34, __pyx_t_35, __pyx_t_36, __pyx_t_37, __pyx_t_38, __pyx_t_39)
+                #pragma omp parallel private(__pyx_t_20, __pyx_t_28, __pyx_t_29, __pyx_t_3, __pyx_t_30, __pyx_t_31, __pyx_t_32, __pyx_t_33, __pyx_t_34, __pyx_t_35, __pyx_t_36, __pyx_t_37, __pyx_t_38, __pyx_t_39, __pyx_t_40, __pyx_t_41, __pyx_t_42, __pyx_t_43, __pyx_t_44, __pyx_t_45, __pyx_t_46, __pyx_t_47, __pyx_t_48, __pyx_t_49) private(__pyx_filename, __pyx_lineno, __pyx_clineno) shared(__pyx_parallel_why, __pyx_parallel_exc_type, __pyx_parallel_exc_value, __pyx_parallel_exc_tb)
                 #endif /* _OPENMP */
                 {
                     #ifdef _OPENMP
-                    #pragma omp for lastprivate(__pyx_v_F) lastprivate(__pyx_v_F_imag) lastprivate(__pyx_v_F_real) lastprivate(__pyx_v_H) lastprivate(__pyx_v_K) lastprivate(__pyx_v_L) lastprivate(__pyx_v_Qh) lastprivate(__pyx_v_Qk) lastprivate(__pyx_v_Ql) lastprivate(__pyx_v_Qx) lastprivate(__pyx_v_Qy) lastprivate(__pyx_v_Qz) lastprivate(__pyx_v_f_H) lastprivate(__pyx_v_f_K) lastprivate(__pyx_v_f_L) lastprivate(__pyx_v_factors) lastprivate(__pyx_v_h) lastprivate(__pyx_v_h_) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_iH) lastprivate(__pyx_v_iK) lastprivate(__pyx_v_iL) lastprivate(__pyx_v_i_dft) lastprivate(__pyx_v_i_ind) lastprivate(__pyx_v_j) lastprivate(__pyx_v_j_dft) lastprivate(__pyx_v_k) lastprivate(__pyx_v_k_) lastprivate(__pyx_v_l) lastprivate(__pyx_v_l_) lastprivate(__pyx_v_op) lastprivate(__pyx_v_phase_factor) lastprivate(__pyx_v_prod) lastprivate(__pyx_v_scattering_length) lastprivate(__pyx_v_u) lastprivate(__pyx_v_v) lastprivate(__pyx_v_var) lastprivate(__pyx_v_w) lastprivate(__pyx_v_x) lastprivate(__pyx_v_x_) lastprivate(__pyx_v_y) lastprivate(__pyx_v_y_) lastprivate(__pyx_v_z) lastprivate(__pyx_v_z_)
+                    #ifdef WITH_THREAD
+                    PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+                    #endif
+                    Py_BEGIN_ALLOW_THREADS
+                    #endif /* _OPENMP */
+                    #ifdef _OPENMP
+                    #pragma omp for lastprivate(__pyx_v_F) lastprivate(__pyx_v_F_imag) lastprivate(__pyx_v_F_real) lastprivate(__pyx_v_H) lastprivate(__pyx_v_K) lastprivate(__pyx_v_L) lastprivate(__pyx_v_Q) lastprivate(__pyx_v_Qh) lastprivate(__pyx_v_Qk) lastprivate(__pyx_v_Ql) lastprivate(__pyx_v_Qx) lastprivate(__pyx_v_Qy) lastprivate(__pyx_v_Qz) lastprivate(__pyx_v_f_H) lastprivate(__pyx_v_f_K) lastprivate(__pyx_v_f_L) lastprivate(__pyx_v_factors) lastprivate(__pyx_v_h) lastprivate(__pyx_v_h_) firstprivate(__pyx_v_i) lastprivate(__pyx_v_i) lastprivate(__pyx_v_iH) lastprivate(__pyx_v_iK) lastprivate(__pyx_v_iL) lastprivate(__pyx_v_i_dft) lastprivate(__pyx_v_i_ind) lastprivate(__pyx_v_j) lastprivate(__pyx_v_j_dft) lastprivate(__pyx_v_k) lastprivate(__pyx_v_k_) lastprivate(__pyx_v_l) lastprivate(__pyx_v_l_) lastprivate(__pyx_v_occ) lastprivate(__pyx_v_op) lastprivate(__pyx_v_phase_factor) lastprivate(__pyx_v_prod) lastprivate(__pyx_v_s_) lastprivate(__pyx_v_s_sq) lastprivate(__pyx_v_scattering_length) lastprivate(__pyx_v_u) lastprivate(__pyx_v_v) lastprivate(__pyx_v_var) lastprivate(__pyx_v_w) lastprivate(__pyx_v_x) lastprivate(__pyx_v_x_) lastprivate(__pyx_v_y) lastprivate(__pyx_v_y_) lastprivate(__pyx_v_z) lastprivate(__pyx_v_z_)
                     #endif /* _OPENMP */
                     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_18; __pyx_t_17++){
+                        if (__pyx_parallel_why < 2)
                         {
                             __pyx_v_i = (Py_ssize_t)(0 + 1 * __pyx_t_17);
                             /* Initialize private variables to invalid values */
@@ -14901,6 +15533,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
                             __pyx_v_H = ((Py_ssize_t)0xbad0bad0);
                             __pyx_v_K = ((Py_ssize_t)0xbad0bad0);
                             __pyx_v_L = ((Py_ssize_t)0xbad0bad0);
+                            __pyx_v_Q = ((double)__PYX_NAN());
                             __pyx_v_Qh = ((double)__PYX_NAN());
                             __pyx_v_Qk = ((double)__PYX_NAN());
                             __pyx_v_Ql = ((double)__PYX_NAN());
@@ -14923,7 +15556,10 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
                             __pyx_v_k_ = ((double)__PYX_NAN());
                             __pyx_v_l = ((double)__PYX_NAN());
                             __pyx_v_l_ = ((double)__PYX_NAN());
+                            __pyx_v_occ = ((double)__PYX_NAN());
                             __pyx_v_op = ((Py_ssize_t)0xbad0bad0);
+                            __pyx_v_s_ = ((double)__PYX_NAN());
+                            __pyx_v_s_sq = ((double)__PYX_NAN());
                             __pyx_v_u = ((Py_ssize_t)0xbad0bad0);
                             __pyx_v_v = ((Py_ssize_t)0xbad0bad0);
                             __pyx_v_var = ((Py_ssize_t)0xbad0bad0);
@@ -14935,7 +15571,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
                             __pyx_v_z = ((double)__PYX_NAN());
                             __pyx_v_z_ = ((double)__PYX_NAN());
 
-                            /* "disorder/diffuse/monocrystal.pyx":1054
+                            /* "disorder/diffuse/monocrystal.pyx":1084
  *     for i in prange(n_hkl, nogil=True):
  * 
  *         i_ind = indices[i]             # <<<<<<<<<<<<<<
@@ -14945,7 +15581,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
                             __pyx_t_20 = __pyx_v_i;
                             __pyx_v_i_ind = (*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_indices.data) + __pyx_t_20)) )));
 
-                            /* "disorder/diffuse/monocrystal.pyx":1056
+                            /* "disorder/diffuse/monocrystal.pyx":1086
  *         i_ind = indices[i]
  * 
  *         w = i_ind % nl             # <<<<<<<<<<<<<<
@@ -14954,7 +15590,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                             __pyx_v_w = (__pyx_v_i_ind % __pyx_v_nl);
 
-                            /* "disorder/diffuse/monocrystal.pyx":1057
+                            /* "disorder/diffuse/monocrystal.pyx":1087
  * 
  *         w = i_ind % nl
  *         v = i_ind // nl % nk             # <<<<<<<<<<<<<<
@@ -14963,7 +15599,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                             __pyx_v_v = ((__pyx_v_i_ind / __pyx_v_nl) % __pyx_v_nk);
 
-                            /* "disorder/diffuse/monocrystal.pyx":1058
+                            /* "disorder/diffuse/monocrystal.pyx":1088
  *         w = i_ind % nl
  *         v = i_ind // nl % nk
  *         u = i_ind // nl // nk % nh             # <<<<<<<<<<<<<<
@@ -14972,7 +15608,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                             __pyx_v_u = (((__pyx_v_i_ind / __pyx_v_nl) / __pyx_v_nk) % __pyx_v_nh);
 
-                            /* "disorder/diffuse/monocrystal.pyx":1060
+                            /* "disorder/diffuse/monocrystal.pyx":1090
  *         u = i_ind // nl // nk % nh
  * 
  *         h_ = h_min_+h_step_*u             # <<<<<<<<<<<<<<
@@ -14981,7 +15617,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                             __pyx_v_h_ = (__pyx_v_h_min_ + (__pyx_v_h_step_ * __pyx_v_u));
 
-                            /* "disorder/diffuse/monocrystal.pyx":1061
+                            /* "disorder/diffuse/monocrystal.pyx":1091
  * 
  *         h_ = h_min_+h_step_*u
  *         k_ = k_min_+k_step_*v             # <<<<<<<<<<<<<<
@@ -14990,7 +15626,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                             __pyx_v_k_ = (__pyx_v_k_min_ + (__pyx_v_k_step_ * __pyx_v_v));
 
-                            /* "disorder/diffuse/monocrystal.pyx":1062
+                            /* "disorder/diffuse/monocrystal.pyx":1092
  *         h_ = h_min_+h_step_*u
  *         k_ = k_min_+k_step_*v
  *         l_ = l_min_+l_step_*w             # <<<<<<<<<<<<<<
@@ -14999,7 +15635,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                             __pyx_v_l_ = (__pyx_v_l_min_ + (__pyx_v_l_step_ * __pyx_v_w));
 
-                            /* "disorder/diffuse/monocrystal.pyx":1064
+                            /* "disorder/diffuse/monocrystal.pyx":1094
  *         l_ = l_min_+l_step_*w
  * 
  *         x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_             # <<<<<<<<<<<<<<
@@ -15007,29 +15643,29 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  *         z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
  */
                             __pyx_t_20 = 0;
-                            __pyx_t_21 = 0;
-                            __pyx_t_22 = 0;
-                            __pyx_t_23 = 1;
-                            __pyx_t_24 = 0;
-                            __pyx_t_25 = 2;
-                            __pyx_v_x = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_20 * __pyx_v_T.strides[0]) ) + __pyx_t_21 * __pyx_v_T.strides[1]) ))) * __pyx_v_h_) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_22 * __pyx_v_T.strides[0]) ) + __pyx_t_23 * __pyx_v_T.strides[1]) ))) * __pyx_v_k_)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_24 * __pyx_v_T.strides[0]) ) + __pyx_t_25 * __pyx_v_T.strides[1]) ))) * __pyx_v_l_));
+                            __pyx_t_31 = 0;
+                            __pyx_t_32 = 0;
+                            __pyx_t_33 = 1;
+                            __pyx_t_34 = 0;
+                            __pyx_t_35 = 2;
+                            __pyx_v_x = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_20 * __pyx_v_T.strides[0]) ) + __pyx_t_31 * __pyx_v_T.strides[1]) ))) * __pyx_v_h_) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_32 * __pyx_v_T.strides[0]) ) + __pyx_t_33 * __pyx_v_T.strides[1]) ))) * __pyx_v_k_)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_34 * __pyx_v_T.strides[0]) ) + __pyx_t_35 * __pyx_v_T.strides[1]) ))) * __pyx_v_l_));
 
-                            /* "disorder/diffuse/monocrystal.pyx":1065
+                            /* "disorder/diffuse/monocrystal.pyx":1095
  * 
  *         x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
  *         y = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_             # <<<<<<<<<<<<<<
  *         z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
  * 
  */
-                            __pyx_t_25 = 1;
-                            __pyx_t_24 = 0;
-                            __pyx_t_23 = 1;
-                            __pyx_t_22 = 1;
-                            __pyx_t_21 = 1;
+                            __pyx_t_35 = 1;
+                            __pyx_t_34 = 0;
+                            __pyx_t_33 = 1;
+                            __pyx_t_32 = 1;
+                            __pyx_t_31 = 1;
                             __pyx_t_20 = 2;
-                            __pyx_v_y = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_25 * __pyx_v_T.strides[0]) ) + __pyx_t_24 * __pyx_v_T.strides[1]) ))) * __pyx_v_h_) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_23 * __pyx_v_T.strides[0]) ) + __pyx_t_22 * __pyx_v_T.strides[1]) ))) * __pyx_v_k_)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_21 * __pyx_v_T.strides[0]) ) + __pyx_t_20 * __pyx_v_T.strides[1]) ))) * __pyx_v_l_));
+                            __pyx_v_y = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_35 * __pyx_v_T.strides[0]) ) + __pyx_t_34 * __pyx_v_T.strides[1]) ))) * __pyx_v_h_) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_33 * __pyx_v_T.strides[0]) ) + __pyx_t_32 * __pyx_v_T.strides[1]) ))) * __pyx_v_k_)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_31 * __pyx_v_T.strides[0]) ) + __pyx_t_20 * __pyx_v_T.strides[1]) ))) * __pyx_v_l_));
 
-                            /* "disorder/diffuse/monocrystal.pyx":1066
+                            /* "disorder/diffuse/monocrystal.pyx":1096
  *         x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
  *         y = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
  *         z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_             # <<<<<<<<<<<<<<
@@ -15037,121 +15673,121 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  *         for var in range(n_vars):
  */
                             __pyx_t_20 = 2;
-                            __pyx_t_21 = 0;
-                            __pyx_t_22 = 2;
-                            __pyx_t_23 = 1;
-                            __pyx_t_24 = 2;
-                            __pyx_t_25 = 2;
-                            __pyx_v_z = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_20 * __pyx_v_T.strides[0]) ) + __pyx_t_21 * __pyx_v_T.strides[1]) ))) * __pyx_v_h_) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_22 * __pyx_v_T.strides[0]) ) + __pyx_t_23 * __pyx_v_T.strides[1]) ))) * __pyx_v_k_)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_24 * __pyx_v_T.strides[0]) ) + __pyx_t_25 * __pyx_v_T.strides[1]) ))) * __pyx_v_l_));
+                            __pyx_t_31 = 0;
+                            __pyx_t_32 = 2;
+                            __pyx_t_33 = 1;
+                            __pyx_t_34 = 2;
+                            __pyx_t_35 = 2;
+                            __pyx_v_z = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_20 * __pyx_v_T.strides[0]) ) + __pyx_t_31 * __pyx_v_T.strides[1]) ))) * __pyx_v_h_) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_32 * __pyx_v_T.strides[0]) ) + __pyx_t_33 * __pyx_v_T.strides[1]) ))) * __pyx_v_k_)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_T.data + __pyx_t_34 * __pyx_v_T.strides[0]) ) + __pyx_t_35 * __pyx_v_T.strides[1]) ))) * __pyx_v_l_));
 
-                            /* "disorder/diffuse/monocrystal.pyx":1068
+                            /* "disorder/diffuse/monocrystal.pyx":1098
  *         z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
  * 
  *         for var in range(n_vars):             # <<<<<<<<<<<<<<
  * 
  *             x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z
  */
-                            __pyx_t_26 = __pyx_v_n_vars;
-                            __pyx_t_27 = __pyx_t_26;
-                            for (__pyx_t_28 = 0; __pyx_t_28 < __pyx_t_27; __pyx_t_28+=1) {
-                              __pyx_v_var = __pyx_t_28;
+                            __pyx_t_36 = __pyx_v_n_vars;
+                            __pyx_t_37 = __pyx_t_36;
+                            for (__pyx_t_38 = 0; __pyx_t_38 < __pyx_t_37; __pyx_t_38+=1) {
+                              __pyx_v_var = __pyx_t_38;
 
-                              /* "disorder/diffuse/monocrystal.pyx":1070
+                              /* "disorder/diffuse/monocrystal.pyx":1100
  *         for var in range(n_vars):
  * 
  *             x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z             # <<<<<<<<<<<<<<
  *             y_ = domains[var,1,0]*x+domains[var,1,1]*y+domains[var,1,2]*z
  *             z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z
  */
-                              __pyx_t_25 = __pyx_v_var;
-                              __pyx_t_24 = 0;
-                              __pyx_t_23 = 0;
-                              __pyx_t_22 = __pyx_v_var;
-                              __pyx_t_21 = 0;
+                              __pyx_t_35 = __pyx_v_var;
+                              __pyx_t_34 = 0;
+                              __pyx_t_33 = 0;
+                              __pyx_t_32 = __pyx_v_var;
+                              __pyx_t_31 = 0;
                               __pyx_t_20 = 1;
-                              __pyx_t_29 = __pyx_v_var;
-                              __pyx_t_30 = 0;
-                              __pyx_t_31 = 2;
-                              __pyx_v_x_ = ((((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_25 * __pyx_v_domains.strides[0]) ) + __pyx_t_24 * __pyx_v_domains.strides[1]) ) + __pyx_t_23 * __pyx_v_domains.strides[2]) ))) * __pyx_v_x) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_22 * __pyx_v_domains.strides[0]) ) + __pyx_t_21 * __pyx_v_domains.strides[1]) ) + __pyx_t_20 * __pyx_v_domains.strides[2]) ))) * __pyx_v_y)) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_29 * __pyx_v_domains.strides[0]) ) + __pyx_t_30 * __pyx_v_domains.strides[1]) ) + __pyx_t_31 * __pyx_v_domains.strides[2]) ))) * __pyx_v_z));
+                              __pyx_t_39 = __pyx_v_var;
+                              __pyx_t_40 = 0;
+                              __pyx_t_41 = 2;
+                              __pyx_v_x_ = ((((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_35 * __pyx_v_domains.strides[0]) ) + __pyx_t_34 * __pyx_v_domains.strides[1]) ) + __pyx_t_33 * __pyx_v_domains.strides[2]) ))) * __pyx_v_x) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_32 * __pyx_v_domains.strides[0]) ) + __pyx_t_31 * __pyx_v_domains.strides[1]) ) + __pyx_t_20 * __pyx_v_domains.strides[2]) ))) * __pyx_v_y)) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_39 * __pyx_v_domains.strides[0]) ) + __pyx_t_40 * __pyx_v_domains.strides[1]) ) + __pyx_t_41 * __pyx_v_domains.strides[2]) ))) * __pyx_v_z));
 
-                              /* "disorder/diffuse/monocrystal.pyx":1071
+                              /* "disorder/diffuse/monocrystal.pyx":1101
  * 
  *             x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z
  *             y_ = domains[var,1,0]*x+domains[var,1,1]*y+domains[var,1,2]*z             # <<<<<<<<<<<<<<
  *             z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z
  * 
  */
-                              __pyx_t_31 = __pyx_v_var;
-                              __pyx_t_30 = 1;
-                              __pyx_t_29 = 0;
+                              __pyx_t_41 = __pyx_v_var;
+                              __pyx_t_40 = 1;
+                              __pyx_t_39 = 0;
                               __pyx_t_20 = __pyx_v_var;
-                              __pyx_t_21 = 1;
-                              __pyx_t_22 = 1;
-                              __pyx_t_23 = __pyx_v_var;
-                              __pyx_t_24 = 1;
-                              __pyx_t_25 = 2;
-                              __pyx_v_y_ = ((((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_31 * __pyx_v_domains.strides[0]) ) + __pyx_t_30 * __pyx_v_domains.strides[1]) ) + __pyx_t_29 * __pyx_v_domains.strides[2]) ))) * __pyx_v_x) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_20 * __pyx_v_domains.strides[0]) ) + __pyx_t_21 * __pyx_v_domains.strides[1]) ) + __pyx_t_22 * __pyx_v_domains.strides[2]) ))) * __pyx_v_y)) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_23 * __pyx_v_domains.strides[0]) ) + __pyx_t_24 * __pyx_v_domains.strides[1]) ) + __pyx_t_25 * __pyx_v_domains.strides[2]) ))) * __pyx_v_z));
+                              __pyx_t_31 = 1;
+                              __pyx_t_32 = 1;
+                              __pyx_t_33 = __pyx_v_var;
+                              __pyx_t_34 = 1;
+                              __pyx_t_35 = 2;
+                              __pyx_v_y_ = ((((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_41 * __pyx_v_domains.strides[0]) ) + __pyx_t_40 * __pyx_v_domains.strides[1]) ) + __pyx_t_39 * __pyx_v_domains.strides[2]) ))) * __pyx_v_x) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_20 * __pyx_v_domains.strides[0]) ) + __pyx_t_31 * __pyx_v_domains.strides[1]) ) + __pyx_t_32 * __pyx_v_domains.strides[2]) ))) * __pyx_v_y)) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_33 * __pyx_v_domains.strides[0]) ) + __pyx_t_34 * __pyx_v_domains.strides[1]) ) + __pyx_t_35 * __pyx_v_domains.strides[2]) ))) * __pyx_v_z));
 
-                              /* "disorder/diffuse/monocrystal.pyx":1072
+                              /* "disorder/diffuse/monocrystal.pyx":1102
  *             x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z
  *             y_ = domains[var,1,0]*x+domains[var,1,1]*y+domains[var,1,2]*z
  *             z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z             # <<<<<<<<<<<<<<
  * 
  *             for op in range(n_ops):
  */
-                              __pyx_t_25 = __pyx_v_var;
-                              __pyx_t_24 = 2;
-                              __pyx_t_23 = 0;
-                              __pyx_t_22 = __pyx_v_var;
-                              __pyx_t_21 = 2;
-                              __pyx_t_20 = 1;
-                              __pyx_t_29 = __pyx_v_var;
-                              __pyx_t_30 = 2;
+                              __pyx_t_35 = __pyx_v_var;
+                              __pyx_t_34 = 2;
+                              __pyx_t_33 = 0;
+                              __pyx_t_32 = __pyx_v_var;
                               __pyx_t_31 = 2;
-                              __pyx_v_z_ = ((((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_25 * __pyx_v_domains.strides[0]) ) + __pyx_t_24 * __pyx_v_domains.strides[1]) ) + __pyx_t_23 * __pyx_v_domains.strides[2]) ))) * __pyx_v_x) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_22 * __pyx_v_domains.strides[0]) ) + __pyx_t_21 * __pyx_v_domains.strides[1]) ) + __pyx_t_20 * __pyx_v_domains.strides[2]) ))) * __pyx_v_y)) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_29 * __pyx_v_domains.strides[0]) ) + __pyx_t_30 * __pyx_v_domains.strides[1]) ) + __pyx_t_31 * __pyx_v_domains.strides[2]) ))) * __pyx_v_z));
+                              __pyx_t_20 = 1;
+                              __pyx_t_39 = __pyx_v_var;
+                              __pyx_t_40 = 2;
+                              __pyx_t_41 = 2;
+                              __pyx_v_z_ = ((((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_35 * __pyx_v_domains.strides[0]) ) + __pyx_t_34 * __pyx_v_domains.strides[1]) ) + __pyx_t_33 * __pyx_v_domains.strides[2]) ))) * __pyx_v_x) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_32 * __pyx_v_domains.strides[0]) ) + __pyx_t_31 * __pyx_v_domains.strides[1]) ) + __pyx_t_20 * __pyx_v_domains.strides[2]) ))) * __pyx_v_y)) + ((*((double *) ( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_domains.data + __pyx_t_39 * __pyx_v_domains.strides[0]) ) + __pyx_t_40 * __pyx_v_domains.strides[1]) ) + __pyx_t_41 * __pyx_v_domains.strides[2]) ))) * __pyx_v_z));
 
-                              /* "disorder/diffuse/monocrystal.pyx":1074
+                              /* "disorder/diffuse/monocrystal.pyx":1104
  *             z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z
  * 
  *             for op in range(n_ops):             # <<<<<<<<<<<<<<
  * 
  *                 h, k, l = transform(x_, y_, z_, sym, op)
  */
-                              __pyx_t_32 = __pyx_v_n_ops;
-                              __pyx_t_33 = __pyx_t_32;
-                              for (__pyx_t_34 = 0; __pyx_t_34 < __pyx_t_33; __pyx_t_34+=1) {
-                                __pyx_v_op = __pyx_t_34;
+                              __pyx_t_42 = __pyx_v_n_ops;
+                              __pyx_t_43 = __pyx_t_42;
+                              for (__pyx_t_44 = 0; __pyx_t_44 < __pyx_t_43; __pyx_t_44+=1) {
+                                __pyx_v_op = __pyx_t_44;
 
-                                /* "disorder/diffuse/monocrystal.pyx":1076
+                                /* "disorder/diffuse/monocrystal.pyx":1106
  *             for op in range(n_ops):
  * 
  *                 h, k, l = transform(x_, y_, z_, sym, op)             # <<<<<<<<<<<<<<
  * 
  *                 f_H, f_K, f_L = h*Nu, k*Nv, l*Nw
  */
-                                __pyx_t_35 = __pyx_f_8disorder_7diffuse_11monocrystal_transform(__pyx_v_x_, __pyx_v_y_, __pyx_v_z_, __pyx_v_sym, __pyx_v_op);
-                                __pyx_t_13 = __pyx_t_35.f0;
-                                __pyx_t_12 = __pyx_t_35.f1;
-                                __pyx_t_11 = __pyx_t_35.f2;
-                                __pyx_v_h = __pyx_t_13;
-                                __pyx_v_k = __pyx_t_12;
-                                __pyx_v_l = __pyx_t_11;
+                                __pyx_t_45 = __pyx_f_8disorder_7diffuse_11monocrystal_transform(__pyx_v_x_, __pyx_v_y_, __pyx_v_z_, __pyx_v_sym, __pyx_v_op);
+                                __pyx_t_30 = __pyx_t_45.f0;
+                                __pyx_t_29 = __pyx_t_45.f1;
+                                __pyx_t_28 = __pyx_t_45.f2;
+                                __pyx_v_h = __pyx_t_30;
+                                __pyx_v_k = __pyx_t_29;
+                                __pyx_v_l = __pyx_t_28;
 
-                                /* "disorder/diffuse/monocrystal.pyx":1078
+                                /* "disorder/diffuse/monocrystal.pyx":1108
  *                 h, k, l = transform(x_, y_, z_, sym, op)
  * 
  *                 f_H, f_K, f_L = h*Nu, k*Nv, l*Nw             # <<<<<<<<<<<<<<
  * 
  *                 H = int(round2even(f_H))
  */
-                                __pyx_t_11 = (__pyx_v_h * __pyx_v_Nu);
-                                __pyx_t_12 = (__pyx_v_k * __pyx_v_Nv);
-                                __pyx_t_13 = (__pyx_v_l * __pyx_v_Nw);
-                                __pyx_v_f_H = __pyx_t_11;
-                                __pyx_v_f_K = __pyx_t_12;
-                                __pyx_v_f_L = __pyx_t_13;
+                                __pyx_t_28 = (__pyx_v_h * __pyx_v_Nu);
+                                __pyx_t_29 = (__pyx_v_k * __pyx_v_Nv);
+                                __pyx_t_30 = (__pyx_v_l * __pyx_v_Nw);
+                                __pyx_v_f_H = __pyx_t_28;
+                                __pyx_v_f_K = __pyx_t_29;
+                                __pyx_v_f_L = __pyx_t_30;
 
-                                /* "disorder/diffuse/monocrystal.pyx":1080
+                                /* "disorder/diffuse/monocrystal.pyx":1110
  *                 f_H, f_K, f_L = h*Nu, k*Nv, l*Nw
  * 
  *                 H = int(round2even(f_H))             # <<<<<<<<<<<<<<
@@ -15160,7 +15796,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 __pyx_v_H = ((Py_ssize_t)__pyx_f_8disorder_7diffuse_11monocrystal_round2even(__pyx_v_f_H));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1081
+                                /* "disorder/diffuse/monocrystal.pyx":1111
  * 
  *                 H = int(round2even(f_H))
  *                 K = int(round2even(f_K))             # <<<<<<<<<<<<<<
@@ -15169,7 +15805,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 __pyx_v_K = ((Py_ssize_t)__pyx_f_8disorder_7diffuse_11monocrystal_round2even(__pyx_v_f_K));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1082
+                                /* "disorder/diffuse/monocrystal.pyx":1112
  *                 H = int(round2even(f_H))
  *                 K = int(round2even(f_K))
  *                 L = int(round2even(f_L))             # <<<<<<<<<<<<<<
@@ -15178,7 +15814,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 __pyx_v_L = ((Py_ssize_t)__pyx_f_8disorder_7diffuse_11monocrystal_round2even(__pyx_v_f_L));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1084
+                                /* "disorder/diffuse/monocrystal.pyx":1114
  *                 L = int(round2even(f_L))
  * 
  *                 iH = (H % Nu+Nu) % Nu             # <<<<<<<<<<<<<<
@@ -15187,7 +15823,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 __pyx_v_iH = (((__pyx_v_H % __pyx_v_Nu) + __pyx_v_Nu) % __pyx_v_Nu);
 
-                                /* "disorder/diffuse/monocrystal.pyx":1085
+                                /* "disorder/diffuse/monocrystal.pyx":1115
  * 
  *                 iH = (H % Nu+Nu) % Nu
  *                 iK = (K % Nv+Nv) % Nv             # <<<<<<<<<<<<<<
@@ -15196,7 +15832,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 __pyx_v_iK = (((__pyx_v_K % __pyx_v_Nv) + __pyx_v_Nv) % __pyx_v_Nv);
 
-                                /* "disorder/diffuse/monocrystal.pyx":1086
+                                /* "disorder/diffuse/monocrystal.pyx":1116
  *                 iH = (H % Nu+Nu) % Nu
  *                 iK = (K % Nv+Nv) % Nv
  *                 iL = (L % Nw+Nw) % Nw             # <<<<<<<<<<<<<<
@@ -15205,31 +15841,31 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 __pyx_v_iL = (((__pyx_v_L % __pyx_v_Nw) + __pyx_v_Nw) % __pyx_v_Nw);
 
-                                /* "disorder/diffuse/monocrystal.pyx":1088
+                                /* "disorder/diffuse/monocrystal.pyx":1118
  *                 iL = (L % Nw+Nw) % Nw
  * 
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):             # <<<<<<<<<<<<<<
  *                     iH = iH+Fu
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
  */
-                                __pyx_t_36 = ((__pyx_v_iH < __pyx_v_Fu) != 0);
-                                if (__pyx_t_36) {
+                                __pyx_t_46 = ((__pyx_v_iH < __pyx_v_Fu) != 0);
+                                if (__pyx_t_46) {
                                 } else {
-                                  __pyx_t_3 = __pyx_t_36;
-                                  goto __pyx_L21_bool_binop_done;
+                                  __pyx_t_3 = __pyx_t_46;
+                                  goto __pyx_L24_bool_binop_done;
                                 }
-                                __pyx_t_36 = ((!(__pyx_f_8disorder_7diffuse_11monocrystal_iszero(fmod(__pyx_v_f_H, __pyx_v_f_Nu)) != 0)) != 0);
-                                if (__pyx_t_36) {
+                                __pyx_t_46 = ((!(__pyx_f_8disorder_7diffuse_11monocrystal_iszero(fmod(__pyx_v_f_H, __pyx_v_f_Nu)) != 0)) != 0);
+                                if (__pyx_t_46) {
                                 } else {
-                                  __pyx_t_3 = __pyx_t_36;
-                                  goto __pyx_L21_bool_binop_done;
+                                  __pyx_t_3 = __pyx_t_46;
+                                  goto __pyx_L24_bool_binop_done;
                                 }
-                                __pyx_t_36 = (((__pyx_v_Nu - __pyx_v_iH) > __pyx_v_Fu) != 0);
-                                __pyx_t_3 = __pyx_t_36;
-                                __pyx_L21_bool_binop_done:;
+                                __pyx_t_46 = (((__pyx_v_Nu - __pyx_v_iH) > __pyx_v_Fu) != 0);
+                                __pyx_t_3 = __pyx_t_46;
+                                __pyx_L24_bool_binop_done:;
                                 if (__pyx_t_3) {
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1089
+                                  /* "disorder/diffuse/monocrystal.pyx":1119
  * 
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
  *                     iH = iH+Fu             # <<<<<<<<<<<<<<
@@ -15238,7 +15874,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                   __pyx_v_iH = (__pyx_v_iH + __pyx_v_Fu);
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1088
+                                  /* "disorder/diffuse/monocrystal.pyx":1118
  *                 iL = (L % Nw+Nw) % Nw
  * 
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):             # <<<<<<<<<<<<<<
@@ -15247,31 +15883,31 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 }
 
-                                /* "disorder/diffuse/monocrystal.pyx":1090
+                                /* "disorder/diffuse/monocrystal.pyx":1120
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
  *                     iH = iH+Fu
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):             # <<<<<<<<<<<<<<
  *                     iK = iK+Fv
  *                 if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):
  */
-                                __pyx_t_36 = ((__pyx_v_iK < __pyx_v_Fv) != 0);
-                                if (__pyx_t_36) {
+                                __pyx_t_46 = ((__pyx_v_iK < __pyx_v_Fv) != 0);
+                                if (__pyx_t_46) {
                                 } else {
-                                  __pyx_t_3 = __pyx_t_36;
-                                  goto __pyx_L25_bool_binop_done;
+                                  __pyx_t_3 = __pyx_t_46;
+                                  goto __pyx_L28_bool_binop_done;
                                 }
-                                __pyx_t_36 = ((!(__pyx_f_8disorder_7diffuse_11monocrystal_iszero(fmod(__pyx_v_f_K, __pyx_v_f_Nv)) != 0)) != 0);
-                                if (__pyx_t_36) {
+                                __pyx_t_46 = ((!(__pyx_f_8disorder_7diffuse_11monocrystal_iszero(fmod(__pyx_v_f_K, __pyx_v_f_Nv)) != 0)) != 0);
+                                if (__pyx_t_46) {
                                 } else {
-                                  __pyx_t_3 = __pyx_t_36;
-                                  goto __pyx_L25_bool_binop_done;
+                                  __pyx_t_3 = __pyx_t_46;
+                                  goto __pyx_L28_bool_binop_done;
                                 }
-                                __pyx_t_36 = (((__pyx_v_Nv - __pyx_v_iK) > __pyx_v_Fv) != 0);
-                                __pyx_t_3 = __pyx_t_36;
-                                __pyx_L25_bool_binop_done:;
+                                __pyx_t_46 = (((__pyx_v_Nv - __pyx_v_iK) > __pyx_v_Fv) != 0);
+                                __pyx_t_3 = __pyx_t_46;
+                                __pyx_L28_bool_binop_done:;
                                 if (__pyx_t_3) {
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1091
+                                  /* "disorder/diffuse/monocrystal.pyx":1121
  *                     iH = iH+Fu
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
  *                     iK = iK+Fv             # <<<<<<<<<<<<<<
@@ -15280,7 +15916,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                   __pyx_v_iK = (__pyx_v_iK + __pyx_v_Fv);
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1090
+                                  /* "disorder/diffuse/monocrystal.pyx":1120
  *                 if (iH < Fu and not iszero(fmod(f_H, f_Nu)) and Nu-iH > Fu):
  *                     iH = iH+Fu
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):             # <<<<<<<<<<<<<<
@@ -15289,31 +15925,31 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 }
 
-                                /* "disorder/diffuse/monocrystal.pyx":1092
+                                /* "disorder/diffuse/monocrystal.pyx":1122
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
  *                     iK = iK+Fv
  *                 if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):             # <<<<<<<<<<<<<<
  *                     iL = iL+Fw
  * 
  */
-                                __pyx_t_36 = ((__pyx_v_iL < __pyx_v_Fw) != 0);
-                                if (__pyx_t_36) {
+                                __pyx_t_46 = ((__pyx_v_iL < __pyx_v_Fw) != 0);
+                                if (__pyx_t_46) {
                                 } else {
-                                  __pyx_t_3 = __pyx_t_36;
-                                  goto __pyx_L29_bool_binop_done;
+                                  __pyx_t_3 = __pyx_t_46;
+                                  goto __pyx_L32_bool_binop_done;
                                 }
-                                __pyx_t_36 = ((!(__pyx_f_8disorder_7diffuse_11monocrystal_iszero(fmod(__pyx_v_f_L, __pyx_v_f_Nw)) != 0)) != 0);
-                                if (__pyx_t_36) {
+                                __pyx_t_46 = ((!(__pyx_f_8disorder_7diffuse_11monocrystal_iszero(fmod(__pyx_v_f_L, __pyx_v_f_Nw)) != 0)) != 0);
+                                if (__pyx_t_46) {
                                 } else {
-                                  __pyx_t_3 = __pyx_t_36;
-                                  goto __pyx_L29_bool_binop_done;
+                                  __pyx_t_3 = __pyx_t_46;
+                                  goto __pyx_L32_bool_binop_done;
                                 }
-                                __pyx_t_36 = (((__pyx_v_Nw - __pyx_v_iL) > __pyx_v_Fw) != 0);
-                                __pyx_t_3 = __pyx_t_36;
-                                __pyx_L29_bool_binop_done:;
+                                __pyx_t_46 = (((__pyx_v_Nw - __pyx_v_iL) > __pyx_v_Fw) != 0);
+                                __pyx_t_3 = __pyx_t_46;
+                                __pyx_L32_bool_binop_done:;
                                 if (__pyx_t_3) {
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1093
+                                  /* "disorder/diffuse/monocrystal.pyx":1123
  *                     iK = iK+Fv
  *                 if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):
  *                     iL = iL+Fw             # <<<<<<<<<<<<<<
@@ -15322,7 +15958,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                   __pyx_v_iL = (__pyx_v_iL + __pyx_v_Fw);
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1092
+                                  /* "disorder/diffuse/monocrystal.pyx":1122
  *                 if (iK < Fv and not iszero(fmod(f_K, f_Nv)) and Nv-iK > Fv):
  *                     iK = iK+Fv
  *                 if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):             # <<<<<<<<<<<<<<
@@ -15331,7 +15967,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 }
 
-                                /* "disorder/diffuse/monocrystal.pyx":1095
+                                /* "disorder/diffuse/monocrystal.pyx":1125
  *                     iL = iL+Fw
  * 
  *                 i_dft = iL+Nw*(iK+Nv*iH)             # <<<<<<<<<<<<<<
@@ -15340,97 +15976,97 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 __pyx_v_i_dft = (__pyx_v_iL + (__pyx_v_Nw * (__pyx_v_iK + (__pyx_v_Nv * __pyx_v_iH))));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1097
+                                /* "disorder/diffuse/monocrystal.pyx":1127
  *                 i_dft = iL+Nw*(iK+Nv*iH)
  * 
  *                 Qh = M_TAU*(B[0,0]*h+B[0,1]*k+B[0,2]*l)             # <<<<<<<<<<<<<<
  *                 Qk = M_TAU*(B[1,0]*h+B[1,1]*k+B[1,2]*l)
  *                 Ql = M_TAU*(B[2,0]*h+B[2,1]*k+B[2,2]*l)
  */
-                                __pyx_t_31 = 0;
-                                __pyx_t_30 = 0;
-                                __pyx_t_29 = 0;
+                                __pyx_t_41 = 0;
+                                __pyx_t_40 = 0;
+                                __pyx_t_39 = 0;
                                 __pyx_t_20 = 1;
-                                __pyx_t_21 = 0;
-                                __pyx_t_22 = 2;
-                                __pyx_v_Qh = (__pyx_v_M_TAU * ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_31 * __pyx_v_B.strides[0]) ) + __pyx_t_30 * __pyx_v_B.strides[1]) ))) * __pyx_v_h) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_29 * __pyx_v_B.strides[0]) ) + __pyx_t_20 * __pyx_v_B.strides[1]) ))) * __pyx_v_k)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_21 * __pyx_v_B.strides[0]) ) + __pyx_t_22 * __pyx_v_B.strides[1]) ))) * __pyx_v_l)));
+                                __pyx_t_31 = 0;
+                                __pyx_t_32 = 2;
+                                __pyx_v_Qh = (__pyx_v_M_TAU * ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_41 * __pyx_v_B.strides[0]) ) + __pyx_t_40 * __pyx_v_B.strides[1]) ))) * __pyx_v_h) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_39 * __pyx_v_B.strides[0]) ) + __pyx_t_20 * __pyx_v_B.strides[1]) ))) * __pyx_v_k)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_31 * __pyx_v_B.strides[0]) ) + __pyx_t_32 * __pyx_v_B.strides[1]) ))) * __pyx_v_l)));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1098
+                                /* "disorder/diffuse/monocrystal.pyx":1128
  * 
  *                 Qh = M_TAU*(B[0,0]*h+B[0,1]*k+B[0,2]*l)
  *                 Qk = M_TAU*(B[1,0]*h+B[1,1]*k+B[1,2]*l)             # <<<<<<<<<<<<<<
  *                 Ql = M_TAU*(B[2,0]*h+B[2,1]*k+B[2,2]*l)
  * 
  */
-                                __pyx_t_22 = 1;
-                                __pyx_t_21 = 0;
+                                __pyx_t_32 = 1;
+                                __pyx_t_31 = 0;
                                 __pyx_t_20 = 1;
-                                __pyx_t_29 = 1;
-                                __pyx_t_30 = 1;
-                                __pyx_t_31 = 2;
-                                __pyx_v_Qk = (__pyx_v_M_TAU * ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_22 * __pyx_v_B.strides[0]) ) + __pyx_t_21 * __pyx_v_B.strides[1]) ))) * __pyx_v_h) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_20 * __pyx_v_B.strides[0]) ) + __pyx_t_29 * __pyx_v_B.strides[1]) ))) * __pyx_v_k)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_30 * __pyx_v_B.strides[0]) ) + __pyx_t_31 * __pyx_v_B.strides[1]) ))) * __pyx_v_l)));
+                                __pyx_t_39 = 1;
+                                __pyx_t_40 = 1;
+                                __pyx_t_41 = 2;
+                                __pyx_v_Qk = (__pyx_v_M_TAU * ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_32 * __pyx_v_B.strides[0]) ) + __pyx_t_31 * __pyx_v_B.strides[1]) ))) * __pyx_v_h) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_20 * __pyx_v_B.strides[0]) ) + __pyx_t_39 * __pyx_v_B.strides[1]) ))) * __pyx_v_k)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_40 * __pyx_v_B.strides[0]) ) + __pyx_t_41 * __pyx_v_B.strides[1]) ))) * __pyx_v_l)));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1099
+                                /* "disorder/diffuse/monocrystal.pyx":1129
  *                 Qh = M_TAU*(B[0,0]*h+B[0,1]*k+B[0,2]*l)
  *                 Qk = M_TAU*(B[1,0]*h+B[1,1]*k+B[1,2]*l)
  *                 Ql = M_TAU*(B[2,0]*h+B[2,1]*k+B[2,2]*l)             # <<<<<<<<<<<<<<
  * 
  *                 Qx = R[0,0]*Qh+R[0,1]*Qk+R[0,2]*Ql
  */
-                                __pyx_t_31 = 2;
-                                __pyx_t_30 = 0;
-                                __pyx_t_29 = 2;
+                                __pyx_t_41 = 2;
+                                __pyx_t_40 = 0;
+                                __pyx_t_39 = 2;
                                 __pyx_t_20 = 1;
-                                __pyx_t_21 = 2;
-                                __pyx_t_22 = 2;
-                                __pyx_v_Ql = (__pyx_v_M_TAU * ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_31 * __pyx_v_B.strides[0]) ) + __pyx_t_30 * __pyx_v_B.strides[1]) ))) * __pyx_v_h) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_29 * __pyx_v_B.strides[0]) ) + __pyx_t_20 * __pyx_v_B.strides[1]) ))) * __pyx_v_k)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_21 * __pyx_v_B.strides[0]) ) + __pyx_t_22 * __pyx_v_B.strides[1]) ))) * __pyx_v_l)));
+                                __pyx_t_31 = 2;
+                                __pyx_t_32 = 2;
+                                __pyx_v_Ql = (__pyx_v_M_TAU * ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_41 * __pyx_v_B.strides[0]) ) + __pyx_t_40 * __pyx_v_B.strides[1]) ))) * __pyx_v_h) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_39 * __pyx_v_B.strides[0]) ) + __pyx_t_20 * __pyx_v_B.strides[1]) ))) * __pyx_v_k)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_B.data + __pyx_t_31 * __pyx_v_B.strides[0]) ) + __pyx_t_32 * __pyx_v_B.strides[1]) ))) * __pyx_v_l)));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1101
+                                /* "disorder/diffuse/monocrystal.pyx":1131
  *                 Ql = M_TAU*(B[2,0]*h+B[2,1]*k+B[2,2]*l)
  * 
  *                 Qx = R[0,0]*Qh+R[0,1]*Qk+R[0,2]*Ql             # <<<<<<<<<<<<<<
  *                 Qy = R[1,0]*Qh+R[1,1]*Qk+R[1,2]*Ql
  *                 Qz = R[2,0]*Qh+R[2,1]*Qk+R[2,2]*Ql
  */
-                                __pyx_t_22 = 0;
-                                __pyx_t_21 = 0;
+                                __pyx_t_32 = 0;
+                                __pyx_t_31 = 0;
                                 __pyx_t_20 = 0;
-                                __pyx_t_29 = 1;
-                                __pyx_t_30 = 0;
-                                __pyx_t_31 = 2;
-                                __pyx_v_Qx = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_22 * __pyx_v_R.strides[0]) ) + __pyx_t_21 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qh) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_20 * __pyx_v_R.strides[0]) ) + __pyx_t_29 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qk)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_30 * __pyx_v_R.strides[0]) ) + __pyx_t_31 * __pyx_v_R.strides[1]) ))) * __pyx_v_Ql));
+                                __pyx_t_39 = 1;
+                                __pyx_t_40 = 0;
+                                __pyx_t_41 = 2;
+                                __pyx_v_Qx = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_32 * __pyx_v_R.strides[0]) ) + __pyx_t_31 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qh) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_20 * __pyx_v_R.strides[0]) ) + __pyx_t_39 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qk)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_40 * __pyx_v_R.strides[0]) ) + __pyx_t_41 * __pyx_v_R.strides[1]) ))) * __pyx_v_Ql));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1102
+                                /* "disorder/diffuse/monocrystal.pyx":1132
  * 
  *                 Qx = R[0,0]*Qh+R[0,1]*Qk+R[0,2]*Ql
  *                 Qy = R[1,0]*Qh+R[1,1]*Qk+R[1,2]*Ql             # <<<<<<<<<<<<<<
  *                 Qz = R[2,0]*Qh+R[2,1]*Qk+R[2,2]*Ql
  * 
  */
-                                __pyx_t_31 = 1;
-                                __pyx_t_30 = 0;
-                                __pyx_t_29 = 1;
+                                __pyx_t_41 = 1;
+                                __pyx_t_40 = 0;
+                                __pyx_t_39 = 1;
                                 __pyx_t_20 = 1;
-                                __pyx_t_21 = 1;
-                                __pyx_t_22 = 2;
-                                __pyx_v_Qy = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_31 * __pyx_v_R.strides[0]) ) + __pyx_t_30 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qh) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_29 * __pyx_v_R.strides[0]) ) + __pyx_t_20 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qk)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_21 * __pyx_v_R.strides[0]) ) + __pyx_t_22 * __pyx_v_R.strides[1]) ))) * __pyx_v_Ql));
+                                __pyx_t_31 = 1;
+                                __pyx_t_32 = 2;
+                                __pyx_v_Qy = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_41 * __pyx_v_R.strides[0]) ) + __pyx_t_40 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qh) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_39 * __pyx_v_R.strides[0]) ) + __pyx_t_20 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qk)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_31 * __pyx_v_R.strides[0]) ) + __pyx_t_32 * __pyx_v_R.strides[1]) ))) * __pyx_v_Ql));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1103
+                                /* "disorder/diffuse/monocrystal.pyx":1133
  *                 Qx = R[0,0]*Qh+R[0,1]*Qk+R[0,2]*Ql
  *                 Qy = R[1,0]*Qh+R[1,1]*Qk+R[1,2]*Ql
  *                 Qz = R[2,0]*Qh+R[2,1]*Qk+R[2,2]*Ql             # <<<<<<<<<<<<<<
  * 
  *                 prod = 0
  */
-                                __pyx_t_22 = 2;
-                                __pyx_t_21 = 0;
+                                __pyx_t_32 = 2;
+                                __pyx_t_31 = 0;
                                 __pyx_t_20 = 2;
-                                __pyx_t_29 = 1;
-                                __pyx_t_30 = 2;
-                                __pyx_t_31 = 2;
-                                __pyx_v_Qz = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_22 * __pyx_v_R.strides[0]) ) + __pyx_t_21 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qh) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_20 * __pyx_v_R.strides[0]) ) + __pyx_t_29 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qk)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_30 * __pyx_v_R.strides[0]) ) + __pyx_t_31 * __pyx_v_R.strides[1]) ))) * __pyx_v_Ql));
+                                __pyx_t_39 = 1;
+                                __pyx_t_40 = 2;
+                                __pyx_t_41 = 2;
+                                __pyx_v_Qz = ((((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_32 * __pyx_v_R.strides[0]) ) + __pyx_t_31 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qh) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_20 * __pyx_v_R.strides[0]) ) + __pyx_t_39 * __pyx_v_R.strides[1]) ))) * __pyx_v_Qk)) + ((*((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_R.data + __pyx_t_40 * __pyx_v_R.strides[0]) ) + __pyx_t_41 * __pyx_v_R.strides[1]) ))) * __pyx_v_Ql));
 
-                                /* "disorder/diffuse/monocrystal.pyx":1105
+                                /* "disorder/diffuse/monocrystal.pyx":1135
  *                 Qz = R[2,0]*Qh+R[2,1]*Qk+R[2,2]*Ql
  * 
  *                 prod = 0             # <<<<<<<<<<<<<<
@@ -15439,51 +16075,161 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 __pyx_v_prod = __pyx_t_double_complex_from_parts(0, 0);
 
-                                /* "disorder/diffuse/monocrystal.pyx":1107
+                                /* "disorder/diffuse/monocrystal.pyx":1137
  *                 prod = 0
  * 
  *                 for j in range(n_atm):             # <<<<<<<<<<<<<<
  * 
- *                     scattering_length = b[j]
+ *                     occ = occupancy[j]
  */
-                                __pyx_t_37 = __pyx_v_n_atm;
-                                __pyx_t_38 = __pyx_t_37;
-                                for (__pyx_t_39 = 0; __pyx_t_39 < __pyx_t_38; __pyx_t_39+=1) {
-                                  __pyx_v_j = __pyx_t_39;
+                                __pyx_t_47 = __pyx_v_n_atm;
+                                __pyx_t_48 = __pyx_t_47;
+                                for (__pyx_t_49 = 0; __pyx_t_49 < __pyx_t_48; __pyx_t_49+=1) {
+                                  __pyx_v_j = __pyx_t_49;
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1109
+                                  /* "disorder/diffuse/monocrystal.pyx":1139
  *                 for j in range(n_atm):
  * 
- *                     scattering_length = b[j]             # <<<<<<<<<<<<<<
+ *                     occ = occupancy[j]             # <<<<<<<<<<<<<<
+ * 
+ *                     if (technique == 'Neutron'):
+ */
+                                  __pyx_t_41 = __pyx_v_j;
+                                  __pyx_v_occ = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_occupancy.data) + __pyx_t_41)) )));
+
+                                  /* "disorder/diffuse/monocrystal.pyx":1141
+ *                     occ = occupancy[j]
+ * 
+ *                     if (technique == 'Neutron'):             # <<<<<<<<<<<<<<
+ * 
+ *                         scattering_length = b[j]
+ */
+                                  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_v_technique, __pyx_n_u_Neutron, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 1141, __pyx_L17_error)
+                                  if (__pyx_t_3) {
+
+                                    /* "disorder/diffuse/monocrystal.pyx":1143
+ *                     if (technique == 'Neutron'):
+ * 
+ *                         scattering_length = b[j]             # <<<<<<<<<<<<<<
+ * 
+ *                     else:
+ */
+                                    __pyx_t_41 = __pyx_v_j;
+                                    __pyx_v_scattering_length = (*((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_b.data) + __pyx_t_41)) )));
+
+                                    /* "disorder/diffuse/monocrystal.pyx":1141
+ *                     occ = occupancy[j]
+ * 
+ *                     if (technique == 'Neutron'):             # <<<<<<<<<<<<<<
+ * 
+ *                         scattering_length = b[j]
+ */
+                                    goto __pyx_L37;
+                                  }
+
+                                  /* "disorder/diffuse/monocrystal.pyx":1147
+ *                     else:
+ * 
+ *                         Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)             # <<<<<<<<<<<<<<
+ * 
+ *                         s_ = Q*inv_M_SP
+ */
+                                  /*else*/ {
+                                    __pyx_v_Q = sqrt((((__pyx_v_Qx * __pyx_v_Qx) + (__pyx_v_Qy * __pyx_v_Qy)) + (__pyx_v_Qz * __pyx_v_Qz)));
+
+                                    /* "disorder/diffuse/monocrystal.pyx":1149
+ *                         Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)
+ * 
+ *                         s_ = Q*inv_M_SP             # <<<<<<<<<<<<<<
+ *                         s_sq = s_*s_
+ * 
+ */
+                                    __pyx_v_s_ = (__pyx_v_Q * __pyx_v_inv_M_SP);
+
+                                    /* "disorder/diffuse/monocrystal.pyx":1150
+ * 
+ *                         s_ = Q*inv_M_SP
+ *                         s_sq = s_*s_             # <<<<<<<<<<<<<<
+ * 
+ *                         scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
+ */
+                                    __pyx_v_s_sq = (__pyx_v_s_ * __pyx_v_s_);
+
+                                    /* "disorder/diffuse/monocrystal.pyx":1152
+ *                         s_sq = s_*s_
+ * 
+ *                         scattering_length = a1[j]*iexp(-b1[j]*s_sq)\             # <<<<<<<<<<<<<<
+ *                                           + a2[j]*iexp(-b2[j]*s_sq)\
+ *                                           + a3[j]*iexp(-b3[j]*s_sq)\
+ */
+                                    __pyx_t_41 = __pyx_v_j;
+                                    __pyx_t_40 = __pyx_v_j;
+
+                                    /* "disorder/diffuse/monocrystal.pyx":1153
+ * 
+ *                         scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
+ *                                           + a2[j]*iexp(-b2[j]*s_sq)\             # <<<<<<<<<<<<<<
+ *                                           + a3[j]*iexp(-b3[j]*s_sq)\
+ *                                           + a4[j]*iexp(-b4[j]*s_sq)\
+ */
+                                    __pyx_t_39 = __pyx_v_j;
+                                    __pyx_t_20 = __pyx_v_j;
+
+                                    /* "disorder/diffuse/monocrystal.pyx":1154
+ *                         scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
+ *                                           + a2[j]*iexp(-b2[j]*s_sq)\
+ *                                           + a3[j]*iexp(-b3[j]*s_sq)\             # <<<<<<<<<<<<<<
+ *                                           + a4[j]*iexp(-b4[j]*s_sq)\
+ *                                           + c[j]
+ */
+                                    __pyx_t_31 = __pyx_v_j;
+                                    __pyx_t_32 = __pyx_v_j;
+
+                                    /* "disorder/diffuse/monocrystal.pyx":1155
+ *                                           + a2[j]*iexp(-b2[j]*s_sq)\
+ *                                           + a3[j]*iexp(-b3[j]*s_sq)\
+ *                                           + a4[j]*iexp(-b4[j]*s_sq)\             # <<<<<<<<<<<<<<
+ *                                           + c[j]
+ * 
+ */
+                                    __pyx_t_33 = __pyx_v_j;
+                                    __pyx_t_34 = __pyx_v_j;
+
+                                    /* "disorder/diffuse/monocrystal.pyx":1156
+ *                                           + a3[j]*iexp(-b3[j]*s_sq)\
+ *                                           + a4[j]*iexp(-b4[j]*s_sq)\
+ *                                           + c[j]             # <<<<<<<<<<<<<<
  * 
  *                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
  */
-                                  __pyx_t_31 = __pyx_v_j;
-                                  __pyx_v_scattering_length = (*((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_b.data) + __pyx_t_31)) )));
+                                    __pyx_t_35 = __pyx_v_j;
+                                    __pyx_v_scattering_length = __Pyx_c_sum_double(__Pyx_c_sum_double(__Pyx_c_sum_double(__Pyx_c_sum_double(__Pyx_c_prod_double(__pyx_t_double_complex_from_parts((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_a1.data) + __pyx_t_41)) ))), 0), __pyx_f_8disorder_7diffuse_11monocrystal_iexp(((-(*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b1.data) + __pyx_t_40)) )))) * __pyx_v_s_sq))), __Pyx_c_prod_double(__pyx_t_double_complex_from_parts((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_a2.data) + __pyx_t_39)) ))), 0), __pyx_f_8disorder_7diffuse_11monocrystal_iexp(((-(*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b2.data) + __pyx_t_20)) )))) * __pyx_v_s_sq)))), __Pyx_c_prod_double(__pyx_t_double_complex_from_parts((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_a3.data) + __pyx_t_31)) ))), 0), __pyx_f_8disorder_7diffuse_11monocrystal_iexp(((-(*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b3.data) + __pyx_t_32)) )))) * __pyx_v_s_sq)))), __Pyx_c_prod_double(__pyx_t_double_complex_from_parts((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_a4.data) + __pyx_t_33)) ))), 0), __pyx_f_8disorder_7diffuse_11monocrystal_iexp(((-(*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_b4.data) + __pyx_t_34)) )))) * __pyx_v_s_sq)))), __pyx_t_double_complex_from_parts((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_c.data) + __pyx_t_35)) ))), 0));
+                                  }
+                                  __pyx_L37:;
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1111
- *                     scattering_length = b[j]
+                                  /* "disorder/diffuse/monocrystal.pyx":1158
+ *                                           + c[j]
  * 
  *                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])             # <<<<<<<<<<<<<<
  * 
- *                     factors = scattering_length*phase_factor
+ *                     factors = occ*scattering_length*phase_factor
  */
-                                  __pyx_t_31 = __pyx_v_j;
-                                  __pyx_t_30 = __pyx_v_j;
-                                  __pyx_t_29 = __pyx_v_j;
-                                  __pyx_v_phase_factor = __pyx_f_8disorder_7diffuse_11monocrystal_iexp((((__pyx_v_Qx * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_ux.data) + __pyx_t_31)) )))) + (__pyx_v_Qy * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_uy.data) + __pyx_t_30)) ))))) + (__pyx_v_Qz * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_uz.data) + __pyx_t_29)) ))))));
+                                  __pyx_t_35 = __pyx_v_j;
+                                  __pyx_t_34 = __pyx_v_j;
+                                  __pyx_t_33 = __pyx_v_j;
+                                  __pyx_v_phase_factor = __pyx_f_8disorder_7diffuse_11monocrystal_iexp((((__pyx_v_Qx * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_ux.data) + __pyx_t_35)) )))) + (__pyx_v_Qy * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_uy.data) + __pyx_t_34)) ))))) + (__pyx_v_Qz * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_uz.data) + __pyx_t_33)) ))))));
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1113
+                                  /* "disorder/diffuse/monocrystal.pyx":1160
  *                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
  * 
- *                     factors = scattering_length*phase_factor             # <<<<<<<<<<<<<<
+ *                     factors = occ*scattering_length*phase_factor             # <<<<<<<<<<<<<<
  * 
  *                     j_dft = j+n_atm*i_dft
  */
-                                  __pyx_v_factors = __Pyx_c_prod_double(__pyx_v_scattering_length, __pyx_v_phase_factor);
+                                  __pyx_v_factors = __Pyx_c_prod_double(__Pyx_c_prod_double(__pyx_t_double_complex_from_parts(__pyx_v_occ, 0), __pyx_v_scattering_length), __pyx_v_phase_factor);
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1115
- *                     factors = scattering_length*phase_factor
+                                  /* "disorder/diffuse/monocrystal.pyx":1162
+ *                     factors = occ*scattering_length*phase_factor
  * 
  *                     j_dft = j+n_atm*i_dft             # <<<<<<<<<<<<<<
  * 
@@ -15491,18 +16237,18 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                   __pyx_v_j_dft = (__pyx_v_j + (__pyx_v_n_atm * __pyx_v_i_dft));
 
-                                  /* "disorder/diffuse/monocrystal.pyx":1117
+                                  /* "disorder/diffuse/monocrystal.pyx":1164
  *                     j_dft = j+n_atm*i_dft
  * 
  *                     prod = prod+factors*A_k[j_dft]             # <<<<<<<<<<<<<<
  * 
  *                 F = prod
  */
-                                  __pyx_t_29 = __pyx_v_j_dft;
-                                  __pyx_v_prod = __Pyx_c_sum_double(__pyx_v_prod, __Pyx_c_prod_double(__pyx_v_factors, (*((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_A_k.data) + __pyx_t_29)) )))));
+                                  __pyx_t_33 = __pyx_v_j_dft;
+                                  __pyx_v_prod = __Pyx_c_sum_double(__pyx_v_prod, __Pyx_c_prod_double(__pyx_v_factors, (*((__pyx_t_double_complex *) ( /* dim=0 */ ((char *) (((__pyx_t_double_complex *) __pyx_v_A_k.data) + __pyx_t_33)) )))));
                                 }
 
-                                /* "disorder/diffuse/monocrystal.pyx":1119
+                                /* "disorder/diffuse/monocrystal.pyx":1166
  *                     prod = prod+factors*A_k[j_dft]
  * 
  *                 F = prod             # <<<<<<<<<<<<<<
@@ -15511,33 +16257,195 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
  */
                                 __pyx_v_F = __pyx_v_prod;
 
-                                /* "disorder/diffuse/monocrystal.pyx":1121
+                                /* "disorder/diffuse/monocrystal.pyx":1168
  *                 F = prod
  * 
  *                 F_real, F_imag = F.real, F.imag             # <<<<<<<<<<<<<<
  * 
  *                 I[i] += (F_real*F_real+F_imag*F_imag)*factor*variants[var]
  */
-                                __pyx_t_13 = __Pyx_CREAL(__pyx_v_F);
-                                __pyx_t_12 = __Pyx_CIMAG(__pyx_v_F);
-                                __pyx_v_F_real = __pyx_t_13;
-                                __pyx_v_F_imag = __pyx_t_12;
+                                __pyx_t_30 = __Pyx_CREAL(__pyx_v_F);
+                                __pyx_t_29 = __Pyx_CIMAG(__pyx_v_F);
+                                __pyx_v_F_real = __pyx_t_30;
+                                __pyx_v_F_imag = __pyx_t_29;
 
-                                /* "disorder/diffuse/monocrystal.pyx":1123
+                                /* "disorder/diffuse/monocrystal.pyx":1170
  *                 F_real, F_imag = F.real, F.imag
  * 
  *                 I[i] += (F_real*F_real+F_imag*F_imag)*factor*variants[var]             # <<<<<<<<<<<<<<
  * 
  *     return I_np
  */
-                                __pyx_t_29 = __pyx_v_var;
-                                __pyx_t_30 = __pyx_v_i;
-                                *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_I.data) + __pyx_t_30)) )) += ((((__pyx_v_F_real * __pyx_v_F_real) + (__pyx_v_F_imag * __pyx_v_F_imag)) * __pyx_v_factor) * (*((double *) ( /* dim=0 */ (__pyx_v_variants.data + __pyx_t_29 * __pyx_v_variants.strides[0]) ))));
+                                __pyx_t_33 = __pyx_v_var;
+                                __pyx_t_34 = __pyx_v_i;
+                                *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_I.data) + __pyx_t_34)) )) += ((((__pyx_v_F_real * __pyx_v_F_real) + (__pyx_v_F_imag * __pyx_v_F_imag)) * __pyx_v_factor) * (*((double *) ( /* dim=0 */ (__pyx_v_variants.data + __pyx_t_33 * __pyx_v_variants.strides[0]) ))));
                               }
                             }
+                            goto __pyx_L39;
+                            __pyx_L17_error:;
+                            {
+                                #ifdef WITH_THREAD
+                                PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+                                #endif
+                                #ifdef _OPENMP
+                                #pragma omp flush(__pyx_parallel_exc_type)
+                                #endif /* _OPENMP */
+                                if (!__pyx_parallel_exc_type) {
+                                  __Pyx_ErrFetchWithState(&__pyx_parallel_exc_type, &__pyx_parallel_exc_value, &__pyx_parallel_exc_tb);
+                                  __pyx_parallel_filename = __pyx_filename; __pyx_parallel_lineno = __pyx_lineno; __pyx_parallel_clineno = __pyx_clineno;
+                                  __Pyx_GOTREF(__pyx_parallel_exc_type);
+                                }
+                                #ifdef WITH_THREAD
+                                __Pyx_PyGILState_Release(__pyx_gilstate_save);
+                                #endif
+                            }
+                            __pyx_parallel_why = 4;
+                            goto __pyx_L38;
+                            __pyx_L38:;
+                            #ifdef _OPENMP
+                            #pragma omp critical(__pyx_parallel_lastprivates2)
+                            #endif /* _OPENMP */
+                            {
+                                __pyx_parallel_temp0 = __pyx_v_F;
+                                __pyx_parallel_temp1 = __pyx_v_F_imag;
+                                __pyx_parallel_temp2 = __pyx_v_F_real;
+                                __pyx_parallel_temp3 = __pyx_v_H;
+                                __pyx_parallel_temp4 = __pyx_v_K;
+                                __pyx_parallel_temp5 = __pyx_v_L;
+                                __pyx_parallel_temp6 = __pyx_v_Q;
+                                __pyx_parallel_temp7 = __pyx_v_Qh;
+                                __pyx_parallel_temp8 = __pyx_v_Qk;
+                                __pyx_parallel_temp9 = __pyx_v_Ql;
+                                __pyx_parallel_temp10 = __pyx_v_Qx;
+                                __pyx_parallel_temp11 = __pyx_v_Qy;
+                                __pyx_parallel_temp12 = __pyx_v_Qz;
+                                __pyx_parallel_temp13 = __pyx_v_f_H;
+                                __pyx_parallel_temp14 = __pyx_v_f_K;
+                                __pyx_parallel_temp15 = __pyx_v_f_L;
+                                __pyx_parallel_temp16 = __pyx_v_factors;
+                                __pyx_parallel_temp17 = __pyx_v_h;
+                                __pyx_parallel_temp18 = __pyx_v_h_;
+                                __pyx_parallel_temp19 = __pyx_v_i;
+                                __pyx_parallel_temp20 = __pyx_v_iH;
+                                __pyx_parallel_temp21 = __pyx_v_iK;
+                                __pyx_parallel_temp22 = __pyx_v_iL;
+                                __pyx_parallel_temp23 = __pyx_v_i_dft;
+                                __pyx_parallel_temp24 = __pyx_v_i_ind;
+                                __pyx_parallel_temp25 = __pyx_v_j;
+                                __pyx_parallel_temp26 = __pyx_v_j_dft;
+                                __pyx_parallel_temp27 = __pyx_v_k;
+                                __pyx_parallel_temp28 = __pyx_v_k_;
+                                __pyx_parallel_temp29 = __pyx_v_l;
+                                __pyx_parallel_temp30 = __pyx_v_l_;
+                                __pyx_parallel_temp31 = __pyx_v_occ;
+                                __pyx_parallel_temp32 = __pyx_v_op;
+                                __pyx_parallel_temp33 = __pyx_v_phase_factor;
+                                __pyx_parallel_temp34 = __pyx_v_prod;
+                                __pyx_parallel_temp35 = __pyx_v_s_;
+                                __pyx_parallel_temp36 = __pyx_v_s_sq;
+                                __pyx_parallel_temp37 = __pyx_v_scattering_length;
+                                __pyx_parallel_temp38 = __pyx_v_u;
+                                __pyx_parallel_temp39 = __pyx_v_v;
+                                __pyx_parallel_temp40 = __pyx_v_var;
+                                __pyx_parallel_temp41 = __pyx_v_w;
+                                __pyx_parallel_temp42 = __pyx_v_x;
+                                __pyx_parallel_temp43 = __pyx_v_x_;
+                                __pyx_parallel_temp44 = __pyx_v_y;
+                                __pyx_parallel_temp45 = __pyx_v_y_;
+                                __pyx_parallel_temp46 = __pyx_v_z;
+                                __pyx_parallel_temp47 = __pyx_v_z_;
+                            }
+                            __pyx_L39:;
+                            #ifdef _OPENMP
+                            #pragma omp flush(__pyx_parallel_why)
+                            #endif /* _OPENMP */
                         }
                     }
+                    #ifdef _OPENMP
+                    Py_END_ALLOW_THREADS
+                    #else
+{
+#ifdef WITH_THREAD
+                    PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+                    #endif
+                    #endif /* _OPENMP */
+                    /* Clean up any temporaries */
+                    #ifdef WITH_THREAD
+                    __Pyx_PyGILState_Release(__pyx_gilstate_save);
+                    #endif
+                    #ifndef _OPENMP
+}
+#endif /* _OPENMP */
                 }
+            }
+            if (__pyx_parallel_exc_type) {
+              /* This may have been overridden by a continue, break or return in another thread. Prefer the error. */
+              __pyx_parallel_why = 4;
+            }
+            if (__pyx_parallel_why) {
+              __pyx_v_F = __pyx_parallel_temp0;
+              __pyx_v_F_imag = __pyx_parallel_temp1;
+              __pyx_v_F_real = __pyx_parallel_temp2;
+              __pyx_v_H = __pyx_parallel_temp3;
+              __pyx_v_K = __pyx_parallel_temp4;
+              __pyx_v_L = __pyx_parallel_temp5;
+              __pyx_v_Q = __pyx_parallel_temp6;
+              __pyx_v_Qh = __pyx_parallel_temp7;
+              __pyx_v_Qk = __pyx_parallel_temp8;
+              __pyx_v_Ql = __pyx_parallel_temp9;
+              __pyx_v_Qx = __pyx_parallel_temp10;
+              __pyx_v_Qy = __pyx_parallel_temp11;
+              __pyx_v_Qz = __pyx_parallel_temp12;
+              __pyx_v_f_H = __pyx_parallel_temp13;
+              __pyx_v_f_K = __pyx_parallel_temp14;
+              __pyx_v_f_L = __pyx_parallel_temp15;
+              __pyx_v_factors = __pyx_parallel_temp16;
+              __pyx_v_h = __pyx_parallel_temp17;
+              __pyx_v_h_ = __pyx_parallel_temp18;
+              __pyx_v_i = __pyx_parallel_temp19;
+              __pyx_v_iH = __pyx_parallel_temp20;
+              __pyx_v_iK = __pyx_parallel_temp21;
+              __pyx_v_iL = __pyx_parallel_temp22;
+              __pyx_v_i_dft = __pyx_parallel_temp23;
+              __pyx_v_i_ind = __pyx_parallel_temp24;
+              __pyx_v_j = __pyx_parallel_temp25;
+              __pyx_v_j_dft = __pyx_parallel_temp26;
+              __pyx_v_k = __pyx_parallel_temp27;
+              __pyx_v_k_ = __pyx_parallel_temp28;
+              __pyx_v_l = __pyx_parallel_temp29;
+              __pyx_v_l_ = __pyx_parallel_temp30;
+              __pyx_v_occ = __pyx_parallel_temp31;
+              __pyx_v_op = __pyx_parallel_temp32;
+              __pyx_v_phase_factor = __pyx_parallel_temp33;
+              __pyx_v_prod = __pyx_parallel_temp34;
+              __pyx_v_s_ = __pyx_parallel_temp35;
+              __pyx_v_s_sq = __pyx_parallel_temp36;
+              __pyx_v_scattering_length = __pyx_parallel_temp37;
+              __pyx_v_u = __pyx_parallel_temp38;
+              __pyx_v_v = __pyx_parallel_temp39;
+              __pyx_v_var = __pyx_parallel_temp40;
+              __pyx_v_w = __pyx_parallel_temp41;
+              __pyx_v_x = __pyx_parallel_temp42;
+              __pyx_v_x_ = __pyx_parallel_temp43;
+              __pyx_v_y = __pyx_parallel_temp44;
+              __pyx_v_y_ = __pyx_parallel_temp45;
+              __pyx_v_z = __pyx_parallel_temp46;
+              __pyx_v_z_ = __pyx_parallel_temp47;
+              switch (__pyx_parallel_why) {
+                    case 4:
+                {
+                    #ifdef WITH_THREAD
+                    PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
+                    #endif
+                    __Pyx_GIVEREF(__pyx_parallel_exc_type);
+                    __Pyx_ErrRestoreWithState(__pyx_parallel_exc_type, __pyx_parallel_exc_value, __pyx_parallel_exc_tb);
+                    __pyx_filename = __pyx_parallel_filename; __pyx_lineno = __pyx_parallel_lineno; __pyx_clineno = __pyx_parallel_clineno;
+                    #ifdef WITH_THREAD
+                    __Pyx_PyGILState_Release(__pyx_gilstate_save);
+                    #endif
+                }
+                goto __pyx_L13_error;
+              }
             }
         }
         #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
@@ -15548,8 +16456,8 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
         #endif
       }
 
-      /* "disorder/diffuse/monocrystal.pyx":1052
- *         b[j] = tables.bc.get(atm)
+      /* "disorder/diffuse/monocrystal.pyx":1082
+ *             c[j] = tables.X.get(atm)
  * 
  *     for i in prange(n_hkl, nogil=True):             # <<<<<<<<<<<<<<
  * 
@@ -15561,13 +16469,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
           __Pyx_FastGIL_Forget();
           Py_BLOCK_THREADS
           #endif
-          goto __pyx_L11;
+          goto __pyx_L14;
         }
-        __pyx_L11:;
+        __pyx_L13_error: {
+          #ifdef WITH_THREAD
+          __Pyx_FastGIL_Forget();
+          Py_BLOCK_THREADS
+          #endif
+          goto __pyx_L1_error;
+        }
+        __pyx_L14:;
       }
   }
 
-  /* "disorder/diffuse/monocrystal.pyx":1125
+  /* "disorder/diffuse/monocrystal.pyx":1172
  *                 I[i] += (F_real*F_real+F_imag*F_imag)*factor*variants[var]
  * 
  *     return I_np             # <<<<<<<<<<<<<<
@@ -15579,12 +16494,12 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   __pyx_r = __pyx_v_I_np;
   goto __pyx_L0;
 
-  /* "disorder/diffuse/monocrystal.pyx":922
+  /* "disorder/diffuse/monocrystal.pyx":924
  *     return I_np
  * 
- * def structure(double [::1] ux,             # <<<<<<<<<<<<<<
- *               double [::1] uy,
- *               double [::1] uz,
+ * def structural(double [::1] occupancy,             # <<<<<<<<<<<<<<
+ *                double [::1] ux,
+ *                double [::1] uy,
  */
 
   /* function exit code */
@@ -15599,16 +16514,29 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   __Pyx_XDECREF(__pyx_t_10);
   __Pyx_XDECREF(__pyx_t_14);
   __Pyx_XDECREF(__pyx_t_16);
-  __Pyx_AddTraceback("disorder.diffuse.monocrystal.structure", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_XDECREF(__pyx_t_21);
+  __Pyx_XDECREF(__pyx_t_22);
+  __Pyx_XDECREF(__pyx_t_23);
+  __Pyx_AddTraceback("disorder.diffuse.monocrystal.structural", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __PYX_XDEC_MEMVIEW(&__pyx_v_b, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_a1, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_b1, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_a2, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_b2, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_a3, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_b3, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_a4, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_b4, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_c, 1);
   __Pyx_XDECREF(__pyx_v_I_np);
   __PYX_XDEC_MEMVIEW(&__pyx_v_I, 1);
   __Pyx_XDECREF(__pyx_v_A_r_np);
   __Pyx_XDECREF(__pyx_v_A_k_np);
   __PYX_XDEC_MEMVIEW(&__pyx_v_A_k, 1);
   __Pyx_XDECREF(__pyx_v_atm);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_occupancy, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_v_ux, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_v_uy, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_v_uz, 1);
@@ -15623,7 +16551,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structure(CYTHON_UNU
   return __pyx_r;
 }
 
-/* "disorder/diffuse/monocrystal.pyx":1127
+/* "disorder/diffuse/monocrystal.pyx":1174
  *     return I_np
  * 
  * def idft_many(X, Nu, Nv, Nw):             # <<<<<<<<<<<<<<
@@ -15672,23 +16600,23 @@ static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_9idft_many(PyObject *
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nu)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("idft_many", 1, 4, 4, 1); __PYX_ERR(0, 1127, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("idft_many", 1, 4, 4, 1); __PYX_ERR(0, 1174, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nv)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("idft_many", 1, 4, 4, 2); __PYX_ERR(0, 1127, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("idft_many", 1, 4, 4, 2); __PYX_ERR(0, 1174, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nw)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("idft_many", 1, 4, 4, 3); __PYX_ERR(0, 1127, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("idft_many", 1, 4, 4, 3); __PYX_ERR(0, 1174, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "idft_many") < 0)) __PYX_ERR(0, 1127, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "idft_many") < 0)) __PYX_ERR(0, 1174, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -15705,7 +16633,7 @@ static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_9idft_many(PyObject *
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("idft_many", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1127, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("idft_many", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1174, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("disorder.diffuse.monocrystal.idft_many", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -15752,94 +16680,94 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("idft_many", 0);
 
-  /* "disorder/diffuse/monocrystal.pyx":1129
+  /* "disorder/diffuse/monocrystal.pyx":1176
  * def idft_many(X, Nu, Nv, Nw):
  * 
  *     nc = X.shape[0]             # <<<<<<<<<<<<<<
  *     nu = X.shape[1]
  *     nv = X.shape[2]
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1129, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1129, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1176, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_nc = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1130
+  /* "disorder/diffuse/monocrystal.pyx":1177
  * 
  *     nc = X.shape[0]
  *     nu = X.shape[1]             # <<<<<<<<<<<<<<
  *     nv = X.shape[2]
  *     nw = X.shape[3]
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1130, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1177, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1130, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1177, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_nu = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1131
+  /* "disorder/diffuse/monocrystal.pyx":1178
  *     nc = X.shape[0]
  *     nu = X.shape[1]
  *     nv = X.shape[2]             # <<<<<<<<<<<<<<
  *     nw = X.shape[3]
  *     n_atm = X.shape[4]
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1178, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1131, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1178, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_nv = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1132
+  /* "disorder/diffuse/monocrystal.pyx":1179
  *     nu = X.shape[1]
  *     nv = X.shape[2]
  *     nw = X.shape[3]             # <<<<<<<<<<<<<<
  *     n_atm = X.shape[4]
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1132, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1179, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1132, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1179, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_nw = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1133
+  /* "disorder/diffuse/monocrystal.pyx":1180
  *     nv = X.shape[2]
  *     nw = X.shape[3]
  *     n_atm = X.shape[4]             # <<<<<<<<<<<<<<
  * 
  *     U = np.zeros((nc,Nu,Nv,Nw,n_atm), dtype=complex)
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1133, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1180, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1133, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 4, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1180, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_n_atm = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1135
+  /* "disorder/diffuse/monocrystal.pyx":1182
  *     n_atm = X.shape[4]
  * 
  *     U = np.zeros((nc,Nu,Nv,Nw,n_atm), dtype=complex)             # <<<<<<<<<<<<<<
  * 
  *     for i in range(nc):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1135, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1182, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1135, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1182, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyTuple_New(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1135, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1182, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_v_nc);
   __Pyx_GIVEREF(__pyx_v_nc);
@@ -15856,15 +16784,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   __Pyx_INCREF(__pyx_v_n_atm);
   __Pyx_GIVEREF(__pyx_v_n_atm);
   PyTuple_SET_ITEM(__pyx_t_2, 4, __pyx_v_n_atm);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1135, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1182, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1135, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1182, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 1135, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1135, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 1182, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_3, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1182, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -15872,22 +16800,22 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   __pyx_v_U = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1137
+  /* "disorder/diffuse/monocrystal.pyx":1184
  *     U = np.zeros((nc,Nu,Nv,Nw,n_atm), dtype=complex)
  * 
  *     for i in range(nc):             # <<<<<<<<<<<<<<
  *         for j in range(n_atm):
  *             V = X[i,:,:,:,j].copy()
  */
-  __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_nc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1137, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_nc); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
     __pyx_t_2 = __pyx_t_4; __Pyx_INCREF(__pyx_t_2); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1137, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1184, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1137, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1184, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   for (;;) {
@@ -15895,17 +16823,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1137, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1184, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1137, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1184, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1137, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1184, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1137, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1184, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -15915,7 +16843,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 1137, __pyx_L1_error)
+          else __PYX_ERR(0, 1184, __pyx_L1_error)
         }
         break;
       }
@@ -15924,22 +16852,22 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1138
+    /* "disorder/diffuse/monocrystal.pyx":1185
  * 
  *     for i in range(nc):
  *         for j in range(n_atm):             # <<<<<<<<<<<<<<
  *             V = X[i,:,:,:,j].copy()
  * 
  */
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1138, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1185, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
       __pyx_t_3 = __pyx_t_4; __Pyx_INCREF(__pyx_t_3); __pyx_t_7 = 0;
       __pyx_t_8 = NULL;
     } else {
-      __pyx_t_7 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1138, __pyx_L1_error)
+      __pyx_t_7 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1185, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_8 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1138, __pyx_L1_error)
+      __pyx_t_8 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1185, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     for (;;) {
@@ -15947,17 +16875,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         if (likely(PyList_CheckExact(__pyx_t_3))) {
           if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_3)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1138, __pyx_L1_error)
+          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1185, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1138, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1185, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         } else {
           if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1138, __pyx_L1_error)
+          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1185, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1138, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1185, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         }
@@ -15967,7 +16895,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 1138, __pyx_L1_error)
+            else __PYX_ERR(0, 1185, __pyx_L1_error)
           }
           break;
         }
@@ -15976,14 +16904,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1139
+      /* "disorder/diffuse/monocrystal.pyx":1186
  *     for i in range(nc):
  *         for j in range(n_atm):
  *             V = X[i,:,:,:,j].copy()             # <<<<<<<<<<<<<<
  * 
  *             W = V.copy()
  */
-      __pyx_t_1 = PyTuple_New(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1139, __pyx_L1_error)
+      __pyx_t_1 = PyTuple_New(5); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1186, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_INCREF(__pyx_v_i);
       __Pyx_GIVEREF(__pyx_v_i);
@@ -16000,10 +16928,10 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_INCREF(__pyx_v_j);
       __Pyx_GIVEREF(__pyx_v_j);
       PyTuple_SET_ITEM(__pyx_t_1, 4, __pyx_v_j);
-      __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_v_X, __pyx_t_1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1139, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_v_X, __pyx_t_1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1186, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_copy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1139, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_copy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1186, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __pyx_t_9 = NULL;
@@ -16018,20 +16946,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       }
       __pyx_t_4 = (__pyx_t_9) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_9) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
       __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1139, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1186, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_XDECREF_SET(__pyx_v_V, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1141
+      /* "disorder/diffuse/monocrystal.pyx":1188
  *             V = X[i,:,:,:,j].copy()
  * 
  *             W = V.copy()             # <<<<<<<<<<<<<<
  *             for _ in range(Nu // nu-1):
  *                 W = np.concatenate((W,V*1),axis=0)
  */
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_V, __pyx_n_s_copy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1141, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_V, __pyx_n_s_copy); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __pyx_t_9 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_1))) {
@@ -16045,34 +16973,34 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       }
       __pyx_t_4 = (__pyx_t_9) ? __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_9) : __Pyx_PyObject_CallNoArg(__pyx_t_1);
       __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1141, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1188, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_XDECREF_SET(__pyx_v_W, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1142
+      /* "disorder/diffuse/monocrystal.pyx":1189
  * 
  *             W = V.copy()
  *             for _ in range(Nu // nu-1):             # <<<<<<<<<<<<<<
  *                 W = np.concatenate((W,V*1),axis=0)
  *             W = np.concatenate((W,V[:(Nu%nu),:,:]*1),axis=0)
  */
-      __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1142, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_1 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1142, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1142, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1189, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
         __pyx_t_1 = __pyx_t_4; __Pyx_INCREF(__pyx_t_1); __pyx_t_10 = 0;
         __pyx_t_11 = NULL;
       } else {
-        __pyx_t_10 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1142, __pyx_L1_error)
+        __pyx_t_10 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1189, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_11 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1142, __pyx_L1_error)
+        __pyx_t_11 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1189, __pyx_L1_error)
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       for (;;) {
@@ -16080,17 +17008,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
           if (likely(PyList_CheckExact(__pyx_t_1))) {
             if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_1)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1142, __pyx_L1_error)
+            __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1189, __pyx_L1_error)
             #else
-            __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1142, __pyx_L1_error)
+            __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1189, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             #endif
           } else {
             if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1142, __pyx_L1_error)
+            __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1189, __pyx_L1_error)
             #else
-            __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1142, __pyx_L1_error)
+            __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1189, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             #endif
           }
@@ -16100,7 +17028,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 1142, __pyx_L1_error)
+              else __PYX_ERR(0, 1189, __pyx_L1_error)
             }
             break;
           }
@@ -16109,21 +17037,21 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         __Pyx_XDECREF_SET(__pyx_v__, __pyx_t_4);
         __pyx_t_4 = 0;
 
-        /* "disorder/diffuse/monocrystal.pyx":1143
+        /* "disorder/diffuse/monocrystal.pyx":1190
  *             W = V.copy()
  *             for _ in range(Nu // nu-1):
  *                 W = np.concatenate((W,V*1),axis=0)             # <<<<<<<<<<<<<<
  *             W = np.concatenate((W,V[:(Nu%nu),:,:]*1),axis=0)
  * 
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1143, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1190, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1143, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1190, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1143, __pyx_L1_error)
+        __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1190, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1143, __pyx_L1_error)
+        __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1190, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_INCREF(__pyx_v_W);
         __Pyx_GIVEREF(__pyx_v_W);
@@ -16131,15 +17059,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_12, 1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1143, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1190, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_12);
         PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_12);
         __pyx_t_12 = 0;
-        __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1143, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1190, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
-        if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_axis, __pyx_int_0) < 0) __PYX_ERR(0, 1143, __pyx_L1_error)
-        __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_4, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1143, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_axis, __pyx_int_0) < 0) __PYX_ERR(0, 1190, __pyx_L1_error)
+        __pyx_t_13 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_4, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1190, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -16147,7 +17075,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_13);
         __pyx_t_13 = 0;
 
-        /* "disorder/diffuse/monocrystal.pyx":1142
+        /* "disorder/diffuse/monocrystal.pyx":1189
  * 
  *             W = V.copy()
  *             for _ in range(Nu // nu-1):             # <<<<<<<<<<<<<<
@@ -16157,24 +17085,24 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       }
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1144
+      /* "disorder/diffuse/monocrystal.pyx":1191
  *             for _ in range(Nu // nu-1):
  *                 W = np.concatenate((W,V*1),axis=0)
  *             W = np.concatenate((W,V[:(Nu%nu),:,:]*1),axis=0)             # <<<<<<<<<<<<<<
  * 
  *             V = W.copy()
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = PyNumber_Remainder(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Remainder(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_12 = PySlice_New(Py_None, __pyx_t_1, Py_None); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __pyx_t_12 = PySlice_New(Py_None, __pyx_t_1, Py_None); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GIVEREF(__pyx_t_12);
       PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_12);
@@ -16185,13 +17113,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_GIVEREF(__pyx_slice_);
       PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_slice_);
       __pyx_t_12 = 0;
-      __pyx_t_12 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-      __pyx_t_1 = PyNumber_Multiply(__pyx_t_12, __pyx_int_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __pyx_t_1 = PyNumber_Multiply(__pyx_t_12, __pyx_int_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __pyx_t_12 = PyTuple_New(2); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_INCREF(__pyx_v_W);
       __Pyx_GIVEREF(__pyx_v_W);
@@ -16199,15 +17127,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_GIVEREF(__pyx_t_1);
       PyTuple_SET_ITEM(__pyx_t_12, 1, __pyx_t_1);
       __pyx_t_1 = 0;
-      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GIVEREF(__pyx_t_12);
       PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_12);
       __pyx_t_12 = 0;
-      __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_axis, __pyx_int_0) < 0) __PYX_ERR(0, 1144, __pyx_L1_error)
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_1, __pyx_t_12); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1144, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_12, __pyx_n_s_axis, __pyx_int_0) < 0) __PYX_ERR(0, 1191, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_1, __pyx_t_12); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1191, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -16215,14 +17143,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1146
+      /* "disorder/diffuse/monocrystal.pyx":1193
  *             W = np.concatenate((W,V[:(Nu%nu),:,:]*1),axis=0)
  * 
  *             V = W.copy()             # <<<<<<<<<<<<<<
  *             for _ in range(Nv // nv-1):
  *                 W = np.concatenate((W,V*1),axis=1)
  */
-      __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1146, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __pyx_t_1 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_12))) {
@@ -16236,34 +17164,34 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       }
       __pyx_t_4 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_12);
       __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1146, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1193, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       __Pyx_DECREF_SET(__pyx_v_V, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1147
+      /* "disorder/diffuse/monocrystal.pyx":1194
  * 
  *             V = W.copy()
  *             for _ in range(Nv // nv-1):             # <<<<<<<<<<<<<<
  *                 W = np.concatenate((W,V*1),axis=1)
  *             W = np.concatenate((W,V[:,:(Nv%nv),:]*1),axis=1)
  */
-      __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1147, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_12 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1147, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_12); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1147, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_12); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1194, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
         __pyx_t_12 = __pyx_t_4; __Pyx_INCREF(__pyx_t_12); __pyx_t_10 = 0;
         __pyx_t_11 = NULL;
       } else {
-        __pyx_t_10 = -1; __pyx_t_12 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1147, __pyx_L1_error)
+        __pyx_t_10 = -1; __pyx_t_12 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1194, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
-        __pyx_t_11 = Py_TYPE(__pyx_t_12)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1147, __pyx_L1_error)
+        __pyx_t_11 = Py_TYPE(__pyx_t_12)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1194, __pyx_L1_error)
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       for (;;) {
@@ -16271,17 +17199,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
           if (likely(PyList_CheckExact(__pyx_t_12))) {
             if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_12)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_4 = PyList_GET_ITEM(__pyx_t_12, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1147, __pyx_L1_error)
+            __pyx_t_4 = PyList_GET_ITEM(__pyx_t_12, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1194, __pyx_L1_error)
             #else
-            __pyx_t_4 = PySequence_ITEM(__pyx_t_12, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1147, __pyx_L1_error)
+            __pyx_t_4 = PySequence_ITEM(__pyx_t_12, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1194, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             #endif
           } else {
             if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_12)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_12, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1147, __pyx_L1_error)
+            __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_12, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1194, __pyx_L1_error)
             #else
-            __pyx_t_4 = PySequence_ITEM(__pyx_t_12, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1147, __pyx_L1_error)
+            __pyx_t_4 = PySequence_ITEM(__pyx_t_12, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1194, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             #endif
           }
@@ -16291,7 +17219,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 1147, __pyx_L1_error)
+              else __PYX_ERR(0, 1194, __pyx_L1_error)
             }
             break;
           }
@@ -16300,21 +17228,21 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         __Pyx_XDECREF_SET(__pyx_v__, __pyx_t_4);
         __pyx_t_4 = 0;
 
-        /* "disorder/diffuse/monocrystal.pyx":1148
+        /* "disorder/diffuse/monocrystal.pyx":1195
  *             V = W.copy()
  *             for _ in range(Nv // nv-1):
  *                 W = np.concatenate((W,V*1),axis=1)             # <<<<<<<<<<<<<<
  *             W = np.concatenate((W,V[:,:(Nv%nv),:]*1),axis=1)
  * 
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1148, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1148, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1148, __pyx_L1_error)
+        __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1148, __pyx_L1_error)
+        __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
         __Pyx_INCREF(__pyx_v_W);
         __Pyx_GIVEREF(__pyx_v_W);
@@ -16322,15 +17250,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1148, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_13);
         PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_13);
         __pyx_t_13 = 0;
-        __pyx_t_13 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1148, __pyx_L1_error)
+        __pyx_t_13 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
-        if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 1148, __pyx_L1_error)
-        __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_4, __pyx_t_13); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1148, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 1195, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_4, __pyx_t_13); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1195, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -16338,7 +17266,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_9);
         __pyx_t_9 = 0;
 
-        /* "disorder/diffuse/monocrystal.pyx":1147
+        /* "disorder/diffuse/monocrystal.pyx":1194
  * 
  *             V = W.copy()
  *             for _ in range(Nv // nv-1):             # <<<<<<<<<<<<<<
@@ -16348,24 +17276,24 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       }
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1149
+      /* "disorder/diffuse/monocrystal.pyx":1196
  *             for _ in range(Nv // nv-1):
  *                 W = np.concatenate((W,V*1),axis=1)
  *             W = np.concatenate((W,V[:,:(Nv%nv),:]*1),axis=1)             # <<<<<<<<<<<<<<
  * 
  *             V = W.copy()
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_12, __pyx_n_s_np); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_12, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = PyNumber_Remainder(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __pyx_t_12 = PyNumber_Remainder(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_13 = PySlice_New(Py_None, __pyx_t_12, Py_None); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __pyx_t_13 = PySlice_New(Py_None, __pyx_t_12, Py_None); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_INCREF(__pyx_slice_);
       __Pyx_GIVEREF(__pyx_slice_);
@@ -16376,13 +17304,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_GIVEREF(__pyx_slice_);
       PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_slice_);
       __pyx_t_13 = 0;
-      __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_12); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = PyNumber_Multiply(__pyx_t_13, __pyx_int_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __pyx_t_12 = PyNumber_Multiply(__pyx_t_13, __pyx_int_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_INCREF(__pyx_v_W);
       __Pyx_GIVEREF(__pyx_v_W);
@@ -16390,15 +17318,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_GIVEREF(__pyx_t_12);
       PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_12);
       __pyx_t_12 = 0;
-      __pyx_t_12 = PyTuple_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __pyx_t_12 = PyTuple_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_GIVEREF(__pyx_t_13);
       PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_13);
       __pyx_t_13 = 0;
-      __pyx_t_13 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 1149, __pyx_L1_error)
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_12, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1149, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 1196, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_12, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1196, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
@@ -16406,14 +17334,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1151
+      /* "disorder/diffuse/monocrystal.pyx":1198
  *             W = np.concatenate((W,V[:,:(Nv%nv),:]*1),axis=1)
  * 
  *             V = W.copy()             # <<<<<<<<<<<<<<
  *             for _ in range(Nw // nw-1):
  *                 W = np.concatenate((W,V*1),axis=2)
  */
-      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1151, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __pyx_t_12 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_13))) {
@@ -16427,34 +17355,34 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       }
       __pyx_t_4 = (__pyx_t_12) ? __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_12) : __Pyx_PyObject_CallNoArg(__pyx_t_13);
       __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1151, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1198, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       __Pyx_DECREF_SET(__pyx_v_V, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1152
+      /* "disorder/diffuse/monocrystal.pyx":1199
  * 
  *             V = W.copy()
  *             for _ in range(Nw // nw-1):             # <<<<<<<<<<<<<<
  *                 W = np.concatenate((W,V*1),axis=2)
  *             W = np.concatenate((W,V[:,:,:(Nw%nw)]*1),axis=2)
  */
-      __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1152, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1199, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_13 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1152, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1199, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1152, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_13); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1199, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
         __pyx_t_13 = __pyx_t_4; __Pyx_INCREF(__pyx_t_13); __pyx_t_10 = 0;
         __pyx_t_11 = NULL;
       } else {
-        __pyx_t_10 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1152, __pyx_L1_error)
+        __pyx_t_10 = -1; __pyx_t_13 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1199, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_13);
-        __pyx_t_11 = Py_TYPE(__pyx_t_13)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1152, __pyx_L1_error)
+        __pyx_t_11 = Py_TYPE(__pyx_t_13)->tp_iternext; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 1199, __pyx_L1_error)
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       for (;;) {
@@ -16462,17 +17390,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
           if (likely(PyList_CheckExact(__pyx_t_13))) {
             if (__pyx_t_10 >= PyList_GET_SIZE(__pyx_t_13)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_4 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1152, __pyx_L1_error)
+            __pyx_t_4 = PyList_GET_ITEM(__pyx_t_13, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1199, __pyx_L1_error)
             #else
-            __pyx_t_4 = PySequence_ITEM(__pyx_t_13, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1152, __pyx_L1_error)
+            __pyx_t_4 = PySequence_ITEM(__pyx_t_13, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1199, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             #endif
           } else {
             if (__pyx_t_10 >= PyTuple_GET_SIZE(__pyx_t_13)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1152, __pyx_L1_error)
+            __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_13, __pyx_t_10); __Pyx_INCREF(__pyx_t_4); __pyx_t_10++; if (unlikely(0 < 0)) __PYX_ERR(0, 1199, __pyx_L1_error)
             #else
-            __pyx_t_4 = PySequence_ITEM(__pyx_t_13, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1152, __pyx_L1_error)
+            __pyx_t_4 = PySequence_ITEM(__pyx_t_13, __pyx_t_10); __pyx_t_10++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1199, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_4);
             #endif
           }
@@ -16482,7 +17410,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 1152, __pyx_L1_error)
+              else __PYX_ERR(0, 1199, __pyx_L1_error)
             }
             break;
           }
@@ -16491,21 +17419,21 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         __Pyx_XDECREF_SET(__pyx_v__, __pyx_t_4);
         __pyx_t_4 = 0;
 
-        /* "disorder/diffuse/monocrystal.pyx":1153
+        /* "disorder/diffuse/monocrystal.pyx":1200
  *             V = W.copy()
  *             for _ in range(Nw // nw-1):
  *                 W = np.concatenate((W,V*1),axis=2)             # <<<<<<<<<<<<<<
  *             W = np.concatenate((W,V[:,:,:(Nw%nw)]*1),axis=2)
  * 
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1153, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1200, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1153, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 1200, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1153, __pyx_L1_error)
+        __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1200, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1153, __pyx_L1_error)
+        __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1200, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_INCREF(__pyx_v_W);
         __Pyx_GIVEREF(__pyx_v_W);
@@ -16513,15 +17441,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1153, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1200, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_9);
         PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_9);
         __pyx_t_9 = 0;
-        __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1153, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1200, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
-        if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_axis, __pyx_int_2) < 0) __PYX_ERR(0, 1153, __pyx_L1_error)
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_12, __pyx_t_4, __pyx_t_9); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1153, __pyx_L1_error)
+        if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_axis, __pyx_int_2) < 0) __PYX_ERR(0, 1200, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_12, __pyx_t_4, __pyx_t_9); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1200, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -16529,7 +17457,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_1);
         __pyx_t_1 = 0;
 
-        /* "disorder/diffuse/monocrystal.pyx":1152
+        /* "disorder/diffuse/monocrystal.pyx":1199
  * 
  *             V = W.copy()
  *             for _ in range(Nw // nw-1):             # <<<<<<<<<<<<<<
@@ -16539,24 +17467,24 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       }
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1154
+      /* "disorder/diffuse/monocrystal.pyx":1201
  *             for _ in range(Nw // nw-1):
  *                 W = np.concatenate((W,V*1),axis=2)
  *             W = np.concatenate((W,V[:,:,:(Nw%nw)]*1),axis=2)             # <<<<<<<<<<<<<<
  * 
  *             U[i,:,:,:,j] = W.copy()
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_13 = PyNumber_Remainder(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __pyx_t_13 = PyNumber_Remainder(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_9 = PySlice_New(Py_None, __pyx_t_13, Py_None); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __pyx_t_9 = PySlice_New(Py_None, __pyx_t_13, Py_None); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_13 = PyTuple_New(3); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __pyx_t_13 = PyTuple_New(3); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_INCREF(__pyx_slice_);
       __Pyx_GIVEREF(__pyx_slice_);
@@ -16567,13 +17495,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_GIVEREF(__pyx_t_9);
       PyTuple_SET_ITEM(__pyx_t_13, 2, __pyx_t_9);
       __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_13); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_13); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-      __pyx_t_13 = PyNumber_Multiply(__pyx_t_9, __pyx_int_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __pyx_t_13 = PyNumber_Multiply(__pyx_t_9, __pyx_int_1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_INCREF(__pyx_v_W);
       __Pyx_GIVEREF(__pyx_v_W);
@@ -16581,15 +17509,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_GIVEREF(__pyx_t_13);
       PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_13);
       __pyx_t_13 = 0;
-      __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_GIVEREF(__pyx_t_9);
       PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_9);
       __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_axis, __pyx_int_2) < 0) __PYX_ERR(0, 1154, __pyx_L1_error)
-      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_13, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1154, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_axis, __pyx_int_2) < 0) __PYX_ERR(0, 1201, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_13, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1201, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
@@ -16597,14 +17525,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1156
+      /* "disorder/diffuse/monocrystal.pyx":1203
  *             W = np.concatenate((W,V[:,:,:(Nw%nw)]*1),axis=2)
  * 
  *             U[i,:,:,:,j] = W.copy()             # <<<<<<<<<<<<<<
  * 
  *     x = np.fft.ifftn(U, axes=(1,2,3))
  */
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1156, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1203, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __pyx_t_13 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
@@ -16618,10 +17546,10 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       }
       __pyx_t_4 = (__pyx_t_13) ? __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_13) : __Pyx_PyObject_CallNoArg(__pyx_t_9);
       __Pyx_XDECREF(__pyx_t_13); __pyx_t_13 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1156, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1203, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-      __pyx_t_9 = PyTuple_New(5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1156, __pyx_L1_error)
+      __pyx_t_9 = PyTuple_New(5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1203, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_INCREF(__pyx_v_i);
       __Pyx_GIVEREF(__pyx_v_i);
@@ -16638,11 +17566,11 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       __Pyx_INCREF(__pyx_v_j);
       __Pyx_GIVEREF(__pyx_v_j);
       PyTuple_SET_ITEM(__pyx_t_9, 4, __pyx_v_j);
-      if (unlikely(PyObject_SetItem(__pyx_v_U, __pyx_t_9, __pyx_t_4) < 0)) __PYX_ERR(0, 1156, __pyx_L1_error)
+      if (unlikely(PyObject_SetItem(__pyx_v_U, __pyx_t_9, __pyx_t_4) < 0)) __PYX_ERR(0, 1203, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1138
+      /* "disorder/diffuse/monocrystal.pyx":1185
  * 
  *     for i in range(nc):
  *         for j in range(n_atm):             # <<<<<<<<<<<<<<
@@ -16652,7 +17580,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1137
+    /* "disorder/diffuse/monocrystal.pyx":1184
  *     U = np.zeros((nc,Nu,Nv,Nw,n_atm), dtype=complex)
  * 
  *     for i in range(nc):             # <<<<<<<<<<<<<<
@@ -16662,30 +17590,30 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1158
+  /* "disorder/diffuse/monocrystal.pyx":1205
  *             U[i,:,:,:,j] = W.copy()
  * 
  *     x = np.fft.ifftn(U, axes=(1,2,3))             # <<<<<<<<<<<<<<
  * 
  *     for i in range(1, Nu // nu):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1158, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_fft); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1158, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_fft); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_ifftn); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1158, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_ifftn); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1158, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_INCREF(__pyx_v_U);
   __Pyx_GIVEREF(__pyx_v_U);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_v_U);
-  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1158, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_axes, __pyx_tuple__2) < 0) __PYX_ERR(0, 1158, __pyx_L1_error)
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1158, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_4, __pyx_n_s_axes, __pyx_tuple__2) < 0) __PYX_ERR(0, 1205, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -16693,16 +17621,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   __pyx_v_x = __pyx_t_9;
   __pyx_t_9 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1160
+  /* "disorder/diffuse/monocrystal.pyx":1207
  *     x = np.fft.ifftn(U, axes=(1,2,3))
  * 
  *     for i in range(1, Nu // nu):             # <<<<<<<<<<<<<<
  *         x[:,i::(Nu//nu),:,:,:] += x[:,0::(Nu//nu),:,:,:]#*(Nu//nu-i)/(Nu//nu)
  * 
  */
-  __pyx_t_9 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1160, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1160, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -16710,16 +17638,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   __Pyx_GIVEREF(__pyx_t_9);
   PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_9);
   __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_4, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1160, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_4, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1207, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (likely(PyList_CheckExact(__pyx_t_9)) || PyTuple_CheckExact(__pyx_t_9)) {
     __pyx_t_4 = __pyx_t_9; __Pyx_INCREF(__pyx_t_4); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1160, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1207, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1160, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1207, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   for (;;) {
@@ -16727,17 +17655,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       if (likely(PyList_CheckExact(__pyx_t_4))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_9 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_9); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1160, __pyx_L1_error)
+        __pyx_t_9 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_9); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1207, __pyx_L1_error)
         #else
-        __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1160, __pyx_L1_error)
+        __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1207, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_9); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1160, __pyx_L1_error)
+        __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_9); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1207, __pyx_L1_error)
         #else
-        __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1160, __pyx_L1_error)
+        __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1207, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         #endif
       }
@@ -16747,7 +17675,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 1160, __pyx_L1_error)
+          else __PYX_ERR(0, 1207, __pyx_L1_error)
         }
         break;
       }
@@ -16756,19 +17684,19 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_9);
     __pyx_t_9 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1161
+    /* "disorder/diffuse/monocrystal.pyx":1208
  * 
  *     for i in range(1, Nu // nu):
  *         x[:,i::(Nu//nu),:,:,:] += x[:,0::(Nu//nu),:,:,:]#*(Nu//nu-i)/(Nu//nu)             # <<<<<<<<<<<<<<
  * 
  *     for j in range(1, Nv // nv):
  */
-    __pyx_t_9 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    __pyx_t_9 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_3 = PySlice_New(__pyx_v_i, Py_None, __pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    __pyx_t_3 = PySlice_New(__pyx_v_i, Py_None, __pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyTuple_New(5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    __pyx_t_9 = PyTuple_New(5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -16785,14 +17713,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_9, 4, __pyx_slice_);
     __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_9); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_13 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    __pyx_t_13 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyTuple_New(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -16809,18 +17737,18 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_2, 4, __pyx_slice_);
     __pyx_t_13 = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_13); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_9, __pyx_t_2) < 0)) __PYX_ERR(0, 1161, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_9, __pyx_t_2) < 0)) __PYX_ERR(0, 1208, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1160
+    /* "disorder/diffuse/monocrystal.pyx":1207
  *     x = np.fft.ifftn(U, axes=(1,2,3))
  * 
  *     for i in range(1, Nu // nu):             # <<<<<<<<<<<<<<
@@ -16830,16 +17758,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1163
+  /* "disorder/diffuse/monocrystal.pyx":1210
  *         x[:,i::(Nu//nu),:,:,:] += x[:,0::(Nu//nu),:,:,:]#*(Nu//nu-i)/(Nu//nu)
  * 
  *     for j in range(1, Nv // nv):             # <<<<<<<<<<<<<<
  *         x[:,:,j::(Nv//nv),:,:] += x[:,:,0::(Nv//nv),:,:]#*(Nv//nv-j)/(Nv//nv)
  * 
  */
-  __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1163, __pyx_L1_error)
+  __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1210, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1163, __pyx_L1_error)
+  __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1210, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -16847,16 +17775,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   __Pyx_GIVEREF(__pyx_t_4);
   PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_4);
   __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_9, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1163, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_9, NULL); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1210, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
     __pyx_t_9 = __pyx_t_4; __Pyx_INCREF(__pyx_t_9); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1163, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1210, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_6 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1163, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1210, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   for (;;) {
@@ -16864,17 +17792,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       if (likely(PyList_CheckExact(__pyx_t_9))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_9)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1163, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1210, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_9, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1163, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_9, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1210, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_9)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1163, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1210, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_9, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1163, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_9, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1210, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -16884,7 +17812,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 1163, __pyx_L1_error)
+          else __PYX_ERR(0, 1210, __pyx_L1_error)
         }
         break;
       }
@@ -16893,19 +17821,19 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1164
+    /* "disorder/diffuse/monocrystal.pyx":1211
  * 
  *     for j in range(1, Nv // nv):
  *         x[:,:,j::(Nv//nv),:,:] += x[:,:,0::(Nv//nv),:,:]#*(Nv//nv-j)/(Nv//nv)             # <<<<<<<<<<<<<<
  * 
  *     for k in range(1, Nw // nw):
  */
-    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_2 = PySlice_New(__pyx_v_j, Py_None, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    __pyx_t_2 = PySlice_New(__pyx_v_j, Py_None, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(5); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -16922,14 +17850,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_4, 4, __pyx_slice_);
     __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_13 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    __pyx_t_13 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_3 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_13); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    __pyx_t_3 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_13); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_13 = PyTuple_New(5); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    __pyx_t_13 = PyTuple_New(5); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -16946,18 +17874,18 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_13, 4, __pyx_slice_);
     __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_13); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_13); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
-    __pyx_t_13 = PyNumber_InPlaceAdd(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    __pyx_t_13 = PyNumber_InPlaceAdd(__pyx_t_2, __pyx_t_3); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_4, __pyx_t_13) < 0)) __PYX_ERR(0, 1164, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_4, __pyx_t_13) < 0)) __PYX_ERR(0, 1211, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1163
+    /* "disorder/diffuse/monocrystal.pyx":1210
  *         x[:,i::(Nu//nu),:,:,:] += x[:,0::(Nu//nu),:,:,:]#*(Nu//nu-i)/(Nu//nu)
  * 
  *     for j in range(1, Nv // nv):             # <<<<<<<<<<<<<<
@@ -16967,16 +17895,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   }
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1166
+  /* "disorder/diffuse/monocrystal.pyx":1213
  *         x[:,:,j::(Nv//nv),:,:] += x[:,:,0::(Nv//nv),:,:]#*(Nv//nv-j)/(Nv//nv)
  * 
  *     for k in range(1, Nw // nw):             # <<<<<<<<<<<<<<
  *         x[:,:,:,k::(Nw//nw),:] += x[:,:,:,0::(Nw//nw),:]#*(Nw//nw-k)/(Nw//nw)
  * 
  */
-  __pyx_t_9 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1166, __pyx_L1_error)
+  __pyx_t_9 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
-  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1166, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -16984,16 +17912,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   __Pyx_GIVEREF(__pyx_t_9);
   PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_9);
   __pyx_t_9 = 0;
-  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_4, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1166, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_4, NULL); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1213, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   if (likely(PyList_CheckExact(__pyx_t_9)) || PyTuple_CheckExact(__pyx_t_9)) {
     __pyx_t_4 = __pyx_t_9; __Pyx_INCREF(__pyx_t_4); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1166, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_4 = PyObject_GetIter(__pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1213, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1166, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_4)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1213, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
   for (;;) {
@@ -17001,17 +17929,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
       if (likely(PyList_CheckExact(__pyx_t_4))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_9 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_9); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1166, __pyx_L1_error)
+        __pyx_t_9 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_9); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1213, __pyx_L1_error)
         #else
-        __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1166, __pyx_L1_error)
+        __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1213, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_4)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_9); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1166, __pyx_L1_error)
+        __pyx_t_9 = PyTuple_GET_ITEM(__pyx_t_4, __pyx_t_5); __Pyx_INCREF(__pyx_t_9); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1213, __pyx_L1_error)
         #else
-        __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1166, __pyx_L1_error)
+        __pyx_t_9 = PySequence_ITEM(__pyx_t_4, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1213, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         #endif
       }
@@ -17021,7 +17949,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 1166, __pyx_L1_error)
+          else __PYX_ERR(0, 1213, __pyx_L1_error)
         }
         break;
       }
@@ -17030,19 +17958,19 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_XDECREF_SET(__pyx_v_k, __pyx_t_9);
     __pyx_t_9 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1167
+    /* "disorder/diffuse/monocrystal.pyx":1214
  * 
  *     for k in range(1, Nw // nw):
  *         x[:,:,:,k::(Nw//nw),:] += x[:,:,:,0::(Nw//nw),:]#*(Nw//nw-k)/(Nw//nw)             # <<<<<<<<<<<<<<
  * 
  *     return x
  */
-    __pyx_t_9 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    __pyx_t_9 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_13 = PySlice_New(__pyx_v_k, Py_None, __pyx_t_9); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    __pyx_t_13 = PySlice_New(__pyx_v_k, Py_None, __pyx_t_9); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyTuple_New(5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    __pyx_t_9 = PyTuple_New(5); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -17059,14 +17987,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_9, 4, __pyx_slice_);
     __pyx_t_13 = 0;
-    __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_9); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_9); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_13);
-    __pyx_t_3 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_2 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    __pyx_t_2 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(5); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -17083,18 +18011,18 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_3, 4, __pyx_slice_);
     __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_t_13, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_t_13, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_9, __pyx_t_3) < 0)) __PYX_ERR(0, 1167, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_9, __pyx_t_3) < 0)) __PYX_ERR(0, 1214, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1166
+    /* "disorder/diffuse/monocrystal.pyx":1213
  *         x[:,:,j::(Nv//nv),:,:] += x[:,:,0::(Nv//nv),:,:]#*(Nv//nv-j)/(Nv//nv)
  * 
  *     for k in range(1, Nw // nw):             # <<<<<<<<<<<<<<
@@ -17104,7 +18032,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1169
+  /* "disorder/diffuse/monocrystal.pyx":1216
  *         x[:,:,:,k::(Nw//nw),:] += x[:,:,:,0::(Nw//nw),:]#*(Nw//nw-k)/(Nw//nw)
  * 
  *     return x             # <<<<<<<<<<<<<<
@@ -17116,7 +18044,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   __pyx_r = __pyx_v_x;
   goto __pyx_L0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1127
+  /* "disorder/diffuse/monocrystal.pyx":1174
  *     return I_np
  * 
  * def idft_many(X, Nu, Nv, Nw):             # <<<<<<<<<<<<<<
@@ -17154,7 +18082,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_8idft_many(CYTHON_UNU
   return __pyx_r;
 }
 
-/* "disorder/diffuse/monocrystal.pyx":1171
+/* "disorder/diffuse/monocrystal.pyx":1218
  *     return x
  * 
  * def idft(X, Nu, Nv, Nw):             # <<<<<<<<<<<<<<
@@ -17203,23 +18131,23 @@ static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_11idft(PyObject *__py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nu)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("idft", 1, 4, 4, 1); __PYX_ERR(0, 1171, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("idft", 1, 4, 4, 1); __PYX_ERR(0, 1218, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nv)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("idft", 1, 4, 4, 2); __PYX_ERR(0, 1171, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("idft", 1, 4, 4, 2); __PYX_ERR(0, 1218, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Nw)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("idft", 1, 4, 4, 3); __PYX_ERR(0, 1171, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("idft", 1, 4, 4, 3); __PYX_ERR(0, 1218, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "idft") < 0)) __PYX_ERR(0, 1171, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "idft") < 0)) __PYX_ERR(0, 1218, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 4) {
       goto __pyx_L5_argtuple_error;
@@ -17236,7 +18164,7 @@ static PyObject *__pyx_pw_8disorder_7diffuse_11monocrystal_11idft(PyObject *__py
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("idft", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1171, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("idft", 1, 4, 4, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 1218, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("disorder.diffuse.monocrystal.idft", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -17279,79 +18207,79 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("idft", 0);
 
-  /* "disorder/diffuse/monocrystal.pyx":1173
+  /* "disorder/diffuse/monocrystal.pyx":1220
  * def idft(X, Nu, Nv, Nw):
  * 
  *     nu = X.shape[0]             # <<<<<<<<<<<<<<
  *     nv = X.shape[1]
  *     nw = X.shape[2]
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1173, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1220, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1173, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1220, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_nu = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1174
+  /* "disorder/diffuse/monocrystal.pyx":1221
  * 
  *     nu = X.shape[0]
  *     nv = X.shape[1]             # <<<<<<<<<<<<<<
  *     nw = X.shape[2]
  *     n_atm = X.shape[3]
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1174, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1221, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1174, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1221, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_nv = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1175
+  /* "disorder/diffuse/monocrystal.pyx":1222
  *     nu = X.shape[0]
  *     nv = X.shape[1]
  *     nw = X.shape[2]             # <<<<<<<<<<<<<<
  *     n_atm = X.shape[3]
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1175, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1222, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1175, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 2, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1222, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_nw = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1176
+  /* "disorder/diffuse/monocrystal.pyx":1223
  *     nv = X.shape[1]
  *     nw = X.shape[2]
  *     n_atm = X.shape[3]             # <<<<<<<<<<<<<<
  * 
  *     U = np.zeros((Nu,Nv,Nw,n_atm), dtype=complex)
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1176, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_X, __pyx_n_s_shape); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1223, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1176, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt(__pyx_t_2, 3, long, 1, __Pyx_PyInt_From_long, 0, 0, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1223, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_n_atm = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1178
+  /* "disorder/diffuse/monocrystal.pyx":1225
  *     n_atm = X.shape[3]
  * 
  *     U = np.zeros((Nu,Nv,Nw,n_atm), dtype=complex)             # <<<<<<<<<<<<<<
  * 
  *     for j in range(n_atm):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1178, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1178, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1178, __pyx_L1_error)
+  __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_INCREF(__pyx_v_Nu);
   __Pyx_GIVEREF(__pyx_v_Nu);
@@ -17365,15 +18293,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   __Pyx_INCREF(__pyx_v_n_atm);
   __Pyx_GIVEREF(__pyx_v_n_atm);
   PyTuple_SET_ITEM(__pyx_t_1, 3, __pyx_v_n_atm);
-  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1178, __pyx_L1_error)
+  __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_1);
   __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1178, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 1178, __pyx_L1_error)
-  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1178, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, ((PyObject *)(&PyComplex_Type))) < 0) __PYX_ERR(0, 1225, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1225, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -17381,22 +18309,22 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   __pyx_v_U = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1180
+  /* "disorder/diffuse/monocrystal.pyx":1227
  *     U = np.zeros((Nu,Nv,Nw,n_atm), dtype=complex)
  * 
  *     for j in range(n_atm):             # <<<<<<<<<<<<<<
  *         V = X[:,:,:,j].copy()
  * 
  */
-  __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1180, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_v_n_atm); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1227, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
     __pyx_t_1 = __pyx_t_4; __Pyx_INCREF(__pyx_t_1); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1180, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1227, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_6 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1180, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1227, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   for (;;) {
@@ -17404,17 +18332,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1180, __pyx_L1_error)
+        __pyx_t_4 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1227, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1180, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1227, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1180, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_5); __Pyx_INCREF(__pyx_t_4); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1227, __pyx_L1_error)
         #else
-        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1180, __pyx_L1_error)
+        __pyx_t_4 = PySequence_ITEM(__pyx_t_1, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1227, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         #endif
       }
@@ -17424,7 +18352,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 1180, __pyx_L1_error)
+          else __PYX_ERR(0, 1227, __pyx_L1_error)
         }
         break;
       }
@@ -17433,14 +18361,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1181
+    /* "disorder/diffuse/monocrystal.pyx":1228
  * 
  *     for j in range(n_atm):
  *         V = X[:,:,:,j].copy()             # <<<<<<<<<<<<<<
  * 
  *         W = V.copy()
  */
-    __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1181, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -17454,10 +18382,10 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_INCREF(__pyx_v_j);
     __Pyx_GIVEREF(__pyx_v_j);
     PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_v_j);
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_X, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1181, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_X, __pyx_t_3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_copy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1181, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_copy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_t_2 = NULL;
@@ -17472,20 +18400,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     }
     __pyx_t_4 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1181, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1228, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_XDECREF_SET(__pyx_v_V, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1183
+    /* "disorder/diffuse/monocrystal.pyx":1230
  *         V = X[:,:,:,j].copy()
  * 
  *         W = V.copy()             # <<<<<<<<<<<<<<
  *         for _ in range(Nu // nu-1):
  *             W = np.concatenate((W,V*1),axis=0)
  */
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_V, __pyx_n_s_copy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1183, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_v_V, __pyx_n_s_copy); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1230, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_2 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_3))) {
@@ -17499,34 +18427,34 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     }
     __pyx_t_4 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1183, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1230, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_XDECREF_SET(__pyx_v_W, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1184
+    /* "disorder/diffuse/monocrystal.pyx":1231
  * 
  *         W = V.copy()
  *         for _ in range(Nu // nu-1):             # <<<<<<<<<<<<<<
  *             W = np.concatenate((W,V*1),axis=0)
  *         W = np.concatenate((W,V[:(Nu%nu),:,:]*1),axis=0)
  */
-    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1184, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1231, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1184, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1231, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1184, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1231, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
       __pyx_t_3 = __pyx_t_4; __Pyx_INCREF(__pyx_t_3); __pyx_t_7 = 0;
       __pyx_t_8 = NULL;
     } else {
-      __pyx_t_7 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1184, __pyx_L1_error)
+      __pyx_t_7 = -1; __pyx_t_3 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1231, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_8 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1184, __pyx_L1_error)
+      __pyx_t_8 = Py_TYPE(__pyx_t_3)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1231, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     for (;;) {
@@ -17534,17 +18462,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
         if (likely(PyList_CheckExact(__pyx_t_3))) {
           if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_3)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1184, __pyx_L1_error)
+          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1231, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1184, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1231, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         } else {
           if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_3)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1184, __pyx_L1_error)
+          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_3, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1231, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1184, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_3, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1231, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         }
@@ -17554,7 +18482,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 1184, __pyx_L1_error)
+            else __PYX_ERR(0, 1231, __pyx_L1_error)
           }
           break;
         }
@@ -17563,21 +18491,21 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       __Pyx_XDECREF_SET(__pyx_v__, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1185
+      /* "disorder/diffuse/monocrystal.pyx":1232
  *         W = V.copy()
  *         for _ in range(Nu // nu-1):
  *             W = np.concatenate((W,V*1),axis=0)             # <<<<<<<<<<<<<<
  *         W = np.concatenate((W,V[:(Nu%nu),:,:]*1),axis=0)
  * 
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1185, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1232, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1185, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1232, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1185, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1232, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1185, __pyx_L1_error)
+      __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1232, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_INCREF(__pyx_v_W);
       __Pyx_GIVEREF(__pyx_v_W);
@@ -17585,15 +18513,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1185, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1232, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_9);
       PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_9);
       __pyx_t_9 = 0;
-      __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1185, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1232, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_axis, __pyx_int_0) < 0) __PYX_ERR(0, 1185, __pyx_L1_error)
-      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1185, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_axis, __pyx_int_0) < 0) __PYX_ERR(0, 1232, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_4, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1232, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -17601,7 +18529,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_10);
       __pyx_t_10 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1184
+      /* "disorder/diffuse/monocrystal.pyx":1231
  * 
  *         W = V.copy()
  *         for _ in range(Nu // nu-1):             # <<<<<<<<<<<<<<
@@ -17611,24 +18539,24 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1186
+    /* "disorder/diffuse/monocrystal.pyx":1233
  *         for _ in range(Nu // nu-1):
  *             W = np.concatenate((W,V*1),axis=0)
  *         W = np.concatenate((W,V[:(Nu%nu),:,:]*1),axis=0)             # <<<<<<<<<<<<<<
  * 
  *         V = W.copy()
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyNumber_Remainder(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Remainder(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_9 = PySlice_New(Py_None, __pyx_t_3, Py_None); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __pyx_t_9 = PySlice_New(Py_None, __pyx_t_3, Py_None); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_9);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_9);
@@ -17639,13 +18567,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_slice_);
     __pyx_t_9 = 0;
-    __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyNumber_Multiply(__pyx_t_9, __pyx_int_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Multiply(__pyx_t_9, __pyx_int_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_INCREF(__pyx_v_W);
     __Pyx_GIVEREF(__pyx_v_W);
@@ -17653,15 +18581,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_t_3);
     PyTuple_SET_ITEM(__pyx_t_9, 1, __pyx_t_3);
     __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_9);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_9);
     __pyx_t_9 = 0;
-    __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_axis, __pyx_int_0) < 0) __PYX_ERR(0, 1186, __pyx_L1_error)
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_3, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1186, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_9, __pyx_n_s_axis, __pyx_int_0) < 0) __PYX_ERR(0, 1233, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_10, __pyx_t_3, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1233, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -17669,14 +18597,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1188
+    /* "disorder/diffuse/monocrystal.pyx":1235
  *         W = np.concatenate((W,V[:(Nu%nu),:,:]*1),axis=0)
  * 
  *         V = W.copy()             # <<<<<<<<<<<<<<
  *         for _ in range(Nv // nv-1):
  *             W = np.concatenate((W,V*1),axis=1)
  */
-    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1188, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1235, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_9))) {
@@ -17690,34 +18618,34 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     }
     __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_9, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_9);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1188, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1235, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __Pyx_DECREF_SET(__pyx_v_V, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1189
+    /* "disorder/diffuse/monocrystal.pyx":1236
  * 
  *         V = W.copy()
  *         for _ in range(Nv // nv-1):             # <<<<<<<<<<<<<<
  *             W = np.concatenate((W,V*1),axis=1)
  *         W = np.concatenate((W,V[:,:(Nv%nv),:]*1),axis=1)
  */
-    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1189, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1236, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_9 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1189, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1236, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1189, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_9); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1236, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
       __pyx_t_9 = __pyx_t_4; __Pyx_INCREF(__pyx_t_9); __pyx_t_7 = 0;
       __pyx_t_8 = NULL;
     } else {
-      __pyx_t_7 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1189, __pyx_L1_error)
+      __pyx_t_7 = -1; __pyx_t_9 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1236, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_8 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1189, __pyx_L1_error)
+      __pyx_t_8 = Py_TYPE(__pyx_t_9)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1236, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     for (;;) {
@@ -17725,17 +18653,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
         if (likely(PyList_CheckExact(__pyx_t_9))) {
           if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_9)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1189, __pyx_L1_error)
+          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1236, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_9, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1189, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_9, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1236, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         } else {
           if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_9)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1189, __pyx_L1_error)
+          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_9, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1236, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_9, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1189, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_9, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1236, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         }
@@ -17745,7 +18673,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 1189, __pyx_L1_error)
+            else __PYX_ERR(0, 1236, __pyx_L1_error)
           }
           break;
         }
@@ -17754,21 +18682,21 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       __Pyx_XDECREF_SET(__pyx_v__, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1190
+      /* "disorder/diffuse/monocrystal.pyx":1237
  *         V = W.copy()
  *         for _ in range(Nv // nv-1):
  *             W = np.concatenate((W,V*1),axis=1)             # <<<<<<<<<<<<<<
  *         W = np.concatenate((W,V[:,:(Nv%nv),:]*1),axis=1)
  * 
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1190, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1237, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1190, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1237, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1190, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1237, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1190, __pyx_L1_error)
+      __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1237, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_INCREF(__pyx_v_W);
       __Pyx_GIVEREF(__pyx_v_W);
@@ -17776,15 +18704,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1190, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1237, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_10);
       PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_10);
       __pyx_t_10 = 0;
-      __pyx_t_10 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1190, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1237, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
-      if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 1190, __pyx_L1_error)
-      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1190, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 1237, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_4, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1237, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -17792,7 +18720,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_2);
       __pyx_t_2 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1189
+      /* "disorder/diffuse/monocrystal.pyx":1236
  * 
  *         V = W.copy()
  *         for _ in range(Nv // nv-1):             # <<<<<<<<<<<<<<
@@ -17802,24 +18730,24 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     }
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1191
+    /* "disorder/diffuse/monocrystal.pyx":1238
  *         for _ in range(Nv // nv-1):
  *             W = np.concatenate((W,V*1),axis=1)
  *         W = np.concatenate((W,V[:,:(Nv%nv),:]*1),axis=1)             # <<<<<<<<<<<<<<
  * 
  *         V = W.copy()
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_9, __pyx_n_s_np); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_9, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyNumber_Remainder(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __pyx_t_9 = PyNumber_Remainder(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
-    __pyx_t_10 = PySlice_New(Py_None, __pyx_t_9, Py_None); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __pyx_t_10 = PySlice_New(Py_None, __pyx_t_9, Py_None); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyTuple_New(3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __pyx_t_9 = PyTuple_New(3); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -17830,13 +18758,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_9, 2, __pyx_slice_);
     __pyx_t_10 = 0;
-    __pyx_t_10 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_9); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-    __pyx_t_9 = PyNumber_Multiply(__pyx_t_10, __pyx_int_1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __pyx_t_9 = PyNumber_Multiply(__pyx_t_10, __pyx_int_1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_INCREF(__pyx_v_W);
     __Pyx_GIVEREF(__pyx_v_W);
@@ -17844,15 +18772,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_t_9);
     PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_9);
     __pyx_t_9 = 0;
-    __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __pyx_t_9 = PyTuple_New(1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_9);
     __Pyx_GIVEREF(__pyx_t_10);
     PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_10);
     __pyx_t_10 = 0;
-    __pyx_t_10 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 1191, __pyx_L1_error)
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1191, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_10, __pyx_n_s_axis, __pyx_int_1) < 0) __PYX_ERR(0, 1238, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_9, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1238, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -17860,14 +18788,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1193
+    /* "disorder/diffuse/monocrystal.pyx":1240
  *         W = np.concatenate((W,V[:,:(Nv%nv),:]*1),axis=1)
  * 
  *         V = W.copy()             # <<<<<<<<<<<<<<
  *         for _ in range(Nw // nw-1):
  *             W = np.concatenate((W,V*1),axis=2)
  */
-    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1193, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1240, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __pyx_t_9 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_10))) {
@@ -17881,34 +18809,34 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     }
     __pyx_t_4 = (__pyx_t_9) ? __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_t_9) : __Pyx_PyObject_CallNoArg(__pyx_t_10);
     __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1193, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1240, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF_SET(__pyx_v_V, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1194
+    /* "disorder/diffuse/monocrystal.pyx":1241
  * 
  *         V = W.copy()
  *         for _ in range(Nw // nw-1):             # <<<<<<<<<<<<<<
  *             W = np.concatenate((W,V*1),axis=2)
  *         W = np.concatenate((W,V[:,:,:(Nw%nw)]*1),axis=2)
  */
-    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1194, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1241, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_10 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1194, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyInt_SubtractObjC(__pyx_t_4, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1241, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1194, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1241, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     if (likely(PyList_CheckExact(__pyx_t_4)) || PyTuple_CheckExact(__pyx_t_4)) {
       __pyx_t_10 = __pyx_t_4; __Pyx_INCREF(__pyx_t_10); __pyx_t_7 = 0;
       __pyx_t_8 = NULL;
     } else {
-      __pyx_t_7 = -1; __pyx_t_10 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1194, __pyx_L1_error)
+      __pyx_t_7 = -1; __pyx_t_10 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1241, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
-      __pyx_t_8 = Py_TYPE(__pyx_t_10)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1194, __pyx_L1_error)
+      __pyx_t_8 = Py_TYPE(__pyx_t_10)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 1241, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     for (;;) {
@@ -17916,17 +18844,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
         if (likely(PyList_CheckExact(__pyx_t_10))) {
           if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_10)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_10, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1194, __pyx_L1_error)
+          __pyx_t_4 = PyList_GET_ITEM(__pyx_t_10, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1241, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1194, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1241, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         } else {
           if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_10)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_10, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1194, __pyx_L1_error)
+          __pyx_t_4 = PyTuple_GET_ITEM(__pyx_t_10, __pyx_t_7); __Pyx_INCREF(__pyx_t_4); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 1241, __pyx_L1_error)
           #else
-          __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1194, __pyx_L1_error)
+          __pyx_t_4 = PySequence_ITEM(__pyx_t_10, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1241, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_4);
           #endif
         }
@@ -17936,7 +18864,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 1194, __pyx_L1_error)
+            else __PYX_ERR(0, 1241, __pyx_L1_error)
           }
           break;
         }
@@ -17945,21 +18873,21 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       __Pyx_XDECREF_SET(__pyx_v__, __pyx_t_4);
       __pyx_t_4 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1195
+      /* "disorder/diffuse/monocrystal.pyx":1242
  *         V = W.copy()
  *         for _ in range(Nw // nw-1):
  *             W = np.concatenate((W,V*1),axis=2)             # <<<<<<<<<<<<<<
  *         W = np.concatenate((W,V[:,:,:(Nw%nw)]*1),axis=2)
  * 
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1195, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1242, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1195, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 1242, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1195, __pyx_L1_error)
+      __pyx_t_4 = PyNumber_Multiply(__pyx_v_V, __pyx_int_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1242, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1195, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1242, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_INCREF(__pyx_v_W);
       __Pyx_GIVEREF(__pyx_v_W);
@@ -17967,15 +18895,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_4);
       __pyx_t_4 = 0;
-      __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1195, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1242, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_2);
       PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_2);
       __pyx_t_2 = 0;
-      __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1195, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1242, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_axis, __pyx_int_2) < 0) __PYX_ERR(0, 1195, __pyx_L1_error)
-      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1195, __pyx_L1_error)
+      if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_axis, __pyx_int_2) < 0) __PYX_ERR(0, 1242, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_9, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1242, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -17983,7 +18911,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_3);
       __pyx_t_3 = 0;
 
-      /* "disorder/diffuse/monocrystal.pyx":1194
+      /* "disorder/diffuse/monocrystal.pyx":1241
  * 
  *         V = W.copy()
  *         for _ in range(Nw // nw-1):             # <<<<<<<<<<<<<<
@@ -17993,24 +18921,24 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     }
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1196
+    /* "disorder/diffuse/monocrystal.pyx":1243
  *         for _ in range(Nw // nw-1):
  *             W = np.concatenate((W,V*1),axis=2)
  *         W = np.concatenate((W,V[:,:,:(Nw%nw)]*1),axis=2)             # <<<<<<<<<<<<<<
  * 
  *         U[:,:,:,j] = W.copy()
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_np); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_10, __pyx_n_s_concatenate); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_10 = PyNumber_Remainder(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __pyx_t_10 = PyNumber_Remainder(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_2 = PySlice_New(Py_None, __pyx_t_10, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __pyx_t_2 = PySlice_New(Py_None, __pyx_t_10, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_10 = PyTuple_New(3); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __pyx_t_10 = PyTuple_New(3); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -18021,13 +18949,13 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_t_2);
     PyTuple_SET_ITEM(__pyx_t_10, 2, __pyx_t_2);
     __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_V, __pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_10 = PyNumber_Multiply(__pyx_t_2, __pyx_int_1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __pyx_t_10 = PyNumber_Multiply(__pyx_t_2, __pyx_int_1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_v_W);
     __Pyx_GIVEREF(__pyx_v_W);
@@ -18035,15 +18963,15 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_t_10);
     PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_10);
     __pyx_t_10 = 0;
-    __pyx_t_10 = PyTuple_New(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __pyx_t_10 = PyTuple_New(1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_GIVEREF(__pyx_t_2);
     PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_2);
     __pyx_t_2 = 0;
-    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_axis, __pyx_int_2) < 0) __PYX_ERR(0, 1196, __pyx_L1_error)
-    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_10, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1196, __pyx_L1_error)
+    if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_axis, __pyx_int_2) < 0) __PYX_ERR(0, 1243, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_10, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1243, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
@@ -18051,14 +18979,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_DECREF_SET(__pyx_v_W, __pyx_t_4);
     __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1198
+    /* "disorder/diffuse/monocrystal.pyx":1245
  *         W = np.concatenate((W,V[:,:,:(Nw%nw)]*1),axis=2)
  * 
  *         U[:,:,:,j] = W.copy()             # <<<<<<<<<<<<<<
  * 
  *     x = np.fft.ifftn(U, axes=(0,1,2))
  */
-    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1198, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_W, __pyx_n_s_copy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1245, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_10 = NULL;
     if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -18072,10 +19000,10 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     }
     __pyx_t_4 = (__pyx_t_10) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_10) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1198, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1245, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1198, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1245, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -18089,11 +19017,11 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_INCREF(__pyx_v_j);
     __Pyx_GIVEREF(__pyx_v_j);
     PyTuple_SET_ITEM(__pyx_t_2, 3, __pyx_v_j);
-    if (unlikely(PyObject_SetItem(__pyx_v_U, __pyx_t_2, __pyx_t_4) < 0)) __PYX_ERR(0, 1198, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_U, __pyx_t_2, __pyx_t_4) < 0)) __PYX_ERR(0, 1245, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1180
+    /* "disorder/diffuse/monocrystal.pyx":1227
  *     U = np.zeros((Nu,Nv,Nw,n_atm), dtype=complex)
  * 
  *     for j in range(n_atm):             # <<<<<<<<<<<<<<
@@ -18103,30 +19031,30 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1200
+  /* "disorder/diffuse/monocrystal.pyx":1247
  *         U[:,:,:,j] = W.copy()
  * 
  *     x = np.fft.ifftn(U, axes=(0,1,2))             # <<<<<<<<<<<<<<
  * 
  *     for i in range(1, Nu // nu):
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1200, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_fft); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1200, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_fft); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_ifftn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1200, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_ifftn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1200, __pyx_L1_error)
+  __pyx_t_4 = PyTuple_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_v_U);
   __Pyx_GIVEREF(__pyx_v_U);
   PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_U);
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1200, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_axes, __pyx_tuple__3) < 0) __PYX_ERR(0, 1200, __pyx_L1_error)
-  __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1200, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_axes, __pyx_tuple__3) < 0) __PYX_ERR(0, 1247, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_Call(__pyx_t_1, __pyx_t_4, __pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -18134,16 +19062,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   __pyx_v_x = __pyx_t_10;
   __pyx_t_10 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1202
+  /* "disorder/diffuse/monocrystal.pyx":1249
  *     x = np.fft.ifftn(U, axes=(0,1,2))
  * 
  *     for i in range(1, Nu // nu):             # <<<<<<<<<<<<<<
  *         x[i::(Nu//nu),:,:,:] += x[0::(Nu//nu),:,:,:]#*(Nu//nu-i)/(Nu//nu)
  * 
  */
-  __pyx_t_10 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1202, __pyx_L1_error)
+  __pyx_t_10 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1249, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1202, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1249, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -18151,16 +19079,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   __Pyx_GIVEREF(__pyx_t_10);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_10);
   __pyx_t_10 = 0;
-  __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1202, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1249, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (likely(PyList_CheckExact(__pyx_t_10)) || PyTuple_CheckExact(__pyx_t_10)) {
     __pyx_t_2 = __pyx_t_10; __Pyx_INCREF(__pyx_t_2); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1202, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1249, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1202, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1249, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   for (;;) {
@@ -18168,17 +19096,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_10 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_10); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1202, __pyx_L1_error)
+        __pyx_t_10 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_10); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1249, __pyx_L1_error)
         #else
-        __pyx_t_10 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1202, __pyx_L1_error)
+        __pyx_t_10 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1249, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_10); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1202, __pyx_L1_error)
+        __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_10); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1249, __pyx_L1_error)
         #else
-        __pyx_t_10 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1202, __pyx_L1_error)
+        __pyx_t_10 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1249, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         #endif
       }
@@ -18188,7 +19116,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 1202, __pyx_L1_error)
+          else __PYX_ERR(0, 1249, __pyx_L1_error)
         }
         break;
       }
@@ -18197,19 +19125,19 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_XDECREF_SET(__pyx_v_i, __pyx_t_10);
     __pyx_t_10 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1203
+    /* "disorder/diffuse/monocrystal.pyx":1250
  * 
  *     for i in range(1, Nu // nu):
  *         x[i::(Nu//nu),:,:,:] += x[0::(Nu//nu),:,:,:]#*(Nu//nu-i)/(Nu//nu)             # <<<<<<<<<<<<<<
  * 
  *     for j in range(1, Nv // nv):
  */
-    __pyx_t_10 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    __pyx_t_10 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_4 = PySlice_New(__pyx_v_i, Py_None, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    __pyx_t_4 = PySlice_New(__pyx_v_i, Py_None, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_GIVEREF(__pyx_t_4);
     PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_4);
@@ -18223,14 +19151,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_10, 3, __pyx_slice_);
     __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_10); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_FloorDivide(__pyx_v_Nu, __pyx_v_nu); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    __pyx_t_3 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    __pyx_t_1 = PyTuple_New(4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_GIVEREF(__pyx_t_3);
     PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_3);
@@ -18244,18 +19172,18 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_1, 3, __pyx_slice_);
     __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    __pyx_t_1 = PyNumber_InPlaceAdd(__pyx_t_4, __pyx_t_3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_10, __pyx_t_1) < 0)) __PYX_ERR(0, 1203, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_10, __pyx_t_1) < 0)) __PYX_ERR(0, 1250, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1202
+    /* "disorder/diffuse/monocrystal.pyx":1249
  *     x = np.fft.ifftn(U, axes=(0,1,2))
  * 
  *     for i in range(1, Nu // nu):             # <<<<<<<<<<<<<<
@@ -18265,16 +19193,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1205
+  /* "disorder/diffuse/monocrystal.pyx":1252
  *         x[i::(Nu//nu),:,:,:] += x[0::(Nu//nu),:,:,:]#*(Nu//nu-i)/(Nu//nu)
  * 
  *     for j in range(1, Nv // nv):             # <<<<<<<<<<<<<<
  *         x[:,j::(Nv//nv),:,:] += x[:,0::(Nv//nv),:,:]#*(Nv//nv-j)/(Nv//nv)
  * 
  */
-  __pyx_t_2 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1205, __pyx_L1_error)
+  __pyx_t_2 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1252, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1205, __pyx_L1_error)
+  __pyx_t_10 = PyTuple_New(2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1252, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -18282,16 +19210,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_10, 1, __pyx_t_2);
   __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_10, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1205, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_10, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1252, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   if (likely(PyList_CheckExact(__pyx_t_2)) || PyTuple_CheckExact(__pyx_t_2)) {
     __pyx_t_10 = __pyx_t_2; __Pyx_INCREF(__pyx_t_10); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_10 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1205, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_10 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1252, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_6 = Py_TYPE(__pyx_t_10)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1205, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_10)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1252, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   for (;;) {
@@ -18299,17 +19227,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       if (likely(PyList_CheckExact(__pyx_t_10))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_10)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_10, __pyx_t_5); __Pyx_INCREF(__pyx_t_2); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1205, __pyx_L1_error)
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_10, __pyx_t_5); __Pyx_INCREF(__pyx_t_2); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1252, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_10, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1205, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_10, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1252, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_10)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_10, __pyx_t_5); __Pyx_INCREF(__pyx_t_2); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1205, __pyx_L1_error)
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_10, __pyx_t_5); __Pyx_INCREF(__pyx_t_2); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1252, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_10, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1205, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_10, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1252, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       }
@@ -18319,7 +19247,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 1205, __pyx_L1_error)
+          else __PYX_ERR(0, 1252, __pyx_L1_error)
         }
         break;
       }
@@ -18328,19 +19256,19 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1206
+    /* "disorder/diffuse/monocrystal.pyx":1253
  * 
  *     for j in range(1, Nv // nv):
  *         x[:,j::(Nv//nv),:,:] += x[:,0::(Nv//nv),:,:]#*(Nv//nv-j)/(Nv//nv)             # <<<<<<<<<<<<<<
  * 
  *     for k in range(1, Nw // nw):
  */
-    __pyx_t_2 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    __pyx_t_2 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_1 = PySlice_New(__pyx_v_j, Py_None, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    __pyx_t_1 = PySlice_New(__pyx_v_j, Py_None, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -18354,14 +19282,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_2, 3, __pyx_slice_);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_3 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_FloorDivide(__pyx_v_Nv, __pyx_v_nv); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    __pyx_t_4 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -18375,18 +19303,18 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_slice_);
     __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_InPlaceAdd(__pyx_t_1, __pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_2, __pyx_t_3) < 0)) __PYX_ERR(0, 1206, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_2, __pyx_t_3) < 0)) __PYX_ERR(0, 1253, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1205
+    /* "disorder/diffuse/monocrystal.pyx":1252
  *         x[i::(Nu//nu),:,:,:] += x[0::(Nu//nu),:,:,:]#*(Nu//nu-i)/(Nu//nu)
  * 
  *     for j in range(1, Nv // nv):             # <<<<<<<<<<<<<<
@@ -18396,16 +19324,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   }
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1208
+  /* "disorder/diffuse/monocrystal.pyx":1255
  *         x[:,j::(Nv//nv),:,:] += x[:,0::(Nv//nv),:,:]#*(Nv//nv-j)/(Nv//nv)
  * 
  *     for k in range(1, Nw // nw):             # <<<<<<<<<<<<<<
  *         x[:,:,k::(Nw//nw),:] += x[:,:,0::(Nw//nw),:]#*(Nw//nw-k)/(Nw//nw)
  * 
  */
-  __pyx_t_10 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1208, __pyx_L1_error)
+  __pyx_t_10 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1255, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
-  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1208, __pyx_L1_error)
+  __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1255, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -18413,16 +19341,16 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   __Pyx_GIVEREF(__pyx_t_10);
   PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_t_10);
   __pyx_t_10 = 0;
-  __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1208, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_2, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1255, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_10);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (likely(PyList_CheckExact(__pyx_t_10)) || PyTuple_CheckExact(__pyx_t_10)) {
     __pyx_t_2 = __pyx_t_10; __Pyx_INCREF(__pyx_t_2); __pyx_t_5 = 0;
     __pyx_t_6 = NULL;
   } else {
-    __pyx_t_5 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1208, __pyx_L1_error)
+    __pyx_t_5 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_t_10); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1255, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1208, __pyx_L1_error)
+    __pyx_t_6 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 1255, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
   for (;;) {
@@ -18430,17 +19358,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
       if (likely(PyList_CheckExact(__pyx_t_2))) {
         if (__pyx_t_5 >= PyList_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_10 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_10); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1208, __pyx_L1_error)
+        __pyx_t_10 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_10); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1255, __pyx_L1_error)
         #else
-        __pyx_t_10 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1208, __pyx_L1_error)
+        __pyx_t_10 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1255, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         #endif
       } else {
         if (__pyx_t_5 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_10); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1208, __pyx_L1_error)
+        __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_5); __Pyx_INCREF(__pyx_t_10); __pyx_t_5++; if (unlikely(0 < 0)) __PYX_ERR(0, 1255, __pyx_L1_error)
         #else
-        __pyx_t_10 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1208, __pyx_L1_error)
+        __pyx_t_10 = PySequence_ITEM(__pyx_t_2, __pyx_t_5); __pyx_t_5++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1255, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         #endif
       }
@@ -18450,7 +19378,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 1208, __pyx_L1_error)
+          else __PYX_ERR(0, 1255, __pyx_L1_error)
         }
         break;
       }
@@ -18459,19 +19387,19 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_XDECREF_SET(__pyx_v_k, __pyx_t_10);
     __pyx_t_10 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1209
+    /* "disorder/diffuse/monocrystal.pyx":1256
  * 
  *     for k in range(1, Nw // nw):
  *         x[:,:,k::(Nw//nw),:] += x[:,:,0::(Nw//nw),:]#*(Nw//nw-k)/(Nw//nw)             # <<<<<<<<<<<<<<
  * 
  *     return x
  */
-    __pyx_t_10 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    __pyx_t_10 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_3 = PySlice_New(__pyx_v_k, Py_None, __pyx_t_10); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    __pyx_t_3 = PySlice_New(__pyx_v_k, Py_None, __pyx_t_10); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-    __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -18485,14 +19413,14 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_10, 3, __pyx_slice_);
     __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_10); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_10); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_FloorDivide(__pyx_v_Nw, __pyx_v_nw); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_1 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    __pyx_t_1 = PySlice_New(__pyx_int_0, Py_None, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_INCREF(__pyx_slice_);
     __Pyx_GIVEREF(__pyx_slice_);
@@ -18506,18 +19434,18 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
     __Pyx_GIVEREF(__pyx_slice_);
     PyTuple_SET_ITEM(__pyx_t_4, 3, __pyx_slice_);
     __pyx_t_1 = 0;
-    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_v_x, __pyx_t_4); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    __pyx_t_4 = PyNumber_InPlaceAdd(__pyx_t_3, __pyx_t_1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_10, __pyx_t_4) < 0)) __PYX_ERR(0, 1209, __pyx_L1_error)
+    if (unlikely(PyObject_SetItem(__pyx_v_x, __pyx_t_10, __pyx_t_4) < 0)) __PYX_ERR(0, 1256, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
 
-    /* "disorder/diffuse/monocrystal.pyx":1208
+    /* "disorder/diffuse/monocrystal.pyx":1255
  *         x[:,j::(Nv//nv),:,:] += x[:,0::(Nv//nv),:,:]#*(Nv//nv-j)/(Nv//nv)
  * 
  *     for k in range(1, Nw // nw):             # <<<<<<<<<<<<<<
@@ -18527,7 +19455,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   }
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1211
+  /* "disorder/diffuse/monocrystal.pyx":1258
  *         x[:,:,k::(Nw//nw),:] += x[:,:,0::(Nw//nw),:]#*(Nw//nw-k)/(Nw//nw)
  * 
  *     return x             # <<<<<<<<<<<<<<
@@ -18537,7 +19465,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_10idft(CYTHON_UNUSED 
   __pyx_r = __pyx_v_x;
   goto __pyx_L0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1171
+  /* "disorder/diffuse/monocrystal.pyx":1218
  *     return x
  * 
  * def idft(X, Nu, Nv, Nw):             # <<<<<<<<<<<<<<
@@ -33657,7 +34585,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_strided_and_indirect, __pyx_k_strided_and_indirect, sizeof(__pyx_k_strided_and_indirect), 0, 0, 1, 0},
   {&__pyx_kp_s_stringsource, __pyx_k_stringsource, sizeof(__pyx_k_stringsource), 0, 0, 1, 0},
   {&__pyx_n_s_struct, __pyx_k_struct, sizeof(__pyx_k_struct), 0, 0, 1, 1},
-  {&__pyx_n_s_structure, __pyx_k_structure, sizeof(__pyx_k_structure), 0, 0, 1, 1},
+  {&__pyx_n_s_structural, __pyx_k_structural, sizeof(__pyx_k_structural), 0, 0, 1, 1},
   {&__pyx_n_s_sym, __pyx_k_sym, sizeof(__pyx_k_sym), 0, 0, 1, 1},
   {&__pyx_n_s_symop, __pyx_k_symop, sizeof(__pyx_k_symop), 0, 0, 1, 1},
   {&__pyx_n_s_t, __pyx_k_t, sizeof(__pyx_k_t), 0, 0, 1, 1},
@@ -33705,36 +34633,36 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "disorder/diffuse/monocrystal.pyx":1139
+  /* "disorder/diffuse/monocrystal.pyx":1186
  *     for i in range(nc):
  *         for j in range(n_atm):
  *             V = X[i,:,:,:,j].copy()             # <<<<<<<<<<<<<<
  * 
  *             W = V.copy()
  */
-  __pyx_slice_ = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 1139, __pyx_L1_error)
+  __pyx_slice_ = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice_)) __PYX_ERR(0, 1186, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_slice_);
   __Pyx_GIVEREF(__pyx_slice_);
 
-  /* "disorder/diffuse/monocrystal.pyx":1158
+  /* "disorder/diffuse/monocrystal.pyx":1205
  *             U[i,:,:,:,j] = W.copy()
  * 
  *     x = np.fft.ifftn(U, axes=(1,2,3))             # <<<<<<<<<<<<<<
  * 
  *     for i in range(1, Nu // nu):
  */
-  __pyx_tuple__2 = PyTuple_Pack(3, __pyx_int_1, __pyx_int_2, __pyx_int_3); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 1158, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(3, __pyx_int_1, __pyx_int_2, __pyx_int_3); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(0, 1205, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
-  /* "disorder/diffuse/monocrystal.pyx":1200
+  /* "disorder/diffuse/monocrystal.pyx":1247
  *         U[:,:,:,j] = W.copy()
  * 
  *     x = np.fft.ifftn(U, axes=(0,1,2))             # <<<<<<<<<<<<<<
  * 
  *     for i in range(1, Nu // nu):
  */
-  __pyx_tuple__3 = PyTuple_Pack(3, __pyx_int_0, __pyx_int_1, __pyx_int_2); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 1200, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(3, __pyx_int_0, __pyx_int_1, __pyx_int_2); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 1247, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
 
@@ -33972,46 +34900,46 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *                double complex [::1] coeffs,
  *                double [::1] ux,
  */
-  __pyx_tuple__27 = PyTuple_Pack(132, __pyx_n_s_U_r, __pyx_n_s_coeffs, __pyx_n_s_ux, __pyx_n_s_uy, __pyx_n_s_uz, __pyx_n_s_atms, __pyx_n_s_h_range, __pyx_n_s_k_range, __pyx_n_s_l_range, __pyx_n_s_indices, __pyx_n_s_symop, __pyx_n_s_T, __pyx_n_s_B, __pyx_n_s_R, __pyx_n_s_domains, __pyx_n_s_variants, __pyx_n_s_nh, __pyx_n_s_nk, __pyx_n_s_nl, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_Nu, __pyx_n_s_Nv, __pyx_n_s_Nw, __pyx_n_s_p, __pyx_n_s_even, __pyx_n_s_centering, __pyx_n_s_technique, __pyx_n_s_n_atm, __pyx_n_s_n_hkl, __pyx_n_s_n_prod, __pyx_n_s_n_even, __pyx_n_s_sym, __pyx_n_s_n_ops, __pyx_n_s_n_vars, __pyx_n_s_n_uvw, __pyx_n_s_n, __pyx_n_s_factor, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_h, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_x_2, __pyx_n_s_y_2, __pyx_n_s_z_2, __pyx_n_s_h_2, __pyx_n_s_k_2, __pyx_n_s_l_2, __pyx_n_s_Qh, __pyx_n_s_Qk, __pyx_n_s_Ql, __pyx_n_s_Qx, __pyx_n_s_Qy, __pyx_n_s_Qz, __pyx_n_s_phase_factor, __pyx_n_s_factors, __pyx_n_s_Q, __pyx_n_s_s, __pyx_n_s_s_sq, __pyx_n_s_scattering_length, __pyx_n_s_b, __pyx_n_s_a1, __pyx_n_s_b1, __pyx_n_s_a2, __pyx_n_s_b2, __pyx_n_s_a3, __pyx_n_s_b3, __pyx_n_s_a4, __pyx_n_s_b4, __pyx_n_s_c, __pyx_n_s_I_np, __pyx_n_s_I, __pyx_n_s_U_r_np, __pyx_n_s_h_min, __pyx_n_s_k_min, __pyx_n_s_l_min, __pyx_n_s_h_max, __pyx_n_s_k_max, __pyx_n_s_l_max, __pyx_n_s_h_step, __pyx_n_s_k_step, __pyx_n_s_l_step, __pyx_n_s_Fu, __pyx_n_s_Fv, __pyx_n_s_Fw, __pyx_n_s_f_H, __pyx_n_s_f_K, __pyx_n_s_f_L, __pyx_n_s_f_Nu, __pyx_n_s_f_Nv, __pyx_n_s_f_Nw, __pyx_n_s_U_k_np, __pyx_n_s_U_k, __pyx_n_s_F_uvw, __pyx_n_s_N_uvw, __pyx_n_s_Q_k, __pyx_n_s_exponents, __pyx_n_s_prod, __pyx_n_s_F, __pyx_n_s_F_real, __pyx_n_s_F_imag, __pyx_n_s_H, __pyx_n_s_K, __pyx_n_s_L, __pyx_n_s_iH, __pyx_n_s_iK, __pyx_n_s_iL, __pyx_n_s_i_dft, __pyx_n_s_i_ind, __pyx_n_s_j_dft, __pyx_n_s_op, __pyx_n_s_var, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_u, __pyx_n_s_v, __pyx_n_s_w, __pyx_n_s_f, __pyx_n_s_g, __pyx_n_s_q, __pyx_n_s_r, __pyx_n_s_s_2, __pyx_n_s_t, __pyx_n_s_M_TAU, __pyx_n_s_M_I, __pyx_n_s_inv_M_SP, __pyx_n_s_atm, __pyx_n_s_odd, __pyx_n_s_n_odd); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 622, __pyx_L1_error)
+  __pyx_tuple__27 = PyTuple_Pack(133, __pyx_n_s_U_r, __pyx_n_s_coeffs, __pyx_n_s_ux, __pyx_n_s_uy, __pyx_n_s_uz, __pyx_n_s_atms, __pyx_n_s_h_range, __pyx_n_s_k_range, __pyx_n_s_l_range, __pyx_n_s_indices, __pyx_n_s_symop, __pyx_n_s_T, __pyx_n_s_B, __pyx_n_s_R, __pyx_n_s_domains, __pyx_n_s_variants, __pyx_n_s_nh, __pyx_n_s_nk, __pyx_n_s_nl, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_Nu, __pyx_n_s_Nv, __pyx_n_s_Nw, __pyx_n_s_p, __pyx_n_s_even, __pyx_n_s_centering, __pyx_n_s_technique, __pyx_n_s_n_atm, __pyx_n_s_n_hkl, __pyx_n_s_n_prod, __pyx_n_s_n_even, __pyx_n_s_sym, __pyx_n_s_n_ops, __pyx_n_s_n_vars, __pyx_n_s_n_uvw, __pyx_n_s_n, __pyx_n_s_factor, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_h, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_x_2, __pyx_n_s_y_2, __pyx_n_s_z_2, __pyx_n_s_h_2, __pyx_n_s_k_2, __pyx_n_s_l_2, __pyx_n_s_Qh, __pyx_n_s_Qk, __pyx_n_s_Ql, __pyx_n_s_Qx, __pyx_n_s_Qy, __pyx_n_s_Qz, __pyx_n_s_phase_factor, __pyx_n_s_factors, __pyx_n_s_Q, __pyx_n_s_s, __pyx_n_s_s_sq, __pyx_n_s_occ, __pyx_n_s_scattering_length, __pyx_n_s_b, __pyx_n_s_a1, __pyx_n_s_b1, __pyx_n_s_a2, __pyx_n_s_b2, __pyx_n_s_a3, __pyx_n_s_b3, __pyx_n_s_a4, __pyx_n_s_b4, __pyx_n_s_c, __pyx_n_s_I_np, __pyx_n_s_I, __pyx_n_s_U_r_np, __pyx_n_s_h_min, __pyx_n_s_k_min, __pyx_n_s_l_min, __pyx_n_s_h_max, __pyx_n_s_k_max, __pyx_n_s_l_max, __pyx_n_s_h_step, __pyx_n_s_k_step, __pyx_n_s_l_step, __pyx_n_s_Fu, __pyx_n_s_Fv, __pyx_n_s_Fw, __pyx_n_s_f_H, __pyx_n_s_f_K, __pyx_n_s_f_L, __pyx_n_s_f_Nu, __pyx_n_s_f_Nv, __pyx_n_s_f_Nw, __pyx_n_s_U_k_np, __pyx_n_s_U_k, __pyx_n_s_F_uvw, __pyx_n_s_N_uvw, __pyx_n_s_Q_k, __pyx_n_s_exponents, __pyx_n_s_prod, __pyx_n_s_F, __pyx_n_s_F_real, __pyx_n_s_F_imag, __pyx_n_s_H, __pyx_n_s_K, __pyx_n_s_L, __pyx_n_s_iH, __pyx_n_s_iK, __pyx_n_s_iL, __pyx_n_s_i_dft, __pyx_n_s_i_ind, __pyx_n_s_j_dft, __pyx_n_s_op, __pyx_n_s_var, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_u, __pyx_n_s_v, __pyx_n_s_w, __pyx_n_s_f, __pyx_n_s_g, __pyx_n_s_q, __pyx_n_s_r, __pyx_n_s_s_2, __pyx_n_s_t, __pyx_n_s_M_TAU, __pyx_n_s_M_I, __pyx_n_s_inv_M_SP, __pyx_n_s_atm, __pyx_n_s_odd, __pyx_n_s_n_odd); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 622, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(29, 0, 132, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_monocrystal_pyx, __pyx_n_s_displacive, 622, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 622, __pyx_L1_error)
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(29, 0, 133, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_monocrystal_pyx, __pyx_n_s_displacive, 622, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 622, __pyx_L1_error)
 
-  /* "disorder/diffuse/monocrystal.pyx":922
+  /* "disorder/diffuse/monocrystal.pyx":924
  *     return I_np
  * 
- * def structure(double [::1] ux,             # <<<<<<<<<<<<<<
- *               double [::1] uy,
- *               double [::1] uz,
+ * def structural(double [::1] occupancy,             # <<<<<<<<<<<<<<
+ *                double [::1] ux,
+ *                double [::1] uy,
  */
-  __pyx_tuple__29 = PyTuple_Pack(101, __pyx_n_s_ux, __pyx_n_s_uy, __pyx_n_s_uz, __pyx_n_s_atms, __pyx_n_s_h_range, __pyx_n_s_k_range, __pyx_n_s_l_range, __pyx_n_s_indices, __pyx_n_s_symop, __pyx_n_s_T, __pyx_n_s_B, __pyx_n_s_R, __pyx_n_s_domains, __pyx_n_s_variants, __pyx_n_s_nh, __pyx_n_s_nk, __pyx_n_s_nl, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_Nu, __pyx_n_s_Nv, __pyx_n_s_Nw, __pyx_n_s_n_atm, __pyx_n_s_n_hkl, __pyx_n_s_sym, __pyx_n_s_n_ops, __pyx_n_s_n_vars, __pyx_n_s_n_uvw, __pyx_n_s_n, __pyx_n_s_factor, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_h, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_x_2, __pyx_n_s_y_2, __pyx_n_s_z_2, __pyx_n_s_h_2, __pyx_n_s_k_2, __pyx_n_s_l_2, __pyx_n_s_Qh, __pyx_n_s_Qk, __pyx_n_s_Ql, __pyx_n_s_Qx, __pyx_n_s_Qy, __pyx_n_s_Qz, __pyx_n_s_phase_factor, __pyx_n_s_factors, __pyx_n_s_scattering_length, __pyx_n_s_b, __pyx_n_s_I_np, __pyx_n_s_I, __pyx_n_s_A_r_np, __pyx_n_s_h_min, __pyx_n_s_k_min, __pyx_n_s_l_min, __pyx_n_s_h_max, __pyx_n_s_k_max, __pyx_n_s_l_max, __pyx_n_s_h_step, __pyx_n_s_k_step, __pyx_n_s_l_step, __pyx_n_s_Fu, __pyx_n_s_Fv, __pyx_n_s_Fw, __pyx_n_s_f_H, __pyx_n_s_f_K, __pyx_n_s_f_L, __pyx_n_s_f_Nu, __pyx_n_s_f_Nv, __pyx_n_s_f_Nw, __pyx_n_s_A_k_np, __pyx_n_s_A_k, __pyx_n_s_F_uvw, __pyx_n_s_N_uvw, __pyx_n_s_prod, __pyx_n_s_F, __pyx_n_s_F_real, __pyx_n_s_F_imag, __pyx_n_s_H, __pyx_n_s_K, __pyx_n_s_L, __pyx_n_s_iH, __pyx_n_s_iK, __pyx_n_s_iL, __pyx_n_s_i_dft, __pyx_n_s_i_ind, __pyx_n_s_j_dft, __pyx_n_s_op, __pyx_n_s_var, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_u, __pyx_n_s_v, __pyx_n_s_w, __pyx_n_s_M_TAU, __pyx_n_s_M_I, __pyx_n_s_atm); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 922, __pyx_L1_error)
+  __pyx_tuple__29 = PyTuple_Pack(117, __pyx_n_s_occupancy, __pyx_n_s_ux, __pyx_n_s_uy, __pyx_n_s_uz, __pyx_n_s_atms, __pyx_n_s_h_range, __pyx_n_s_k_range, __pyx_n_s_l_range, __pyx_n_s_indices, __pyx_n_s_symop, __pyx_n_s_T, __pyx_n_s_B, __pyx_n_s_R, __pyx_n_s_domains, __pyx_n_s_variants, __pyx_n_s_nh, __pyx_n_s_nk, __pyx_n_s_nl, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_Nu, __pyx_n_s_Nv, __pyx_n_s_Nw, __pyx_n_s_technique, __pyx_n_s_n_atm, __pyx_n_s_n_hkl, __pyx_n_s_sym, __pyx_n_s_n_ops, __pyx_n_s_n_vars, __pyx_n_s_n_uvw, __pyx_n_s_n, __pyx_n_s_factor, __pyx_n_s_x, __pyx_n_s_y, __pyx_n_s_z, __pyx_n_s_h, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_x_2, __pyx_n_s_y_2, __pyx_n_s_z_2, __pyx_n_s_h_2, __pyx_n_s_k_2, __pyx_n_s_l_2, __pyx_n_s_Qh, __pyx_n_s_Qk, __pyx_n_s_Ql, __pyx_n_s_Qx, __pyx_n_s_Qy, __pyx_n_s_Qz, __pyx_n_s_phase_factor, __pyx_n_s_factors, __pyx_n_s_Q, __pyx_n_s_s, __pyx_n_s_s_sq, __pyx_n_s_occ, __pyx_n_s_scattering_length, __pyx_n_s_b, __pyx_n_s_a1, __pyx_n_s_b1, __pyx_n_s_a2, __pyx_n_s_b2, __pyx_n_s_a3, __pyx_n_s_b3, __pyx_n_s_a4, __pyx_n_s_b4, __pyx_n_s_c, __pyx_n_s_I_np, __pyx_n_s_I, __pyx_n_s_A_r_np, __pyx_n_s_h_min, __pyx_n_s_k_min, __pyx_n_s_l_min, __pyx_n_s_h_max, __pyx_n_s_k_max, __pyx_n_s_l_max, __pyx_n_s_h_step, __pyx_n_s_k_step, __pyx_n_s_l_step, __pyx_n_s_Fu, __pyx_n_s_Fv, __pyx_n_s_Fw, __pyx_n_s_f_H, __pyx_n_s_f_K, __pyx_n_s_f_L, __pyx_n_s_f_Nu, __pyx_n_s_f_Nv, __pyx_n_s_f_Nw, __pyx_n_s_A_k_np, __pyx_n_s_A_k, __pyx_n_s_F_uvw, __pyx_n_s_N_uvw, __pyx_n_s_prod, __pyx_n_s_F, __pyx_n_s_F_real, __pyx_n_s_F_imag, __pyx_n_s_H, __pyx_n_s_K, __pyx_n_s_L, __pyx_n_s_iH, __pyx_n_s_iK, __pyx_n_s_iL, __pyx_n_s_i_dft, __pyx_n_s_i_ind, __pyx_n_s_j_dft, __pyx_n_s_op, __pyx_n_s_var, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_u, __pyx_n_s_v, __pyx_n_s_w, __pyx_n_s_M_TAU, __pyx_n_s_M_I, __pyx_n_s_inv_M_SP, __pyx_n_s_atm); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 924, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_GIVEREF(__pyx_tuple__29);
-  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(23, 0, 101, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_monocrystal_pyx, __pyx_n_s_structure, 922, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 922, __pyx_L1_error)
+  __pyx_codeobj__30 = (PyObject*)__Pyx_PyCode_New(25, 0, 117, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__29, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_monocrystal_pyx, __pyx_n_s_structural, 924, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__30)) __PYX_ERR(0, 924, __pyx_L1_error)
 
-  /* "disorder/diffuse/monocrystal.pyx":1127
+  /* "disorder/diffuse/monocrystal.pyx":1174
  *     return I_np
  * 
  * def idft_many(X, Nu, Nv, Nw):             # <<<<<<<<<<<<<<
  * 
  *     nc = X.shape[0]
  */
-  __pyx_tuple__32 = PyTuple_Pack(17, __pyx_n_s_X, __pyx_n_s_Nu, __pyx_n_s_Nv, __pyx_n_s_Nw, __pyx_n_s_nc, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_n_atm, __pyx_n_s_U, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_V, __pyx_n_s_W, __pyx_n_s__31, __pyx_n_s_x_2, __pyx_n_s_k_2); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 1127, __pyx_L1_error)
+  __pyx_tuple__32 = PyTuple_Pack(17, __pyx_n_s_X, __pyx_n_s_Nu, __pyx_n_s_Nv, __pyx_n_s_Nw, __pyx_n_s_nc, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_n_atm, __pyx_n_s_U, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_V, __pyx_n_s_W, __pyx_n_s__31, __pyx_n_s_x_2, __pyx_n_s_k_2); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 1174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__32);
   __Pyx_GIVEREF(__pyx_tuple__32);
-  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(4, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_monocrystal_pyx, __pyx_n_s_idft_many, 1127, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(0, 1127, __pyx_L1_error)
+  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(4, 0, 17, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_monocrystal_pyx, __pyx_n_s_idft_many, 1174, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(0, 1174, __pyx_L1_error)
 
-  /* "disorder/diffuse/monocrystal.pyx":1171
+  /* "disorder/diffuse/monocrystal.pyx":1218
  *     return x
  * 
  * def idft(X, Nu, Nv, Nw):             # <<<<<<<<<<<<<<
  * 
  *     nu = X.shape[0]
  */
-  __pyx_tuple__34 = PyTuple_Pack(16, __pyx_n_s_X, __pyx_n_s_Nu, __pyx_n_s_Nv, __pyx_n_s_Nw, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_n_atm, __pyx_n_s_U, __pyx_n_s_j, __pyx_n_s_V, __pyx_n_s_W, __pyx_n_s__31, __pyx_n_s_x_2, __pyx_n_s_i, __pyx_n_s_k_2); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 1171, __pyx_L1_error)
+  __pyx_tuple__34 = PyTuple_Pack(16, __pyx_n_s_X, __pyx_n_s_Nu, __pyx_n_s_Nv, __pyx_n_s_Nw, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_n_atm, __pyx_n_s_U, __pyx_n_s_j, __pyx_n_s_V, __pyx_n_s_W, __pyx_n_s__31, __pyx_n_s_x_2, __pyx_n_s_i, __pyx_n_s_k_2); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 1218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__34);
   __Pyx_GIVEREF(__pyx_tuple__34);
-  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(4, 0, 16, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_monocrystal_pyx, __pyx_n_s_idft, 1171, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 1171, __pyx_L1_error)
+  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(4, 0, 16, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_monocrystal_pyx, __pyx_n_s_idft, 1218, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 1218, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -34568,40 +35496,40 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_displacive, __pyx_t_2) < 0) __PYX_ERR(0, 622, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":922
+  /* "disorder/diffuse/monocrystal.pyx":924
  *     return I_np
  * 
- * def structure(double [::1] ux,             # <<<<<<<<<<<<<<
- *               double [::1] uy,
- *               double [::1] uz,
+ * def structural(double [::1] occupancy,             # <<<<<<<<<<<<<<
+ *                double [::1] ux,
+ *                double [::1] uy,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_11monocrystal_7structure, NULL, __pyx_n_s_disorder_diffuse_monocrystal); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 922, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_11monocrystal_7structural, NULL, __pyx_n_s_disorder_diffuse_monocrystal); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 924, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_structure, __pyx_t_2) < 0) __PYX_ERR(0, 922, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_structural, __pyx_t_2) < 0) __PYX_ERR(0, 924, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1127
+  /* "disorder/diffuse/monocrystal.pyx":1174
  *     return I_np
  * 
  * def idft_many(X, Nu, Nv, Nw):             # <<<<<<<<<<<<<<
  * 
  *     nc = X.shape[0]
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_11monocrystal_9idft_many, NULL, __pyx_n_s_disorder_diffuse_monocrystal); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1127, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_11monocrystal_9idft_many, NULL, __pyx_n_s_disorder_diffuse_monocrystal); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_idft_many, __pyx_t_2) < 0) __PYX_ERR(0, 1127, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_idft_many, __pyx_t_2) < 0) __PYX_ERR(0, 1174, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/monocrystal.pyx":1171
+  /* "disorder/diffuse/monocrystal.pyx":1218
  *     return x
  * 
  * def idft(X, Nu, Nv, Nw):             # <<<<<<<<<<<<<<
  * 
  *     nu = X.shape[0]
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_11monocrystal_11idft, NULL, __pyx_n_s_disorder_diffuse_monocrystal); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1171, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_11monocrystal_11idft, NULL, __pyx_n_s_disorder_diffuse_monocrystal); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1218, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_idft, __pyx_t_2) < 0) __PYX_ERR(0, 1171, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_idft, __pyx_t_2) < 0) __PYX_ERR(0, 1218, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "disorder/diffuse/monocrystal.pyx":1

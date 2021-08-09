@@ -683,6 +683,8 @@ def displacive(double [::1] U_r,
     cdef double complex phase_factor, factors
     
     cdef double Q, s_, s_sq
+    
+    cdef double occ
         
     cdef double complex scattering_length
     
@@ -861,7 +863,7 @@ def displacive(double [::1] U_r,
                 
                 prod = 0
                 
-                for j in range(n_atm):                                        
+                for j in range(n_atm): 
                     
                     if (technique == 'Neutron'):
                         
@@ -919,29 +921,31 @@ def displacive(double [::1] U_r,
 
     return I_np
 
-def structure(double [::1] ux,
-              double [::1] uy,
-              double [::1] uz,
-              atms,
-              h_range,
-              k_range,
-              l_range,
-              long [::1] indices,
-              symop,
-              double [:,:] T,
-              double [:,:] B,
-              double [:,:] R,
-              double [:,:,:] domains,
-              double [:] variants,
-              Py_ssize_t nh,
-              Py_ssize_t nk,
-              Py_ssize_t nl,
-              Py_ssize_t nu,
-              Py_ssize_t nv,
-              Py_ssize_t nw,
-              Py_ssize_t Nu,
-              Py_ssize_t Nv,
-              Py_ssize_t Nw):
+def structural(double [::1] occupancy,
+               double [::1] ux,
+               double [::1] uy,
+               double [::1] uz,
+               atms,
+               h_range,
+               k_range,
+               l_range,
+               long [::1] indices,
+               symop,
+               double [:,:] T,
+               double [:,:] B,
+               double [:,:] R,
+               double [:,:,:] domains,
+               double [:] variants,
+               Py_ssize_t nh,
+               Py_ssize_t nk,
+               Py_ssize_t nl,
+               Py_ssize_t nu,
+               Py_ssize_t nv,
+               Py_ssize_t nw,
+               Py_ssize_t Nu,
+               Py_ssize_t Nv,
+               Py_ssize_t Nw,
+               technique='Neutron'):
     
     cdef Py_ssize_t n_atm = len(atms)
         
@@ -972,10 +976,24 @@ def structure(double [::1] ux,
     cdef double Qx, Qy, Qz
         
     cdef double complex phase_factor, factors
+    
+    cdef double Q, s_, s_sq
+    
+    cdef double occ
         
     cdef double complex scattering_length
     
     cdef double complex [::1] b = np.zeros(n_atm, dtype=complex)
+    
+    cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] c  = np.zeros(n_atm, dtype=float)
     
     I_np = np.zeros(n_hkl, dtype=float)
     
@@ -1043,11 +1061,23 @@ def structure(double [::1] ux,
     cdef double M_TAU = 2*np.pi
     cdef double complex M_I = 1j
         
+    cdef double inv_M_SP = 1/(4*np.pi)
+
     for j in range(n_atm):
         
         atm = atms[j]
         
-        b[j] = tables.bc.get(atm)
+        if (technique == 'Neutron'):
+            
+            b[j] = tables.bc.get(atm)
+        
+        else:
+        
+            a1[j], b1[j], \
+            a2[j], b2[j], \
+            a3[j], b3[j], \
+            a4[j], b4[j], \
+            c[j] = tables.X.get(atm)
                             
     for i in prange(n_hkl, nogil=True):
             
@@ -1105,12 +1135,29 @@ def structure(double [::1] ux,
                 prod = 0
                 
                 for j in range(n_atm):
+                    
+                    occ = occupancy[j]
                                             
-                    scattering_length = b[j]
+                    if (technique == 'Neutron'):
                         
+                        scattering_length = b[j]
+                        
+                    else:
+                        
+                        Q = sqrt(Qx*Qx+Qy*Qy+Qz*Qz)
+                        
+                        s_ = Q*inv_M_SP
+                        s_sq = s_*s_
+                                                
+                        scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
+                                          + a2[j]*iexp(-b2[j]*s_sq)\
+                                          + a3[j]*iexp(-b3[j]*s_sq)\
+                                          + a4[j]*iexp(-b4[j]*s_sq)\
+                                          + c[j]
+                                          
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
                     
-                    factors = scattering_length*phase_factor
+                    factors = occ*scattering_length*phase_factor
                     
                     j_dft = j+n_atm*i_dft
                                  

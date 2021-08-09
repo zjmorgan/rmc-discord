@@ -54,6 +54,7 @@ class Presenter:
         self.view.clicked_run(self.run_refinement)
         self.view.clicked_stop(self.stop_refinement)
         self.view.clicked_reset(self.reset_refinement)
+        self.view.clicked_continue(self.continue_refinement)
         
         self.view.index_changed_correlations_1d(self.change_type_1d)
         self.view.index_changed_correlations_3d(self.change_type_3d)
@@ -87,6 +88,10 @@ class Presenter:
         self.view.clicked_disorder_occ_recalc(self.disorder_check_occ_recalc)
         self.view.clicked_disorder_dis_recalc(self.disorder_check_dis_recalc)
         
+        self.view.clicked_disorder_struct_recalc(
+            self.disorder_check_struct_recalc
+        )
+        
         self.view.finished_editing_min_calc(self.draw_plot_calc)
         self.view.finished_editing_max_calc(self.draw_plot_calc)
         self.view.finished_editing_slice_calc(self.draw_plot_calc)
@@ -111,6 +116,8 @@ class Presenter:
         self.view.button_clicked_save_VTK(self.save_correlations_VTK)
         
         # ---
+        
+        self.folder = '.'
 
         self.magnetic = False
         self.occupational = False
@@ -130,7 +137,7 @@ class Presenter:
         
     def save_as_application(self):
         
-        self.fname = self.view.open_dialog_save()
+        self.fname = self.view.open_dialog_save(self.folder)
         self.file_save(self.fname)
         
     def save_application(self):
@@ -169,13 +176,39 @@ class Presenter:
             
             self.model.save_region_of_interest(self.fname, signal, error_sq)
             
+        if (self.view.get_pairs_1d_table_row_count() > 0):
+            disorder = self.view.get_correlations_1d()
+            if (disorder != 'Occupancy'):
+                self.model.save_vector_1d(self.fname, self.corr1d, self.coll1d, 
+                                          self.sigma_sq_corr1d, 
+                                          self.sigma_sq_coll1d, self.d, 
+                                          self.atm_pair1d)
+            else:
+                self.model.save_scalar_1d(self.fname, self.corr1d, 
+                                          self.sigma_sq_corr1d, self.d, 
+                                          self.atm_pair1d)
+                
+        if (self.view.get_pairs_3d_table_row_count() > 0):
+            disorder = self.view.get_correlations_3d()
+            if (disorder != 'Occupancy'):
+                self.model.save_vector_3d(self.fname, self.corr3d, self.coll3d, 
+                                          self.sigma_sq_corr3d, 
+                                          self.sigma_sq_coll3d,
+                                          self.dx, self.dy, self.dz, 
+                                          self.atm_pair3d)
+            else:
+                self.model.save_scalar_3d(self.fname, self.corr3d, 
+                                          self.sigma_sq_corr3d, 
+                                          self.dx, self.dy, self.dz, 
+                                          self.atm_pair3d)
+                
         if (self.view.get_atom_site_recalculation_row_count() > 0):
             if (self.intensity is not None):
                 self.model.save_recalculation(self.fname, self.intensity)
     
     def load_application(self):
                 
-        self.fname = self.view.open_dialog_load()
+        self.fname = self.view.open_dialog_load(self.folder)
         if self.fname:
             self.view.clear_application()
             self.view.load_widgets(self.fname)
@@ -237,14 +270,30 @@ class Presenter:
                 self.view.enable_disorder_occ_recalc(True)
                 self.view.enable_disorder_dis_recalc(True)
             if (self.view.get_pairs_1d_table_row_count() > 0):
-                self.calculate_1d_thread(None)
+                disorder = self.view.get_correlations_1d()
+                if (disorder != 'Occupancy'):
+                    self.corr1d, self.coll1d, 
+                    self.sigma_sq_corr1d, self.sigma_sq_coll1d, self.d, \
+                    self.atm_pair1d = self.model.load_vector_1d(self.fname)
+                else:
+                    self.corr1d, self.sigma_sq_corr1d, self.d, \
+                    self.atm_pair1d = self.model.load_scalar_1d(self.fname)
                 visible = False if self.view.get_average_1d() else True   
                 self.view.enable_pairs_1d(visible)
                 self.view.check_clicked_pairs_1d(self.plot_1d)
                 self.view.format_pairs_1d_table()
                 self.plot_1d()
             if (self.view.get_pairs_3d_table_row_count() > 0):
-                self.calculate_3d_thread(None)
+                disorder = self.view.get_correlations_3d()
+                if (disorder != 'Occupancy'):
+                    self.corr3d, self.coll3d, \
+                    self.sigma_sq_corr3d, self.sigma_sq_coll3d, \
+                    self.dx, self.dy, self.dz, \
+                    self.atm_pair3d = self.model.load_vector_3d(self.fname)
+                else:
+                     self.corr3d, self.sigma_sq_corr3d, \
+                     self.dx, self.dy, self.dz, \
+                     self.atm_pair3d = self.model.load_scalar_3d(self.fname)
                 visible = False if self.view.get_average_3d() else True   
                 self.view.enable_pairs_3d(visible)
                 self.view.check_clicked_pairs_3d(self.plot_3d)
@@ -255,11 +304,14 @@ class Presenter:
                 intensity = self.model.load_recalculation(fname)
                 if (intensity is not None):
                     self.intensity = intensity
-                    self.redraw_plot_calc()    
+                    self.redraw_plot_calc()
+                self.view.item_changed_recalculation_table(
+                    self.update_recalculation_table
+                )
                     
     def save_intensity_exp(self):
         
-        filename = self.view.save_intensity_exp()
+        filename = self.view.save_intensity_exp(self.folder)
         
         if filename:
             
@@ -279,7 +331,7 @@ class Presenter:
             
     def save_intensity_ref(self):
         
-        filename = self.view.save_intensity_ref()
+        filename = self.view.save_intensity_ref(self.folder)
         
         if filename:
             
@@ -309,7 +361,7 @@ class Presenter:
             
     def save_correlations_1d(self):
         
-        filename = self.view.save_correlations_1d()
+        filename = self.view.save_correlations_1d(self.folder)
             
         if filename:
             
@@ -324,7 +376,7 @@ class Presenter:
             
     def save_correlations_3d(self):
         
-        filename = self.view.save_correlations_3d()
+        filename = self.view.save_correlations_3d(self.folder)
             
         if filename:
             
@@ -339,7 +391,7 @@ class Presenter:
       
     def save_intensity_calc(self):
         
-        filename = self.view.save_intensity_calc()              
+        filename = self.view.save_intensity_calc(self.folder)              
             
         if filename:
             
@@ -350,7 +402,7 @@ class Presenter:
         
         if (self.view.get_unit_cell_table_row_count() > 0):
         
-            fname = self.view.save_CIF()
+            fname = self.view.save_CIF(self.folder)
             
             if fname:
                 
@@ -392,7 +444,7 @@ class Presenter:
         
         if self.allocated:
             
-            fname = self.view.save_dis_CIF()
+            fname = self.view.save_CIF(self.folder)
             
             if fname:
                 
@@ -412,7 +464,15 @@ class Presenter:
                 
                 delta = ((A_r.reshape(A_r.size // n_atm, n_atm)+1)*occupancy)
                 delta = delta.flatten()
-        
+                
+                rx, ry, rz = self.rx, self.ry, self.rz
+                
+                atm = self.atm
+                
+                A = self.A
+                
+                nu, nv, nw = self.nu, self.nv, self.nw 
+                
                 self.model.save_disorder(fname, Sx, Sy, Sz, delta, Ux, Uy, Uz, 
                                          rx, ry, rz, nu, nv, nw, atm, A, 
                                          folder, filename)
@@ -421,7 +481,7 @@ class Presenter:
         
         if (self.view.get_pairs_1d_table_row_count() > 0):
         
-            filename = self.view.save_correlations_CSV()
+            filename = self.view.save_correlations_CSV(self.folder)
             
             if filename:
                 
@@ -452,7 +512,7 @@ class Presenter:
         
         if (self.view.get_pairs_3d_table_row_count() > 0):
         
-            filename = self.view.save_correlations_VTK()
+            filename = self.view.save_VTK(self.folder)
             
             if filename:
                 
@@ -815,6 +875,8 @@ class Presenter:
     
         self.view.set_lattice(lat)
         
+        a, b, c, alpha, beta, gamma = self.view.get_lattice_parameters()
+        
         self.view.set_a_visible(False)
         self.view.set_b_visible(False)
         self.view.set_c_visible(False)
@@ -852,9 +914,11 @@ class Presenter:
         
     def load_CIF(self):
         
-        name = self.view.open_dialog_cif()
+        name = self.view.open_dialog_cif(self.folder)
         
         if name:
+            
+            self.view.enable_load_CIF(False)
             
             self.fname_cif = name
             
@@ -869,10 +933,10 @@ class Presenter:
             
             lat = self.model.find_lattice(a, b, c, alpha, beta, gamma)
             
-            self.lattice_variables(lat)
-          
             self.view.set_lattice_parameters(a, b, c, alpha, beta, gamma)
             
+            self.lattice_variables(lat)
+                      
             group, hm = self.model.load_space_group(folder, filename)
             
             self.view.set_space_group(group, hm)
@@ -978,6 +1042,8 @@ class Presenter:
             self.view.set_n(self.model.supercell_size(n_atm, nu, nv, nw))
             
             self.connect_table_signals()
+            
+            self.view.enable_load_CIF(True)
         
     def draw_plot_exp(self):
                 
@@ -1751,6 +1817,7 @@ class Presenter:
         self.reset_data()
         self.connect_experiment_buttons()
         self.populate_recalculation_table()
+        self.view.enable_load_NXS(True)
             
     def connect_experiment_buttons(self):
         
@@ -1770,13 +1837,15 @@ class Presenter:
             
             if name:
                 
+                self.view.enable_load_NXS(False)
+                
                 self.fname_exp = name
                 
                 self.load = self.view.worker(self.load_data_thread, name)
                 self.view.progress(self.load, self.load_data_progress)
                 self.view.finished(self.load, self.load_data_complete)
                 self.threadpool.start(self.load)
-                                
+                                            
     def check_batch(self):
                 
         visibility = True if self.view.batch_checked() else False
@@ -1991,6 +2060,8 @@ class Presenter:
         self.a_filt, self.b_filt, self.c_filt, \
         self.d_filt, self.e_filt, self.f_filt, \
         self.g_filt, self.h_filt, self.i_filt = filt_arrays
+        
+        self.refinement_m = self.model.mask_array(self.I_obs)
              
     def refinement_statistics(self):
         
@@ -2020,20 +2091,26 @@ class Presenter:
     def initialize_disorder(self):
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
-                
-        moment = self.mu
+        
+        c = 1 if self.view.get_disorder_mag() else 0
+            
+        moment = self.mu*c
         
         Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm, moment)
                 
         self.Sx, self.Sy, self.Sz = Sx, Sy, Sz 
         
-        occupancy = self.occupancy
+        b, c = (0, 1) if self.view.get_disorder_occ() else (1, 0)
+
+        occupancy = self.occupancy*c+b
         
         A_r = self.model.random_occupancies(nu, nv, nw, n_atm, occupancy)
         
         self.A_r = A_r 
         
-        Uiso = self.Uiso
+        c = 1 if self.view.get_disorder_dis() else 0
+        
+        Uiso = self.Uiso*c
         
         Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, Uiso)
         
@@ -2126,9 +2203,9 @@ class Presenter:
                     
     def run_refinement_thread(self, callback):
                            
-        batch = self.view.get_run()
-        runs = self.view.get_runs()
-        cycles = self.view.get_cycles()
+        batch = self.batch
+        runs = self.runs
+        cycles = self.cycles
                                                         
         for b in range(batch, runs):
 
@@ -2144,12 +2221,15 @@ class Presenter:
                 self.refinement_cycle()
                 
                 p = int(round(100*(i+1)/n))
-                if (p <= 0): p = 1
-                elif (p > 100): p = 100
                 
-                x = self.chi_sq[-1]
-                
-                callback.emit([p, b, x])
+                if (p != self.progress):
+                    
+                    if (p <= 0): p = 1
+                    elif (p > 100): p = 100
+                    
+                    x = self.chi_sq[-1]
+                    
+                    callback.emit([p, b, x])
                                                 
                 self.iteration = i+1
                                 
@@ -2178,12 +2258,14 @@ class Presenter:
         
         progress, batch, chi_sq = data
         
+        self.progress = progress
+
         self.view.set_progress(progress)
         self.view.set_run(batch)
         self.view.set_chi_sq(chi_sq)
         
-        self.redraw_plot_ref()
-        self.draw_plot_chi_sq()
+        self.fast_redraw_plot_ref()
+        self.fast_redraw_plot_chi_sq()
             
     def run_refinement_complete(self):
         
@@ -2194,7 +2276,22 @@ class Presenter:
         
         self.view.enable_refinement(True)
         self.view.enable_reset_refinement(True)
+        self.view.enable_continue_refinement(True)
         
+        self.save_application()
+        
+    def continue_refinement(self):
+        
+        if (self.view.get_progress() == 100):
+            batch = self.view.get_run()-1
+            self.view.set_run(batch)
+            cycles = self.cycles + self.view.get_cycles()
+            self.view.set_cycles(cycles) 
+            self.iteration = self.cycles
+            progress = int(round(100*self.iteration/cycles))
+            self.view.set_progress(progress)
+            self.run_refinement()
+            
     def run_refinement(self):
         
         if self.view.get_recalculation_table_row_count():
@@ -2228,10 +2325,28 @@ class Presenter:
                 if (not self.view.get_atom_site_recalculation_row_count()):
                     
                     self.populate_atom_site_recalculation_table()
-            
+                    
+                self.batch = self.view.get_run()
+                self.runs = self.view.get_runs()
+                self.cycles = self.view.get_cycles()
+                
+                self.progress = self.view.get_progress()
+                
+                self.constant = self.view.get_constant()
+                
+                self.p = self.view.get_order()
+                
+                self.fixed_mag = self.view.fixed_moment_check()
+                self.fixed_occ = self.view.fixed_composition_check()
+                self.fixed_dis = self.view.fixed_displacement_check()
+                    
                 self.view.enable_refinement(False)
                 self.view.enable_reset_refinement(False)
-                                
+                self.view.enable_continue_refinement(False)
+                
+                self.redraw_plot_ref()
+                self.draw_plot_chi_sq()
+                
                 self.ref = self.view.worker(self.run_refinement_thread)
                 self.ref.stop = False
 
@@ -2240,7 +2355,7 @@ class Presenter:
                 self.threadpool.start(self.ref)
                 
     def filter_sigma(self):
-                
+        
         sigma_h = self.view.get_filter_h()
         sigma_k = self.view.get_filter_k()
         sigma_l = self.view.get_filter_l()
@@ -2278,7 +2393,7 @@ class Presenter:
             self.view.clear_atom_site_recalculation_table()
             
     def refinement_cycle(self):
-        
+                    
         N = self.n_uvw*self.n_atm*1
             
         delta = 1
@@ -2310,7 +2425,7 @@ class Presenter:
         nh, nk, nl = self.nh, self.nk, self.nl
         nu, nv, nw, n_atm, n = self.nu, self.nv, self.nw, self.n_atm, self.n
                 
-        constant = self.view.get_constant()
+        constant = self.constant
 
         if self.magnetic:
             
@@ -2340,7 +2455,7 @@ class Presenter:
             Qy_norm = self.Qy_norm
             Qz_norm = self.Qz_norm
             
-            fixed = self.view.fixed_moment_check()
+            fixed_mag = self.fixed_mag
             
             self.model.magnetic_refinement(
                 Sx, Sy, Sz, Qx_norm, Qy_norm, Qz_norm, 
@@ -2361,7 +2476,7 @@ class Presenter:
                 boxes, i_dft, inverses, i_mask, i_unmask,
                 acc_moves, acc_temps, rej_moves, rej_temps,
                 chi_sq, energy, temperature, scale, constant,
-                delta, fixed, T, nh, nk, nl, nu, nv, nw, n_atm, n, N)
+                delta, fixed_mag, T, nh, nk, nl, nu, nv, nw, n_atm, n, N)
             
         elif self.occupational:
             
@@ -2376,7 +2491,7 @@ class Presenter:
             
             factors  = self.factors
             
-            fixed = self.view.fixed_composition_check()
+            fixed_occ = self.fixed_occ
             
             self.model.occupational_refinement(
                 A_r, A_k, A_k_orig, A_k_cand,
@@ -2389,7 +2504,7 @@ class Presenter:
                 g_filt, h_filt, i_filt,
                 boxes, i_dft, inverses, i_mask, i_unmask,
                 acc_moves, acc_temps, rej_moves, rej_temps,
-                chi_sq, energy, temperature, scale, constant, fixed,
+                chi_sq, energy, temperature, scale, constant, fixed_occ,
                 nh, nk, nl, nu, nv, nw, n_atm, n, N)
     
         elif self.displacive:
@@ -2418,10 +2533,10 @@ class Presenter:
             
             bragg, even = self.bragg, self.even
             
-            fixed = self.view.fixed_displacement_check()
+            fixed_dis = self.fixed_dis
             
-            p = self.view.get_order()
-            
+            p = self.p
+
             self.model.displacive_refinement(
                 Ux, Uy, Uz,
                 U_r, U_r_orig, U_r_cand,
@@ -2439,14 +2554,14 @@ class Presenter:
                 bragg, even, boxes, i_dft, inverses, i_mask, i_unmask, 
                 acc_moves, acc_temps, rej_moves, rej_temps, 
                 chi_sq, energy, temperature, scale, constant, 
-                delta, fixed, T, p, nh, nk, nl,
+                delta, fixed_dis, T, p, nh, nk, nl,
                 nu, nv, nw, n_atm, n, N)
                         
         self.I_obs = I_flat.reshape(nh,nk,nl)
         self.I_obs[self.mask] = np.nan
         
-        self.refinement_m = self.model.mask_array(self.I_obs)
-            
+        self.refinement_m = self.model.mask_array(self.I_obs*scale[-1])
+                    
     def draw_plot_ref(self):
         
         if self.allocated:
@@ -2488,6 +2603,9 @@ class Presenter:
                     i_hkl = self.model.slice_index(min_l, max_l, nl, slice_hkl)
                 slice_hkl = self.model.slice_value(min_l, max_l, nl, i_hkl)
                 self.view.set_slice(slice_hkl)
+                
+            self.hkl = hkl
+            self.i_hkl = i_hkl
             
             norm = self.view.get_norm_ref()
             
@@ -2497,11 +2615,14 @@ class Presenter:
             self.view.validate_min_ref()
             self.view.validate_max_ref()
             
-            plots.plot_ref(canvas, data, hkl, slice_hkl, i_hkl, 
-                           min_h, min_k, min_l, max_h, max_k, max_l, 
-                           nh, nk, nl, matrix_h, matrix_k, matrix_l,
-                           scale_h, scale_k, scale_l, norm, vmin, vmax)
-        
+            im = plots.plot_ref(canvas, data, hkl, slice_hkl, i_hkl, 
+                                min_h, min_k, min_l, max_h, max_k, max_l, 
+                                nh, nk, nl, matrix_h, matrix_k, matrix_l,
+                                scale_h, scale_k, scale_l, 
+                                norm, vmin, vmax)
+            
+            self.im_ref = im
+                    
     def redraw_plot_ref(self):
         
         if self.allocated:
@@ -2518,6 +2639,27 @@ class Presenter:
             self.view.set_max_ref(self.ref_arr_m.max())
                         
             self.draw_plot_ref()
+       
+    def fast_redraw_plot_ref(self):
+        
+        canvas = self.view.get_plot_ref_canvas()
+        plot_type = self.view.get_plot_ref()
+        if (plot_type == 'Calculated'):
+            self.ref_arr_m = self.refinement_m
+        
+            self.view.set_min_ref(self.ref_arr_m.min())
+            self.view.set_max_ref(self.ref_arr_m.max())
+                
+            vmin = self.view.get_min_ref()
+            vmax = self.view.get_max_ref()
+            
+            self.view.validate_min_ref()
+            self.view.validate_max_ref()
+            
+            im = self.im_ref
+            data, hkl, i_hkl = self.ref_arr_m, self.hkl, self.i_hkl
+            
+            plots.fast_update_ref(canvas, im, data, hkl, i_hkl, vmin, vmax)
                 
     def draw_plot_chi_sq(self):
         
@@ -2527,14 +2669,60 @@ class Presenter:
 
             plot0 = self.view.get_plot_top_chi_sq()
             plot1 = self.view.get_plot_bottom_chi_sq()
+            
+            self.plot0, self.plot1 = plot0, plot1
                         
             acc_moves, rej_moves = self.acc_moves, self.rej_moves
             temperature, energy = self.temperature, self.energy
             chi_sq, scale = self.chi_sq, self.scale
             
-            plots.chi_sq(canvas, plot0, plot1, acc_moves, rej_moves, 
-                         temperature, energy, chi_sq, scale)
+            ax0, ax1, line0, line1 = plots.chi_sq(canvas, plot0, plot1, 
+                                                  acc_moves, rej_moves, 
+                                                  temperature, energy, 
+                                                  chi_sq, scale)
             
+            self.ax0, self.ax1, self.line0, self.line1 = ax0, ax1, line0, line1
+            
+    def fast_redraw_plot_chi_sq(self):
+        
+        canvas = self.view.get_plot_chi_sq_canvas()
+
+        plot0, plot1 = self.plot0, self.plot1 
+                    
+        acc_moves, rej_moves = self.acc_moves, self.rej_moves
+        temperature, energy = self.temperature, self.energy
+        chi_sq, scale = self.chi_sq, self.scale
+        
+        if (plot0 == 'Accepted'):
+            data0 = acc_moves.copy()
+        elif (plot0 == 'Reject.copy()ed'):
+            data0 = rej_moves
+        elif (plot0 == 'Temperature'):              
+            data0 = temperature.copy()
+        elif (plot0 == 'Energy'):              
+            data0 = energy.copy()
+        elif (plot0 == 'Chi-squared'):              
+            data0 = chi_sq.copy()
+        else:
+            data0 = scale.copy()
+            
+        if (plot1 == 'Accepted'):
+            data1 = acc_moves.copy()
+        elif (plot1 == 'Rejecte.copy()d'):
+            data1 = rej_moves.copy()
+        elif (plot1 == 'Temperature'):              
+            data1 = temperature.copy()
+        elif (plot1 == 'Energy'):              
+            data1 = energy.copy()
+        elif (plot1 == 'Chi-squared'):              
+            data1 = chi_sq.copy()
+        else:
+            data1 = scale.copy()
+        
+        ax0, ax1, line0, line1 = self.ax0, self.ax1, self.line0, self.line1
+        
+        plots.fast_chi_sq(canvas, ax0, ax1, line0, line1,
+                          plot0, plot1, data0, data1)
     # ---
     
     def recreate_table_1d(self):
@@ -2908,6 +3096,9 @@ class Presenter:
             average = self.view.average_3d_checked()
             
             h, k, l = self.view.get_h(), self.view.get_k(), self.view.get_l()
+            
+            if (h**2+k**2+l**2 == 0): l = 1
+            
             d = self.view.get_d()
             
             A, B = self.A, self.B
@@ -2948,10 +3139,12 @@ class Presenter:
             self.view.set_disorder_mag_recalc(True)
             self.view.set_disorder_occ_recalc(False)
             self.view.set_disorder_dis_recalc(False)
+            self.view.set_disorder_struct_recalc(False)
         else:
             self.view.set_disorder_mag_recalc(False)
             self.view.set_disorder_occ_recalc(True)
             self.view.set_disorder_dis_recalc(False)
+            self.view.set_disorder_struct_recalc(False)
             
     def disorder_check_occ_recalc(self):
         
@@ -2959,10 +3152,12 @@ class Presenter:
             self.view.set_disorder_mag_recalc(False)
             self.view.set_disorder_occ_recalc(True)
             self.view.set_disorder_dis_recalc(False)
+            self.view.set_disorder_struct_recalc(False)
         else:
             self.view.set_disorder_mag_recalc(False)
             self.view.set_disorder_occ_recalc(False)
             self.view.set_disorder_dis_recalc(True)
+            self.view.set_disorder_struct_recalc(False)
             
     def disorder_check_dis_recalc(self):
         
@@ -2970,10 +3165,25 @@ class Presenter:
             self.view.set_disorder_mag_recalc(False)
             self.view.set_disorder_occ_recalc(False)
             self.view.set_disorder_dis_recalc(True)
+            self.view.set_disorder_struct_recalc(False)
         else:
             self.view.set_disorder_mag_recalc(False)
             self.view.set_disorder_occ_recalc(True)
             self.view.set_disorder_dis_recalc(False)
+            self.view.set_disorder_struct_recalc(False)
+            
+    def disorder_check_struct_recalc(self):
+        
+        if self.view.get_disorder_struct_recalc():
+            self.view.set_disorder_mag_recalc(False)
+            self.view.set_disorder_occ_recalc(False)
+            self.view.set_disorder_dis_recalc(False)
+            self.view.set_disorder_struct_recalc(True)
+        else:
+            self.view.set_disorder_mag_recalc(False)
+            self.view.set_disorder_occ_recalc(True)
+            self.view.set_disorder_dis_recalc(False)
+            self.view.set_disorder_struct_recalc(False)
     
     def recalculate_intensity_thread(self, callback):
         
@@ -3098,6 +3308,16 @@ class Presenter:
                                  nu, nv, nw, Nu, Nv, Nw, p, even, cntr, mask)
                                         
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
+                    
+                elif self.view.get_disorder_struct_recalc():
+                            
+                    I_calc = self.model.structural_intensity(
+                                occupancy, ux, uy, uz, atm,
+                                h_range, k_range, l_range, indices, symop,
+                                T, B, R, twins, variants, nh, nk, nl,
+                                nu, nv, nw, Nu, Nv, Nw, mask)
+                                                            
+                    self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
                                   
                 self.intensity /= runs*operators.shape[0]
                 
@@ -3195,10 +3415,20 @@ class Presenter:
             vmin = self.view.get_min_calc()
             vmax = self.view.get_max_calc()
             
+            if (norm == 'Logarithmic'):
+                data_range = data.max()-data.min()
+                if (vmin <= 0):
+                    data -= vmin
+                    vmin -= vmin
+                    data += 0.001*data_range
+                    vmin += 0.001*data_range
+            
             self.view.validate_min_calc()
             self.view.validate_max_calc()
             
-            plots.plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T, 
-                            min_h, min_k, min_l, max_h, max_k, max_l, 
-                            nh, nk, nl, matrix_h, matrix_k, matrix_l, 
-                            scale_h, scale_k, scale_l, norm, vmin, vmax)
+            if (vmax > 0):
+                                
+                plots.plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T, 
+                                min_h, min_k, min_l, max_h, max_k, max_l, 
+                                nh, nk, nl, matrix_h, matrix_k, matrix_l, 
+                                scale_h, scale_k, scale_l, norm, vmin, vmax)

@@ -96,7 +96,7 @@ def plot_exp_h(canvas, data, h, ih, min_k, min_l, max_k, max_l, size_k, size_l,
     
     ax_h.minorticks_on()
     
-    fig.tight_layout(pad=2.16)
+    fig.tight_layout(pad=3.24)
     
     cb = fig.colorbar(im_h, ax=ax_h, orientation='horizontal', pad=0.2)
     cb.ax.minorticks_on()
@@ -161,7 +161,7 @@ def plot_exp_k(canvas, data, k, ik, min_h, min_l, max_h, max_l, size_h, size_l,
     
     ax_k.minorticks_on()
     
-    fig.tight_layout(pad=2.16)
+    fig.tight_layout(pad=3.24)
     
     cb = fig.colorbar(im_k, ax=ax_k, orientation='horizontal', pad=0.2)
     cb.ax.minorticks_on()
@@ -226,7 +226,7 @@ def plot_exp_l(canvas, data, l, il, min_h, min_k, max_h, max_k, size_h, size_k,
     
     ax_l.minorticks_on()
     
-    fig.tight_layout(pad=2.16)
+    fig.tight_layout(pad=3.24)
  
     cb = fig.colorbar(im_l, ax=ax_l, orientation='horizontal', pad=0.2)
     cb.ax.minorticks_on()
@@ -339,7 +339,7 @@ def plot_ref(canvas, data, hkl, slice_hkl, i_hkl,
     
     ax.axes.tick_params(labelsize='small')
 
-    fig.tight_layout(pad=2.16)
+    fig.tight_layout(pad=3.24)
     
     cb = fig.colorbar(im, ax=ax)
     cb.ax.minorticks_on()
@@ -351,7 +351,9 @@ def plot_ref(canvas, data, hkl, slice_hkl, i_hkl,
     cb.ax.tick_params(labelsize='small') 
     canvas.draw()
     
-def fast_update_ref(canvas, im, data, hkl, i_hkl):
+    return im
+    
+def fast_update_ref(canvas, im, data, hkl, i_hkl, vmin, vmax):
    
     if (hkl == 'h ='):
         im.set_array(data[i_hkl,:,:].T)
@@ -359,9 +361,11 @@ def fast_update_ref(canvas, im, data, hkl, i_hkl):
         im.set_array(data[:,i_hkl,:].T)        
     else:
         im.set_array(data[:,:,i_hkl].T) 
+        
+    im.set_clim(vmin=vmin, vmax=vmax)
 
-    canvas.draw()           
-    
+    canvas.draw_idle()           
+
 def chi_sq(canvas, plot0, plot1, acc_moves, rej_moves,
            temperature, energy, chi_sq, scale):
 
@@ -372,59 +376,51 @@ def chi_sq(canvas, plot0, plot1, acc_moves, rej_moves,
     ax1 = fig.add_subplot(212)
     
     if (plot0 == 'Accepted'):
-        ax0.semilogy(acc_moves, 'C0')
-        ax0.set_xlabel(r'Moves', fontsize='small')
+        line0, = ax0.semilogy(acc_moves, 'C0')
         ax0.set_ylabel(r'Accepted $\chi^2$', fontsize='small')    
     elif (plot0 == 'Rejected'):
-        ax0.semilogy(rej_moves, 'C0')
-        ax0.set_xlabel(r'Moves', fontsize='small')
+        line0, = ax0.semilogy(rej_moves, 'C0')
         ax0.set_ylabel(r'Rejected $\chi^2$', fontsize='small') 
     elif (plot0 == 'Temperature'):              
-        ax0.semilogy(temperature, 'C0')
-        ax0.set_xlabel(r'Moves', fontsize='small')
+        line0, = ax0.semilogy(temperature, 'C0')
         ax0.set_ylabel(r'Temperatrue $T$', fontsize='small') 
     elif (plot0 == 'Energy'):              
-        ax0.plot(energy, 'C0')
+        line0, = ax0.plot(energy, 'C0')
         ax0.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
-        ax0.set_xlabel(r'Moves', fontsize='small')
         ax0.set_ylabel(r'Energy $\Delta\chi^2$', fontsize='small') 
     elif (plot0 == 'Chi-squared'):              
-        ax0.semilogy(chi_sq, 'C0')
-        ax0.set_xlabel(r'Moves', fontsize='small')
+        line0, = ax0.semilogy(chi_sq, 'C0')
         ax0.set_ylabel(r'$\chi^2$', fontsize='small') 
     else:
-        ax0.plot(scale, 'C0')
+        line0, = ax0.plot(scale, 'C0')
         ax0.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
-        ax0.set_xlabel(r'Moves', fontsize='small')
+        
         ax0.set_ylabel(r'Scale factor', fontsize='small') 
 
     if (plot1 == 'Accepted'):
-        ax1.semilogy(acc_moves, 'C1')
-        ax1.set_xlabel(r'Moves', fontsize='small')
+        line1, = ax1.semilogy(acc_moves, 'C1')
         ax1.set_ylabel(r'Accepted $\chi^2$', fontsize='small')    
     elif (plot1 == 'Rejected'):
-        ax1.semilogy(rej_moves, 'C1')
-        ax1.set_xlabel(r'Moves', fontsize='small')
+        line1, = ax1.semilogy(rej_moves, 'C1')
         ax1.set_ylabel(r'Rejected $\chi^2$', fontsize='small') 
     elif (plot1 == 'Temperature'):              
-        ax1.semilogy(temperature, 'C1')
-        ax1.set_xlabel(r'Moves', fontsize='small')
+        line1, = ax1.semilogy(temperature, 'C1')
         ax1.set_ylabel(r'Temperature $T$', fontsize='small') 
     elif (plot1 == 'Energy'):              
-        ax1.plot(energy, 'C1')
+        line1, = ax1.plot(energy, 'C1')
         ax1.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
-        ax1.set_xlabel(r'Moves', fontsize='small')
         ax1.set_ylabel(r'Energy $\Delta\chi^2$', fontsize='small') 
     elif (plot1 == 'Chi-squared'):              
-        ax1.semilogy(chi_sq, 'C1')
-        ax1.set_xlabel(r'Moves', fontsize='small')
+        line1, = ax1.semilogy(chi_sq, 'C1')
         ax1.set_ylabel(r'$\chi^2$', fontsize='small') 
     else:
-        ax1.plot(scale, 'C1')
+        line1, = ax1.plot(scale, 'C1')
         ax1.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
-        ax1.set_xlabel(r'Moves', fontsize='small')
         ax1.set_ylabel(r'Scale factor', fontsize='small') 
-        
+     
+    ax0.set_xlabel(r'Moves', fontsize='small')
+    ax1.set_xlabel(r'Moves', fontsize='small')   
+     
     ax0.axes.tick_params(labelsize='small')
     ax1.axes.tick_params(labelsize='small')
            
@@ -442,8 +438,23 @@ def chi_sq(canvas, plot0, plot1, acc_moves, rej_moves,
 
     #ax.set_title(r'\chi^2$', fontsize='small') 
     
-    fig.tight_layout(pad=2.16)
+    fig.tight_layout(pad=3.24)
     canvas.draw()
+    
+    return ax0, ax1, line0, line1
+    
+def fast_chi_sq(canvas, ax0, ax1, line0, line1, plot0, plot1, data0, data1):
+    
+    line0.set_data(np.arange(len(data0)), data0)
+    line1.set_data(np.arange(len(data1)), data1)
+
+    ax0.relim()
+    ax1.relim()
+    
+    ax0.autoscale_view()
+    ax1.autoscale_view()
+    
+    canvas.draw_idle() 
     
 class MinorSymLogLocator(Locator):
     def __init__(self, linthresh, nints=10):
@@ -577,7 +588,7 @@ def correlations_1d(canvas, d, data, error, atm_pair, disorder,
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     
-    fig.tight_layout(pad=2.16)
+    fig.tight_layout(pad=3.24)
     canvas.draw()
     
 def _mask_plane(dx, dy, dz, h, k, l, d, A, B, tol):
@@ -764,7 +775,7 @@ def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, atm_pair3d,
 
     ax.axes.tick_params(labelsize='small')
     
-    fig.tight_layout(pad=2.16)
+    fig.tight_layout(pad=3.24)
     canvas.draw()
     
     return H, K, L, d
@@ -885,7 +896,7 @@ def plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T,
     
     ax.axes.tick_params(labelsize='small')
 
-    fig.tight_layout(pad=2.16)
+    fig.tight_layout(pad=3.24)
     
     cb = fig.colorbar(im, ax=ax)
     cb.ax.minorticks_on()
@@ -893,6 +904,9 @@ def plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T,
     if (norm == 'Linear'):
         cb.formatter.set_powerlimits((0, 0))
         cb.update_ticks()
+    else:
+        cb.ax.xaxis.set_major_locator(plt.NullLocator())
+        cb.ax.xaxis.set_minor_locator(plt.NullLocator())
         
     cb.ax.tick_params(labelsize='small') 
     canvas.draw()

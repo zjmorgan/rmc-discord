@@ -128,7 +128,8 @@ setuptools.setup(
         'pycifrw',
         'nexusformat',
         'pyvista',
-        'pyqt5'
+        'pyqt5',
+        'ipython'
     ],
     cmdclass=cmdclass,
     ext_modules=ext_modules,

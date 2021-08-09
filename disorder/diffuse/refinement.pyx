@@ -140,10 +140,8 @@ cpdef void magnetic(double [::1] Sx,
             Sx_cand, Sy_cand, Sz_cand = candidate.vector(Sx_orig, 
                                                          Sy_orig, 
                                                          Sz_orig, 
-                                                         delta,
                                                          mu,
-                                                         fixed,
-                                                         T)
+                                                         fixed)
                                     
             scattering.copy(Fx_orig, Fx)
             scattering.copy(Fy_orig, Fy)
@@ -613,10 +611,8 @@ cpdef void displacive(double [::1] Ux,
             Ux_cand, Uy_cand, Uz_cand = candidate.vector(Ux_orig, 
                                                          Uy_orig, 
                                                          Uz_orig, 
-                                                         delta,
                                                          disp,
-                                                         fixed,
-                                                         T)
+                                                         fixed)
 
             scattering.copy(F_orig, F)
             scattering.copy(F_nuc_orig, F_nuc)
@@ -705,7 +701,7 @@ cpdef void displacive(double [::1] Ux,
                                  nl)
                     
             scattering.unmask(I_ref, I_flat, i_unmask)
-                        
+            
             chi_sq_cand, scale_factor = scattering.goodness(I_ref, 
                                                             I_exp, 
                                                             inv_sigma_sq)

@@ -1,0 +1,102 @@
+
+##########################################################################
+#               Crystallographic Information Format file
+#               Produced by PyCifRW module
+#
+#  This is a CIF file.  CIF has been adopted by the International
+#  Union of Crystallography as the standard for data archiving and
+#  transmission.
+#
+#  For information on this file format, follow the CIF links at
+#  http://www.iucr.org
+##########################################################################
+
+data_global
+
+_chemical_name_mineral                  'Ice Ih deuterated'
+loop_
+  _publ_author_name
+         'Peterson S'        
+         'Levy H' 
+_journal_name_full                      'Acta Crystallographica'
+_journal_volume                         10
+_journal_year                           1957
+_journal_page_first                     70
+_journal_page_last                      76
+_publ_section_title                     
+;
+ A Single-Crystal Neutron Diffraction Study of Heavy Ice
+ _cod_database_code 1008748
+;
+_database_code_amcsd                    0016627
+_chemical_formula_sum                   'O D2'
+_cell_length_a                          4.513
+_cell_length_b                          4.513
+_cell_length_c                          7.355
+_cell_angle_alpha                       90
+_cell_angle_beta                        90
+_cell_angle_gamma                       120
+_cell_volume                            129.731
+_exptl_crystal_density_diffrn           1.025
+_symmetry_space_group_name_H-M          'P 63/m m c'
+loop_
+  _atom_site_aniso_label
+  _atom_site_aniso_U_11
+  _atom_site_aniso_U_22
+  _atom_site_aniso_U_33
+  _atom_site_aniso_U_12
+  _atom_site_aniso_U_13
+  _atom_site_aniso_U_23
+         O1        1.84952   1.84952   6.54988   0.92863   0.00000   0.00000   
+         D1        2.49957   2.49957   8.13939   1.25365   0.00000   0.00000   
+         D2        2.55374   2.16681   8.35864   1.08340   0.34951   0.69902 
+loop_
+  _space_group_symop_operation_xyz
+         'x, y, z' 
+loop_
+  _atom_site_label
+  _atom_site_fract_x
+  _atom_site_fract_y
+  _atom_site_fract_z
+  _atom_site_type_symbol
+  _atom_site_occupancy
+         O0        0.3644273339532844  1.0498471313248463  -0.04653343113376654         O
+          1.0       
+         O1        0.1761625681184018  0.9682180277525648  0.47901856385446223           O
+          1.0       
+         O2        1.0281122288559195  0.7685056248943779  0.6059308403852026  O
+          1.0       
+         O3        0.20244910668251598           0.02606795093468442 
+          0.9488146329727877  O         1.0       
+         H4        0.6508842617242068  1.131288252584725   0.0676020685272227  H
+          0.0       
+         H5        0.6337525993817581  1.0501458421044756  0.11413050030255283           H
+          1.0       
+         H6        1.1899337279773017  0.615490675582599   0.6400762200255179  H
+          0.0       
+         H7        1.0798583482059783  0.8343476077137942  0.8099374491480155  H
+          0.0       
+         H8        -0.43251759750982227          0.3555527903612848 
+          -0.03087948391613766          H         1.0       
+         H9        0.1948920326953512  0.041987988284910537 
+          -0.08149673542384063          H         0.0       
+         H10       0.11777318975284665           0.5380680897764782 
+          0.20168993991162226           H         1.0       
+         H11       0.024367082688205317          0.15175268841989883 
+          0.3049767175252456  H         0.0       
+         H12       0.3344275925288466  0.6194229880134033  0.7471816968466737  H
+          0.0       
+         H13       0.04807913931554866           0.9185082731747639 
+          0.3487049618427814  H         0.0       
+         H14       0.6221554680415644  0.4820964038237997  0.3376226077578772  H
+          1.0       
+         H15       0.05765339819338383           0.01642199581509088 
+          0.5133203749684911  H         0.0       
+         H16       0.8054490781958489  0.1749365587024107  0.2758104076187283  H
+          1.0       
+         H17       0.34651983752231236           0.41900346732773747 
+          1.0161255861323508  H         1.0       
+         H18       0.22900840427345479           -0.07019093833555524 
+          1.0308241485442506  H         0.0       
+         H19       0.3766730007307028  0.23167099192746135           0.9644411324838035 H
+          1.0 

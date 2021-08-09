@@ -199,8 +199,9 @@ class Model:
     def save_disorder(self, fname, Sx, Sy, Sz, delta, Ux, Uy, Uz, rx, ry, rz,
                       nu, nv, nw, atm, A, folder, filename):
         
-        crystal.disordered(Ux, Uy, Uz, delta, Sx, Sy, Sz, rx, ry, rz,
-                           atm, A, fname, folder=folder, filename=filename,
+        crystal.disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, 
+                           rx, ry, rz, nu, nv, nw, atm, A, fname, 
+                           folder=folder, filename=filename, 
                            ulim=[0,nu], vlim=[0,nv], wlim=[0,nw])
     
     def load_data(self, fname):
@@ -848,6 +849,20 @@ class Model:
                     
         return I_calc
     
+    def structural_intensity(self, occupancy, ux, uy, uz, atm,
+                             h_range, k_range, l_range, indices, symop,
+                             T, B, R, twins, variants, nh, nk, nl, 
+                             nu, nv, nw, Nu, Nv, Nw, mask):
+                            
+        n_atm = np.size(occupancy)
+                
+        I_calc = monocrystal.structural(occupancy, ux, uy, uz, atm,
+                                        h_range, k_range, l_range, indices, 
+                                        symop, T, B, R, twins, variants,
+                                        nh, nk, nl, nu, nv, nw, Nu, Nv, Nw)
+        
+        return I_calc
+    
     def magnetic_refinement(self, Sx, Sy, Sz, Qx_norm, Qy_norm, Qz_norm, 
                             Sx_k, Sy_k, Sz_k, 
                             Sx_k_orig, Sy_k_orig, Sz_k_orig,
@@ -1054,7 +1069,7 @@ class Model:
                                         sigma_sq_corr3d, sigma_sq_coll3d),
                                         dx, dy, dz, tol=tol)
 
-        return corr3d, coll3d,sigma_sq_corr3d, sigma_sq_coll3d, dx, dy, dz                            
+        return corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d, dx, dy, dz                            
         
     def scalar_average_3d(self, corr3d, sigma_sq_corr3d, dx, dy, dz, tol):
 
@@ -1064,3 +1079,86 @@ class Model:
                                         dx, dy, dz, tol=tol)
         
         return corr3d, sigma_sq_corr3d, dx, dy, dz
+    
+    def save_scalar_1d(self, fname, corr, sigma_sq_corr, d, atm_pair):
+        
+        np.save('{}-correlations-1d.npy'.format(fname), corr)
+        np.save('{}-correlations-1d-error.npy'.format(fname), sigma_sq_corr)
+        np.save('{}-correlations-1d-d.npy'.format(fname), d)
+        np.save('{}-correlations-1d-pair.npy'.format(fname), atm_pair)
+        
+    def save_vector_1d(self, fname, corr, coll, sigma_sq_corr, sigma_sq_coll, 
+                       d, atm_pair):
+        
+        np.save('{}-correlations-1d.npy'.format(fname), corr)
+        np.save('{}-collinearity-1d.npy'.format(fname), coll)
+        np.save('{}-correlations-1d-error.npy'.format(fname), sigma_sq_corr)
+        np.save('{}-collinearity-1d-error.npy'.format(fname), sigma_sq_coll)
+        np.save('{}-correlations-1d-d.npy'.format(fname), d)
+        np.save('{}-correlations-1d-pair.npy'.format(fname), atm_pair)
+        
+    def save_scalar_3d(self, fname, corr, sigma_sq_corr, dx, dy, dz, atm_pair):
+        
+        np.save('{}-correlations-3d.npy'.format(fname), corr)
+        np.save('{}-correlations-3d-error.npy'.format(fname), sigma_sq_corr)
+        np.save('{}-correlations-3d-dx.npy'.format(fname), dx)
+        np.save('{}-correlations-3d-dy.npy'.format(fname), dy)
+        np.save('{}-correlations-3d-dz.npy'.format(fname), dz)
+        np.save('{}-correlations-3d-pair.npy'.format(fname), atm_pair)
+        
+    def save_vector_3d(self, fname, corr, coll, sigma_sq_corr, sigma_sq_coll, 
+                       dx, dy, dz, atm_pair):
+        
+        np.save('{}-correlations-3d.npy'.format(fname), corr)
+        np.save('{}-collinearity-3d.npy'.format(fname), coll)
+        np.save('{}-correlations-3d-error.npy'.format(fname), sigma_sq_corr)
+        np.save('{}-collinearity-3d-error.npy'.format(fname), sigma_sq_coll)
+        np.save('{}-correlations-3d-dx.npy'.format(fname), dx)
+        np.save('{}-correlations-3d-dy.npy'.format(fname), dy)
+        np.save('{}-correlations-3d-dz.npy'.format(fname), dz)
+        np.save('{}-correlations-3d-pair.npy'.format(fname), atm_pair)
+        
+    def load_scalar_1d(self, fname):
+        
+        corr = np.load('{}-correlations-1d.npy'.format(fname))
+        sigma_sq_corr = np.load('{}-correlations-1d-error.npy'.format(fname))
+        d = np.load('{}-correlations-1d-d.npy'.format(fname))
+        atm_pair = np.load('{}-correlations-1d-pair.npy'.format(fname))
+        
+        return corr, sigma_sq_corr, d, atm_pair
+        
+    def load_vector_1d(self, fname):
+        
+        corr = np.load('{}-correlations-1d.npy'.format(fname))
+        coll = np.load('{}-collinearity-1d.npy'.format(fname))
+        sigma_sq_corr = np.load('{}-correlations-1d-error.npy'.format(fname))
+        sigma_sq_coll = np.load('{}-collinearity-1d-error.npy'.format(fname))
+        d = np.load('{}-correlations-1d-d.npy'.format(fname))
+        atm_pair = np.load('{}-correlations-1d-pair.npy'.format(fname))
+        
+        return corr, coll, sigma_sq_corr, sigma_sq_coll, d, atm_pair
+        
+    def load_scalar_3d(self, fname):
+        
+        corr = np.load('{}-correlations-3d.npy'.format(fname))
+        sigma_sq_corr = np.load('{}-correlations-3d-error.npy'.format(fname))
+        dx = np.load('{}-correlations-3d-dx.npy'.format(fname))
+        dy = np.load('{}-correlations-3d-dy.npy'.format(fname))
+        dz = np.load('{}-correlations-3d-dz.npy'.format(fname))
+        atm_pair = np.load('{}-correlations-3d-pair.npy'.format(fname))
+        
+        return corr, sigma_sq_corr, dx, dy, dz, atm_pair
+        
+    def load_vector_3d(self, fname):
+        
+        corr = np.load('{}-correlations-3d.npy'.format(fname))
+        coll = np.load('{}-collinearity-3d.npy'.format(fname))
+        sigma_sq_corr = np.load('{}-correlations-3d-error.npy'.format(fname))
+        sigma_sq_coll = np.load('{}-collinearity-3d-error.npy'.format(fname))
+        dx = np.load('{}-correlations-3d-dx.npy'.format(fname))
+        dy = np.load('{}-correlations-3d-dy.npy'.format(fname))
+        dz = np.load('{}-correlations-3d-dz.npy'.format(fname))
+        atm_pair = np.load('{}-correlations-3d-pair.npy'.format(fname))
+        
+        return corr, coll, sigma_sq_corr, sigma_sq_coll, dx, dy, dz, atm_pair
+        
