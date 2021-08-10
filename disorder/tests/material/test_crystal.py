@@ -145,6 +145,29 @@ class test_crystal(unittest.TestCase):
         for i in range(8):
             moment = symmetry.evaluate_mag(mag_op[atm == 'Mn'][i], [mx,my,mz])
             np.testing.assert_array_almost_equal(mom[atm == 'Mn'][i], moment)
+            
+        u, \
+        v, \
+        w, \
+        disp, \
+        atm, \
+        n_atm = crystal.unitcell(folder=folder, 
+                                 filename='natrolite.cif', 
+                                 occupancy=False, 
+                                 displacement=True, 
+                                 site=False, 
+                                 operator=False, 
+                                 tol=1e-4)
+        
+        np.testing.assert_array_equal(atm[152:184], 'H')
+        
+        adp = [0.034, 0.034, 0.034, 0, 0, 0]
+        for i in range(152, 168):
+            np.testing.assert_array_almost_equal(disp[i], adp)
+        
+        adp = [0.032, 0.032, 0.032, 0, 0, 0]
+        for i in range(168, 184):
+            np.testing.assert_array_almost_equal(disp[i], adp)
         
     def test_supercell(self):
 

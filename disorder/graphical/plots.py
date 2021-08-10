@@ -259,6 +259,8 @@ def plot_ref(canvas, data, hkl, slice_hkl, i_hkl,
     offset_l = _offset(matrix_l, min_k)
     
     if (norm == 'Logarithmic'):
+        if (np.isclose(vmin, 0) and np.isclose(vmax, 0)):
+            vmin, vmax = 1e-3, 1e-2
         normalize = colors.LogNorm(vmin=vmin, vmax=vmax)
     else:
         normalize = colors.Normalize(vmin=vmin, vmax=vmax)
@@ -804,6 +806,8 @@ def plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T,
     aligned = np.allclose(T, np.eye(3))
         
     if (norm == 'Logarithmic'):
+        if (np.isclose(vmin, 0) and np.isclose(vmax, 0)):
+            vmin, vmax = 1e-3, 1e-2
         normalize = colors.LogNorm(vmin=vmin, vmax=vmax)
     else:
         normalize = colors.Normalize(vmin=vmin, vmax=vmax)

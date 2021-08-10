@@ -945,6 +945,7 @@ def structural(double [::1] occupancy,
                Py_ssize_t Nu,
                Py_ssize_t Nv,
                Py_ssize_t Nw,
+               Py_ssize_t centering,
                technique='Neutron'):
     
     cdef Py_ssize_t n_atm = len(atms)
@@ -1159,9 +1160,12 @@ def structural(double [::1] occupancy,
                     
                     factors = occ*scattering_length*phase_factor
                     
-                    j_dft = j+n_atm*i_dft
-                                 
-                    prod = prod+factors*A_k[j_dft]
+                    if ((iH <= Fu and iK <= Fv and iL <= Fw) and \
+                    nuclear(h, k, l, centering)):
+                    
+                        j_dft = j+n_atm*i_dft
+                                     
+                        prod = prod+factors*A_k[j_dft]
                 
                 F = prod
       

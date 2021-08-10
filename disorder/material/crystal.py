@@ -75,9 +75,12 @@ def unitcell(folder=None,
         occs = [re.sub(r'\([^()]*\)', '', occ) for occ in occs]
     else:
         occs = [1.0]*len(atomic_sites)
+        
+    iso = False
+    ani = False
 
     if ('_atom_site_aniso_label' in cif_dict):
-        adp_type = 'ani'
+        adp_type, ani = 'ani', True
         if ('_atom_site_aniso_u_11' in cif_dict):
             adp_U = True
             U11s = cif_dict['_atom_site_aniso_u_11']
@@ -106,27 +109,68 @@ def unitcell(folder=None,
             B23s = [re.sub(r'\([^()]*\)', '', B23) for B23 in B23s]
             B13s = [re.sub(r'\([^()]*\)', '', B13) for B13 in B13s]
             B12s = [re.sub(r'\([^()]*\)', '', B12) for B12 in B12s]
-    else:
-        adp_type = 'iso'
-        if ('_atom_site_u_iso_or_equiv' in cif_dict):
-            adp_U = True
-            Uisos = cif_dict['_atom_site_u_iso_or_equiv']
-            Uisos = [re.sub(r'\([^()]*\)', '', Uiso) for Uiso in Uisos]
-        elif ('_atom_site_b_iso_or_equiv' in cif_dict):
-            adp_U = False
-            Uisos = cif_dict['_atom_site_b_iso_or_equiv']
-            Uisos = [re.sub(r'\([^()]*\)', '', Uiso) for Uiso in Uisos]
-        if ('_atom_site_u_iso_or_equiv' in cif_dict):
-            adp_U = True
-            Bisos = cif_dict['_atom_site_u_iso_or_equiv']
-            Bisos = [re.sub(r'\([^()]*\)', '', Biso) for Biso in Bisos]
-        elif ('_atom_site_b_iso_or_equiv' in cif_dict):
-            adp_U = False
-            Bisos = cif_dict['_atom_site_b_iso_or_equiv']
-            Bisos = [re.sub(r'\([^()]*\)', '', Biso) for Biso in Bisos]
-        else:
-            adp_U = True
-            Uisos = [0.0]*len(atomic_sites) 
+
+    if ('_atom_site_u_iso_or_equiv' in cif_dict):
+        adp_type, iso = 'iso', True
+        adp_U = True
+        Uisos = cif_dict['_atom_site_u_iso_or_equiv']
+        Uisos = [re.sub(r'\([^()]*\)', '', Uiso) for Uiso in Uisos]
+    elif ('_atom_site_b_iso_or_equiv' in cif_dict):
+        adp_type, iso = 'iso', True
+        adp_U = False
+        Bisos = cif_dict['_atom_site_b_iso_or_equiv']
+        Bisos = [re.sub(r'\([^()]*\)', '', Biso) for Biso in Bisos]
+    elif (ani == False):
+        adp_type, iso = 'iso', True
+        adp_U = True
+        Uisos = [0.0]*len(atomic_sites)
+            
+    if (ani and iso):
+        adp_type = 'ani'
+        _, D = orthogonalized(*parameters(folder, filename))
+        iso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
+        iso_labels = cif_dict['_atom_site_label']
+        ani_labels = cif_dict['_atom_site_aniso_label']
+        adp_types = cif_dict['_atom_site_adp_type']
+        U11, U22, U33, U23, U13, U12 = [], [], [], [], [], []
+        B11, B22, B33, B23, B13, B12 = [], [], [], [], [], []
+        for adp, label in zip(adp_types, iso_labels):
+            if (adp.lower() == 'uani'):
+                index = ani_labels.index(label)
+                U11.append(U11s[index])
+                U22.append(U22s[index])
+                U33.append(U33s[index])
+                U23.append(U23s[index])
+                U13.append(U13s[index])
+                U12.append(U12s[index])
+            elif (adp.lower() == 'bani'):
+                index = ani_labels.index(label)
+                B11.append(B11s[index])
+                B22.append(B22s[index])
+                B33.append(B33s[index])
+                B23.append(B23s[index])
+                B13.append(B13s[index])
+                B12.append(B12s[index])
+            elif (adp.lower() == 'uiso'):
+                index = iso_labels.index(label)
+                Uani = iso*float(Uisos[index])
+                U11.append(str(Uani[0,0]))
+                U22.append(str(Uani[1,1]))
+                U33.append(str(Uani[2,2]))
+                U23.append(str(Uani[1,2]))
+                U13.append(str(Uani[0,2]))
+                U12.append(str(Uani[0,1]))
+            elif (adp.lower() == 'biso'):
+                index = iso_labels.index(label)
+                Bani = iso*float(Bisos[index])
+                B11.append(str(Bani[0,0]))
+                B22.append(str(Bani[1,1]))
+                B33.append(str(Bani[2,2]))
+                B23.append(str(Bani[1,2]))
+                B13.append(str(Bani[0,2]))
+                B12.append(str(Bani[0,1]))
+        U11s, U22s, U33s, U23s, U13s, U12s = U11, U22, U33, U23, U13, U12
+        B11s, B22s, B33s, B23s, B13s, B12s = B11, B22, B33, B23, B13, B12
         
     Mxs = [0.0]*len(atomic_sites)    
     Mys = [0.0]*len(atomic_sites)

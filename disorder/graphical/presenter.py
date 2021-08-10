@@ -3275,7 +3275,8 @@ class Presenter:
                         h_range, k_range, l_range, nh, nk, nl, 
                         nu, nv, nw, T, laue)
                                                     
-            if self.view.get_disorder_dis_recalc():
+            if self.view.get_disorder_dis_recalc() or \
+               self.view.get_disorder_struct_recalc():
                 
                 p = self.view.get_order_calc()
                 
@@ -3326,7 +3327,7 @@ class Presenter:
                                 occupancy, ux, uy, uz, atm,
                                 h_range, k_range, l_range, indices, symop,
                                 T, B, R, twins, variants, nh, nk, nl,
-                                nu, nv, nw, Nu, Nv, Nw, mask)
+                                nu, nv, nw, Nu, Nv, Nw, cntr, mask)
                                                             
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
                                   
@@ -3443,10 +3444,8 @@ class Presenter:
             
             self.view.validate_min_calc()
             self.view.validate_max_calc()
-            
-            if (vmax > 0):
-                                
-                plots.plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T, 
-                                min_h, min_k, min_l, max_h, max_k, max_l, 
-                                nh, nk, nl, matrix_h, matrix_k, matrix_l, 
-                                scale_h, scale_k, scale_l, norm, vmin, vmax)
+                                                        
+            plots.plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T, 
+                            min_h, min_k, min_l, max_h, max_k, max_l, 
+                            nh, nk, nl, matrix_h, matrix_k, matrix_l, 
+                            scale_h, scale_k, scale_l, norm, vmin, vmax)

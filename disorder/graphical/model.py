@@ -852,14 +852,15 @@ class Model:
     def structural_intensity(self, occupancy, ux, uy, uz, atm,
                              h_range, k_range, l_range, indices, symop,
                              T, B, R, twins, variants, nh, nk, nl, 
-                             nu, nv, nw, Nu, Nv, Nw, mask):
+                             nu, nv, nw, Nu, Nv, Nw, cntr, mask):
                             
         n_atm = np.size(occupancy)
                 
         I_calc = monocrystal.structural(occupancy, ux, uy, uz, atm,
                                         h_range, k_range, l_range, indices, 
                                         symop, T, B, R, twins, variants,
-                                        nh, nk, nl, nu, nv, nw, Nu, Nv, Nw)
+                                        nh, nk, nl, nu, nv, nw, Nu, Nv, Nw, 
+                                        cntr)
         
         return I_calc
     
