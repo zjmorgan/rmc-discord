@@ -573,28 +573,28 @@ def reduced(h_range,
     else:
         Nw = nw
         
-    H = (h*Nu).astype(np.int16)
+    H = np.round(h*Nu).astype(np.int16)
     
     iH = np.mod(H, Nu) # // (Nu // nu)
-    mask = (iH < Nu//nu) & (~np.isclose(np.mod(h*Nu,Nu),0))
+    mask = (iH < Nu // nu) & (~np.isclose(np.mod(h*Nu, Nu),0))
     # H[mask] += Nu//nu
     del iH, mask
     
     del h
         
-    K = (k*Nv).astype(np.int16)
+    K = np.round(k*Nv).astype(np.int16)
     
     iK = np.mod(K, Nv) # // (Nv // nv)
-    mask = (iK < Nv//nv) & (~np.isclose(np.mod(k*Nv,Nv),0))
+    mask = (iK < Nv // nv) & (~np.isclose(np.mod(k*Nv, Nv),0))
     # K[mask] += Nv//nv
     del iK, mask
     
     del k
     
-    L = (l*Nw).astype(np.int16)
+    L = np.round(l*Nw).astype(np.int16)
     
     iL = np.mod(L, Nw) # // (Nw // nw)
-    mask = (iL < Nw//nw) & (~np.isclose(np.mod(l*Nw,Nw),0))
+    mask = (iL < Nw // nw) & (~np.isclose(np.mod(l*Nw, Nw),0))
     # L[mask] += Nw//nw
     del iL, mask  
         
@@ -604,12 +604,7 @@ def reduced(h_range,
         
         index = np.arange(nh*nk*nl)
         
-        return index, \
-               index, \
-               np.array([u'x,y,z']), \
-               Nu, \
-               Nv, \
-               Nw
+        return index, index, np.array([u'x,y,z']), Nu,  Nv, Nw
                
     symops = np.array(symmetry.laue(laue))
     

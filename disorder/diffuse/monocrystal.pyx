@@ -569,7 +569,7 @@ def occupational(double [::1] A_r,
                     iK = iK+Fv
                 if (iL < Fw and not iszero(fmod(f_L, f_Nw)) and Nw-iL > Fw):
                     iL = iL+Fw
-                    
+
                 i_dft = iL+Nw*(iK+Nv*iH)
                 
                 Qh = M_TAU*(B[0,0]*h+B[0,1]*k+B[0,2]*l)
@@ -1079,7 +1079,7 @@ def structural(double [::1] occupancy,
             a3[j], b3[j], \
             a4[j], b4[j], \
             c[j] = tables.X.get(atm)
-                            
+                                        
     for i in prange(n_hkl, nogil=True):
             
         i_ind = indices[i]
@@ -1091,7 +1091,7 @@ def structural(double [::1] occupancy,
         h_ = h_min_+h_step_*u
         k_ = k_min_+k_step_*v
         l_ = l_min_+l_step_*w
-        
+                
         x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
         y = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
         z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
@@ -1160,12 +1160,9 @@ def structural(double [::1] occupancy,
                     
                     factors = occ*scattering_length*phase_factor
                     
-                    if ((iH <= Fu and iK <= Fv and iL <= Fw) and \
-                    nuclear(h, k, l, centering)):
-                    
-                        j_dft = j+n_atm*i_dft
-                                     
-                        prod = prod+factors*A_k[j_dft]
+                    j_dft = j+n_atm*i_dft
+                                 
+                    prod = prod+factors*A_k[j_dft]
                 
                 F = prod
       
