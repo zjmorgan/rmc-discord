@@ -257,17 +257,3 @@ def structure(U_k,
            V_k_nuc.flatten(), \
            even, \
            bragg
-
-def debye_waller(Qx, Qy, Qz, Ux, Uy, Uz, A, cond, n_atm):
-    
-    n_nuc = Qx[cond].shape[0]
-    
-    n_xyz = Ux.shape[0]
-    
-    n_uvw = n_xyz // n_atm
-    
-    Q_dot_U = np.kron(Qx[cond],Ux)+np.kron(Qy[cond],Uy)+np.kron(Qz[cond],Uz)
-    
-    T = (1+A)*np.exp(1j*Q_dot_U.reshape(n_nuc,n_xyz))
-        
-    return np.sum(T.reshape(n_nuc,n_uvw,n_atm),axis=1).flatten()

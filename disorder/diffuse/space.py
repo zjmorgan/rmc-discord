@@ -436,3 +436,45 @@ def bragg(T, Qx, Qy, Qz, ux, uy, uz, scattering_length, cond, n_atm):
     F = scattering_length*T*phase_factor
     
     return np.sum(F.reshape(cond.sum(),n_atm),axis=1)
+
+def debye_waller(h_range, 
+                 k_range, 
+                 l_range, 
+                 nh, 
+                 nk,
+                 nl, 
+                 U11, 
+                 U22, 
+                 U33, 
+                 U23, 
+                 U13, 
+                 U12, 
+                 a, 
+                 b, 
+                 c,
+                 T=np.eye(3)):
+    
+    h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
+                             np.linspace(k_range[0],k_range[1],nk), 
+                             np.linspace(l_range[0],l_range[1],nl), 
+                             indexing='ij')
+    
+    h = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
+    k = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
+    l = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
+        
+    h = h.flatten()
+    k = k.flatten()
+    l = l.flatten()
+    
+    n_hkl = nh*nk*nl
+    n_atm = U11.shape[0]
+    
+    T = np.zeros((n_hkl,n_atm))
+    
+    for i in range(n_atm):
+        
+        T[:,i] = np.exp(U11*(h*a)**2+U22*(k*b)**2+U33*(l*c)**2+
+                        2*U23*k*l*b*c+2*U13*h*l*a*c+2*U12*h*k*a*b)
+    
+    return T.flatten()

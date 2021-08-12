@@ -516,11 +516,8 @@ def occupational(double [::1] A_r,
         atm = atms[j]
         
         if (technique == 'Neutron'):
-            
             b[j] = tables.bc.get(atm)
-        
         else:
-        
             a1[j], b1[j], \
             a2[j], b2[j], \
             a3[j], b3[j], \
@@ -621,6 +618,7 @@ def occupational(double [::1] A_r,
 
 def displacive(double [::1] U_r,
                double complex [::1] coeffs,
+               double [::1] occupancy,
                double [::1] ux,
                double [::1] uy,
                double [::1] uz,
@@ -781,11 +779,8 @@ def displacive(double [::1] U_r,
         atm = atms[j]
         
         if (technique == 'Neutron'):
-            
             b[j] = tables.bc.get(atm)
-        
         else:
-        
             a1[j], b1[j], \
             a2[j], b2[j], \
             a3[j], b3[j], \
@@ -865,6 +860,8 @@ def displacive(double [::1] U_r,
                 
                 for j in range(n_atm): 
                     
+                    occ = occupancy[j]
+                    
                     if (technique == 'Neutron'):
                         
                         scattering_length = b[j]
@@ -884,7 +881,7 @@ def displacive(double [::1] U_r,
                                           
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
                     
-                    factors = scattering_length*phase_factor
+                    factors = occ*scattering_length*phase_factor
                     
                     if ((iH <= Fu and iK <= Fv and iL <= Fw) and \
                         nuclear(h, k, l, centering)):
@@ -1069,11 +1066,8 @@ def structural(double [::1] occupancy,
         atm = atms[j]
         
         if (technique == 'Neutron'):
-            
             b[j] = tables.bc.get(atm)
-        
         else:
-        
             a1[j], b1[j], \
             a2[j], b2[j], \
             a3[j], b3[j], \

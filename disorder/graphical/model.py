@@ -832,7 +832,7 @@ class Model:
                              Nu, Nv, Nw, p, even, cntr, mask):
                 
         Ux, Uy, Uz = self.load_displacive(fname, run)
-        
+                
         n_atm = np.size(Ux) // (nu*nv*nw)
         
         Ux = Ux.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
