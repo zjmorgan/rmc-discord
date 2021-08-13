@@ -251,3 +251,9 @@ def report_exception(*args):
     layout = message_box.layout()
     layout.setColumnMinimumWidth(layout.columnCount()-1, 600)
     return message_box.exec_()
+
+
+def save_screenshot(widget, filename):
+    screen = QtWidgets.QApplication.primaryScreen()
+    screenshot = screen.grabWindow(widget.winId())
+    screenshot.save(filename+'.jpg', 'jpg')
