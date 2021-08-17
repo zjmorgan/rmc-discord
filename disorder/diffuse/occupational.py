@@ -6,7 +6,7 @@ from scipy import spatial
 
 from disorder.diffuse.powder import occupational
 
-def composition(nu, nv, nw, n_atm, value=0.5, structure=None):
+def composition(nu, nv, nw, n_atm, value=0.5):
     """
     Generate random relative site occupancies.
     
@@ -32,36 +32,10 @@ def composition(nu, nv, nw, n_atm, value=0.5, structure=None):
         Array has a flattened shape of size ``nu*nw*nv*n_atm``
         
     """
-    
-    if (structure is None):
-                
-        A = (np.random.random((nu,nv,nw,n_atm))<=value)/value-1
-        
-        A = A.flatten()
-        
-    else:
-        
-        A = np.zeros((nu*nv*nw*n_atm))
-        
-        if (np.size(value) > 1):
-        
-            atms = np.mod(structure, n_atm)
-            
-            m, n = atms.shape[0], atms.shape[1]
-            
-            values = value[atms]
-                                    
-            A[structure] = (np.random.random((m,n))<=values)/values-1
-                
-        else:
-            
-            m, n = structure.shape[0], structure.shape[1]
-            
-            a = np.random.random(m)
-                            
-            A[structure] = (np.repeat(a,n).reshape(m,n)<=value)/value-1
-                
-    return A
+                    
+    A = (np.random.random((nu,nv,nw,n_atm))<=value)/value-1
+                        
+    return A.flatten()
 
 def transform(A, 
               H,

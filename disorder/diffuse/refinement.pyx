@@ -9,9 +9,9 @@ from disorder.diffuse cimport candidate
 from disorder.diffuse cimport scattering
 
 from libc.stdlib cimport rand, RAND_MAX
-from libc.math cimport exp, log
+from libc.math cimport exp, log, sqrt
 
-cdef double random() nogil:
+cdef double random_uniform() nogil:
     
     return float(rand())/RAND_MAX
 
@@ -81,9 +81,8 @@ cpdef void magnetic(double [::1] Sx,
                     list temperature,
                     list scale,
                     double constant,
-                    double delta,
                     bint fixed,
-                    double [::1] T, 
+                    bint heisenberg,
                     Py_ssize_t nh,
                     Py_ssize_t nk, 
                     Py_ssize_t nl,
@@ -137,11 +136,12 @@ cpdef void magnetic(double [::1] Sx,
             
             mu = moment[j]
     
-            Sx_cand, Sy_cand, Sz_cand = candidate.vector(Sx_orig, 
+            Sx_cand, Sy_cand, Sz_cand = candidate.moment(Sx_orig, 
                                                          Sy_orig, 
                                                          Sz_orig, 
                                                          mu,
-                                                         fixed)
+                                                         fixed,
+                                                         heisenberg)                
                                     
             scattering.copy(Fx_orig, Fx)
             scattering.copy(Fy_orig, Fy)
@@ -245,7 +245,7 @@ cpdef void magnetic(double [::1] Sx,
             delta_chi_sq = chi_sq_cand-chi_sq_orig
             
             if (delta_chi_sq > 0):
-                if (random() < exp(-inv_temp*delta_chi_sq)):
+                if (random_uniform() < exp(-inv_temp*delta_chi_sq)):
                     chi_sq_orig = chi_sq_cand
                     
                     acc_moves_arr[s] = chi_sq_orig
@@ -384,7 +384,7 @@ cpdef void occupational(double [::1] A_r,
             
             occ = occupancy[j]
                     
-            A_r_cand = candidate.scalar(A_r_orig, occ, fixed)
+            A_r_cand = candidate.composition(A_r_orig, occ, fixed)
                             
             scattering.copy(F_orig, F)
             
@@ -451,7 +451,7 @@ cpdef void occupational(double [::1] A_r,
             delta_chi_sq = chi_sq_cand-chi_sq_orig
             
             if (delta_chi_sq > 0):
-                if (random() < exp(-inv_temp*delta_chi_sq)):
+                if (random_uniform() < exp(-inv_temp*delta_chi_sq)):
                     chi_sq_orig = chi_sq_cand
                     
                     acc_moves_arr[s] = chi_sq_orig
@@ -518,7 +518,12 @@ cpdef void displacive(double [::1] Ux,
                       double complex [::1] factors,
                       double complex [::1] coeffs,
                       double [::1] Q_k,
-                      double [::1] displacement,
+                      double [::1] Lxx,
+                      double [::1] Lyy,
+                      double [::1] Lzz,
+                      double [::1] Lyz,
+                      double [::1] Lxz,
+                      double [::1] Lxy,
                       double [::1] I_calc,
                       double [::1] I_exp,
                       double [::1] inv_sigma_sq,
@@ -551,9 +556,8 @@ cpdef void displacive(double [::1] Ux,
                       list temperature,
                       list scale,
                       double constant,
-                      double delta,
                       bint fixed,
-                      double [::1] T, 
+                      bint isotropic,
                       Py_ssize_t p,
                       Py_ssize_t nh,
                       Py_ssize_t nk, 
@@ -569,7 +573,9 @@ cpdef void displacive(double [::1] Ux,
     
     cdef double delta_chi_sq, chi_sq_cand, chi_sq_orig, scale_factor
     
-    cdef double Ux_orig, Uy_orig, Uz_orig, Ux_cand, Uy_cand, Uz_cand, disp
+    cdef double Ux_orig, Uy_orig, Uz_orig, Ux_cand, Uy_cand, Uz_cand
+    
+    cdef double lxx, lyy, lzz, lyz, lxz, lxy
     
     acc_moves_np = np.full(N, np.nan)
     acc_temps_np = np.full(N, np.nan)
@@ -588,6 +594,8 @@ cpdef void displacive(double [::1] Ux,
     cdef double [::1] energy_arr = energy_np
     cdef double [::1] temperature_arr = temperature_np
     cdef double [::1] scale_arr = scale_np
+    
+    cdef double [::1] result = np.zeros(3, dtype=np.double)
 
     cdef Py_ssize_t i, j, s
     
@@ -606,13 +614,17 @@ cpdef void displacive(double [::1] Ux,
                 
             j = i % n_atm
             
-            disp = displacement[j]
+            lxx, lyy, lzz = Lxx[j], Lyy[j], Lzz[j]
+            lyz, lxz, lxy = Lyz[j], Lxz[j], Lxy[j]
 
-            Ux_cand, Uy_cand, Uz_cand = candidate.vector(Ux_orig, 
-                                                         Uy_orig, 
-                                                         Uz_orig, 
-                                                         disp,
-                                                         fixed)
+            Ux_cand, Uy_cand, Uz_cand = candidate.displacement(lxx, 
+                                                               lyy,
+                                                               lzz, 
+                                                               lyz, 
+                                                               lxz, 
+                                                               lxy, 
+                                                               fixed,
+                                                               isotropic)
 
             scattering.copy(F_orig, F)
             scattering.copy(F_nuc_orig, F_nuc)
@@ -709,7 +721,7 @@ cpdef void displacive(double [::1] Ux,
             delta_chi_sq = chi_sq_cand-chi_sq_orig
             
             if (delta_chi_sq > 0):
-                if (random() < exp(-inv_temp*delta_chi_sq)):
+                if (random_uniform() < exp(-inv_temp*delta_chi_sq)):
                     chi_sq_orig = chi_sq_cand
                     
                     acc_moves_arr[s] = chi_sq_orig

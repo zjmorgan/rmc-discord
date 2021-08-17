@@ -13,7 +13,7 @@ def f(x,y):
 def g(x,y):
     return (1-np.cos(x))/np.pi
 
-def expansion(nu, nv, nw, n_atm, value=1, structure=None, fixed=True): 
+def expansion(nu, nv, nw, n_atm, value=1, fixed=True): 
     """
     Generate random displacement vectors.
     
@@ -40,13 +40,6 @@ def expansion(nu, nv, nw, n_atm, value=1, structure=None, fixed=True):
         
     """
     
-    theta = 2*np.pi*np.random.rand(nu,nv,nw,n_atm)
-    phi = np.arccos(1-2*np.random.rand(nu,nv,nw,n_atm))
-    
-    nx = np.sin(phi)*np.cos(theta)
-    ny = np.sin(phi)*np.sin(theta)
-    nz = np.cos(phi) 
-    
     if (len(np.shape(value)) == 0):
         Vxx = Vyy = Vzz = np.full(n_atm, value)
         Vyz = Vxz = Vxy = np.full(n_atm, 0)
@@ -57,14 +50,44 @@ def expansion(nu, nv, nw, n_atm, value=1, structure=None, fixed=True):
         Vxx, Vyy, Vzz = value[0], value[1], value[2]
         Vyz, Vxz, Vxy = value[3], value[4], value[5]
     
-    U = 1 if fixed else np.random.rand(nu,nv,nw,n_atm)
-    
-    ms = np.sqrt(Vxx*nx*nx+Vyy*ny*ny+Vzz*nz*nz\
-             +2*(Vxz*nx*nz+Vyz*ny*nz+Vxy*nx*ny))
+    if fixed:
+        
+        theta = 2*np.pi*np.random.rand(nu,nv,nw,n_atm)
+        phi = np.arccos(1-2*np.random.rand(nu,nv,nw,n_atm))
+        
+        nx = np.sin(phi)*np.cos(theta)
+        ny = np.sin(phi)*np.sin(theta)
+        nz = np.cos(phi) 
+                    
+        U = np.sqrt(Vxx*nx*nx+Vyy*ny*ny+Vzz*nz*nz\
+                +2*(Vxz*nx*nz+Vyz*ny*nz+Vxy*nx*ny))
             
-    Ux = U*ms*nx
-    Uy = U*ms*ny
-    Uz = U*ms*nz
+        Ux = U*nx
+        Uy = U*ny
+        Uz = U*nz
+        
+    else:
+        
+        L, V = np.zeros((3,3,n_atm)), np.zeros((3,3,n_atm))
+        
+        V[0,0,:] = Vxx
+        V[1,1,:] = Vyy
+        V[2,2,:] = Vzz
+        V[1,2,:] = V[2,1,:] = Vyz
+        V[0,2,:] = V[2,0,:] = Vxz
+        V[0,1,:] = V[1,0,:] = Vxy
+        
+        for i in range(n_atm):
+            if np.all(np.linalg.eigvals(V[...,i]) > 0):
+                L[...,i] = np.linalg.cholesky(V[...,i])
+        
+        U = np.random.normal(loc=0, 
+                             scale=1, 
+                             size=3*nu*nv*nw*n_atm).reshape(3,nu,nv,nw,n_atm)
+        
+        Ux = U[0,...]*L[0,0,:]
+        Uy = U[0,...]*L[1,0,:]+U[1,...]*L[1,1,:]
+        Uz = U[0,...]*L[2,0,:]+U[1,...]*L[2,1,:]+U[2,...]*L[2,2,:]
     
     return Ux.flatten(), Uy.flatten(), Uz.flatten()
 
@@ -496,13 +519,3 @@ def powder(Q,
     I = (auto/scale+2*summation)/n_xyz
     
     return I
-
-def debye_waller(Q, Ux, Uy, Uz):
-            
-    U = np.sqrt(Ux**2+Uy**2+Uz**2)
-        
-    QU = np.kron(Q,U)
-    
-    T = np.exp(-QU.reshape(Q.shape[0],U.shape[0])**2/3)/U.shape[0]
-        
-    return np.sum(T,axis=1).flatten()

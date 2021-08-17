@@ -154,7 +154,7 @@ def form(Q, ions, g=2):
 
     return factor
 
-def spin(nu, nv, nw, n_atm, value=1):
+def spin(nu, nv, nw, n_atm, value=1, fixed=True):
     """
     Generate random spin vectors.
 
@@ -179,12 +179,33 @@ def spin(nu, nv, nw, n_atm, value=1):
 
     """
 
-    theta = 2*np.pi*np.random.rand(nu,nv,nw,n_atm)
-    phi = np.arccos(1-2*np.random.rand(nu,nv,nw,n_atm))
+    if (len(np.shape(value)) <= 1):
 
-    Sx = value*np.sin(phi)*np.cos(theta)
-    Sy = value*np.sin(phi)*np.sin(theta)
-    Sz = value*np.cos(phi)
+        if (len(np.shape(value)) == 0):
+            V = np.full(n_atm, value)
+        elif (len(np.shape(value)) == 1):
+            V = value
+        
+        theta = 2*np.pi*np.random.rand(nu,nv,nw,n_atm)
+        phi = np.arccos(1-2*np.random.rand(nu,nv,nw,n_atm))
+    
+        Sx = V*np.sin(phi)*np.cos(theta)
+        Sy = V*np.sin(phi)*np.sin(theta)
+        Sz = V*np.cos(phi)     
+        
+    else:
+        
+        sign = 2*(np.random.rand(nu,nv,nw,n_atm) < 0.5)-1
+        
+        Sx, Sy, Sz = sign*value[0], sign*value[1], sign*value[2]
+        
+    if not fixed:
+        
+        U = np.random.rand(nu,nv,nw,n_atm)
+        
+        Sx *= U
+        Sy *= U
+        Sz *= U       
 
     return Sx.flatten(), Sy.flatten(), Sz.flatten()
 

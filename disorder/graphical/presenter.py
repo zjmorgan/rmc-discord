@@ -2044,15 +2044,70 @@ class Presenter:
                  
         phase_factor, space_factor = exp_factors
         self.phase_factor, self.space_factor = exp_factors
-                                        
+                
+        heisenberg = self.view.get_moment_constraint() == 'Heisenberg'
+        isotropic = self.view.get_displacement_constraint() == 'Isotropic'
+        
+        self.heisenberg, self.isotropic = heisenberg, isotropic
+        
+        mux, muy, muz = self.model.transform_moments(mu1, mu2, mu3, C)
+        
+        self.moment = np.row_stack((mux, muy, muz)) if not heisenberg else mu
+        
+        u11, u22, u33, u23, u13, u12 = U11, U22, U33, U23, U13, U12
+             
+        if isotropic:
+            ADPs = self.model.anisotropic_parameters(Uiso, D)
+            u11, u22, u33, u23, u13, u12 = ADPs
+        
+        L = self.model.decompose_adps(u11, u22, u33, u23, u13, u12, D)
+        
+        self.Lxx, self.Lyy, self.Lzz, self.Lyz, self.Lxz, self.Lxy = L
+        
+        uxx, uyy, uzz, \
+        uyz, uxz, uxx = self.model.transform_adps(u11, u22, u33, 
+                                                  u23, u13, u12, D)
+        
+        self.displacement = np.row_stack((uxx, uyy, uzz, uyz, uxz, uxx))
+        
+        # ---
+        
+        adp_type = self.view.get_adp_type()
+        
+        if (adp_type != 'Anisotropic' or self.view.get_disorder_dis()):
+            if (adp_type != 'Isotropic' or self.view.get_disorder_dis()):
+                Uiso *= 0
+                
+            ADPs = self.model.anisotropic_parameters(Uiso, D)
+            
+            U11, U22, U33, U23, U13, U12 = ADPs
+        
+        constants_ = self.model.reciprocal_lattice_parameters(*constants)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = constants_
+        
+        T = self.model.debye_waller_factors(h_range, k_range, l_range, 
+                                            nh, nk, nl,
+                                            U11, U22, U33, U23, U13, U12,
+                                            a_, b_, c_)
+                                                        
         if (self.view.get_type() == 'Neutron'):
              factors = self.model.neutron_factors(Q, element, ion, occupancy,
-                                                  g, phase_factor)
+                                                  T, g, phase_factor)
+             
              self.factors, self.magnetic_factors = factors
         else:
-             factors = self.model.xray_factors(Q, ion, occupancy, phase_factor)
+             factors = self.model.xray_factors(Q, ion, occupancy, 
+                                               T, phase_factor)
+             
              self.factors = factors
-                          
+             
+        self.p = self.view.get_order()
+        
+        self.fixed_mag = self.view.fixed_moment_check()
+        self.fixed_occ = self.view.fixed_composition_check()
+        self.fixed_dis = self.view.fixed_displacement_check()
+                                  
     def initialize_intensity(self):
         
         mask, Q = self.mask, self.Q
@@ -2098,15 +2153,18 @@ class Presenter:
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
         
-        c = 1 if self.view.get_disorder_mag() else 0
+        c = 1 if self.magnetic else 0
             
-        moment = self.mu*c
+        fixed_mag = self.fixed_mag
+
+        moment = self.moment*c
         
-        Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm, moment)
+        Sx, Sy, Sz = self.model.random_moments(nu, nv, nw, n_atm, 
+                                               moment, fixed_mag)
                 
         self.Sx, self.Sy, self.Sz = Sx, Sy, Sz 
         
-        b, c = (0, 1) if self.view.get_disorder_occ() else (1, 0)
+        b, c = (0, 1) if self.occupational else (1, 0)
 
         occupancy = self.occupancy*c+b
         
@@ -2114,11 +2172,14 @@ class Presenter:
         
         self.A_r = A_r 
         
-        c = 1 if self.view.get_disorder_dis() else 0
+        c = 1 if self.displacive else 0
         
-        Uiso = self.Uiso*c
+        fixed_dis = self.fixed_dis
         
-        Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, Uiso)
+        displacement = self.displacement*c
+        
+        Ux, Uy, Uz = self.model.random_displacements(nu, nv, nw, n_atm, 
+                                                     displacement, fixed_dis)
         
         self.Ux, self.Uy, self.Uz = Ux, Uy, Uz
 
@@ -2339,12 +2400,6 @@ class Presenter:
                 self.progress = self.view.get_progress()
                 
                 self.constant = self.view.get_constant()
-                
-                self.p = self.view.get_order()
-                
-                self.fixed_mag = self.view.fixed_moment_check()
-                self.fixed_occ = self.view.fixed_composition_check()
-                self.fixed_dis = self.view.fixed_displacement_check()
                     
                 self.view.enable_refinement(False)
                 self.view.enable_reset_refinement(False)
@@ -2407,11 +2462,7 @@ class Presenter:
     def refinement_cycle(self):
                     
         N = self.n_uvw*self.n_atm*1
-            
-        delta = 1
-        
-        T = np.array([1.,1.,1.,0.,0.,0.])
-        
+                            
         space_factor = self.space_factor
         I_calc, I_expt = self.I_calc, self.I_expt
         inv_sigma_sq = self.inv_sigma_sq
@@ -2469,6 +2520,8 @@ class Presenter:
             
             fixed_mag = self.fixed_mag
             
+            heisenberg = self.heisenberg
+            
             self.model.magnetic_refinement(
                 Sx, Sy, Sz, Qx_norm, Qy_norm, Qz_norm, 
                 Sx_k, Sy_k, Sz_k, 
@@ -2488,7 +2541,7 @@ class Presenter:
                 boxes, i_dft, inverses, i_mask, i_unmask,
                 acc_moves, acc_temps, rej_moves, rej_temps,
                 chi_sq, energy, temperature, scale, constant,
-                delta, fixed_mag, T, nh, nk, nl, nu, nv, nw, n_atm, n, N)
+                fixed_mag, heisenberg, nh, nk, nl, nu, nv, nw, n_atm, n, N)
             
         elif self.occupational:
             
@@ -2522,7 +2575,6 @@ class Presenter:
         elif self.displacive:
             
             Ux, Uy, Uz = self.Ux, self.Uy, self.Uz 
-            Uiso = self.Uiso
             
             U_r, U_r_orig, U_r_cand = self.U_r, self.U_r_orig, self.U_r_cand
             U_k, U_k_orig, U_k_cand = self.U_k, self.U_k_orig, self.U_k_cand
@@ -2547,6 +2599,11 @@ class Presenter:
             
             fixed_dis = self.fixed_dis
             
+            isotropic = self.isotropic
+            
+            Lxx, Lyy, Lzz = self.Lxx, self.Lyy, self.Lzz
+            Lyz, Lxz, Lxy = self.Lyz, self.Lxz, self.Lxy
+            
             p = self.p
 
             self.model.displacive_refinement(
@@ -2558,7 +2615,7 @@ class Presenter:
                 F, F_nuc, F_orig, F_nuc_orig, F_cand, F_nuc_cand,
                 prod, prod_nuc, prod_orig, prod_nuc_orig,    
                 prod_cand, prod_nuc_cand, space_factor, factors,
-                coeffs, Q_k, Uiso,
+                coeffs, Q_k, Lxx, Lyy, Lzz, Lyz, Lxz, Lxy,
                 I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref, v_inv,
                 a_filt, b_filt, c_filt,
                 d_filt, e_filt, f_filt,
@@ -2566,8 +2623,7 @@ class Presenter:
                 bragg, even, boxes, i_dft, inverses, i_mask, i_unmask, 
                 acc_moves, acc_temps, rej_moves, rej_temps, 
                 chi_sq, energy, temperature, scale, constant, 
-                delta, fixed_dis, T, p, nh, nk, nl,
-                nu, nv, nw, n_atm, n, N)
+                fixed_dis, isotropic, p, nh, nk, nl, nu, nv, nw, n_atm, n, N)
                         
         self.I_obs = I_flat.reshape(nh,nk,nl)
         self.I_obs[self.mask] = np.nan
@@ -3241,9 +3297,30 @@ class Presenter:
             
             fname = self.fname
             
-            B, R, = self.B, self.R
+            B, R, D, = self.B, self.R, self.D
             
-            occupancy, g = self.occupancy[mask], self.g[mask]
+            occupancy = self.occupancy[mask]
+            
+            U11 = self.U11[mask]
+            U22 = self.U22[mask]
+            U33 = self.U33[mask]
+            U23 = self.U23[mask]
+            U13 = self.U13[mask]
+            U12 = self.U12[mask]
+            
+            Uiso = self.Uiso[mask]
+            
+            g = self.g[mask]
+                        
+            adp_type = self.view.get_adp_type_recalc()
+            
+            if (adp_type != 'Anisotropic'):
+                if (adp_type != 'Isotropic'):
+                    Uiso *= 0
+                    
+                ADPs = self.model.anisotropic_parameters(Uiso, D)
+                
+                U11, U22, U33, U23, U13, U12 = ADPs
             
             # ---
             
@@ -3294,9 +3371,10 @@ class Presenter:
                 if self.view.get_disorder_mag_recalc():
                     
                     I_calc = self.model.magnetic_intensity(
-                                 fname, run, ux, uy, uz, ion,
+                                 fname, run, occupancy, 
+                                 U11, U22, U33, U23, U13, U12, ux, uy, uz, ion,
                                  h_range, k_range, l_range, indices, symop,
-                                 T, B, R, twins, variants, nh, nk, nl, 
+                                 T, B, R, D, twins, variants, nh, nk, nl, 
                                  nu, nv, nw, Nu, Nv, Nw, g, mask)
                     
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
@@ -3304,9 +3382,10 @@ class Presenter:
                 elif self.view.get_disorder_occ_recalc():
                                         
                     I_calc = self.model.occupational_intensity(
-                                 fname, run, occupancy, ux, uy, uz, atm,
+                                 fname, run, occupancy, 
+                                 U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
                                  h_range, k_range, l_range, indices, symop,
-                                 T, B, R, twins, variants, nh, nk, nl,
+                                 T, B, R, D, twins, variants, nh, nk, nl,
                                  nu, nv, nw, Nu, Nv, Nw, mask)
                                                             
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
@@ -3314,9 +3393,9 @@ class Presenter:
                 elif self.view.get_disorder_dis_recalc():
                             
                     I_calc = self.model.displacive_intensity(
-                                 fname, run, coeffs, ux, uy, uz, atm,
-                                 h_range, k_range, l_range, indices, symop,
-                                 T, B, R, twins, variants, nh, nk, nl,
+                                 fname, run, coeffs, occupancy, ux, uy, uz, 
+                                 atm, h_range, k_range, l_range, indices, 
+                                 symop, T, B, R, twins, variants, nh, nk, nl,
                                  nu, nv, nw, Nu, Nv, Nw, p, even, cntr, mask)
                                         
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
@@ -3324,9 +3403,10 @@ class Presenter:
                 elif self.view.get_disorder_struct_recalc():
                             
                     I_calc = self.model.structural_intensity(
-                                occupancy, ux, uy, uz, atm,
+                                occupancy, U11, U22, U33, U23, U13, U12, 
+                                ux, uy, uz, atm,
                                 h_range, k_range, l_range, indices, symop,
-                                T, B, R, twins, variants, nh, nk, nl,
+                                T, B, R, D, twins, variants, nh, nk, nl,
                                 nu, nv, nw, Nu, Nv, Nw, cntr, mask)
                                                             
                     self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)

@@ -67,6 +67,13 @@ cdef bint nuclear(double h, double k, double l, int centering) nogil:
 def magnetic(double [::1] Sx, 
              double [::1] Sy,
              double [::1] Sz,
+             double [::1] occupancy,
+             double [::1] U11,
+             double [::1] U22,
+             double [::1] U33,
+             double [::1] U23,
+             double [::1] U13,
+             double [::1] U12,
              double [::1] ux,
              double [::1] uy,
              double [::1] uz,
@@ -79,6 +86,7 @@ def magnetic(double [::1] Sx,
              double [:,:] T,
              double [:,:] B,
              double [:,:] R,
+             double [:,:] D,
              double [:,:,:] domains,
              double [:] variants,
              Py_ssize_t nh,
@@ -122,11 +130,18 @@ def magnetic(double [::1] Sx,
     
     cdef double Qx_norm, Qy_norm, Qz_norm, Q
     
-    cdef double complex phase_factor, factors
+    cdef double complex phase_factor, factors, dw_factors
+    
+    cdef double [::1] Uxx = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uyy = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uzz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uyz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uxz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uxy = np.zeros(n_atm, dtype=float)
     
     cdef double [::1] K2 = 2/np.copy(g, order='C')-1
     
-    cdef double form_factor, j0, j2, s_, s_sq
+    cdef double form_factor, j0, j2, s_, s_sq, occ
     
     cdef double [::1] A0 = np.zeros(n_atm, dtype=float)
     cdef double [::1] B0 = np.zeros(n_atm, dtype=float)
@@ -250,6 +265,48 @@ def magnetic(double [::1] Sx,
             B2[j], b2[j], \
             C2[j], c2[j], \
             D2[j] = tables.j2.get(ion)
+            
+        Uxx[j] = D[0,0]*D[0,0]*U11[j]+\
+                 D[0,1]*D[0,1]*U22[j]+\
+                 D[0,2]*D[0,2]*U33[j]+\
+                 D[0,1]*D[0,2]*U23[j]*2+\
+                 D[0,2]*D[0,0]*U13[j]*2+\
+                 D[0,0]*D[0,1]*U12[j]*2
+
+        Uyy[j] = D[1,0]*D[1,0]*U11[j]+\
+                 D[1,1]*D[1,1]*U22[j]+\
+                 D[1,2]*D[1,2]*U33[j]+\
+                 D[1,1]*D[1,2]*U23[j]*2+\
+                 D[1,2]*D[1,0]*U13[j]*2+\
+                 D[1,0]*D[1,1]*U12[j]*2
+
+        Uzz[j] = D[2,0]*D[2,0]*U11[j]+\
+                 D[2,1]*D[2,1]*U22[j]+\
+                 D[2,2]*D[2,2]*U33[j]+\
+                 D[2,1]*D[2,2]*U23[j]*2+\
+                 D[2,2]*D[2,0]*U13[j]*2+\
+                 D[2,0]*D[2,1]*U12[j]*2
+
+        Uyz[j] =  D[1,0]*D[2,0]*U11[j]+\
+                  D[1,1]*D[2,1]*U22[j]+\
+                  D[1,2]*D[2,2]*U33[j]+\
+                 (D[1,1]*D[2,2]+D[1,2]*D[2,1])*U23[j]+\
+                 (D[1,2]*D[2,0]+D[1,0]*D[2,2])*U13[j]+\
+                 (D[1,0]*D[2,1]+D[1,1]*D[2,0])*U12[j]
+
+        Uxz[j] =  D[0,0]*D[2,0]*U11[j]+\
+                  D[0,1]*D[2,1]*U22[j]+\
+                  D[0,2]*D[2,2]*U33[j]+\
+                 (D[0,1]*D[2,2]+D[0,2]*D[2,1])*U23[j]+\
+                 (D[0,2]*D[2,0]+D[0,0]*D[2,2])*U13[j]+\
+                 (D[0,0]*D[2,1]+D[0,1]*D[2,0])*U12[j]
+
+        Uxy[j] =  D[0,0]*D[1,0]*U11[j]+\
+                  D[0,1]*D[1,1]*U22[j]+\
+                  D[0,2]*D[1,2]*U33[j]+\
+                 (D[0,1]*D[1,2]+D[0,2]*D[1,1])*U23[j]+\
+                 (D[0,2]*D[1,0]+D[0,0]*D[1,2])*U13[j]+\
+                 (D[0,0]*D[1,1]+D[0,1]*D[1,0])*U12[j]
                             
     for i in prange(n_hkl, nogil=True):
              
@@ -320,6 +377,8 @@ def magnetic(double [::1] Sx,
                 
                 for j in range(n_atm):
                     
+                    occ = occupancy[j]
+                    
                     j0 = A0[j]*exp(-a0[j]*s_sq)\
                        + B0[j]*exp(-b0[j]*s_sq)\
                        + C0[j]*exp(-c0[j]*s_sq)\
@@ -336,8 +395,15 @@ def magnetic(double [::1] Sx,
                         form_factor = 0
                         
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
+    
+                    dw_factors = iexp(0.5*(Uxx[j]*Qx*Qx+\
+                                           Uyy[j]*Qy*Qy+\
+                                           Uzz[j]*Qz*Qz)+\
+                                           Uyz[j]*Qy*Qz+\
+                                           Uxz[j]*Qx*Qz+\
+                                           Uxy[j]*Qx*Qy)
                     
-                    factors = form_factor*phase_factor
+                    factors = occ*form_factor*phase_factor*dw_factors
                     
                     j_dft = j+n_atm*i_dft
                                  
@@ -368,6 +434,12 @@ def magnetic(double [::1] Sx,
 
 def occupational(double [::1] A_r, 
                  double [::1] occupancy,
+                 double [::1] U11,
+                 double [::1] U22,
+                 double [::1] U33,
+                 double [::1] U23,
+                 double [::1] U13,
+                 double [::1] U12,
                  double [::1] ux,
                  double [::1] uy,
                  double [::1] uz,
@@ -380,6 +452,7 @@ def occupational(double [::1] A_r,
                  double [:,:] T,
                  double [:,:] B,
                  double [:,:] R,
+                 double [:,:] D,
                  double [:,:,:] domains,
                  double [:] variants,
                  Py_ssize_t nh,
@@ -421,7 +494,14 @@ def occupational(double [::1] A_r,
     cdef double Qh, Qk, Ql
     cdef double Qx, Qy, Qz
         
-    cdef double complex phase_factor, factors
+    cdef double complex phase_factor, factors, dw_factors
+    
+    cdef double [::1] Uxx = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uyy = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uzz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uyz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uxz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uxy = np.zeros(n_atm, dtype=float)
     
     cdef double Q, s_, s_sq
     
@@ -523,6 +603,48 @@ def occupational(double [::1] A_r,
             a3[j], b3[j], \
             a4[j], b4[j], \
             c[j] = tables.X.get(atm)
+
+        Uxx[j] = D[0,0]*D[0,0]*U11[j]+\
+                 D[0,1]*D[0,1]*U22[j]+\
+                 D[0,2]*D[0,2]*U33[j]+\
+                 D[0,1]*D[0,2]*U23[j]*2+\
+                 D[0,2]*D[0,0]*U13[j]*2+\
+                 D[0,0]*D[0,1]*U12[j]*2
+
+        Uyy[j] = D[1,0]*D[1,0]*U11[j]+\
+                 D[1,1]*D[1,1]*U22[j]+\
+                 D[1,2]*D[1,2]*U33[j]+\
+                 D[1,1]*D[1,2]*U23[j]*2+\
+                 D[1,2]*D[1,0]*U13[j]*2+\
+                 D[1,0]*D[1,1]*U12[j]*2
+
+        Uzz[j] = D[2,0]*D[2,0]*U11[j]+\
+                 D[2,1]*D[2,1]*U22[j]+\
+                 D[2,2]*D[2,2]*U33[j]+\
+                 D[2,1]*D[2,2]*U23[j]*2+\
+                 D[2,2]*D[2,0]*U13[j]*2+\
+                 D[2,0]*D[2,1]*U12[j]*2
+
+        Uyz[j] =  D[1,0]*D[2,0]*U11[j]+\
+                  D[1,1]*D[2,1]*U22[j]+\
+                  D[1,2]*D[2,2]*U33[j]+\
+                 (D[1,1]*D[2,2]+D[1,2]*D[2,1])*U23[j]+\
+                 (D[1,2]*D[2,0]+D[1,0]*D[2,2])*U13[j]+\
+                 (D[1,0]*D[2,1]+D[1,1]*D[2,0])*U12[j]
+
+        Uxz[j] =  D[0,0]*D[2,0]*U11[j]+\
+                  D[0,1]*D[2,1]*U22[j]+\
+                  D[0,2]*D[2,2]*U33[j]+\
+                 (D[0,1]*D[2,2]+D[0,2]*D[2,1])*U23[j]+\
+                 (D[0,2]*D[2,0]+D[0,0]*D[2,2])*U13[j]+\
+                 (D[0,0]*D[2,1]+D[0,1]*D[2,0])*U12[j]
+
+        Uxy[j] =  D[0,0]*D[1,0]*U11[j]+\
+                  D[0,1]*D[1,1]*U22[j]+\
+                  D[0,2]*D[1,2]*U33[j]+\
+                 (D[0,1]*D[1,2]+D[0,2]*D[1,1])*U23[j]+\
+                 (D[0,2]*D[1,0]+D[0,0]*D[1,2])*U13[j]+\
+                 (D[0,0]*D[1,1]+D[0,1]*D[1,0])*U12[j]
                             
     for i in prange(n_hkl, nogil=True):
             
@@ -601,8 +723,15 @@ def occupational(double [::1] A_r,
                                           + c[j]
                         
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
+    
+                    dw_factors = iexp(0.5*(Uxx[j]*Qx*Qx+\
+                                           Uyy[j]*Qy*Qy+\
+                                           Uzz[j]*Qz*Qz)+\
+                                           Uyz[j]*Qy*Qz+\
+                                           Uxz[j]*Qx*Qz+\
+                                           Uxy[j]*Qx*Qy)
                     
-                    factors = occ*scattering_length*phase_factor
+                    factors = occ*scattering_length*phase_factor*dw_factors
                     
                     j_dft = j+n_atm*i_dft
                                  
@@ -679,7 +808,7 @@ def displacive(double [::1] U_r,
     cdef double Qx, Qy, Qz
         
     cdef double complex phase_factor, factors
-    
+        
     cdef double Q, s_, s_sq
     
     cdef double occ
@@ -919,6 +1048,12 @@ def displacive(double [::1] U_r,
     return I_np
 
 def structural(double [::1] occupancy,
+               double [::1] U11,
+               double [::1] U22,
+               double [::1] U33,
+               double [::1] U23,
+               double [::1] U13,
+               double [::1] U12,
                double [::1] ux,
                double [::1] uy,
                double [::1] uz,
@@ -931,6 +1066,7 @@ def structural(double [::1] occupancy,
                double [:,:] T,
                double [:,:] B,
                double [:,:] R,
+               double [:,:] D,
                double [:,:,:] domains,
                double [:] variants,
                Py_ssize_t nh,
@@ -973,7 +1109,14 @@ def structural(double [::1] occupancy,
     cdef double Qh, Qk, Ql
     cdef double Qx, Qy, Qz
         
-    cdef double complex phase_factor, factors
+    cdef double complex phase_factor, factors, dw_factors
+    
+    cdef double [::1] Uxx = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uyy = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uzz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uyz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uxz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uxy = np.zeros(n_atm, dtype=float)
     
     cdef double Q, s_, s_sq
     
@@ -1073,6 +1216,48 @@ def structural(double [::1] occupancy,
             a3[j], b3[j], \
             a4[j], b4[j], \
             c[j] = tables.X.get(atm)
+            
+        Uxx[j] = D[0,0]*D[0,0]*U11[j]+\
+                 D[0,1]*D[0,1]*U22[j]+\
+                 D[0,2]*D[0,2]*U33[j]+\
+                 D[0,1]*D[0,2]*U23[j]*2+\
+                 D[0,2]*D[0,0]*U13[j]*2+\
+                 D[0,0]*D[0,1]*U12[j]*2
+
+        Uyy[j] = D[1,0]*D[1,0]*U11[j]+\
+                 D[1,1]*D[1,1]*U22[j]+\
+                 D[1,2]*D[1,2]*U33[j]+\
+                 D[1,1]*D[1,2]*U23[j]*2+\
+                 D[1,2]*D[1,0]*U13[j]*2+\
+                 D[1,0]*D[1,1]*U12[j]*2
+
+        Uzz[j] = D[2,0]*D[2,0]*U11[j]+\
+                 D[2,1]*D[2,1]*U22[j]+\
+                 D[2,2]*D[2,2]*U33[j]+\
+                 D[2,1]*D[2,2]*U23[j]*2+\
+                 D[2,2]*D[2,0]*U13[j]*2+\
+                 D[2,0]*D[2,1]*U12[j]*2
+
+        Uyz[j] =  D[1,0]*D[2,0]*U11[j]+\
+                  D[1,1]*D[2,1]*U22[j]+\
+                  D[1,2]*D[2,2]*U33[j]+\
+                 (D[1,1]*D[2,2]+D[1,2]*D[2,1])*U23[j]+\
+                 (D[1,2]*D[2,0]+D[1,0]*D[2,2])*U13[j]+\
+                 (D[1,0]*D[2,1]+D[1,1]*D[2,0])*U12[j]
+
+        Uxz[j] =  D[0,0]*D[2,0]*U11[j]+\
+                  D[0,1]*D[2,1]*U22[j]+\
+                  D[0,2]*D[2,2]*U33[j]+\
+                 (D[0,1]*D[2,2]+D[0,2]*D[2,1])*U23[j]+\
+                 (D[0,2]*D[2,0]+D[0,0]*D[2,2])*U13[j]+\
+                 (D[0,0]*D[2,1]+D[0,1]*D[2,0])*U12[j]
+
+        Uxy[j] =  D[0,0]*D[1,0]*U11[j]+\
+                  D[0,1]*D[1,1]*U22[j]+\
+                  D[0,2]*D[1,2]*U33[j]+\
+                 (D[0,1]*D[1,2]+D[0,2]*D[1,1])*U23[j]+\
+                 (D[0,2]*D[1,0]+D[0,0]*D[1,2])*U13[j]+\
+                 (D[0,0]*D[1,1]+D[0,1]*D[1,0])*U12[j]
                                         
     for i in prange(n_hkl, nogil=True):
             
@@ -1151,8 +1336,15 @@ def structural(double [::1] occupancy,
                                           + c[j]
                                           
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
+    
+                    dw_factors = iexp(0.5*(Uxx[j]*Qx*Qx+\
+                                           Uyy[j]*Qy*Qy+\
+                                           Uzz[j]*Qz*Qz)+\
+                                           Uyz[j]*Qy*Qz+\
+                                           Uxz[j]*Qx*Qz+\
+                                           Uxy[j]*Qx*Qy)
                     
-                    factors = occ*scattering_length*phase_factor
+                    factors = occ*scattering_length*phase_factor*dw_factors
                     
                     j_dft = j+n_atm*i_dft
                                  

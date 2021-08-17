@@ -96,6 +96,10 @@ class Model:
         
         return crystal.parameters(folder=folder, filename=filename)
     
+    def reciprocal_lattice_parameters(self, a, b, c, alpha, beta, gamma):
+        
+        return crystal.reciprocal(a, b, c, alpha, beta, gamma)
+    
     def find_laue(self, folder, filename):
         
         return crystal.laue(folder, filename)
@@ -126,6 +130,9 @@ class Model:
     
     def anisotropic_parameters(self, displacement, D):
         
+        if (len(displacement.shape) != 2):
+            displacement = displacement.reshape(displacement.size, 1)
+        
         if (displacement.shape[1] == 6):
             U11, U22, U33, U23, U13, U12 = np.round(displacement.T, 4)
         else:
@@ -154,6 +161,47 @@ class Model:
         
         return np.array(Uiso), np.array(U1), np.array(U2), np.array(U3)
     
+    def decompose_adps(self, U11, U22, U33, U23, U13, U12, D):
+
+        U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
+        n = np.size(U11)
+        
+        U = U.reshape(3,3,n)
+        
+        Lxx, Lyy, Lzz, Lyz, Lxz, Lxy = [], [], [], [], [], []
+        for i in range(n):
+            if np.all(np.linalg.eigvals(U[...,i]) > 0):
+                L = np.linalg.cholesky(np.dot(np.dot(D, U[...,i]), D.T))
+                Lxx.append(L[0,0])
+                Lyy.append(L[1,1])
+                Lzz.append(L[2,2])
+                Lyz.append(L[1,2])
+                Lxz.append(L[0,2])
+                Lxy.append(L[0,1])
+
+        return np.array(Lxx), np.array(Lyy), np.array(Lzz), \
+               np.array(Lyz), np.array(Lxz), np.array(Lxy)
+               
+    def transform_adps(self, U11, U22, U33, U23, U13, U12, D):
+
+        U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
+        n = np.size(U11)
+        
+        U = U.reshape(3,3,n)
+        
+        Uxx, Uyy, Uzz, Uyz, Uxz, Uxy = [], [], [], [], [], []
+        for i in range(n):
+            Up = np.dot(np.dot(D, U[...,i]), D.T)
+            Uxx.append(Up[0,0])
+            Uyy.append(Up[1,1])
+            Uzz.append(Up[2,2])
+            Uyz.append(Up[1,2])
+            Uxz.append(Up[0,2])
+            Uxy.append(Up[0,1])
+        
+        return np.array(Uxx), np.array(Uyy), np.array(Uzz), \
+               np.array(Uyz), np.array(Uxz), np.array(Uxy)
+               
     def magnetic_moments(self, mu1, mu2, mu3, C):
         
         M = np.array([mu1,mu2,mu3])
@@ -166,6 +214,22 @@ class Model:
             mu.append(np.linalg.norm(np.dot(C, M[:,i])))
         
         return np.array(mu)
+    
+    def transform_moments(self, mu1, mu2, mu3, C):
+        
+        M = np.array([mu1,mu2,mu3])
+        n = np.size(mu1)
+        
+        M = M.reshape(3,n)
+
+        mux, muy, muz = [], [], []
+        for i in range(n):
+            Mp = np.dot(C, M[:,i])
+            mux.append(Mp[0])
+            muy.append(Mp[1])
+            muz.append(Mp[2])
+        
+        return np.array(mux), np.array(muy), np.array(muz)
     
     def magnetic_symmetry(self, operator, moment):
                         
@@ -412,7 +476,7 @@ class Model:
         
         return phase_factor, space_factor
 
-    def neutron_factors(self, Q, atm, ion, occupancy, g, phase_factor):
+    def neutron_factors(self, Q, atm, ion, occupancy, T, g, phase_factor):
                     
         scattering_length = scattering.length(atm, Q.size)
                     
@@ -423,15 +487,23 @@ class Model:
         magnetic_factors = space.prefactors(magnetic_form_factor, 
                                             phase_factor, occupancy)
         
-        return factors, magnetic_factors
+        return factors*T, magnetic_factors*T
     
-    def xray_factors(self, Q, ion, occupancy, phase_factor):
+    def xray_factors(self, Q, ion, occupancy, T, phase_factor):
             
         form_factor = scattering.form(ion, Q)
         
         factors = space.prefactors(form_factor, phase_factor, occupancy)
 
-        return factors       
+        return factors*T
+    
+    def debye_waller_factors(self, h_range, k_range, l_range, nh, nk, nl, 
+                             U11, U22, U33, U23, U13, U12, a, b, c):
+        
+        T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
+                               U11, U22, U33, U23, U13, U12, a, b, c)
+        
+        return T.flatten()
 
     def initialize_intensity(self, mask, Q):
         
@@ -475,17 +547,17 @@ class Model:
             
         return v_inv, boxes
         
-    def random_moments(self, nu, nv, nw, n_atm, moment):
+    def random_moments(self, nu, nv, nw, n_atm, moment, fixed):
     
-        return magnetic.spin(nu, nv, nw, n_atm, moment)
+        return magnetic.spin(nu, nv, nw, n_atm, moment, fixed)
         
     def random_occupancies(self, nu, nv, nw, n_atm, occupancy):
         
-        return occupational.composition(nu, nv, nw, n_atm, value=occupancy)
+        return occupational.composition(nu, nv, nw, n_atm, occupancy)
     
-    def random_displacements(self, nu, nv, nw, n_atm, displacement):
+    def random_displacements(self, nu, nv, nw, n_atm, displacement, fixed):
         
-        return displacive.expansion(nu, nv, nw, n_atm, value=displacement)
+        return displacive.expansion(nu, nv, nw, n_atm, displacement, fixed)
             
     def initialize_magnetic(self, Sx, Sy, Sz, H, K, L, 
                             Qx_norm, Qy_norm, Qz_norm, indices, 
@@ -788,9 +860,10 @@ class Model:
                     
         blocks.save(fname, binary=False)
     
-    def magnetic_intensity(self, fname, run, ux, uy, uz, atm,
+    def magnetic_intensity(self, fname, run, occupancy, 
+                           U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
                            h_range, k_range, l_range, indices, symop,
-                           T, B, R, twins, variants, nh, nk, nl, nu, nv, nw,
+                           T, B, R, D, twins, variants, nh, nk, nl, nu, nv, nw,
                            Nu, Nv, Nw, g, mask):
             
         Sx, Sy, Sz = self.load_magnetic(fname, run)
@@ -801,16 +874,19 @@ class Model:
         Sy = Sy.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
         Sz = Sz.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
                 
-        I_calc = monocrystal.magnetic(Sx, Sy, Sz, ux, uy, uz, atm,
+        I_calc = monocrystal.magnetic(Sx, Sy, Sz, occupancy, 
+                                      U11, U22, U33, U23, U13, U12, 
+                                      ux, uy, uz, atm,
                                       h_range, k_range, l_range, indices,
-                                      symop, T, B, R, twins, variants,
+                                      symop, T, B, R, D, twins, variants,
                                       nh, nk, nl, nu, nv, nw, Nu, Nv, Nw, g)
         
         return I_calc
                                 
-    def occupational_intensity(self, fname, run, occupancy, ux, uy, uz, atm,
+    def occupational_intensity(self, fname, run, occupancy, 
+                               U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
                                h_range, k_range, l_range, indices, symop,
-                               T, B, R, twins, variants, nh, nk, nl, 
+                               T, B, R, D, twins, variants, nh, nk, nl, 
                                nu, nv, nw, Nu, Nv, Nw, mask):
                     
         A_r = self.load_occupational(fname, run)
@@ -819,15 +895,17 @@ class Model:
         
         A_r = A_r.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
                 
-        I_calc = monocrystal.occupational(A_r, occupancy, ux, uy, uz, atm,
+        I_calc = monocrystal.occupational(A_r, occupancy, 
+                                          U11, U22, U33, U23, U13, U12, 
+                                          ux, uy, uz, atm,
                                           h_range, k_range, l_range, indices, 
-                                          symop, T, B, R, twins, variants,
+                                          symop, T, B, R, D, twins, variants,
                                           nh, nk, nl, nu, nv, nw, Nu, Nv, Nw)
         
         return I_calc
 
-    def displacive_intensity(self, fname, run, coeffs, ux, uy, uz, atm,
-                             h_range, k_range, l_range, indices, symop,
+    def displacive_intensity(self, fname, run, coeffs, occupancy, ux, uy, uz, 
+                             atm, h_range, k_range, l_range, indices, symop,
                              T, B, R, twins, variants, nh, nk, nl, nu, nv, nw,
                              Nu, Nv, Nw, p, even, cntr, mask):
                 
@@ -841,24 +919,27 @@ class Model:
             
         U_r = displacive.products(Ux, Uy, Uz, p)
                 
-        I_calc = monocrystal.displacive(U_r, coeffs, ux, uy, uz, atm,
-                                        h_range, k_range, l_range, indices,
-                                        symop, T, B, R, twins, variants,
+        I_calc = monocrystal.displacive(U_r, coeffs, occupancy, ux, uy, uz, 
+                                        atm, h_range, k_range, l_range, 
+                                        indices, symop, T, B, R, twins, variants,
                                         nh, nk, nl, nu, nv, nw, Nu, Nv, Nw,
                                         p, even, cntr)
                     
         return I_calc
     
-    def structural_intensity(self, occupancy, ux, uy, uz, atm,
+    def structural_intensity(self, occupancy, 
+                             U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
                              h_range, k_range, l_range, indices, symop,
-                             T, B, R, twins, variants, nh, nk, nl, 
+                             T, B, R, D, twins, variants, nh, nk, nl, 
                              nu, nv, nw, Nu, Nv, Nw, cntr, mask):
                             
         n_atm = np.size(occupancy)
                 
-        I_calc = monocrystal.structural(occupancy, ux, uy, uz, atm,
+        I_calc = monocrystal.structural(occupancy,
+                                        U11, U22, U33, U23, U13, U12, 
+                                        ux, uy, uz, atm,
                                         h_range, k_range, l_range, indices, 
-                                        symop, T, B, R, twins, variants,
+                                        symop, T, B, R, D, twins, variants,
                                         nh, nk, nl, nu, nv, nw, Nu, Nv, Nw, 
                                         cntr)
         
@@ -881,8 +962,8 @@ class Model:
                             g_filt, h_filt, i_filt,
                             boxes, i_dft, inverses, i_mask, i_unmask,
                             acc_moves, acc_temps, rej_moves, rej_temps, chi_sq, 
-                            energy, temperature, scale, constant, delta, fixed, 
-                            T, nh, nk, nl, nu, nv, nw, n_atm, n, N):
+                            energy, temperature, scale, constant, fixed, 
+                            heisenberg, nh, nk, nl, nu, nv, nw, n_atm, n, N):
 
         refinement.magnetic(Sx, Sy, Sz, Qx_norm, Qy_norm, Qz_norm, 
                             Sx_k, Sy_k, Sz_k, 
@@ -901,8 +982,8 @@ class Model:
                             g_filt, h_filt, i_filt,
                             boxes, i_dft, inverses, i_mask, i_unmask,
                             acc_moves, acc_temps, rej_moves, rej_temps, chi_sq, 
-                            energy, temperature, scale, constant, delta, fixed, 
-                            T, nh, nk, nl, nu, nv, nw, n_atm, n, N)
+                            energy, temperature, scale, constant, fixed, 
+                            heisenberg, nh, nk, nl, nu, nv, nw, n_atm, n, N)
             
     def occupational_refinement(self, A_r, A_k, A_k_orig, A_k_cand,
                                 F, F_orig, F_cand,
@@ -940,7 +1021,7 @@ class Model:
                               F, F_nuc, F_orig, F_nuc_orig, F_cand, F_nuc_cand,
                               prod, prod_nuc, prod_orig, prod_nuc_orig,    
                               prod_cand, prod_nuc_cand, space_factor, factors,
-                              coeffs, Q_k, displacement,
+                              coeffs, Q_k, Lxx, Lyy, Lzz, Lyz, Lxz, Lxy,
                               I_calc, I_expt, inv_sigma_sq, 
                               I_raw, I_flat, I_ref, v_inv, 
                               a_filt, b_filt, c_filt,
@@ -949,7 +1030,7 @@ class Model:
                               bragg, even, boxes, i_dft, inverses, i_mask, 
                               i_unmask, acc_moves, acc_temps, rej_moves,
                               rej_temps, chi_sq, energy, temperature, scale,
-                              constant, delta, fixed, T, p, nh, nk, nl,
+                              constant, fixed, isotropic, p, nh, nk, nl,
                               nu, nv, nw, n_atm, n, N):
                                             
         refinement.displacive(Ux, Uy, Uz,
@@ -960,7 +1041,7 @@ class Model:
                               F, F_nuc, F_orig, F_nuc_orig, F_cand, F_nuc_cand,
                               prod, prod_nuc, prod_orig, prod_nuc_orig,    
                               prod_cand, prod_nuc_cand, space_factor, factors,
-                              coeffs, Q_k, displacement,
+                              coeffs, Q_k, Lxx, Lyy, Lzz, Lyz, Lxz, Lxy,
                               I_calc, I_expt, inv_sigma_sq, 
                               I_raw, I_flat, I_ref, v_inv, 
                               a_filt, b_filt, c_filt,
@@ -969,7 +1050,7 @@ class Model:
                               bragg, even, boxes, i_dft, inverses, i_mask, 
                               i_unmask, acc_moves, acc_temps, rej_moves,
                               rej_temps, chi_sq, energy, temperature, scale,
-                              constant, delta, fixed, T, p, nh, nk, nl,
+                              constant, fixed, isotropic, p, nh, nk, nl,
                               nu, nv, nw, n_atm, n, N)
     
     def correlation_statistics(self, corr):

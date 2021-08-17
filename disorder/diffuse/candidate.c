@@ -1108,9 +1108,9 @@ struct __pyx_ctuple_double__and_double__and_double;
 typedef struct __pyx_ctuple_double__and_double__and_double __pyx_ctuple_double__and_double__and_double;
 
 /* "disorder/diffuse/candidate.pxd":7
- * cpdef double scalar(double A, double value, bint fixed) nogil
+ * cpdef double composition(double A, double value, bint fixed) nogil
  * 
- * cpdef (double, double, double) vector(double A,             # <<<<<<<<<<<<<<
+ * cpdef (double, double, double) moment(double A,             # <<<<<<<<<<<<<<
  *                                       double B,
  *                                       double C,
  */
@@ -1324,6 +1324,65 @@ static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UIN
 #define __PYX_PY_DICT_LOOKUP_IF_MODIFIED(VAR, DICT, LOOKUP)  (VAR) = (LOOKUP);
 #endif
 
+/* GetModuleGlobalName.proto */
+#if CYTHON_USE_DICT_VERSIONS
+#define __Pyx_GetModuleGlobalName(var, name)  {\
+    static PY_UINT64_T __pyx_dict_version = 0;\
+    static PyObject *__pyx_dict_cached_value = NULL;\
+    (var) = (likely(__pyx_dict_version == __PYX_GET_DICT_VERSION(__pyx_d))) ?\
+        (likely(__pyx_dict_cached_value) ? __Pyx_NewRef(__pyx_dict_cached_value) : __Pyx_GetBuiltinName(name)) :\
+        __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  {\
+    PY_UINT64_T __pyx_dict_version;\
+    PyObject *__pyx_dict_cached_value;\
+    (var) = __Pyx__GetModuleGlobalName(name, &__pyx_dict_version, &__pyx_dict_cached_value);\
+}
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value);
+#else
+#define __Pyx_GetModuleGlobalName(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+#define __Pyx_GetModuleGlobalNameUncached(var, name)  (var) = __Pyx__GetModuleGlobalName(name)
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name);
+#endif
+
+/* PyCFunctionFastCall.proto */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject *__Pyx_PyCFunction_FastCall(PyObject *func, PyObject **args, Py_ssize_t nargs);
+#else
+#define __Pyx_PyCFunction_FastCall(func, args, nargs)  (assert(0), NULL)
+#endif
+
+/* PyFunctionFastCall.proto */
+#if CYTHON_FAST_PYCALL
+#define __Pyx_PyFunction_FastCall(func, args, nargs)\
+    __Pyx_PyFunction_FastCallDict((func), (args), (nargs), NULL)
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs);
+#else
+#define __Pyx_PyFunction_FastCallDict(func, args, nargs, kwargs) _PyFunction_FastCallDict(func, args, nargs, kwargs)
+#endif
+#define __Pyx_BUILD_ASSERT_EXPR(cond)\
+    (sizeof(char [1 - 2*!(cond)]) - 1)
+#ifndef Py_MEMBER_SIZE
+#define Py_MEMBER_SIZE(type, member) sizeof(((type *)0)->member)
+#endif
+  static size_t __pyx_pyframe_localsplus_offset = 0;
+  #include "frameobject.h"
+  #define __Pxy_PyFrame_Initialize_Offsets()\
+    ((void)__Pyx_BUILD_ASSERT_EXPR(sizeof(PyFrameObject) == offsetof(PyFrameObject, f_localsplus) + Py_MEMBER_SIZE(PyFrameObject, f_localsplus)),\
+     (void)(__pyx_pyframe_localsplus_offset = ((size_t)PyFrame_Type.tp_basicsize) - Py_MEMBER_SIZE(PyFrameObject, f_localsplus)))
+  #define __Pyx_PyFrame_GetLocalsplus(frame)\
+    (assert(__pyx_pyframe_localsplus_offset), (PyObject **)(((char *)(frame)) + __pyx_pyframe_localsplus_offset))
+#endif
+
+/* PyObjectCallMethO.proto */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg);
+#endif
+
+/* PyObjectCallOneArg.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg);
+
 /* CLineInTraceback.proto */
 #ifdef CYTHON_CLINE_IN_TRACEBACK
 #define __Pyx_CLineForTraceback(tstate, c_line)  (((CYTHON_CLINE_IN_TRACEBACK)) ? c_line : 0)
@@ -1349,6 +1408,11 @@ static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object);
 /* AddTraceback.proto */
 static void __Pyx_AddTraceback(const char *funcname, int c_line,
                                int py_line, const char *filename);
+
+/* GCCDiagnostics.proto */
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
+#define __Pyx_HAS_GCC_DIAGNOSTIC
+#endif
 
 /* ToPyCTupleUtility.proto */
 static PyObject* __pyx_convert__to_py___pyx_ctuple_double__and_double__and_double(__pyx_ctuple_double__and_double__and_double);
@@ -1451,10 +1515,8 @@ static PyObject* __pyx_convert__to_py___pyx_ctuple_double__and_double__and_doubl
     #endif
 #endif
 
-/* GCCDiagnostics.proto */
-#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
-#define __Pyx_HAS_GCC_DIAGNOSTIC
-#endif
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -1533,8 +1595,15 @@ static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 /* Module declarations from 'libc.stdlib' */
 
 /* Module declarations from 'disorder.diffuse.candidate' */
-static double __pyx_f_8disorder_7diffuse_9candidate_scalar(double, double, int, int __pyx_skip_dispatch); /*proto*/
-static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_9candidate_vector(double, double, double, double, int, int __pyx_skip_dispatch); /*proto*/
+static double __pyx_v_8disorder_7diffuse_9candidate_M_EPS;
+static double __pyx_f_8disorder_7diffuse_9candidate_composition(double, double, int, int __pyx_skip_dispatch); /*proto*/
+static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_9candidate_moment(double, double, double, double, int, int, int __pyx_skip_dispatch); /*proto*/
+static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_9candidate_displacement(double, double, double, double, double, double, int, int, int __pyx_skip_dispatch); /*proto*/
+static double __pyx_f_8disorder_7diffuse_9candidate_random_uniform_nonzero(void); /*proto*/
+static double __pyx_f_8disorder_7diffuse_9candidate_random_uniform(void); /*proto*/
+static double __pyx_f_8disorder_7diffuse_9candidate_random_gaussian(void); /*proto*/
+static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_9candidate_random_gaussian_3d(void); /*proto*/
+static int __pyx_f_8disorder_7diffuse_9candidate_iszero(double); /*proto*/
 #define __Pyx_MODULE_NAME "disorder.diffuse.candidate"
 extern int __pyx_module_is_main_disorder__diffuse__candidate;
 int __pyx_module_is_main_disorder__diffuse__candidate = 0;
@@ -1544,14 +1613,21 @@ static PyObject *__pyx_builtin_ImportError;
 static const char __pyx_k_A[] = "A";
 static const char __pyx_k_B[] = "B";
 static const char __pyx_k_C[] = "C";
+static const char __pyx_k_D[] = "D";
+static const char __pyx_k_E[] = "E";
+static const char __pyx_k_F[] = "F";
 static const char __pyx_k_np[] = "np";
+static const char __pyx_k_eps[] = "eps";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
 static const char __pyx_k_test[] = "__test__";
+static const char __pyx_k_finfo[] = "finfo";
 static const char __pyx_k_fixed[] = "fixed";
 static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_value[] = "value";
 static const char __pyx_k_import[] = "__import__";
+static const char __pyx_k_rotate[] = "rotate";
+static const char __pyx_k_isotropic[] = "isotropic";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_numpy_core_multiarray_failed_to[] = "numpy.core.multiarray failed to import";
@@ -1559,95 +1635,404 @@ static const char __pyx_k_numpy_core_umath_failed_to_impor[] = "numpy.core.umath
 static PyObject *__pyx_n_s_A;
 static PyObject *__pyx_n_s_B;
 static PyObject *__pyx_n_s_C;
+static PyObject *__pyx_n_s_D;
+static PyObject *__pyx_n_s_E;
+static PyObject *__pyx_n_s_F;
 static PyObject *__pyx_n_s_ImportError;
 static PyObject *__pyx_n_s_cline_in_traceback;
+static PyObject *__pyx_n_s_eps;
+static PyObject *__pyx_n_s_finfo;
 static PyObject *__pyx_n_s_fixed;
 static PyObject *__pyx_n_s_import;
+static PyObject *__pyx_n_s_isotropic;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_name;
 static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_kp_u_numpy_core_multiarray_failed_to;
 static PyObject *__pyx_kp_u_numpy_core_umath_failed_to_impor;
+static PyObject *__pyx_n_s_rotate;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_n_s_value;
-static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_scalar(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_value, int __pyx_v_fixed); /* proto */
-static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_2vector(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_B, double __pyx_v_C, double __pyx_v_value, int __pyx_v_fixed); /* proto */
+static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_composition(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_value, int __pyx_v_fixed); /* proto */
+static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_2moment(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_B, double __pyx_v_C, double __pyx_v_value, int __pyx_v_fixed, int __pyx_v_rotate); /* proto */
+static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_4displacement(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_B, double __pyx_v_C, double __pyx_v_D, double __pyx_v_E, double __pyx_v_F, int __pyx_v_fixed, int __pyx_v_isotropic); /* proto */
 static PyObject *__pyx_tuple_;
 static PyObject *__pyx_tuple__2;
 /* Late includes */
 
-/* "disorder/diffuse/candidate.pyx":11
- * from libc.stdlib cimport rand, RAND_MAX
+/* "disorder/diffuse/candidate.pyx":13
+ * cdef double M_EPS = np.finfo(float).eps
  * 
- * cpdef double scalar(double A, double value, bint fixed) nogil:             # <<<<<<<<<<<<<<
+ * cdef double random_uniform_nonzero() nogil:             # <<<<<<<<<<<<<<
  * 
- *     cdef double V
+ *     cdef double u = 0
  */
 
-static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_1scalar(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static double __pyx_f_8disorder_7diffuse_9candidate_scalar(double __pyx_v_A, double __pyx_v_value, int __pyx_v_fixed, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  double __pyx_v_V;
+static double __pyx_f_8disorder_7diffuse_9candidate_random_uniform_nonzero(void) {
+  double __pyx_v_u;
   double __pyx_r;
   int __pyx_t_1;
 
   /* "disorder/diffuse/candidate.pyx":15
- *     cdef double V
+ * cdef double random_uniform_nonzero() nogil:
  * 
- *     if fixed:             # <<<<<<<<<<<<<<
- *         V = value
- *     else:
+ *     cdef double u = 0             # <<<<<<<<<<<<<<
+ * 
+ *     while (u == 0):
  */
-  __pyx_t_1 = (__pyx_v_fixed != 0);
-  if (__pyx_t_1) {
+  __pyx_v_u = 0.0;
 
-    /* "disorder/diffuse/candidate.pyx":16
+  /* "disorder/diffuse/candidate.pyx":17
+ *     cdef double u = 0
  * 
- *     if fixed:
- *         V = value             # <<<<<<<<<<<<<<
- *     else:
- *         V = value*rand()/RAND_MAX
+ *     while (u == 0):             # <<<<<<<<<<<<<<
+ *         u = float(rand())/RAND_MAX
+ * 
  */
-    __pyx_v_V = __pyx_v_value;
+  while (1) {
+    __pyx_t_1 = ((__pyx_v_u == 0.0) != 0);
+    if (!__pyx_t_1) break;
 
-    /* "disorder/diffuse/candidate.pyx":15
- *     cdef double V
+    /* "disorder/diffuse/candidate.pyx":18
  * 
- *     if fixed:             # <<<<<<<<<<<<<<
- *         V = value
- *     else:
+ *     while (u == 0):
+ *         u = float(rand())/RAND_MAX             # <<<<<<<<<<<<<<
+ * 
+ *     return u
  */
-    goto __pyx_L3;
+    __pyx_v_u = (((double)rand()) / ((double)RAND_MAX));
   }
 
-  /* "disorder/diffuse/candidate.pyx":18
- *         V = value
- *     else:
- *         V = value*rand()/RAND_MAX             # <<<<<<<<<<<<<<
+  /* "disorder/diffuse/candidate.pyx":20
+ *         u = float(rand())/RAND_MAX
+ * 
+ *     return u             # <<<<<<<<<<<<<<
+ * 
+ * cdef double random_uniform() nogil:
+ */
+  __pyx_r = __pyx_v_u;
+  goto __pyx_L0;
+
+  /* "disorder/diffuse/candidate.pyx":13
+ * cdef double M_EPS = np.finfo(float).eps
+ * 
+ * cdef double random_uniform_nonzero() nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double u = 0
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/candidate.pyx":22
+ *     return u
+ * 
+ * cdef double random_uniform() nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     return float(rand())/RAND_MAX
+ */
+
+static double __pyx_f_8disorder_7diffuse_9candidate_random_uniform(void) {
+  double __pyx_r;
+
+  /* "disorder/diffuse/candidate.pyx":24
+ * cdef double random_uniform() nogil:
+ * 
+ *     return float(rand())/RAND_MAX             # <<<<<<<<<<<<<<
+ * 
+ * cdef double random_gaussian() nogil:
+ */
+  __pyx_r = (((double)rand()) / ((double)RAND_MAX));
+  goto __pyx_L0;
+
+  /* "disorder/diffuse/candidate.pyx":22
+ *     return u
+ * 
+ * cdef double random_uniform() nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     return float(rand())/RAND_MAX
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/candidate.pyx":26
+ *     return float(rand())/RAND_MAX
+ * 
+ * cdef double random_gaussian() nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double x0, x1, w
+ */
+
+static double __pyx_f_8disorder_7diffuse_9candidate_random_gaussian(void) {
+  double __pyx_v_x0;
+  double __pyx_v_x1;
+  double __pyx_v_w;
+  double __pyx_r;
+  int __pyx_t_1;
+
+  /* "disorder/diffuse/candidate.pyx":30
+ *     cdef double x0, x1, w
+ * 
+ *     w = 2.0             # <<<<<<<<<<<<<<
+ *     while (w >= 1.0):
+ *         x0 = 2.0*random_uniform()-1.0
+ */
+  __pyx_v_w = 2.0;
+
+  /* "disorder/diffuse/candidate.pyx":31
+ * 
+ *     w = 2.0
+ *     while (w >= 1.0):             # <<<<<<<<<<<<<<
+ *         x0 = 2.0*random_uniform()-1.0
+ *         x1 = 2.0*random_uniform()-1.0
+ */
+  while (1) {
+    __pyx_t_1 = ((__pyx_v_w >= 1.0) != 0);
+    if (!__pyx_t_1) break;
+
+    /* "disorder/diffuse/candidate.pyx":32
+ *     w = 2.0
+ *     while (w >= 1.0):
+ *         x0 = 2.0*random_uniform()-1.0             # <<<<<<<<<<<<<<
+ *         x1 = 2.0*random_uniform()-1.0
+ *         w = x0*x0+x1*x1
+ */
+    __pyx_v_x0 = ((2.0 * __pyx_f_8disorder_7diffuse_9candidate_random_uniform()) - 1.0);
+
+    /* "disorder/diffuse/candidate.pyx":33
+ *     while (w >= 1.0):
+ *         x0 = 2.0*random_uniform()-1.0
+ *         x1 = 2.0*random_uniform()-1.0             # <<<<<<<<<<<<<<
+ *         w = x0*x0+x1*x1
+ * 
+ */
+    __pyx_v_x1 = ((2.0 * __pyx_f_8disorder_7diffuse_9candidate_random_uniform()) - 1.0);
+
+    /* "disorder/diffuse/candidate.pyx":34
+ *         x0 = 2.0*random_uniform()-1.0
+ *         x1 = 2.0*random_uniform()-1.0
+ *         w = x0*x0+x1*x1             # <<<<<<<<<<<<<<
+ * 
+ *     w = sqrt(-2.0*log(w)/w)
+ */
+    __pyx_v_w = ((__pyx_v_x0 * __pyx_v_x0) + (__pyx_v_x1 * __pyx_v_x1));
+  }
+
+  /* "disorder/diffuse/candidate.pyx":36
+ *         w = x0*x0+x1*x1
+ * 
+ *     w = sqrt(-2.0*log(w)/w)             # <<<<<<<<<<<<<<
+ * 
+ *     return x1*w
+ */
+  __pyx_v_w = sqrt(((-2.0 * log(__pyx_v_w)) / __pyx_v_w));
+
+  /* "disorder/diffuse/candidate.pyx":38
+ *     w = sqrt(-2.0*log(w)/w)
+ * 
+ *     return x1*w             # <<<<<<<<<<<<<<
+ * 
+ * cdef (double, double, double) random_gaussian_3d() nogil:
+ */
+  __pyx_r = (__pyx_v_x1 * __pyx_v_w);
+  goto __pyx_L0;
+
+  /* "disorder/diffuse/candidate.pyx":26
+ *     return float(rand())/RAND_MAX
+ * 
+ * cdef double random_gaussian() nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double x0, x1, w
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/candidate.pyx":40
+ *     return x1*w
+ * 
+ * cdef (double, double, double) random_gaussian_3d() nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double x0, x1, w
+ */
+
+static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_9candidate_random_gaussian_3d(void) {
+  double __pyx_v_x0;
+  double __pyx_v_x1;
+  double __pyx_v_w;
+  __pyx_ctuple_double__and_double__and_double __pyx_r;
+  int __pyx_t_1;
+  __pyx_ctuple_double__and_double__and_double __pyx_t_2;
+
+  /* "disorder/diffuse/candidate.pyx":45
+ *     cdef double x2, x3, v
+ * 
+ *     w = 2.0             # <<<<<<<<<<<<<<
+ *     while (w >= 1.0):
+ *         x0 = 2.0*random_uniform()-1.0
+ */
+  __pyx_v_w = 2.0;
+
+  /* "disorder/diffuse/candidate.pyx":46
+ * 
+ *     w = 2.0
+ *     while (w >= 1.0):             # <<<<<<<<<<<<<<
+ *         x0 = 2.0*random_uniform()-1.0
+ *         x1 = 2.0*random_uniform()-1.0
+ */
+  while (1) {
+    __pyx_t_1 = ((__pyx_v_w >= 1.0) != 0);
+    if (!__pyx_t_1) break;
+
+    /* "disorder/diffuse/candidate.pyx":47
+ *     w = 2.0
+ *     while (w >= 1.0):
+ *         x0 = 2.0*random_uniform()-1.0             # <<<<<<<<<<<<<<
+ *         x1 = 2.0*random_uniform()-1.0
+ *         w = x0*x0+x1*x1
+ */
+    __pyx_v_x0 = ((2.0 * __pyx_f_8disorder_7diffuse_9candidate_random_uniform()) - 1.0);
+
+    /* "disorder/diffuse/candidate.pyx":48
+ *     while (w >= 1.0):
+ *         x0 = 2.0*random_uniform()-1.0
+ *         x1 = 2.0*random_uniform()-1.0             # <<<<<<<<<<<<<<
+ *         w = x0*x0+x1*x1
+ * 
+ */
+    __pyx_v_x1 = ((2.0 * __pyx_f_8disorder_7diffuse_9candidate_random_uniform()) - 1.0);
+
+    /* "disorder/diffuse/candidate.pyx":49
+ *         x0 = 2.0*random_uniform()-1.0
+ *         x1 = 2.0*random_uniform()-1.0
+ *         w = x0*x0+x1*x1             # <<<<<<<<<<<<<<
+ * 
+ *     w = sqrt(-2.0*log(w)/w)
+ */
+    __pyx_v_w = ((__pyx_v_x0 * __pyx_v_x0) + (__pyx_v_x1 * __pyx_v_x1));
+  }
+
+  /* "disorder/diffuse/candidate.pyx":51
+ *         w = x0*x0+x1*x1
+ * 
+ *     w = sqrt(-2.0*log(w)/w)             # <<<<<<<<<<<<<<
+ * 
+ *     return x0*w, x1*w, random_gaussian()
+ */
+  __pyx_v_w = sqrt(((-2.0 * log(__pyx_v_w)) / __pyx_v_w));
+
+  /* "disorder/diffuse/candidate.pyx":53
+ *     w = sqrt(-2.0*log(w)/w)
+ * 
+ *     return x0*w, x1*w, random_gaussian()             # <<<<<<<<<<<<<<
+ * 
+ * cdef bint iszero(double a) nogil:
+ */
+  __pyx_t_2.f0 = (__pyx_v_x0 * __pyx_v_w);
+  __pyx_t_2.f1 = (__pyx_v_x1 * __pyx_v_w);
+  __pyx_t_2.f2 = __pyx_f_8disorder_7diffuse_9candidate_random_gaussian();
+  __pyx_r = __pyx_t_2;
+  goto __pyx_L0;
+
+  /* "disorder/diffuse/candidate.pyx":40
+ *     return x1*w
+ * 
+ * cdef (double, double, double) random_gaussian_3d() nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double x0, x1, w
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/candidate.pyx":55
+ *     return x0*w, x1*w, random_gaussian()
+ * 
+ * cdef bint iszero(double a) nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     return fabs(a) <= M_EPS
+ */
+
+static int __pyx_f_8disorder_7diffuse_9candidate_iszero(double __pyx_v_a) {
+  int __pyx_r;
+
+  /* "disorder/diffuse/candidate.pyx":57
+ * cdef bint iszero(double a) nogil:
+ * 
+ *     return fabs(a) <= M_EPS             # <<<<<<<<<<<<<<
+ * 
+ * cpdef double composition(double A, double value, bint fixed) nogil:
+ */
+  __pyx_r = (fabs(__pyx_v_a) <= __pyx_v_8disorder_7diffuse_9candidate_M_EPS);
+  goto __pyx_L0;
+
+  /* "disorder/diffuse/candidate.pyx":55
+ *     return x0*w, x1*w, random_gaussian()
+ * 
+ * cdef bint iszero(double a) nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     return fabs(a) <= M_EPS
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/candidate.pyx":59
+ *     return fabs(a) <= M_EPS
+ * 
+ * cpdef double composition(double A, double value, bint fixed) nogil:             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double V = value if fixed else value*random_uniform_nonzero()
+ */
+
+static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_1composition(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static double __pyx_f_8disorder_7diffuse_9candidate_composition(double __pyx_v_A, double __pyx_v_value, int __pyx_v_fixed, CYTHON_UNUSED int __pyx_skip_dispatch) {
+  double __pyx_v_V;
+  double __pyx_r;
+  double __pyx_t_1;
+
+  /* "disorder/diffuse/candidate.pyx":61
+ * cpdef double composition(double A, double value, bint fixed) nogil:
+ * 
+ *     cdef double V = value if fixed else value*random_uniform_nonzero()             # <<<<<<<<<<<<<<
  * 
  *     return 1/V-2-A
  */
-  /*else*/ {
-    __pyx_v_V = ((__pyx_v_value * rand()) / ((double)RAND_MAX));
+  if ((__pyx_v_fixed != 0)) {
+    __pyx_t_1 = __pyx_v_value;
+  } else {
+    __pyx_t_1 = (__pyx_v_value * __pyx_f_8disorder_7diffuse_9candidate_random_uniform_nonzero());
   }
-  __pyx_L3:;
+  __pyx_v_V = __pyx_t_1;
 
-  /* "disorder/diffuse/candidate.pyx":20
- *         V = value*rand()/RAND_MAX
+  /* "disorder/diffuse/candidate.pyx":63
+ *     cdef double V = value if fixed else value*random_uniform_nonzero()
  * 
  *     return 1/V-2-A             # <<<<<<<<<<<<<<
  * 
- * cpdef (double, double, double) vector(double A,
+ * cpdef (double, double, double) moment(double A,
  */
   __pyx_r = (((1.0 / __pyx_v_V) - 2.0) - __pyx_v_A);
   goto __pyx_L0;
 
-  /* "disorder/diffuse/candidate.pyx":11
- * from libc.stdlib cimport rand, RAND_MAX
+  /* "disorder/diffuse/candidate.pyx":59
+ *     return fabs(a) <= M_EPS
  * 
- * cpdef double scalar(double A, double value, bint fixed) nogil:             # <<<<<<<<<<<<<<
+ * cpdef double composition(double A, double value, bint fixed) nogil:             # <<<<<<<<<<<<<<
  * 
- *     cdef double V
+ *     cdef double V = value if fixed else value*random_uniform_nonzero()
  */
 
   /* function exit code */
@@ -1656,8 +2041,8 @@ static double __pyx_f_8disorder_7diffuse_9candidate_scalar(double __pyx_v_A, dou
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_1scalar(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_1scalar(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_1composition(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_1composition(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_A;
   double __pyx_v_value;
   int __pyx_v_fixed;
@@ -1666,7 +2051,7 @@ static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_1scalar(PyObject *__pyx_
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("scalar (wrapper)", 0);
+  __Pyx_RefNannySetupContext("composition (wrapper)", 0);
   {
     static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_A,&__pyx_n_s_value,&__pyx_n_s_fixed,0};
     PyObject* values[3] = {0,0,0};
@@ -1692,17 +2077,17 @@ static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_1scalar(PyObject *__pyx_
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("scalar", 1, 3, 3, 1); __PYX_ERR(0, 11, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("composition", 1, 3, 3, 1); __PYX_ERR(0, 59, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_fixed)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("scalar", 1, 3, 3, 2); __PYX_ERR(0, 11, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("composition", 1, 3, 3, 2); __PYX_ERR(0, 59, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "scalar") < 0)) __PYX_ERR(0, 11, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "composition") < 0)) __PYX_ERR(0, 59, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 3) {
       goto __pyx_L5_argtuple_error;
@@ -1711,35 +2096,35 @@ static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_1scalar(PyObject *__pyx_
       values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
     }
-    __pyx_v_A = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_A == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L3_error)
-    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L3_error)
-    __pyx_v_fixed = __Pyx_PyObject_IsTrue(values[2]); if (unlikely((__pyx_v_fixed == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L3_error)
+    __pyx_v_A = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_A == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 59, __pyx_L3_error)
+    __pyx_v_value = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 59, __pyx_L3_error)
+    __pyx_v_fixed = __Pyx_PyObject_IsTrue(values[2]); if (unlikely((__pyx_v_fixed == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 59, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("scalar", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 11, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("composition", 1, 3, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 59, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("disorder.diffuse.candidate.scalar", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("disorder.diffuse.candidate.composition", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8disorder_7diffuse_9candidate_scalar(__pyx_self, __pyx_v_A, __pyx_v_value, __pyx_v_fixed);
+  __pyx_r = __pyx_pf_8disorder_7diffuse_9candidate_composition(__pyx_self, __pyx_v_A, __pyx_v_value, __pyx_v_fixed);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_scalar(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_value, int __pyx_v_fixed) {
+static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_composition(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_value, int __pyx_v_fixed) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("scalar", 0);
+  __Pyx_RefNannySetupContext("composition", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_8disorder_7diffuse_9candidate_scalar(__pyx_v_A, __pyx_v_value, __pyx_v_fixed, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_f_8disorder_7diffuse_9candidate_composition(__pyx_v_A, __pyx_v_value, __pyx_v_fixed, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -1748,7 +2133,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_scalar(CYTHON_UNUSED PyO
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("disorder.diffuse.candidate.scalar", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("disorder.diffuse.candidate.composition", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -1756,127 +2141,240 @@ static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_scalar(CYTHON_UNUSED PyO
   return __pyx_r;
 }
 
-/* "disorder/diffuse/candidate.pyx":22
+/* "disorder/diffuse/candidate.pyx":65
  *     return 1/V-2-A
  * 
- * cpdef (double, double, double) vector(double A,             # <<<<<<<<<<<<<<
+ * cpdef (double, double, double) moment(double A,             # <<<<<<<<<<<<<<
  *                                       double B,
  *                                       double C,
  */
 
-static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_3vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_9candidate_vector(CYTHON_UNUSED double __pyx_v_A, CYTHON_UNUSED double __pyx_v_B, CYTHON_UNUSED double __pyx_v_C, double __pyx_v_value, int __pyx_v_fixed, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  double __pyx_v_V;
+static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_3moment(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_9candidate_moment(double __pyx_v_A, double __pyx_v_B, double __pyx_v_C, double __pyx_v_value, int __pyx_v_fixed, int __pyx_v_rotate, CYTHON_UNUSED int __pyx_skip_dispatch) {
   double __pyx_v_theta;
   double __pyx_v_phi;
   double __pyx_v_u;
   double __pyx_v_v;
   double __pyx_v_w;
+  double __pyx_v_n;
+  double __pyx_v_V;
   __pyx_ctuple_double__and_double__and_double __pyx_r;
   int __pyx_t_1;
-  __pyx_ctuple_double__and_double__and_double __pyx_t_2;
+  double __pyx_t_2;
+  double __pyx_t_3;
+  double __pyx_t_4;
+  __pyx_ctuple_double__and_double__and_double __pyx_t_5;
 
-  /* "disorder/diffuse/candidate.pyx":30
+  /* "disorder/diffuse/candidate.pyx":78
  *     cdef double V
  * 
- *     cdef double theta = 2*M_PI*rand()/RAND_MAX             # <<<<<<<<<<<<<<
- *     cdef double phi = acos(1-2.*rand()/RAND_MAX)
+ *     if rotate:             # <<<<<<<<<<<<<<
  * 
+ *         V = value if fixed else value*random_uniform_nonzero()
  */
-  __pyx_v_theta = (((2.0 * M_PI) * rand()) / ((double)RAND_MAX));
-
-  /* "disorder/diffuse/candidate.pyx":31
- * 
- *     cdef double theta = 2*M_PI*rand()/RAND_MAX
- *     cdef double phi = acos(1-2.*rand()/RAND_MAX)             # <<<<<<<<<<<<<<
- * 
- *     cdef double u, v, w
- */
-  __pyx_v_phi = acos((1.0 - ((2. * rand()) / ((double)RAND_MAX))));
-
-  /* "disorder/diffuse/candidate.pyx":35
- *     cdef double u, v, w
- * 
- *     if fixed:             # <<<<<<<<<<<<<<
- *         V = value
- *     else:
- */
-  __pyx_t_1 = (__pyx_v_fixed != 0);
+  __pyx_t_1 = (__pyx_v_rotate != 0);
   if (__pyx_t_1) {
 
-    /* "disorder/diffuse/candidate.pyx":36
+    /* "disorder/diffuse/candidate.pyx":80
+ *     if rotate:
  * 
- *     if fixed:
- *         V = value             # <<<<<<<<<<<<<<
- *     else:
- *         V = value*rand()/RAND_MAX
+ *         V = value if fixed else value*random_uniform_nonzero()             # <<<<<<<<<<<<<<
+ * 
+ *         theta = 2.0*M_PI*random_uniform()
  */
-    __pyx_v_V = __pyx_v_value;
+    if ((__pyx_v_fixed != 0)) {
+      __pyx_t_2 = __pyx_v_value;
+    } else {
+      __pyx_t_2 = (__pyx_v_value * __pyx_f_8disorder_7diffuse_9candidate_random_uniform_nonzero());
+    }
+    __pyx_v_V = __pyx_t_2;
 
-    /* "disorder/diffuse/candidate.pyx":35
- *     cdef double u, v, w
+    /* "disorder/diffuse/candidate.pyx":82
+ *         V = value if fixed else value*random_uniform_nonzero()
  * 
- *     if fixed:             # <<<<<<<<<<<<<<
- *         V = value
+ *         theta = 2.0*M_PI*random_uniform()             # <<<<<<<<<<<<<<
+ *         phi = acos(1.0-2.0*random_uniform())
+ * 
+ */
+    __pyx_v_theta = ((2.0 * M_PI) * __pyx_f_8disorder_7diffuse_9candidate_random_uniform());
+
+    /* "disorder/diffuse/candidate.pyx":83
+ * 
+ *         theta = 2.0*M_PI*random_uniform()
+ *         phi = acos(1.0-2.0*random_uniform())             # <<<<<<<<<<<<<<
+ * 
+ *         u = V*sin(phi)*cos(theta)
+ */
+    __pyx_v_phi = acos((1.0 - (2.0 * __pyx_f_8disorder_7diffuse_9candidate_random_uniform())));
+
+    /* "disorder/diffuse/candidate.pyx":85
+ *         phi = acos(1.0-2.0*random_uniform())
+ * 
+ *         u = V*sin(phi)*cos(theta)             # <<<<<<<<<<<<<<
+ *         v = V*sin(phi)*sin(theta)
+ *         w = V*cos(phi)
+ */
+    __pyx_v_u = ((__pyx_v_V * sin(__pyx_v_phi)) * cos(__pyx_v_theta));
+
+    /* "disorder/diffuse/candidate.pyx":86
+ * 
+ *         u = V*sin(phi)*cos(theta)
+ *         v = V*sin(phi)*sin(theta)             # <<<<<<<<<<<<<<
+ *         w = V*cos(phi)
+ * 
+ */
+    __pyx_v_v = ((__pyx_v_V * sin(__pyx_v_phi)) * sin(__pyx_v_theta));
+
+    /* "disorder/diffuse/candidate.pyx":87
+ *         u = V*sin(phi)*cos(theta)
+ *         v = V*sin(phi)*sin(theta)
+ *         w = V*cos(phi)             # <<<<<<<<<<<<<<
+ * 
  *     else:
+ */
+    __pyx_v_w = (__pyx_v_V * cos(__pyx_v_phi));
+
+    /* "disorder/diffuse/candidate.pyx":78
+ *     cdef double V
+ * 
+ *     if rotate:             # <<<<<<<<<<<<<<
+ * 
+ *         V = value if fixed else value*random_uniform_nonzero()
  */
     goto __pyx_L3;
   }
 
-  /* "disorder/diffuse/candidate.pyx":38
- *         V = value
+  /* "disorder/diffuse/candidate.pyx":91
  *     else:
- *         V = value*rand()/RAND_MAX             # <<<<<<<<<<<<<<
  * 
- *     u = V*sin(phi)*cos(theta)
+ *         if fixed:             # <<<<<<<<<<<<<<
+ * 
+ *             u, v, w = -A, -B, -C
  */
   /*else*/ {
-    __pyx_v_V = ((__pyx_v_value * rand()) / ((double)RAND_MAX));
-  }
-  __pyx_L3:;
+    __pyx_t_1 = (__pyx_v_fixed != 0);
+    if (__pyx_t_1) {
 
-  /* "disorder/diffuse/candidate.pyx":40
- *         V = value*rand()/RAND_MAX
+      /* "disorder/diffuse/candidate.pyx":93
+ *         if fixed:
  * 
- *     u = V*sin(phi)*cos(theta)             # <<<<<<<<<<<<<<
- *     v = V*sin(phi)*sin(theta)
- *     w = V*cos(phi)
+ *             u, v, w = -A, -B, -C             # <<<<<<<<<<<<<<
+ * 
+ *         else:
  */
-  __pyx_v_u = ((__pyx_v_V * sin(__pyx_v_phi)) * cos(__pyx_v_theta));
+      __pyx_t_2 = (-__pyx_v_A);
+      __pyx_t_3 = (-__pyx_v_B);
+      __pyx_t_4 = (-__pyx_v_C);
+      __pyx_v_u = __pyx_t_2;
+      __pyx_v_v = __pyx_t_3;
+      __pyx_v_w = __pyx_t_4;
 
-  /* "disorder/diffuse/candidate.pyx":41
+      /* "disorder/diffuse/candidate.pyx":91
+ *     else:
  * 
- *     u = V*sin(phi)*cos(theta)
- *     v = V*sin(phi)*sin(theta)             # <<<<<<<<<<<<<<
- *     w = V*cos(phi)
+ *         if fixed:             # <<<<<<<<<<<<<<
  * 
+ *             u, v, w = -A, -B, -C
  */
-  __pyx_v_v = ((__pyx_v_V * sin(__pyx_v_phi)) * sin(__pyx_v_theta));
+      goto __pyx_L4;
+    }
 
-  /* "disorder/diffuse/candidate.pyx":42
- *     u = V*sin(phi)*cos(theta)
- *     v = V*sin(phi)*sin(theta)
- *     w = V*cos(phi)             # <<<<<<<<<<<<<<
+    /* "disorder/diffuse/candidate.pyx":97
+ *         else:
+ * 
+ *             n = sqrt(A*A+B*B+C*C)             # <<<<<<<<<<<<<<
+ * 
+ *             if iszero(n):
+ */
+    /*else*/ {
+      __pyx_v_n = sqrt((((__pyx_v_A * __pyx_v_A) + (__pyx_v_B * __pyx_v_B)) + (__pyx_v_C * __pyx_v_C)));
+
+      /* "disorder/diffuse/candidate.pyx":99
+ *             n = sqrt(A*A+B*B+C*C)
+ * 
+ *             if iszero(n):             # <<<<<<<<<<<<<<
+ * 
+ *                 u, v, w = -A, -B, -C
+ */
+      __pyx_t_1 = (__pyx_f_8disorder_7diffuse_9candidate_iszero(__pyx_v_n) != 0);
+      if (__pyx_t_1) {
+
+        /* "disorder/diffuse/candidate.pyx":101
+ *             if iszero(n):
+ * 
+ *                 u, v, w = -A, -B, -C             # <<<<<<<<<<<<<<
+ * 
+ *             else:
+ */
+        __pyx_t_4 = (-__pyx_v_A);
+        __pyx_t_3 = (-__pyx_v_B);
+        __pyx_t_2 = (-__pyx_v_C);
+        __pyx_v_u = __pyx_t_4;
+        __pyx_v_v = __pyx_t_3;
+        __pyx_v_w = __pyx_t_2;
+
+        /* "disorder/diffuse/candidate.pyx":99
+ *             n = sqrt(A*A+B*B+C*C)
+ * 
+ *             if iszero(n):             # <<<<<<<<<<<<<<
+ * 
+ *                 u, v, w = -A, -B, -C
+ */
+        goto __pyx_L5;
+      }
+
+      /* "disorder/diffuse/candidate.pyx":105
+ *             else:
+ * 
+ *                 V = value if fixed else value*random_uniform_nonzero()             # <<<<<<<<<<<<<<
+ * 
+ *                 u, v, w = -V*A/n, -V*B/n, -V*C/n
+ */
+      /*else*/ {
+        if ((__pyx_v_fixed != 0)) {
+          __pyx_t_2 = __pyx_v_value;
+        } else {
+          __pyx_t_2 = (__pyx_v_value * __pyx_f_8disorder_7diffuse_9candidate_random_uniform_nonzero());
+        }
+        __pyx_v_V = __pyx_t_2;
+
+        /* "disorder/diffuse/candidate.pyx":107
+ *                 V = value if fixed else value*random_uniform_nonzero()
+ * 
+ *                 u, v, w = -V*A/n, -V*B/n, -V*C/n             # <<<<<<<<<<<<<<
  * 
  *     return u, v, w
  */
-  __pyx_v_w = (__pyx_v_V * cos(__pyx_v_phi));
+        __pyx_t_2 = (((-__pyx_v_V) * __pyx_v_A) / __pyx_v_n);
+        __pyx_t_3 = (((-__pyx_v_V) * __pyx_v_B) / __pyx_v_n);
+        __pyx_t_4 = (((-__pyx_v_V) * __pyx_v_C) / __pyx_v_n);
+        __pyx_v_u = __pyx_t_2;
+        __pyx_v_v = __pyx_t_3;
+        __pyx_v_w = __pyx_t_4;
+      }
+      __pyx_L5:;
+    }
+    __pyx_L4:;
+  }
+  __pyx_L3:;
 
-  /* "disorder/diffuse/candidate.pyx":44
- *     w = V*cos(phi)
+  /* "disorder/diffuse/candidate.pyx":109
+ *                 u, v, w = -V*A/n, -V*B/n, -V*C/n
  * 
  *     return u, v, w             # <<<<<<<<<<<<<<
+ * 
+ * cpdef (double, double, double) displacement(double A,
  */
-  __pyx_t_2.f0 = __pyx_v_u;
-  __pyx_t_2.f1 = __pyx_v_v;
-  __pyx_t_2.f2 = __pyx_v_w;
-  __pyx_r = __pyx_t_2;
+  __pyx_t_5.f0 = __pyx_v_u;
+  __pyx_t_5.f1 = __pyx_v_v;
+  __pyx_t_5.f2 = __pyx_v_w;
+  __pyx_r = __pyx_t_5;
   goto __pyx_L0;
 
-  /* "disorder/diffuse/candidate.pyx":22
+  /* "disorder/diffuse/candidate.pyx":65
  *     return 1/V-2-A
  * 
- * cpdef (double, double, double) vector(double A,             # <<<<<<<<<<<<<<
+ * cpdef (double, double, double) moment(double A,             # <<<<<<<<<<<<<<
  *                                       double B,
  *                                       double C,
  */
@@ -1887,26 +2385,29 @@ static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_9c
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_3vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_3vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_3moment(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_3moment(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   double __pyx_v_A;
   double __pyx_v_B;
   double __pyx_v_C;
   double __pyx_v_value;
   int __pyx_v_fixed;
+  int __pyx_v_rotate;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("vector (wrapper)", 0);
+  __Pyx_RefNannySetupContext("moment (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_A,&__pyx_n_s_B,&__pyx_n_s_C,&__pyx_n_s_value,&__pyx_n_s_fixed,0};
-    PyObject* values[5] = {0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_A,&__pyx_n_s_B,&__pyx_n_s_C,&__pyx_n_s_value,&__pyx_n_s_fixed,&__pyx_n_s_rotate,0};
+    PyObject* values[6] = {0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
         case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
         CYTHON_FALLTHROUGH;
         case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
@@ -1929,31 +2430,37 @@ static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_3vector(PyObject *__pyx_
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_B)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("vector", 1, 5, 5, 1); __PYX_ERR(0, 22, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("moment", 1, 6, 6, 1); __PYX_ERR(0, 65, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_C)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("vector", 1, 5, 5, 2); __PYX_ERR(0, 22, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("moment", 1, 6, 6, 2); __PYX_ERR(0, 65, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_value)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("vector", 1, 5, 5, 3); __PYX_ERR(0, 22, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("moment", 1, 6, 6, 3); __PYX_ERR(0, 65, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_fixed)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("vector", 1, 5, 5, 4); __PYX_ERR(0, 22, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("moment", 1, 6, 6, 4); __PYX_ERR(0, 65, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_rotate)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("moment", 1, 6, 6, 5); __PYX_ERR(0, 65, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "vector") < 0)) __PYX_ERR(0, 22, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "moment") < 0)) __PYX_ERR(0, 65, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 5) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 6) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -1961,38 +2468,40 @@ static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_3vector(PyObject *__pyx_
       values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
       values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
       values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
     }
-    __pyx_v_A = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_A == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 22, __pyx_L3_error)
-    __pyx_v_B = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_B == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 23, __pyx_L3_error)
-    __pyx_v_C = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_C == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 24, __pyx_L3_error)
-    __pyx_v_value = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 25, __pyx_L3_error)
-    __pyx_v_fixed = __Pyx_PyObject_IsTrue(values[4]); if (unlikely((__pyx_v_fixed == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 26, __pyx_L3_error)
+    __pyx_v_A = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_A == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 65, __pyx_L3_error)
+    __pyx_v_B = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_B == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 66, __pyx_L3_error)
+    __pyx_v_C = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_C == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 67, __pyx_L3_error)
+    __pyx_v_value = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_value == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 68, __pyx_L3_error)
+    __pyx_v_fixed = __Pyx_PyObject_IsTrue(values[4]); if (unlikely((__pyx_v_fixed == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 69, __pyx_L3_error)
+    __pyx_v_rotate = __Pyx_PyObject_IsTrue(values[5]); if (unlikely((__pyx_v_rotate == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("vector", 1, 5, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 22, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("moment", 1, 6, 6, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 65, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("disorder.diffuse.candidate.vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("disorder.diffuse.candidate.moment", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8disorder_7diffuse_9candidate_2vector(__pyx_self, __pyx_v_A, __pyx_v_B, __pyx_v_C, __pyx_v_value, __pyx_v_fixed);
+  __pyx_r = __pyx_pf_8disorder_7diffuse_9candidate_2moment(__pyx_self, __pyx_v_A, __pyx_v_B, __pyx_v_C, __pyx_v_value, __pyx_v_fixed, __pyx_v_rotate);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_2vector(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_B, double __pyx_v_C, double __pyx_v_value, int __pyx_v_fixed) {
+static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_2moment(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_B, double __pyx_v_C, double __pyx_v_value, int __pyx_v_fixed, int __pyx_v_rotate) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("vector", 0);
+  __Pyx_RefNannySetupContext("moment", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_convert__to_py___pyx_ctuple_double__and_double__and_double(__pyx_f_8disorder_7diffuse_9candidate_vector(__pyx_v_A, __pyx_v_B, __pyx_v_C, __pyx_v_value, __pyx_v_fixed, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 22, __pyx_L1_error)
+  __pyx_t_1 = __pyx_convert__to_py___pyx_ctuple_double__and_double__and_double(__pyx_f_8disorder_7diffuse_9candidate_moment(__pyx_v_A, __pyx_v_B, __pyx_v_C, __pyx_v_value, __pyx_v_fixed, __pyx_v_rotate, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 65, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -2001,7 +2510,410 @@ static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_2vector(CYTHON_UNUSED Py
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("disorder.diffuse.candidate.vector", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("disorder.diffuse.candidate.moment", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/candidate.pyx":111
+ *     return u, v, w
+ * 
+ * cpdef (double, double, double) displacement(double A,             # <<<<<<<<<<<<<<
+ *                                             double B,
+ *                                             double C,
+ */
+
+static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_5displacement(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_9candidate_displacement(double __pyx_v_A, double __pyx_v_B, double __pyx_v_C, double __pyx_v_D, double __pyx_v_E, double __pyx_v_F, int __pyx_v_fixed, int __pyx_v_isotropic, CYTHON_UNUSED int __pyx_skip_dispatch) {
+  double __pyx_v_theta;
+  double __pyx_v_phi;
+  double __pyx_v_u;
+  double __pyx_v_v;
+  double __pyx_v_w;
+  double __pyx_v_l;
+  double __pyx_v_m;
+  double __pyx_v_n;
+  __pyx_ctuple_double__and_double__and_double __pyx_r;
+  int __pyx_t_1;
+  double __pyx_t_2;
+  double __pyx_t_3;
+  double __pyx_t_4;
+  __pyx_ctuple_double__and_double__and_double __pyx_t_5;
+
+  /* "disorder/diffuse/candidate.pyx":124
+ *     cdef double u, v, w, l, m, n
+ * 
+ *     if fixed:             # <<<<<<<<<<<<<<
+ * 
+ *         theta = 2.0*M_PI*random_uniform()
+ */
+  __pyx_t_1 = (__pyx_v_fixed != 0);
+  if (__pyx_t_1) {
+
+    /* "disorder/diffuse/candidate.pyx":126
+ *     if fixed:
+ * 
+ *         theta = 2.0*M_PI*random_uniform()             # <<<<<<<<<<<<<<
+ *         phi = acos(1.0-2.0*random_uniform())
+ * 
+ */
+    __pyx_v_theta = ((2.0 * M_PI) * __pyx_f_8disorder_7diffuse_9candidate_random_uniform());
+
+    /* "disorder/diffuse/candidate.pyx":127
+ * 
+ *         theta = 2.0*M_PI*random_uniform()
+ *         phi = acos(1.0-2.0*random_uniform())             # <<<<<<<<<<<<<<
+ * 
+ *         l = sin(phi)*cos(theta)
+ */
+    __pyx_v_phi = acos((1.0 - (2.0 * __pyx_f_8disorder_7diffuse_9candidate_random_uniform())));
+
+    /* "disorder/diffuse/candidate.pyx":129
+ *         phi = acos(1.0-2.0*random_uniform())
+ * 
+ *         l = sin(phi)*cos(theta)             # <<<<<<<<<<<<<<
+ *         m = sin(phi)*sin(theta)
+ *         n = cos(phi)
+ */
+    __pyx_v_l = (sin(__pyx_v_phi) * cos(__pyx_v_theta));
+
+    /* "disorder/diffuse/candidate.pyx":130
+ * 
+ *         l = sin(phi)*cos(theta)
+ *         m = sin(phi)*sin(theta)             # <<<<<<<<<<<<<<
+ *         n = cos(phi)
+ * 
+ */
+    __pyx_v_m = (sin(__pyx_v_phi) * sin(__pyx_v_theta));
+
+    /* "disorder/diffuse/candidate.pyx":131
+ *         l = sin(phi)*cos(theta)
+ *         m = sin(phi)*sin(theta)
+ *         n = cos(phi)             # <<<<<<<<<<<<<<
+ * 
+ *         if isotropic:
+ */
+    __pyx_v_n = cos(__pyx_v_phi);
+
+    /* "disorder/diffuse/candidate.pyx":133
+ *         n = cos(phi)
+ * 
+ *         if isotropic:             # <<<<<<<<<<<<<<
+ * 
+ *             u, v, w = A*l, B*m, C*n
+ */
+    __pyx_t_1 = (__pyx_v_isotropic != 0);
+    if (__pyx_t_1) {
+
+      /* "disorder/diffuse/candidate.pyx":135
+ *         if isotropic:
+ * 
+ *             u, v, w = A*l, B*m, C*n             # <<<<<<<<<<<<<<
+ * 
+ *         else:
+ */
+      __pyx_t_2 = (__pyx_v_A * __pyx_v_l);
+      __pyx_t_3 = (__pyx_v_B * __pyx_v_m);
+      __pyx_t_4 = (__pyx_v_C * __pyx_v_n);
+      __pyx_v_u = __pyx_t_2;
+      __pyx_v_v = __pyx_t_3;
+      __pyx_v_w = __pyx_t_4;
+
+      /* "disorder/diffuse/candidate.pyx":133
+ *         n = cos(phi)
+ * 
+ *         if isotropic:             # <<<<<<<<<<<<<<
+ * 
+ *             u, v, w = A*l, B*m, C*n
+ */
+      goto __pyx_L4;
+    }
+
+    /* "disorder/diffuse/candidate.pyx":139
+ *         else:
+ * 
+ *             u = sqrt(A*(A*l+F*m+E*n))*l             # <<<<<<<<<<<<<<
+ *             v = sqrt(B*(F*l+B*m+D*n))*m
+ *             w = sqrt(C*(E*l+D*m+C*n))*n
+ */
+    /*else*/ {
+      __pyx_v_u = (sqrt((__pyx_v_A * (((__pyx_v_A * __pyx_v_l) + (__pyx_v_F * __pyx_v_m)) + (__pyx_v_E * __pyx_v_n)))) * __pyx_v_l);
+
+      /* "disorder/diffuse/candidate.pyx":140
+ * 
+ *             u = sqrt(A*(A*l+F*m+E*n))*l
+ *             v = sqrt(B*(F*l+B*m+D*n))*m             # <<<<<<<<<<<<<<
+ *             w = sqrt(C*(E*l+D*m+C*n))*n
+ * 
+ */
+      __pyx_v_v = (sqrt((__pyx_v_B * (((__pyx_v_F * __pyx_v_l) + (__pyx_v_B * __pyx_v_m)) + (__pyx_v_D * __pyx_v_n)))) * __pyx_v_m);
+
+      /* "disorder/diffuse/candidate.pyx":141
+ *             u = sqrt(A*(A*l+F*m+E*n))*l
+ *             v = sqrt(B*(F*l+B*m+D*n))*m
+ *             w = sqrt(C*(E*l+D*m+C*n))*n             # <<<<<<<<<<<<<<
+ * 
+ *     else:
+ */
+      __pyx_v_w = (sqrt((__pyx_v_C * (((__pyx_v_E * __pyx_v_l) + (__pyx_v_D * __pyx_v_m)) + (__pyx_v_C * __pyx_v_n)))) * __pyx_v_n);
+    }
+    __pyx_L4:;
+
+    /* "disorder/diffuse/candidate.pyx":124
+ *     cdef double u, v, w, l, m, n
+ * 
+ *     if fixed:             # <<<<<<<<<<<<<<
+ * 
+ *         theta = 2.0*M_PI*random_uniform()
+ */
+    goto __pyx_L3;
+  }
+
+  /* "disorder/diffuse/candidate.pyx":145
+ *     else:
+ * 
+ *         l, m, n = random_gaussian_3d()             # <<<<<<<<<<<<<<
+ * 
+ *         if isotropic:
+ */
+  /*else*/ {
+    __pyx_t_5 = __pyx_f_8disorder_7diffuse_9candidate_random_gaussian_3d();
+    __pyx_t_4 = __pyx_t_5.f0;
+    __pyx_t_3 = __pyx_t_5.f1;
+    __pyx_t_2 = __pyx_t_5.f2;
+    __pyx_v_l = __pyx_t_4;
+    __pyx_v_m = __pyx_t_3;
+    __pyx_v_n = __pyx_t_2;
+
+    /* "disorder/diffuse/candidate.pyx":147
+ *         l, m, n = random_gaussian_3d()
+ * 
+ *         if isotropic:             # <<<<<<<<<<<<<<
+ * 
+ *             u, v, w = A*l, B*m, C*n
+ */
+    __pyx_t_1 = (__pyx_v_isotropic != 0);
+    if (__pyx_t_1) {
+
+      /* "disorder/diffuse/candidate.pyx":149
+ *         if isotropic:
+ * 
+ *             u, v, w = A*l, B*m, C*n             # <<<<<<<<<<<<<<
+ * 
+ *         else:
+ */
+      __pyx_t_2 = (__pyx_v_A * __pyx_v_l);
+      __pyx_t_3 = (__pyx_v_B * __pyx_v_m);
+      __pyx_t_4 = (__pyx_v_C * __pyx_v_n);
+      __pyx_v_u = __pyx_t_2;
+      __pyx_v_v = __pyx_t_3;
+      __pyx_v_w = __pyx_t_4;
+
+      /* "disorder/diffuse/candidate.pyx":147
+ *         l, m, n = random_gaussian_3d()
+ * 
+ *         if isotropic:             # <<<<<<<<<<<<<<
+ * 
+ *             u, v, w = A*l, B*m, C*n
+ */
+      goto __pyx_L5;
+    }
+
+    /* "disorder/diffuse/candidate.pyx":153
+ *         else:
+ * 
+ *             u, v, w = A*l, F*l+B*m, E*l+D*m+C*n             # <<<<<<<<<<<<<<
+ * 
+ *     return u, v, w
+ */
+    /*else*/ {
+      __pyx_t_4 = (__pyx_v_A * __pyx_v_l);
+      __pyx_t_3 = ((__pyx_v_F * __pyx_v_l) + (__pyx_v_B * __pyx_v_m));
+      __pyx_t_2 = (((__pyx_v_E * __pyx_v_l) + (__pyx_v_D * __pyx_v_m)) + (__pyx_v_C * __pyx_v_n));
+      __pyx_v_u = __pyx_t_4;
+      __pyx_v_v = __pyx_t_3;
+      __pyx_v_w = __pyx_t_2;
+    }
+    __pyx_L5:;
+  }
+  __pyx_L3:;
+
+  /* "disorder/diffuse/candidate.pyx":155
+ *             u, v, w = A*l, F*l+B*m, E*l+D*m+C*n
+ * 
+ *     return u, v, w             # <<<<<<<<<<<<<<
+ */
+  __pyx_t_5.f0 = __pyx_v_u;
+  __pyx_t_5.f1 = __pyx_v_v;
+  __pyx_t_5.f2 = __pyx_v_w;
+  __pyx_r = __pyx_t_5;
+  goto __pyx_L0;
+
+  /* "disorder/diffuse/candidate.pyx":111
+ *     return u, v, w
+ * 
+ * cpdef (double, double, double) displacement(double A,             # <<<<<<<<<<<<<<
+ *                                             double B,
+ *                                             double C,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_5displacement(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_8disorder_7diffuse_9candidate_5displacement(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  double __pyx_v_A;
+  double __pyx_v_B;
+  double __pyx_v_C;
+  double __pyx_v_D;
+  double __pyx_v_E;
+  double __pyx_v_F;
+  int __pyx_v_fixed;
+  int __pyx_v_isotropic;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("displacement (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_A,&__pyx_n_s_B,&__pyx_n_s_C,&__pyx_n_s_D,&__pyx_n_s_E,&__pyx_n_s_F,&__pyx_n_s_fixed,&__pyx_n_s_isotropic,0};
+    PyObject* values[8] = {0,0,0,0,0,0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  8: values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
+        CYTHON_FALLTHROUGH;
+        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+        CYTHON_FALLTHROUGH;
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_A)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_B)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("displacement", 1, 8, 8, 1); __PYX_ERR(0, 111, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_C)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("displacement", 1, 8, 8, 2); __PYX_ERR(0, 111, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_D)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("displacement", 1, 8, 8, 3); __PYX_ERR(0, 111, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_E)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("displacement", 1, 8, 8, 4); __PYX_ERR(0, 111, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_F)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("displacement", 1, 8, 8, 5); __PYX_ERR(0, 111, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  6:
+        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_fixed)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("displacement", 1, 8, 8, 6); __PYX_ERR(0, 111, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  7:
+        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_isotropic)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("displacement", 1, 8, 8, 7); __PYX_ERR(0, 111, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "displacement") < 0)) __PYX_ERR(0, 111, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 8) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
+    }
+    __pyx_v_A = __pyx_PyFloat_AsDouble(values[0]); if (unlikely((__pyx_v_A == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 111, __pyx_L3_error)
+    __pyx_v_B = __pyx_PyFloat_AsDouble(values[1]); if (unlikely((__pyx_v_B == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 112, __pyx_L3_error)
+    __pyx_v_C = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_C == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 113, __pyx_L3_error)
+    __pyx_v_D = __pyx_PyFloat_AsDouble(values[3]); if (unlikely((__pyx_v_D == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 114, __pyx_L3_error)
+    __pyx_v_E = __pyx_PyFloat_AsDouble(values[4]); if (unlikely((__pyx_v_E == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 115, __pyx_L3_error)
+    __pyx_v_F = __pyx_PyFloat_AsDouble(values[5]); if (unlikely((__pyx_v_F == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 116, __pyx_L3_error)
+    __pyx_v_fixed = __Pyx_PyObject_IsTrue(values[6]); if (unlikely((__pyx_v_fixed == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 117, __pyx_L3_error)
+    __pyx_v_isotropic = __Pyx_PyObject_IsTrue(values[7]); if (unlikely((__pyx_v_isotropic == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 118, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("displacement", 1, 8, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 111, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("disorder.diffuse.candidate.displacement", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_8disorder_7diffuse_9candidate_4displacement(__pyx_self, __pyx_v_A, __pyx_v_B, __pyx_v_C, __pyx_v_D, __pyx_v_E, __pyx_v_F, __pyx_v_fixed, __pyx_v_isotropic);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8disorder_7diffuse_9candidate_4displacement(CYTHON_UNUSED PyObject *__pyx_self, double __pyx_v_A, double __pyx_v_B, double __pyx_v_C, double __pyx_v_D, double __pyx_v_E, double __pyx_v_F, int __pyx_v_fixed, int __pyx_v_isotropic) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("displacement", 0);
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __pyx_convert__to_py___pyx_ctuple_double__and_double__and_double(__pyx_f_8disorder_7diffuse_9candidate_displacement(__pyx_v_A, __pyx_v_B, __pyx_v_C, __pyx_v_D, __pyx_v_E, __pyx_v_F, __pyx_v_fixed, __pyx_v_isotropic, 0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 111, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("disorder.diffuse.candidate.displacement", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3027,8 +3939,9 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
 }
 
 static PyMethodDef __pyx_methods[] = {
-  {"scalar", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_9candidate_1scalar, METH_VARARGS|METH_KEYWORDS, 0},
-  {"vector", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_9candidate_3vector, METH_VARARGS|METH_KEYWORDS, 0},
+  {"composition", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_9candidate_1composition, METH_VARARGS|METH_KEYWORDS, 0},
+  {"moment", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_9candidate_3moment, METH_VARARGS|METH_KEYWORDS, 0},
+  {"displacement", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_9candidate_5displacement, METH_VARARGS|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 
@@ -3077,16 +3990,23 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_A, __pyx_k_A, sizeof(__pyx_k_A), 0, 0, 1, 1},
   {&__pyx_n_s_B, __pyx_k_B, sizeof(__pyx_k_B), 0, 0, 1, 1},
   {&__pyx_n_s_C, __pyx_k_C, sizeof(__pyx_k_C), 0, 0, 1, 1},
+  {&__pyx_n_s_D, __pyx_k_D, sizeof(__pyx_k_D), 0, 0, 1, 1},
+  {&__pyx_n_s_E, __pyx_k_E, sizeof(__pyx_k_E), 0, 0, 1, 1},
+  {&__pyx_n_s_F, __pyx_k_F, sizeof(__pyx_k_F), 0, 0, 1, 1},
   {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
+  {&__pyx_n_s_eps, __pyx_k_eps, sizeof(__pyx_k_eps), 0, 0, 1, 1},
+  {&__pyx_n_s_finfo, __pyx_k_finfo, sizeof(__pyx_k_finfo), 0, 0, 1, 1},
   {&__pyx_n_s_fixed, __pyx_k_fixed, sizeof(__pyx_k_fixed), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
+  {&__pyx_n_s_isotropic, __pyx_k_isotropic, sizeof(__pyx_k_isotropic), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
   {&__pyx_n_s_np, __pyx_k_np, sizeof(__pyx_k_np), 0, 0, 1, 1},
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
   {&__pyx_kp_u_numpy_core_multiarray_failed_to, __pyx_k_numpy_core_multiarray_failed_to, sizeof(__pyx_k_numpy_core_multiarray_failed_to), 0, 1, 0, 0},
   {&__pyx_kp_u_numpy_core_umath_failed_to_impor, __pyx_k_numpy_core_umath_failed_to_impor, sizeof(__pyx_k_numpy_core_umath_failed_to_impor), 0, 1, 0, 0},
+  {&__pyx_n_s_rotate, __pyx_k_rotate, sizeof(__pyx_k_rotate), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_n_s_value, __pyx_k_value, sizeof(__pyx_k_value), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
@@ -3168,8 +4088,9 @@ static int __Pyx_modinit_function_export_code(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_export_code", 0);
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("scalar", (void (*)(void))__pyx_f_8disorder_7diffuse_9candidate_scalar, "double (double, double, int, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("vector", (void (*)(void))__pyx_f_8disorder_7diffuse_9candidate_vector, "__pyx_ctuple_double__and_double__and_double (double, double, double, double, int, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("composition", (void (*)(void))__pyx_f_8disorder_7diffuse_9candidate_composition, "double (double, double, int, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("moment", (void (*)(void))__pyx_f_8disorder_7diffuse_9candidate_moment, "__pyx_ctuple_double__and_double__and_double (double, double, double, double, int, int, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  if (__Pyx_ExportFunction("displacement", (void (*)(void))__pyx_f_8disorder_7diffuse_9candidate_displacement, "__pyx_ctuple_double__and_double__and_double (double, double, double, double, double, double, int, int, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -3356,6 +4277,8 @@ static CYTHON_SMALL_CODE int __pyx_pymod_exec_candidate(PyObject *__pyx_pyinit_m
 #endif
 {
   PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  double __pyx_t_3;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3475,15 +4398,37 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 3, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
+  /* "disorder/diffuse/candidate.pyx":11
+ * from libc.stdlib cimport rand, RAND_MAX
+ * 
+ * cdef double M_EPS = np.finfo(float).eps             # <<<<<<<<<<<<<<
+ * 
+ * cdef double random_uniform_nonzero() nogil:
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_finfo); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)(&PyFloat_Type))); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_eps); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 11, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_3 = __pyx_PyFloat_AsDouble(__pyx_t_2); if (unlikely((__pyx_t_3 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 11, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_8disorder_7diffuse_9candidate_M_EPS = __pyx_t_3;
+
   /* "disorder/diffuse/candidate.pyx":1
  * #cython: boundscheck=False, wraparound=False, cdivision=True, language_level=3             # <<<<<<<<<<<<<<
  * 
  * import numpy as np
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_2) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1016
  * 
@@ -3498,6 +4443,7 @@ if (!__Pyx_RefNanny) {
   goto __pyx_L0;
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
   if (__pyx_m) {
     if (__pyx_d) {
       __Pyx_AddTraceback("init disorder.diffuse.candidate", __pyx_clineno, __pyx_lineno, __pyx_filename);
@@ -4215,6 +5161,243 @@ static CYTHON_INLINE int __Pyx_object_dict_version_matches(PyObject* obj, PY_UIN
 }
 #endif
 
+/* GetModuleGlobalName */
+#if CYTHON_USE_DICT_VERSIONS
+static PyObject *__Pyx__GetModuleGlobalName(PyObject *name, PY_UINT64_T *dict_version, PyObject **dict_cached_value)
+#else
+static CYTHON_INLINE PyObject *__Pyx__GetModuleGlobalName(PyObject *name)
+#endif
+{
+    PyObject *result;
+#if !CYTHON_AVOID_BORROWED_REFS
+#if CYTHON_COMPILING_IN_CPYTHON && PY_VERSION_HEX >= 0x030500A1
+    result = _PyDict_GetItem_KnownHash(__pyx_d, name, ((PyASCIIObject *) name)->hash);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    } else if (unlikely(PyErr_Occurred())) {
+        return NULL;
+    }
+#else
+    result = PyDict_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+#endif
+#else
+    result = PyObject_GetItem(__pyx_d, name);
+    __PYX_UPDATE_DICT_CACHE(__pyx_d, result, *dict_cached_value, *dict_version)
+    if (likely(result)) {
+        return __Pyx_NewRef(result);
+    }
+    PyErr_Clear();
+#endif
+    return __Pyx_GetBuiltinName(name);
+}
+
+/* PyCFunctionFastCall */
+#if CYTHON_FAST_PYCCALL
+static CYTHON_INLINE PyObject * __Pyx_PyCFunction_FastCall(PyObject *func_obj, PyObject **args, Py_ssize_t nargs) {
+    PyCFunctionObject *func = (PyCFunctionObject*)func_obj;
+    PyCFunction meth = PyCFunction_GET_FUNCTION(func);
+    PyObject *self = PyCFunction_GET_SELF(func);
+    int flags = PyCFunction_GET_FLAGS(func);
+    assert(PyCFunction_Check(func));
+    assert(METH_FASTCALL == (flags & ~(METH_CLASS | METH_STATIC | METH_COEXIST | METH_KEYWORDS | METH_STACKLESS)));
+    assert(nargs >= 0);
+    assert(nargs == 0 || args != NULL);
+    /* _PyCFunction_FastCallDict() must not be called with an exception set,
+       because it may clear it (directly or indirectly) and so the
+       caller loses its exception */
+    assert(!PyErr_Occurred());
+    if ((PY_VERSION_HEX < 0x030700A0) || unlikely(flags & METH_KEYWORDS)) {
+        return (*((__Pyx_PyCFunctionFastWithKeywords)(void*)meth)) (self, args, nargs, NULL);
+    } else {
+        return (*((__Pyx_PyCFunctionFast)(void*)meth)) (self, args, nargs);
+    }
+}
+#endif
+
+/* PyFunctionFastCall */
+#if CYTHON_FAST_PYCALL
+static PyObject* __Pyx_PyFunction_FastCallNoKw(PyCodeObject *co, PyObject **args, Py_ssize_t na,
+                                               PyObject *globals) {
+    PyFrameObject *f;
+    PyThreadState *tstate = __Pyx_PyThreadState_Current;
+    PyObject **fastlocals;
+    Py_ssize_t i;
+    PyObject *result;
+    assert(globals != NULL);
+    /* XXX Perhaps we should create a specialized
+       PyFrame_New() that doesn't take locals, but does
+       take builtins without sanity checking them.
+       */
+    assert(tstate != NULL);
+    f = PyFrame_New(tstate, co, globals, NULL);
+    if (f == NULL) {
+        return NULL;
+    }
+    fastlocals = __Pyx_PyFrame_GetLocalsplus(f);
+    for (i = 0; i < na; i++) {
+        Py_INCREF(*args);
+        fastlocals[i] = *args++;
+    }
+    result = PyEval_EvalFrameEx(f,0);
+    ++tstate->recursion_depth;
+    Py_DECREF(f);
+    --tstate->recursion_depth;
+    return result;
+}
+#if 1 || PY_VERSION_HEX < 0x030600B1
+static PyObject *__Pyx_PyFunction_FastCallDict(PyObject *func, PyObject **args, Py_ssize_t nargs, PyObject *kwargs) {
+    PyCodeObject *co = (PyCodeObject *)PyFunction_GET_CODE(func);
+    PyObject *globals = PyFunction_GET_GLOBALS(func);
+    PyObject *argdefs = PyFunction_GET_DEFAULTS(func);
+    PyObject *closure;
+#if PY_MAJOR_VERSION >= 3
+    PyObject *kwdefs;
+#endif
+    PyObject *kwtuple, **k;
+    PyObject **d;
+    Py_ssize_t nd;
+    Py_ssize_t nk;
+    PyObject *result;
+    assert(kwargs == NULL || PyDict_Check(kwargs));
+    nk = kwargs ? PyDict_Size(kwargs) : 0;
+    if (Py_EnterRecursiveCall((char*)" while calling a Python object")) {
+        return NULL;
+    }
+    if (
+#if PY_MAJOR_VERSION >= 3
+            co->co_kwonlyargcount == 0 &&
+#endif
+            likely(kwargs == NULL || nk == 0) &&
+            co->co_flags == (CO_OPTIMIZED | CO_NEWLOCALS | CO_NOFREE)) {
+        if (argdefs == NULL && co->co_argcount == nargs) {
+            result = __Pyx_PyFunction_FastCallNoKw(co, args, nargs, globals);
+            goto done;
+        }
+        else if (nargs == 0 && argdefs != NULL
+                 && co->co_argcount == Py_SIZE(argdefs)) {
+            /* function called with no arguments, but all parameters have
+               a default value: use default values as arguments .*/
+            args = &PyTuple_GET_ITEM(argdefs, 0);
+            result =__Pyx_PyFunction_FastCallNoKw(co, args, Py_SIZE(argdefs), globals);
+            goto done;
+        }
+    }
+    if (kwargs != NULL) {
+        Py_ssize_t pos, i;
+        kwtuple = PyTuple_New(2 * nk);
+        if (kwtuple == NULL) {
+            result = NULL;
+            goto done;
+        }
+        k = &PyTuple_GET_ITEM(kwtuple, 0);
+        pos = i = 0;
+        while (PyDict_Next(kwargs, &pos, &k[i], &k[i+1])) {
+            Py_INCREF(k[i]);
+            Py_INCREF(k[i+1]);
+            i += 2;
+        }
+        nk = i / 2;
+    }
+    else {
+        kwtuple = NULL;
+        k = NULL;
+    }
+    closure = PyFunction_GET_CLOSURE(func);
+#if PY_MAJOR_VERSION >= 3
+    kwdefs = PyFunction_GET_KW_DEFAULTS(func);
+#endif
+    if (argdefs != NULL) {
+        d = &PyTuple_GET_ITEM(argdefs, 0);
+        nd = Py_SIZE(argdefs);
+    }
+    else {
+        d = NULL;
+        nd = 0;
+    }
+#if PY_MAJOR_VERSION >= 3
+    result = PyEval_EvalCodeEx((PyObject*)co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, kwdefs, closure);
+#else
+    result = PyEval_EvalCodeEx(co, globals, (PyObject *)NULL,
+                               args, (int)nargs,
+                               k, (int)nk,
+                               d, (int)nd, closure);
+#endif
+    Py_XDECREF(kwtuple);
+done:
+    Py_LeaveRecursiveCall();
+    return result;
+}
+#endif
+#endif
+
+/* PyObjectCallMethO */
+#if CYTHON_COMPILING_IN_CPYTHON
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallMethO(PyObject *func, PyObject *arg) {
+    PyObject *self, *result;
+    PyCFunction cfunc;
+    cfunc = PyCFunction_GET_FUNCTION(func);
+    self = PyCFunction_GET_SELF(func);
+    if (unlikely(Py_EnterRecursiveCall((char*)" while calling a Python object")))
+        return NULL;
+    result = cfunc(self, arg);
+    Py_LeaveRecursiveCall();
+    if (unlikely(!result) && unlikely(!PyErr_Occurred())) {
+        PyErr_SetString(
+            PyExc_SystemError,
+            "NULL result without error in PyObject_Call");
+    }
+    return result;
+}
+#endif
+
+/* PyObjectCallOneArg */
+#if CYTHON_COMPILING_IN_CPYTHON
+static PyObject* __Pyx__PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_New(1);
+    if (unlikely(!args)) return NULL;
+    Py_INCREF(arg);
+    PyTuple_SET_ITEM(args, 0, arg);
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+#if CYTHON_FAST_PYCALL
+    if (PyFunction_Check(func)) {
+        return __Pyx_PyFunction_FastCall(func, &arg, 1);
+    }
+#endif
+    if (likely(PyCFunction_Check(func))) {
+        if (likely(PyCFunction_GET_FLAGS(func) & METH_O)) {
+            return __Pyx_PyObject_CallMethO(func, arg);
+#if CYTHON_FAST_PYCCALL
+        } else if (__Pyx_PyFastCFunction_Check(func)) {
+            return __Pyx_PyCFunction_FastCall(func, &arg, 1);
+#endif
+        }
+    }
+    return __Pyx__PyObject_CallOneArg(func, arg);
+}
+#else
+static CYTHON_INLINE PyObject* __Pyx_PyObject_CallOneArg(PyObject *func, PyObject *arg) {
+    PyObject *result;
+    PyObject *args = PyTuple_Pack(1, arg);
+    if (unlikely(!args)) return NULL;
+    result = __Pyx_PyObject_Call(func, args, NULL);
+    Py_DECREF(args);
+    return result;
+}
+#endif
+
 /* CLineInTraceback */
 #ifndef CYTHON_CLINE_IN_TRACEBACK
 static int __Pyx_CLineForTraceback(CYTHON_NCP_UNUSED PyThreadState *tstate, int c_line) {
@@ -4750,6 +5933,44 @@ bad:
         }
     #endif
 #endif
+
+/* CIntToPy */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const int neg_one = (int) -1, const_zero = (int) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+    }
+}
 
 /* CIntToPy */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {

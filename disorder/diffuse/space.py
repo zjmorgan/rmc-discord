@@ -449,9 +449,9 @@ def debye_waller(h_range,
                  U23, 
                  U13, 
                  U12, 
-                 a, 
-                 b, 
-                 c,
+                 a_, 
+                 b_, 
+                 c_,
                  T=np.eye(3)):
     
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
@@ -471,10 +471,14 @@ def debye_waller(h_range,
     n_atm = U11.shape[0]
     
     T = np.zeros((n_hkl,n_atm))
-    
+        
     for i in range(n_atm):
         
-        T[:,i] = np.exp(U11*(h*a)**2+U22*(k*b)**2+U33*(l*c)**2+
-                        2*U23*k*l*b*c+2*U13*h*l*a*c+2*U12*h*k*a*b)
+        T[:,i] = np.exp(-2*np.pi**2*(U11[i]*(h*a_)**2+
+                                     U22[i]*(k*b_)**2+
+                                     U33[i]*(l*c_)**2+
+                                     U23[i]*k*l*b_*c_*2+
+                                     U13[i]*h*l*a_*c_*2+
+                                     U12[i]*h*k*a_*b_*2))
     
     return T.flatten()

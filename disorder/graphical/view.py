@@ -161,11 +161,15 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         disorder.setTabButton(1, QtWidgets.QTabBar.LeftSide, self.checkBox_occ)
         disorder.setTabButton(2, QtWidgets.QTabBar.LeftSide, self.checkBox_dis)
         
-        # self.comboBox_moment_constraint.addItem('Heisenberg')
-        # self.comboBox_moment_constraint.addItem('Ising')
+        self.comboBox_moment_constraint.addItem('Heisenberg')
+        self.comboBox_moment_constraint.addItem('Ising')
         
-        # self.comboBox_displacement_parameters.addItem('Isotropic')
-        # self.comboBox_displacement_parameters.addItem('Anisotropic')
+        self.comboBox_displacement_constraint.addItem('Isotropic')
+        self.comboBox_displacement_constraint.addItem('Anisotropic')
+        
+        self.comboBox_displacement_parameters.addItem('None')
+        self.comboBox_displacement_parameters.addItem('Isotropic')
+        self.comboBox_displacement_parameters.addItem('Anisotropic')
 
         # ---
 
@@ -260,6 +264,10 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_slice_calc.addItem('h =')
         self.comboBox_slice_calc.addItem('k =')
         self.comboBox_slice_calc.addItem('l =')
+        
+        self.comboBox_adp_recalc.addItem('None')
+        self.comboBox_adp_recalc.addItem('Isotropic')
+        self.comboBox_adp_recalc.addItem('Anisotropic')
                        
         self.clear_application()
         
@@ -1985,12 +1993,10 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_max_ref.setValidator(validator)
     
     def get_plot_ref(self):
-        index = self.comboBox_plot_ref.currentIndex()    
-        return self.comboBox_plot_ref.itemText(index)
+        return self.comboBox_plot_ref.currentText()
             
     def get_norm_ref(self):
-        index = self.comboBox_norm_ref.currentIndex()    
-        return self.comboBox_norm_ref.itemText(index)
+        return self.comboBox_norm_ref.currentText()
     
     def get_plot_ref_canvas(self):
         return self.canvas_ref
@@ -2052,6 +2058,15 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def fixed_displacement_check(self):
         return self.checkBox_fixed_displacement.isChecked()
+    
+    def get_moment_constraint(self):
+        return self.comboBox_moment_constraint.currentText()
+    
+    def get_displacement_constraint(self):
+        return self.comboBox_displacement_constraint.currentText()
+    
+    def get_adp_type(self):
+        return self.comboBox_displacement_parameters.currentText()
     
     def save_intensity_ref(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
@@ -2805,6 +2820,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def get_atom_site_recalculation_row_count(self):
         return self.tableWidget_recalc.rowCount()
+    
+    def get_adp_type_recalc(self):
+        return self.comboBox_adp_recalc.currentText()
  
     def get_active_atom_site(self):
         data = []
