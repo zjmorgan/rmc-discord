@@ -5,7 +5,6 @@ import numpy as np
 from scipy import spatial
 
 from disorder.diffuse.scattering import gauss, blur
-from disorder.diffuse.powder import average
 
 def data(folder='ising/', directory='', filestr=None):
     
@@ -268,61 +267,6 @@ def indices(inverses, mask):
     i_unmask = np.arange(mask.size)[~mask.flatten()]
     
     return i_mask, i_unmask
-
-def powder(Q, rx, ry, rz, scattering_length, fract=0.5):
-    
-    r_max = np.sqrt(rx.max()**2+ry.max()**2+rz.max()**2)
-        
-    points = np.column_stack((rx, ry, rz))
-    tree = spatial.cKDTree(points)
-    
-    pairs = tree.query_pairs(fract*r_max)
-    
-    coordinate = np.array(list(pairs))
-            
-    i = coordinate[:,0]
-    j = coordinate[:,1]
-        
-    n_hkl = Q.shape[0]
-    n_xyz = rx.shape[0]
-    
-    n_pairs = i.shape[0]
-    n_atm = scattering_length.shape[0] // n_hkl
-    
-    k = np.mod(i,n_atm)
-    l = np.mod(j,n_atm)
-    
-    #n_uvw = n_xyz // n_atm
-
-    rx_ij = rx[j]-rx[i]
-    ry_ij = ry[j]-ry[i]
-    rz_ij = rz[j]-rz[i]
-    
-    r_ij = np.sqrt(rx_ij**2+ry_ij**2+rz_ij**2)
-    
-    m = np.arange(n_xyz)
-    n = np.mod(m,n_atm)
-        
-    summation = np.zeros(Q.shape[0])
-    
-    auto = np.zeros(Q.shape[0])
-
-    average(summation, 
-            auto,
-            Q,
-            r_ij,
-            scattering_length,
-            k,
-            l,
-            n,
-            n_xyz,
-            n_atm)
-    
-    scale = n_xyz/((np.sqrt(8*n_pairs+1)+1)/2)
-        
-    I = (auto/scale+2*summation)/n_xyz
-   
-    return I
 
 def prefactors(scattering_length, phase_factor, occupancy, primitive=None):
     

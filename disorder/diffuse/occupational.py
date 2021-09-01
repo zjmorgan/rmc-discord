@@ -4,8 +4,6 @@ import numpy as np
 
 from scipy import spatial
 
-from disorder.diffuse.powder import occupational
-
 def composition(nu, nv, nw, n_atm, value=0.5):
     """
     Generate random relative site occupancies.
@@ -169,61 +167,3 @@ def structure(A_k,
     F = np.sum(prod, axis=1)
      
     return F, prod.flatten()
-
-def powder(Q, A, rx, ry, rz, scattering_length, fract=0.5):
-    
-    r_max = np.sqrt(rx.max()**2+ry.max()**2+rz.max()**2)
-        
-    points = np.column_stack((rx, ry, rz))
-    tree = spatial.cKDTree(points)
-    
-    pairs = tree.query_pairs(fract*r_max)
-    
-    coordinate = np.array(list(pairs))
-            
-    i = coordinate[:,0]
-    j = coordinate[:,1]
-        
-    n_hkl = Q.shape[0]
-    n_xyz = A.shape[0]
-    
-    n_pairs = i.shape[0]
-    n_atm = scattering_length.shape[0] // n_hkl
-    
-    k = np.mod(i,n_atm)
-    l = np.mod(j,n_atm)
-    
-    rx_ij = rx[j]-rx[i]
-    ry_ij = ry[j]-ry[i]
-    rz_ij = rz[j]-rz[i]
-    
-    r_ij = np.sqrt(rx_ij**2+ry_ij**2+rz_ij**2)
-    
-    m = np.arange(n_xyz)
-    n = np.mod(m,n_atm)
-    
-    delta_i_delta_i = (1+A[m])**2
-    delta_ij = (1+A[i])*(1+A[j])
-    
-    summation = np.zeros(Q.shape[0])
-    
-    auto = np.zeros(Q.shape[0])
-
-    occupational(summation, 
-                 auto,
-                 Q,
-                 r_ij,
-                 scattering_length,
-                 delta_ij,
-                 delta_i_delta_i,
-                 k,
-                 l,
-                 n,
-                 n_xyz,
-                 n_atm)
-    
-    scale = n_xyz/((np.sqrt(8*n_pairs+1)+1)/2)
-        
-    I = (auto/scale+2*summation)/n_xyz
-    
-    return I

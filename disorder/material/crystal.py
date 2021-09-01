@@ -480,7 +480,7 @@ def bragg(h_range,
         
     for op in symops:
                 
-        transformed = symmetry.evaluate([op], cosymmetries, translate=False)
+        transformed = symmetry.evaluate(op, cosymmetries, translate=False)
                                         
         total.append(transformed.T.tolist())
         
@@ -655,135 +655,152 @@ def reduced(h_range,
            reverses[inverses][coinverses], \
            symops, \
            Nu, Nv, Nw
-           
-def multiplicity(h, k, l, laue):
-            
-    total = []
-    
-    coordinate = np.stack((h,k,l))
-    
-    symops = np.array(symmetry.laue(laue))
-    
-    symops = symmetry.inverse(symops)
-            
-    symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
-            
-    for op in symops:
-                
-        transformed = symmetry.evaluate([op], coordinate, translate=False)
-                                        
-        total.append(transformed.T.tolist())
-                               
-    total = np.hstack(total)
-    
-    m = np.zeros(coordinate.shape[1])
-    
-    for i in range(coordinate.shape[1]):
-        
-        array = total[i,:].reshape(len(symops),3)
-        
-        symmetries, indices, counts = np.unique(array,\
-                                                axis=0, 
-                                                return_index=True, 
-                                                return_counts=True)
-            
-        m[i] = counts[0]
-        
-    return m, symops
 
-def spherical(Q_range, B, laue, tol=0.00001):
+def spherical(Q_range, nQ, B, laue, np=100, nt=100, tol=1e-5):
     
-    Q_min = Q_range[0]
-    Q_max = Q_range[1]
-    
-    inv_d = np.array([Q_min,Q_max])/2/np.pi
-    
-    h_range = inv_d/np.sqrt(B[0,0]**2+B[1,0]**2+B[2,0]**2)
-    k_range = inv_d/np.sqrt(B[0,1]**2+B[1,1]**2+B[2,1]**2)
-    l_range = inv_d/np.sqrt(B[0,2]**2+B[1,2]**2+B[2,2]**2)
-    
-    h, k, l = np.meshgrid(np.arange(h_range[0],h_range[1]+1).astype(int), 
-                          np.arange(k_range[0],k_range[1]+1).astype(int), 
-                          np.arange(l_range[0],l_range[1]+1).astype(int), 
+    Q_min, Q_max = Q_range
+
+    t_range = [0, np.pi]
+    p_range = [0, 2*np.pi]
+        
+    Q, t, p = np.meshgrid(np.linspace(Q_range[0],Q_range[1],nQ), 
+                          np.linspace(t_range[0],t_range[1],nt), 
+                          np.linspace(p_range[0],p_range[1],np), 
                           indexing='ij')
     
+    Qh = Q*np.sin(t)*np.cos(p)
+    Qk = Q*np.sin(t)*np.sin(p)
+    Ql = Q*np.cos(t)
+    
+    B_inv = np.linalg.inv(B)
+    
+    h, k, l = transform(Qh, Qk, Ql, B_inv)
+    
+    h_range = [h.min(), h.max()]
+    k_range = [k.min(), k.max()]
+    l_range = [l.min(), l.max()]
+    
     h, k, l = h.flatten(), k.flatten(), l.flatten()
+    
+    del Qh, Qk, Ql, Q, t, p
+                    
+    if (nh > 1):
+        h_max_res = (h_range[1]-h_range[0])/(nh-1)
+    else:
+        h_max_res = 0
         
+    if (nk > 1):
+        k_max_res = (k_range[1]-k_range[0])/(nk-1)
+    else:
+        k_max_res = 0
+        
+    if (nl > 1):
+        l_max_res = (l_range[1]-l_range[0])/(nl-1)
+    else:
+        l_max_res = 0
+        
+    hkl_max_res = np.array([[h_max_res,0,0],[0,k_max_res,0],[0,0,l_max_res]])
+    hkl_res = np.abs(np.dot(T, hkl_max_res))
+    
+    h_res, k_res, l_res = np.max(hkl_res, axis=0)
+    
+    if (h_res > 0 and h_res < 1/nu):
+        Nu = int(1/h_res // nu)*nu
+    else:
+        Nu = nu
+        
+    if (k_res > 0 and k_res < 1/nv):
+        Nv = int(1/k_res // nv)*nv
+    else:
+        Nv = nv
+    
+    if (l_res > 0 and l_res < 1/nw):
+        Nw = int(1/l_res // nw)*nw
+    else:
+        Nw = nw
+        
+    H = np.round(h*Nu).astype(np.int16)
+    
+    iH = np.mod(H, Nu) # // (Nu // nu)
+    mask = (iH < Nu // nu) & (~np.isclose(np.mod(h*Nu, Nu),0))
+    # H[mask] += Nu//nu
+    del iH, mask
+    
+    del h
+        
+    K = np.round(k*Nv).astype(np.int16)
+    
+    iK = np.mod(K, Nv) # // (Nv // nv)
+    mask = (iK < Nv // nv) & (~np.isclose(np.mod(k*Nv, Nv),0))
+    # K[mask] += Nv//nv
+    del iK, mask
+    
+    del k
+    
+    L = np.round(l*Nw).astype(np.int16)
+    
+    iL = np.mod(L, Nw) # // (Nw // nw)
+    mask = (iL < Nw // nw) & (~np.isclose(np.mod(l*Nw, Nw),0))
+    # L[mask] += Nw//nw
+    del iL, mask  
+        
+    del l
+            
+    if (laue == None or laue == 'None'):
+        
+        index = np.arange(nh*nk*nl)
+        
+        return index, index, np.array([u'x,y,z']), Nu,  Nv, Nw
+               
     symops = np.array(symmetry.laue(laue))
     
     symops = symmetry.inverse(symops)
-    
+                    
     symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
-            
-    total = []
+                    
+    coordinate = np.ascontiguousarray(np.stack(((H,-H),(K,-K),(L,-L))).T)
     
-    coordinate = np.stack((h,k,l))
+    del H, K, L
             
-    for op in symops:
-                
-        transformed = symmetry.evaluate([op], coordinate, translate=False)
-                                        
-        total.append(transformed.T.tolist())
-                                                              
-    total = np.array(total)
-    sort = np.array(total)
-    
-    for i in range(coordinate.shape[1]):
+    n = coordinate.shape[0]
         
-        sort[:,i,:] = total[np.lexsort(total[:,i,:].T),i,:]
+    pair = np.zeros((n,3), dtype=np.int16)
+                    
+    symmetry.friedel(pair, coordinate)
+
+    del coordinate
         
-    array = np.hstack(sort)
+    cosymmetries, coindices, coinverses = symmetry.unique(pair)
                         
-    h, k, l = array[:,:3].T
+    del pair
     
-    Q = 2*np.pi*np.sqrt((B[0,0]*h+B[0,1]*k+B[0,2]*l)**2+\
-                        (B[1,0]*h+B[1,1]*k+B[1,2]*l)**2+\
-                        (B[2,0]*h+B[2,1]*k+B[2,2]*l)**2)
-    
-    mask = (Q >= Q_min) & (Q <= Q_max)
-    
-    sort = np.argsort(Q[mask])
-    
-    Q = Q[mask][sort]
-    array = array[mask][sort]
-
-    distance = np.round(np.round(Q/tol,1)).astype(int)
-    metric =  np.vstack((distance, array.T)).T
-                                
-    symmetries, indices, inverses = np.unique(metric,
-                                              axis=0, 
-                                              return_index=True, 
-                                              return_inverse=True)
-    
-    distance = distance[indices]
-    Q = Q[indices]
-    
-    #length, ind = np.unique(distance, return_index=True)
-    
-    m = np.zeros(symmetries.shape[0], dtype=np.int)
-    
-    total = []
-    
-    for i in range(symmetries.shape[0]):
+    n_symm = cosymmetries.shape[0]
         
-        array = symmetries[i,1:].reshape(symmetries.shape[1] // 3,3)
-        
-        vectors, indices, inverses = np.unique(array,
-                                               axis=0, 
-                                               return_index=True, 
-                                               return_inverse=True)
-        
-        m[i] = vectors.shape[0]
-        
-        total.append(vectors.tolist())
-        
-    total = np.vstack(total)
-    index = np.cumsum(m)
+    total = np.zeros((n_symm,3), dtype=np.int16)
     
-    #index = np.append(np.append(0, index[ind]), index[-1])
-    h, k, l = total.T
-
-    return Q, h, k, l, index, m
+    laue_sym = symmetry.operators(invert=True)
+    
+    symop = [11,1]
+    
+    for count, sym in enumerate(list(laue_sym.keys())):
+        if (np.array([symops[p] in laue_sym.get(sym) \
+                      for p in range(symops.shape[0])]).all() and \
+             len(laue_sym.get(sym)) == symops.shape[0]):
+            
+            symop = [count,len(laue_sym.get(sym))]
+        
+    index = np.arange(n)
+                
+    symmetry.sorting(total, cosymmetries, symop)
+    
+    _, indices, inverses = symmetry.unique(total)
+    
+    reverses = np.arange(indices.shape[0])
+                       
+    return index[coindices][indices], \
+           reverses[inverses][coinverses], \
+           symops, \
+           Nu, Nv, Nw
 
 def symmetrize(arrays, 
                dx, 

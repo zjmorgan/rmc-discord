@@ -396,7 +396,7 @@ def magnetic(double [::1] Sx,
                         
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
     
-                    dw_factors = iexp(0.5*(Uxx[j]*Qx*Qx+\
+                    dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
                                            Uyy[j]*Qy*Qy+\
                                            Uzz[j]*Qz*Qz)+\
                                            Uyz[j]*Qy*Qz+\
@@ -465,6 +465,8 @@ def occupational(double [::1] A_r,
                  Py_ssize_t Nv,
                  Py_ssize_t Nw,
                  technique='Neutron'):
+    
+    cdef bint neutron = technique == 'Neutron'
     
     cdef Py_ssize_t n_atm = len(atms)
         
@@ -595,7 +597,7 @@ def occupational(double [::1] A_r,
         
         atm = atms[j]
         
-        if (technique == 'Neutron'):
+        if neutron:
             b[j] = tables.bc.get(atm)
         else:
             a1[j], b1[j], \
@@ -705,7 +707,7 @@ def occupational(double [::1] A_r,
                     
                     occ = occupancy[j]
                     
-                    if (technique == 'Neutron'):
+                    if neutron:
                         
                         scattering_length = b[j]
                         
@@ -716,15 +718,15 @@ def occupational(double [::1] A_r,
                         s_ = Q*inv_M_SP
                         s_sq = s_*s_
                                                 
-                        scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
-                                          + a2[j]*iexp(-b2[j]*s_sq)\
-                                          + a3[j]*iexp(-b3[j]*s_sq)\
-                                          + a4[j]*iexp(-b4[j]*s_sq)\
+                        scattering_length = a1[j]*exp(-b1[j]*s_sq)\
+                                          + a2[j]*exp(-b2[j]*s_sq)\
+                                          + a3[j]*exp(-b3[j]*s_sq)\
+                                          + a4[j]*exp(-b4[j]*s_sq)\
                                           + c[j]
                         
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
-    
-                    dw_factors = iexp(0.5*(Uxx[j]*Qx*Qx+\
+                    
+                    dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
                                            Uyy[j]*Qy*Qy+\
                                            Uzz[j]*Qz*Qz)+\
                                            Uyz[j]*Qy*Qz+\
@@ -776,6 +778,8 @@ def displacive(double [::1] U_r,
                Py_ssize_t centering,
                technique='Neutron'):
     
+    cdef bint neutron = technique == 'Neutron'
+
     cdef Py_ssize_t n_atm = len(atms)
         
     cdef Py_ssize_t n_hkl = indices.shape[0]
@@ -882,7 +886,7 @@ def displacive(double [::1] U_r,
             
     cdef double Q_k
     
-    cdef long [:,::1] exponents = np.zeros((n_prod,3), dtype=np.int)
+    cdef long [:,::1] exponents = np.zeros((n_prod,3), dtype=int)
 
     cdef double complex prod
     cdef double complex F
@@ -907,7 +911,7 @@ def displacive(double [::1] U_r,
         
         atm = atms[j]
         
-        if (technique == 'Neutron'):
+        if neutron:
             b[j] = tables.bc.get(atm)
         else:
             a1[j], b1[j], \
@@ -991,7 +995,7 @@ def displacive(double [::1] U_r,
                     
                     occ = occupancy[j]
                     
-                    if (technique == 'Neutron'):
+                    if neutron:
                         
                         scattering_length = b[j]
                         
@@ -1002,10 +1006,10 @@ def displacive(double [::1] U_r,
                         s_ = Q*inv_M_SP
                         s_sq = s_*s_
                                                 
-                        scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
-                                          + a2[j]*iexp(-b2[j]*s_sq)\
-                                          + a3[j]*iexp(-b3[j]*s_sq)\
-                                          + a4[j]*iexp(-b4[j]*s_sq)\
+                        scattering_length = a1[j]*exp(-b1[j]*s_sq)\
+                                          + a2[j]*exp(-b2[j]*s_sq)\
+                                          + a3[j]*exp(-b3[j]*s_sq)\
+                                          + a4[j]*exp(-b4[j]*s_sq)\
                                           + c[j]
                                           
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
@@ -1080,6 +1084,8 @@ def structural(double [::1] occupancy,
                Py_ssize_t Nw,
                Py_ssize_t centering,
                technique='Neutron'):
+    
+    cdef bint neutron = technique == 'Neutron'
     
     cdef Py_ssize_t n_atm = len(atms)
         
@@ -1208,7 +1214,7 @@ def structural(double [::1] occupancy,
         
         atm = atms[j]
         
-        if (technique == 'Neutron'):
+        if neutron:
             b[j] = tables.bc.get(atm)
         else:
             a1[j], b1[j], \
@@ -1318,7 +1324,7 @@ def structural(double [::1] occupancy,
                     
                     occ = occupancy[j]
                                             
-                    if (technique == 'Neutron'):
+                    if neutron:
                         
                         scattering_length = b[j]
                         
@@ -1329,15 +1335,15 @@ def structural(double [::1] occupancy,
                         s_ = Q*inv_M_SP
                         s_sq = s_*s_
                                                 
-                        scattering_length = a1[j]*iexp(-b1[j]*s_sq)\
-                                          + a2[j]*iexp(-b2[j]*s_sq)\
-                                          + a3[j]*iexp(-b3[j]*s_sq)\
-                                          + a4[j]*iexp(-b4[j]*s_sq)\
+                        scattering_length = a1[j]*exp(-b1[j]*s_sq)\
+                                          + a2[j]*exp(-b2[j]*s_sq)\
+                                          + a3[j]*exp(-b3[j]*s_sq)\
+                                          + a4[j]*exp(-b4[j]*s_sq)\
                                           + c[j]
                                           
                     phase_factor = iexp(Qx*ux[j]+Qy*uy[j]+Qz*uz[j])
-    
-                    dw_factors = iexp(0.5*(Uxx[j]*Qx*Qx+\
+                    
+                    dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
                                            Uyy[j]*Qy*Qy+\
                                            Uzz[j]*Qz*Qz)+\
                                            Uyz[j]*Qy*Qz+\
