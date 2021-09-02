@@ -8,7 +8,6 @@ from cython.parallel import prange
 
 cimport cython
 
-from scipy.special.cython_special cimport spherical_jn
 from scipy.special import factorial
 
 from libc.math cimport M_PI, cos, sin, exp, sqrt
@@ -289,7 +288,7 @@ def magnetic(double [::1] Sx,
             Qr_ij = Q[q]*r_ij[p]
             
             a_ij = sin(Qr_ij)/Qr_ij
-            b_ij = (a_ij-cos(Qr_ij))/(Qr_ij*Qr_ij)
+            b_ij = (a_ij-cos(Qr_ij))/Qr_ij
             
             value += (f_k_real*f_l_real+f_k_imag*f_l_imag)\
                   *  (A_ij[p]*a_ij+B_ij[p]*b_ij)
@@ -573,7 +572,7 @@ def occupational(double [::1] A_r,
             
             occ_n = occupancy[w]
             
-            if (technique == 'Neutron'):
+            if neutron:
                 
                 sl_n = b[w]
                 
@@ -666,8 +665,9 @@ def displacive(double [::1] Ux,
     
     cdef Py_ssize_t n_pairs = r_ij.shape[0]
     
-    cdef double Qr_ij, a_ij, s_ij, c_ij
+    cdef double Qr_ij
     
+    cdef double [::1] a_ij = np.zeros(order+1)
     cdef double [::1] A_ij = np.zeros(order+1)
     
     cdef double Qu_ij, jn
@@ -733,7 +733,7 @@ def displacive(double [::1] Ux,
     
     for t in range(order//2+1):
         seq_id = np.concatenate((seq_id, cs))
-        cs = np.cumsum(cs[1:order-t])
+        cs = np.cumsum(cs[1:cs.size-1])
         
     num = (seq_id+1)*seq_id/2
     
@@ -817,7 +817,13 @@ def displacive(double [::1] Ux,
             
             values = 0
             for r in range(order+1):
-                values += A_ij[r]*spherical_jn(r, Qr_ij)
+                if (r == 0):
+                    a_ij[0] = sin(Qr_ij)/Qr_ij
+                elif (r == 1):
+                    a_ij[1] = (a_ij[0]-cos(Qr_ij))/Qr_ij
+                else:
+                    a_ij[r] = (2*r-1)*a_ij[r-1]/Qr_ij-a_ij[r-2]
+                values += A_ij[r]*a_ij[r]
             
             value += (f_k_real*f_l_real+f_k_imag*f_l_imag)*values
                          
@@ -833,7 +839,7 @@ def displacive(double [::1] Ux,
             
             occ_n = occupancy[w]
             
-            if (technique == 'Neutron'):
+            if neutron:
                 
                 sl_n = b[w]
                 
@@ -849,6 +855,267 @@ def displacive(double [::1] Ux,
                      + c[w]
                                                 
             f_n = occ_n*sl_n
+            
+            f_n_real = f_n.real
+            f_n_imag = f_n.imag
+            
+            value += (f_n_real*f_n_real+f_n_imag*f_n_imag)
+                    
+        auto[q] = value
+      
+    for q in range(n_hkl):
+        
+        I[q] = (auto[q]+2*summation[q])/n_xyz
+        
+    return I_np
+
+def structural(double [::1] occupancy,
+               double [::1] U11,
+               double [::1] U22,
+               double [::1] U33,
+               double [::1] U23,
+               double [::1] U13,
+               double [::1] U12,
+               double [::1] rx, 
+               double [::1] ry, 
+               double [::1] rz, 
+               atms,
+               double [::1] Q,
+               double [:,:] D,
+               technique='Neutron'):
+    
+    cdef bint neutron = technique == 'Neutron'
+    
+    cdef Py_ssize_t n_hkl = Q.shape[0]
+    cdef Py_ssize_t n_xyz = rx.shape[0]
+    
+    cdef Py_ssize_t n_atm = occupancy.shape[0]
+    
+    i_np, j_np = np.triu_indices(n_xyz, k=1)
+    
+    k_np = np.mod(i_np, n_atm)
+    l_np = np.mod(j_np, n_atm)
+    
+    m_np = np.arange(n_xyz, dtype=int)
+    n_np = np.mod(m_np, n_atm)
+    
+    cdef long [::1] k = k_np.astype(int)
+    cdef long [::1] l = l_np.astype(int)
+    cdef long [::1] m = m_np.astype(int)
+    cdef long [::1] n = n_np.astype(int)
+    
+    rx_np = np.copy(rx, order='C')
+    ry_np = np.copy(ry, order='C')
+    rz_np = np.copy(rz, order='C')
+        
+    rx_ij_np = rx_np[j_np]-rx_np[i_np]
+    ry_ij_np = ry_np[j_np]-ry_np[i_np]
+    rz_ij_np = rz_np[j_np]-rz_np[i_np]
+    
+    cdef double [::1] rx_ij = rx_ij_np
+    cdef double [::1] ry_ij = ry_ij_np
+    cdef double [::1] rz_ij = rz_ij_np
+    
+    cdef double [::1] r_ij = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
+    
+    cdef double [::1] summation = np.zeros(Q.shape[0])
+    
+    cdef double [::1] auto = np.zeros(Q.shape[0])
+    
+    cdef Py_ssize_t n_pairs = r_ij.shape[0]
+    
+    cdef double Qr_ij, a_ij
+                
+    cdef double [::1] Uxx = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uyy = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uzz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uyz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uxz = np.zeros(n_atm, dtype=float)
+    cdef double [::1] Uxy = np.zeros(n_atm, dtype=float)
+    
+    cdef double [::1] Uiso = np.zeros(n_atm, dtype=float)
+        
+    cdef double occ_k, occ_l, occ_n
+    
+    cdef double complex sl_k, sl_l, sl_n
+    
+    cdef double dw_k, dw_l, dw_n
+    
+    cdef double Q_sq, s_, s_sq
+    
+    cdef double complex f_k, f_l, f_n
+    
+    cdef double f_k_real, f_l_real, f_n_real
+    cdef double f_k_imag, f_l_imag, f_n_imag
+    
+    cdef double complex [::1] b = np.zeros(n_atm, dtype=complex)
+    
+    cdef double [::1] a1 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b1 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b2 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a3 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b3 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] a4 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] b4 = np.zeros(n_atm, dtype=float)
+    cdef double [::1] c  = np.zeros(n_atm, dtype=float)
+    
+    I_np = np.zeros(n_hkl, dtype=float)
+    
+    cdef double [::1] I = I_np
+    
+    cdef Py_ssize_t p, q, u, v, w
+    
+    cdef double inv_M_SP = 1/(4*np.pi)
+    
+    cdef double value = 0
+        
+    for p in range(n_atm):
+        
+        atm = atms[p]
+        
+        if neutron:
+            b[p] = tables.bc.get(atm)
+        else:
+            a1[p], b1[p], \
+            a2[p], b2[p], \
+            a3[p], b3[p], \
+            a4[p], b4[p], \
+            c[p] = tables.X.get(atm)
+
+        Uxx[p] = D[0,0]*D[0,0]*U11[p]+\
+                 D[0,1]*D[0,1]*U22[p]+\
+                 D[0,2]*D[0,2]*U33[p]+\
+                 D[0,1]*D[0,2]*U23[p]*2+\
+                 D[0,2]*D[0,0]*U13[p]*2+\
+                 D[0,0]*D[0,1]*U12[p]*2
+
+        Uyy[p] = D[1,0]*D[1,0]*U11[p]+\
+                 D[1,1]*D[1,1]*U22[p]+\
+                 D[1,2]*D[1,2]*U33[p]+\
+                 D[1,1]*D[1,2]*U23[p]*2+\
+                 D[1,2]*D[1,0]*U13[p]*2+\
+                 D[1,0]*D[1,1]*U12[p]*2
+
+        Uzz[p] = D[2,0]*D[2,0]*U11[p]+\
+                 D[2,1]*D[2,1]*U22[p]+\
+                 D[2,2]*D[2,2]*U33[p]+\
+                 D[2,1]*D[2,2]*U23[p]*2+\
+                 D[2,2]*D[2,0]*U13[p]*2+\
+                 D[2,0]*D[2,1]*U12[p]*2
+
+        Uyz[p] =  D[1,0]*D[2,0]*U11[p]+\
+                  D[1,1]*D[2,1]*U22[p]+\
+                  D[1,2]*D[2,2]*U33[p]+\
+                 (D[1,1]*D[2,2]+D[1,2]*D[2,1])*U23[p]+\
+                 (D[1,2]*D[2,0]+D[1,0]*D[2,2])*U13[p]+\
+                 (D[1,0]*D[2,1]+D[1,1]*D[2,0])*U12[p]
+
+        Uxz[p] =  D[0,0]*D[2,0]*U11[p]+\
+                  D[0,1]*D[2,1]*U22[p]+\
+                  D[0,2]*D[2,2]*U33[p]+\
+                 (D[0,1]*D[2,2]+D[0,2]*D[2,1])*U23[p]+\
+                 (D[0,2]*D[2,0]+D[0,0]*D[2,2])*U13[p]+\
+                 (D[0,0]*D[2,1]+D[0,1]*D[2,0])*U12[p]
+
+        Uxy[p] =  D[0,0]*D[1,0]*U11[p]+\
+                  D[0,1]*D[1,1]*U22[p]+\
+                  D[0,2]*D[1,2]*U33[p]+\
+                 (D[0,1]*D[1,2]+D[0,2]*D[1,1])*U23[p]+\
+                 (D[0,2]*D[1,0]+D[0,0]*D[1,2])*U13[p]+\
+                 (D[0,0]*D[1,1]+D[0,1]*D[1,0])*U12[p]
+                 
+        Up, _ = np.linalg.eig(np.array([[Uxx[p], Uxy[p], Uxz[p]],
+                                        [Uxy[p], Uyy[p], Uyz[p]],
+                                        [Uxz[p], Uyz[p], Uzz[p]]]))
+
+        Uiso[p] = np.mean(Up).real
+    
+    for q in range(n_hkl):
+        
+        value = 0
+                
+        for p in prange(n_pairs, nogil=True):
+            
+            u, v = k[p], l[p]
+            
+            occ_k = occupancy[u]
+            occ_l = occupancy[v]
+            
+            if neutron:
+                
+                sl_k = b[u]
+                sl_l = b[v]
+                
+            else:
+                            
+                s_ = Q[q]*inv_M_SP
+                s_sq = s_*s_
+                                        
+                sl_k = a1[u]*exp(-b1[u]*s_sq)\
+                     + a2[u]*exp(-b2[u]*s_sq)\
+                     + a3[u]*exp(-b3[u]*s_sq)\
+                     + a4[u]*exp(-b4[u]*s_sq)\
+                     + c[u]
+                     
+                sl_l = a1[v]*exp(-b1[v]*s_sq)\
+                     + a2[v]*exp(-b2[v]*s_sq)\
+                     + a3[v]*exp(-b3[v]*s_sq)\
+                     + a4[v]*exp(-b4[v]*s_sq)\
+                     + c[v]
+                        
+            Q_sq = Q[q]*Q[q]
+            
+            dw_k = exp(-0.5*Q_sq*Uiso[u])
+            dw_l = exp(-0.5*Q_sq*Uiso[v])
+            
+            f_k = occ_k*sl_k*dw_k
+            f_l = occ_l*sl_l*dw_l
+            
+            f_k_real = f_k.real
+            f_l_real = f_l.real
+            
+            f_k_imag = f_k.imag
+            f_l_imag = f_l.imag
+            
+            Qr_ij = Q[q]*r_ij[p]
+            
+            a_ij = sin(Qr_ij)/Qr_ij
+            
+            value += (f_k_real*f_l_real+f_k_imag*f_l_imag)*a_ij
+                         
+        summation[q] = value
+                         
+    for q in range(n_hkl):
+        
+        value = 0
+        
+        for p in prange(n_xyz, nogil=True):
+            
+            w = n[p]
+            
+            occ_n = occupancy[w]
+            
+            if neutron:
+                
+                sl_n = b[w]
+                
+            else:
+                            
+                s_ = Q[q]*inv_M_SP
+                s_sq = s_*s_
+                                        
+                sl_n = a1[w]*exp(-b1[w]*s_sq)\
+                     + a2[w]*exp(-b2[w]*s_sq)\
+                     + a3[w]*exp(-b3[w]*s_sq)\
+                     + a4[w]*exp(-b4[w]*s_sq)\
+                     + c[w]
+                        
+            Q_sq = Q[q]*Q[q]
+            
+            dw_n = exp(-0.5*Q_sq*Uiso[w])
+            
+            f_n = occ_n*sl_n*dw_n
             
             f_n_real = f_n.real
             f_n_imag = f_n.imag
