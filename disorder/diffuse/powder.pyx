@@ -672,6 +672,7 @@ def displacive(double [::1] Ux,
     
     cdef double Qu_ij, jn
     
+    cdef double Qr_ij_pow = 1
     cdef double Qu_ij_pow = 1
     
     Ux_ij_np = Ux_np[j_np]-Ux_np[i_np]
@@ -761,7 +762,7 @@ def displacive(double [::1] Ux,
         
         value = 0
                 
-        for p in prange(n_pairs, nogil=True):
+        for p in range(n_pairs):
             
             u, v = k[p], l[p]
             
@@ -804,17 +805,20 @@ def displacive(double [::1] Ux,
             Qr_ij = Q[q]*r_ij[p]
             Qu_ij = Q[q]*u_ij[p]
             
+            Qr_ij_pow = 1
             Qu_ij_pow = 1
                         
             for r in range(order+1):
                 A_ij[r] = 0
                 t = r
                 for s in range(r // 2+1):
-                    A_ij[r-s] += coeff[t]*Qu_ij_pow\
-                              *  u_hat_ij_dot_r_hat_ij_pow[r-s,p]
+                    A_ij[r-s] += coeff[t]*Qu_ij_pow/Qr_ij_pow\
+                              *  u_hat_ij_dot_r_hat_ij_pow[r-2*s,p]
                     t += order-2*r
+                    Qr_ij_pow *= Qr_ij
+                Qr_ij_pow = 1
                 Qu_ij_pow *= Qu_ij
-            
+                
             values = 0
             for r in range(order+1):
                 if (r == 0):
@@ -824,6 +828,8 @@ def displacive(double [::1] Ux,
                 else:
                     a_ij[r] = (2*r-1)*a_ij[r-1]/Qr_ij-a_ij[r-2]
                 values += A_ij[r]*a_ij[r]
+                            
+            #value += (f_k_real*f_l_real+f_k_imag*f_l_imag)*sin(Qr_ij)/Qr_ij
             
             value += (f_k_real*f_l_real+f_k_imag*f_l_imag)*values
                          
