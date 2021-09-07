@@ -197,8 +197,8 @@ def radial(Sx,
         
     distance = np.sqrt(dx**2+dy**2+dz**2)
         
-    metric =  np.stack((np.round(np.round(distance/tol,1)).astype(int), \
-                        ion_labels)).T
+    metric = np.stack((np.round(np.round(distance/tol,1)).astype(int), \
+                       ion_labels)).T
                             
     sort = np.lexsort(np.fliplr(metric).T)
         

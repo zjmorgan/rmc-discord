@@ -7,12 +7,6 @@ from scipy.optimize import fsolve
 
 from disorder.diffuse.powder import displacive
 
-def f(x,y):
-    return (x-np.sin(x))/np.pi-y
-
-def g(x,y):
-    return (1-np.cos(x))/np.pi
-
 def expansion(nu, nv, nw, n_atm, value=1, fixed=True): 
     """
     Generate random displacement vectors.
@@ -457,65 +451,3 @@ def structure(U_k,
            V_k_nuc.flatten(), \
            even, \
            bragg
-
-def powder(Q, 
-           Ux, 
-           Uy, 
-           Uz, 
-           rx, 
-           ry, 
-           rz, 
-           scattering_length, 
-           fract=0.5):
-    
-    r_max = np.sqrt(rx.max()**2+ry.max()**2+rz.max()**2)
-        
-    points = np.column_stack((rx, ry, rz))
-    tree = spatial.cKDTree(points)
-    
-    pairs = tree.query_pairs(fract*r_max)
-    
-    coordinate = np.array(list(pairs))
-            
-    i = coordinate[:,0].copy()
-    j = coordinate[:,1].copy()
-        
-    n_hkl = Q.shape[0]
-    n_xyz = Ux.shape[0]
-    
-    n_pairs = i.shape[0]
-    n_atm = scattering_length.shape[0] // n_hkl
-        
-    k = np.mod(i,n_atm)
-    l = np.mod(j,n_atm)
-        
-    m = np.arange(n_xyz)
-    n = np.mod(m,n_atm)
-        
-    summation = np.zeros(Q.shape[0])
-    
-    auto = np.zeros(Q.shape[0])
-
-    displacive(summation, 
-               auto,
-               Q,
-               Ux,
-               Uy,
-               Uz,
-               rx,
-               ry,
-               rz,
-               scattering_length,
-               i,
-               j,
-               k,
-               l,
-               n,
-               n_xyz,
-               n_atm)    
-    
-    scale = n_xyz/((np.sqrt(8*n_pairs+1)+1)/2)
-            
-    I = (auto/scale+2*summation)/n_xyz
-    
-    return I
