@@ -63,13 +63,6 @@ ext_modules = [
         include_dirs=[np.get_include()]
     ),
     Extension(
-        'disorder.diffuse.direct',
-        ['disorder/diffuse/direct'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
-    ),
-    Extension(
         'disorder.diffuse.refinement',
         ['disorder/diffuse/refinement'+ext],
         extra_compile_args=[compile_openmp],

@@ -2,10 +2,13 @@
 
 import numpy as np
 
-from scipy import spatial
 from scipy.optimize import fsolve
 
-from disorder.diffuse.powder import displacive
+def f(x,y):
+    return (x-np.sin(x))/np.pi-y
+
+def g(x,y):
+    return (1-np.cos(x))/np.pi
 
 def expansion(nu, nv, nw, n_atm, value=1, fixed=True): 
     """

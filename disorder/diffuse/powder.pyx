@@ -50,24 +50,10 @@ def magnetic(double [::1] Sx,
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
     
-    rx_np = np.copy(rx, order='C')
-    ry_np = np.copy(ry, order='C')
-    rz_np = np.copy(rz, order='C')
-    
-    rx_np = rx_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    ry_np = ry_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    rz_np = rz_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    
     i_np, j_np = np.triu_indices(m_xyz, k=1)
     
     m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
-    
-    rx_ij_np = rx_np[j_np]-rx_np[i_np]
-    ry_ij_np = ry_np[j_np]-ry_np[i_np]
-    rz_ij_np = rz_np[j_np]-rz_np[i_np]
-    
-    r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
     
     Sx_np = np.copy(Sx, order='C')
     Sy_np = np.copy(Sy, order='C')
@@ -86,10 +72,10 @@ def magnetic(double [::1] Sx,
     jv = np.mod(jv+cv[:,None], nv)
     jw = np.mod(jw+cw[:,None], nw)
     
-    i_np = np.ascontiguousarray((i_atm+n_atm*(iw+nw*(iv+nv*iu))).T)
-    j_np = np.ascontiguousarray((j_atm+n_atm*(jw+nw*(jv+nv*ju))).T)
+    i_np = np.ravel_multi_index((iu,iv,iw,i_atm), (nu,nv,nw,n_atm))
+    j_np = np.ravel_multi_index((ju,jv,jw,j_atm), (nu,nv,nw,n_atm))
     
-    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*r_ij_np.shape[0])
+    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*m_xyz*(m_xyz-1)//2)
     
     pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
     
@@ -389,24 +375,10 @@ def occupational(double [::1] A_r,
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
     
-    rx_np = np.copy(rx, order='C')
-    ry_np = np.copy(ry, order='C')
-    rz_np = np.copy(rz, order='C')
-    
-    rx_np = rx_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    ry_np = ry_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    rz_np = rz_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    
     i_np, j_np = np.triu_indices(m_xyz, k=1)
     
     m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
-    
-    rx_ij_np = rx_np[j_np]-rx_np[i_np]
-    ry_ij_np = ry_np[j_np]-ry_np[i_np]
-    rz_ij_np = rz_np[j_np]-rz_np[i_np]
-    
-    r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
     
     A_r_np = np.copy(A_r, order='C')
         
@@ -423,10 +395,10 @@ def occupational(double [::1] A_r,
     jv = np.mod(jv+cv[:,None], nv)
     jw = np.mod(jw+cw[:,None], nw)
     
-    i_np = np.ascontiguousarray((i_atm+n_atm*(iw+nw*(iv+nv*iu))).T)
-    j_np = np.ascontiguousarray((j_atm+n_atm*(jw+nw*(jv+nv*ju))).T)
+    i_np = np.ravel_multi_index((iu,iv,iw,i_atm), (nu,nv,nw,n_atm))
+    j_np = np.ravel_multi_index((ju,jv,jw,j_atm), (nu,nv,nw,n_atm))
     
-    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*r_ij_np.shape[0])
+    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*m_xyz*(m_xyz-1)//2)
     
     pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
     
@@ -676,24 +648,10 @@ def displacive(double [::1] Ux,
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
     
-    rx_np = np.copy(rx, order='C')
-    ry_np = np.copy(ry, order='C')
-    rz_np = np.copy(rz, order='C')
-    
-    rx_np = rx_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    ry_np = ry_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    rz_np = rz_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    
     i_np, j_np = np.triu_indices(m_xyz, k=1)
     
     m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
-    
-    rx_ij_np = rx_np[j_np]-rx_np[i_np]
-    ry_ij_np = ry_np[j_np]-ry_np[i_np]
-    rz_ij_np = rz_np[j_np]-rz_np[i_np]
-    
-    r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
     
     Ux_np = np.copy(Ux, order='C')
     Uy_np = np.copy(Uy, order='C')
@@ -712,10 +670,10 @@ def displacive(double [::1] Ux,
     jv = np.mod(jv+cv[:,None], nv)
     jw = np.mod(jw+cw[:,None], nw)
     
-    i_np = np.ascontiguousarray((i_atm+n_atm*(iw+nw*(iv+nv*iu))).T)
-    j_np = np.ascontiguousarray((j_atm+n_atm*(jw+nw*(jv+nv*ju))).T)
+    i_np = np.ravel_multi_index((iu,iv,iw,i_atm), (nu,nv,nw,n_atm))
+    j_np = np.ravel_multi_index((ju,jv,jw,j_atm), (nu,nv,nw,n_atm))
     
-    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*r_ij_np.shape[0])
+    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*m_xyz*(m_xyz-1)//2)
     
     pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
     
@@ -741,7 +699,7 @@ def displacive(double [::1] Ux,
     Uz_ij_np = Uz_np[j_np]-Uz_np[i_np]
     
     U_ij_np = np.sqrt(Ux_ij_np**2+Uy_ij_np**2+Uz_ij_np**2)
-        
+            
     cdef double [::1] U_ij = U_ij_np
     
     U_ij_mul_r_ij = U_ij_np*r_ij_np
@@ -834,7 +792,7 @@ def displacive(double [::1] Ux,
             t += order-1-2*s
 
     cdef double [::1] coeff = sign*num/den
-            
+                
     for p in range(n_atm):
         
         atm = atms[p]
@@ -919,8 +877,8 @@ def displacive(double [::1] Ux,
                 for s in range(r // 2+1):
                     A_ij[thread_id,t] = coeff[t]/Qr_ij_pow
                     values = values+A_ij[thread_id,t]*Qu_ij_pow\
-                           * U_hat_ij_dot_r_hat_ij_pow[r-2*s,p]\
-                           * a_ij[thread_id,r]
+                           * U_hat_ij_dot_r_hat_ij_pow[r-s,p]\
+                           * a_ij[thread_id,r-s]
                     t = t+order-1-2*s    
                     Qr_ij_pow = Qr_ij_pow*Qr_ij
                 Qr_ij_pow = 1
@@ -963,7 +921,7 @@ def displacive(double [::1] Ux,
             value += (f_n_real*f_n_real+f_n_imag*f_n_imag)
                     
         auto[q] = value
-      
+        
     for q in prange(n_hkl, nogil=True):
         
         I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
@@ -991,7 +949,7 @@ def structural(double [::1] occupancy,
     cdef bint neutron = technique == 'Neutron'
     
     cdef Py_ssize_t n_atm = occupancy.shape[0]
-                
+    
     cdef Py_ssize_t mu = (nu+1) // 2
     cdef Py_ssize_t mv = (nv+1) // 2
     cdef Py_ssize_t mw = (nw+1) // 2
@@ -1002,21 +960,41 @@ def structural(double [::1] occupancy,
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
     
-    rx_np = np.copy(rx, order='C')
-    ry_np = np.copy(ry, order='C')
-    rz_np = np.copy(rz, order='C')
-    
-    rx_np = rx_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    ry_np = ry_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    rz_np = rz_np.reshape((nu,nv,nw,n_atm))[:mu,:mv,:mw,:].flatten()
-    
     i_np, j_np = np.triu_indices(m_xyz, k=1)
+    
+    m_np = np.arange(n_xyz, dtype=int)
+    n_np = np.mod(m_np, n_atm)
+            
+    iu, iv, iw, i_atm = np.unravel_index(i_np, (mu,mv,mw,n_atm))
+    ju, jv, jw, j_atm = np.unravel_index(j_np, (mu,mv,mw,n_atm))
+        
+    cu, cv, cw = np.unravel_index(np.arange(n_uvw), (nu,nv,nw))
+    
+    iu = np.mod(iu+cu[:,None], nu)
+    iv = np.mod(iv+cv[:,None], nv)
+    iw = np.mod(iw+cw[:,None], nw)
+    
+    ju = np.mod(ju+cu[:,None], nu)
+    jv = np.mod(jv+cv[:,None], nv)
+    jw = np.mod(jw+cw[:,None], nw)
+    
+    i_np = np.ravel_multi_index((iu,iv,iw,i_atm), (nu,nv,nw,n_atm))
+    j_np = np.ravel_multi_index((ju,jv,jw,j_atm), (nu,nv,nw,n_atm))
+    
+    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*m_xyz*(m_xyz-1)//2)
+    
+    pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
+    
+    cdef double [::1] multiplicity = multiplicity_np*1.
+    
+    i_np, j_np = pairs
     
     k_np = np.mod(i_np, n_atm)
     l_np = np.mod(j_np, n_atm)
     
-    m_np = np.arange(n_xyz, dtype=int)
-    n_np = np.mod(m_np, n_atm)
+    rx_np = np.copy(rx, order='C')
+    ry_np = np.copy(ry, order='C')
+    rz_np = np.copy(rz, order='C')
     
     rx_ij_np = rx_np[j_np]-rx_np[i_np]
     ry_ij_np = ry_np[j_np]-ry_np[i_np]
@@ -1030,15 +1008,15 @@ def structural(double [::1] occupancy,
     cdef long [::1] n = n_np.astype(int)
     
     cdef double [::1] r_ij = r_ij_np
-    
+        
     cdef double [::1] summation = np.zeros(Q.shape[0])
     
     cdef double [::1] auto = np.zeros(Q.shape[0])
     
     cdef Py_ssize_t n_pairs = r_ij.shape[0]
-            
+    
     cdef double Qr_ij, a_ij
-            
+                
     cdef double [::1] Uxx = np.zeros(n_atm, dtype=float)
     cdef double [::1] Uyy = np.zeros(n_atm, dtype=float)
     cdef double [::1] Uzz = np.zeros(n_atm, dtype=float)
@@ -1077,12 +1055,12 @@ def structural(double [::1] occupancy,
     
     cdef double [::1] I = I_np
     
-    cdef Py_ssize_t p, q, u, v, w
-        
+    cdef Py_ssize_t p, q, r, u, v, w
+    
     cdef double inv_M_SP = 1/(4*np.pi)
     
-    cdef double value = 0
-            
+    cdef double factors, value = 0
+        
     for p in range(n_atm):
         
         atm = atms[p]
@@ -1095,7 +1073,7 @@ def structural(double [::1] occupancy,
             a3[p], b3[p], \
             a4[p], b4[p], \
             c[p] = tables.X.get(atm)
-            
+
         U = np.array([[U11[p], U12[p], U13[p]],
                       [U12[p], U22[p], U23[p]],
                       [U13[p], U23[p], U33[p]]])
@@ -1118,7 +1096,7 @@ def structural(double [::1] occupancy,
         value = 0
         
         Q_sq = Q[q]*Q[q]
-                
+        
         if not neutron:
             
             s_ = Q[q]*inv_M_SP
@@ -1137,7 +1115,7 @@ def structural(double [::1] occupancy,
                 sl_l = b[v]
                 
             else:
-                            
+                                                                    
                 sl_k = a1[u]*exp(-b1[u]*s_sq)\
                      + a2[u]*exp(-b2[u]*s_sq)\
                      + a3[u]*exp(-b3[u]*s_sq)\
@@ -1165,9 +1143,11 @@ def structural(double [::1] occupancy,
             Qr_ij = Q[q]*r_ij[p]
             
             a_ij = sin(Qr_ij)/Qr_ij
-                        
-            value += (f_k_real*f_l_real+f_k_imag*f_l_imag)*a_ij
-                                     
+            
+            factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
+                            
+            value += factors*a_ij*multiplicity[p]
+                         
         summation[q] = value
                          
     for q in range(n_hkl):
@@ -1177,7 +1157,7 @@ def structural(double [::1] occupancy,
         Q_sq = Q[q]*Q[q]
         
         if not neutron:
-        
+            
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
         
@@ -1192,7 +1172,7 @@ def structural(double [::1] occupancy,
                 sl_n = b[w]
                 
             else:
-                                                                    
+
                 sl_n = a1[w]*exp(-b1[w]*s_sq)\
                      + a2[w]*exp(-b2[w]*s_sq)\
                      + a3[w]*exp(-b3[w]*s_sq)\
@@ -1207,7 +1187,7 @@ def structural(double [::1] occupancy,
             f_n_imag = f_n.imag
             
             value += (f_n_real*f_n_real+f_n_imag*f_n_imag)
-                    
+            
         auto[q] = value
       
     for q in prange(n_hkl, nogil=True):
