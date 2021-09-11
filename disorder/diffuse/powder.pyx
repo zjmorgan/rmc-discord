@@ -7,6 +7,7 @@ cimport numpy as np
 from cython.parallel import prange
 
 cimport cython
+cimport openmp
 
 from scipy.special import factorial
 
@@ -32,7 +33,6 @@ def magnetic(double [::1] Sx,
              ions,
              double [::1] Q,
              double [:,:] D,
-             double [:,:] A,
              Py_ssize_t nu,
              Py_ssize_t nv,
              Py_ssize_t nw,
@@ -60,9 +60,6 @@ def magnetic(double [::1] Sx,
     
     i_np, j_np = np.triu_indices(m_xyz, k=1)
     
-    k_np = np.mod(i_np, n_atm)
-    l_np = np.mod(j_np, n_atm)
-    
     m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
     
@@ -83,14 +80,35 @@ def magnetic(double [::1] Sx,
     
     iu = np.mod(iu+cu[:,None], nu)
     iv = np.mod(iv+cv[:,None], nv)
-    iw = np.mod(iw+cu[:,None], nw)
+    iw = np.mod(iw+cw[:,None], nw)
     
     ju = np.mod(ju+cu[:,None], nu)
     jv = np.mod(jv+cv[:,None], nv)
-    jw = np.mod(jw+cu[:,None], nw)
+    jw = np.mod(jw+cw[:,None], nw)
     
     i_np = np.ascontiguousarray((i_atm+n_atm*(iw+nw*(iv+nv*iu))).T)
     j_np = np.ascontiguousarray((j_atm+n_atm*(jw+nw*(jv+nv*ju))).T)
+    
+    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*r_ij_np.shape[0])
+    
+    pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
+    
+    cdef double [::1] multiplicity = multiplicity_np*1.
+    
+    i_np, j_np = pairs
+    
+    k_np = np.mod(i_np, n_atm)
+    l_np = np.mod(j_np, n_atm)
+    
+    rx_np = np.copy(rx, order='C')
+    ry_np = np.copy(ry, order='C')
+    rz_np = np.copy(rz, order='C')
+    
+    rx_ij_np = rx_np[j_np]-rx_np[i_np]
+    ry_ij_np = ry_np[j_np]-ry_np[i_np]
+    rz_ij_np = rz_np[j_np]-rz_np[i_np]
+    
+    r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
     
     cdef double [::1] S_i_dot_S_i = Sx_np[m_np]*Sx_np[m_np]\
                                   + Sy_np[m_np]*Sy_np[m_np]\
@@ -110,8 +128,8 @@ def magnetic(double [::1] Sx,
 
     S_i_dot_r_ij_S_j_dot_r_ij_np = S_i_dot_r_ij_np*S_j_dot_r_ij_np
 
-    cdef double [:,::1] A_ij = S_i_dot_S_j_np-S_i_dot_r_ij_S_j_dot_r_ij_np
-    cdef double [:,::1] B_ij = 3*S_i_dot_r_ij_S_j_dot_r_ij_np-S_i_dot_S_j_np
+    cdef double [::1] A_ij = S_i_dot_S_j_np-S_i_dot_r_ij_S_j_dot_r_ij_np
+    cdef double [::1] B_ij = 3*S_i_dot_r_ij_S_j_dot_r_ij_np-S_i_dot_S_j_np
     
     cdef long [::1] k = k_np.astype(int)
     cdef long [::1] l = l_np.astype(int)
@@ -232,7 +250,7 @@ def magnetic(double [::1] Sx,
         s_ = Q[q]*inv_M_SP
         s_sq = s_*s_
                 
-        for p in range(n_pairs):
+        for p in prange(n_pairs, nogil=True):
             
             u, v = k[p], l[p]
             
@@ -286,10 +304,8 @@ def magnetic(double [::1] Sx,
             b_ij = (a_ij-cos(Qr_ij))/Qr_ij
             
             factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
-            
-            for r in prange(n_uvw, nogil=True):
-                
-                value += factors*(A_ij[r,p]*a_ij+B_ij[r,p]*b_ij)
+                            
+            value += factors*(A_ij[p]*a_ij+B_ij[p]*b_ij)*multiplicity[p]
                          
         summation[q] = value
                          
@@ -354,7 +370,6 @@ def occupational(double [::1] A_r,
                  atms,
                  double [::1] Q,
                  double [:,:] D,
-                 double [:,:] A,
                  Py_ssize_t nu,
                  Py_ssize_t nv,
                  Py_ssize_t nw,
@@ -384,9 +399,6 @@ def occupational(double [::1] A_r,
     
     i_np, j_np = np.triu_indices(m_xyz, k=1)
     
-    k_np = np.mod(i_np, n_atm)
-    l_np = np.mod(j_np, n_atm)
-    
     m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
     
@@ -405,17 +417,38 @@ def occupational(double [::1] A_r,
     
     iu = np.mod(iu+cu[:,None], nu)
     iv = np.mod(iv+cv[:,None], nv)
-    iw = np.mod(iw+cu[:,None], nw)
+    iw = np.mod(iw+cw[:,None], nw)
     
     ju = np.mod(ju+cu[:,None], nu)
     jv = np.mod(jv+cv[:,None], nv)
-    jw = np.mod(jw+cu[:,None], nw)
+    jw = np.mod(jw+cw[:,None], nw)
     
     i_np = np.ascontiguousarray((i_atm+n_atm*(iw+nw*(iv+nv*iu))).T)
     j_np = np.ascontiguousarray((j_atm+n_atm*(jw+nw*(jv+nv*ju))).T)
+    
+    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*r_ij_np.shape[0])
+    
+    pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
+    
+    cdef double [::1] multiplicity = multiplicity_np*1.
+    
+    i_np, j_np = pairs
+    
+    k_np = np.mod(i_np, n_atm)
+    l_np = np.mod(j_np, n_atm)
+    
+    rx_np = np.copy(rx, order='C')
+    ry_np = np.copy(ry, order='C')
+    rz_np = np.copy(rz, order='C')
+    
+    rx_ij_np = rx_np[j_np]-rx_np[i_np]
+    ry_ij_np = ry_np[j_np]-ry_np[i_np]
+    rz_ij_np = rz_np[j_np]-rz_np[i_np]
+    
+    r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
                 
     cdef double [::1] delta_ii = (1+A_r_np[m_np])**2
-    cdef double [:,::1] delta_ij = (1+A_r_np[i_np])*(1+A_r_np[j_np])
+    cdef double [::1] delta_ij = (1+A_r_np[i_np])*(1+A_r_np[j_np])
     
     cdef long [::1] k = k_np.astype(int)
     cdef long [::1] l = l_np.astype(int)
@@ -517,7 +550,7 @@ def occupational(double [::1] A_r,
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
                 
-        for p in range(n_pairs):
+        for p in prange(n_pairs, nogil=True):
             
             u, v = k[p], l[p]
             
@@ -560,10 +593,8 @@ def occupational(double [::1] A_r,
             a_ij = sin(Qr_ij)/Qr_ij
             
             factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
-            
-            for r in prange(n_uvw, nogil=True):
-                
-                value += factors*delta_ij[p,r]*a_ij
+                            
+            value += factors*delta_ij[p]*a_ij*multiplicity[p]
                          
         summation[q] = value
                          
@@ -623,7 +654,6 @@ def displacive(double [::1] Ux,
                atms,
                double [::1] Q,
                double [:,:] D,
-               double [:,:] A,
                Py_ssize_t nu,
                Py_ssize_t nv,
                Py_ssize_t nw,
@@ -631,6 +661,8 @@ def displacive(double [::1] Ux,
                technique='Neutron'):
 
     cdef bint neutron = technique == 'Neutron'
+    
+    cdef Py_ssize_t thread_id, num_threads = openmp.omp_get_max_threads()
 
     cdef Py_ssize_t n_atm = occupancy.shape[0]
     
@@ -654,9 +686,6 @@ def displacive(double [::1] Ux,
     
     i_np, j_np = np.triu_indices(m_xyz, k=1)
     
-    k_np = np.mod(i_np, n_atm)
-    l_np = np.mod(j_np, n_atm)
-    
     m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
     
@@ -669,7 +698,7 @@ def displacive(double [::1] Ux,
     Ux_np = np.copy(Ux, order='C')
     Uy_np = np.copy(Uy, order='C')
     Uz_np = np.copy(Uz, order='C')
-    
+        
     iu, iv, iw, i_atm = np.unravel_index(i_np, (mu,mv,mw,n_atm))
     ju, jv, jw, j_atm = np.unravel_index(j_np, (mu,mv,mw,n_atm))
         
@@ -677,14 +706,54 @@ def displacive(double [::1] Ux,
     
     iu = np.mod(iu+cu[:,None], nu)
     iv = np.mod(iv+cv[:,None], nv)
-    iw = np.mod(iw+cu[:,None], nw)
+    iw = np.mod(iw+cw[:,None], nw)
     
     ju = np.mod(ju+cu[:,None], nu)
     jv = np.mod(jv+cv[:,None], nv)
-    jw = np.mod(jw+cu[:,None], nw)
+    jw = np.mod(jw+cw[:,None], nw)
     
     i_np = np.ascontiguousarray((i_atm+n_atm*(iw+nw*(iv+nv*iu))).T)
     j_np = np.ascontiguousarray((j_atm+n_atm*(jw+nw*(jv+nv*ju))).T)
+    
+    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*r_ij_np.shape[0])
+    
+    pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
+    
+    cdef double [::1] multiplicity = multiplicity_np*1.
+    
+    i_np, j_np = pairs
+    
+    k_np = np.mod(i_np, n_atm)
+    l_np = np.mod(j_np, n_atm)
+    
+    rx_np = np.copy(rx, order='C')
+    ry_np = np.copy(ry, order='C')
+    rz_np = np.copy(rz, order='C')
+    
+    rx_ij_np = rx_np[j_np]-rx_np[i_np]
+    ry_ij_np = ry_np[j_np]-ry_np[i_np]
+    rz_ij_np = rz_np[j_np]-rz_np[i_np]
+    
+    r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
+    
+    Ux_ij_np = Ux_np[j_np]-Ux_np[i_np]
+    Uy_ij_np = Uy_np[j_np]-Uy_np[i_np]
+    Uz_ij_np = Uz_np[j_np]-Uz_np[i_np]
+    
+    U_ij_np = np.sqrt(Ux_ij_np**2+Uy_ij_np**2+Uz_ij_np**2)
+        
+    cdef double [::1] U_ij = U_ij_np
+    
+    U_ij_mul_r_ij = U_ij_np*r_ij_np
+    
+    U_ij_mul_r_ij[np.isclose(U_ij_mul_r_ij, 0)] = 1
+    
+    U_hat_ij_dot_r_hat_ij = (Ux_ij_np*rx_ij_np
+                          +  Uy_ij_np*ry_ij_np\
+                          +  Uz_ij_np*rz_ij_np)/U_ij_mul_r_ij
+                
+    cdef double [:,::1] U_hat_ij_dot_r_hat_ij_pow = U_hat_ij_dot_r_hat_ij\
+                                                  **np.arange(order+1)[:,None]
     
     cdef long [::1] k = k_np.astype(int)
     cdef long [::1] l = l_np.astype(int)
@@ -703,32 +772,12 @@ def displacive(double [::1] Ux,
     
     coeff_size = int(np.ceil((order+2)/2)*np.floor((order+2)/2))
     
-    cdef double [::1] a_ij = np.zeros(order+1)
-    cdef double [::1] A_ij = np.zeros(coeff_size)
+    cdef double [:,::1] a_ij = np.zeros((num_threads,order+1))
+    cdef double [:,::1] A_ij = np.zeros((num_threads,coeff_size))
     
     cdef double Qr_ij_pow = 1
     cdef double Qu_ij_pow = 1
     
-    Ux_ij_np = Ux_np[j_np]-Ux_np[i_np]
-    Uy_ij_np = Uy_np[j_np]-Uy_np[i_np]
-    Uz_ij_np = Uz_np[j_np]-Uz_np[i_np]
-    
-    U_ij_np = np.sqrt(Ux_ij_np**2+Uy_ij_np**2+Uz_ij_np**2)
-        
-    cdef double [:,::1] U_ij = U_ij_np
-    
-    U_ij_mul_r_ij = (U_ij_np.T*r_ij_np).T
-    
-    U_ij_mul_r_ij[np.isclose(U_ij_mul_r_ij, 0)] = 1
-    
-    U_hat_ij_dot_r_hat_ij = (Ux_ij_np.T*rx_ij_np
-                          +  Uy_ij_np.T*ry_ij_np\
-                          +  Uz_ij_np.T*rz_ij_np).T/U_ij_mul_r_ij
-                
-    cdef double [:,:,::1] U_hat_ij_dot_r_hat_ij_pow = \
-                          U_hat_ij_dot_r_hat_ij[:,None]\
-                           **np.arange(order+1)[:,None]
-                                     
     cdef double occ_k, occ_l, occ_n
     
     cdef double complex sl_k, sl_l, sl_n
@@ -756,11 +805,11 @@ def displacive(double [::1] Ux,
     
     cdef double [::1] I = I_np
     
-    cdef Py_ssize_t p, q, r, s, t, u, v, w, x
+    cdef Py_ssize_t p, q, r, s, t, u, v, w
         
     cdef double inv_M_SP = 1/(4*np.pi)
     
-    cdef double factor, value, values = 0
+    cdef double factor, factors, value, values = 0
     
     cs = np.ones(order+1)
     seq_id = np.array([])
@@ -810,7 +859,7 @@ def displacive(double [::1] Ux,
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
                 
-        for p in range(n_pairs):
+        for p in prange(n_pairs, nogil=True):
             
             u, v = k[p], l[p]
             
@@ -846,43 +895,38 @@ def displacive(double [::1] Ux,
             f_l_imag = f_l.imag
             
             Qr_ij = Q[q]*r_ij[p]
+            Qu_ij = Q[q]*U_ij[p]
             
             Qr_ij_pow = 1
+            Qu_ij_pow = 1
             
             factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
+            
+            thread_id = openmp.omp_get_thread_num()
                 
             for r in range(order+1):
                 if (r == 0):
-                    a_ij[0] = sin(Qr_ij)/Qr_ij
+                    a_ij[thread_id,0] = sin(Qr_ij)/Qr_ij
                 elif (r == 1):
-                    a_ij[1] = (a_ij[0]-cos(Qr_ij))/Qr_ij
+                    a_ij[thread_id,1] = (a_ij[thread_id,0]-cos(Qr_ij))/Qr_ij
                 else:
-                    a_ij[r] = (2*r-1)/Qr_ij*a_ij[r-1]-a_ij[r-2]
-                
+                    a_ij[thread_id,r] = (2*r-1)/Qr_ij*a_ij[thread_id,r-1]\
+                                                     -a_ij[thread_id,r-2]
+                                   
+            values = 0
             for r in range(order+1):
                 t = r
                 for s in range(r // 2+1):
-                    A_ij[t] = coeff[t]/Qr_ij_pow
-                    t += order-1-2*s
-                    Qr_ij_pow *= Qr_ij
+                    A_ij[thread_id,t] = coeff[t]/Qr_ij_pow
+                    values = values+A_ij[thread_id,t]*Qu_ij_pow\
+                           * U_hat_ij_dot_r_hat_ij_pow[r-2*s,p]\
+                           * a_ij[thread_id,r]
+                    t = t+order-1-2*s    
+                    Qr_ij_pow = Qr_ij_pow*Qr_ij
                 Qr_ij_pow = 1
-                                                 
-            for x in prange(n_uvw, nogil=True):
+                Qu_ij_pow = Qu_ij_pow*Qu_ij
                 
-                Qu_ij = Q[q]*U_ij[p,x]
-                
-                Qu_ij_pow = 1
-
-                values = 0
-                for r in range(order+1):
-                    t = r
-                    for s in range(r // 2+1):
-                        values = values+A_ij[t]*Qu_ij_pow\
-                               * U_hat_ij_dot_r_hat_ij_pow[p,r-2*s,x]*a_ij[r]
-                        t = t+order-1-2*s    
-                    Qu_ij_pow = Qu_ij_pow*Qu_ij
-                    
-                value += factors*values
+            value += factors*values*multiplicity[p]
                     
         summation[q] = value
                          
@@ -939,7 +983,6 @@ def structural(double [::1] occupancy,
                atms,
                double [::1] Q,
                double [:,:] D,
-               double [:,:] A,
                Py_ssize_t nu,
                Py_ssize_t nv,
                Py_ssize_t nw,
@@ -1172,5 +1215,3 @@ def structural(double [::1] occupancy,
         I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
         
     return I_np
-
-    # scale = n_xyz/((sqrt(8*n_pairs+1)+1)/2)

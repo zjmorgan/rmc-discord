@@ -229,11 +229,15 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         self.lineEdit_type.setEnabled(False)
         
-        self.lineEdit_runs_calc.setValidator(QtGui.QIntValidator(1, 100))  
+        self.lineEdit_runs_calc_1d.setValidator(QtGui.QIntValidator(1, 100))  
+        self.lineEdit_runs_calc_3d.setValidator(QtGui.QIntValidator(1, 100))  
 
-        self.comboBox_norm_calc.addItem('Linear')
-        self.comboBox_norm_calc.addItem('Logarithmic')
-        
+        self.comboBox_norm_calc_1d.addItem('Linear')
+        self.comboBox_norm_calc_1d.addItem('Logarithmic')
+ 
+        self.comboBox_norm_calc_3d.addItem('Linear')
+        self.comboBox_norm_calc_3d.addItem('Logarithmic')       
+ 
         self.comboBox_axes.addItem('(h00), (0k0), (00l)')
         self.comboBox_axes.addItem('(hh0), (-kk0), (00l)')
         
@@ -251,23 +255,35 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_laue.addItem('m-3m')
         self.comboBox_laue.addItem('cif')
         
-        self.comboBox_centering_calc.addItem('P')
-        self.comboBox_centering_calc.addItem('I')
-        self.comboBox_centering_calc.addItem('F')
-        self.comboBox_centering_calc.addItem('A')
-        self.comboBox_centering_calc.addItem('B')
-        self.comboBox_centering_calc.addItem('C')
-        self.comboBox_centering_calc.addItem('R')
+        self.comboBox_centering_calc_3d.addItem('P')
+        self.comboBox_centering_calc_3d.addItem('I')
+        self.comboBox_centering_calc_3d.addItem('F')
+        self.comboBox_centering_calc_3d.addItem('A')
+        self.comboBox_centering_calc_3d.addItem('B')
+        self.comboBox_centering_calc_3d.addItem('C')
+        self.comboBox_centering_calc_3d.addItem('R')
         
-        self.lineEdit_order_calc.setValidator(QtGui.QIntValidator(0, 10))
+        self.lineEdit_order_calc_1d.setValidator(QtGui.QIntValidator(0, 10))
+        self.lineEdit_order_calc_3d.setValidator(QtGui.QIntValidator(0, 10))
         
-        self.comboBox_slice_calc.addItem('h =')
-        self.comboBox_slice_calc.addItem('k =')
-        self.comboBox_slice_calc.addItem('l =')
+        self.comboBox_prof_calc_1d.addItem('Total only')
+        self.comboBox_prof_calc_1d.addItem('Diffuse only')
+        self.comboBox_prof_calc_1d.addItem('Bragg only')
+        self.comboBox_prof_calc_1d.addItem('Total and Bragg')
+        self.comboBox_prof_calc_1d.addItem('Diffuse and Bragg')
+        self.comboBox_prof_calc_1d.addItem('Total and Bragg')
+        self.comboBox_prof_calc_1d.addItem('Total, diffuse, and Bragg')
         
-        self.comboBox_adp_recalc.addItem('None')
-        self.comboBox_adp_recalc.addItem('Isotropic')
-        self.comboBox_adp_recalc.addItem('Anisotropic')
+        self.comboBox_slice_calc_3d.addItem('h =')
+        self.comboBox_slice_calc_3d.addItem('k =')
+        self.comboBox_slice_calc_3d.addItem('l =')
+        
+        self.comboBox_adp_recalc_1d.addItem('None')
+        self.comboBox_adp_recalc_1d.addItem('Isotropic')
+        
+        self.comboBox_adp_recalc_3d.addItem('None')
+        self.comboBox_adp_recalc_3d.addItem('Isotropic')
+        self.comboBox_adp_recalc_3d.addItem('Anisotropic')
                        
         self.clear_application()
         
@@ -498,46 +514,73 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         # ---
         
-        self.checkBox_mag_recalc.setEnabled(False)
-        self.checkBox_occ_recalc.setEnabled(False)
-        self.checkBox_dis_recalc.setEnabled(False)
+        self.checkBox_mag_recalc_1d.setEnabled(False)
+        self.checkBox_occ_recalc_1d.setEnabled(False)
+        self.checkBox_dis_recalc_1d.setEnabled(False)
+        
+        self.checkBox_mag_recalc_3d.setEnabled(False)
+        self.checkBox_occ_recalc_3d.setEnabled(False)
+        self.checkBox_dis_recalc_3d.setEnabled(False)
         
         self.lineEdit_type.setText('')   
                 
-        self.checkBox_mag_recalc.setCheckState(QtCore.Qt.Unchecked)
-        self.checkBox_occ_recalc.setCheckState(QtCore.Qt.Unchecked)
-        self.checkBox_dis_recalc.setCheckState(QtCore.Qt.Unchecked)
+        self.checkBox_mag_recalc_1d.setCheckState(QtCore.Qt.Unchecked)
+        self.checkBox_occ_recalc_1d.setCheckState(QtCore.Qt.Unchecked)
+        self.checkBox_dis_recalc_1d.setCheckState(QtCore.Qt.Unchecked)
+                
+        self.checkBox_mag_recalc_3d.setCheckState(QtCore.Qt.Unchecked)
+        self.checkBox_occ_recalc_3d.setCheckState(QtCore.Qt.Unchecked)
+        self.checkBox_dis_recalc_3d.setCheckState(QtCore.Qt.Unchecked)
         
-        try: self.tableWidget_calc.disconnect() 
+        try: self.tableWidget_calc_3d.disconnect() 
         except Exception: pass
-                        
-        self.tableWidget_calc.clearContents()
-        self.tableWidget_calc.setRowCount(0)
-        self.tableWidget_calc.setColumnCount(0)
+    
+        try: self.tableWidget_calc_1d.disconnect() 
+        except Exception: pass
+                         
+        self.tableWidget_calc_1d.clearContents()
+        self.tableWidget_calc_1d.setRowCount(0)
+        self.tableWidget_calc_1d.setColumnCount(0)
+                       
+        self.tableWidget_calc_3d.clearContents()
+        self.tableWidget_calc_3d.setRowCount(0)
+        self.tableWidget_calc_3d.setColumnCount(0)
 
-        self.tableWidget_recalc.clearContents()
-        self.tableWidget_recalc.setRowCount(0)
-        self.tableWidget_recalc.setColumnCount(0)
+        self.tableWidget_recalc_1d.clearContents()
+        self.tableWidget_recalc_1d.setRowCount(0)
+        self.tableWidget_recalc_1d.setColumnCount(0)
         
-        self.tableWidget_recalc.clearContents()
-        self.tableWidget_recalc.setRowCount(0)
-        self.tableWidget_recalc.setColumnCount(0)
+        self.tableWidget_recalc_3d.clearContents()
+        self.tableWidget_recalc_3d.setRowCount(0)
+        self.tableWidget_recalc_3d.setColumnCount(0)
         
-        self.lineEdit_order_calc.setText('2')
+        self.lineEdit_order_calc_1d.setText('2')
+        self.lineEdit_order_calc_3d.setText('2')
         
-        self.comboBox_slice_calc.setCurrentIndex(2)
+        self.comboBox_prof_calc_1d.setCurrentIndex(1)
+        self.comboBox_slice_calc_3d.setCurrentIndex(2)
 
-        self.lineEdit_slice_calc.setText('')
+        self.lineEdit_slice_calc_3d.setText('')
         
-        self.lineEdit_min_calc.setText('')       
-        self.lineEdit_max_calc.setText('')
+        self.lineEdit_min_calc_1d.setText('')       
+        self.lineEdit_max_calc_1d.setText('')
+        
+        self.lineEdit_min_calc_3d.setText('')       
+        self.lineEdit_max_calc_3d.setText('')
 
-        self.checkBox_batch_calc.setCheckState(QtCore.Qt.Unchecked)
-        self.lineEdit_runs_calc.setText('1')
-        self.lineEdit_runs_calc.setEnabled(False)
+        self.checkBox_batch_calc_1d.setCheckState(QtCore.Qt.Unchecked)
+        self.lineEdit_runs_calc_1d.setText('1')
+        self.lineEdit_runs_calc_1d.setEnabled(False)
         
-        self.canvas_calc.figure.clear()
-        self.canvas_calc.draw()
+        self.checkBox_batch_calc_3d.setCheckState(QtCore.Qt.Unchecked)
+        self.lineEdit_runs_calc_3d.setText('1')
+        self.lineEdit_runs_calc_3d.setEnabled(False)
+  
+        self.canvas_calc_1d.figure.clear()
+        self.canvas_calc_1d.draw()
+        
+        self.canvas_calc_3d.figure.clear()
+        self.canvas_calc_3d.draw()
         
     def save_as_triggered(self, slot):
         self.actionSave_As.triggered.connect(slot)
@@ -2098,6 +2141,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def button_clicked_save_chi_sq(self, slot):
         self.pushButton_save_chi_sq.clicked.connect(slot)
         
+    def get_type_recalc(self):
+        return self.lineEdit_type.text()
+    
+    def set_type_recalc(self, value):
+        self.lineEdit_type.setText(str(value))
+        
     # ---
         
     def batch_checked_1d(self):
@@ -2114,21 +2163,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
     def get_runs_1d(self):
         return int(self.lineEdit_runs_corr_1d.text())
-        
-    def batch_checked_3d(self):
-        return self.checkBox_batch_corr_3d.isChecked()
-    
-    def clicked_batch_3d(self, slot):
-        self.checkBox_batch_corr_3d.stateChanged.connect(slot)
-        
-    def enable_runs_3d(self, visible):
-        self.lineEdit_runs_corr_3d.setEnabled(visible)
-        
-    def set_runs_3d(self, runs):
-        self.lineEdit_runs_corr_3d.setText(str(runs))
-        
-    def get_runs_3d(self):
-        return int(self.lineEdit_runs_corr_3d.text())
       
     def set_correlations_1d_type(self):
         selection = self.comboBox_correlations_1d.currentIndex()    
@@ -2136,91 +2170,45 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_plot_1d.clear()
         for t in data: self.comboBox_plot_1d.addItem(t)    
 
-    def set_correlations_3d_type(self):
-        selection = self.comboBox_correlations_3d.currentIndex()    
-        data = self.comboBox_correlations_3d.itemData(selection)
-        self.comboBox_plot_3d.clear()
-        for t in data: self.comboBox_plot_3d.addItem(t)
-        
     def index_changed_correlations_1d(self, slot):
         self.comboBox_correlations_1d.currentIndexChanged.connect(slot)
-        
-    def index_changed_correlations_3d(self, slot):
-        self.comboBox_correlations_3d.currentIndexChanged.connect(slot)
-        
+
     def get_correlations_1d(self):
         return self.comboBox_correlations_1d.currentText()
     
-    def get_correlations_3d(self):
-        return self.comboBox_correlations_3d.currentText()
-    
     def get_plot_1d(self):
-        return self.comboBox_plot_1d.currentText()
-    
-    def get_plot_3d(self):
-        return self.comboBox_plot_3d.currentText()  
+        return self.comboBox_plot_1d.currentText() 
     
     def index_changed_plot_1d(self, slot):
         self.comboBox_plot_1d.currentIndexChanged.connect(slot)
-        
-    def index_changed_plot_3d(self, slot):
-        self.comboBox_plot_3d.currentIndexChanged.connect(slot)
 
     def get_norm_1d(self):
         return self.comboBox_norm_1d.currentText()
     
-    def get_norm_3d(self):
-        return self.comboBox_norm_3d.currentText()
-    
     def index_changed_norm_1d(self, slot):
         self.comboBox_norm_1d.currentIndexChanged.connect(slot)
-        
-    def index_changed_norm_3d(self, slot):
-        self.comboBox_norm_3d.currentIndexChanged.connect(slot)
 
     def get_fract_1d(self):
         return float(self.lineEdit_fract_1d.text())
     
-    def get_fract_3d(self):
-        return float(self.lineEdit_fract_3d.text())
-    
     def get_tol_1d(self):
         return float(self.lineEdit_tol_1d.text())
-    
-    def get_tol_3d(self):
-        return float(self.lineEdit_tol_3d.text())
- 
+
     def get_plot_1d_canvas(self):
         return self.canvas_1d
     
-    def get_plot_3d_canvas(self):
-        return self.canvas_3d
-    
     def get_average_1d(self):
         return self.checkBox_average_1d.isChecked()
-    
-    def get_average_3d(self):
-        return self.checkBox_average_3d.isChecked()
 
     def enable_calculate_1d(self, visible):
         self.pushButton_calculate_1d.setEnabled(visible)
         
-    def enable_calculate_3d(self, visible):
-        self.pushButton_calculate_3d.setEnabled(visible)
-        
     def button_clicked_calculate_1d(self, slot):
         self.pushButton_calculate_1d.clicked.connect(slot)
-        
-    def button_clicked_calculate_3d(self, slot):
-        self.pushButton_calculate_3d.clicked.connect(slot)
         
     def clear_plot_1d_canvas(self):
         self.canvas_1d.figure.clear()
         self.canvas_1d.draw()
-        
-    def clear_plot_3d_canvas(self):
-        self.canvas_3d.figure.clear()
-        self.canvas_3d.draw()
         
     def get_symmetrize(self):
         return self.comboBox_laue_corr.currentText()
@@ -2240,27 +2228,11 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         
         vert_lbl = ['{}'.format(s+1) for s in range(n_pairs)]
         self.tableWidget_pairs_1d.setVerticalHeaderLabels(vert_lbl)
-        
-    def create_pairs_3d_table(self, n_pairs):
-        self.tableWidget_pairs_3d.setRowCount(n_pairs)
-        self.tableWidget_pairs_3d.setColumnCount(3)
-        
-        horiz_lbl = 'atom,pair,active'
-        horiz_lbl = horiz_lbl.split(',')
-        self.tableWidget_pairs_3d.setHorizontalHeaderLabels(horiz_lbl)
-        
-        vert_lbl = ['{}'.format(s+1) for s in range(n_pairs)]
-        self.tableWidget_pairs_3d.setVerticalHeaderLabels(vert_lbl)
      
     def clear_pairs_1d_table(self):
         self.tableWidget_pairs_1d.clearContents()
         self.tableWidget_pairs_1d.setRowCount(0)
         self.tableWidget_pairs_1d.setColumnCount(0)
-        
-    def clear_pairs_3d_table(self):
-        self.tableWidget_pairs_3d.clearContents()
-        self.tableWidget_pairs_3d.setRowCount(0)
-        self.tableWidget_pairs_3d.setColumnCount(0)
         
     def format_pairs_1d_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
@@ -2280,26 +2252,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                                 
         horiz_hdr = self.tableWidget_pairs_1d.horizontalHeader()
         horiz_hdr.setSectionResizeMode(stretch)
-            
-    def format_pairs_3d_table(self):
-        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
-        stretch = QtWidgets.QHeaderView.Stretch
-        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
-        
-        self.tableWidget_pairs_3d.setSpan(0, 0, 1, 2)
-        self.tableWidget_pairs_3d.item(0, 0).setTextAlignment(alignment)
-        self.tableWidget_pairs_3d.item(0, 0).setFlags(flags)
-                                       
-        for i in range(1,self.tableWidget_pairs_3d.rowCount()):
-            for j in range(self.tableWidget_pairs_3d.columnCount()):
-                item = self.tableWidget_pairs_3d.item(i, j)
-                if (item is not None and item.text() != ''):
-                    item.setTextAlignment(alignment)
-                    item.setFlags(flags)
-                                
-        horiz_hdr = self.tableWidget_pairs_3d.horizontalHeader()
-        horiz_hdr.setSectionResizeMode(stretch)
-        
+                    
     def clear_pairs_1d_table_table(self):
         self.tableWidget_pairs_1d.clearContents()
         self.tableWidget_pairs_1d.setRowCount(0)
@@ -2312,15 +2265,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                 
     def get_pairs_1d_table_row_count(self):
         return self.tableWidget_pairs_1d.rowCount()
-                
-    def get_pairs_3d_table_row_count(self):
-        return self.tableWidget_pairs_3d.rowCount()
- 
+
     def get_pairs_1d_table_col_count(self):
         return self.tableWidget_pairs_1d.columnCount()
-    
-    def get_pairs_3d_table_col_count(self):
-        return self.tableWidget_pairs_3d.columnCount()
  
     def get_pairs_1d_table_row(self, i):
         atom = self.tableWidget_pairs_1d.item(i, 0)
@@ -2330,14 +2277,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         if (pair is not None): pair = pair.text()
         return atom, pair, active
     
-    def get_pairs_3d_table_row(self, i):
-        atom = self.tableWidget_pairs_3d.item(i, 0)
-        pair = self.tableWidget_pairs_3d.item(i, 1)
-        active = self.tableWidget_pairs_3d.cellWidget(i, 2).isChecked()
-        if (atom is not None): atom = atom.text()
-        if (pair is not None): pair = pair.text()
-        return atom, pair, active
- 
     def set_pairs_1d_table_row(self, data, i):
         item = QtWidgets.QTableWidgetItem(data[0])
         self.tableWidget_pairs_1d.setItem(i, 0, item)
@@ -2347,16 +2286,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         check.setObjectName('checkBox_pairs_1d_'+str(i))
         check.setCheckState(QtCore.Qt.Checked) 
         self.tableWidget_pairs_1d.setCellWidget(i, 2, check)
-    
-    def set_pairs_3d_table_row(self, data, i):
-        item = QtWidgets.QTableWidgetItem(data[0])
-        self.tableWidget_pairs_3d.setItem(i, 0, item)
-        item = QtWidgets.QTableWidgetItem(data[1])
-        self.tableWidget_pairs_3d.setItem(i, 1, item)        
-        check = QtWidgets.QCheckBox()
-        check.setObjectName('checkBox_pairs_3d_'+str(i))
-        check.setCheckState(QtCore.Qt.Checked) 
-        self.tableWidget_pairs_3d.setCellWidget(i, 2, check)
  
     def enable_pairs_1d(self, state):  
         visible = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
@@ -2364,29 +2293,14 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             check = self.tableWidget_pairs_1d.cellWidget(i, 2)
             check.setCheckState(QtCore.Qt.Checked) 
             check.setEnabled(visible)
-            
-    def enable_pairs_3d(self, state):  
-        visible = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
-        for i in range(self.tableWidget_pairs_3d.rowCount()):
-            check = self.tableWidget_pairs_3d.cellWidget(i, 2)
-            check.setCheckState(QtCore.Qt.Checked) 
-            check.setEnabled(visible)
-    
+                
     def check_clicked_pairs_1d(self, slot):
         for i in range(self.tableWidget_pairs_1d.rowCount()):
             check = self.tableWidget_pairs_1d.cellWidget(i, 2)
             check.clicked.connect(slot)
-            
-    def check_clicked_pairs_3d(self, slot):
-        for i in range(self.tableWidget_pairs_3d.rowCount()):
-            check = self.tableWidget_pairs_3d.cellWidget(i, 2)
-            check.clicked.connect(slot)
  
     def average_1d_checked(self):
         return self.checkBox_average_1d.isChecked()
-    
-    def average_3d_checked(self):
-        return self.checkBox_average_3d.isChecked()
     
     def get_h(self):
         return int(self.lineEdit_plane_h.text())
@@ -2436,6 +2350,195 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                                                          options=options)
         return filename
             
+    def button_clicked_save_1d(self, slot):
+        self.pushButton_save_1d.clicked.connect(slot)
+        
+    # ---
+    
+    def batch_checked_3d(self):
+        return self.checkBox_batch_corr_3d.isChecked()
+    
+    def clicked_batch_3d(self, slot):
+        self.checkBox_batch_corr_3d.stateChanged.connect(slot)
+        
+    def enable_runs_3d(self, visible):
+        self.lineEdit_runs_corr_3d.setEnabled(visible)
+        
+    def set_runs_3d(self, runs):
+        self.lineEdit_runs_corr_3d.setText(str(runs))
+        
+    def get_runs_3d(self):
+        return int(self.lineEdit_runs_corr_3d.text())
+    
+    def set_correlations_3d_type(self):
+        selection = self.comboBox_correlations_3d.currentIndex()    
+        data = self.comboBox_correlations_3d.itemData(selection)
+        self.comboBox_plot_3d.clear()
+        for t in data: self.comboBox_plot_3d.addItem(t)
+        
+    def index_changed_correlations_3d(self, slot):
+        self.comboBox_correlations_3d.currentIndexChanged.connect(slot)
+        
+    def get_correlations_3d(self):
+        return self.comboBox_correlations_3d.currentText()
+    
+    def get_plot_3d(self):
+        return self.comboBox_plot_3d.currentText() 
+        
+    def index_changed_plot_3d(self, slot):
+        self.comboBox_plot_3d.currentIndexChanged.connect(slot)
+    
+    def get_norm_3d(self):
+        return self.comboBox_norm_3d.currentText()        
+        
+    def index_changed_norm_3d(self, slot):
+        self.comboBox_norm_3d.currentIndexChanged.connect(slot)
+    
+    def get_fract_3d(self):
+        return float(self.lineEdit_fract_3d.text())
+    
+    def get_tol_3d(self):
+        return float(self.lineEdit_tol_3d.text())
+
+    def get_plot_3d_canvas(self):
+        return self.canvas_3d
+    
+    def get_average_3d(self):
+        return self.checkBox_average_3d.isChecked()
+    
+    def enable_calculate_3d(self, visible):
+        self.pushButton_calculate_3d.setEnabled(visible)
+
+    def button_clicked_calculate_3d(self, slot):
+        self.pushButton_calculate_3d.clicked.connect(slot)
+
+    def clear_plot_3d_canvas(self):
+        self.canvas_3d.figure.clear()
+        self.canvas_3d.draw()
+        
+    def get_symmetrize(self):
+        return self.comboBox_laue_corr.currentText()
+        
+    def set_symmetrize(self, laue):
+        match = QtCore.Qt.MatchFixedString
+        index = self.comboBox_laue_corr.findText(laue, match)
+        self.comboBox_laue_corr.setCurrentIndex(index)
+        
+    def create_pairs_3d_table(self, n_pairs):
+        self.tableWidget_pairs_3d.setRowCount(n_pairs)
+        self.tableWidget_pairs_3d.setColumnCount(3)
+        
+        horiz_lbl = 'atom,pair,active'
+        horiz_lbl = horiz_lbl.split(',')
+        self.tableWidget_pairs_3d.setHorizontalHeaderLabels(horiz_lbl)
+        
+        vert_lbl = ['{}'.format(s+1) for s in range(n_pairs)]
+        self.tableWidget_pairs_3d.setVerticalHeaderLabels(vert_lbl)
+        
+    def clear_pairs_3d_table(self):
+        self.tableWidget_pairs_3d.clearContents()
+        self.tableWidget_pairs_3d.setRowCount(0)
+        self.tableWidget_pairs_3d.setColumnCount(0)
+            
+    def format_pairs_3d_table(self):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        stretch = QtWidgets.QHeaderView.Stretch
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+        
+        self.tableWidget_pairs_3d.setSpan(0, 0, 1, 2)
+        self.tableWidget_pairs_3d.item(0, 0).setTextAlignment(alignment)
+        self.tableWidget_pairs_3d.item(0, 0).setFlags(flags)
+                                       
+        for i in range(1,self.tableWidget_pairs_3d.rowCount()):
+            for j in range(self.tableWidget_pairs_3d.columnCount()):
+                item = self.tableWidget_pairs_3d.item(i, j)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    item.setFlags(flags)
+                                
+        horiz_hdr = self.tableWidget_pairs_3d.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        
+    def clear_pairs_3d_table_table(self):
+        self.tableWidget_pairs_3d.clearContents()
+        self.tableWidget_pairs_3d.setRowCount(0)
+        self.tableWidget_pairs_3d.setColumnCount(0) 
+                
+    def get_pairs_3d_table_row_count(self):
+        return self.tableWidget_pairs_3d.rowCount()
+    
+    def get_pairs_3d_table_col_count(self):
+        return self.tableWidget_pairs_3d.columnCount()
+    
+    def get_pairs_3d_table_row(self, i):
+        atom = self.tableWidget_pairs_3d.item(i, 0)
+        pair = self.tableWidget_pairs_3d.item(i, 1)
+        active = self.tableWidget_pairs_3d.cellWidget(i, 2).isChecked()
+        if (atom is not None): atom = atom.text()
+        if (pair is not None): pair = pair.text()
+        return atom, pair, active
+    
+    def set_pairs_3d_table_row(self, data, i):
+        item = QtWidgets.QTableWidgetItem(data[0])
+        self.tableWidget_pairs_3d.setItem(i, 0, item)
+        item = QtWidgets.QTableWidgetItem(data[1])
+        self.tableWidget_pairs_3d.setItem(i, 1, item)        
+        check = QtWidgets.QCheckBox()
+        check.setObjectName('checkBox_pairs_3d_'+str(i))
+        check.setCheckState(QtCore.Qt.Checked) 
+        self.tableWidget_pairs_3d.setCellWidget(i, 2, check)
+            
+    def enable_pairs_3d(self, state):  
+        visible = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        for i in range(self.tableWidget_pairs_3d.rowCount()):
+            check = self.tableWidget_pairs_3d.cellWidget(i, 2)
+            check.setCheckState(QtCore.Qt.Checked) 
+            check.setEnabled(visible)
+            
+    def check_clicked_pairs_3d(self, slot):
+        for i in range(self.tableWidget_pairs_3d.rowCount()):
+            check = self.tableWidget_pairs_3d.cellWidget(i, 2)
+            check.clicked.connect(slot)
+    
+    def average_3d_checked(self):
+        return self.checkBox_average_3d.isChecked()
+    
+    def get_h(self):
+        return int(self.lineEdit_plane_h.text())
+    
+    def get_k(self):
+        return int(self.lineEdit_plane_k.text())
+    
+    def get_l(self):    
+        return int(self.lineEdit_plane_l.text())
+    
+    def get_d(self):
+        return float(self.lineEdit_plane_d.text())
+    
+    def set_h(self, h):
+        self.lineEdit_plane_h.setText(str(h))
+        
+    def set_k(self, k):
+        self.lineEdit_plane_k.setText(str(k))
+        
+    def set_l(self, l):
+        self.lineEdit_plane_l.setText(str(l))
+        
+    def set_d(self, d):
+        self.lineEdit_plane_d.setText(str(d))
+    
+    def finished_editing_h(self, slot):
+        self.lineEdit_plane_h.editingFinished.connect(slot)
+            
+    def finished_editing_k(self, slot):
+        self.lineEdit_plane_k.editingFinished.connect(slot)
+            
+    def finished_editing_l(self, slot):
+        self.lineEdit_plane_l.editingFinished.connect(slot)
+            
+    def finished_editing_d(self, slot):
+        self.lineEdit_plane_d.editingFinished.connect(slot)
+        
     def save_correlations_3d(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
@@ -2447,342 +2550,236 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                                                         'png files *.png',
                                                          options=options)
         return filename
-            
-    def button_clicked_save_1d(self, slot):
-        self.pushButton_save_1d.clicked.connect(slot)
         
     def button_clicked_save_3d(self, slot):
         self.pushButton_save_3d.clicked.connect(slot)
-               
+    
     # ---
     
-    def enable_disorder_mag_recalc(self, visible):
-        self.checkBox_mag_recalc.setEnabled(visible)
+    def enable_disorder_mag_recalc_1d(self, visible):
+        self.checkBox_mag_recalc_1d.setEnabled(visible)
         
-    def enable_disorder_occ_recalc(self, visible):
-        self.checkBox_occ_recalc.setEnabled(visible)
+    def enable_disorder_occ_recalc_1d(self, visible):
+        self.checkBox_occ_recalc_1d.setEnabled(visible)
         
-    def enable_disorder_dis_recalc(self, visible):
-        self.checkBox_dis_recalc.setEnabled(visible)
+    def enable_disorder_dis_recalc_1d(self, visible):
+        self.checkBox_dis_recalc_1d.setEnabled(visible)
         
-    def enable_disorder_struct_recalc(self, visible):
-        self.checkBox_struct_recalc.setEnabled(visible)
+    def enable_disorder_struct_recalc_1d(self, visible):
+        self.checkBox_struct_recalc_1d.setEnabled(visible)
         
-    def clicked_disorder_mag_recalc(self, slot):
-        self.checkBox_mag_recalc.clicked.connect(slot)
+    def clicked_disorder_mag_recalc_1d(self, slot):
+        self.checkBox_mag_recalc_1d.clicked.connect(slot)
 
-    def clicked_disorder_occ_recalc(self, slot):
-        self.checkBox_occ_recalc.clicked.connect(slot)
+    def clicked_disorder_occ_recalc_1d(self, slot):
+        self.checkBox_occ_recalc_1d.clicked.connect(slot)
         
-    def clicked_disorder_dis_recalc(self, slot):
-        self.checkBox_dis_recalc.clicked.connect(slot)
+    def clicked_disorder_dis_recalc_1d(self, slot):
+        self.checkBox_dis_recalc_1d.clicked.connect(slot)
         
-    def clicked_disorder_struct_recalc(self, slot):
-        self.checkBox_struct_recalc.clicked.connect(slot)
-        
-    def set_disorder_mag_recalc(self, state):
+    def set_disorder_mag_recalc_1d(self, state):
         check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
-        self.checkBox_mag_recalc.setCheckState(check)
+        self.checkBox_mag_recalc_1d.setCheckState(check)
         
-    def set_disorder_occ_recalc(self, state):
+    def set_disorder_occ_recalc_1d(self, state):
         check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
-        self.checkBox_occ_recalc.setCheckState(check)
+        self.checkBox_occ_recalc_1d.setCheckState(check)
         
-    def set_disorder_dis_recalc(self, state):
+    def set_disorder_dis_recalc_1d(self, state):
         check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
-        self.checkBox_dis_recalc.setCheckState(check)
+        self.checkBox_dis_recalc_1d.setCheckState(check)
         
-    def set_disorder_struct_recalc(self, state):
-        check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
-        self.checkBox_struct_recalc.setCheckState(check)
-
-    def get_disorder_mag_recalc(self):
-        return self.checkBox_mag_recalc.isChecked()
+    def get_disorder_mag_recalc_1d(self):
+        return self.checkBox_mag_recalc_1d.isChecked()
     
-    def get_disorder_occ_recalc(self):
-        return self.checkBox_occ_recalc.isChecked()
+    def get_disorder_occ_recalc_1d(self):
+        return self.checkBox_occ_recalc_1d.isChecked()
     
-    def get_disorder_dis_recalc(self):
-        return self.checkBox_dis_recalc.isChecked()
+    def get_disorder_dis_recalc_1d(self):
+        return self.checkBox_dis_recalc_1d.isChecked()
     
-    def get_disorder_struct_recalc(self):
-        return self.checkBox_struct_recalc.isChecked()
+    def create_recalculation_1d_table(self, dQ, nQ, min_Q, max_Q):
         
-    def create_recalculation_table(self, dh, nh, min_h, max_h, 
-                                         dk, nk, min_k, max_k, 
-                                         dl, nl, min_l, max_l):
+        self.tableWidget_calc_1d.setRowCount(1)
+        self.tableWidget_calc_1d.setColumnCount(4)
         
-        self.tableWidget_calc.setRowCount(3)
-        self.tableWidget_calc.setColumnCount(5)
+        data = [dQ, nQ, min_Q, max_Q]
         
-        data = [[dh, nh, min_h, max_h, 0.0], 
-                [dk, nk, min_k, max_k, 0.0], 
-                [dl, nl, min_l, max_l, 0.0]]
+        for i in range(self.tableWidget_calc_1d.columnCount()):
+            item = QtWidgets.QTableWidgetItem(str(data[i]))
+            self.tableWidget_calc_1d.setItem(0, i, item)
         
-        for i in range(self.tableWidget_calc.rowCount()):
-            for j in range(self.tableWidget_calc.columnCount()):
-                item = QtWidgets.QTableWidgetItem(str(data[i][j]))
-                self.tableWidget_calc.setItem(i, j, item)
-        
-        lbl = 'step,size,min,max,filter'    
+        lbl = 'step,size,min,max'    
         lbl = lbl.split(',')
-        self.tableWidget_calc.setHorizontalHeaderLabels(lbl)
+        self.tableWidget_calc_1d.setHorizontalHeaderLabels(lbl)
         
-        lbl = 'h,k,l'
-        lbl = lbl.split(',')
-        self.tableWidget_calc.setVerticalHeaderLabels(lbl)
+        lbl = 'Q'
+        self.tableWidget_calc_1d.setVerticalHeaderLabels(lbl)
         
-    def clear_recalculation_table(self):
-        try: self.tableWidget_calc.disconnect() 
+    def clear_recalculation_1d_table(self):
+        try: self.tableWidget_calc_1d.disconnect() 
         except Exception: pass  
-        self.tableWidget_calc.clearContents()
-        self.tableWidget_calc.setRowCount(0)
-        self.tableWidget_calc.setColumnCount(0)
+        self.tableWidget_calc_1d.clearContents()
+        self.tableWidget_calc_1d.setRowCount(0)
+        self.tableWidget_calc_1d.setColumnCount(0)
         
-    def format_recalculation_table(self):
+    def format_recalculation_1d_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         stretch = QtWidgets.QHeaderView.Stretch
         flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
 
-        for i in range(self.tableWidget_calc.rowCount()):
-            for j in range(self.tableWidget_calc.columnCount()):
-                item = self.tableWidget_calc.item(i, j)
+        for i in range(self.tableWidget_calc_1d.rowCount()):
+            for j in range(self.tableWidget_calc_1d.columnCount()):
+                item = self.tableWidget_calc_1d.item(i, j)
                 if (item is not None and item.text() != ''):
                     item.setTextAlignment(alignment)
                     if (j == 0): item.setFlags(flags)
 
-        delegate = SizeIntDelegate(self.tableWidget_calc)
-        self.tableWidget_calc.setItemDelegateForColumn(1, delegate)
-        delegate = StandardDoubleDelegate(self.tableWidget_calc)
-        self.tableWidget_calc.setItemDelegateForColumn(2, delegate)
-        self.tableWidget_calc.setItemDelegateForColumn(3, delegate)
-        delegate = PositiveDoubleDelegate(self.tableWidget_calc)
-        self.tableWidget_calc.setItemDelegateForColumn(4, delegate)
+        delegate = SizeIntDelegate(self.tableWidget_calc_1d)
+        self.tableWidget_calc_1d.setItemDelegateForColumn(1, delegate)
+        delegate = StandardDoubleDelegate(self.tableWidget_calc_1d)
+        self.tableWidget_calc_1d.setItemDelegateForColumn(2, delegate)
+        self.tableWidget_calc_1d.setItemDelegateForColumn(3, delegate)
         
-        horiz_hdr = self.tableWidget_calc.horizontalHeader()
+        horiz_hdr = self.tableWidget_calc_1d.horizontalHeader()
         horiz_hdr.setSectionResizeMode(stretch)
         
-    def get_recalculation_binning_h(self):       
-        i = 0
-        text = self.tableWidget_calc.item(i, 0).text()
+    def get_recalculation_1d_binning(self):       
+        text = self.tableWidget_calc_1d.item(0, 0).text()
         step = 0 if text == '-' else float(text)
-        size = int(self.tableWidget_calc.item(i, 1).text()) 
-        mininum = float(self.tableWidget_calc.item(i, 2).text())
-        maximum = float(self.tableWidget_calc.item(i, 3).text())
+        size = int(self.tableWidget_calc_1d.item(0, 1).text()) 
+        mininum = float(self.tableWidget_calc_1d.item(0, 2).text())
+        maximum = float(self.tableWidget_calc_1d.item(0, 3).text())
         return step, size, mininum, maximum
     
-    def get_recalculation_binning_k(self):       
-        i = 1
-        text = self.tableWidget_calc.item(i, 0).text()
-        step = 0 if text == '-' else float(text)
-        size = int(self.tableWidget_calc.item(i, 1).text()) 
-        mininum = float(self.tableWidget_calc.item(i, 2).text())
-        maximum = float(self.tableWidget_calc.item(i, 3).text())
-        return step, size, mininum, maximum
-    
-    def get_recalculation_binning_l(self):       
-        i = 2
-        text = self.tableWidget_calc.item(i, 0).text()
-        step = 0 if text == '-' else float(text)
-        size = int(self.tableWidget_calc.item(i, 1).text()) 
-        mininum = float(self.tableWidget_calc.item(i, 2).text())
-        maximum = float(self.tableWidget_calc.item(i, 3).text())
-        return step, size, mininum, maximum
-    
-    def set_recalculation_binning_h(self, size, minimum, maximum):
-        i = 0
+    def set_recalculation_1d_binning(self, size, minimum, maximum):
         text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
         item = QtWidgets.QTableWidgetItem(str(text))
-        self.tableWidget_calc.setItem(i, 0, item)
+        self.tableWidget_calc_1d.setItem(0, 0, item)
         
         item = QtWidgets.QTableWidgetItem(str(size))
-        self.tableWidget_calc.setItem(i, 1, item)   
+        self.tableWidget_calc_1d.setItem(0, 1, item)   
         item = QtWidgets.QTableWidgetItem(str(minimum))
-        self.tableWidget_calc.setItem(i, 2, item)  
+        self.tableWidget_calc_1d.setItem(0, 2, item)  
         item = QtWidgets.QTableWidgetItem(str(maximum))
-        self.tableWidget_calc.setItem(i, 3, item)
+        self.tableWidget_calc_1d.setItem(0, 3, item)
         
-    def set_recalculation_binning_k(self, size, minimum, maximum):
-        i = 1
-        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
-        item = QtWidgets.QTableWidgetItem(str(text))
-        self.tableWidget_calc.setItem(i, 0, item)
-        
-        item = QtWidgets.QTableWidgetItem(str(size))
-        self.tableWidget_calc.setItem(i, 1, item)   
-        item = QtWidgets.QTableWidgetItem(str(minimum))
-        self.tableWidget_calc.setItem(i, 2, item)  
-        item = QtWidgets.QTableWidgetItem(str(maximum))
-        self.tableWidget_calc.setItem(i, 3, item)
-        
-    def set_recalculation_binning_l(self, size, minimum, maximum):
-        i = 2
-        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
-        item = QtWidgets.QTableWidgetItem(str(text))
-        self.tableWidget_calc.setItem(i, 0, item)
-        
-        item = QtWidgets.QTableWidgetItem(str(size))
-        self.tableWidget_calc.setItem(i, 1, item)   
-        item = QtWidgets.QTableWidgetItem(str(minimum))
-        self.tableWidget_calc.setItem(i, 2, item)  
-        item = QtWidgets.QTableWidgetItem(str(maximum))
-        self.tableWidget_calc.setItem(i, 3, item)
-        
-    def get_recalculation_filter(self):       
-        sigma_h = float(self.tableWidget_calc.item(0, 4).text())
-        sigma_k = float(self.tableWidget_calc.item(1, 4).text())
-        sigma_l = float(self.tableWidget_calc.item(2, 4).text())
-        return sigma_h, sigma_k, sigma_l
-        
-    def block_recalculation_table_signals(self):
-        self.tableWidget_calc.blockSignals(True)
+    def block_recalculation_1d_table_signals(self):
+        self.tableWidget_calc_1d.blockSignals(True)
 
-    def unblock_recalculation_table_signals(self):
-        self.tableWidget_calc.blockSignals(False)
+    def unblock_recalculation_1d_table_signals(self):
+        self.tableWidget_calc_1d.blockSignals(False)
         
-    def item_changed_recalculation_table(self, slot):
-        self.tableWidget_calc.itemChanged.connect(slot)
+    def item_changed_recalculation_1d_table(self, slot):
+        self.tableWidget_calc_1d.itemChanged.connect(slot)
         
-    def get_recalculation_table_row_count(self):
-        return self.tableWidget_calc.rowCount()
+    def get_recalculation_1d_table_row_count(self):
+        return self.tableWidget_calc_1d.rowCount()
     
-    def get_unit_recalculation_col_count(self):
-        return self.tableWidget_calc.columnCount()
+    def get_unit_recalculation_1d_col_count(self):
+        return self.tableWidget_calc_1d.columnCount()
     
-    def batch_checked_calc(self):
-        return self.checkBox_batch_calc.isChecked()
+    def batch_checked_calc_1d(self):
+        return self.checkBox_batch_calc_1d.isChecked()
     
-    def clicked_batch_calc(self, slot):
-        self.checkBox_batch_calc.stateChanged.connect(slot)
+    def clicked_batch_calc_1d(self, slot):
+        self.checkBox_batch_calc_1d.stateChanged.connect(slot)
         
-    def enable_runs_calc(self, visible):
-        self.lineEdit_runs_calc.setEnabled(visible)
+    def enable_runs_calc_1d(self, visible):
+        self.lineEdit_runs_calc_1d.setEnabled(visible)
         
-    def set_runs_calc(self, runs):
-        self.lineEdit_runs_calc.setText(str(runs))
+    def set_runs_calc_1d(self, runs):
+        self.lineEdit_runs_calc_1d.setText(str(runs))
         
-    def get_runs_calc(self):
-        return int(self.lineEdit_runs_calc.text())
+    def get_runs_calc_1d(self):
+        return int(self.lineEdit_runs_calc_1d.text())
  
-    def get_order_calc(self):
-        return int(self.lineEdit_order_calc.text())
-    
-    def get_laue(self):
-        return self.comboBox_laue.currentText()
-    
-    def set_laue(self, laue):
-        index = self.comboBox_laue.findText(laue, QtCore.Qt.MatchFixedString)
-        self.comboBox_laue.setCurrentIndex(index)
+    def get_order_calc_1d(self):
+        return int(self.lineEdit_order_calc_1d.text())
         
-    def get_norm_calc(self):
-        index = self.comboBox_norm_calc.currentIndex()    
-        return self.comboBox_norm_calc.itemText(index)
+    def get_norm_calc_1d(self):
+        index = self.comboBox_norm_calc_1d.currentIndex()    
+        return self.comboBox_norm_calc_1d.itemText(index)
         
-    def index_changed_norm_calc(self, slot):
-        self.comboBox_norm_calc.currentIndexChanged.connect(slot)
+    def index_changed_norm_calc_1d(self, slot):
+        self.comboBox_norm_calc_1d.currentIndexChanged.connect(slot)
     
-    def set_min_calc(self, value):
+    def set_min_calc_1d(self, value):
         if str(value) == '--': value = 0
-        self.lineEdit_min_calc.setText('{:1.4e}'.format(value))
+        self.lineEdit_min_calc_1d.setText('{:1.4e}'.format(value))
 
-    def set_max_calc(self, value):
+    def set_max_calc_1d(self, value):
         if str(value) == '--': value = 0
-        self.lineEdit_max_calc.setText('{:1.4e}'.format(value))
+        self.lineEdit_max_calc_1d.setText('{:1.4e}'.format(value))
         
-    def get_min_calc(self):
-        return float(self.lineEdit_min_calc.text())
+    def get_min_calc_1d(self):
+        return float(self.lineEdit_min_calc_1d.text())
 
-    def get_max_calc(self):
-        return float(self.lineEdit_max_calc.text())
+    def get_max_calc_1d(self):
+        return float(self.lineEdit_max_calc_1d.text())
     
-    def finished_editing_min_calc(self, slot):
-        self.lineEdit_min_calc.editingFinished.connect(slot)
+    def finished_editing_min_calc_1d(self, slot):
+        self.lineEdit_min_calc_1d.editingFinished.connect(slot)
 
-    def finished_editing_max_calc(self, slot):
-        self.lineEdit_max_calc.editingFinished.connect(slot)
+    def finished_editing_max_calc_1d(self, slot):
+        self.lineEdit_max_calc_1d.editingFinished.connect(slot)
     
-    def validate_min_calc(self):
+    def validate_min_calc_1d(self):
         maximum = float(self.lineEdit_max_exp.text())
         validator = QtGui.QDoubleValidator(np.finfo(float).min, maximum, 4)
-        self.lineEdit_min_calc.setValidator(validator)
+        self.lineEdit_min_calc_1d.setValidator(validator)
         
-    def validate_max_calc(self):
+    def validate_max_calc_1d(self):
         minimum = float(self.lineEdit_min_exp.text())
         validator = QtGui.QDoubleValidator(minimum, np.finfo(float).max, 4)
-        self.lineEdit_max_calc.setValidator(validator)
+        self.lineEdit_max_calc_1d.setValidator(validator)
     
-    def get_axes(self):
-        return self.comboBox_axes.currentText()
+    def get_plot_calc_1d_canvas(self):
+        return self.canvas_calc_1d
     
-    def get_plot_calc_canvas(self):
-        return self.canvas_calc
+    def clear_canvas_calc_1d_canvas(self):
+        self.canvas_calc_1d.figure.clear()
+        self.canvas_calc_1d.draw()
+        self.lineEdit_min_calc_1d.setText('')
+        self.lineEdit_max_calc_1d.setText('')
     
-    def clear_canvas_calc_canvas(self):
-        self.canvas_calc.figure.clear()
-        self.canvas_calc.draw()
-        self.lineEdit_min_calc.setText('')
-        self.lineEdit_max_calc.setText('')
+    def button_clicked_calc_1d(self, slot):
+        self.pushButton_calc_1d.clicked.connect(slot)
+        
+    def enable_recalculation_1d(self, visible):
+        self.pushButton_calc_1d.setEnabled(visible)
+        
+    def get_profiles_calc_1d(self):
+        index = self.comboBox_prof_calc_1d.currentIndex()    
+        return self.comboBox_prof_calc_1d.itemText(index)
     
-    def button_clicked_calc(self, slot):
-        self.pushButton_calc.clicked.connect(slot)
+    def index_changed_profiles_calc_1d(self, slot):
+        self.comboBox_prof_calc_1d.currentIndexChanged.connect(slot)
+
+    def clear_atom_site_recalculation_1d_table(self):
+        self.tableWidget_recalc_1d.clearContents()
+        self.tableWidget_recalc_1d.setRowCount(0)
+        self.tableWidget_recalc_1d.setColumnCount(0)
         
-    def enable_recalculation(self, visible):
-        self.pushButton_calc.setEnabled(visible)
-        
-    def get_type_recalc(self):
-        return self.lineEdit_type.text()
-    
-    def set_type_recalc(self, value):
-        self.lineEdit_type.setText(str(value))
-        
-    def set_slice_calc(self, value):
-        self.lineEdit_slice_calc.setText(str(value))
-    
-    def get_slice_calc(self):
-        text = self.lineEdit_slice_calc.text()
-        if (text != ''): return float(text) 
-        
-    def get_slice_hkl_calc(self):
-        index = self.comboBox_slice_calc.currentIndex()    
-        return self.comboBox_slice_calc.itemText(index)
-        
-    def index_changed_slice_hkl_calc(self, slot):
-        self.comboBox_slice_calc.currentIndexChanged.connect(slot)
-        
-    def finished_editing_slice_calc(self, slot):
-        self.lineEdit_slice_calc.editingFinished.connect(slot)
-        
-    def get_centering_calc(self):
-        return self.comboBox_centering_calc.currentText()
-    
-    def set_centering_calc(self, centering):
-        match = QtCore.Qt.MatchFixedString
-        index = self.comboBox_centering_calc.findText(centering, match)
-        self.comboBox_centering_calc.setCurrentIndex(index)
-    
-    def clear_atom_site_recalculation_table(self):
-        self.tableWidget_recalc.clearContents()
-        self.tableWidget_recalc.setRowCount(0)
-        self.tableWidget_recalc.setColumnCount(0)
-        
-    def format_atom_site_recalculation_table(self):
+    def format_atom_site_recalculation_1d_table(self):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
         stretch = QtWidgets.QHeaderView.Stretch
         resize = QtWidgets.QHeaderView.ResizeToContents
 
-        for i in range(self.tableWidget_recalc.rowCount()):
-            for j in range(self.tableWidget_recalc.columnCount()-1):
-                item = self.tableWidget_recalc.item(i, j)
+        for i in range(self.tableWidget_recalc_1d.rowCount()):
+            for j in range(self.tableWidget_recalc_1d.columnCount()-1):
+                item = self.tableWidget_recalc_1d.item(i, j)
                 if (item is not None and item.text() != ''):
                     item.setTextAlignment(alignment)
                     item.setFlags(flags)
                     
-        horiz_hdr = self.tableWidget_recalc.horizontalHeader()
+        horiz_hdr = self.tableWidget_recalc_1d.horizontalHeader()
         horiz_hdr.setSectionResizeMode(stretch)
         horiz_hdr.setSectionResizeMode(1, resize)
     
-    def create_atom_site_recalculation_table(self, atom, occupancy, Uiso, mu):
+    def create_atom_site_recalculation_1d_table(self, atom, occupancy, 
+                                                Uiso, mu):
         alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
         stretch = QtWidgets.QHeaderView.Stretch
@@ -2790,48 +2787,48 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                     
         n_site = len(atom)
         
-        self.tableWidget_recalc.setRowCount(n_site)
-        self.tableWidget_recalc.setColumnCount(5)
+        self.tableWidget_recalc_1d.setRowCount(n_site)
+        self.tableWidget_recalc_1d.setColumnCount(5)
         
         data = [atom, occupancy, Uiso, mu]
         
-        for i in range(self.tableWidget_recalc.rowCount()):
-            for j in range(self.tableWidget_recalc.columnCount()-1):
+        for i in range(self.tableWidget_recalc_1d.rowCount()):
+            for j in range(self.tableWidget_recalc_1d.columnCount()-1):
                 item = QtWidgets.QTableWidgetItem(str(data[j][i]))
-                self.tableWidget_recalc.setItem(i, j, item)
+                self.tableWidget_recalc_1d.setItem(i, j, item)
                 if (item is not None and item.text() != ''):
                     item.setTextAlignment(alignment)
                     item.setFlags(flags)
             check = QtWidgets.QCheckBox()
-            check.setObjectName('checkBox_atom_site_recalculation_'+str(i))
+            check.setObjectName('checkBox_atom_site_recalculation_1d_'+str(i))
             check.setCheckState(QtCore.Qt.Checked) 
-            self.tableWidget_recalc.setCellWidget(i, 4, check)
+            self.tableWidget_recalc_1d.setCellWidget(i, 4, check)
                     
         horiz_lbl = 'atom,occupancy,Uiso,mu,active'    
         horiz_lbl = horiz_lbl.split(',')
-        self.tableWidget_recalc.setHorizontalHeaderLabels(horiz_lbl)
+        self.tableWidget_recalc_1d.setHorizontalHeaderLabels(horiz_lbl)
         
         vert_lbl = ['{}'.format(s+1) for s in range(n_site)]
-        self.tableWidget_recalc.setVerticalHeaderLabels(vert_lbl)
+        self.tableWidget_recalc_1d.setVerticalHeaderLabels(vert_lbl)
         
-        horiz_hdr = self.tableWidget_recalc.horizontalHeader()
+        horiz_hdr = self.tableWidget_recalc_1d.horizontalHeader()
         horiz_hdr.setSectionResizeMode(stretch)
         horiz_hdr.setSectionResizeMode(1, resize)
         
-    def get_atom_site_recalculation_row_count(self):
-        return self.tableWidget_recalc.rowCount()
+    def get_atom_site_recalculation_1d_row_count(self):
+        return self.tableWidget_recalc_1d.rowCount()
     
-    def get_adp_type_recalc(self):
-        return self.comboBox_adp_recalc.currentText()
+    def get_adp_type_recalc_1d(self):
+        return self.comboBox_adp_recalc_1d.currentText()
  
-    def get_active_atom_site(self):
+    def get_active_atom_site_1d(self):
         data = []
-        for i in range(self.tableWidget_recalc.rowCount()):
-            active = self.tableWidget_recalc.cellWidget(i, 4).isChecked()
+        for i in range(self.tableWidget_recalc_1d.rowCount()):
+            active = self.tableWidget_recalc_1d.cellWidget(i, 4).isChecked()
             data.append(active)
         return np.array(data)
     
-    def save_intensity_calc(self, folder='.'):
+    def save_intensity_calc_1d(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         
@@ -2843,8 +2840,395 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                                                          options=options)
         return filename
             
-    def button_clicked_save_calc(self, slot):
-        self.pushButton_save_calc.clicked.connect(slot)
+    def button_clicked_save_calc_1d(self, slot):
+        self.pushButton_save_calc_1d.clicked.connect(slot)
+               
+    # ---
+    
+    def enable_disorder_mag_recalc_3d(self, visible):
+        self.checkBox_mag_recalc_3d.setEnabled(visible)
+        
+    def enable_disorder_occ_recalc_3d(self, visible):
+        self.checkBox_occ_recalc_3d.setEnabled(visible)
+        
+    def enable_disorder_dis_recalc_3d(self, visible):
+        self.checkBox_dis_recalc_3d.setEnabled(visible)
+        
+    def enable_disorder_struct_recalc_3d(self, visible):
+        self.checkBox_struct_recalc_3d.setEnabled(visible)
+        
+    def clicked_disorder_mag_recalc_3d(self, slot):
+        self.checkBox_mag_recalc_3d.clicked.connect(slot)
+
+    def clicked_disorder_occ_recalc_3d(self, slot):
+        self.checkBox_occ_recalc_3d.clicked.connect(slot)
+        
+    def clicked_disorder_dis_recalc_3d(self, slot):
+        self.checkBox_dis_recalc_3d.clicked.connect(slot)
+        
+    def clicked_disorder_struct_recalc_3d(self, slot):
+        self.checkBox_struct_recalc_3d.clicked.connect(slot)
+        
+    def set_disorder_mag_recalc_3d(self, state):
+        check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        self.checkBox_mag_recalc_3d.setCheckState(check)
+        
+    def set_disorder_occ_recalc_3d(self, state):
+        check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        self.checkBox_occ_recalc_3d.setCheckState(check)
+        
+    def set_disorder_dis_recalc_3d(self, state):
+        check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        self.checkBox_dis_recalc_3d.setCheckState(check)
+        
+    def set_disorder_struct_recalc_3d(self, state):
+        check = QtCore.Qt.Checked if state else QtCore.Qt.Unchecked
+        self.checkBox_struct_recalc_3d.setCheckState(check)
+
+    def get_disorder_mag_recalc_3d(self):
+        return self.checkBox_mag_recalc_3d.isChecked()
+    
+    def get_disorder_occ_recalc_3d(self):
+        return self.checkBox_occ_recalc_3d.isChecked()
+    
+    def get_disorder_dis_recalc_3d(self):
+        return self.checkBox_dis_recalc_3d.isChecked()
+    
+    def get_disorder_struct_recalc_3d(self):
+        return self.checkBox_struct_recalc_3d.isChecked()
+        
+    def create_recalculation_3d_table(self, dh, nh, min_h, max_h, 
+                                      dk, nk, min_k, max_k, 
+                                      dl, nl, min_l, max_l):
+        
+        self.tableWidget_calc_3d.setRowCount(3)
+        self.tableWidget_calc_3d.setColumnCount(5)
+        
+        data = [[dh, nh, min_h, max_h, 0.0], 
+                [dk, nk, min_k, max_k, 0.0], 
+                [dl, nl, min_l, max_l, 0.0]]
+        
+        for i in range(self.tableWidget_calc_3d.rowCount()):
+            for j in range(self.tableWidget_calc_3d.columnCount()):
+                item = QtWidgets.QTableWidgetItem(str(data[i][j]))
+                self.tableWidget_calc_3d.setItem(i, j, item)
+        
+        lbl = 'step,size,min,max,filter'    
+        lbl = lbl.split(',')
+        self.tableWidget_calc_3d.setHorizontalHeaderLabels(lbl)
+        
+        lbl = 'h,k,l'
+        lbl = lbl.split(',')
+        self.tableWidget_calc_3d.setVerticalHeaderLabels(lbl)
+        
+    def clear_recalculation_3d_table(self):
+        try: self.tableWidget_calc_3d.disconnect() 
+        except Exception: pass  
+        self.tableWidget_calc_3d.clearContents()
+        self.tableWidget_calc_3d.setRowCount(0)
+        self.tableWidget_calc_3d.setColumnCount(0)
+        
+    def format_recalculation_3d_table(self):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        stretch = QtWidgets.QHeaderView.Stretch
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+
+        for i in range(self.tableWidget_calc_3d.rowCount()):
+            for j in range(self.tableWidget_calc_3d.columnCount()):
+                item = self.tableWidget_calc_3d.item(i, j)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    if (j == 0): item.setFlags(flags)
+
+        delegate = SizeIntDelegate(self.tableWidget_calc)
+        self.tableWidget_calc_3d.setItemDelegateForColumn(1, delegate)
+        delegate = StandardDoubleDelegate(self.tableWidget_calc_3d)
+        self.tableWidget_calc_3d.setItemDelegateForColumn(2, delegate)
+        self.tableWidget_calc_3d.setItemDelegateForColumn(3, delegate)
+        delegate = PositiveDoubleDelegate(self.tableWidget_calc_3d)
+        self.tableWidget_calc_3d.setItemDelegateForColumn(4, delegate)
+        
+        horiz_hdr = self.tableWidget_calc_3d.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        
+    def get_recalculation_3d_binning_h(self):       
+        i = 0
+        text = self.tableWidget_calc_3d.item(i, 0).text()
+        step = 0 if text == '-' else float(text)
+        size = int(self.tableWidget_calc_3d.item(i, 1).text()) 
+        mininum = float(self.tableWidget_calc_3d.item(i, 2).text())
+        maximum = float(self.tableWidget_calc_3d.item(i, 3).text())
+        return step, size, mininum, maximum
+    
+    def get_recalculation_3d_binning_k(self):       
+        i = 1
+        text = self.tableWidget_calc_3d.item(i, 0).text()
+        step = 0 if text == '-' else float(text)
+        size = int(self.tableWidget_calc_3d.item(i, 1).text()) 
+        mininum = float(self.tableWidget_calc_3d.item(i, 2).text())
+        maximum = float(self.tableWidget_calc_3d.item(i, 3).text())
+        return step, size, mininum, maximum
+    
+    def get_recalculation_3d_binning_l(self):       
+        i = 2
+        text = self.tableWidget_calc_3d.item(i, 0).text()
+        step = 0 if text == '-' else float(text)
+        size = int(self.tableWidget_calc_3d.item(i, 1).text()) 
+        mininum = float(self.tableWidget_calc_3d.item(i, 2).text())
+        maximum = float(self.tableWidget_calc_3d.item(i, 3).text())
+        return step, size, mininum, maximum
+    
+    def set_recalculation_3d_binning_h(self, size, minimum, maximum):
+        i = 0
+        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
+        item = QtWidgets.QTableWidgetItem(str(text))
+        self.tableWidget_calc_3d.setItem(i, 0, item)
+        
+        item = QtWidgets.QTableWidgetItem(str(size))
+        self.tableWidget_calc_3d.setItem(i, 1, item)   
+        item = QtWidgets.QTableWidgetItem(str(minimum))
+        self.tableWidget_calc_3d.setItem(i, 2, item)  
+        item = QtWidgets.QTableWidgetItem(str(maximum))
+        self.tableWidget_calc_3d.setItem(i, 3, item)
+        
+    def set_recalculation_3d_binning_k(self, size, minimum, maximum):
+        i = 1
+        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
+        item = QtWidgets.QTableWidgetItem(str(text))
+        self.tableWidget_calc_3d.setItem(i, 0, item)
+        
+        item = QtWidgets.QTableWidgetItem(str(size))
+        self.tableWidget_calc_3d.setItem(i, 1, item)   
+        item = QtWidgets.QTableWidgetItem(str(minimum))
+        self.tableWidget_calc_3d.setItem(i, 2, item)  
+        item = QtWidgets.QTableWidgetItem(str(maximum))
+        self.tableWidget_calc_3d.setItem(i, 3, item)
+        
+    def set_recalculation_3d_binning_l(self, size, minimum, maximum):
+        i = 2
+        text = '-' if size <= 1 else np.round((maximum-minimum)/(size-1),4)
+        item = QtWidgets.QTableWidgetItem(str(text))
+        self.tableWidget_calc_3d.setItem(i, 0, item)
+        
+        item = QtWidgets.QTableWidgetItem(str(size))
+        self.tableWidget_calc_3d.setItem(i, 1, item)   
+        item = QtWidgets.QTableWidgetItem(str(minimum))
+        self.tableWidget_calc_3d.setItem(i, 2, item)  
+        item = QtWidgets.QTableWidgetItem(str(maximum))
+        self.tableWidget_calc_3d.setItem(i, 3, item)
+        
+    def get_recalculation_3d_filter(self):       
+        sigma_h = float(self.tableWidget_calc_3d.item(0, 4).text())
+        sigma_k = float(self.tableWidget_calc_3d.item(1, 4).text())
+        sigma_l = float(self.tableWidget_calc_3d.item(2, 4).text())
+        return sigma_h, sigma_k, sigma_l
+        
+    def block_recalculation_3d_table_signals(self):
+        self.tableWidget_calc_3d.blockSignals(True)
+
+    def unblock_recalculation_3d_table_signals(self):
+        self.tableWidget_calc_3d.blockSignals(False)
+        
+    def item_changed_recalculation_3d_table(self, slot):
+        self.tableWidget_calc_3d.itemChanged.connect(slot)
+        
+    def get_recalculation_3d_table_row_count(self):
+        return self.tableWidget_calc_3d.rowCount()
+    
+    def get_unit_recalculation_3d_col_count(self):
+        return self.tableWidget_calc_3d.columnCount()
+    
+    def batch_checked_calc_3d(self):
+        return self.checkBox_batch_calc_3d.isChecked()
+    
+    def clicked_batch_calc_3d(self, slot):
+        self.checkBox_batch_calc_3d.stateChanged.connect(slot)
+        
+    def enable_runs_calc_3d(self, visible):
+        self.lineEdit_runs_calc_3d.setEnabled(visible)
+        
+    def set_runs_calc_3d(self, runs):
+        self.lineEdit_runs_calc_3d.setText(str(runs))
+        
+    def get_runs_calc_3d(self):
+        return int(self.lineEdit_runs_calc_3d.text())
+ 
+    def get_order_calc_3d(self):
+        return int(self.lineEdit_order_calc_3d.text())
+    
+    def get_laue(self):
+        return self.comboBox_laue.currentText()
+    
+    def set_laue(self, laue):
+        index = self.comboBox_laue.findText(laue, QtCore.Qt.MatchFixedString)
+        self.comboBox_laue.setCurrentIndex(index)
+        
+    def get_norm_calc_3d(self):
+        index = self.comboBox_norm_calc_3d.currentIndex()    
+        return self.comboBox_norm_calc_3d.itemText(index)
+        
+    def index_changed_norm_calc_3d(self, slot):
+        self.comboBox_norm_calc_3d.currentIndexChanged.connect(slot)
+    
+    def set_min_calc_3d(self, value):
+        if str(value) == '--': value = 0
+        self.lineEdit_min_calc_3d.setText('{:1.4e}'.format(value))
+
+    def set_max_calc_3d(self, value):
+        if str(value) == '--': value = 0
+        self.lineEdit_max_calc_3d.setText('{:1.4e}'.format(value))
+        
+    def get_min_calc_3d(self):
+        return float(self.lineEdit_min_calc_3d.text())
+
+    def get_max_calc_3d(self):
+        return float(self.lineEdit_max_calc_3d.text())
+    
+    def finished_editing_min_calc_3d(self, slot):
+        self.lineEdit_min_calc_3d.editingFinished.connect(slot)
+
+    def finished_editing_max_calc_3d(self, slot):
+        self.lineEdit_max_calc_3d.editingFinished.connect(slot)
+    
+    def validate_min_calc_3d(self):
+        maximum = float(self.lineEdit_max_exp.text())
+        validator = QtGui.QDoubleValidator(np.finfo(float).min, maximum, 4)
+        self.lineEdit_min_calc_3d.setValidator(validator)
+        
+    def validate_max_calc_3d(self):
+        minimum = float(self.lineEdit_min_exp.text())
+        validator = QtGui.QDoubleValidator(minimum, np.finfo(float).max, 4)
+        self.lineEdit_max_calc_3d.setValidator(validator)
+    
+    def get_axes(self):
+        return self.comboBox_axes.currentText()
+    
+    def get_plot_calc_3d_canvas(self):
+        return self.canvas_calc_3d
+    
+    def clear_canvas_calc_3d_canvas(self):
+        self.canvas_calc_3d.figure.clear()
+        self.canvas_calc_3d.draw()
+        self.lineEdit_min_calc_3d.setText('')
+        self.lineEdit_max_calc_3d.setText('')
+    
+    def button_clicked_calc_3d(self, slot):
+        self.pushButton_calc_3d.clicked.connect(slot)
+        
+    def enable_recalculation_3d(self, visible):
+        self.pushButton_calc_3d.setEnabled(visible)
+        
+    def set_slice_calc_3d(self, value):
+        self.lineEdit_slice_calc_3d.setText(str(value))
+    
+    def get_slice_calc_3d(self):
+        text = self.lineEdit_slice_calc_3d.text()
+        if (text != ''): return float(text) 
+        
+    def get_slice_hkl_calc_3d(self):
+        index = self.comboBox_slice_calc_3d.currentIndex()    
+        return self.comboBox_slice_calc_3d.itemText(index)
+        
+    def index_changed_slice_hkl_calc_3d(self, slot):
+        self.comboBox_slice_calc_3d.currentIndexChanged.connect(slot)
+        
+    def finished_editing_slice_calc_3d(self, slot):
+        self.lineEdit_slice_calc_3d.editingFinished.connect(slot)
+        
+    def get_centering_calc_3d(self):
+        return self.comboBox_centering_calc_3d.currentText()
+    
+    def set_centering_calc_3d(self, centering):
+        match = QtCore.Qt.MatchFixedString
+        index = self.comboBox_centering_calc_3d.findText(centering, match)
+        self.comboBox_centering_calc_3d.setCurrentIndex(index)
+    
+    def clear_atom_site_recalculation_3d_table(self):
+        self.tableWidget_recalc_3d.clearContents()
+        self.tableWidget_recalc_3d.setRowCount(0)
+        self.tableWidget_recalc_3d.setColumnCount(0)
+        
+    def format_atom_site_recalculation_3d_table(self):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+        stretch = QtWidgets.QHeaderView.Stretch
+        resize = QtWidgets.QHeaderView.ResizeToContents
+
+        for i in range(self.tableWidget_recalc_3d.rowCount()):
+            for j in range(self.tableWidget_recalc_3d.columnCount()-1):
+                item = self.tableWidget_recalc_3d.item(i, j)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    item.setFlags(flags)
+                    
+        horiz_hdr = self.tableWidget_recalc_3d.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        horiz_hdr.setSectionResizeMode(1, resize)
+    
+    def create_atom_site_recalculation_3d_table(self, atom, occupancy, 
+                                                Uiso, mu):
+        alignment = int(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        flags = QtCore.Qt.ItemIsSelectable | QtCore.Qt.ItemIsEnabled
+        stretch = QtWidgets.QHeaderView.Stretch
+        resize = QtWidgets.QHeaderView.ResizeToContents
+                    
+        n_site = len(atom)
+        
+        self.tableWidget_recalc_3d.setRowCount(n_site)
+        self.tableWidget_recalc_3d.setColumnCount(5)
+        
+        data = [atom, occupancy, Uiso, mu]
+        
+        for i in range(self.tableWidget_recalc_3d.rowCount()):
+            for j in range(self.tableWidget_recalc_3d.columnCount()-1):
+                item = QtWidgets.QTableWidgetItem(str(data[j][i]))
+                self.tableWidget_recalc_3d.setItem(i, j, item)
+                if (item is not None and item.text() != ''):
+                    item.setTextAlignment(alignment)
+                    item.setFlags(flags)
+            check = QtWidgets.QCheckBox()
+            check.setObjectName('checkBox_atom_site_recalculation_3d_'+str(i))
+            check.setCheckState(QtCore.Qt.Checked) 
+            self.tableWidget_recalc_3d.setCellWidget(i, 4, check)
+                    
+        horiz_lbl = 'atom,occupancy,Uiso,mu,active'    
+        horiz_lbl = horiz_lbl.split(',')
+        self.tableWidget_recalc_3d.setHorizontalHeaderLabels(horiz_lbl)
+        
+        vert_lbl = ['{}'.format(s+1) for s in range(n_site)]
+        self.tableWidget_recalc_3d.setVerticalHeaderLabels(vert_lbl)
+        
+        horiz_hdr = self.tableWidget_recalc_3d.horizontalHeader()
+        horiz_hdr.setSectionResizeMode(stretch)
+        horiz_hdr.setSectionResizeMode(1, resize)
+        
+    def get_atom_site_recalculation_3d_row_count(self):
+        return self.tableWidget_recalc_3d.rowCount()
+    
+    def get_adp_type_recalc_3d(self):
+        return self.comboBox_adp_recalc_3d.currentText()
+ 
+    def get_active_atom_site_3d(self):
+        data = []
+        for i in range(self.tableWidget_recalc_3d.rowCount()):
+            active = self.tableWidget_recalc_3d.cellWidget(i, 4).isChecked()
+            data.append(active)
+        return np.array(data)
+    
+    def save_intensity_calc_3d(self, folder='.'):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder, 
+                                                        'pdf files *.pdf;;'+
+                                                        'png files *.png',
+                                                         options=options)
+        return filename
+            
+    def button_clicked_save_calc_3d(self, slot):
+        self.pushButton_save_calc_3d.clicked.connect(slot)
         
     # ---
     

@@ -782,10 +782,10 @@ def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, atm_pair3d,
     
     return H, K, L, d
 
-def plot_calc(canvas, data, hkl, slice_hkl, i_hkl, T,
-              min_h, min_k, min_l, max_h, max_k, max_l, size_h, size_k, size_l, 
-              matrix_h, matrix_k, matrix_l, scale_h, scale_k, scale_l,
-              norm, vmin, vmax):
+def plot_calc_3d(canvas, data, hkl, slice_hkl, i_hkl, T,
+                 min_h, min_k, min_l, max_h, max_k, max_l, 
+                 size_h, size_k, size_l, matrix_h, matrix_k, matrix_l, 
+                 scale_h, scale_k, scale_l, norm, vmin, vmax):
         
     extents_h = [min_k, max_k, min_l, max_l]
     extents_k = [min_h, max_h, min_l, max_l]

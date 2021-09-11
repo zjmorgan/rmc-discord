@@ -451,3 +451,36 @@ def structure(U_k,
            V_k_nuc.flatten(), \
            even, \
            bragg
+           
+def debye_waller(Ux, Uy, Uz, D, n_atm):
+    
+    Uxx = np.mean((Ux**2).reshape(Ux.size // n_atm, n_atm), axis=0)
+    Uyy = np.mean((Uy**2).reshape(Uy.size // n_atm, n_atm), axis=0)
+    Uzz = np.mean((Uz**2).reshape(Ux.size // n_atm, n_atm), axis=0)
+    Uyz = np.mean((Uy*Uz).reshape(Ux.size // n_atm, n_atm), axis=0)
+    Uxz = np.mean((Ux*Uz).reshape(Uy.size // n_atm, n_atm), axis=0)
+    Uxy = np.mean((Ux*Uy).reshape(Uz.size // n_atm, n_atm), axis=0)
+    
+    U11 = np.zeros(n_atm)
+    U22 = np.zeros(n_atm)
+    U33 = np.zeros(n_atm)
+    U23 = np.zeros(n_atm)
+    U13 = np.zeros(n_atm)
+    U12 = np.zeros(n_atm)
+
+    for i in range(n_atm):
+        
+        Up = np.array([[Uxx[i], Uxy[i], Uxz[i]],
+                       [Uxy[i], Uyy[i], Uyz[i]],
+                       [Uxz[i], Uyz[i], Uzz[i]]])
+        
+        U = np.dot(np.dot(D.T, Up), D)
+        
+        U11[i] = U[0,0]
+        U22[i] = U[1,1]
+        U33[i] = U[2,2]
+        U23[i] = U[1,2]
+        U13[i] = U[0,2]
+        U12[i] = U[0,1]
+        
+    return U11, U22, U33, U23, U13, U12

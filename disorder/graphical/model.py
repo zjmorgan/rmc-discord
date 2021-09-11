@@ -5,7 +5,8 @@ import os
 
 import numpy as np
 
-from disorder.diffuse import experimental, space, scattering, monocrystal
+from disorder.diffuse import experimental, space, scattering
+from disorder.diffuse import monocrystal, powder
 from disorder.diffuse import magnetic, occupational, displacive, refinement
 from disorder.material import crystal, symmetry, tables
 
@@ -806,15 +807,15 @@ class Model:
                acc_moves.tolist(), rej_moves.tolist(), \
                acc_temps.tolist(), rej_temps.tolist()
                
-    def save_recalculation(self, fname, I_recalc):
+    def save_recalculatio_3dn(self, fname, I_recalc):
 
-        np.save('{}-intensity-recalc.npy'.format(fname), I_recalc)
+        np.save('{}-intensity-recalc-3d.npy'.format(fname), I_recalc)
         
-    def load_recalculation(self, fname):
+    def load_recalculation_3d(self, fname):
         
-        if os.path.isfile('{}-intensity-recalc.npy'.format(fname)):
+        if os.path.isfile('{}-intensity-recalc-3d.npy'.format(fname)):
 
-            I_recalc = np.load('{}-intensity-recalc.npy'.format(fname)) 
+            I_recalc = np.load('{}-intensity-recalc-3d.npy'.format(fname)) 
             
             return I_recalc
         
@@ -859,12 +860,100 @@ class Model:
                 blocks[t].point_arrays[t] = array
                     
         blocks.save(fname, binary=False)
+        
+    def magnetic_intensity_1d(self, fname, run, occupancy, 
+                              U11, U22, U33, U23, U13, U12, rx, ry, rz, atm,
+                              Q_range, nQ, D, A, nu, nv, nw, g):
+            
+        Sx, Sy, Sz = self.load_magnetic(fname, run)
+        
+        n_atm = np.size(Sx) // (nu*nv*nw)
+        
+        Sx = Sx.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        Sy = Sy.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        Sz = Sz.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        
+        rx = rx.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        ry = ry.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        rz = rz.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        
+        Q = np.linspace(Q_range[0], Q_range[1], nQ)
+                
+        I_calc = powder.magnetic(Sx, Sy, Sz, occupancy, 
+                                 U11, U22, U33, U23, U13, U12, 
+                                 rx, ry, rz, atm, Q, D, A, nu, nv, nw, g)
+
+        return I_calc
+                                
+    def occupational_intensity_1d(self, fname, run, occupancy, 
+                                  U11, U22, U33, U23, U13, U12, rx, ry, rz, 
+                                  atm, Q_range, nQ, D, A, nu, nv, nw):
+                    
+        A_r = self.load_occupational(fname, run)
+        
+        n_atm = np.size(A_r) // (nu*nv*nw)
+        
+        A_r = A_r.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+                
+        rx = rx.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        ry = ry.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        rz = rz.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        
+        Q = np.linspace(Q_range[0], Q_range[1], nQ)
+                
+        I_calc = powder.occupational(A_r, occupancy, 
+                                     U11, U22, U33, U23, U13, U12, 
+                                     rx, ry, rz, atm, Q, D, A, nu, nv, nw)
+        
+        return I_calc
+
+    def displacive_intensity_1d(self, fname, run, occupancy, 
+                                  U11, U22, U33, U23, U13, U12, rx, ry, rz, 
+                                  atm, Q_range, nQ, D, A, nu, nv, nw, p):
+                
+        Ux, Uy, Uz = self.load_displacive(fname, run)
+                
+        n_atm = np.size(Ux) // (nu*nv*nw)
+        
+        Ux = Ux.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        Uy = Uy.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        Uz = Uz.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+                            
+        rx = rx.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        ry = ry.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        rz = rz.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        
+        Q = np.linspace(Q_range[0], Q_range[1], nQ)
+                
+        I_calc = powder.displacive(Ux, Uy, Uz, occupancy, 
+                                   U11, U22, U33, U23, U13, U12, 
+                                   rx, ry, rz, atm, Q, D, A, nu, nv, nw, p)
+                    
+        return I_calc
     
-    def magnetic_intensity(self, fname, run, occupancy, 
-                           U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
-                           h_range, k_range, l_range, indices, symop,
-                           T, B, R, D, twins, variants, nh, nk, nl, nu, nv, nw,
-                           Nu, Nv, Nw, g, mask):
+    def structural_intensity_1d(self, occupancy, 
+                                U11, U22, U33, U23, U13, U12, rx, ry, rz, 
+                                atm, Q_range, nQ, D, A, nu, nv, nw):
+                            
+        n_atm = np.size(occupancy)
+                
+        rx = rx.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        ry = ry.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        rz = rz.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
+        
+        Q = np.linspace(Q_range[0], Q_range[1], nQ)
+                
+        I_calc = powder.occupational(A_r, occupancy, 
+                                     U11, U22, U33, U23, U13, U12, 
+                                     rx, ry, rz, atm, Q, D, A, nu, nv, nw)
+        
+        return I_calc
+    
+    def magnetic_intensity_3d(self, fname, run, occupancy, 
+                              U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
+                              h_range, k_range, l_range, indices, symop,
+                              T, B, R, D, twins, variants, nh, nk, nl, 
+                              nu, nv, nw, Nu, Nv, Nw, g, mask):
             
         Sx, Sy, Sz = self.load_magnetic(fname, run)
         
@@ -883,11 +972,11 @@ class Model:
         
         return I_calc
                                 
-    def occupational_intensity(self, fname, run, occupancy, 
-                               U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
-                               h_range, k_range, l_range, indices, symop,
-                               T, B, R, D, twins, variants, nh, nk, nl, 
-                               nu, nv, nw, Nu, Nv, Nw, mask):
+    def occupational_intensity_3d(self, fname, run, occupancy, 
+                                  U11, U22, U33, U23, U13, U12, ux, uy, uz, 
+                                  atm, h_range, k_range, l_range, indices, 
+                                  symop, T, B, R, D, twins, variants, 
+                                  nh, nk, nl, nu, nv, nw, Nu, Nv, Nw, mask):
                     
         A_r = self.load_occupational(fname, run)
         
@@ -904,10 +993,11 @@ class Model:
         
         return I_calc
 
-    def displacive_intensity(self, fname, run, coeffs, occupancy, ux, uy, uz, 
-                             atm, h_range, k_range, l_range, indices, symop,
-                             T, B, R, twins, variants, nh, nk, nl, nu, nv, nw,
-                             Nu, Nv, Nw, p, even, cntr, mask):
+    def displacive_intensity_3d(self, fname, run, coeffs, occupancy, 
+                                ux, uy, uz, atm, h_range, k_range, l_range, 
+                                indices, symop, T, B, R, twins, variants, 
+                                nh, nk, nl, nu, nv, nw, Nu, Nv, Nw, 
+                                p, even, cntr, mask):
                 
         Ux, Uy, Uz = self.load_displacive(fname, run)
                 
@@ -927,11 +1017,11 @@ class Model:
                     
         return I_calc
     
-    def structural_intensity(self, occupancy, 
-                             U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
-                             h_range, k_range, l_range, indices, symop,
-                             T, B, R, D, twins, variants, nh, nk, nl, 
-                             nu, nv, nw, Nu, Nv, Nw, cntr, mask):
+    def structural_intensity_3d(self, occupancy, 
+                                U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
+                                h_range, k_range, l_range, indices, symop,
+                                T, B, R, D, twins, variants, nh, nk, nl, 
+                                nu, nv, nw, Nu, Nv, Nw, cntr, mask):
                             
         n_atm = np.size(occupancy)
                 
