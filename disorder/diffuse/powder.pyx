@@ -643,24 +643,28 @@ def displacive(double [::1] Ux,
     cdef Py_ssize_t mw = (nw+1) // 2
     
     cdef Py_ssize_t n_hkl = Q.shape[0]
+    
+    cdef Py_ssize_t m_uvw = mu*mv*mw
     cdef Py_ssize_t n_uvw = nu*nv*nw
     
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
-    
-    i_np, j_np = np.triu_indices(m_xyz, k=1)
-    
-    m_np = np.arange(n_xyz, dtype=int)
+        
+    m_np = np.arange(n_atm, dtype=int)
     n_np = np.mod(m_np, n_atm)
     
     Ux_np = np.copy(Ux, order='C')
     Uy_np = np.copy(Uy, order='C')
     Uz_np = np.copy(Uz, order='C')
+
+    c_uvw = np.arange(n_uvw)
+                    
+    cu, cv, cw = np.unravel_index(c_uvw, (nu,nv,nw))
         
-    iu, iv, iw, i_atm = np.unravel_index(i_np, (mu,mv,mw,n_atm))
-    ju, jv, jw, j_atm = np.unravel_index(j_np, (mu,mv,mw,n_atm))
-        
-    cu, cv, cw = np.unravel_index(np.arange(n_uvw), (nu,nv,nw))
+    i_lat, j_lat = np.triu_indices(m_uvw, k=1)
+    
+    iu, iv, iw = np.unravel_index(i_lat, (mu,mv,mw))
+    ju, jv, jw = np.unravel_index(j_lat, (mu,mv,mw))
     
     iu = np.mod(iu+cu[:,None], nu)
     iv = np.mod(iv+cv[:,None], nv)
@@ -670,65 +674,128 @@ def displacive(double [::1] Ux,
     jv = np.mod(jv+cv[:,None], nv)
     jw = np.mod(jw+cw[:,None], nw)
     
-    i_np = np.ravel_multi_index((iu,iv,iw,i_atm), (nu,nv,nw,n_atm))
-    j_np = np.ravel_multi_index((ju,jv,jw,j_atm), (nu,nv,nw,n_atm))
+    i_lat = np.ravel_multi_index((iu,iv,iw), (nu,nv,nw))
+    j_lat = np.ravel_multi_index((ju,jv,jw), (nu,nv,nw))
     
-    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*m_xyz*(m_xyz-1)//2)
+    pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
+        
+    i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
     
-    pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
+    i_atm, j_atm = np.triu_indices(n_atm, k=1)
     
-    cdef double [::1] multiplicity = multiplicity_np*1.
+    i_atms = np.concatenate((i_atm,j_atm))
+    j_atms = np.concatenate((j_atm,i_atm))
+   
+    i_atms = np.concatenate((i_atms,np.arange(n_atm)))
+    j_atms = np.concatenate((j_atms,np.arange(n_atm)))
+   
+    is_np = np.ravel_multi_index((i_lat,i_atms[:,None]), (n_uvw,n_atm))
+    js_np = np.ravel_multi_index((j_lat,j_atms[:,None]), (n_uvw,n_atm))
     
-    i_np, j_np = pairs
+    i_np = np.ravel_multi_index((c_uvw,i_atm[:,None]), (n_uvw,n_atm))
+    j_np = np.ravel_multi_index((c_uvw,j_atm[:,None]), (n_uvw,n_atm))
     
-    k_np = np.mod(i_np, n_atm)
-    l_np = np.mod(j_np, n_atm)
+    iu, iv, iw = np.unravel_index(i_lat, (nu,nv,nw))
+    ju, jv, jw = np.unravel_index(j_lat, (nu,nv,nw))
+    
+    diff_u = ju-iu
+    diff_v = jv-iv
+    diff_w = jw-iw
+    
+    diff_u[diff_u >= mu] -= nu
+    diff_v[diff_v >= mv] -= nv
+    diff_w[diff_w >= mw] -= nw
+    
+    diff_u[diff_u <= -mu] += nu
+    diff_v[diff_v <= -mv] += nv
+    diff_w[diff_w <= -mw] += nw
+    
+    mult_s_np = (mu-np.abs(diff_u))*(mv-np.abs(diff_v))*(mw-np.abs(diff_w))*1.
+        
+    cdef double [::1] mult_s = mult_s_np
+    cdef double [::1] mult = np.full(n_uvw, m_uvw, dtype=float)
+        
+    ks_np = np.mod(is_np[:,0], n_atm)
+    ls_np = np.mod(js_np[:,0], n_atm)
+    
+    k_np = np.mod(i_np[:,0], n_atm)
+    l_np = np.mod(j_np[:,0], n_atm)
     
     rx_np = np.copy(rx, order='C')
     ry_np = np.copy(ry, order='C')
     rz_np = np.copy(rz, order='C')
+    
+    rx_s_ij_np = rx_np[js_np]-rx_np[is_np]
+    ry_s_ij_np = ry_np[js_np]-ry_np[is_np]
+    rz_s_ij_np = rz_np[js_np]-rz_np[is_np]
+    
+    rs_ij_np = np.sqrt(rx_s_ij_np**2+ry_s_ij_np**2+rz_s_ij_np**2)
     
     rx_ij_np = rx_np[j_np]-rx_np[i_np]
     ry_ij_np = ry_np[j_np]-ry_np[i_np]
     rz_ij_np = rz_np[j_np]-rz_np[i_np]
     
     r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
+ 
+    Ux_s_ij_np = Ux_np[js_np]-Ux_np[is_np]
+    Uy_s_ij_np = Uy_np[js_np]-Uy_np[is_np]
+    Uz_s_ij_np = Uz_np[js_np]-Uz_np[is_np]
+    
+    Us_ij_np = np.sqrt(Ux_s_ij_np**2+Uy_s_ij_np**2+Uz_s_ij_np**2)
     
     Ux_ij_np = Ux_np[j_np]-Ux_np[i_np]
     Uy_ij_np = Uy_np[j_np]-Uy_np[i_np]
     Uz_ij_np = Uz_np[j_np]-Uz_np[i_np]
     
     U_ij_np = np.sqrt(Ux_ij_np**2+Uy_ij_np**2+Uz_ij_np**2)
-            
-    cdef double [::1] U_ij = U_ij_np
+
+    cdef double [:,::1] Us_ij = Us_ij_np
+    cdef double [:,::1] U_ij = U_ij_np
     
+    Us_ij_mul_rs_ij = Us_ij_np*rs_ij_np
     U_ij_mul_r_ij = U_ij_np*r_ij_np
     
+    Us_ij_mul_rs_ij[np.isclose(Us_ij_mul_rs_ij, 0)] = 1
     U_ij_mul_r_ij[np.isclose(U_ij_mul_r_ij, 0)] = 1
     
+    Us_hat_ij_dot_rs_hat_ij = (Ux_s_ij_np*rx_s_ij_np
+                            +  Uy_s_ij_np*ry_s_ij_np\
+                            +  Uz_s_ij_np*rz_s_ij_np)/Us_ij_mul_rs_ij
+        
     U_hat_ij_dot_r_hat_ij = (Ux_ij_np*rx_ij_np
                           +  Uy_ij_np*ry_ij_np\
                           +  Uz_ij_np*rz_ij_np)/U_ij_mul_r_ij
-                
-    cdef double [:,::1] U_hat_ij_dot_r_hat_ij_pow = U_hat_ij_dot_r_hat_ij\
-                                                  **np.arange(order+1)[:,None]
+                                                                  
+    cdef double [:,:,::1] Us_hat_ij_dot_rs_hat_ij_pow = \
+        Us_hat_ij_dot_rs_hat_ij[:,:,None]**np.arange(order+1)
+   
+    cdef double [:,:,::1] U_hat_ij_dot_r_hat_ij_pow = \
+        U_hat_ij_dot_r_hat_ij[:,:,None]**np.arange(order+1)
+                                                  
+    cdef long [::1] ks = ks_np.astype(int)
+    cdef long [::1] ls = ls_np.astype(int)
     
     cdef long [::1] k = k_np.astype(int)
     cdef long [::1] l = l_np.astype(int)
-    cdef long [::1] m = m_np.astype(int)
+    
     cdef long [::1] n = n_np.astype(int)
     
-    cdef double [::1] r_ij = r_ij_np
+    cdef double [:,::1] rs_ij = rs_ij_np
+    cdef double [:,::1] r_ij = r_ij_np
     
     cdef double [::1] summation = np.zeros(Q.shape[0])
     
     cdef double [::1] auto = np.zeros(Q.shape[0])
     
-    cdef Py_ssize_t n_pairs = r_ij.shape[0]
+    cdef Py_ssize_t n_pairs = rs_ij.shape[1]
+    cdef Py_ssize_t n_pair = r_ij.shape[1]
+    
+    cdef Py_ssize_t n_types = n_atm*n_atm
+    cdef Py_ssize_t n_type = n_atm*(n_atm-1)//2
     
     cdef double Qr_ij, Qu_ij
     
-    coeff_size = int(np.ceil((order+2)/2)*np.floor((order+2)/2))
+    coeff_size = int(np.ceil(float(order+2)/2)*np.floor(float(order+2)/2))
     
     cdef double [:,::1] a_ij = np.zeros((num_threads,order+1))
     cdef double [:,::1] A_ij = np.zeros((num_threads,coeff_size))
@@ -763,7 +830,7 @@ def displacive(double [::1] Ux,
     
     cdef double [::1] I = I_np
     
-    cdef Py_ssize_t p, q, r, s, t, u, v, w
+    cdef Py_ssize_t a, p, q, r, s, t, u, v, w
         
     cdef double inv_M_SP = 1/(4*np.pi)
     
@@ -784,7 +851,7 @@ def displacive(double [::1] Ux,
         den = np.concatenate((den, factorial(np.arange(2*t, order+1))))
         
     sign = np.zeros(coeff_size)
-        
+            
     for r in range(order+1):
         t = r
         for s in range(r // 2+1):
@@ -817,9 +884,9 @@ def displacive(double [::1] Ux,
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
                 
-        for p in prange(n_pairs, nogil=True):
+        for a in range(n_types):
             
-            u, v = k[p], l[p]
+            u, v = ks[a], ls[a]
             
             occ_k = occupancy[u]
             occ_l = occupancy[v]
@@ -852,39 +919,114 @@ def displacive(double [::1] Ux,
             f_k_imag = f_k.imag
             f_l_imag = f_l.imag
             
-            Qr_ij = Q[q]*r_ij[p]
-            Qu_ij = Q[q]*U_ij[p]
-            
-            Qr_ij_pow = 1
-            Qu_ij_pow = 1
-            
             factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
             
-            thread_id = openmp.omp_get_thread_num()
+            for p in prange(n_pairs, nogil=True):
+                                
+                Qr_ij = Q[q]*rs_ij[a,p]
+                Qu_ij = Q[q]*Us_ij[a,p]
                 
-            for r in range(order+1):
-                if (r == 0):
-                    a_ij[thread_id,0] = sin(Qr_ij)/Qr_ij
-                elif (r == 1):
-                    a_ij[thread_id,1] = (a_ij[thread_id,0]-cos(Qr_ij))/Qr_ij
-                else:
-                    a_ij[thread_id,r] = (2*r-1)/Qr_ij*a_ij[thread_id,r-1]\
-                                                     -a_ij[thread_id,r-2]
-                                   
-            values = 0
-            for r in range(order+1):
-                t = r
-                for s in range(r // 2+1):
-                    A_ij[thread_id,t] = coeff[t]/Qr_ij_pow
-                    values = values+A_ij[thread_id,t]*Qu_ij_pow\
-                           * U_hat_ij_dot_r_hat_ij_pow[r-s,p]\
-                           * a_ij[thread_id,r-s]
-                    t = t+order-1-2*s    
-                    Qr_ij_pow = Qr_ij_pow*Qr_ij
                 Qr_ij_pow = 1
-                Qu_ij_pow = Qu_ij_pow*Qu_ij
+                Qu_ij_pow = 1
+                                
+                thread_id = openmp.omp_get_thread_num()
+                    
+                for r in range(order+1):
+                    if (r == 0):
+                        a_ij[thread_id,0] = sin(Qr_ij)/Qr_ij
+                    elif (r == 1):
+                        a_ij[thread_id,1] = (a_ij[thread_id,0]\
+                                             -cos(Qr_ij))/Qr_ij
+                    else:
+                        a_ij[thread_id,r] = (2*r-1)/Qr_ij*a_ij[thread_id,r-1]\
+                                                         -a_ij[thread_id,r-2]
+                                       
+                values = 0
+                for r in range(order+1):
+                    t = r
+                    for s in range(r // 2+1):
+                        A_ij[thread_id,t] = coeff[t]/Qr_ij_pow
+                        values = values+A_ij[thread_id,t]*Qu_ij_pow\
+                               * Us_hat_ij_dot_rs_hat_ij_pow[a,p,r-2*s]\
+                               * a_ij[thread_id,r-s]
+                        t = t+order-1-2*s    
+                        Qr_ij_pow = Qr_ij_pow*Qr_ij
+                    Qr_ij_pow = 1
+                    Qu_ij_pow = Qu_ij_pow*Qu_ij
+                    
+                value += factors*values*mult_s[p]
+                            
+        for a in range(n_type):
+            
+            u, v = k[a], l[a]
+            
+            occ_k = occupancy[u]
+            occ_l = occupancy[v]
+            
+            if neutron:
                 
-            value += factors*values*multiplicity[p]
+                sl_k = b[u]
+                sl_l = b[v]
+                
+            else:
+          
+                sl_k = a1[u]*exp(-b1[u]*s_sq)\
+                     + a2[u]*exp(-b2[u]*s_sq)\
+                     + a3[u]*exp(-b3[u]*s_sq)\
+                     + a4[u]*exp(-b4[u]*s_sq)\
+                     + c[u]
+                     
+                sl_l = a1[v]*exp(-b1[v]*s_sq)\
+                     + a2[v]*exp(-b2[v]*s_sq)\
+                     + a3[v]*exp(-b3[v]*s_sq)\
+                     + a4[v]*exp(-b4[v]*s_sq)\
+                     + c[v]
+                                    
+            f_k = occ_k*sl_k
+            f_l = occ_l*sl_l
+            
+            f_k_real = f_k.real
+            f_l_real = f_l.real
+            
+            f_k_imag = f_k.imag
+            f_l_imag = f_l.imag
+            
+            factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
+                                       
+            for p in prange(n_pair, nogil=True):
+                 
+                Qr_ij = Q[q]*r_ij[a,p]
+                Qu_ij = Q[q]*U_ij[a,p]
+                
+                Qr_ij_pow = 1
+                Qu_ij_pow = 1
+                                
+                thread_id = openmp.omp_get_thread_num()
+                    
+                for r in range(order+1):
+                    if (r == 0):
+                        a_ij[thread_id,0] = sin(Qr_ij)/Qr_ij
+                    elif (r == 1):
+                        a_ij[thread_id,1] = (a_ij[thread_id,0]\
+                                             -cos(Qr_ij))/Qr_ij
+                    else:
+                        a_ij[thread_id,r] = (2*r-1)/Qr_ij*a_ij[thread_id,r-1]\
+                                                         -a_ij[thread_id,r-2]
+                                       
+                values = 0
+                for r in range(order+1):
+                    t = r
+                    for s in range(r // 2+1):
+                        A_ij[thread_id,t] = coeff[t]/Qr_ij_pow
+                        values = values+A_ij[thread_id,t]*Qu_ij_pow\
+                               * U_hat_ij_dot_r_hat_ij_pow[a,p,r-2*s]\
+                               * a_ij[thread_id,r-s]
+                        t = t+order-1-2*s    
+                        Qr_ij_pow = Qr_ij_pow*Qr_ij
+                    Qr_ij_pow = 1
+                    Qu_ij_pow = Qu_ij_pow*Qu_ij
+                    
+                value += factors*values*mult[p]
                     
         summation[q] = value
                          
@@ -892,7 +1034,7 @@ def displacive(double [::1] Ux,
         
         value = 0
         
-        for p in prange(n_xyz, nogil=True):
+        for p in prange(n_atm, nogil=True):
             
             w = n[p]
             
@@ -924,7 +1066,7 @@ def displacive(double [::1] Ux,
         
     for q in prange(n_hkl, nogil=True):
         
-        I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
+        I[q] = (auto[q]/n_atm+2*summation[q]/m_xyz)
         
     return I_np
 
