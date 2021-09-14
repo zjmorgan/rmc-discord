@@ -455,7 +455,7 @@ def structure(U_k,
            even, \
            bragg
            
-def debye_waller(Ux, Uy, Uz, D, n_atm):
+def parameters(Ux, Uy, Uz, D, n_atm):
     
     Uxx = np.mean((Ux**2).reshape(Ux.size // n_atm, n_atm), axis=0)
     Uyy = np.mean((Uy**2).reshape(Uy.size // n_atm, n_atm), axis=0)

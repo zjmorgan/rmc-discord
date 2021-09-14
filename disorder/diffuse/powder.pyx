@@ -45,24 +45,28 @@ def magnetic(double [::1] Sx,
     cdef Py_ssize_t mw = (nw+1) // 2
     
     cdef Py_ssize_t n_hkl = Q.shape[0]
+    
+    cdef Py_ssize_t m_uvw = mu*mv*mw
     cdef Py_ssize_t n_uvw = nu*nv*nw
     
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
     
-    i_np, j_np = np.triu_indices(m_xyz, k=1)
-    
-    m_np = np.arange(n_xyz, dtype=int)
+    m_np = np.arange(n_atm, dtype=int)
     n_np = np.mod(m_np, n_atm)
     
     Sx_np = np.copy(Sx, order='C')
     Sy_np = np.copy(Sy, order='C')
     Sz_np = np.copy(Sz, order='C')
+    
+    c_uvw = np.arange(n_uvw)
+                    
+    cu, cv, cw = np.unravel_index(c_uvw, (nu,nv,nw))
         
-    iu, iv, iw, i_atm = np.unravel_index(i_np, (mu,mv,mw,n_atm))
-    ju, jv, jw, j_atm = np.unravel_index(j_np, (mu,mv,mw,n_atm))
-        
-    cu, cv, cw = np.unravel_index(np.arange(n_uvw), (nu,nv,nw))
+    i_lat, j_lat = np.triu_indices(m_uvw, k=1)
+    
+    iu, iv, iw = np.unravel_index(i_lat, (mu,mv,mw))
+    ju, jv, jw = np.unravel_index(j_lat, (mu,mv,mw))
     
     iu = np.mod(iu+cu[:,None], nu)
     iv = np.mod(iv+cv[:,None], nv)
@@ -72,63 +76,131 @@ def magnetic(double [::1] Sx,
     jv = np.mod(jv+cv[:,None], nv)
     jw = np.mod(jw+cw[:,None], nw)
     
-    i_np = np.ravel_multi_index((iu,iv,iw,i_atm), (nu,nv,nw,n_atm))
-    j_np = np.ravel_multi_index((ju,jv,jw,j_atm), (nu,nv,nw,n_atm))
+    i_lat = np.ravel_multi_index((iu,iv,iw), (nu,nv,nw))
+    j_lat = np.ravel_multi_index((ju,jv,jw), (nu,nv,nw))
     
-    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*m_xyz*(m_xyz-1)//2)
+    pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
+        
+    i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
     
-    pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
+    i_atm, j_atm = np.triu_indices(n_atm, k=1)
     
-    cdef double [::1] multiplicity = multiplicity_np*1.
+    i_atms = np.concatenate((i_atm,j_atm))
+    j_atms = np.concatenate((j_atm,i_atm))
+   
+    i_atms = np.concatenate((i_atms,np.arange(n_atm)))
+    j_atms = np.concatenate((j_atms,np.arange(n_atm)))
+   
+    is_np = np.ravel_multi_index((i_lat,i_atms[:,None]), (n_uvw,n_atm))
+    js_np = np.ravel_multi_index((j_lat,j_atms[:,None]), (n_uvw,n_atm))
     
-    i_np, j_np = pairs
+    i_np = np.ravel_multi_index((c_uvw,i_atm[:,None]), (n_uvw,n_atm))
+    j_np = np.ravel_multi_index((c_uvw,j_atm[:,None]), (n_uvw,n_atm))
     
-    k_np = np.mod(i_np, n_atm)
-    l_np = np.mod(j_np, n_atm)
+    iu, iv, iw = np.unravel_index(i_lat, (nu,nv,nw))
+    ju, jv, jw = np.unravel_index(j_lat, (nu,nv,nw))
+    
+    diff_u = ju-iu
+    diff_v = jv-iv
+    diff_w = jw-iw
+    
+    diff_u[diff_u >= mu] -= nu
+    diff_v[diff_v >= mv] -= nv
+    diff_w[diff_w >= mw] -= nw
+    
+    diff_u[diff_u <= -mu] += nu
+    diff_v[diff_v <= -mv] += nv
+    diff_w[diff_w <= -mw] += nw
+    
+    mult_s_np = (mu-np.abs(diff_u))*(mv-np.abs(diff_v))*(mw-np.abs(diff_w))*1.
+        
+    cdef double [::1] mult_s = mult_s_np
+    cdef double [::1] mult = np.full(n_uvw, m_uvw, dtype=float)
     
     rx_np = np.copy(rx, order='C')
     ry_np = np.copy(ry, order='C')
     rz_np = np.copy(rz, order='C')
+    
+    rx_s_ij_np = rx_np[js_np]-rx_np[is_np]
+    ry_s_ij_np = ry_np[js_np]-ry_np[is_np]
+    rz_s_ij_np = rz_np[js_np]-rz_np[is_np]
+    
+    rs_ij_np = np.sqrt(rx_s_ij_np**2+ry_s_ij_np**2+rz_s_ij_np**2)
     
     rx_ij_np = rx_np[j_np]-rx_np[i_np]
     ry_ij_np = ry_np[j_np]-ry_np[i_np]
     rz_ij_np = rz_np[j_np]-rz_np[i_np]
     
     r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
+        
+    ks_np = np.mod(is_np[:,0], n_atm)
+    ls_np = np.mod(js_np[:,0], n_atm)
+    
+    k_np = np.mod(i_np[:,0], n_atm)
+    l_np = np.mod(j_np[:,0], n_atm)
     
     cdef double [::1] S_i_dot_S_i = Sx_np[m_np]*Sx_np[m_np]\
                                   + Sy_np[m_np]*Sy_np[m_np]\
                                   + Sz_np[m_np]*Sz_np[m_np]
-    
+                                  
+    Ss_i_dot_Ss_j_np = Sx_np[is_np]*Sx_np[js_np]\
+                     + Sy_np[is_np]*Sy_np[js_np]\
+                     + Sz_np[is_np]*Sz_np[js_np]
+                     
     S_i_dot_S_j_np = Sx_np[i_np]*Sx_np[j_np]\
                    + Sy_np[i_np]*Sy_np[j_np]\
                    + Sz_np[i_np]*Sz_np[j_np]
+                       
+    Ss_i_dot_rs_ij_np = ((Sx_np[is_np]*rx_s_ij_np+\
+                          Sy_np[is_np]*ry_s_ij_np+\
+                          Sz_np[is_np]*rz_s_ij_np)/rs_ij_np)
     
-    S_i_dot_r_ij_np = ((Sx_np[i_np].T*rx_ij_np[:]+\
-                        Sy_np[i_np].T*ry_ij_np[:]+\
-                        Sz_np[i_np].T*rz_ij_np[:])/r_ij_np[:]).T
-    
-    S_j_dot_r_ij_np = ((Sx_np[j_np].T*rx_ij_np[:]+\
-                        Sy_np[j_np].T*ry_ij_np[:]+\
-                        Sz_np[j_np].T*rz_ij_np[:])/r_ij_np[:]).T
+    S_i_dot_r_ij_np = ((Sx_np[i_np]*rx_ij_np+\
+                        Sy_np[i_np]*ry_ij_np+\
+                        Sz_np[i_np]*rz_ij_np)/r_ij_np)
+        
+    Ss_j_dot_rs_ij_np = ((Sx_np[js_np]*rx_s_ij_np+\
+                          Sy_np[js_np]*ry_s_ij_np+\
+                          Sz_np[js_np]*rz_s_ij_np)/rs_ij_np)
+        
+    S_j_dot_r_ij_np = ((Sx_np[j_np]*rx_ij_np+\
+                        Sy_np[j_np]*ry_ij_np+\
+                        Sz_np[j_np]*rz_ij_np)/r_ij_np)
+
+    Ss_i_dot_rs_ij_Ss_j_dot_rs_ij_np = Ss_i_dot_rs_ij_np*Ss_j_dot_rs_ij_np
 
     S_i_dot_r_ij_S_j_dot_r_ij_np = S_i_dot_r_ij_np*S_j_dot_r_ij_np
-
-    cdef double [::1] A_ij = S_i_dot_S_j_np-S_i_dot_r_ij_S_j_dot_r_ij_np
-    cdef double [::1] B_ij = 3*S_i_dot_r_ij_S_j_dot_r_ij_np-S_i_dot_S_j_np
+    
+    cdef double [:,::1] As_ij = Ss_i_dot_Ss_j_np\
+                              - Ss_i_dot_rs_ij_Ss_j_dot_rs_ij_np
+    
+    cdef double [:,::1] A_ij = S_i_dot_S_j_np-S_i_dot_r_ij_S_j_dot_r_ij_np
+    
+    cdef double [:,::1] Bs_ij = 3*Ss_i_dot_rs_ij_Ss_j_dot_rs_ij_np\
+                                - Ss_i_dot_Ss_j_np
+    
+    cdef double [:,::1] B_ij = 3*S_i_dot_r_ij_S_j_dot_r_ij_np-S_i_dot_S_j_np
+    
+    cdef long [::1] ks = ks_np.astype(int)
+    cdef long [::1] ls = ls_np.astype(int)
     
     cdef long [::1] k = k_np.astype(int)
     cdef long [::1] l = l_np.astype(int)
-    cdef long [::1] m = m_np.astype(int)
+    
     cdef long [::1] n = n_np.astype(int)
     
-    cdef double [::1] r_ij = r_ij_np
+    cdef double [:,::1] rs_ij = rs_ij_np
+    cdef double [:,::1] r_ij = r_ij_np
     
     cdef double [::1] summation = np.zeros(Q.shape[0])
     
     cdef double [::1] auto = np.zeros(Q.shape[0])
     
-    cdef Py_ssize_t n_pairs = r_ij.shape[0]
+    cdef Py_ssize_t n_pairs = rs_ij.shape[1]
+    cdef Py_ssize_t n_pair = r_ij.shape[1]
+    
+    cdef Py_ssize_t n_types = n_atm*n_atm
+    cdef Py_ssize_t n_type = n_atm*(n_atm-1)//2
     
     cdef double Qr_ij, a_ij, b_ij
                 
@@ -181,7 +253,7 @@ def magnetic(double [::1] Sx,
     
     cdef double [::1] I = I_np
     
-    cdef Py_ssize_t p, q, r, u, v, w
+    cdef Py_ssize_t a, p, q, r, u, v, w
     
     cdef double inv_M_SP = 1/(4*np.pi)
     
@@ -236,9 +308,9 @@ def magnetic(double [::1] Sx,
         s_ = Q[q]*inv_M_SP
         s_sq = s_*s_
                 
-        for p in prange(n_pairs, nogil=True):
+        for a in range(n_types):
             
-            u, v = k[p], l[p]
+            u, v = ks[a], ls[a]
             
             occ_k = occupancy[u]
             occ_l = occupancy[v]
@@ -284,14 +356,75 @@ def magnetic(double [::1] Sx,
             f_k_imag = f_k.imag
             f_l_imag = f_l.imag
             
-            Qr_ij = Q[q]*r_ij[p]
+            factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
             
-            a_ij = sin(Qr_ij)/Qr_ij
-            b_ij = (a_ij-cos(Qr_ij))/Qr_ij
+            for p in prange(n_pairs, nogil=True):
+            
+                Qr_ij = Q[q]*rs_ij[a,p]
+                
+                a_ij = sin(Qr_ij)/Qr_ij
+                b_ij = (a_ij-cos(Qr_ij))/Qr_ij
+                                                
+                value += factors*(As_ij[a,p]*a_ij+Bs_ij[a,p]*b_ij)*mult_s[p]
+                
+        for a in range(n_type):
+            
+            u, v = k[a], l[a]
+            
+            occ_k = occupancy[u]
+            occ_l = occupancy[v]
+                                                                                
+            j0_k = A0[u]*exp(-a0[u]*s_sq)\
+                 + B0[u]*exp(-b0[u]*s_sq)\
+                 + C0[u]*exp(-c0[u]*s_sq)\
+                 + D0[u]
+                 
+            j0_l = A0[v]*exp(-a0[v]*s_sq)\
+                 + B0[v]*exp(-b0[v]*s_sq)\
+                 + C0[v]*exp(-c0[v]*s_sq)\
+                 + D0[v]
+            
+            j2_k = (A2[u]*exp(-a2[u]*s_sq)\
+                 +  B2[u]*exp(-b2[u]*s_sq)\
+                 +  C2[u]*exp(-c2[u]*s_sq)\
+                 +  D2[u])*s_sq
+                
+            j2_l = (A2[v]*exp(-a2[v]*s_sq)\
+                 +  B2[v]*exp(-b2[v]*s_sq)\
+                 +  C2[v]*exp(-c2[v]*s_sq)\
+                 +  D2[v])*s_sq
+                
+            ff_k = j0_k+K2[u]*j2_k
+            ff_l = j0_l+K2[v]*j2_l
+            
+            if (ff_k < 0):
+                ff_k = 0
+                
+            if (ff_l < 0):
+                ff_l = 0
+                                    
+            dw_k = exp(-0.5*Q_sq*Uiso[u])
+            dw_l = exp(-0.5*Q_sq*Uiso[v])
+            
+            f_k = occ_k*ff_k*dw_k
+            f_l = occ_l*ff_l*dw_l
+            
+            f_k_real = f_k.real
+            f_l_real = f_l.real
+            
+            f_k_imag = f_k.imag
+            f_l_imag = f_l.imag
             
             factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
-                            
-            value += factors*(A_ij[p]*a_ij+B_ij[p]*b_ij)*multiplicity[p]
+            
+            for p in prange(n_pair, nogil=True):
+            
+                Qr_ij = Q[q]*r_ij[a,p]
+                
+                a_ij = sin(Qr_ij)/Qr_ij
+                b_ij = (a_ij-cos(Qr_ij))/Qr_ij
+                                                
+                value += factors*(A_ij[a,p]*a_ij+B_ij[a,p]*b_ij)*mult[p]
                          
         summation[q] = value
                          
@@ -304,7 +437,7 @@ def magnetic(double [::1] Sx,
         s_ = Q[q]*inv_M_SP
         s_sq = s_*s_
         
-        for p in prange(n_xyz, nogil=True):
+        for p in prange(n_atm, nogil=True):
             
             w = n[p]
             
@@ -338,7 +471,7 @@ def magnetic(double [::1] Sx,
       
     for q in prange(n_hkl, nogil=True):
         
-        I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
+        I[q] = (auto[q]/n_atm+2*summation[q]/m_xyz)
         
     return I_np
 
@@ -370,22 +503,26 @@ def occupational(double [::1] A_r,
     cdef Py_ssize_t mw = (nw+1) // 2
     
     cdef Py_ssize_t n_hkl = Q.shape[0]
+    
+    cdef Py_ssize_t m_uvw = mu*mv*mw
     cdef Py_ssize_t n_uvw = nu*nv*nw
     
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
     
-    i_np, j_np = np.triu_indices(m_xyz, k=1)
-    
-    m_np = np.arange(n_xyz, dtype=int)
+    m_np = np.arange(n_atm, dtype=int)
     n_np = np.mod(m_np, n_atm)
     
     A_r_np = np.copy(A_r, order='C')
+
+    c_uvw = np.arange(n_uvw)
+                    
+    cu, cv, cw = np.unravel_index(c_uvw, (nu,nv,nw))
         
-    iu, iv, iw, i_atm = np.unravel_index(i_np, (mu,mv,mw,n_atm))
-    ju, jv, jw, j_atm = np.unravel_index(j_np, (mu,mv,mw,n_atm))
-        
-    cu, cv, cw = np.unravel_index(np.arange(n_uvw), (nu,nv,nw))
+    i_lat, j_lat = np.triu_indices(m_uvw, k=1)
+    
+    iu, iv, iw = np.unravel_index(i_lat, (mu,mv,mw))
+    ju, jv, jw = np.unravel_index(j_lat, (mu,mv,mw))
     
     iu = np.mod(iu+cu[:,None], nu)
     iv = np.mod(iv+cv[:,None], nv)
@@ -395,45 +532,94 @@ def occupational(double [::1] A_r,
     jv = np.mod(jv+cv[:,None], nv)
     jw = np.mod(jw+cw[:,None], nw)
     
-    i_np = np.ravel_multi_index((iu,iv,iw,i_atm), (nu,nv,nw,n_atm))
-    j_np = np.ravel_multi_index((ju,jv,jw,j_atm), (nu,nv,nw,n_atm))
+    i_lat = np.ravel_multi_index((iu,iv,iw), (nu,nv,nw))
+    j_lat = np.ravel_multi_index((ju,jv,jw), (nu,nv,nw))
     
-    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*m_xyz*(m_xyz-1)//2)
+    pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
+        
+    i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
     
-    pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
+    i_atm, j_atm = np.triu_indices(n_atm, k=1)
     
-    cdef double [::1] multiplicity = multiplicity_np*1.
+    i_atms = np.concatenate((i_atm,j_atm))
+    j_atms = np.concatenate((j_atm,i_atm))
+   
+    i_atms = np.concatenate((i_atms,np.arange(n_atm)))
+    j_atms = np.concatenate((j_atms,np.arange(n_atm)))
+   
+    is_np = np.ravel_multi_index((i_lat,i_atms[:,None]), (n_uvw,n_atm))
+    js_np = np.ravel_multi_index((j_lat,j_atms[:,None]), (n_uvw,n_atm))
     
-    i_np, j_np = pairs
+    i_np = np.ravel_multi_index((c_uvw,i_atm[:,None]), (n_uvw,n_atm))
+    j_np = np.ravel_multi_index((c_uvw,j_atm[:,None]), (n_uvw,n_atm))
     
-    k_np = np.mod(i_np, n_atm)
-    l_np = np.mod(j_np, n_atm)
+    iu, iv, iw = np.unravel_index(i_lat, (nu,nv,nw))
+    ju, jv, jw = np.unravel_index(j_lat, (nu,nv,nw))
+    
+    diff_u = ju-iu
+    diff_v = jv-iv
+    diff_w = jw-iw
+    
+    diff_u[diff_u >= mu] -= nu
+    diff_v[diff_v >= mv] -= nv
+    diff_w[diff_w >= mw] -= nw
+    
+    diff_u[diff_u <= -mu] += nu
+    diff_v[diff_v <= -mv] += nv
+    diff_w[diff_w <= -mw] += nw
+    
+    mult_s_np = (mu-np.abs(diff_u))*(mv-np.abs(diff_v))*(mw-np.abs(diff_w))*1.
+        
+    cdef double [::1] mult_s = mult_s_np
+    cdef double [::1] mult = np.full(n_uvw, m_uvw, dtype=float)
     
     rx_np = np.copy(rx, order='C')
     ry_np = np.copy(ry, order='C')
     rz_np = np.copy(rz, order='C')
+    
+    rx_s_ij_np = rx_np[js_np]-rx_np[is_np]
+    ry_s_ij_np = ry_np[js_np]-ry_np[is_np]
+    rz_s_ij_np = rz_np[js_np]-rz_np[is_np]
+    
+    rs_ij_np = np.sqrt(rx_s_ij_np**2+ry_s_ij_np**2+rz_s_ij_np**2)
     
     rx_ij_np = rx_np[j_np]-rx_np[i_np]
     ry_ij_np = ry_np[j_np]-ry_np[i_np]
     rz_ij_np = rz_np[j_np]-rz_np[i_np]
     
     r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
-                
+        
+    ks_np = np.mod(is_np[:,0], n_atm)
+    ls_np = np.mod(js_np[:,0], n_atm)
+    
+    k_np = np.mod(i_np[:,0], n_atm)
+    l_np = np.mod(j_np[:,0], n_atm)
+                    
     cdef double [::1] delta_ii = (1+A_r_np[m_np])**2
-    cdef double [::1] delta_ij = (1+A_r_np[i_np])*(1+A_r_np[j_np])
+    
+    cdef double [:,::1] delta_s_ij = (1+A_r_np[is_np])*(1+A_r_np[js_np])
+    cdef double [:,::1] delta_ij = (1+A_r_np[i_np])*(1+A_r_np[j_np])
+    
+    cdef long [::1] ks = ks_np.astype(int)
+    cdef long [::1] ls = ls_np.astype(int)
     
     cdef long [::1] k = k_np.astype(int)
     cdef long [::1] l = l_np.astype(int)
-    cdef long [::1] m = m_np.astype(int)
+    
     cdef long [::1] n = n_np.astype(int)
     
-    cdef double [::1] r_ij = r_ij_np
-        
+    cdef double [:,::1] rs_ij = rs_ij_np
+    cdef double [:,::1] r_ij = r_ij_np
+    
     cdef double [::1] summation = np.zeros(Q.shape[0])
     
     cdef double [::1] auto = np.zeros(Q.shape[0])
     
-    cdef Py_ssize_t n_pairs = r_ij.shape[0]
+    cdef Py_ssize_t n_pairs = rs_ij.shape[1]
+    cdef Py_ssize_t n_pair = r_ij.shape[1]
+    
+    cdef Py_ssize_t n_types = n_atm*n_atm
+    cdef Py_ssize_t n_type = n_atm*(n_atm-1)//2
     
     cdef double Qr_ij, a_ij
                 
@@ -475,7 +661,7 @@ def occupational(double [::1] A_r,
     
     cdef double [::1] I = I_np
     
-    cdef Py_ssize_t p, q, r, u, v, w
+    cdef Py_ssize_t a, p, q, r, u, v, w
     
     cdef double inv_M_SP = 1/(4*np.pi)
     
@@ -522,9 +708,9 @@ def occupational(double [::1] A_r,
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
                 
-        for p in prange(n_pairs, nogil=True):
+        for a in range(n_types):
             
-            u, v = k[p], l[p]
+            u, v = ks[a], ls[a]
             
             occ_k = occupancy[u]
             occ_l = occupancy[v]
@@ -560,14 +746,64 @@ def occupational(double [::1] A_r,
             f_k_imag = f_k.imag
             f_l_imag = f_l.imag
             
-            Qr_ij = Q[q]*r_ij[p]
+            factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
             
-            a_ij = sin(Qr_ij)/Qr_ij
+            for p in prange(n_pairs, nogil=True):
+                                
+                Qr_ij = Q[q]*rs_ij[a,p]
+                                
+                a_ij = sin(Qr_ij)/Qr_ij
+                                                
+                value += factors*delta_s_ij[a,p]*a_ij*mult_s[p]
+                
+        for a in range(n_type):
+            
+            u, v = k[a], l[a]
+            
+            occ_k = occupancy[u]
+            occ_l = occupancy[v]
+            
+            if neutron:
+                
+                sl_k = b[u]
+                sl_l = b[v]
+                
+            else:
+                                                                    
+                sl_k = a1[u]*exp(-b1[u]*s_sq)\
+                     + a2[u]*exp(-b2[u]*s_sq)\
+                     + a3[u]*exp(-b3[u]*s_sq)\
+                     + a4[u]*exp(-b4[u]*s_sq)\
+                     + c[u]
+                     
+                sl_l = a1[v]*exp(-b1[v]*s_sq)\
+                     + a2[v]*exp(-b2[v]*s_sq)\
+                     + a3[v]*exp(-b3[v]*s_sq)\
+                     + a4[v]*exp(-b4[v]*s_sq)\
+                     + c[v]
+                                    
+            dw_k = exp(-0.5*Q_sq*Uiso[u])
+            dw_l = exp(-0.5*Q_sq*Uiso[v])
+            
+            f_k = occ_k*sl_k*dw_k
+            f_l = occ_l*sl_l*dw_l
+            
+            f_k_real = f_k.real
+            f_l_real = f_l.real
+            
+            f_k_imag = f_k.imag
+            f_l_imag = f_l.imag
             
             factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
-                            
-            value += factors*delta_ij[p]*a_ij*multiplicity[p]
-                         
+            
+            for p in prange(n_pair, nogil=True):
+                                
+                Qr_ij = Q[q]*r_ij[a,p]
+                                
+                a_ij = sin(Qr_ij)/Qr_ij
+                                                
+                value += factors*delta_ij[a,p]*a_ij*mult[p]
+                          
         summation[q] = value
                          
     for q in range(n_hkl):
@@ -581,7 +817,7 @@ def occupational(double [::1] A_r,
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
         
-        for p in prange(n_xyz, nogil=True):
+        for p in prange(n_atm, nogil=True):
             
             w = n[p]
             
@@ -612,7 +848,7 @@ def occupational(double [::1] A_r,
       
     for q in prange(n_hkl, nogil=True):
         
-        I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
+        I[q] = (auto[q]/n_atm+2*summation[q]/m_xyz)
         
     return I_np
         
@@ -753,9 +989,11 @@ def displacive(double [::1] Ux,
     cdef double [:,::1] U_ij = U_ij_np
     
     Us_ij_mul_rs_ij = Us_ij_np*rs_ij_np
+    
     U_ij_mul_r_ij = U_ij_np*r_ij_np
     
     Us_ij_mul_rs_ij[np.isclose(Us_ij_mul_rs_ij, 0)] = 1
+    
     U_ij_mul_r_ij[np.isclose(U_ij_mul_r_ij, 0)] = 1
     
     Us_hat_ij_dot_rs_hat_ij = (Ux_s_ij_np*rx_s_ij_np
@@ -1097,20 +1335,24 @@ def structural(double [::1] occupancy,
     cdef Py_ssize_t mw = (nw+1) // 2
     
     cdef Py_ssize_t n_hkl = Q.shape[0]
+    
+    cdef Py_ssize_t m_uvw = mu*mv*mw
     cdef Py_ssize_t n_uvw = nu*nv*nw
     
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
     
-    i_np, j_np = np.triu_indices(m_xyz, k=1)
-    
-    m_np = np.arange(n_xyz, dtype=int)
+    m_np = np.arange(n_atm, dtype=int)
     n_np = np.mod(m_np, n_atm)
-            
-    iu, iv, iw, i_atm = np.unravel_index(i_np, (mu,mv,mw,n_atm))
-    ju, jv, jw, j_atm = np.unravel_index(j_np, (mu,mv,mw,n_atm))
+    
+    c_uvw = np.arange(n_uvw)
+                    
+    cu, cv, cw = np.unravel_index(c_uvw, (nu,nv,nw))
         
-    cu, cv, cw = np.unravel_index(np.arange(n_uvw), (nu,nv,nw))
+    i_lat, j_lat = np.triu_indices(m_uvw, k=1)
+    
+    iu, iv, iw = np.unravel_index(i_lat, (mu,mv,mw))
+    ju, jv, jw = np.unravel_index(j_lat, (mu,mv,mw))
     
     iu = np.mod(iu+cu[:,None], nu)
     iv = np.mod(iv+cv[:,None], nv)
@@ -1120,42 +1362,89 @@ def structural(double [::1] occupancy,
     jv = np.mod(jv+cv[:,None], nv)
     jw = np.mod(jw+cw[:,None], nw)
     
-    i_np = np.ravel_multi_index((iu,iv,iw,i_atm), (nu,nv,nw,n_atm))
-    j_np = np.ravel_multi_index((ju,jv,jw,j_atm), (nu,nv,nw,n_atm))
+    i_lat = np.ravel_multi_index((iu,iv,iw), (nu,nv,nw))
+    j_lat = np.ravel_multi_index((ju,jv,jw), (nu,nv,nw))
     
-    pairs = np.stack((i_np,j_np)).reshape(2,n_uvw*m_xyz*(m_xyz-1)//2)
+    pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
+        
+    i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
     
-    pairs, multiplicity_np = np.unique(pairs, axis=1, return_counts=True)
+    i_atm, j_atm = np.triu_indices(n_atm, k=1)
     
-    cdef double [::1] multiplicity = multiplicity_np*1.
+    i_atms = np.concatenate((i_atm,j_atm))
+    j_atms = np.concatenate((j_atm,i_atm))
+   
+    i_atms = np.concatenate((i_atms,np.arange(n_atm)))
+    j_atms = np.concatenate((j_atms,np.arange(n_atm)))
+   
+    is_np = np.ravel_multi_index((i_lat,i_atms[:,None]), (n_uvw,n_atm))
+    js_np = np.ravel_multi_index((j_lat,j_atms[:,None]), (n_uvw,n_atm))
     
-    i_np, j_np = pairs
+    i_np = np.ravel_multi_index((c_uvw,i_atm[:,None]), (n_uvw,n_atm))
+    j_np = np.ravel_multi_index((c_uvw,j_atm[:,None]), (n_uvw,n_atm))
     
-    k_np = np.mod(i_np, n_atm)
-    l_np = np.mod(j_np, n_atm)
+    iu, iv, iw = np.unravel_index(i_lat, (nu,nv,nw))
+    ju, jv, jw = np.unravel_index(j_lat, (nu,nv,nw))
+    
+    diff_u = ju-iu
+    diff_v = jv-iv
+    diff_w = jw-iw
+    
+    diff_u[diff_u >= mu] -= nu
+    diff_v[diff_v >= mv] -= nv
+    diff_w[diff_w >= mw] -= nw
+    
+    diff_u[diff_u <= -mu] += nu
+    diff_v[diff_v <= -mv] += nv
+    diff_w[diff_w <= -mw] += nw
+    
+    mult_s_np = (mu-np.abs(diff_u))*(mv-np.abs(diff_v))*(mw-np.abs(diff_w))*1.
+        
+    cdef double [::1] mult_s = mult_s_np
+    cdef double [::1] mult = np.full(n_uvw, m_uvw, dtype=float)
     
     rx_np = np.copy(rx, order='C')
     ry_np = np.copy(ry, order='C')
     rz_np = np.copy(rz, order='C')
+    
+    rx_s_ij_np = rx_np[js_np]-rx_np[is_np]
+    ry_s_ij_np = ry_np[js_np]-ry_np[is_np]
+    rz_s_ij_np = rz_np[js_np]-rz_np[is_np]
+    
+    rs_ij_np = np.sqrt(rx_s_ij_np**2+ry_s_ij_np**2+rz_s_ij_np**2)
     
     rx_ij_np = rx_np[j_np]-rx_np[i_np]
     ry_ij_np = ry_np[j_np]-ry_np[i_np]
     rz_ij_np = rz_np[j_np]-rz_np[i_np]
     
     r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
+        
+    ks_np = np.mod(is_np[:,0], n_atm)
+    ls_np = np.mod(js_np[:,0], n_atm)
+    
+    k_np = np.mod(i_np[:,0], n_atm)
+    l_np = np.mod(j_np[:,0], n_atm)
+
+    cdef long [::1] ks = ks_np.astype(int)
+    cdef long [::1] ls = ls_np.astype(int)
     
     cdef long [::1] k = k_np.astype(int)
     cdef long [::1] l = l_np.astype(int)
-    cdef long [::1] m = m_np.astype(int)
+    
     cdef long [::1] n = n_np.astype(int)
     
-    cdef double [::1] r_ij = r_ij_np
-        
+    cdef double [:,::1] rs_ij = rs_ij_np
+    cdef double [:,::1] r_ij = r_ij_np
+    
     cdef double [::1] summation = np.zeros(Q.shape[0])
     
     cdef double [::1] auto = np.zeros(Q.shape[0])
     
-    cdef Py_ssize_t n_pairs = r_ij.shape[0]
+    cdef Py_ssize_t n_pairs = rs_ij.shape[1]
+    cdef Py_ssize_t n_pair = r_ij.shape[1]
+    
+    cdef Py_ssize_t n_types = n_atm*n_atm
+    cdef Py_ssize_t n_type = n_atm*(n_atm-1)//2
     
     cdef double Qr_ij, a_ij
                 
@@ -1197,7 +1486,7 @@ def structural(double [::1] occupancy,
     
     cdef double [::1] I = I_np
     
-    cdef Py_ssize_t p, q, r, u, v, w
+    cdef Py_ssize_t a, p, q, r, u, v, w
     
     cdef double inv_M_SP = 1/(4*np.pi)
     
@@ -1244,9 +1533,9 @@ def structural(double [::1] occupancy,
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
                 
-        for p in prange(n_pairs, nogil=True):
+        for a in range(n_types):
             
-            u, v = k[p], l[p]
+            u, v = ks[a], ls[a]
             
             occ_k = occupancy[u]
             occ_l = occupancy[v]
@@ -1282,14 +1571,64 @@ def structural(double [::1] occupancy,
             f_k_imag = f_k.imag
             f_l_imag = f_l.imag
             
-            Qr_ij = Q[q]*r_ij[p]
+            factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
             
-            a_ij = sin(Qr_ij)/Qr_ij
+            for p in prange(n_pairs, nogil=True):
+                                
+                Qr_ij = Q[q]*rs_ij[a,p]
+                                
+                a_ij = sin(Qr_ij)/Qr_ij
+                                                
+                value += factors*a_ij*mult_s[p]
+                
+        for a in range(n_type):
+            
+            u, v = k[a], l[a]
+            
+            occ_k = occupancy[u]
+            occ_l = occupancy[v]
+            
+            if neutron:
+                
+                sl_k = b[u]
+                sl_l = b[v]
+                
+            else:
+                                                                    
+                sl_k = a1[u]*exp(-b1[u]*s_sq)\
+                     + a2[u]*exp(-b2[u]*s_sq)\
+                     + a3[u]*exp(-b3[u]*s_sq)\
+                     + a4[u]*exp(-b4[u]*s_sq)\
+                     + c[u]
+                     
+                sl_l = a1[v]*exp(-b1[v]*s_sq)\
+                     + a2[v]*exp(-b2[v]*s_sq)\
+                     + a3[v]*exp(-b3[v]*s_sq)\
+                     + a4[v]*exp(-b4[v]*s_sq)\
+                     + c[v]
+                                    
+            dw_k = exp(-0.5*Q_sq*Uiso[u])
+            dw_l = exp(-0.5*Q_sq*Uiso[v])
+            
+            f_k = occ_k*sl_k*dw_k
+            f_l = occ_l*sl_l*dw_l
+            
+            f_k_real = f_k.real
+            f_l_real = f_l.real
+            
+            f_k_imag = f_k.imag
+            f_l_imag = f_l.imag
             
             factors = (f_k_real*f_l_real+f_k_imag*f_l_imag)/n_uvw
-                            
-            value += factors*a_ij*multiplicity[p]
-                         
+            
+            for p in prange(n_pair, nogil=True):
+                                
+                Qr_ij = Q[q]*r_ij[a,p]
+                                
+                a_ij = sin(Qr_ij)/Qr_ij
+                                                
+                value += factors*a_ij*mult[p]
+                          
         summation[q] = value
                          
     for q in range(n_hkl):
@@ -1303,7 +1642,7 @@ def structural(double [::1] occupancy,
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
         
-        for p in prange(n_xyz, nogil=True):
+        for p in prange(n_atm, nogil=True):
             
             w = n[p]
             
@@ -1329,11 +1668,11 @@ def structural(double [::1] occupancy,
             f_n_imag = f_n.imag
             
             value += (f_n_real*f_n_real+f_n_imag*f_n_imag)
-            
+                    
         auto[q] = value
       
     for q in prange(n_hkl, nogil=True):
         
-        I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
+        I[q] = (auto[q]/n_atm+2*summation[q]/m_xyz)
         
     return I_np
