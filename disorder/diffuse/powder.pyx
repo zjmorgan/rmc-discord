@@ -1093,9 +1093,9 @@ def displacive(double [::1] Ux,
     for r in range(order+1):
         t = r
         for s in range(r // 2+1):
-            sign[t] = (-1)**r
+            sign[t] = (-1)**(r-s)
             t += order-1-2*s
-
+            
     cdef double [::1] coeff = sign*num/den
                 
     for p in range(n_atm):
