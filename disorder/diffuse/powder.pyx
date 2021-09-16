@@ -1095,9 +1095,9 @@ def displacive(double [::1] Ux,
         for s in range(r // 2+1):
             sign[t] = (-1)**(r-s)
             t += order-1-2*s
-            
+    
     cdef double [::1] coeff = sign*num/den
-                
+                    
     for p in range(n_atm):
         
         atm = atms[p]
@@ -1179,19 +1179,23 @@ def displacive(double [::1] Ux,
                         a_ij[thread_id,r] = (2*r-1)/Qr_ij*a_ij[thread_id,r-1]\
                                                          -a_ij[thread_id,r-2]
                                        
-                values = 0
                 for r in range(order+1):
                     t = r
                     for s in range(r // 2+1):
-                        A_ij[thread_id,t] = coeff[t]/Qr_ij_pow
-                        values = values+A_ij[thread_id,t]*Qu_ij_pow\
-                               * Us_hat_ij_dot_rs_hat_ij_pow[a,p,r-2*s]\
-                               * a_ij[thread_id,r-s]
+                        A_ij[thread_id,t] = coeff[t]*Qu_ij_pow/Qr_ij_pow\
+                            * Us_hat_ij_dot_rs_hat_ij_pow[a,p,r-2*s]
                         t = t+order-1-2*s    
                         Qr_ij_pow = Qr_ij_pow*Qr_ij
                     Qr_ij_pow = 1
                     Qu_ij_pow = Qu_ij_pow*Qu_ij
-                    
+                
+                values = 0
+                for r in range(order+1):
+                    t = r
+                    for s in range(r // 2+1):
+                        values = values+A_ij[thread_id,t]*a_ij[thread_id,r-s]
+                        t = t+order-1-2*s    
+
                 value += factors*values*mult_s[p]
                             
         for a in range(n_type):
@@ -1209,16 +1213,16 @@ def displacive(double [::1] Ux,
             else:
           
                 sl_k = a1[u]*exp(-b1[u]*s_sq)\
-                     + a2[u]*exp(-b2[u]*s_sq)\
-                     + a3[u]*exp(-b3[u]*s_sq)\
-                     + a4[u]*exp(-b4[u]*s_sq)\
-                     + c[u]
+                      + a2[u]*exp(-b2[u]*s_sq)\
+                      + a3[u]*exp(-b3[u]*s_sq)\
+                      + a4[u]*exp(-b4[u]*s_sq)\
+                      + c[u]
                      
                 sl_l = a1[v]*exp(-b1[v]*s_sq)\
-                     + a2[v]*exp(-b2[v]*s_sq)\
-                     + a3[v]*exp(-b3[v]*s_sq)\
-                     + a4[v]*exp(-b4[v]*s_sq)\
-                     + c[v]
+                      + a2[v]*exp(-b2[v]*s_sq)\
+                      + a3[v]*exp(-b3[v]*s_sq)\
+                      + a4[v]*exp(-b4[v]*s_sq)\
+                      + c[v]
                                     
             f_k = occ_k*sl_k
             f_l = occ_l*sl_l
@@ -1246,23 +1250,27 @@ def displacive(double [::1] Ux,
                         a_ij[thread_id,0] = sin(Qr_ij)/Qr_ij
                     elif (r == 1):
                         a_ij[thread_id,1] = (a_ij[thread_id,0]\
-                                             -cos(Qr_ij))/Qr_ij
+                                              -cos(Qr_ij))/Qr_ij
                     else:
                         a_ij[thread_id,r] = (2*r-1)/Qr_ij*a_ij[thread_id,r-1]\
-                                                         -a_ij[thread_id,r-2]
+                                                          -a_ij[thread_id,r-2]
                                        
-                values = 0
                 for r in range(order+1):
                     t = r
                     for s in range(r // 2+1):
-                        A_ij[thread_id,t] = coeff[t]/Qr_ij_pow
-                        values = values+A_ij[thread_id,t]*Qu_ij_pow\
-                               * U_hat_ij_dot_r_hat_ij_pow[a,p,r-2*s]\
-                               * a_ij[thread_id,r-s]
+                        A_ij[thread_id,t] = coeff[t]*Qu_ij_pow/Qr_ij_pow\
+                            * U_hat_ij_dot_r_hat_ij_pow[a,p,r-2*s]
                         t = t+order-1-2*s    
                         Qr_ij_pow = Qr_ij_pow*Qr_ij
                     Qr_ij_pow = 1
                     Qu_ij_pow = Qu_ij_pow*Qu_ij
+                
+                values = 0
+                for r in range(order+1):
+                    t = r
+                    for s in range(r // 2+1):
+                        values = values+A_ij[thread_id,t]*a_ij[thread_id,r-s]
+                        t = t+order-1-2*s  
                     
                 value += factors*values*mult[p]
                     
