@@ -914,3 +914,35 @@ def plot_calc_3d(canvas, data, hkl, slice_hkl, i_hkl, T,
         
     cb.ax.tick_params(labelsize='small') 
     canvas.draw()
+    
+def plot_calc_1d(canvas, data, Q, indices, labels, norm, vmin, vmax):
+        
+    if (norm == 'Logarithmic'):
+        if (np.isclose(vmin, 0) and np.isclose(vmax, 0)):
+            vmin, vmax = 1e-3, 1e-2
+        normalize = colors.LogNorm(vmin=vmin, vmax=vmax)
+    else:
+        normalize = colors.Normalize(vmin=vmin, vmax=vmax)
+                
+    fig = canvas.figure
+    fig.clear()   
+    
+    ax = fig.add_subplot(111)
+        
+    for i in indices:
+        ax.plot(Q, data[i], label=labels[i])
+    
+    ax.legend()
+
+    ax.set_xlabel(r'Q/2\pi$ [Å]', fontsize='small')
+    ax.set_ylabel(r'$I(Q)$ [arb. unit]', fontsize='small')  
+
+    ax.xaxis.tick_bottom()
+    
+    ax.minorticks_on()
+    
+    ax.axes.tick_params(labelsize='small')
+
+    fig.tight_layout(pad=3.24)
+    
+    canvas.draw()

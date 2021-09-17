@@ -271,7 +271,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_prof_calc_1d.addItem('Bragg only')
         self.comboBox_prof_calc_1d.addItem('Total and Bragg')
         self.comboBox_prof_calc_1d.addItem('Diffuse and Bragg')
-        self.comboBox_prof_calc_1d.addItem('Total and Bragg')
+        self.comboBox_prof_calc_1d.addItem('Total and Diffuse')
         self.comboBox_prof_calc_1d.addItem('Total, diffuse, and Bragg')
         
         self.comboBox_slice_calc_3d.addItem('h =')
@@ -2613,7 +2613,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         lbl = lbl.split(',')
         self.tableWidget_calc_1d.setHorizontalHeaderLabels(lbl)
         
-        lbl = 'Q'
+        lbl = ['Q/2π']
         self.tableWidget_calc_1d.setVerticalHeaderLabels(lbl)
         
     def clear_recalculation_1d_table(self):
@@ -2737,7 +2737,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_plot_calc_1d_canvas(self):
         return self.canvas_calc_1d
     
-    def clear_canvas_calc_1d_canvas(self):
+    def clear_calc_1d_canvas(self):
         self.canvas_calc_1d.figure.clear()
         self.canvas_calc_1d.draw()
         self.lineEdit_min_calc_1d.setText('')
@@ -2940,7 +2940,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                     item.setTextAlignment(alignment)
                     if (j == 0): item.setFlags(flags)
 
-        delegate = SizeIntDelegate(self.tableWidget_calc)
+        delegate = SizeIntDelegate(self.tableWidget_calc_3d)
         self.tableWidget_calc_3d.setItemDelegateForColumn(1, delegate)
         delegate = StandardDoubleDelegate(self.tableWidget_calc_3d)
         self.tableWidget_calc_3d.setItemDelegateForColumn(2, delegate)
@@ -3106,7 +3106,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def get_plot_calc_3d_canvas(self):
         return self.canvas_calc_3d
     
-    def clear_canvas_calc_3d_canvas(self):
+    def clear_calc_3d_canvas(self):
         self.canvas_calc_3d.figure.clear()
         self.canvas_calc_3d.draw()
         self.lineEdit_min_calc_3d.setText('')

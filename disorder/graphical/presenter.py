@@ -254,6 +254,7 @@ class Presenter:
                 self.signal_m = self.model.mask_array(signal)
                 self.error_sq_m = self.model.mask_array(error_sq)
                 self.view.format_experiment_table()
+                self.view.format_recalculation_1d_table()
                 self.view.format_recalculation_3d_table()
                 self.connect_experiment_buttons()
                 self.connect_experiment_table_signals()
@@ -286,7 +287,7 @@ class Presenter:
                 self.draw_plot_ref()
                 self.draw_plot_chi_sq()
                 technique = self.view.get_type()
-                self.view.set_type_recalc_3d(technique)
+                self.view.set_type_recalc(technique)
                 magnetic = True if technique == 'Neutron' else False
                 self.view.enable_disorder_mag_recalc_3d(magnetic)
                 self.view.enable_disorder_occ_recalc_3d(True)
@@ -1787,6 +1788,29 @@ class Presenter:
         self.redraw_plot_exp()
                 
         self.view.enable_cropbin_signals(True)
+        
+    def populate_recalculation_1d_table(self):
+        
+        dQ, nQ, min_Q, max_Q = 0.1, 91, 0.1, 1.0
+        
+        self.view.create_recalculation_1d_table(dQ, nQ, min_Q, max_Q)
+        
+        self.view.format_recalculation_1d_table()
+        
+        self.view.item_changed_recalculation_1d_table(
+            self.update_recalculation_1d_table
+        )
+        
+    def update_recalculation_1d_table(self):
+                
+        dQ, nQ, min_Q, max_Q = self.view.get_recalculation_1d_binning()
+                
+        self.view.block_recalculation_1d_table_signals()
+        
+        self.view.set_recalculation_1d_binning_h(nQ, min_Q, max_Q)
+        
+        self.view.format_recalculation_1d_table()
+        self.view.unblock_recalculation_1d_table_signals()
                 
     def populate_recalculation_3d_table(self):
         
@@ -1844,6 +1868,7 @@ class Presenter:
                 
         self.reset_data()
         self.connect_experiment_buttons()
+        self.populate_recalculation_1d_table()
         self.populate_recalculation_3d_table()
         self.view.enable_load_NXS(True)
             
@@ -2158,6 +2183,19 @@ class Presenter:
         self.temperature = [self.view.get_prefactor()]
         self.scale = []
         
+    def populate_atom_site_recalculation_1d_table(self):
+    
+        occupancy, Uiso, moment = self.occupancy, self.Uiso, self.mu
+    
+        self.view.clear_atom_site_recalculation_1d_table()
+        
+        site, atm = self.site, self.atm
+        _, ind = np.unique(site, return_index=True)
+        
+        data = atm[ind], occupancy[ind], Uiso[ind], moment[ind]
+                
+        self.view.create_atom_site_recalculation_1d_table(*data)
+        
     def populate_atom_site_recalculation_3d_table(self):
     
         occupancy, Uiso, moment = self.occupancy, self.Uiso, self.mu
@@ -2393,9 +2431,13 @@ class Presenter:
                 self.displacive = self.view.get_disorder_dis()
                 
                 technique = self.view.get_type()
-                self.view.set_type_recalc_3d(technique)
+                self.view.set_type_recalc(technique)
                 
                 magnetic = True if technique == 'Neutron' else False
+                
+                self.view.enable_disorder_mag_recalc_1d(magnetic)
+                self.view.enable_disorder_occ_recalc_1d(True)
+                self.view.enable_disorder_dis_recalc_1d(True)
        
                 self.view.enable_disorder_mag_recalc_3d(magnetic)
                 self.view.enable_disorder_occ_recalc_3d(True)
@@ -2410,6 +2452,10 @@ class Presenter:
                     self.filter_sigma()
                     
                     self.allocated = True
+                    
+                if (not self.view.get_atom_site_recalculation_1d_row_count()):
+                    
+                    self.populate_atom_site_recalculation_1d_table()
                     
                 if (not self.view.get_atom_site_recalculation_3d_row_count()):
                     
@@ -2475,7 +2521,8 @@ class Presenter:
             self.view.clear_plot_chi_sq_canvas()
             self.view.clear_plot_1d_canvas()
             self.view.clear_plot_3d_canvas()
-            self.view.clear_canvas_calc_canvas()
+            self.view.clear_calc_1d_canvas()
+            self.view.clear_calc_3d_canvas()
             
             self.view.clear_pairs_1d_table()
             self.view.clear_pairs_3d_table()
@@ -3271,7 +3318,7 @@ class Presenter:
             
             dQ, nQ, min_Q, max_Q = self.view.get_recalculation_1d_binning()
             
-            Q_range = [2*np.pi*Q_range[0], 2*np.pi*Q_range[1]]
+            Q_range = [2*np.pi*min_Q, 2*np.pi*max_Q]
                                     
             active = self.view.get_active_atom_site_1d()
             
@@ -3289,6 +3336,8 @@ class Presenter:
                                         
             nu, nv, nw = self.nu, self.nv, self.nw
             
+            rx, ry, rz = self.rx, self.ry, self.rz
+            
             fname_cif = self.fname_cif
             
             folder = os.path.dirname(fname_cif)
@@ -3296,7 +3345,7 @@ class Presenter:
             
             fname = self.fname
             
-            B, R, D, = self.B, self.R, self.D
+            D = self.D
             
             occupancy = self.occupancy[mask]
             
@@ -3322,48 +3371,10 @@ class Presenter:
                 U11, U22, U33, U23, U13, U12 = ADPs
             
             # ---
-            
-            twins = np.zeros((1,3,3))
-            variants = np.array([1.])
-            
-            twins[0,:,:] = np.eye(3)
-                                    
-            axes = self.view.get_axes()       
-            
-            if (axes == '(h00), (0k0), (00l)'):
-                T = np.eye(3)
-            else:                
-                T = np.array([[1, -1,  0],
-                              [1,  1,  0],
-                              [0,  0,  1]])*1.      
-            
-            laue = self.view.get_laue()
-                    
-            if (laue == 'cif'):
-                
-                laue = self.model.find_laue(folder, filename)
                             
-            self.intensity = np.zeros((nh,nk,nl))
-                        
-            indices, inverses, operators, \
-            Nu, Nv, Nw, \
-            symop = self.model.reduced_crystal_symmetry(
-                        h_range, k_range, l_range, nh, nk, nl, 
-                        nu, nv, nw, T, laue)
-                                                    
-            if self.view.get_disorder_dis_recalc_1d() or \
-               self.view.get_disorder_struct_recalc_1d():
-                
-                p = self.view.get_order_calc_1d()
-                
-                lat = self.view.get_lattice()
-                
-                cent = self.view.get_centering_calc_1d()
-                
-                if (lat == 'Rhombohedral'): 
-                    if (cent == 'R'): cent = 'P'
-                        
-                coeffs, even, cntr = self.model.displacive_parameters(p, cent)
+            self.ds_intensity = np.zeros(nQ)
+            self.ds_bragg_intensity = np.zeros(nQ)
+            self.ds_diffuse_intensity = np.zeros(nQ)
                         
             for run in range(runs):               
                     
@@ -3371,54 +3382,46 @@ class Presenter:
                     
                     I_calc = self.model.magnetic_intensity_1d(
                                  fname, run, occupancy, 
-                                 U11, U22, U33, U23, U13, U12, ux, uy, uz, ion,
-                                 h_range, k_range, l_range, indices, symop,
-                                 T, B, R, D, twins, variants, nh, nk, nl, 
-                                 nu, nv, nw, Nu, Nv, Nw, g, mask)
+                                 U11, U22, U33, U23, U13, U12, rx, ry, rz, ion,
+                                 Q_range, nQ, D, nu, nv, nw, g, mask)
                     
-                    self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
+                    self.ds_intensity[:] += I_calc
                                             
                 elif self.view.get_disorder_occ_recalc_1d():
                                         
                     I_calc = self.model.occupational_intensity_1d(
                                  fname, run, occupancy, 
-                                 U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
-                                 h_range, k_range, l_range, indices, symop,
-                                 T, B, R, D, twins, variants, nh, nk, nl,
-                                 nu, nv, nw, Nu, Nv, Nw, mask)
+                                 U11, U22, U33, U23, U13, U12, rx, ry, rz, atm,
+                                 Q_range, nQ, D, nu, nv, nw, mask)
                                                             
-                    self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
+                    self.ds_intensity[:] += I_calc
                     
                 elif self.view.get_disorder_dis_recalc_1d():
                             
                     I_calc = self.model.displacive_intensity_1d(
-                                 fname, run, coeffs, occupancy, ux, uy, uz, 
-                                 atm, h_range, k_range, l_range, indices, 
-                                 symop, T, B, R, twins, variants, nh, nk, nl,
-                                 nu, nv, nw, Nu, Nv, Nw, p, even, cntr, mask)
+                                 fname, run, coeffs, occupancy, rx, ry, rz, 
+                                 Q_range, nQ, D, nu, nv, nw, mask)
                                         
-                    self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
-                    
-                elif self.view.get_disorder_struct_recalc_1d():
-                            
-                    I_calc = self.model.structural_intensity_1d(
-                                occupancy, U11, U22, U33, U23, U13, U12, 
-                                ux, uy, uz, atm,
-                                h_range, k_range, l_range, indices, symop,
-                                T, B, R, D, twins, variants, nh, nk, nl,
-                                nu, nv, nw, Nu, Nv, Nw, cntr, mask)
-                                                            
-                    self.intensity[:,:,:] += I_calc[inverses].reshape(nh,nk,nl)
-                                  
-                self.intensity /= runs*operators.shape[0]
+                    self.ds_intensity[:] += I_calc
+                        
+                I_calc = self.model.structural_intensity_1d(
+                             occupancy, U11, U22, U33, U23, U13, U12, 
+                             rx, ry, rz, atm, Q_range, nQ, D, 
+                             nu, nv, nw, mask)
+                                                        
+                self.ds_bragg_intensity[:] += I_calc
                 
-                self.recalculation_1d_blur()
+            if (not self.view.get_disorder_mag_recalc_1d() and \
+                not self.view.get_disorder_occ_recalc_1d() and \
+                not self.view.get_disorder_dis_recalc_1d()):
+                self.ds_intensity =self.ds_bragg_intensity
                 
-            return laue
-        
-    def recalculate_intensity_1d_output(self, data):
-        
-        self.view.set_laue(data)
+            self.ds_diffuse_intensity = self.ds_intensity\
+                                      - self.ds_bragg_intensity
+
+            self.ds_intensity /= runs
+            self.ds_bragg_intensity /= runs
+            self.ds_diffuse_intensity /= runs                                        
 
     def recalculate_intensity_1d_complete(self):
                 
@@ -3435,9 +3438,8 @@ class Presenter:
                         
             self.recalc_1d = self.view.worker(
                 self.recalculate_intensity_1d_thread)
-            self.view.finished(self.recalc,
+            self.view.finished(self.recalc_1d,
                                self.recalculate_intensity_1d_complete)
-            self.view.result(self.recalc, self.recalculate_intensity_1d_output)
             self.threadpool.start(self.recalc_1d)
             
     def redraw_plot_calc_1d(self):
@@ -3454,70 +3456,42 @@ class Presenter:
         if self.intensity is not None:
         
             canvas = self.view.get_plot_calc_1d_canvas()
-            data = self.intensity
             
-            B = self.B
+            data = [self.ds_intensity,
+                    self.ds_bragg_intensity,
+                    self.ds_diffuse_intensity]
             
-            axes = self.view.get_axes() 
+            labels = ['Total', 'Bragg', 'Diffuse']
             
-            if (axes == '(h00), (0k0), (00l)'):
-                T = np.eye(3)
-            else:                
-                T = np.array([[1, -1,  0],
-                              [1,  1,  0],
-                              [0,  0,  1]])*1.   
+            dQ, nQ, min_Q, max_Q = self.view.get_recalculation_1d_binning()
             
-            hkl = self.view.get_slice_hkl_calc_1d()
+            profiles = self.view.get_profiles_calc_1d()
             
-            matrix_h, scale_h = self.model.matrix_transform(B, 'h', T=T)
-            matrix_k, scale_k = self.model.matrix_transform(B, 'k', T=T)
-            matrix_l, scale_l = self.model.matrix_transform(B, 'l', T=T)
-            
-            dh, nh, min_h, max_h = self.view.get_recalculation_1d_binning_h()
-            dk, nk, min_k, max_k = self.view.get_recalculation_1d_binning_k()
-            dl, nl, min_l, max_l = self.view.get_recalculation_1d_binning_l()
-            
-            slice_hkl = self.view.get_slice_calc_1d()
-                           
-            if (hkl == 'h ='):
-                i_hkl = (nh-1) // 2
-                if (slice_hkl is not None):
-                    i_hkl = self.model.slice_index(min_h, max_h, nh, slice_hkl) 
-                slice_hkl = self.model.slice_value(min_h, max_h, nh, i_hkl)
-                self.view.set_slice_calc_1d(slice_hkl)
-            elif (hkl == 'k ='):
-                i_hkl = (nk-1) // 2
-                if (slice_hkl is not None):
-                    i_hkl = self.model.slice_index(min_k, max_k, nk, slice_hkl)
-                slice_hkl = self.model.slice_value(min_k, max_k, nk, i_hkl)           
-                self.view.set_slice_calc_1d(slice_hkl)
-            elif (hkl == 'l ='):
-                i_hkl = (nl-1) // 2
-                if (slice_hkl is not None):
-                    i_hkl = self.model.slice_index(min_l, max_l, nl, slice_hkl)
-                slice_hkl = self.model.slice_value(min_l, max_l, nl, i_hkl)
-                self.view.set_slice_calc_1d(slice_hkl)
+            if (profiles == 'Total only'):
+                indices = [0]
+            elif (profiles == 'Diffuse only'): 
+                indices = [1]
+            elif (profiles == 'Bragg only'):
+                indices = [0]
+            elif (profiles == 'Total and Bragg'):
+                indices = [0,1]
+            elif (profiles == 'Diffuse and Bragg'):
+                indices = [1,2]
+            elif (profiles == 'Total and Diffuse'):
+                indices = [0,2]
+            else:
+                indices = [0,1,2]
             
             norm = self.view.get_norm_calc_1d()
             
             vmin = self.view.get_min_calc_1d()
             vmax = self.view.get_max_calc_1d()
             
-            if (norm == 'Logarithmic'):
-                data_range = data.max()-data.min()
-                if (vmin <= 0):
-                    data -= vmin
-                    vmin -= vmin
-                    data += 0.001*data_range
-                    vmin += 0.001*data_range
-            
             self.view.validate_min_calc_1d()
             self.view.validate_max_calc_1d()
                                                         
-            plots.plot_calc_1d(canvas, data, hkl, slice_hkl, i_hkl, T, 
-                               min_h, min_k, min_l, max_h, max_k, max_l, 
-                               nh, nk, nl, matrix_h, matrix_k, matrix_l, 
-                               scale_h, scale_k, scale_l, norm, vmin, vmax)
+            plots.plot_calc_1d(canvas, data, Q, indices, 
+                               labels, norm, vmin, vmax)
 
     def disorder_check_mag_recalc_3d(self):
         
@@ -3765,9 +3739,10 @@ class Presenter:
                         
             self.recalc_3d = self.view.worker(
                 self.recalculate_intensity_3d_thread)
-            self.view.finished(self.recalc,
+            self.view.finished(self.recalc_3d,
                                self.recalculate_intensity_3d_complete)
-            self.view.result(self.recalc, self.recalculate_intensity_3d_output)
+            self.view.result(self.recalc_3d, 
+                             self.recalculate_intensity_3d_output)
             self.threadpool.start(self.recalc_3d)
             
     def redraw_plot_calc_3d(self):

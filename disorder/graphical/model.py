@@ -863,7 +863,7 @@ class Model:
         
     def magnetic_intensity_1d(self, fname, run, occupancy, 
                               U11, U22, U33, U23, U13, U12, rx, ry, rz, atm,
-                              Q_range, nQ, D, A, nu, nv, nw, g):
+                              Q_range, nQ, D, nu, nv, nw, g, mask):
             
         Sx, Sy, Sz = self.load_magnetic(fname, run)
         
@@ -881,13 +881,13 @@ class Model:
                 
         I_calc = powder.magnetic(Sx, Sy, Sz, occupancy, 
                                  U11, U22, U33, U23, U13, U12, 
-                                 rx, ry, rz, atm, Q, D, A, nu, nv, nw, g)
+                                 rx, ry, rz, atm, Q, D, nu, nv, nw, g)
 
         return I_calc
                                 
     def occupational_intensity_1d(self, fname, run, occupancy, 
                                   U11, U22, U33, U23, U13, U12, rx, ry, rz, 
-                                  atm, Q_range, nQ, D, A, nu, nv, nw):
+                                  atm, Q_range, nQ, D, nu, nv, nw, mask):
                     
         A_r = self.load_occupational(fname, run)
         
@@ -903,13 +903,13 @@ class Model:
                 
         I_calc = powder.occupational(A_r, occupancy, 
                                      U11, U22, U33, U23, U13, U12, 
-                                     rx, ry, rz, atm, Q, D, A, nu, nv, nw)
+                                     rx, ry, rz, atm, Q, D, nu, nv, nw)
         
         return I_calc
 
     def displacive_intensity_1d(self, fname, run, occupancy, 
                                   U11, U22, U33, U23, U13, U12, rx, ry, rz, 
-                                  atm, Q_range, nQ, D, A, nu, nv, nw, p):
+                                  atm, Q_range, nQ, D, nu, nv, nw, p, mask):
                 
         Ux, Uy, Uz = self.load_displacive(fname, run)
                 
@@ -927,13 +927,13 @@ class Model:
                 
         I_calc = powder.displacive(Ux, Uy, Uz, occupancy, 
                                    U11, U22, U33, U23, U13, U12, 
-                                   rx, ry, rz, atm, Q, D, A, nu, nv, nw, p)
+                                   rx, ry, rz, atm, Q, D, nu, nv, nw, p)
                     
         return I_calc
     
     def structural_intensity_1d(self, occupancy, 
                                 U11, U22, U33, U23, U13, U12, rx, ry, rz, 
-                                atm, Q_range, nQ, D, A, nu, nv, nw):
+                                atm, Q_range, nQ, D, nu, nv, nw, mask):
                             
         n_atm = np.size(occupancy)
                 
@@ -943,9 +943,8 @@ class Model:
         
         Q = np.linspace(Q_range[0], Q_range[1], nQ)
                 
-        I_calc = powder.occupational(A_r, occupancy, 
-                                     U11, U22, U33, U23, U13, U12, 
-                                     rx, ry, rz, atm, Q, D, A, nu, nv, nw)
+        I_calc = powder.structural(occupancy, U11, U22, U33, U23, U13, U12, 
+                                   rx, ry, rz, atm, Q, D, nu, nv, nw)
         
         return I_calc
     
