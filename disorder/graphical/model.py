@@ -807,7 +807,30 @@ class Model:
                acc_moves.tolist(), rej_moves.tolist(), \
                acc_temps.tolist(), rej_temps.tolist()
                
-    def save_recalculatio_3dn(self, fname, I_recalc):
+    def save_recalculation_1d(self, fname, I_recalc):
+        
+        I_total, I_bragg, I_diffuse = I_recalc
+        
+        np.save('{}-intensity-total-recalc-1d.npy'.format(fname), I_total)
+        np.save('{}-intensity-bragg-recalc-1d.npy'.format(fname), I_bragg)
+        np.save('{}-intensity-diffuse-recalc-1d.npy'.format(fname), I_diffuse)
+        
+    def load_recalculation_1d(self, fname):
+        
+        if os.path.isfile('{}-intensity-total-recalc-1d.npy'.format(fname)):
+
+            I_total = np.load('{}-intensity-total-recalc-1d.npy'.format(fname)) 
+            I_bragg = np.load('{}-intensity-bragg-recalc-1d.npy'.format(fname)) 
+            I_diffuse = np.load('{}-intensity-diffuse-'\
+                                'recalc-1d.npy'.format(fname)) 
+            
+            return I_total, I_bragg, I_diffuse
+        
+        else:
+            
+            return None, None, None
+               
+    def save_recalculation_3d(self, fname, I_recalc):
 
         np.save('{}-intensity-recalc-3d.npy'.format(fname), I_recalc)
         
@@ -907,9 +930,8 @@ class Model:
         
         return I_calc
 
-    def displacive_intensity_1d(self, fname, run, occupancy, 
-                                  U11, U22, U33, U23, U13, U12, rx, ry, rz, 
-                                  atm, Q_range, nQ, D, nu, nv, nw, p, mask):
+    def displacive_intensity_1d(self, fname, run, occupancy, rx, ry, rz, 
+                                atm, Q_range, nQ, D, nu, nv, nw, p, mask):
                 
         Ux, Uy, Uz = self.load_displacive(fname, run)
                 
@@ -926,7 +948,6 @@ class Model:
         Q = np.linspace(Q_range[0], Q_range[1], nQ)
                 
         I_calc = powder.displacive(Ux, Uy, Uz, occupancy, 
-                                   U11, U22, U33, U23, U13, U12, 
                                    rx, ry, rz, atm, Q, D, nu, nv, nw, p)
                     
         return I_calc
@@ -935,7 +956,7 @@ class Model:
                                 U11, U22, U33, U23, U13, U12, rx, ry, rz, 
                                 atm, Q_range, nQ, D, nu, nv, nw, mask):
                             
-        n_atm = np.size(occupancy)
+        n_atm = np.size(rx) // (nu*nv*nw)
                 
         rx = rx.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()
         ry = ry.reshape(nu,nv,nw,n_atm).T[mask].T.flatten()

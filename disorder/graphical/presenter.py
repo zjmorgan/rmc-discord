@@ -45,6 +45,7 @@ class Presenter:
         self.view.clicked_batch(self.check_batch)
         self.view.clicked_batch_1d(self.check_batch_1d)
         self.view.clicked_batch_3d(self.check_batch_3d)
+        self.view.clicked_batch_calc_1d(self.check_batch_calc_1d)
         self.view.clicked_batch_calc_3d(self.check_batch_calc_3d)
         
         self.view.clicked_disorder_mag(self.disorder_check_mag)
@@ -77,8 +78,8 @@ class Presenter:
         self.view.index_changed_norm_3d(self.plot_3d)
         
         self.view.index_changed_plot_1d(self.plot_1d)
-        self.view.index_changed_plot_3d(self.plot_3d)
-        
+        self.view.index_changed_plot_3d(self.plot_3d)        
+
         self.view.finished_editing_h(self.plot_3d)
         self.view.finished_editing_k(self.plot_3d)
         self.view.finished_editing_l(self.plot_3d)
@@ -87,7 +88,7 @@ class Presenter:
         self.view.clicked_disorder_mag_recalc_1d(
             self.disorder_check_mag_recalc_1d
         )
-        self.view.clicked_disorder_occ_recalc_3d(
+        self.view.clicked_disorder_occ_recalc_1d(
             self.disorder_check_occ_recalc_1d
         )
         self.view.clicked_disorder_dis_recalc_1d(
@@ -107,8 +108,8 @@ class Presenter:
             self.disorder_check_struct_recalc_3d
         )
         
-        self.view.finished_editing_min_calc_1d(self.draw_plot_calc_1d)
-        self.view.finished_editing_max_calc_1d(self.draw_plot_calc_1d)
+        self.view.index_changed_norm_calc_1d(self.draw_plot_calc_1d)
+        self.view.index_changed_marker_calc_1d(self.draw_plot_calc_1d) 
         
         self.view.finished_editing_min_calc_3d(self.draw_plot_calc_3d)
         self.view.finished_editing_max_calc_3d(self.draw_plot_calc_3d)
@@ -150,6 +151,10 @@ class Presenter:
         
         self.ref = None
         self.threadpool = self.view.create_thread_pool()
+        
+        self.ds_total_intensity = None
+        self.ds_bragg_intensity = None
+        self.ds_diffuse_intensity = None
         
         self.intensity = None
         
@@ -227,7 +232,14 @@ class Presenter:
         if (self.view.get_atom_site_recalculation_3d_row_count() > 0):
             if (self.intensity is not None):
                 self.model.save_recalculation_3d(self.fname, self.intensity)
-    
+                
+        if (self.view.get_atom_site_recalculation_1d_row_count() > 0):
+            if (self.ds_total_intensity is not None):
+                self.model.save_recalculation_1d(self.fname, 
+                                                 (self.ds_total_intensity, 
+                                                  self.ds_bragg_intensity, 
+                                                  self.ds_diffuse_intensity))
+
     def load_application(self):
                 
         self.fname = self.view.open_dialog_load(self.folder)
@@ -289,6 +301,9 @@ class Presenter:
                 technique = self.view.get_type()
                 self.view.set_type_recalc(technique)
                 magnetic = True if technique == 'Neutron' else False
+                self.view.enable_disorder_mag_recalc_1d(magnetic)
+                self.view.enable_disorder_occ_recalc_1d(True)
+                self.view.enable_disorder_dis_recalc_1d(True)
                 self.view.enable_disorder_mag_recalc_3d(magnetic)
                 self.view.enable_disorder_occ_recalc_3d(True)
                 self.view.enable_disorder_dis_recalc_3d(True)
@@ -331,7 +346,19 @@ class Presenter:
                 self.view.item_changed_recalculation_3d_table(
                     self.update_recalculation_3d_table
                 )
-                    
+            if (self.view.get_atom_site_recalculation_1d_row_count() > 0):
+                self.view.format_atom_site_recalculation_1d_table()
+                ds_total_intensity, ds_bragg_intensity, \
+                ds_diffuse_intensity = self.model.load_recalculation_1d(fname)
+                if (ds_total_intensity is not None):
+                    self.ds_total_intensity = ds_total_intensity
+                    self.ds_bragg_intensity = ds_bragg_intensity
+                    self.ds_diffuse_intensity = ds_diffuse_intensity
+                    self.redraw_plot_calc_1d()
+                self.view.item_changed_recalculation_1d_table(
+                    self.update_recalculation_1d_table
+                )                  
+
     def save_intensity_exp(self):
         
         filename = self.view.save_intensity_exp(self.folder)
@@ -1807,7 +1834,7 @@ class Presenter:
                 
         self.view.block_recalculation_1d_table_signals()
         
-        self.view.set_recalculation_1d_binning_h(nQ, min_Q, max_Q)
+        self.view.set_recalculation_1d_binning(nQ, min_Q, max_Q)
         
         self.view.format_recalculation_1d_table()
         self.view.unblock_recalculation_1d_table_signals()
@@ -1916,6 +1943,12 @@ class Presenter:
         visibility = True if self.view.batch_checked_3d() else False
         self.view.enable_runs_3d(visibility)
         if (not visibility): self.view.set_runs_3d(1)
+        
+    def check_batch_calc_1d(self):
+                
+        visibility = True if self.view.batch_checked_calc_1d() else False
+        self.view.enable_runs_calc_1d(visibility)
+        if (not visibility): self.view.set_runs_calc_1d(1)
         
     def check_batch_calc_3d(self):
                 
@@ -3369,10 +3402,14 @@ class Presenter:
                 ADPs = self.model.anisotropic_parameters(Uiso, D)
                 
                 U11, U22, U33, U23, U13, U12 = ADPs
+                
+            if self.view.get_disorder_dis_recalc_1d():
+                
+                p = self.view.get_order_calc_1d()
             
             # ---
                             
-            self.ds_intensity = np.zeros(nQ)
+            self.ds_total_intensity = np.zeros(nQ)
             self.ds_bragg_intensity = np.zeros(nQ)
             self.ds_diffuse_intensity = np.zeros(nQ)
                         
@@ -3385,7 +3422,7 @@ class Presenter:
                                  U11, U22, U33, U23, U13, U12, rx, ry, rz, ion,
                                  Q_range, nQ, D, nu, nv, nw, g, mask)
                     
-                    self.ds_intensity[:] += I_calc
+                    self.ds_diffuse_intensity[:] += I_calc
                                             
                 elif self.view.get_disorder_occ_recalc_1d():
                                         
@@ -3394,15 +3431,15 @@ class Presenter:
                                  U11, U22, U33, U23, U13, U12, rx, ry, rz, atm,
                                  Q_range, nQ, D, nu, nv, nw, mask)
                                                             
-                    self.ds_intensity[:] += I_calc
+                    self.ds_total_intensity[:] += I_calc
                     
                 elif self.view.get_disorder_dis_recalc_1d():
                             
                     I_calc = self.model.displacive_intensity_1d(
-                                 fname, run, coeffs, occupancy, rx, ry, rz, 
-                                 Q_range, nQ, D, nu, nv, nw, mask)
+                                 fname, run, occupancy, rx, ry, rz, atm, 
+                                 Q_range, nQ, D, nu, nv, nw, p, mask)
                                         
-                    self.ds_intensity[:] += I_calc
+                    self.ds_total_intensity[:] += I_calc
                         
                 I_calc = self.model.structural_intensity_1d(
                              occupancy, U11, U22, U33, U23, U13, U12, 
@@ -3411,17 +3448,22 @@ class Presenter:
                                                         
                 self.ds_bragg_intensity[:] += I_calc
                 
-            if (not self.view.get_disorder_mag_recalc_1d() and \
-                not self.view.get_disorder_occ_recalc_1d() and \
-                not self.view.get_disorder_dis_recalc_1d()):
-                self.ds_intensity =self.ds_bragg_intensity
-                
-            self.ds_diffuse_intensity = self.ds_intensity\
-                                      - self.ds_bragg_intensity
+            if (self.view.get_disorder_occ_recalc_1d() or \
+                self.view.get_disorder_dis_recalc_1d()):
+                self.ds_diffuse_intensity = self.ds_total_intensity\
+                                          - self.ds_bragg_intensity
+            elif self.view.get_disorder_mag_recalc_1d():
+                self.ds_total_intensity = self.ds_bragg_intensity.copy()
+            else:
+                self.ds_total_intensity = self.ds_bragg_intensity.copy()
 
-            self.ds_intensity /= runs
+            self.ds_total_intensity /= runs
             self.ds_bragg_intensity /= runs
             self.ds_diffuse_intensity /= runs                                        
+
+            self.ds_total_intensity[self.ds_total_intensity < 0] = np.nan
+            self.ds_bragg_intensity[self.ds_bragg_intensity < 0] = np.nan
+            self.ds_diffuse_intensity[self.ds_diffuse_intensity < 0] = np.nan
 
     def recalculate_intensity_1d_complete(self):
                 
@@ -3444,20 +3486,17 @@ class Presenter:
             
     def redraw_plot_calc_1d(self):
         
-        if self.intensity is not None:
-        
-            self.view.set_min_calc_1d(self.intensity.min())
-            self.view.set_max_calc_1d(self.intensity.max())
-            
+        if self.ds_total_intensity is not None:
+                    
             self.draw_plot_calc_1d()
         
     def draw_plot_calc_1d(self):
         
-        if self.intensity is not None:
+        if self.ds_total_intensity is not None:
         
             canvas = self.view.get_plot_calc_1d_canvas()
             
-            data = [self.ds_intensity,
+            data = [self.ds_total_intensity,
                     self.ds_bragg_intensity,
                     self.ds_diffuse_intensity]
             
@@ -3465,14 +3504,16 @@ class Presenter:
             
             dQ, nQ, min_Q, max_Q = self.view.get_recalculation_1d_binning()
             
+            Q = 2*np.pi*np.linspace(min_Q, max_Q, nQ)
+            
             profiles = self.view.get_profiles_calc_1d()
             
             if (profiles == 'Total only'):
                 indices = [0]
             elif (profiles == 'Diffuse only'): 
-                indices = [1]
+                indices = [2]
             elif (profiles == 'Bragg only'):
-                indices = [0]
+                indices = [1]
             elif (profiles == 'Total and Bragg'):
                 indices = [0,1]
             elif (profiles == 'Diffuse and Bragg'):
@@ -3484,14 +3525,9 @@ class Presenter:
             
             norm = self.view.get_norm_calc_1d()
             
-            vmin = self.view.get_min_calc_1d()
-            vmax = self.view.get_max_calc_1d()
-            
-            self.view.validate_min_calc_1d()
-            self.view.validate_max_calc_1d()
+            marker = self.view.get_marker_calc_1d()
                                                         
-            plots.plot_calc_1d(canvas, data, Q, indices, 
-                               labels, norm, vmin, vmax)
+            plots.plot_calc_1d(canvas, data, Q, indices, labels, norm, marker)
 
     def disorder_check_mag_recalc_3d(self):
         

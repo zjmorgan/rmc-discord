@@ -915,14 +915,7 @@ def plot_calc_3d(canvas, data, hkl, slice_hkl, i_hkl, T,
     cb.ax.tick_params(labelsize='small') 
     canvas.draw()
     
-def plot_calc_1d(canvas, data, Q, indices, labels, norm, vmin, vmax):
-        
-    if (norm == 'Logarithmic'):
-        if (np.isclose(vmin, 0) and np.isclose(vmax, 0)):
-            vmin, vmax = 1e-3, 1e-2
-        normalize = colors.LogNorm(vmin=vmin, vmax=vmax)
-    else:
-        normalize = colors.Normalize(vmin=vmin, vmax=vmax)
+def plot_calc_1d(canvas, data, Q, indices, labels, norm, marker):
                 
     fig = canvas.figure
     fig.clear()   
@@ -930,11 +923,14 @@ def plot_calc_1d(canvas, data, Q, indices, labels, norm, vmin, vmax):
     ax = fig.add_subplot(111)
         
     for i in indices:
-        ax.plot(Q, data[i], label=labels[i])
+        if (norm == 'Logarithmic'): 
+            ax.semilogy(Q/(2*np.pi), data[i], marker, label=labels[i])
+        else:
+            ax.plot(Q/(2*np.pi), data[i], marker, label=labels[i])
     
     ax.legend()
 
-    ax.set_xlabel(r'Q/2\pi$ [Å]', fontsize='small')
+    ax.set_xlabel(r'$Q/2\pi$ [Å]', fontsize='small')
     ax.set_ylabel(r'$I(Q)$ [arb. unit]', fontsize='small')  
 
     ax.xaxis.tick_bottom()

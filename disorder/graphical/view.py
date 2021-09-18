@@ -274,6 +274,10 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_prof_calc_1d.addItem('Total and Diffuse')
         self.comboBox_prof_calc_1d.addItem('Total, diffuse, and Bragg')
         
+        self.comboBox_marker_calc_1d.addItem('-')
+        self.comboBox_marker_calc_1d.addItem('o')
+        self.comboBox_marker_calc_1d.addItem('-o')
+        
         self.comboBox_slice_calc_3d.addItem('h =')
         self.comboBox_slice_calc_3d.addItem('k =')
         self.comboBox_slice_calc_3d.addItem('l =')
@@ -558,12 +562,11 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_order_calc_3d.setText('2')
         
         self.comboBox_prof_calc_1d.setCurrentIndex(1)
+        self.comboBox_marker_calc_1d.setCurrentIndex(0)
+
         self.comboBox_slice_calc_3d.setCurrentIndex(2)
 
         self.lineEdit_slice_calc_3d.setText('')
-        
-        self.lineEdit_min_calc_1d.setText('')       
-        self.lineEdit_max_calc_1d.setText('')
         
         self.lineEdit_min_calc_3d.setText('')       
         self.lineEdit_max_calc_3d.setText('')
@@ -2704,35 +2707,12 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def index_changed_norm_calc_1d(self, slot):
         self.comboBox_norm_calc_1d.currentIndexChanged.connect(slot)
     
-    def set_min_calc_1d(self, value):
-        if str(value) == '--': value = 0
-        self.lineEdit_min_calc_1d.setText('{:1.4e}'.format(value))
-
-    def set_max_calc_1d(self, value):
-        if str(value) == '--': value = 0
-        self.lineEdit_max_calc_1d.setText('{:1.4e}'.format(value))
+    def get_marker_calc_1d(self):
+        index = self.comboBox_marker_calc_1d.currentIndex()    
+        return self.comboBox_marker_calc_1d.itemText(index)
         
-    def get_min_calc_1d(self):
-        return float(self.lineEdit_min_calc_1d.text())
-
-    def get_max_calc_1d(self):
-        return float(self.lineEdit_max_calc_1d.text())
-    
-    def finished_editing_min_calc_1d(self, slot):
-        self.lineEdit_min_calc_1d.editingFinished.connect(slot)
-
-    def finished_editing_max_calc_1d(self, slot):
-        self.lineEdit_max_calc_1d.editingFinished.connect(slot)
-    
-    def validate_min_calc_1d(self):
-        maximum = float(self.lineEdit_max_exp.text())
-        validator = QtGui.QDoubleValidator(np.finfo(float).min, maximum, 4)
-        self.lineEdit_min_calc_1d.setValidator(validator)
-        
-    def validate_max_calc_1d(self):
-        minimum = float(self.lineEdit_min_exp.text())
-        validator = QtGui.QDoubleValidator(minimum, np.finfo(float).max, 4)
-        self.lineEdit_max_calc_1d.setValidator(validator)
+    def index_changed_marker_calc_1d(self, slot):
+        self.comboBox_marker_calc_1d.currentIndexChanged.connect(slot)
     
     def get_plot_calc_1d_canvas(self):
         return self.canvas_calc_1d
@@ -2740,8 +2720,6 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
     def clear_calc_1d_canvas(self):
         self.canvas_calc_1d.figure.clear()
         self.canvas_calc_1d.draw()
-        self.lineEdit_min_calc_1d.setText('')
-        self.lineEdit_max_calc_1d.setText('')
     
     def button_clicked_calc_1d(self, slot):
         self.pushButton_calc_1d.clicked.connect(slot)

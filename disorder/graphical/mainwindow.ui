@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1130</width>
+    <width>1212</width>
     <height>848</height>
    </rect>
   </property>
@@ -3681,9 +3681,6 @@
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0">
-                 <widget class="QComboBox" name="comboBox_norm_calc_1d"/>
-                </item>
                 <item row="0" column="3">
                  <spacer name="horizontalSpacer_94">
                   <property name="orientation">
@@ -3697,44 +3694,23 @@
                   </property>
                  </spacer>
                 </item>
-                <item row="0" column="5">
-                 <widget class="QLineEdit" name="lineEdit_min_calc_1d">
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>16777215</height>
-                   </size>
+                <item row="0" column="0">
+                 <widget class="QComboBox" name="comboBox_norm_calc_1d"/>
+                </item>
+                <item row="0" column="4">
+                 <widget class="QLabel" name="label_marker_calc_1d">
+                  <property name="text">
+                   <string>Marker :</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="4">
-                 <widget class="QLabel" name="label_min_calc_1d">
-                  <property name="text">
-                   <string>Min :</string>
-                  </property>
-                 </widget>
+                <item row="0" column="5">
+                 <widget class="QComboBox" name="comboBox_marker_calc_1d"/>
                 </item>
                </layout>
               </item>
               <item row="0" column="0">
                <layout class="QGridLayout" name="gridLayout_26">
-                <item row="0" column="2">
-                 <widget class="QLabel" name="label_max_calc_1d">
-                  <property name="text">
-                   <string>Max :</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="3">
-                 <widget class="QLineEdit" name="lineEdit_max_calc_1d">
-                  <property name="maximumSize">
-                   <size>
-                    <width>100</width>
-                    <height>16777215</height>
-                   </size>
-                  </property>
-                 </widget>
-                </item>
                 <item row="0" column="1">
                  <spacer name="horizontalSpacer_15">
                   <property name="orientation">
@@ -4274,7 +4250,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1130</width>
+     <width>1212</width>
      <height>26</height>
     </rect>
    </property>
