@@ -562,7 +562,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.lineEdit_order_calc_3d.setText('2')
         
         self.comboBox_prof_calc_1d.setCurrentIndex(1)
-        self.comboBox_marker_calc_1d.setCurrentIndex(0)
+        self.comboBox_marker_calc_1d.setCurrentIndex(2)
 
         self.comboBox_slice_calc_3d.setCurrentIndex(2)
 

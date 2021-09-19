@@ -4962,7 +4962,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_magnetic(CYTHON_UNUSED PyOb
  * 
  *     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)             # <<<<<<<<<<<<<<
  * 
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
  */
   __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 82, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
@@ -5051,7 +5051,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_magnetic(CYTHON_UNUSED PyOb
   /* "disorder/diffuse/powder.pyx":84
  *     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
  * 
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)             # <<<<<<<<<<<<<<
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)             # <<<<<<<<<<<<<<
  * 
  *     i_atm, j_atm = np.triu_indices(n_atm, k=1)
  */
@@ -5143,7 +5143,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_magnetic(CYTHON_UNUSED PyOb
   __pyx_t_7 = 0;
 
   /* "disorder/diffuse/powder.pyx":86
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
  * 
  *     i_atm, j_atm = np.triu_indices(n_atm, k=1)             # <<<<<<<<<<<<<<
  * 
@@ -12943,7 +12943,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_2occupational(CYTHON_UNUSED
  * 
  *     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)             # <<<<<<<<<<<<<<
  * 
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
  */
   __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 538, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
@@ -13032,7 +13032,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_2occupational(CYTHON_UNUSED
   /* "disorder/diffuse/powder.pyx":540
  *     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
  * 
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)             # <<<<<<<<<<<<<<
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)             # <<<<<<<<<<<<<<
  * 
  *     i_atm, j_atm = np.triu_indices(n_atm, k=1)
  */
@@ -13124,7 +13124,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_2occupational(CYTHON_UNUSED
   __pyx_t_8 = 0;
 
   /* "disorder/diffuse/powder.pyx":542
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
  * 
  *     i_atm, j_atm = np.triu_indices(n_atm, k=1)             # <<<<<<<<<<<<<<
  * 
@@ -19864,7 +19864,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_4displacive(CYTHON_UNUSED P
  * 
  *     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)             # <<<<<<<<<<<<<<
  * 
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
  */
   __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 916, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
@@ -19953,7 +19953,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_4displacive(CYTHON_UNUSED P
   /* "disorder/diffuse/powder.pyx":918
  *     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
  * 
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)             # <<<<<<<<<<<<<<
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)             # <<<<<<<<<<<<<<
  * 
  *     i_atm, j_atm = np.triu_indices(n_atm, k=1)
  */
@@ -20045,7 +20045,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_4displacive(CYTHON_UNUSED P
   __pyx_t_8 = 0;
 
   /* "disorder/diffuse/powder.pyx":920
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
  * 
  *     i_atm, j_atm = np.triu_indices(n_atm, k=1)             # <<<<<<<<<<<<<<
  * 
@@ -27614,7 +27614,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_6structural(CYTHON_UNUSED P
  * 
  *     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)             # <<<<<<<<<<<<<<
  * 
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
  */
   __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 1376, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
@@ -27703,7 +27703,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_6structural(CYTHON_UNUSED P
   /* "disorder/diffuse/powder.pyx":1378
  *     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
  * 
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)             # <<<<<<<<<<<<<<
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)             # <<<<<<<<<<<<<<
  * 
  *     i_atm, j_atm = np.triu_indices(n_atm, k=1)
  */
@@ -27795,7 +27795,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_6powder_6structural(CYTHON_UNUSED P
   __pyx_t_8 = 0;
 
   /* "disorder/diffuse/powder.pyx":1380
- *     i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+ *     i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
  * 
  *     i_atm, j_atm = np.triu_indices(n_atm, k=1)             # <<<<<<<<<<<<<<
  * 

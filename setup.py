@@ -70,8 +70,8 @@ ext_modules = [
         include_dirs=[np.get_include()]
     ),
     Extension(
-        'disorder.correlation.radii',
-        ['disorder/correlation/radii'+ext],
+        'disorder.correlation.functions',
+        ['disorder/correlation/functions'+ext],
         extra_compile_args=[compile_openmp],
         extra_link_args=[link_openmp],
         include_dirs=[np.get_include()]

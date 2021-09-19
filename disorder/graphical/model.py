@@ -1169,108 +1169,91 @@ class Model:
         
         return np.mean(corr, axis=0), np.std(corr, axis=0)**2/runs,
                
-    def vector_correlations_1d(self, Vx, Vy, Vz, rx, ry, rz, atms, fract, tol,
-                               A, nu, nv, nw, n_atm):
+    def vector_correlations_1d(self, Vx, Vy, Vz, rx, ry, rz, atms,
+                               nu, nv, nw, fract, tol):
 
-        corr, coll, \
-        corr_, coll_, \
-        d, atm_pair = correlations.radial(Vx, Vy, Vz, rx, ry, rz, atms, 
-                                          fract=fract, tol=tol,
-                                          period=(A, nu, nv, nw, n_atm))
+        data = correlations.vector1d(Vx, Vy, Vz, rx, ry, rz, atms,
+                                     nu, nv, nw, fract, tol)
         
-        return corr, coll, d, atm_pair
+        corr1d, coll1d, corr1d_, coll1d_, d, atm_pair1d = data
+        
+        return corr1d, coll1d, d, atm_pair1d
 
-    def scalar_correlations_1d(self, V_r, rx, ry, rz, atms, fract, tol,
-                               A, nu, nv, nw, n_atm):
+    def scalar_correlations_1d(self, V_r, rx, ry, rz, atms,
+                               nu, nv, nw, fract, tol):
 
-        corr, corr_, \
-        d, atm_pair = correlations.parameter(V_r, rx, ry, rz, atms, 
-                                             fract=fract, tol=tol,
-                                             period=(A, nu, nv, nw, n_atm))
-            
-        return corr, d, atm_pair
+        data = correlations.scalar1d(V_r, rx, ry, rz, atms, 
+                                     nu, nv, nw, fract, tol)
+        
+        corr1d, corr1d_, d, atm_pair1d = data
+        
+        return corr1d, d, atm_pair1d
                 
-    def vector_average_1d(self, corr, coll, sigma_sq_corr, 
-                          sigma_sq_coll, d, tol):
+    def vector_average_1d(self, corr1d, coll1d, sigma_sq_corr1d, 
+                          sigma_sq_coll1d, d, tol):
     
-        corr, corr_, \
-        sigma_sq_corr, sigma_sq_coll, \
-        d = crystal.average((corr, coll, sigma_sq_corr, sigma_sq_coll), d, tol)
+        arrays = (corr1d, coll1d, sigma_sq_corr1d, sigma_sq_coll1d)
         
-        return corr, coll, sigma_sq_corr, sigma_sq_coll, d
+        corr1d, coll1d, \
+        sigma_sq_corr1d, sigma_sq_coll1d, d = crystal.average1d(arrays, d, tol)
+                
+        return corr1d, coll1d, sigma_sq_corr1d, sigma_sq_col1dl, d
                         
-    def scalar_average_1d(self, corr, sigma_sq_corr, d, tol):
+    def scalar_average_1d(self, corr1d, sigma_sq_corr1d, d, tol):
+        
+        arrays = (corr1d, sigma_sq_corr1d)
             
-        corr, sigma_sq_corr, d = crystal.average((corr, sigma_sq_corr), d, tol)
+        corr1d, sigma_sq_corr1d, d = crystal.average1d(arrays, d, tol)
         
-        return corr, sigma_sq_corr, d
+        return corr1d, sigma_sq_corr1d, d
             
-    def vector_correlations_3d(self, Ux, Uy, Uz, rx, ry, rz, atms, fract, tol,
-                               A, nu, nv, nw, n_atm):  
+    def vector_correlations_3d(self, Ux, Uy, Uz, rx, ry, rz, atms,
+                               nu, nv, nw, fract, tol):  
         
-        corr3d, coll3d, \
-        corr3d_, coll3d_, \
-        dx, dy, dz, \
-        atm_pair3d = correlations.radial3d(Ux, Uy, Uz, rx, ry, rz, atms, 
-                                           fract=fract, tol=tol,
-                                           period=(A, nu, nv, nw, n_atm))
+        data = correlations.vector3d(Ux, Uy, Uz, rx, ry, rz, atms, 
+                                     nu, nv, nw, fract, tol)
         
+        corr3d, coll3d, corr3d_, coll3d_, dx, dy, dz, atm_pair3d = data
+                
         return corr3d, coll3d, dx, dy, dz, atm_pair3d
                
-    def scalar_correlations_3d(self, V_r, rx, ry, rz, atms, fract, tol,
-                               A, nu, nv, nw, n_atm):
+    def scalar_correlations_3d(self, V_r, rx, ry, rz, atms,
+                               nu, nv, nw, fract, tol):
                             
-        corr3d, corr3d_, \
-        dx, dy, dz, \
-        atm_pair3d = correlations.parameter3d(V_r, rx, ry, rz, atms,
-                                              fract=fract, tol=tol,
-                                              period=(A, nu, nv, nw, n_atm))    
-                                        
+        data = correlations.scalar3d(V_r, rx, ry, rz, atms, 
+                                     nu, nv, nw, fract, tol)    
+        
+        corr3d, corr3d_, dx, dy, dz, atm_pair3d = data
+                                                
         return corr3d, dx, dy, dz, atm_pair3d
        
     def vector_symmetrize_3d(self, corr3d, coll3d,
                              sigma_sq_corr3d, sigma_sq_coll3d, 
                              dx, dy, dz, atm_pair3d, A, laue, tol):
         
-        corr3d, coll3d, \
-        sigma_sq_corr3d, sigma_sq_coll3d, \
-        dx, dy, dz, \
-        atm_pair3d = crystal.symmetrize((corr3d, coll3d,
-                                         sigma_sq_corr3d, sigma_sq_coll3d),
-                                         dx, dy, dz, atm_pair3d, A, laue, tol)
+        arrays = (corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d)
         
-        return corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d, \
-               dx, dy, dz, atm_pair3d
+        return crystal.symmetrize(arrays, dx, dy, dz, atm_pair3d, A, laue, tol)
         
     def scalar_symmetrizes_3d(self, corr3d, sigma_sq_corr3d, dx, dy, dz, 
                               atm_pair3d, A, laue, tol):
 
-        corr3d, sigma_sq_corr3d, \
-        dx, dy, dz, \
-        atm_pair3d = crystal.symmetrize((corr3d, sigma_sq_corr3d),
-                                         dx, dy, dz, atm_pair3d, A, laue, tol)
+        arrays = (corr3d, sigma_sq_corr3d)
         
-        return corr3d, sigma_sq_corr3d, dx, dy, dz, atm_pair3d
+        return crystal.symmetrize(arrays, dx, dy, dz, atm_pair3d, A, laue, tol)
         
     def vector_average_3d(self, corr3d, coll3d, 
                           sigma_sq_corr3d, sigma_sq_coll3d, dx, dy, dz, tol):
         
-        corr3d, coll3d, \
-        sigma_sq_corr3d, sigma_sq_coll3d, \
-        dx, dy, dz = crystal.average3d((corr3d, coll3d, 
-                                        sigma_sq_corr3d, sigma_sq_coll3d),
-                                        dx, dy, dz, tol=tol)
-
-        return corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d, dx, dy, dz                            
+        arrays = (corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d)
+        
+        return crystal.average3d(arrays, dx, dy, dz, tol=tol)                          
         
     def scalar_average_3d(self, corr3d, sigma_sq_corr3d, dx, dy, dz, tol):
 
-        corr3d, \
-        sigma_sq_corr3d, \
-        dx, dy, dz = crystal.average3d((corr3d, sigma_sq_corr3d),
-                                        dx, dy, dz, tol=tol)
+        arrays = (corr3d, sigma_sq_corr3d)
         
-        return corr3d, sigma_sq_corr3d, dx, dy, dz
+        return crystal.average3d(arrays, dx, dy, dz, tol=tol)
     
     def save_scalar_1d(self, fname, corr, sigma_sq_corr, d, atm_pair):
         

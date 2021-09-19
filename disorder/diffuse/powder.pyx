@@ -81,7 +81,7 @@ def magnetic(double [::1] Sx,
     
     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
         
-    i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+    i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
     
     i_atm, j_atm = np.triu_indices(n_atm, k=1)
     
@@ -537,7 +537,7 @@ def occupational(double [::1] A_r,
     
     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
         
-    i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+    i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
     
     i_atm, j_atm = np.triu_indices(n_atm, k=1)
     
@@ -915,7 +915,7 @@ def displacive(double [::1] Ux,
     
     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
         
-    i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+    i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
     
     i_atm, j_atm = np.triu_indices(n_atm, k=1)
     
@@ -1375,7 +1375,7 @@ def structural(double [::1] occupancy,
     
     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
         
-    i_lat, j_lat = np.unique(np.sort(pairs,axis=0), axis=1)
+    i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
     
     i_atm, j_atm = np.triu_indices(n_atm, k=1)
     

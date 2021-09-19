@@ -158,6 +158,24 @@ def element_radii():
     
     return dict(zip(element, zip(*vals)))
 
+def element_colors():
+    
+    filename = directory+'/colors.csv'
+    names = ('Element', 'Red', 'Green', 'Blue')
+    formats = ('U15', float, float, float)
+    columns = (0, 1, 2, 3)
+       
+    element, r, g, b = np.loadtxt(filename,
+                                  delimiter=',',
+                                  dtype={'names': names, 'formats': formats},           
+                                  usecols=columns,
+                                  skiprows=1, 
+                                  unpack=True)
+                                                               
+    vals = [r, g, b]
+    
+    return dict(zip(element, zip(*vals)))
+
 j0 = magnetic_form_factor_coefficients_j0()
 j2 = magnetic_form_factor_coefficients_j2()
 bc = neutron_scattering_length_b()
@@ -168,3 +186,4 @@ Z = atomic_numbers()
 
 sg = space_groups()
 r = element_radii()
+rgb = element_colors()

@@ -775,7 +775,7 @@ def symmetrize(arrays,
         
     return output
 
-def average(arrays, d, tol=1e-4):
+def average1d(arrays, d, tol=1e-4):
     
     arrays = np.hstack(list((arrays,)))
     

@@ -286,6 +286,7 @@ class Presenter:
                 self.I_obs, self.chi_sq, self.energy, self.temperature, \
                 self.scale, self.acc_moves, self.rej_moves, \
                 self.acc_temps, self.rej_temps = stats
+                self.I_obs *= self.scale[-1]
                 self.iteration = len(self.scale) // (self.n_uvw*self.n_atm)
                 self.refinement_m = self.model.mask_array(self.I_obs)
                 self.allocated = True
@@ -1818,7 +1819,7 @@ class Presenter:
         
     def populate_recalculation_1d_table(self):
         
-        dQ, nQ, min_Q, max_Q = 0.1, 91, 0.1, 1.0
+        dQ, nQ, min_Q, max_Q = 0.1, 41, 0.1, 1.0
         
         self.view.create_recalculation_1d_table(dQ, nQ, min_Q, max_Q)
         
@@ -2438,6 +2439,9 @@ class Presenter:
         self.view.enable_reset_refinement(True)
         self.view.enable_continue_refinement(True)
         
+        self.fast_redraw_plot_ref()
+        self.fast_redraw_plot_chi_sq()
+        
         self.save_application()
         
     def continue_refinement(self):
@@ -2559,6 +2563,7 @@ class Presenter:
             
             self.view.clear_pairs_1d_table()
             self.view.clear_pairs_3d_table()
+            self.view.clear_atom_site_recalculation_1d_table()
             self.view.clear_atom_site_recalculation_3d_table()
             
     def refinement_cycle(self):
@@ -2781,7 +2786,7 @@ class Presenter:
             
             vmin = self.view.get_min_ref()
             vmax = self.view.get_max_ref()
-            
+                        
             self.view.validate_min_ref()
             self.view.validate_max_ref()
             
@@ -2822,7 +2827,7 @@ class Presenter:
                 
             vmin = self.view.get_min_ref()
             vmax = self.view.get_max_ref()
-            
+                        
             self.view.validate_min_ref()
             self.view.validate_max_ref()
             
@@ -2953,13 +2958,9 @@ class Presenter:
         runs = self.view.get_runs_1d()
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
-        
-        A = self.A
-        
-        rx, ry, rz, atms = self.rx, self.ry, self.rz, self.atms
                 
-        period = (A, nu, nv, nw, n_atm)
-        
+        rx, ry, rz, atms = self.rx, self.ry, self.rz, self.atms
+                        
         corr1d_arrs, coll1d_arrs = [], []
         
         for run in range(runs):
@@ -2968,12 +2969,11 @@ class Presenter:
         
                 Sx, Sy, Sz = self.model.load_magnetic(self.fname, run)
                 
-                corr1d, coll1d, \
-                d, \
-                atm_pair1d = self.model.vector_correlations_1d(Sx, Sy, Sz, 
-                                                               rx, ry, rz,
-                                                               atms, fract, 
-                                                               tol, *period)
+                args = [Sx, Sy, Sz, rx, ry, rz, atms, nu, nv, nw, fract, tol]
+                
+                data = self.model.vector_correlations_1d(*args)
+                 
+                corr1d, coll1d, d, atm_pair1d = data
                 
                 corr1d_arrs.append(corr1d)
                 coll1d_arrs.append(coll1d)
@@ -2982,24 +2982,23 @@ class Presenter:
                 
                 A_r = self.model.load_occupational(self.fname, run)
                 
-                corr1d, \
-                d, \
-                atm_pair1d = self.model.scalar_correlations_1d(A_r, rx, ry, rz,
-                                                               atms, fract, 
-                                                               tol, *period)
+                args = [A_r, rx, ry, rz, atms, nu, nv, nw, fract, tol]
+
+                data = self.model.scalar_correlations_1d(*args)
+                
+                corr1d, d, atm_pair1d = data
                 
                 corr1d_arrs.append(corr1d)
                 
             elif (disorder == 'Displacement'):
         
                 Ux, Uy, Uz = self.model.load_displacive(self.fname, run)
+
+                args = [Ux, Uy, Uz, rx, ry, rz, atms, nu, nv, nw, fract, tol]
                 
-                corr1d, coll1d, \
-                d, \
-                atm_pair1d = self.model.vector_correlations_1d(Ux, Uy, Uz, 
-                                                               rx, ry, rz,
-                                                               atms, fract, 
-                                                               tol, *period)
+                data = self.model.vector_correlations_1d(*args)
+                
+                corr1d, coll1d, d, atm_pair1d = data
                 
                 corr1d_arrs.append(corr1d)
                 coll1d_arrs.append(coll1d)               
@@ -3133,13 +3132,11 @@ class Presenter:
         runs = self.view.get_runs_3d()
         
         nu, nv, nw, n_atm = self.nu, self.nv, self.nw, self.n_atm
-        
-        A = self.A
-        
+                
         rx, ry, rz, atms = self.rx, self.ry, self.rz, self.atms
         
-        period = (A, nu, nv, nw, n_atm)
-        
+        A = self.A
+                
         corr3d_arrs, coll3d_arrs = [], []
         
         for run in range(runs):
@@ -3148,12 +3145,11 @@ class Presenter:
         
                 Sx, Sy, Sz = self.model.load_magnetic(self.fname, run)
                 
-                corr3d, coll3d, \
-                dx, dy, dz, \
-                atm_pair3d = self.model.vector_correlations_3d(Sx, Sy, Sz, 
-                                                               rx, ry, rz,
-                                                               atms, fract, 
-                                                               tol, *period)
+                args = [Sx, Sy, Sz, rx, ry, rz, atms, nu, nv, nw, fract, tol]
+                
+                data = self.model.vector_correlations_3d(*args)
+                
+                corr3d, coll3d, dx, dy, dz, atm_pair3d = data
                 
                 corr3d_arrs.append(corr3d)
                 coll3d_arrs.append(coll3d)
@@ -3162,11 +3158,11 @@ class Presenter:
                 
                 A_r = self.model.load_occupational(self.fname, run)
                 
-                corr3d, \
-                dx, dy, dz, \
-                atm_pair3d = self.model.scalar_correlations_3d(A_r, rx, ry, rz,
-                                                               atms, fract, 
-                                                               tol, *period)
+                args = [A_r, rx, ry, rz, atms, nu, nv, nw, fract, tol]
+
+                data = self.model.scalar_correlations_3d(*args)
+                
+                corr3d, dx, dy, dz, atm_pair3d = data
                 
                 corr3d_arrs.append(corr3d)
                 
@@ -3174,12 +3170,11 @@ class Presenter:
         
                 Ux, Uy, Uz = self.model.load_displacive(self.fname, run)
                 
-                corr3d, coll3d, \
-                dx, dy, dz, \
-                atm_pair3d = self.model.vector_correlations_3d(Ux, Uy, Uz, 
-                                                               rx, ry, rz,
-                                                               atms, fract, 
-                                                               tol, *period)
+                args = [Ux, Uy, Uz, rx, ry, rz, atms, nu, nv, nw, fract, tol]
+                
+                data = self.model.vector_correlations_3d(*args)
+                
+                corr3d, coll3d, dx, dy, dz, atm_pair3d = data
                 
                 corr3d_arrs.append(corr3d)
                 coll3d_arrs.append(coll3d)               

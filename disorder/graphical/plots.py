@@ -565,7 +565,7 @@ def correlations_1d(canvas, d, data, error, atm_pair, disorder,
     else:
         ax.set_ylim([0,1])
         
-    ax.set_xlabel(r'$r$ [Å]')
+    ax.set_xlabel(r'$r$ [$\AA$]')
     
     if (correlation == 'Correlation'):
         if (disorder == 'Moment'):
@@ -930,7 +930,7 @@ def plot_calc_1d(canvas, data, Q, indices, labels, norm, marker):
     
     ax.legend()
 
-    ax.set_xlabel(r'$Q/2\pi$ [Å]', fontsize='small')
+    ax.set_xlabel(r'$Q/2\pi$ [$\AA$]', fontsize='small')
     ax.set_ylabel(r'$I(Q)$ [arb. unit]', fontsize='small')  
 
     ax.xaxis.tick_bottom()
