@@ -10,14 +10,11 @@ import sys, os, io, re
 from disorder.material import symmetry
 from disorder.material import tables
 
-def unitcell(folder=None, 
-             filename=None, 
-             occupancy=False, 
-             displacement=False, 
-             moment=False,
-             site=False, 
-             operator=False,
-             magnetic_operator=False,
+directory = os.path.dirname(os.path.abspath(__file__))
+folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+
+def unitcell(folder=folder, 
+             filename='copper.cif', 
              tol=1e-2):
     
     cf = CifFile.ReadCif(os.path.join(folder, filename))
@@ -314,18 +311,21 @@ def unitcell(folder=None,
     
     atm = atm[sort]
     
-    output = (u, v, w,)
-   
-    if occupancy: output = (*output, c)
-    if displacement: output = (*output, d)
-    if moment: output = (*output, m)
-    if site: output = (*output, s)
-    if operator: output = (*output, ops)
-    if magnetic_operator: output = (*output, mag_ops)
+    unit_cell_dict = {}
         
-    output = (*output, atm, n_atm)
+    unit_cell_dict['u'] = u
+    unit_cell_dict['v'] = v
+    unit_cell_dict['w'] = w
+    unit_cell_dict['occupancy'] = c
+    unit_cell_dict['displacement'] = d
+    unit_cell_dict['moment'] = m
+    unit_cell_dict['site'] = s
+    unit_cell_dict['operator'] = ops
+    unit_cell_dict['magnetic_operator'] = mag_ops
+    unit_cell_dict['atom'] = atm
+    unit_cell_dict['n_atom'] = n_atm
     
-    return output
+    return unit_cell_dict
 
 def nuclear(H, K, L, h=None, k=None, l=None, nu=1, nv=1, nw=1, centering=None):
     
@@ -1096,6 +1096,70 @@ def orthogonalized(a, b, c, alpha, beta, gamma):
     L_ = np.array([[a_,0,0],[0,b_,0],[0,0,c_]])
         
     return np.dot(A, np.linalg.inv(L)), np.dot(A, L_)
+
+def cartesian(a, b, c, alpha, beta, gamma):
+    
+    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
+                                                   b, 
+                                                   c, 
+                                                   alpha, 
+                                                   beta, 
+                                                   gamma)
+    
+    return np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
+                     [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
+                     [0, 0,                1/c_]])
+                                                      
+def cartesian_rotation(a, b, c, alpha, beta, gamma):
+    
+    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
+                                                   b, 
+                                                   c, 
+                                                   alpha, 
+                                                   beta, 
+                                                   gamma)
+    
+    A = cartesian(a, b, c, alpha, beta, gamma)
+    
+    B = cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+    
+    R = np.dot(np.linalg.inv(A).T, np.linalg.inv(B))
+                                                      
+    return R
+
+def cartesian_moment(a, b, c, alpha, beta, gamma):
+    
+    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
+                                                   b, 
+                                                   c, 
+                                                   alpha, 
+                                                   beta, 
+                                                   gamma)
+    
+    A = np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
+                  [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
+                  [0, 0,                1/c_]])
+    
+    L = np.array([[a,0,0],[0,b,0],[0,0,c]])
+        
+    return np.dot(A, np.linalg.inv(L))
+
+def cartesian_displacement(a, b, c, alpha, beta, gamma):
+    
+    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
+                                                   b, 
+                                                   c, 
+                                                   alpha, 
+                                                   beta, 
+                                                   gamma)
+    
+    A = np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
+                  [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
+                  [0, 0,                1/c_]])
+    
+    L_ = np.array([[a_,0,0],[0,b_,0],[0,0,c_]])
+        
+    return np.dot(A, L_)
 
 def transform(p, q, r, U):
         

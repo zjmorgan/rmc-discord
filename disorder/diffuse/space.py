@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy import spatial
 
-from disorder.diffuse.scattering import gauss, blur
+from disorder.diffuse.filters import gauss, blur
 
 def data(folder='ising/', directory='', filestr=None):
     

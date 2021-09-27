@@ -82,12 +82,7 @@ class Model:
         
         return crystal.unitcell(folder=folder, 
                                 filename=filename,
-                                occupancy=True,
-                                displacement=True,
-                                moment=True,
-                                site=True,
-                                operator=True,
-                                magnetic_operator=True)
+                                tol=1e-2)
     
     def load_space_group(self, folder, filename):
                 
@@ -420,8 +415,8 @@ class Model:
         return i_min, i_max
 
     def punch(self, array, radius_h, radius_k, radius_l, 
-              step_h, step_k, step_l, h_range, k_range, l_range,
-              centering, outlier, punch):
+                    step_h, step_k, step_l, h_range, k_range, l_range,
+                    centering, outlier, punch):
         
         return experimental.punch(array, radius_h, radius_k, radius_l,
                    step_h, step_k, step_l, h_range, k_range, l_range,
@@ -499,7 +494,7 @@ class Model:
         return factors*T
     
     def debye_waller_factors(self, h_range, k_range, l_range, nh, nk, nl, 
-                             U11, U22, U33, U23, U13, U12, a, b, c):
+                                   U11, U22, U33, U23, U13, U12, a, b, c):
         
         T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
                                U11, U22, U33, U23, U13, U12, a, b, c)
@@ -561,8 +556,8 @@ class Model:
         return displacive.expansion(nu, nv, nw, n_atm, displacement, fixed)
             
     def initialize_magnetic(self, Sx, Sy, Sz, H, K, L, 
-                            Qx_norm, Qy_norm, Qz_norm, indices, 
-                            magnetic_factors, nu, nv, nw, n_atm):
+                                  Qx_norm, Qy_norm, Qz_norm, indices, 
+                                  magnetic_factors, nu, nv, nw, n_atm):
         
         n_uvw = nu*nv*nw
         

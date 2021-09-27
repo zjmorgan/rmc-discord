@@ -16,65 +16,49 @@ class test_crystal(unittest.TestCase):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
                                         
-        u, v, w, atm, n_atm = crystal.unitcell(folder=folder, 
-                                               filename='Cu3Au.cif', 
-                                               occupancy=False, 
-                                               displacement=False, 
-                                               site=False, 
-                                               tol=1e-4)
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='Cu3Au.cif', 
+                                   tol=1e-4)
+        
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        occ = uc_dict['occupancy']
+        disp = uc_dict['displacement']
+        site = uc_dict['site']
+        atm = uc_dict['atom']
+        n_atm = uc_dict['n_atom']
                 
         self.assertEqual(n_atm, 4)
-                
+        
         np.testing.assert_array_almost_equal(u[atm == 'Au'], 0)
         np.testing.assert_array_almost_equal(v[atm == 'Au'], 0)
         np.testing.assert_array_almost_equal(w[atm == 'Au'], 0)
-        
-        u, v, w, site, atm, n_atm = crystal.unitcell(folder=folder, 
-                                                     filename='Cu3Au.cif', 
-                                                     occupancy=False, 
-                                                     displacement=False, 
-                                                     site=True, 
-                                                     tol=1e-4)
                
         np.testing.assert_array_equal(atm[site == 0], 'Au')
         np.testing.assert_array_equal(atm[site == 1], 'Cu') 
-        
-        u, v, w, occ, atm, n_atm = crystal.unitcell(folder=folder, 
-                                                    filename='Cu3Au.cif', 
-                                                    occupancy=True, 
-                                                    displacement=False, 
-                                                    site=False, 
-                                                    tol=1e-4)
                
         np.testing.assert_array_almost_equal(occ, 1)
-        
-        u, v, w, disp, atm, n_atm = crystal.unitcell(folder=folder, 
-                                                     filename='Cu3Au.cif', 
-                                                     occupancy=False, 
-                                                     displacement=True, 
-                                                     site=False, 
-                                                     tol=1e-4)
-        
         np.testing.assert_array_almost_equal(disp, 0)
 
         # ---
         
-        u, v, w, occ, atm, n_atm = crystal.unitcell(folder=folder, 
-                                                    filename='H2O.cif', 
-                                                    occupancy=True,
-                                                    displacement=False, 
-                                                    site=False, 
-                                                    tol=1e-4)
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='H2O.cif', 
+                                   tol=1e-4)
+        
+        occ = uc_dict['occupancy']
+        atm = uc_dict['atom']
         
         np.testing.assert_array_almost_equal(occ[atm == '0'], 1.0)
         np.testing.assert_array_almost_equal(occ[atm == 'H'], 0.5)
         
-        u, v, w, disp, atm, n_atm = crystal.unitcell(folder=folder, 
-                                                     filename='CaTiOSiO4.cif', 
-                                                     occupancy=False, 
-                                                     displacement=True, 
-                                                     site=False, 
-                                                     tol=1e-4)
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='CaTiOSiO4.cif', 
+                                   tol=1e-4)
+        
+        disp = uc_dict['displacement']
+        atm = uc_dict['atom']
         
         np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,0], 0.02200)
         np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,1], 0.00497)
@@ -83,21 +67,17 @@ class test_crystal(unittest.TestCase):
         np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,4], -0.00098)
         np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,3], 0.00029)
         
-        u, \
-        v, \
-        w, \
-        occ, \
-        disp, \
-        site, \
-        op, \
-        atm, \
-        n_atm = crystal.unitcell(folder=folder, 
+        uc_dict = crystal.unitcell(folder=folder, 
                                  filename='chlorastrolite.cif', 
-                                 occupancy=True, 
-                                 displacement=True, 
-                                 site=True, 
-                                 operator=True, 
                                  tol=1e-4)
+        
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        occ = uc_dict['occupancy']
+        disp = uc_dict['displacement']
+        op = uc_dict['operator']
+        atm = uc_dict['atom']
         
         np.testing.assert_array_almost_equal(occ[atm == 'FeX']+\
                                              occ[atm == 'AlX']+\
@@ -122,21 +102,13 @@ class test_crystal(unittest.TestCase):
         
         # ---
         
-        u, \
-        v, \
-        w, \
-        mom, \
-        mag_op, \
-        atm, \
-        n_atm = crystal.unitcell(folder=folder, 
-                                 filename='CuMnO2.mcif', 
-                                 occupancy=False, 
-                                 displacement=False, 
-                                 moment=True, 
-                                 site=False, 
-                                 operator=False, 
-                                 magnetic_operator=True, 
-                                 tol=1e-4)
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='CuMnO2.mcif', 
+                                   tol=1e-4)
+        
+        mom = uc_dict['moment']
+        mag_op = uc_dict['magnetic_operator']
+        atm = uc_dict['atom']
         
         np.testing.assert_array_almost_equal(mom[atm == 'Cu'], 0.0)
         np.testing.assert_array_almost_equal(mom[atm == 'O'], 0.0)        
@@ -146,18 +118,11 @@ class test_crystal(unittest.TestCase):
             moment = symmetry.evaluate_mag(mag_op[atm == 'Mn'][i], [mx,my,mz])
             np.testing.assert_array_almost_equal(mom[atm == 'Mn'][i], moment)
             
-        u, \
-        v, \
-        w, \
-        disp, \
-        atm, \
-        n_atm = crystal.unitcell(folder=folder, 
+        uc_dict = crystal.unitcell(folder=folder, 
                                  filename='natrolite.cif', 
-                                 occupancy=False, 
-                                 displacement=True, 
-                                 site=False, 
-                                 operator=False, 
                                  tol=1e-4)
+        
+        disp = uc_dict['displacement']
         
         np.testing.assert_array_equal(atm[152:184], 'H')
         
@@ -173,27 +138,23 @@ class test_crystal(unittest.TestCase):
 
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
                 
-        u, \
-        v, \
-        w, \
-        occ, \
-        disp, \
-        mom, \
-        atm, \
-        n_atm = crystal.unitcell(folder=folder, 
-                                 filename='CaTiOSiO4.cif', 
-                                 occupancy=True, 
-                                 displacement=True, 
-                                 moment=True, 
-                                 site=False, 
-                                 tol=1e-4)
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='CaTiOSiO4.cif', 
+                                   tol=1e-4)
         
-        a, \
-        b, \
-        c, \
-        alpha, \
-        beta, \
-        gamma = crystal.parameters(folder=folder, filename='CaTiOSiO4.cif')
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        occ = uc_dict['occupancy']
+        disp = uc_dict['displacement']
+        mom = uc_dict['moment']
+        site = uc_dict['site']
+        atm = uc_dict['atom']
+        n_atm = uc_dict['n_atom']
+        
+        constants = crystal.parameters(folder=folder, filename='CaTiOSiO4.cif')
+        
+        a, b, c, alpha, beta, gamma = constants
         
         nu, nv, nw = 2, 3, 1
       
@@ -211,26 +172,24 @@ class test_crystal(unittest.TestCase):
                           folder=folder,
                           filename='CaTiOSiO4.cif')
         
-        U, \
-        V, \
-        W, \
-        Occ, \
-        Disp, \
-        Atm, \
-        N_atm = crystal.unitcell(folder=folder, 
-                                 filename='supercell_CaTiOSiO4.cif', 
-                                 occupancy=True, 
-                                 displacement=True, 
-                                 site=False, 
-                                 tol=1e-4)
+        UC_dict = crystal.unitcell(folder=folder, 
+                                   filename='supercell_CaTiOSiO4.cif', 
+                                   tol=1e-4)
         
-        A, \
-        B, \
-        C, \
-        Alpha, \
-        Beta, \
-        Gamma = crystal.parameters(folder=folder, 
-                                   filename='supercell_CaTiOSiO4.cif')
+        U = UC_dict['u']
+        V = UC_dict['v']
+        W = UC_dict['w']
+        Occ = UC_dict['occupancy']
+        Disp = UC_dict['displacement']
+        Mom = UC_dict['moment']
+        Site = UC_dict['site']
+        Atm = UC_dict['atom']
+        N_atm = UC_dict['n_atom']
+        
+        Constants = crystal.parameters(folder=folder,
+                                       filename='supercell_CaTiOSiO4.cif')
+        
+        A, B, C, Alpha, Beta, Gamma = Constants
         
         n_uvw = nu*nv*nw
         
@@ -264,20 +223,19 @@ class test_crystal(unittest.TestCase):
 
         # ---
         
-        u, \
-        v, \
-        w, \
-        occ, \
-        disp, \
-        mom, \
-        atm, \
-        n_atm = crystal.unitcell(folder=folder, 
-                                 filename='CuMnO2.mcif', 
-                                 occupancy=True, 
-                                 displacement=True, 
-                                 moment=True, 
-                                 site=False, 
-                                 tol=1e-4)
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='CuMnO2.mcif', 
+                                   tol=1e-4)
+        
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        occ = uc_dict['occupancy']
+        disp = uc_dict['displacement']
+        mom = uc_dict['moment']
+        site = uc_dict['site']
+        atm = uc_dict['atom']
+        n_atm = uc_dict['n_atom']
                 
         nu, nv, nw = 1, 2, 3
       
@@ -295,20 +253,19 @@ class test_crystal(unittest.TestCase):
                           folder=folder,
                           filename='CuMnO2.mcif')
         
-        U, \
-        V, \
-        W, \
-        Occ, \
-        Disp, \
-        Mom, \
-        Atm, \
-        N_atm = crystal.unitcell(folder=folder, 
-                                 filename='supercell_CuMnO2.mcif', 
-                                 occupancy=True, 
-                                 displacement=True, 
-                                 moment=True, 
-                                 site=False, 
-                                 tol=1e-4)
+        UC_dict = crystal.unitcell(folder=folder, 
+                                   filename='supercell_CuMnO2.mcif', 
+                                   tol=1e-4)
+        
+        U = UC_dict['u']
+        V = UC_dict['v']
+        W = UC_dict['w']
+        Occ = UC_dict['occupancy']
+        Disp = UC_dict['displacement']
+        Mom = UC_dict['moment']
+        Site = UC_dict['site']
+        Atm = UC_dict['atom']
+        N_atm = UC_dict['n_atom']
         
         n_uvw = nu*nv*nw
                 
@@ -324,12 +281,9 @@ class test_crystal(unittest.TestCase):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
         
-        a, \
-        b, \
-        c, \
-        alpha, \
-        beta, \
-        gamma = crystal.parameters(folder=folder, filename='CaTiOSiO4.cif')
+        constants = crystal.parameters(folder=folder, filename='CaTiOSiO4.cif')
+        
+        a, b, c, alpha, beta, gamma = constants
         
         self.assertAlmostEqual(a, 7.069)
         self.assertAlmostEqual(b, 8.722)
@@ -397,12 +351,9 @@ class test_crystal(unittest.TestCase):
         
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
         
-        a_, b_, c_, alpha_, beta_, gamma_ = crystal.reciprocal(a, 
-                                                               b, 
-                                                               c, 
-                                                               alpha, 
-                                                               beta, 
-                                                               gamma)
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
         
         A, B, R = crystal.matrices(a, b, c, alpha, beta, gamma)
 
@@ -432,12 +383,9 @@ class test_crystal(unittest.TestCase):
     
         G = crystal.metric(a, b, c, alpha, beta, gamma)
 
-        a_, b_, c_, alpha_, beta_, gamma_ = crystal.reciprocal(a, 
-                                                               b, 
-                                                               c, 
-                                                               alpha, 
-                                                               beta, 
-                                                               gamma)
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
         
         G_ = crystal.metric(a_, b_, c_, alpha_, beta_, gamma_)
         
@@ -454,12 +402,9 @@ class test_crystal(unittest.TestCase):
         U = scipy.linalg.cholesky(G, lower=False)
         np.testing.assert_array_almost_equal(A, U)
         
-        a_, b_, c_, alpha_, beta_, gamma_ = crystal.reciprocal(a, 
-                                                               b, 
-                                                               c, 
-                                                               alpha, 
-                                                               beta, 
-                                                               gamma)
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
         
         G_ = crystal.metric(a_, b_, c_, alpha_, beta_, gamma_)
         
@@ -477,12 +422,9 @@ class test_crystal(unittest.TestCase):
                                 
         C, D = crystal.orthogonalized(a, b, c, alpha, beta, gamma)
         
-        a_, b_, c_, alpha_, beta_, gamma_ = crystal.reciprocal(a, 
-                                                               b, 
-                                                               c, 
-                                                               alpha, 
-                                                               beta, 
-                                                               gamma)
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
 
         U = np.array([[1,0.1,0.2],
                       [0.1,3,0.3],

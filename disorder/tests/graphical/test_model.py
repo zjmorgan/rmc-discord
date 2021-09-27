@@ -80,8 +80,8 @@ class test_model(unittest.TestCase):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
         
-        data = self.model.load_unit_cell(folder, 'chlorastrolite.cif')
-        self.assertEqual(data[-1], 104)
+        uc_dict = self.model.load_unit_cell(folder, 'chlorastrolite.cif')
+        self.assertEqual(uc_dict['n_atom'], 104)
         
     def test_load_space_group(self):
         

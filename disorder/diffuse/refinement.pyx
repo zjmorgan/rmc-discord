@@ -7,6 +7,7 @@ cimport numpy as np
 from disorder.diffuse cimport original
 from disorder.diffuse cimport candidate
 from disorder.diffuse cimport scattering
+from disorder.diffuse cimport filters
 
 from libc.stdlib cimport rand, RAND_MAX
 from libc.math cimport exp, log, sqrt
@@ -219,22 +220,22 @@ cpdef void magnetic(double [::1] Sx,
             
             scattering.intensity(I_raw, I_calc, inverses, i_mask)
                     
-            scattering.filtering(I_flat,
-                                 I_raw, 
-                                 v_inv, 
-                                 boxes,
-                                 a_filt,
-                                 b_filt,
-                                 c_filt,
-                                 d_filt,
-                                 e_filt,
-                                 f_filt,
-                                 g_filt,
-                                 h_filt,
-                                 i_filt, 
-                                 nh, 
-                                 nk, 
-                                 nl)
+            filters.filtering(I_flat,
+                              I_raw, 
+                              v_inv, 
+                              boxes,
+                              a_filt,
+                              b_filt,
+                              c_filt,
+                              d_filt,
+                              e_filt,
+                              f_filt,
+                              g_filt,
+                              h_filt,
+                              i_filt, 
+                              nh, 
+                              nk, 
+                              nl)
                     
             scattering.unmask(I_ref, I_flat, i_unmask)
                         
@@ -425,22 +426,22 @@ cpdef void occupational(double [::1] A_r,
             
             scattering.intensity(I_raw, I_calc, inverses, i_mask)
                     
-            scattering.filtering(I_flat,
-                                 I_raw, 
-                                 v_inv, 
-                                 boxes,
-                                 a_filt,
-                                 b_filt,
-                                 c_filt,
-                                 d_filt,
-                                 e_filt,
-                                 f_filt,
-                                 g_filt,
-                                 h_filt,
-                                 i_filt, 
-                                 nh, 
-                                 nk, 
-                                 nl)
+            filters.filtering(I_flat,
+                              I_raw, 
+                              v_inv, 
+                              boxes,
+                              a_filt,
+                              b_filt,
+                              c_filt,
+                              d_filt,
+                              e_filt,
+                              f_filt,
+                              g_filt,
+                              h_filt,
+                              i_filt, 
+                              nh, 
+                              nk, 
+                              nl)
                     
             scattering.unmask(I_ref, I_flat, i_unmask)
                         
@@ -695,22 +696,22 @@ cpdef void displacive(double [::1] Ux,
             
             scattering.intensity(I_raw, I_calc, inverses, i_mask)
                     
-            scattering.filtering(I_flat,
-                                 I_raw, 
-                                 v_inv, 
-                                 boxes,
-                                 a_filt,
-                                 b_filt,
-                                 c_filt,
-                                 d_filt,
-                                 e_filt,
-                                 f_filt,
-                                 g_filt,
-                                 h_filt,
-                                 i_filt, 
-                                 nh, 
-                                 nk, 
-                                 nl)
+            filters.filtering(I_flat,
+                              I_raw, 
+                              v_inv, 
+                              boxes,
+                              a_filt,
+                              b_filt,
+                              c_filt,
+                              d_filt,
+                              e_filt,
+                              f_filt,
+                              g_filt,
+                              h_filt,
+                              i_filt, 
+                              nh, 
+                              nk, 
+                              nl)
                     
             scattering.unmask(I_ref, I_flat, i_unmask)
             

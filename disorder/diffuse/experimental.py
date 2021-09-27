@@ -6,7 +6,7 @@ from nexusformat.nexus import nxload
 
 from functools import reduce
 
-from disorder.diffuse.scattering import rebin0, rebin1, rebin2
+from disorder.diffuse.filters import rebin0, rebin1, rebin2
 
 def data(filename):
     

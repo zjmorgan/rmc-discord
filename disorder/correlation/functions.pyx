@@ -20,7 +20,7 @@ def vector_correlation(double [::1] Sx,
                        double [::1] Sz,
                        signed long long [::1] counts,
                        signed long long [::1] search,
-                       long [:,::1] coordinate):
+                       long long [:,::1] coordinate):
     
     cdef Py_ssize_t N = counts.shape[0]
     
@@ -361,8 +361,6 @@ def pairs1d(rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
     dz = rz[j]-rz[i]
     
     distance = np.sqrt(dx**2+dy**2+dz**2)
-    
-    print(np.isclose(distance,0).any())
         
     mask = distance <= distance.max()*fract
     
@@ -470,9 +468,7 @@ def pairs3d(rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
     dz = rz[j]-rz[i]
     
     distance = np.sqrt(dx**2+dy**2+dz**2)
-    
-    print(np.isclose(distance,0).any())
-        
+            
     mask = distance <= distance.max()*fract
     
     dx = dx[mask]

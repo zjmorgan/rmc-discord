@@ -286,9 +286,9 @@ class Presenter:
                 self.I_obs, self.chi_sq, self.energy, self.temperature, \
                 self.scale, self.acc_moves, self.rej_moves, \
                 self.acc_temps, self.rej_temps = stats
-                self.I_obs *= self.scale[-1]
                 self.iteration = len(self.scale) // (self.n_uvw*self.n_atm)
-                self.refinement_m = self.model.mask_array(self.I_obs)
+                scale = self.scale[-1]
+                self.refinement_m = self.model.mask_array(self.I_obs*scale)
                 self.allocated = True
                 plot_type = self.view.get_plot_ref()
                 if (plot_type == 'Calculated'):
@@ -998,11 +998,20 @@ class Presenter:
                 self.view.set_centering_ref(centering)
                 self.view.set_centering_calc_3d(centering)
                 
-            u, v, w, occupancy, \
-            displacement, moment, \
-            site, op, mag_op, \
-            atm, n_atm = self.model.load_unit_cell(folder, filename)
+            uc_dict = self.model.load_unit_cell(folder, filename)
             
+            u = uc_dict['u']
+            v = uc_dict['v']
+            w = uc_dict['w']
+            occupancy = uc_dict['occupancy']
+            displacement = uc_dict['displacement']
+            moment = uc_dict['moment']
+            site = uc_dict['site']
+            op = uc_dict['operator']
+            mag_op = uc_dict['magnetic_operator']
+            atm = uc_dict['atom']
+            n_atm = uc_dict['n_atom']
+                    
             A, B, R, C, D = self.model.crystal_matrices(a, b, c, 
                                                         alpha, beta, gamma)
             

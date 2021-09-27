@@ -42,6 +42,13 @@ ext_modules = [
         include_dirs=[np.get_include()]
     ),
     Extension(
+        'disorder.diffuse.filters',
+        ['disorder/diffuse/filters'+ext],
+        extra_compile_args=[compile_openmp],
+        extra_link_args=[link_openmp],
+        include_dirs=[np.get_include()]
+    ),
+    Extension(
         'disorder.diffuse.original',
         ['disorder/diffuse/original'+ext],
         extra_compile_args=[compile_openmp],
