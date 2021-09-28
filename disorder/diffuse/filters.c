@@ -1958,11 +1958,6 @@ static CYTHON_INLINE int __pyx_memview_set_double(const char *itemp, PyObject *o
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_ds_Py_ssize_t(PyObject *, int writable_flag);
 
-/* GCCDiagnostics.proto */
-#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
-#define __Pyx_HAS_GCC_DIAGNOSTIC
-#endif
-
 /* None.proto */
 static CYTHON_INLINE Py_ssize_t __Pyx_pow_Py_ssize_t(Py_ssize_t, Py_ssize_t);
 
@@ -2071,14 +2066,19 @@ __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
                                  size_t sizeof_dtype, int contig_flag,
                                  int dtype_is_object);
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
+/* GCCDiagnostics.proto */
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
+#define __Pyx_HAS_GCC_DIAGNOSTIC
+#endif
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
+
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
@@ -2172,8 +2172,6 @@ static void __pyx_f_8disorder_7diffuse_7filters_gauss(__Pyx_memviewslice, __Pyx_
 static void __pyx_f_8disorder_7diffuse_7filters_filtering(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, int __pyx_skip_dispatch); /*proto*/
 static void __pyx_f_8disorder_7diffuse_7filters_blur(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, int __pyx_skip_dispatch); /*proto*/
 static void __pyx_f_8disorder_7diffuse_7filters_sort(__Pyx_memviewslice, __Pyx_memviewslice, int); /*proto*/
-static void __pyx_f_8disorder_7diffuse_7filters_argsort(__Pyx_memviewslice, int); /*proto*/
-static void __pyx_f_8disorder_7diffuse_7filters_copy(__Pyx_memviewslice, __Pyx_memviewslice, int); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -2239,6 +2237,9 @@ static const char __pyx_k_k[] = "k";
 static const char __pyx_k_l[] = "l";
 static const char __pyx_k_m[] = "m";
 static const char __pyx_k_n[] = "n";
+static const char __pyx_k_p[] = "p";
+static const char __pyx_k_q[] = "q";
+static const char __pyx_k_r[] = "r";
 static const char __pyx_k_s[] = "s";
 static const char __pyx_k_t[] = "t";
 static const char __pyx_k_u[] = "u";
@@ -2340,6 +2341,7 @@ static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_PickleError[] = "PickleError";
 static const char __pyx_k_window_size[] = "window_size";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
+static const char __pyx_k_sliding_size[] = "sliding_size";
 static const char __pyx_k_stringsource[] = "stringsource";
 static const char __pyx_k_window_order[] = "window_order";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
@@ -2493,6 +2495,7 @@ static PyObject *__pyx_kp_u_numpy_core_multiarray_failed_to;
 static PyObject *__pyx_kp_u_numpy_core_umath_failed_to_impor;
 static PyObject *__pyx_n_s_obj;
 static PyObject *__pyx_n_s_os;
+static PyObject *__pyx_n_s_p;
 static PyObject *__pyx_n_s_pack;
 static PyObject *__pyx_n_s_pickle;
 static PyObject *__pyx_n_s_pyx_PickleError;
@@ -2503,6 +2506,8 @@ static PyObject *__pyx_n_s_pyx_state;
 static PyObject *__pyx_n_s_pyx_type;
 static PyObject *__pyx_n_s_pyx_unpickle_Enum;
 static PyObject *__pyx_n_s_pyx_vtable;
+static PyObject *__pyx_n_s_q;
+static PyObject *__pyx_n_s_r;
 static PyObject *__pyx_n_s_range;
 static PyObject *__pyx_n_s_rank;
 static PyObject *__pyx_n_s_rebin0;
@@ -2517,6 +2522,7 @@ static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_shape;
 static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_size_sq;
+static PyObject *__pyx_n_s_sliding_size;
 static PyObject *__pyx_n_s_start;
 static PyObject *__pyx_n_s_step;
 static PyObject *__pyx_n_s_stop;
@@ -6775,7 +6781,7 @@ static void __pyx_f_8disorder_7diffuse_7filters_sort(__Pyx_memviewslice __pyx_v_
  *         while (j >= 0 and data[j] > temp):
  *             data[j+1] = data[j]             # <<<<<<<<<<<<<<
  *             order[j+1] = order[j]
- *             j = j-1
+ *             j -= 1
  */
       __pyx_t_2 = __pyx_v_j;
       __pyx_t_4 = (__pyx_v_j + 1);
@@ -6785,7 +6791,7 @@ static void __pyx_f_8disorder_7diffuse_7filters_sort(__Pyx_memviewslice __pyx_v_
  *         while (j >= 0 and data[j] > temp):
  *             data[j+1] = data[j]
  *             order[j+1] = order[j]             # <<<<<<<<<<<<<<
- *             j = j-1
+ *             j -= 1
  *         data[j+1] = temp
  */
       __pyx_t_2 = __pyx_v_j;
@@ -6795,7 +6801,7 @@ static void __pyx_f_8disorder_7diffuse_7filters_sort(__Pyx_memviewslice __pyx_v_
       /* "disorder/diffuse/filters.pyx":435
  *             data[j+1] = data[j]
  *             order[j+1] = order[j]
- *             j = j-1             # <<<<<<<<<<<<<<
+ *             j -= 1             # <<<<<<<<<<<<<<
  *         data[j+1] = temp
  *         order[j+1] = temp_ind
  */
@@ -6804,19 +6810,19 @@ static void __pyx_f_8disorder_7diffuse_7filters_sort(__Pyx_memviewslice __pyx_v_
 
     /* "disorder/diffuse/filters.pyx":436
  *             order[j+1] = order[j]
- *             j = j-1
+ *             j -= 1
  *         data[j+1] = temp             # <<<<<<<<<<<<<<
  *         order[j+1] = temp_ind
- *         i = i+1
+ *         i += 1
  */
     __pyx_t_2 = (__pyx_v_j + 1);
     *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_data.data) + __pyx_t_2)) )) = __pyx_v_temp;
 
     /* "disorder/diffuse/filters.pyx":437
- *             j = j-1
+ *             j -= 1
  *         data[j+1] = temp
  *         order[j+1] = temp_ind             # <<<<<<<<<<<<<<
- *         i = i+1
+ *         i += 1
  * 
  */
     __pyx_t_2 = (__pyx_v_j + 1);
@@ -6825,9 +6831,9 @@ static void __pyx_f_8disorder_7diffuse_7filters_sort(__Pyx_memviewslice __pyx_v_
     /* "disorder/diffuse/filters.pyx":438
  *         data[j+1] = temp
  *         order[j+1] = temp_ind
- *         i = i+1             # <<<<<<<<<<<<<<
+ *         i += 1             # <<<<<<<<<<<<<<
  * 
- * cdef void argsort(long [::1] data, int n) nogil:
+ * # cdef void argsort(long [::1] data, int n) nogil:
  */
     __pyx_v_i = (__pyx_v_i + 1);
   }
@@ -6843,187 +6849,8 @@ static void __pyx_f_8disorder_7diffuse_7filters_sort(__Pyx_memviewslice __pyx_v_
   /* function exit code */
 }
 
-/* "disorder/diffuse/filters.pyx":440
- *         i = i+1
- * 
- * cdef void argsort(long [::1] data, int n) nogil:             # <<<<<<<<<<<<<<
- * 
- *     cdef Py_ssize_t temp
- */
-
-static void __pyx_f_8disorder_7diffuse_7filters_argsort(__Pyx_memviewslice __pyx_v_data, int __pyx_v_n) {
-  Py_ssize_t __pyx_v_temp;
-  Py_ssize_t __pyx_v_i;
-  Py_ssize_t __pyx_v_j;
-  int __pyx_t_1;
-  Py_ssize_t __pyx_t_2;
-  int __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-
-  /* "disorder/diffuse/filters.pyx":446
- *     cdef Py_ssize_t i, j
- * 
- *     i = 1             # <<<<<<<<<<<<<<
- *     while (i < n):
- *         temp = data[i]
- */
-  __pyx_v_i = 1;
-
-  /* "disorder/diffuse/filters.pyx":447
- * 
- *     i = 1
- *     while (i < n):             # <<<<<<<<<<<<<<
- *         temp = data[i]
- *         j = i-1
- */
-  while (1) {
-    __pyx_t_1 = ((__pyx_v_i < __pyx_v_n) != 0);
-    if (!__pyx_t_1) break;
-
-    /* "disorder/diffuse/filters.pyx":448
- *     i = 1
- *     while (i < n):
- *         temp = data[i]             # <<<<<<<<<<<<<<
- *         j = i-1
- *         while (j >= 0 and data[j] > temp):
- */
-    __pyx_t_2 = __pyx_v_i;
-    __pyx_v_temp = (*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_data.data) + __pyx_t_2)) )));
-
-    /* "disorder/diffuse/filters.pyx":449
- *     while (i < n):
- *         temp = data[i]
- *         j = i-1             # <<<<<<<<<<<<<<
- *         while (j >= 0 and data[j] > temp):
- *             data[j+1] = data[j]
- */
-    __pyx_v_j = (__pyx_v_i - 1);
-
-    /* "disorder/diffuse/filters.pyx":450
- *         temp = data[i]
- *         j = i-1
- *         while (j >= 0 and data[j] > temp):             # <<<<<<<<<<<<<<
- *             data[j+1] = data[j]
- *             j = j-1
- */
-    while (1) {
-      __pyx_t_3 = ((__pyx_v_j >= 0) != 0);
-      if (__pyx_t_3) {
-      } else {
-        __pyx_t_1 = __pyx_t_3;
-        goto __pyx_L7_bool_binop_done;
-      }
-      __pyx_t_2 = __pyx_v_j;
-      __pyx_t_3 = (((*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_data.data) + __pyx_t_2)) ))) > __pyx_v_temp) != 0);
-      __pyx_t_1 = __pyx_t_3;
-      __pyx_L7_bool_binop_done:;
-      if (!__pyx_t_1) break;
-
-      /* "disorder/diffuse/filters.pyx":451
- *         j = i-1
- *         while (j >= 0 and data[j] > temp):
- *             data[j+1] = data[j]             # <<<<<<<<<<<<<<
- *             j = j-1
- *         data[j+1] = temp
- */
-      __pyx_t_2 = __pyx_v_j;
-      __pyx_t_4 = (__pyx_v_j + 1);
-      *((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_data.data) + __pyx_t_4)) )) = (*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_data.data) + __pyx_t_2)) )));
-
-      /* "disorder/diffuse/filters.pyx":452
- *         while (j >= 0 and data[j] > temp):
- *             data[j+1] = data[j]
- *             j = j-1             # <<<<<<<<<<<<<<
- *         data[j+1] = temp
- *         i = i+1
- */
-      __pyx_v_j = (__pyx_v_j - 1);
-    }
-
-    /* "disorder/diffuse/filters.pyx":453
- *             data[j+1] = data[j]
- *             j = j-1
- *         data[j+1] = temp             # <<<<<<<<<<<<<<
- *         i = i+1
- * 
- */
-    __pyx_t_2 = (__pyx_v_j + 1);
-    *((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_data.data) + __pyx_t_2)) )) = __pyx_v_temp;
-
-    /* "disorder/diffuse/filters.pyx":454
- *             j = j-1
- *         data[j+1] = temp
- *         i = i+1             # <<<<<<<<<<<<<<
- * 
- * cdef void copy(long [::1] data, long [::1] order, int n) nogil:
- */
-    __pyx_v_i = (__pyx_v_i + 1);
-  }
-
-  /* "disorder/diffuse/filters.pyx":440
- *         i = i+1
- * 
- * cdef void argsort(long [::1] data, int n) nogil:             # <<<<<<<<<<<<<<
- * 
- *     cdef Py_ssize_t temp
- */
-
-  /* function exit code */
-}
-
-/* "disorder/diffuse/filters.pyx":456
- *         i = i+1
- * 
- * cdef void copy(long [::1] data, long [::1] order, int n) nogil:             # <<<<<<<<<<<<<<
- * 
- *     cdef Py_ssize_t i
- */
-
-static void __pyx_f_8disorder_7diffuse_7filters_copy(__Pyx_memviewslice __pyx_v_data, __Pyx_memviewslice __pyx_v_order, int __pyx_v_n) {
-  Py_ssize_t __pyx_v_i;
-  int __pyx_t_1;
-  int __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-
-  /* "disorder/diffuse/filters.pyx":460
- *     cdef Py_ssize_t i
- * 
- *     for i in range(n):             # <<<<<<<<<<<<<<
- * 
- *         data[i] = order[i]
- */
-  __pyx_t_1 = __pyx_v_n;
-  __pyx_t_2 = __pyx_t_1;
-  for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
-    __pyx_v_i = __pyx_t_3;
-
-    /* "disorder/diffuse/filters.pyx":462
- *     for i in range(n):
- * 
- *         data[i] = order[i]             # <<<<<<<<<<<<<<
- * 
- * def median(double [:,:,::1] a, Py_ssize_t size):
- */
-    __pyx_t_4 = __pyx_v_i;
-    __pyx_t_5 = __pyx_v_i;
-    *((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_data.data) + __pyx_t_5)) )) = (*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_order.data) + __pyx_t_4)) )));
-  }
-
-  /* "disorder/diffuse/filters.pyx":456
- *         i = i+1
- * 
- * cdef void copy(long [::1] data, long [::1] order, int n) nogil:             # <<<<<<<<<<<<<<
- * 
- *     cdef Py_ssize_t i
- */
-
-  /* function exit code */
-}
-
 /* "disorder/diffuse/filters.pyx":464
- *         data[i] = order[i]
+ * #         data[i] = order[i]
  * 
  * def median(double [:,:,::1] a, Py_ssize_t size):             # <<<<<<<<<<<<<<
  * 
@@ -7110,13 +6937,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_12median(CYTHON_UNUSED PyO
   PyObject *__pyx_v_window_order_np = NULL;
   PyObject *__pyx_v_argument_order_np = NULL;
   __Pyx_memviewslice __pyx_v_window_order = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_argument_order = { 0, 0, { 0 }, { 0 }, { 0 } };
+  CYTHON_UNUSED __Pyx_memviewslice __pyx_v_argument_order = { 0, 0, { 0 }, { 0 }, { 0 } };
   Py_ssize_t __pyx_v_i;
   Py_ssize_t __pyx_v_j;
   Py_ssize_t __pyx_v_k;
   Py_ssize_t __pyx_v_l;
   Py_ssize_t __pyx_v_m;
   Py_ssize_t __pyx_v_n;
+  Py_ssize_t __pyx_v_p;
+  Py_ssize_t __pyx_v_q;
+  Py_ssize_t __pyx_v_r;
+  Py_ssize_t __pyx_v_sliding_size;
   Py_ssize_t __pyx_v_j_l;
   Py_ssize_t __pyx_v_j_lm;
   Py_ssize_t __pyx_v_j_lmn;
@@ -7142,10 +6973,10 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_12median(CYTHON_UNUSED PyO
   Py_ssize_t __pyx_t_15;
   Py_ssize_t __pyx_t_16;
   Py_ssize_t __pyx_t_17;
-  Py_ssize_t __pyx_t_18;
+  int __pyx_t_18;
   Py_ssize_t __pyx_t_19;
   Py_ssize_t __pyx_t_20;
-  int __pyx_t_21;
+  Py_ssize_t __pyx_t_21;
   Py_ssize_t __pyx_t_22;
   Py_ssize_t __pyx_t_23;
   Py_ssize_t __pyx_t_24;
@@ -7412,409 +7243,835 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_12median(CYTHON_UNUSED PyO
  *     cdef long [::1] window_order = window_order_np
  *     cdef long [::1] argument_order = argument_order_np             # <<<<<<<<<<<<<<
  * 
- *     cdef Py_ssize_t i, j, k, l, m, n
+ *     cdef Py_ssize_t i, j, k, l, m, n, p, q, r
  */
   __pyx_t_8 = __Pyx_PyObject_to_MemoryviewSlice_dc_long(__pyx_v_argument_order_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_8.memview)) __PYX_ERR(0, 490, __pyx_L1_error)
   __pyx_v_argument_order = __pyx_t_8;
   __pyx_t_8.memview = NULL;
   __pyx_t_8.data = NULL;
 
-  /* "disorder/diffuse/filters.pyx":498
- *     cdef Py_ssize_t i_l, j_m, k_n
+  /* "disorder/diffuse/filters.pyx":494
+ *     cdef Py_ssize_t i, j, k, l, m, n, p, q, r
  * 
- *     with nogil:             # <<<<<<<<<<<<<<
- *         for i in range(n0):
- *             for j in range(n1):
- */
-  {
-      #ifdef WITH_THREAD
-      PyThreadState *_save;
-      Py_UNBLOCK_THREADS
-      __Pyx_FastGIL_Remember();
-      #endif
-      /*try:*/ {
-
-        /* "disorder/diffuse/filters.pyx":499
+ *     cdef Py_ssize_t sliding_size = window_size-size_sq             # <<<<<<<<<<<<<<
  * 
- *     with nogil:
- *         for i in range(n0):             # <<<<<<<<<<<<<<
- *             for j in range(n1):
- *                 for k in range(n2):
+ *     cdef Py_ssize_t j_l, j_lm, j_lmn
  */
-        __pyx_t_9 = __pyx_v_n0;
-        __pyx_t_10 = __pyx_t_9;
-        for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
-          __pyx_v_i = __pyx_t_11;
+  __pyx_v_sliding_size = (__pyx_v_window_size - __pyx_v_size_sq);
 
-          /* "disorder/diffuse/filters.pyx":500
- *     with nogil:
- *         for i in range(n0):
- *             for j in range(n1):             # <<<<<<<<<<<<<<
- *                 for k in range(n2):
+  /* "disorder/diffuse/filters.pyx":501
+ * 
+ *     #with nogil:
+ *     for i in range(n0):             # <<<<<<<<<<<<<<
+ *         for j in range(n1):
+ *             for k in range(n2):
+ */
+  __pyx_t_9 = __pyx_v_n0;
+  __pyx_t_10 = __pyx_t_9;
+  for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
+    __pyx_v_i = __pyx_t_11;
+
+    /* "disorder/diffuse/filters.pyx":502
+ *     #with nogil:
+ *     for i in range(n0):
+ *         for j in range(n1):             # <<<<<<<<<<<<<<
+ *             for k in range(n2):
  * 
  */
-          __pyx_t_12 = __pyx_v_n1;
-          __pyx_t_13 = __pyx_t_12;
-          for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
-            __pyx_v_j = __pyx_t_14;
+    __pyx_t_12 = __pyx_v_n1;
+    __pyx_t_13 = __pyx_t_12;
+    for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
+      __pyx_v_j = __pyx_t_14;
 
-            /* "disorder/diffuse/filters.pyx":501
- *         for i in range(n0):
- *             for j in range(n1):
- *                 for k in range(n2):             # <<<<<<<<<<<<<<
+      /* "disorder/diffuse/filters.pyx":503
+ *     for i in range(n0):
+ *         for j in range(n1):
+ *             for k in range(n2):             # <<<<<<<<<<<<<<
  * 
+ *                 if (k == 0):
+ */
+      __pyx_t_15 = __pyx_v_n2;
+      __pyx_t_16 = __pyx_t_15;
+      for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
+        __pyx_v_k = __pyx_t_17;
+
+        /* "disorder/diffuse/filters.pyx":505
+ *             for k in range(n2):
+ * 
+ *                 if (k == 0):             # <<<<<<<<<<<<<<
  *                     for l in range(2*rank+1):
+ *                         i_l = i+(l-rank)
  */
-            __pyx_t_15 = __pyx_v_n2;
-            __pyx_t_16 = __pyx_t_15;
-            for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
-              __pyx_v_k = __pyx_t_17;
+        __pyx_t_18 = ((__pyx_v_k == 0) != 0);
+        if (__pyx_t_18) {
 
-              /* "disorder/diffuse/filters.pyx":503
- *                 for k in range(n2):
+          /* "disorder/diffuse/filters.pyx":506
  * 
+ *                 if (k == 0):
  *                     for l in range(2*rank+1):             # <<<<<<<<<<<<<<
  *                         i_l = i+(l-rank)
  *                         if (i_l < 0):
  */
-              __pyx_t_18 = ((2 * __pyx_v_rank) + 1);
-              __pyx_t_19 = __pyx_t_18;
-              for (__pyx_t_20 = 0; __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
-                __pyx_v_l = __pyx_t_20;
+          __pyx_t_19 = ((2 * __pyx_v_rank) + 1);
+          __pyx_t_20 = __pyx_t_19;
+          for (__pyx_t_21 = 0; __pyx_t_21 < __pyx_t_20; __pyx_t_21+=1) {
+            __pyx_v_l = __pyx_t_21;
 
-                /* "disorder/diffuse/filters.pyx":504
- * 
+            /* "disorder/diffuse/filters.pyx":507
+ *                 if (k == 0):
  *                     for l in range(2*rank+1):
  *                         i_l = i+(l-rank)             # <<<<<<<<<<<<<<
  *                         if (i_l < 0):
  *                             i_l = 0
  */
-                __pyx_v_i_l = (__pyx_v_i + (__pyx_v_l - __pyx_v_rank));
+            __pyx_v_i_l = (__pyx_v_i + (__pyx_v_l - __pyx_v_rank));
 
-                /* "disorder/diffuse/filters.pyx":505
+            /* "disorder/diffuse/filters.pyx":508
  *                     for l in range(2*rank+1):
  *                         i_l = i+(l-rank)
  *                         if (i_l < 0):             # <<<<<<<<<<<<<<
  *                             i_l = 0
  *                         elif (i_l > n0-1):
  */
-                __pyx_t_21 = ((__pyx_v_i_l < 0) != 0);
-                if (__pyx_t_21) {
+            __pyx_t_18 = ((__pyx_v_i_l < 0) != 0);
+            if (__pyx_t_18) {
 
-                  /* "disorder/diffuse/filters.pyx":506
+              /* "disorder/diffuse/filters.pyx":509
  *                         i_l = i+(l-rank)
  *                         if (i_l < 0):
  *                             i_l = 0             # <<<<<<<<<<<<<<
  *                         elif (i_l > n0-1):
  *                             i_l = n0-1
  */
-                  __pyx_v_i_l = 0;
+              __pyx_v_i_l = 0;
 
-                  /* "disorder/diffuse/filters.pyx":505
+              /* "disorder/diffuse/filters.pyx":508
  *                     for l in range(2*rank+1):
  *                         i_l = i+(l-rank)
  *                         if (i_l < 0):             # <<<<<<<<<<<<<<
  *                             i_l = 0
  *                         elif (i_l > n0-1):
  */
-                  goto __pyx_L14;
-                }
+              goto __pyx_L12;
+            }
 
-                /* "disorder/diffuse/filters.pyx":507
+            /* "disorder/diffuse/filters.pyx":510
  *                         if (i_l < 0):
  *                             i_l = 0
  *                         elif (i_l > n0-1):             # <<<<<<<<<<<<<<
  *                             i_l = n0-1
  *                         j_l = size_sq*l
  */
-                __pyx_t_21 = ((__pyx_v_i_l > (__pyx_v_n0 - 1)) != 0);
-                if (__pyx_t_21) {
+            __pyx_t_18 = ((__pyx_v_i_l > (__pyx_v_n0 - 1)) != 0);
+            if (__pyx_t_18) {
 
-                  /* "disorder/diffuse/filters.pyx":508
+              /* "disorder/diffuse/filters.pyx":511
  *                             i_l = 0
  *                         elif (i_l > n0-1):
  *                             i_l = n0-1             # <<<<<<<<<<<<<<
  *                         j_l = size_sq*l
  *                         for m in range(2*rank+1):
  */
-                  __pyx_v_i_l = (__pyx_v_n0 - 1);
+              __pyx_v_i_l = (__pyx_v_n0 - 1);
 
-                  /* "disorder/diffuse/filters.pyx":507
+              /* "disorder/diffuse/filters.pyx":510
  *                         if (i_l < 0):
  *                             i_l = 0
  *                         elif (i_l > n0-1):             # <<<<<<<<<<<<<<
  *                             i_l = n0-1
  *                         j_l = size_sq*l
  */
-                }
-                __pyx_L14:;
+            }
+            __pyx_L12:;
 
-                /* "disorder/diffuse/filters.pyx":509
+            /* "disorder/diffuse/filters.pyx":512
  *                         elif (i_l > n0-1):
  *                             i_l = n0-1
  *                         j_l = size_sq*l             # <<<<<<<<<<<<<<
  *                         for m in range(2*rank+1):
  *                             j_m = j+(m-rank)
  */
-                __pyx_v_j_l = (__pyx_v_size_sq * __pyx_v_l);
+            __pyx_v_j_l = (__pyx_v_size_sq * __pyx_v_l);
 
-                /* "disorder/diffuse/filters.pyx":510
+            /* "disorder/diffuse/filters.pyx":513
  *                             i_l = n0-1
  *                         j_l = size_sq*l
  *                         for m in range(2*rank+1):             # <<<<<<<<<<<<<<
  *                             j_m = j+(m-rank)
  *                             if (j_m < 0):
  */
-                __pyx_t_22 = ((2 * __pyx_v_rank) + 1);
-                __pyx_t_23 = __pyx_t_22;
-                for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_23; __pyx_t_24+=1) {
-                  __pyx_v_m = __pyx_t_24;
+            __pyx_t_22 = ((2 * __pyx_v_rank) + 1);
+            __pyx_t_23 = __pyx_t_22;
+            for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_23; __pyx_t_24+=1) {
+              __pyx_v_m = __pyx_t_24;
 
-                  /* "disorder/diffuse/filters.pyx":511
+              /* "disorder/diffuse/filters.pyx":514
  *                         j_l = size_sq*l
  *                         for m in range(2*rank+1):
  *                             j_m = j+(m-rank)             # <<<<<<<<<<<<<<
  *                             if (j_m < 0):
  *                                 j_m = 0
  */
-                  __pyx_v_j_m = (__pyx_v_j + (__pyx_v_m - __pyx_v_rank));
+              __pyx_v_j_m = (__pyx_v_j + (__pyx_v_m - __pyx_v_rank));
 
-                  /* "disorder/diffuse/filters.pyx":512
+              /* "disorder/diffuse/filters.pyx":515
  *                         for m in range(2*rank+1):
  *                             j_m = j+(m-rank)
  *                             if (j_m < 0):             # <<<<<<<<<<<<<<
  *                                 j_m = 0
  *                             elif (j_m > n1-1):
  */
-                  __pyx_t_21 = ((__pyx_v_j_m < 0) != 0);
-                  if (__pyx_t_21) {
+              __pyx_t_18 = ((__pyx_v_j_m < 0) != 0);
+              if (__pyx_t_18) {
 
-                    /* "disorder/diffuse/filters.pyx":513
+                /* "disorder/diffuse/filters.pyx":516
  *                             j_m = j+(m-rank)
  *                             if (j_m < 0):
  *                                 j_m = 0             # <<<<<<<<<<<<<<
  *                             elif (j_m > n1-1):
  *                                 j_m = n1-1
  */
-                    __pyx_v_j_m = 0;
+                __pyx_v_j_m = 0;
 
-                    /* "disorder/diffuse/filters.pyx":512
+                /* "disorder/diffuse/filters.pyx":515
  *                         for m in range(2*rank+1):
  *                             j_m = j+(m-rank)
  *                             if (j_m < 0):             # <<<<<<<<<<<<<<
  *                                 j_m = 0
  *                             elif (j_m > n1-1):
  */
-                    goto __pyx_L17;
-                  }
+                goto __pyx_L15;
+              }
 
-                  /* "disorder/diffuse/filters.pyx":514
+              /* "disorder/diffuse/filters.pyx":517
  *                             if (j_m < 0):
  *                                 j_m = 0
  *                             elif (j_m > n1-1):             # <<<<<<<<<<<<<<
  *                                 j_m = n1-1
  *                             j_lm = j_l+size*m
  */
-                  __pyx_t_21 = ((__pyx_v_j_m > (__pyx_v_n1 - 1)) != 0);
-                  if (__pyx_t_21) {
+              __pyx_t_18 = ((__pyx_v_j_m > (__pyx_v_n1 - 1)) != 0);
+              if (__pyx_t_18) {
 
-                    /* "disorder/diffuse/filters.pyx":515
+                /* "disorder/diffuse/filters.pyx":518
  *                                 j_m = 0
  *                             elif (j_m > n1-1):
  *                                 j_m = n1-1             # <<<<<<<<<<<<<<
  *                             j_lm = j_l+size*m
  *                             for n in range(2*rank+1):
  */
-                    __pyx_v_j_m = (__pyx_v_n1 - 1);
+                __pyx_v_j_m = (__pyx_v_n1 - 1);
 
-                    /* "disorder/diffuse/filters.pyx":514
+                /* "disorder/diffuse/filters.pyx":517
  *                             if (j_m < 0):
  *                                 j_m = 0
  *                             elif (j_m > n1-1):             # <<<<<<<<<<<<<<
  *                                 j_m = n1-1
  *                             j_lm = j_l+size*m
  */
-                  }
-                  __pyx_L17:;
+              }
+              __pyx_L15:;
 
-                  /* "disorder/diffuse/filters.pyx":516
+              /* "disorder/diffuse/filters.pyx":519
  *                             elif (j_m > n1-1):
  *                                 j_m = n1-1
  *                             j_lm = j_l+size*m             # <<<<<<<<<<<<<<
  *                             for n in range(2*rank+1):
  *                                 k_n = k+(n-rank)
  */
-                  __pyx_v_j_lm = (__pyx_v_j_l + (__pyx_v_size * __pyx_v_m));
+              __pyx_v_j_lm = (__pyx_v_j_l + (__pyx_v_size * __pyx_v_m));
 
-                  /* "disorder/diffuse/filters.pyx":517
+              /* "disorder/diffuse/filters.pyx":520
  *                                 j_m = n1-1
  *                             j_lm = j_l+size*m
  *                             for n in range(2*rank+1):             # <<<<<<<<<<<<<<
  *                                 k_n = k+(n-rank)
  *                                 if (k_n < 0):
  */
-                  __pyx_t_25 = ((2 * __pyx_v_rank) + 1);
-                  __pyx_t_26 = __pyx_t_25;
-                  for (__pyx_t_27 = 0; __pyx_t_27 < __pyx_t_26; __pyx_t_27+=1) {
-                    __pyx_v_n = __pyx_t_27;
+              __pyx_t_25 = ((2 * __pyx_v_rank) + 1);
+              __pyx_t_26 = __pyx_t_25;
+              for (__pyx_t_27 = 0; __pyx_t_27 < __pyx_t_26; __pyx_t_27+=1) {
+                __pyx_v_n = __pyx_t_27;
 
-                    /* "disorder/diffuse/filters.pyx":518
+                /* "disorder/diffuse/filters.pyx":521
  *                             j_lm = j_l+size*m
  *                             for n in range(2*rank+1):
  *                                 k_n = k+(n-rank)             # <<<<<<<<<<<<<<
  *                                 if (k_n < 0):
  *                                     k_n = 0
  */
-                    __pyx_v_k_n = (__pyx_v_k + (__pyx_v_n - __pyx_v_rank));
+                __pyx_v_k_n = (__pyx_v_k + (__pyx_v_n - __pyx_v_rank));
 
-                    /* "disorder/diffuse/filters.pyx":519
+                /* "disorder/diffuse/filters.pyx":522
  *                             for n in range(2*rank+1):
  *                                 k_n = k+(n-rank)
  *                                 if (k_n < 0):             # <<<<<<<<<<<<<<
  *                                     k_n = 0
  *                                 elif (k_n > n2-1):
  */
-                    __pyx_t_21 = ((__pyx_v_k_n < 0) != 0);
-                    if (__pyx_t_21) {
+                __pyx_t_18 = ((__pyx_v_k_n < 0) != 0);
+                if (__pyx_t_18) {
 
-                      /* "disorder/diffuse/filters.pyx":520
+                  /* "disorder/diffuse/filters.pyx":523
  *                                 k_n = k+(n-rank)
  *                                 if (k_n < 0):
  *                                     k_n = 0             # <<<<<<<<<<<<<<
  *                                 elif (k_n > n2-1):
  *                                     k_n = n2-1
  */
-                      __pyx_v_k_n = 0;
+                  __pyx_v_k_n = 0;
 
-                      /* "disorder/diffuse/filters.pyx":519
+                  /* "disorder/diffuse/filters.pyx":522
  *                             for n in range(2*rank+1):
  *                                 k_n = k+(n-rank)
  *                                 if (k_n < 0):             # <<<<<<<<<<<<<<
  *                                     k_n = 0
  *                                 elif (k_n > n2-1):
  */
-                      goto __pyx_L20;
-                    }
+                  goto __pyx_L18;
+                }
 
-                    /* "disorder/diffuse/filters.pyx":521
+                /* "disorder/diffuse/filters.pyx":524
  *                                 if (k_n < 0):
  *                                     k_n = 0
  *                                 elif (k_n > n2-1):             # <<<<<<<<<<<<<<
  *                                     k_n = n2-1
  *                                 j_lmn = j_lm+n
  */
-                    __pyx_t_21 = ((__pyx_v_k_n > (__pyx_v_n2 - 1)) != 0);
-                    if (__pyx_t_21) {
+                __pyx_t_18 = ((__pyx_v_k_n > (__pyx_v_n2 - 1)) != 0);
+                if (__pyx_t_18) {
 
-                      /* "disorder/diffuse/filters.pyx":522
+                  /* "disorder/diffuse/filters.pyx":525
  *                                     k_n = 0
  *                                 elif (k_n > n2-1):
  *                                     k_n = n2-1             # <<<<<<<<<<<<<<
  *                                 j_lmn = j_lm+n
- * 
+ *                                 window[j_lmn] = a[i_l,j_m,k_n]
  */
-                      __pyx_v_k_n = (__pyx_v_n2 - 1);
+                  __pyx_v_k_n = (__pyx_v_n2 - 1);
 
-                      /* "disorder/diffuse/filters.pyx":521
+                  /* "disorder/diffuse/filters.pyx":524
  *                                 if (k_n < 0):
  *                                     k_n = 0
  *                                 elif (k_n > n2-1):             # <<<<<<<<<<<<<<
  *                                     k_n = n2-1
  *                                 j_lmn = j_lm+n
  */
-                    }
-                    __pyx_L20:;
+                }
+                __pyx_L18:;
 
-                    /* "disorder/diffuse/filters.pyx":523
+                /* "disorder/diffuse/filters.pyx":526
  *                                 elif (k_n > n2-1):
  *                                     k_n = n2-1
  *                                 j_lmn = j_lm+n             # <<<<<<<<<<<<<<
- * 
  *                                 window[j_lmn] = a[i_l,j_m,k_n]
+ *                                 window_order[j_lmn] = j_lmn
  */
-                    __pyx_v_j_lmn = (__pyx_v_j_lm + __pyx_v_n);
+                __pyx_v_j_lmn = (__pyx_v_j_lm + __pyx_v_n);
 
-                    /* "disorder/diffuse/filters.pyx":525
+                /* "disorder/diffuse/filters.pyx":527
+ *                                     k_n = n2-1
  *                                 j_lmn = j_lm+n
- * 
  *                                 window[j_lmn] = a[i_l,j_m,k_n]             # <<<<<<<<<<<<<<
- * 
- *                     sort(window, window_order, window_size)
+ *                                 window_order[j_lmn] = j_lmn
+ *                 else:
  */
-                    __pyx_t_28 = __pyx_v_i_l;
-                    __pyx_t_29 = __pyx_v_j_m;
-                    __pyx_t_30 = __pyx_v_k_n;
-                    __pyx_t_31 = __pyx_v_j_lmn;
-                    *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_window.data) + __pyx_t_31)) )) = (*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_a.data + __pyx_t_28 * __pyx_v_a.strides[0]) ) + __pyx_t_29 * __pyx_v_a.strides[1]) )) + __pyx_t_30)) )));
-                  }
+                __pyx_t_28 = __pyx_v_i_l;
+                __pyx_t_29 = __pyx_v_j_m;
+                __pyx_t_30 = __pyx_v_k_n;
+                __pyx_t_31 = __pyx_v_j_lmn;
+                *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_window.data) + __pyx_t_31)) )) = (*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_a.data + __pyx_t_28 * __pyx_v_a.strides[0]) ) + __pyx_t_29 * __pyx_v_a.strides[1]) )) + __pyx_t_30)) )));
+
+                /* "disorder/diffuse/filters.pyx":528
+ *                                 j_lmn = j_lm+n
+ *                                 window[j_lmn] = a[i_l,j_m,k_n]
+ *                                 window_order[j_lmn] = j_lmn             # <<<<<<<<<<<<<<
+ *                 else:
+ *                     p = 0
+ */
+                __pyx_t_30 = __pyx_v_j_lmn;
+                *((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_window_order.data) + __pyx_t_30)) )) = __pyx_v_j_lmn;
+              }
+            }
+          }
+
+          /* "disorder/diffuse/filters.pyx":505
+ *             for k in range(n2):
+ * 
+ *                 if (k == 0):             # <<<<<<<<<<<<<<
+ *                     for l in range(2*rank+1):
+ *                         i_l = i+(l-rank)
+ */
+          goto __pyx_L9;
+        }
+
+        /* "disorder/diffuse/filters.pyx":530
+ *                                 window_order[j_lmn] = j_lmn
+ *                 else:
+ *                     p = 0             # <<<<<<<<<<<<<<
+ *                     while (p < sliding_size):
+ *                         if (window_order[p] % size == 0):
+ */
+        /*else*/ {
+          __pyx_v_p = 0;
+
+          /* "disorder/diffuse/filters.pyx":531
+ *                 else:
+ *                     p = 0
+ *                     while (p < sliding_size):             # <<<<<<<<<<<<<<
+ *                         if (window_order[p] % size == 0):
+ *                             r = p
+ */
+          while (1) {
+            __pyx_t_18 = ((__pyx_v_p < __pyx_v_sliding_size) != 0);
+            if (!__pyx_t_18) break;
+
+            /* "disorder/diffuse/filters.pyx":532
+ *                     p = 0
+ *                     while (p < sliding_size):
+ *                         if (window_order[p] % size == 0):             # <<<<<<<<<<<<<<
+ *                             r = p
+ *                             for q in range(p+1,window_size):
+ */
+            __pyx_t_30 = __pyx_v_p;
+            __pyx_t_18 = ((((*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_window_order.data) + __pyx_t_30)) ))) % __pyx_v_size) == 0) != 0);
+            if (__pyx_t_18) {
+
+              /* "disorder/diffuse/filters.pyx":533
+ *                     while (p < sliding_size):
+ *                         if (window_order[p] % size == 0):
+ *                             r = p             # <<<<<<<<<<<<<<
+ *                             for q in range(p+1,window_size):
+ *                                 if (window_order[q] % size != 0):
+ */
+              __pyx_v_r = __pyx_v_p;
+
+              /* "disorder/diffuse/filters.pyx":534
+ *                         if (window_order[p] % size == 0):
+ *                             r = p
+ *                             for q in range(p+1,window_size):             # <<<<<<<<<<<<<<
+ *                                 if (window_order[q] % size != 0):
+ *                                     window[r] = window[q]
+ */
+              __pyx_t_19 = __pyx_v_window_size;
+              __pyx_t_20 = __pyx_t_19;
+              for (__pyx_t_21 = (__pyx_v_p + 1); __pyx_t_21 < __pyx_t_20; __pyx_t_21+=1) {
+                __pyx_v_q = __pyx_t_21;
+
+                /* "disorder/diffuse/filters.pyx":535
+ *                             r = p
+ *                             for q in range(p+1,window_size):
+ *                                 if (window_order[q] % size != 0):             # <<<<<<<<<<<<<<
+ *                                     window[r] = window[q]
+ *                                     window_order[r] = window_order[q]
+ */
+                __pyx_t_30 = __pyx_v_q;
+                __pyx_t_18 = ((((*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_window_order.data) + __pyx_t_30)) ))) % __pyx_v_size) != 0) != 0);
+                if (__pyx_t_18) {
+
+                  /* "disorder/diffuse/filters.pyx":536
+ *                             for q in range(p+1,window_size):
+ *                                 if (window_order[q] % size != 0):
+ *                                     window[r] = window[q]             # <<<<<<<<<<<<<<
+ *                                     window_order[r] = window_order[q]
+ *                                     r += 1
+ */
+                  __pyx_t_30 = __pyx_v_q;
+                  __pyx_t_29 = __pyx_v_r;
+                  *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_window.data) + __pyx_t_29)) )) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_window.data) + __pyx_t_30)) )));
+
+                  /* "disorder/diffuse/filters.pyx":537
+ *                                 if (window_order[q] % size != 0):
+ *                                     window[r] = window[q]
+ *                                     window_order[r] = window_order[q]             # <<<<<<<<<<<<<<
+ *                                     r += 1
+ *                         window_order[p] -= 1
+ */
+                  __pyx_t_30 = __pyx_v_q;
+                  __pyx_t_29 = __pyx_v_r;
+                  *((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_window_order.data) + __pyx_t_29)) )) = (*((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_window_order.data) + __pyx_t_30)) )));
+
+                  /* "disorder/diffuse/filters.pyx":538
+ *                                     window[r] = window[q]
+ *                                     window_order[r] = window_order[q]
+ *                                     r += 1             # <<<<<<<<<<<<<<
+ *                         window_order[p] -= 1
+ *                         p = p+1
+ */
+                  __pyx_v_r = (__pyx_v_r + 1);
+
+                  /* "disorder/diffuse/filters.pyx":535
+ *                             r = p
+ *                             for q in range(p+1,window_size):
+ *                                 if (window_order[q] % size != 0):             # <<<<<<<<<<<<<<
+ *                                     window[r] = window[q]
+ *                                     window_order[r] = window_order[q]
+ */
                 }
               }
 
-              /* "disorder/diffuse/filters.pyx":527
- *                                 window[j_lmn] = a[i_l,j_m,k_n]
- * 
- *                     sort(window, window_order, window_size)             # <<<<<<<<<<<<<<
- *                     copy(argument_order, window_order, window_size)
- *                     argsort(argument_order, window_size)
+              /* "disorder/diffuse/filters.pyx":532
+ *                     p = 0
+ *                     while (p < sliding_size):
+ *                         if (window_order[p] % size == 0):             # <<<<<<<<<<<<<<
+ *                             r = p
+ *                             for q in range(p+1,window_size):
  */
-              __pyx_f_8disorder_7diffuse_7filters_sort(__pyx_v_window, __pyx_v_window_order, __pyx_v_window_size);
+            }
 
-              /* "disorder/diffuse/filters.pyx":528
- * 
- *                     sort(window, window_order, window_size)
- *                     copy(argument_order, window_order, window_size)             # <<<<<<<<<<<<<<
- *                     argsort(argument_order, window_size)
- * 
+            /* "disorder/diffuse/filters.pyx":539
+ *                                     window_order[r] = window_order[q]
+ *                                     r += 1
+ *                         window_order[p] -= 1             # <<<<<<<<<<<<<<
+ *                         p = p+1
+ *                     n = 2*rank
  */
-              __pyx_f_8disorder_7diffuse_7filters_copy(__pyx_v_argument_order, __pyx_v_window_order, __pyx_v_window_size);
+            __pyx_t_30 = __pyx_v_p;
+            *((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_window_order.data) + __pyx_t_30)) )) -= 1;
 
-              /* "disorder/diffuse/filters.pyx":529
- *                     sort(window, window_order, window_size)
- *                     copy(argument_order, window_order, window_size)
- *                     argsort(argument_order, window_size)             # <<<<<<<<<<<<<<
- * 
- *                     b[i,j,k] = window[med]
+            /* "disorder/diffuse/filters.pyx":540
+ *                                     r += 1
+ *                         window_order[p] -= 1
+ *                         p = p+1             # <<<<<<<<<<<<<<
+ *                     n = 2*rank
+ *                     k_n = k+(n-rank)
  */
-              __pyx_f_8disorder_7diffuse_7filters_argsort(__pyx_v_argument_order, __pyx_v_window_size);
+            __pyx_v_p = (__pyx_v_p + 1);
+          }
 
-              /* "disorder/diffuse/filters.pyx":531
- *                     argsort(argument_order, window_size)
- * 
- *                     b[i,j,k] = window[med]             # <<<<<<<<<<<<<<
- * 
- *     return b_np
+          /* "disorder/diffuse/filters.pyx":541
+ *                         window_order[p] -= 1
+ *                         p = p+1
+ *                     n = 2*rank             # <<<<<<<<<<<<<<
+ *                     k_n = k+(n-rank)
+ *                     if (k_n < 0):
  */
-              __pyx_t_30 = __pyx_v_med;
-              __pyx_t_29 = __pyx_v_i;
-              __pyx_t_28 = __pyx_v_j;
-              __pyx_t_31 = __pyx_v_k;
-              *((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_29 * __pyx_v_b.strides[0]) ) + __pyx_t_28 * __pyx_v_b.strides[1]) )) + __pyx_t_31)) )) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_window.data) + __pyx_t_30)) )));
+          __pyx_v_n = (2 * __pyx_v_rank);
+
+          /* "disorder/diffuse/filters.pyx":542
+ *                         p = p+1
+ *                     n = 2*rank
+ *                     k_n = k+(n-rank)             # <<<<<<<<<<<<<<
+ *                     if (k_n < 0):
+ *                         k_n = 0
+ */
+          __pyx_v_k_n = (__pyx_v_k + (__pyx_v_n - __pyx_v_rank));
+
+          /* "disorder/diffuse/filters.pyx":543
+ *                     n = 2*rank
+ *                     k_n = k+(n-rank)
+ *                     if (k_n < 0):             # <<<<<<<<<<<<<<
+ *                         k_n = 0
+ *                     elif (k_n > n2-1):
+ */
+          __pyx_t_18 = ((__pyx_v_k_n < 0) != 0);
+          if (__pyx_t_18) {
+
+            /* "disorder/diffuse/filters.pyx":544
+ *                     k_n = k+(n-rank)
+ *                     if (k_n < 0):
+ *                         k_n = 0             # <<<<<<<<<<<<<<
+ *                     elif (k_n > n2-1):
+ *                         k_n = n2-1
+ */
+            __pyx_v_k_n = 0;
+
+            /* "disorder/diffuse/filters.pyx":543
+ *                     n = 2*rank
+ *                     k_n = k+(n-rank)
+ *                     if (k_n < 0):             # <<<<<<<<<<<<<<
+ *                         k_n = 0
+ *                     elif (k_n > n2-1):
+ */
+            goto __pyx_L25;
+          }
+
+          /* "disorder/diffuse/filters.pyx":545
+ *                     if (k_n < 0):
+ *                         k_n = 0
+ *                     elif (k_n > n2-1):             # <<<<<<<<<<<<<<
+ *                         k_n = n2-1
+ *                     p = 0
+ */
+          __pyx_t_18 = ((__pyx_v_k_n > (__pyx_v_n2 - 1)) != 0);
+          if (__pyx_t_18) {
+
+            /* "disorder/diffuse/filters.pyx":546
+ *                         k_n = 0
+ *                     elif (k_n > n2-1):
+ *                         k_n = n2-1             # <<<<<<<<<<<<<<
+ *                     p = 0
+ *                     for l in range(2*rank+1):
+ */
+            __pyx_v_k_n = (__pyx_v_n2 - 1);
+
+            /* "disorder/diffuse/filters.pyx":545
+ *                     if (k_n < 0):
+ *                         k_n = 0
+ *                     elif (k_n > n2-1):             # <<<<<<<<<<<<<<
+ *                         k_n = n2-1
+ *                     p = 0
+ */
+          }
+          __pyx_L25:;
+
+          /* "disorder/diffuse/filters.pyx":547
+ *                     elif (k_n > n2-1):
+ *                         k_n = n2-1
+ *                     p = 0             # <<<<<<<<<<<<<<
+ *                     for l in range(2*rank+1):
+ *                         i_l = i+(l-rank)
+ */
+          __pyx_v_p = 0;
+
+          /* "disorder/diffuse/filters.pyx":548
+ *                         k_n = n2-1
+ *                     p = 0
+ *                     for l in range(2*rank+1):             # <<<<<<<<<<<<<<
+ *                         i_l = i+(l-rank)
+ *                         if (i_l < 0):
+ */
+          __pyx_t_19 = ((2 * __pyx_v_rank) + 1);
+          __pyx_t_20 = __pyx_t_19;
+          for (__pyx_t_21 = 0; __pyx_t_21 < __pyx_t_20; __pyx_t_21+=1) {
+            __pyx_v_l = __pyx_t_21;
+
+            /* "disorder/diffuse/filters.pyx":549
+ *                     p = 0
+ *                     for l in range(2*rank+1):
+ *                         i_l = i+(l-rank)             # <<<<<<<<<<<<<<
+ *                         if (i_l < 0):
+ *                             i_l = 0
+ */
+            __pyx_v_i_l = (__pyx_v_i + (__pyx_v_l - __pyx_v_rank));
+
+            /* "disorder/diffuse/filters.pyx":550
+ *                     for l in range(2*rank+1):
+ *                         i_l = i+(l-rank)
+ *                         if (i_l < 0):             # <<<<<<<<<<<<<<
+ *                             i_l = 0
+ *                         elif (i_l > n0-1):
+ */
+            __pyx_t_18 = ((__pyx_v_i_l < 0) != 0);
+            if (__pyx_t_18) {
+
+              /* "disorder/diffuse/filters.pyx":551
+ *                         i_l = i+(l-rank)
+ *                         if (i_l < 0):
+ *                             i_l = 0             # <<<<<<<<<<<<<<
+ *                         elif (i_l > n0-1):
+ *                             i_l = n0-1
+ */
+              __pyx_v_i_l = 0;
+
+              /* "disorder/diffuse/filters.pyx":550
+ *                     for l in range(2*rank+1):
+ *                         i_l = i+(l-rank)
+ *                         if (i_l < 0):             # <<<<<<<<<<<<<<
+ *                             i_l = 0
+ *                         elif (i_l > n0-1):
+ */
+              goto __pyx_L28;
+            }
+
+            /* "disorder/diffuse/filters.pyx":552
+ *                         if (i_l < 0):
+ *                             i_l = 0
+ *                         elif (i_l > n0-1):             # <<<<<<<<<<<<<<
+ *                             i_l = n0-1
+ *                         j_l = size_sq*l
+ */
+            __pyx_t_18 = ((__pyx_v_i_l > (__pyx_v_n0 - 1)) != 0);
+            if (__pyx_t_18) {
+
+              /* "disorder/diffuse/filters.pyx":553
+ *                             i_l = 0
+ *                         elif (i_l > n0-1):
+ *                             i_l = n0-1             # <<<<<<<<<<<<<<
+ *                         j_l = size_sq*l
+ *                         for m in range(2*rank+1):
+ */
+              __pyx_v_i_l = (__pyx_v_n0 - 1);
+
+              /* "disorder/diffuse/filters.pyx":552
+ *                         if (i_l < 0):
+ *                             i_l = 0
+ *                         elif (i_l > n0-1):             # <<<<<<<<<<<<<<
+ *                             i_l = n0-1
+ *                         j_l = size_sq*l
+ */
+            }
+            __pyx_L28:;
+
+            /* "disorder/diffuse/filters.pyx":554
+ *                         elif (i_l > n0-1):
+ *                             i_l = n0-1
+ *                         j_l = size_sq*l             # <<<<<<<<<<<<<<
+ *                         for m in range(2*rank+1):
+ *                             j_m = j+(m-rank)
+ */
+            __pyx_v_j_l = (__pyx_v_size_sq * __pyx_v_l);
+
+            /* "disorder/diffuse/filters.pyx":555
+ *                             i_l = n0-1
+ *                         j_l = size_sq*l
+ *                         for m in range(2*rank+1):             # <<<<<<<<<<<<<<
+ *                             j_m = j+(m-rank)
+ *                             if (j_m < 0):
+ */
+            __pyx_t_22 = ((2 * __pyx_v_rank) + 1);
+            __pyx_t_23 = __pyx_t_22;
+            for (__pyx_t_24 = 0; __pyx_t_24 < __pyx_t_23; __pyx_t_24+=1) {
+              __pyx_v_m = __pyx_t_24;
+
+              /* "disorder/diffuse/filters.pyx":556
+ *                         j_l = size_sq*l
+ *                         for m in range(2*rank+1):
+ *                             j_m = j+(m-rank)             # <<<<<<<<<<<<<<
+ *                             if (j_m < 0):
+ *                                 j_m = 0
+ */
+              __pyx_v_j_m = (__pyx_v_j + (__pyx_v_m - __pyx_v_rank));
+
+              /* "disorder/diffuse/filters.pyx":557
+ *                         for m in range(2*rank+1):
+ *                             j_m = j+(m-rank)
+ *                             if (j_m < 0):             # <<<<<<<<<<<<<<
+ *                                 j_m = 0
+ *                             elif (j_m > n1-1):
+ */
+              __pyx_t_18 = ((__pyx_v_j_m < 0) != 0);
+              if (__pyx_t_18) {
+
+                /* "disorder/diffuse/filters.pyx":558
+ *                             j_m = j+(m-rank)
+ *                             if (j_m < 0):
+ *                                 j_m = 0             # <<<<<<<<<<<<<<
+ *                             elif (j_m > n1-1):
+ *                                 j_m = n1-1
+ */
+                __pyx_v_j_m = 0;
+
+                /* "disorder/diffuse/filters.pyx":557
+ *                         for m in range(2*rank+1):
+ *                             j_m = j+(m-rank)
+ *                             if (j_m < 0):             # <<<<<<<<<<<<<<
+ *                                 j_m = 0
+ *                             elif (j_m > n1-1):
+ */
+                goto __pyx_L31;
+              }
+
+              /* "disorder/diffuse/filters.pyx":559
+ *                             if (j_m < 0):
+ *                                 j_m = 0
+ *                             elif (j_m > n1-1):             # <<<<<<<<<<<<<<
+ *                                 j_m = n1-1
+ *                             j_lm = j_l+size*m
+ */
+              __pyx_t_18 = ((__pyx_v_j_m > (__pyx_v_n1 - 1)) != 0);
+              if (__pyx_t_18) {
+
+                /* "disorder/diffuse/filters.pyx":560
+ *                                 j_m = 0
+ *                             elif (j_m > n1-1):
+ *                                 j_m = n1-1             # <<<<<<<<<<<<<<
+ *                             j_lm = j_l+size*m
+ *                             j_lmn = j_lm+n
+ */
+                __pyx_v_j_m = (__pyx_v_n1 - 1);
+
+                /* "disorder/diffuse/filters.pyx":559
+ *                             if (j_m < 0):
+ *                                 j_m = 0
+ *                             elif (j_m > n1-1):             # <<<<<<<<<<<<<<
+ *                                 j_m = n1-1
+ *                             j_lm = j_l+size*m
+ */
+              }
+              __pyx_L31:;
+
+              /* "disorder/diffuse/filters.pyx":561
+ *                             elif (j_m > n1-1):
+ *                                 j_m = n1-1
+ *                             j_lm = j_l+size*m             # <<<<<<<<<<<<<<
+ *                             j_lmn = j_lm+n
+ *                             window[sliding_size+p] = a[i_l,j_m,k_n]
+ */
+              __pyx_v_j_lm = (__pyx_v_j_l + (__pyx_v_size * __pyx_v_m));
+
+              /* "disorder/diffuse/filters.pyx":562
+ *                                 j_m = n1-1
+ *                             j_lm = j_l+size*m
+ *                             j_lmn = j_lm+n             # <<<<<<<<<<<<<<
+ *                             window[sliding_size+p] = a[i_l,j_m,k_n]
+ *                             window_order[sliding_size+p] = j_lmn
+ */
+              __pyx_v_j_lmn = (__pyx_v_j_lm + __pyx_v_n);
+
+              /* "disorder/diffuse/filters.pyx":563
+ *                             j_lm = j_l+size*m
+ *                             j_lmn = j_lm+n
+ *                             window[sliding_size+p] = a[i_l,j_m,k_n]             # <<<<<<<<<<<<<<
+ *                             window_order[sliding_size+p] = j_lmn
+ *                             p = p+1
+ */
+              __pyx_t_30 = __pyx_v_i_l;
+              __pyx_t_29 = __pyx_v_j_m;
+              __pyx_t_28 = __pyx_v_k_n;
+              __pyx_t_31 = (__pyx_v_sliding_size + __pyx_v_p);
+              *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_window.data) + __pyx_t_31)) )) = (*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_a.data + __pyx_t_30 * __pyx_v_a.strides[0]) ) + __pyx_t_29 * __pyx_v_a.strides[1]) )) + __pyx_t_28)) )));
+
+              /* "disorder/diffuse/filters.pyx":564
+ *                             j_lmn = j_lm+n
+ *                             window[sliding_size+p] = a[i_l,j_m,k_n]
+ *                             window_order[sliding_size+p] = j_lmn             # <<<<<<<<<<<<<<
+ *                             p = p+1
+ * 
+ */
+              __pyx_t_28 = (__pyx_v_sliding_size + __pyx_v_p);
+              *((long *) ( /* dim=0 */ ((char *) (((long *) __pyx_v_window_order.data) + __pyx_t_28)) )) = __pyx_v_j_lmn;
+
+              /* "disorder/diffuse/filters.pyx":565
+ *                             window[sliding_size+p] = a[i_l,j_m,k_n]
+ *                             window_order[sliding_size+p] = j_lmn
+ *                             p = p+1             # <<<<<<<<<<<<<<
+ * 
+ *                 sort(window, window_order, window_size)
+ */
+              __pyx_v_p = (__pyx_v_p + 1);
             }
           }
         }
-      }
+        __pyx_L9:;
 
-      /* "disorder/diffuse/filters.pyx":498
- *     cdef Py_ssize_t i_l, j_m, k_n
+        /* "disorder/diffuse/filters.pyx":567
+ *                             p = p+1
  * 
- *     with nogil:             # <<<<<<<<<<<<<<
- *         for i in range(n0):
- *             for j in range(n1):
+ *                 sort(window, window_order, window_size)             # <<<<<<<<<<<<<<
+ * 
+ *                 b[i,j,k] = window[med]
  */
-      /*finally:*/ {
-        /*normal exit:*/{
-          #ifdef WITH_THREAD
-          __Pyx_FastGIL_Forget();
-          Py_BLOCK_THREADS
-          #endif
-          goto __pyx_L5;
-        }
-        __pyx_L5:;
+        __pyx_f_8disorder_7diffuse_7filters_sort(__pyx_v_window, __pyx_v_window_order, __pyx_v_window_size);
+
+        /* "disorder/diffuse/filters.pyx":569
+ *                 sort(window, window_order, window_size)
+ * 
+ *                 b[i,j,k] = window[med]             # <<<<<<<<<<<<<<
+ * 
+ *     return b_np
+ */
+        __pyx_t_28 = __pyx_v_med;
+        __pyx_t_29 = __pyx_v_i;
+        __pyx_t_30 = __pyx_v_j;
+        __pyx_t_31 = __pyx_v_k;
+        *((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_29 * __pyx_v_b.strides[0]) ) + __pyx_t_30 * __pyx_v_b.strides[1]) )) + __pyx_t_31)) )) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_window.data) + __pyx_t_28)) )));
       }
+    }
   }
 
-  /* "disorder/diffuse/filters.pyx":533
- *                     b[i,j,k] = window[med]
+  /* "disorder/diffuse/filters.pyx":571
+ *                 b[i,j,k] = window[med]
  * 
  *     return b_np             # <<<<<<<<<<<<<<
  */
@@ -7824,7 +8081,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_12median(CYTHON_UNUSED PyO
   goto __pyx_L0;
 
   /* "disorder/diffuse/filters.pyx":464
- *         data[i] = order[i]
+ * #         data[i] = order[i]
  * 
  * def median(double [:,:,::1] a, Py_ssize_t size):             # <<<<<<<<<<<<<<
  * 
@@ -22768,6 +23025,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_numpy_core_umath_failed_to_impor, __pyx_k_numpy_core_umath_failed_to_impor, sizeof(__pyx_k_numpy_core_umath_failed_to_impor), 0, 1, 0, 0},
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
   {&__pyx_n_s_os, __pyx_k_os, sizeof(__pyx_k_os), 0, 0, 1, 1},
+  {&__pyx_n_s_p, __pyx_k_p, sizeof(__pyx_k_p), 0, 0, 1, 1},
   {&__pyx_n_s_pack, __pyx_k_pack, sizeof(__pyx_k_pack), 0, 0, 1, 1},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_PickleError, __pyx_k_pyx_PickleError, sizeof(__pyx_k_pyx_PickleError), 0, 0, 1, 1},
@@ -22778,6 +23036,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_pyx_type, __pyx_k_pyx_type, sizeof(__pyx_k_pyx_type), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_unpickle_Enum, __pyx_k_pyx_unpickle_Enum, sizeof(__pyx_k_pyx_unpickle_Enum), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_vtable, __pyx_k_pyx_vtable, sizeof(__pyx_k_pyx_vtable), 0, 0, 1, 1},
+  {&__pyx_n_s_q, __pyx_k_q, sizeof(__pyx_k_q), 0, 0, 1, 1},
+  {&__pyx_n_s_r, __pyx_k_r, sizeof(__pyx_k_r), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
   {&__pyx_n_s_rank, __pyx_k_rank, sizeof(__pyx_k_rank), 0, 0, 1, 1},
   {&__pyx_n_s_rebin0, __pyx_k_rebin0, sizeof(__pyx_k_rebin0), 0, 0, 1, 1},
@@ -22792,6 +23052,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
   {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
   {&__pyx_n_s_size_sq, __pyx_k_size_sq, sizeof(__pyx_k_size_sq), 0, 0, 1, 1},
+  {&__pyx_n_s_sliding_size, __pyx_k_sliding_size, sizeof(__pyx_k_sliding_size), 0, 0, 1, 1},
   {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
   {&__pyx_n_s_step, __pyx_k_step, sizeof(__pyx_k_step), 0, 0, 1, 1},
   {&__pyx_n_s_stop, __pyx_k_stop, sizeof(__pyx_k_stop), 0, 0, 1, 1},
@@ -23089,16 +23350,16 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(2, 0, 18, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_filters_pyx, __pyx_n_s_rebin2, 82, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 82, __pyx_L1_error)
 
   /* "disorder/diffuse/filters.pyx":464
- *         data[i] = order[i]
+ * #         data[i] = order[i]
  * 
  * def median(double [:,:,::1] a, Py_ssize_t size):             # <<<<<<<<<<<<<<
  * 
  *     cdef Py_ssize_t n0 = a.shape[0]
  */
-  __pyx_tuple__27 = PyTuple_Pack(29, __pyx_n_s_a, __pyx_n_s_size, __pyx_n_s_n0, __pyx_n_s_n1, __pyx_n_s_n2, __pyx_n_s_b_np, __pyx_n_s_b, __pyx_n_s_rank, __pyx_n_s_window_size, __pyx_n_s_size_sq, __pyx_n_s_med, __pyx_n_s_window_np, __pyx_n_s_window, __pyx_n_s_window_order_np, __pyx_n_s_argument_order_np, __pyx_n_s_window_order, __pyx_n_s_argument_order, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_m, __pyx_n_s_n, __pyx_n_s_j_l, __pyx_n_s_j_lm, __pyx_n_s_j_lmn, __pyx_n_s_i_l, __pyx_n_s_j_m, __pyx_n_s_k_n); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __pyx_tuple__27 = PyTuple_Pack(33, __pyx_n_s_a, __pyx_n_s_size, __pyx_n_s_n0, __pyx_n_s_n1, __pyx_n_s_n2, __pyx_n_s_b_np, __pyx_n_s_b, __pyx_n_s_rank, __pyx_n_s_window_size, __pyx_n_s_size_sq, __pyx_n_s_med, __pyx_n_s_window_np, __pyx_n_s_window, __pyx_n_s_window_order_np, __pyx_n_s_argument_order_np, __pyx_n_s_window_order, __pyx_n_s_argument_order, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_l, __pyx_n_s_m, __pyx_n_s_n, __pyx_n_s_p, __pyx_n_s_q, __pyx_n_s_r, __pyx_n_s_sliding_size, __pyx_n_s_j_l, __pyx_n_s_j_lm, __pyx_n_s_j_lmn, __pyx_n_s_i_l, __pyx_n_s_j_m, __pyx_n_s_k_n); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(0, 464, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__27);
   __Pyx_GIVEREF(__pyx_tuple__27);
-  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(2, 0, 29, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_filters_pyx, __pyx_n_s_median, 464, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 464, __pyx_L1_error)
+  __pyx_codeobj__28 = (PyObject*)__Pyx_PyCode_New(2, 0, 33, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__27, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_filters_pyx, __pyx_n_s_median, 464, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__28)) __PYX_ERR(0, 464, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -23645,7 +23906,7 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "disorder/diffuse/filters.pyx":464
- *         data[i] = order[i]
+ * #         data[i] = order[i]
  * 
  * def median(double [:,:,::1] a, Py_ssize_t size):             # <<<<<<<<<<<<<<
  * 
@@ -27398,44 +27659,6 @@ no_fail:
     return new_mvs;
 }
 
-/* CIntToPy */
-  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const int neg_one = (int) -1, const_zero = (int) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(int) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(int) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(int) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(int),
-                                     little, !is_unsigned);
-    }
-}
-
 /* CIntFromPyVerify */
   #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
@@ -27848,6 +28071,44 @@ raise_neg_overflow:
     PyErr_SetString(PyExc_OverflowError,
         "can't convert negative value to long");
     return (long) -1;
+}
+
+/* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const int neg_one = (int) -1, const_zero = (int) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+    if (is_unsigned) {
+        if (sizeof(int) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(int) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
+#endif
+        }
+    } else {
+        if (sizeof(int) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
+    }
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(int),
+                                     little, !is_unsigned);
+    }
 }
 
 /* CIntToPy */

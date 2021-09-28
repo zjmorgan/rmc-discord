@@ -432,34 +432,34 @@ cdef void sort(double [::1] data, long [::1] order, int n) nogil:
         while (j >= 0 and data[j] > temp):
             data[j+1] = data[j]
             order[j+1] = order[j]
-            j = j-1
+            j -= 1
         data[j+1] = temp
         order[j+1] = temp_ind
-        i = i+1
+        i += 1
         
-cdef void argsort(long [::1] data, int n) nogil:
+# cdef void argsort(long [::1] data, int n) nogil:
 
-    cdef Py_ssize_t temp
+#     cdef Py_ssize_t temp
     
-    cdef Py_ssize_t i, j
+#     cdef Py_ssize_t i, j
     
-    i = 1
-    while (i < n):
-        temp = data[i]
-        j = i-1
-        while (j >= 0 and data[j] > temp):
-            data[j+1] = data[j]
-            j = j-1
-        data[j+1] = temp
-        i = i+1
+#     i = 1
+#     while (i < n):
+#         temp = data[i]
+#         j = i-1
+#         while (j >= 0 and data[j] > temp):
+#             data[j+1] = data[j]
+#             j = j-1
+#         data[j+1] = temp
+#         i = i+1
         
-cdef void copy(long [::1] data, long [::1] order, int n) nogil:
+# cdef void copy(long [::1] data, long [::1] order, int n) nogil:
     
-    cdef Py_ssize_t i
+#     cdef Py_ssize_t i
     
-    for i in range(n):
+#     for i in range(n):
         
-        data[i] = order[i]
+#         data[i] = order[i]
 
 def median(double [:,:,::1] a, Py_ssize_t size):
     
@@ -489,17 +489,20 @@ def median(double [:,:,::1] a, Py_ssize_t size):
     cdef long [::1] window_order = window_order_np
     cdef long [::1] argument_order = argument_order_np
 
-    cdef Py_ssize_t i, j, k, l, m, n
+    cdef Py_ssize_t i, j, k, l, m, n, p, q, r
+    
+    cdef Py_ssize_t sliding_size = window_size-size_sq
     
     cdef Py_ssize_t j_l, j_lm, j_lmn
     
     cdef Py_ssize_t i_l, j_m, k_n
 
-    with nogil:
-        for i in range(n0):
-            for j in range(n1):
-                for k in range(n2):
-                                            
+    #with nogil:
+    for i in range(n0):
+        for j in range(n1):
+            for k in range(n2):
+                         
+                if (k == 0):
                     for l in range(2*rank+1):
                         i_l = i+(l-rank)
                         if (i_l < 0):
@@ -521,13 +524,48 @@ def median(double [:,:,::1] a, Py_ssize_t size):
                                 elif (k_n > n2-1):
                                     k_n = n2-1
                                 j_lmn = j_lm+n
-                    
-                                window[j_lmn] = a[i_l,j_m,k_n]
-                                    
-                    sort(window, window_order, window_size)
-                    copy(argument_order, window_order, window_size)
-                    argsort(argument_order, window_size)
-                    
-                    b[i,j,k] = window[med]
+                                window[j_lmn] = a[i_l,j_m,k_n]  
+                                window_order[j_lmn] = j_lmn
+                else:
+                    p = 0
+                    while (p < sliding_size):
+                        if (window_order[p] % size == 0):
+                            r = p
+                            for q in range(p+1,window_size):
+                                if (window_order[q] % size != 0):
+                                    window[r] = window[q]
+                                    window_order[r] = window_order[q]
+                                    r += 1
+                        window_order[p] -= 1       
+                        p = p+1
+                    n = 2*rank
+                    k_n = k+(n-rank)
+                    if (k_n < 0):
+                        k_n = 0
+                    elif (k_n > n2-1):
+                        k_n = n2-1                            
+                    p = 0
+                    for l in range(2*rank+1):
+                        i_l = i+(l-rank)
+                        if (i_l < 0):
+                            i_l = 0
+                        elif (i_l > n0-1):
+                            i_l = n0-1
+                        j_l = size_sq*l
+                        for m in range(2*rank+1):
+                            j_m = j+(m-rank)
+                            if (j_m < 0):
+                                j_m = 0
+                            elif (j_m > n1-1):
+                                j_m = n1-1
+                            j_lm = j_l+size*m
+                            j_lmn = j_lm+n
+                            window[sliding_size+p] = a[i_l,j_m,k_n]  
+                            window_order[sliding_size+p] = j_lmn 
+                            p = p+1
+                            
+                sort(window, window_order, window_size)
             
+                b[i,j,k] = window[med]
+        
     return b_np
