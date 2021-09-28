@@ -404,21 +404,11 @@ cpdef void filtering(double [::1] t,
         blur2(i, h, boxes[8], nh, nk, nl)
         
     weight(t, i, v_inv)
-    
-# cdef void sort(double [::1] array2sort, int n) nogil:
 
-#     cdef double temp
-    
-#     cdef Py_ssize_t i, j
-    
-#     for i in range(0, n-1):
-#         for j in range(0, n-1-i):
-#             if (array2sort[j] > array2sort[j+1]):
-#                 temp = array2sort[j]
-#                 array2sort[j] = array2sort[j+1]
-#                 array2sort[j+1] = temp
-
-cdef void sort(double [::1] data, long [::1] order, int n) nogil:
+cdef void sort(double [:,::1] data, 
+               long [:,::1] order, 
+               int n, 
+               Py_ssize_t thread_id) nogil:
 
     cdef double temp
     
@@ -426,42 +416,20 @@ cdef void sort(double [::1] data, long [::1] order, int n) nogil:
     
     i = 1
     while (i < n):
-        temp = data[i]
-        temp_ind = i
+        temp = data[thread_id,i]
+        temp_ind = order[thread_id,i]
         j = i-1
-        while (j >= 0 and data[j] > temp):
-            data[j+1] = data[j]
-            order[j+1] = order[j]
-            j -= 1
-        data[j+1] = temp
-        order[j+1] = temp_ind
-        i += 1
-        
-# cdef void argsort(long [::1] data, int n) nogil:
-
-#     cdef Py_ssize_t temp
-    
-#     cdef Py_ssize_t i, j
-    
-#     i = 1
-#     while (i < n):
-#         temp = data[i]
-#         j = i-1
-#         while (j >= 0 and data[j] > temp):
-#             data[j+1] = data[j]
-#             j = j-1
-#         data[j+1] = temp
-#         i = i+1
-        
-# cdef void copy(long [::1] data, long [::1] order, int n) nogil:
-    
-#     cdef Py_ssize_t i
-    
-#     for i in range(n):
-        
-#         data[i] = order[i]
+        while (j >= 0 and data[thread_id,j] > temp):
+            data[thread_id,j+1] = data[thread_id,j]
+            order[thread_id,j+1] = order[thread_id,j]
+            j = j-1
+        data[thread_id,j+1] = temp
+        order[thread_id,j+1] = temp_ind
+        i = i+1
 
 def median(double [:,:,::1] a, Py_ssize_t size):
+    
+    cdef Py_ssize_t thread_id, num_threads = openmp.omp_get_max_threads()
     
     cdef Py_ssize_t n0 = a.shape[0]
     cdef Py_ssize_t n1 = a.shape[1]
@@ -479,15 +447,16 @@ def median(double [:,:,::1] a, Py_ssize_t size):
     
     cdef Py_ssize_t med = window_size // 2
     
-    window_np = np.zeros(window_size, dtype=np.double)
+    window_np = np.zeros((num_threads,window_size), dtype=np.double)
 
-    cdef double [::1] window = window_np
+    cdef double [:,::1] window = window_np
     
-    window_order_np = np.arange(window_size, dtype=int)
-    argument_order_np = np.arange(window_size, dtype=int)
+    order = np.arange(window_size)
     
-    cdef long [::1] window_order = window_order_np
-    cdef long [::1] argument_order = argument_order_np
+    window_order_np = np.tile(order,num_threads)
+    window_order_np = window_order_np.reshape(num_threads,window_size)
+    
+    cdef long [:,::1] window_order = window_order_np
 
     cdef Py_ssize_t i, j, k, l, m, n, p, q, r
     
@@ -496,76 +465,91 @@ def median(double [:,:,::1] a, Py_ssize_t size):
     cdef Py_ssize_t j_l, j_lm, j_lmn
     
     cdef Py_ssize_t i_l, j_m, k_n
+    
+    cdef Py_ssize_t i_l_max, j_m_max, k_n_max
 
-    #with nogil:
-    for i in range(n0):
-        for j in range(n1):
-            for k in range(n2):
-                         
-                if (k == 0):
-                    for l in range(2*rank+1):
-                        i_l = i+(l-rank)
-                        if (i_l < 0):
-                            i_l = 0
-                        elif (i_l > n0-1):
-                            i_l = n0-1
-                        j_l = size_sq*l
-                        for m in range(2*rank+1):
-                            j_m = j+(m-rank)
-                            if (j_m < 0):
-                                j_m = 0
-                            elif (j_m > n1-1):
-                                j_m = n1-1
-                            j_lm = j_l+size*m
-                            for n in range(2*rank+1):
-                                k_n = k+(n-rank)
-                                if (k_n < 0):
-                                    k_n = 0
-                                elif (k_n > n2-1):
-                                    k_n = n2-1
-                                j_lmn = j_lm+n
-                                window[j_lmn] = a[i_l,j_m,k_n]  
-                                window_order[j_lmn] = j_lmn
-                else:
-                    p = 0
-                    while (p < sliding_size):
-                        if (window_order[p] % size == 0):
-                            r = p
-                            for q in range(p+1,window_size):
-                                if (window_order[q] % size != 0):
-                                    window[r] = window[q]
-                                    window_order[r] = window_order[q]
-                                    r += 1
-                        window_order[p] -= 1       
-                        p = p+1
-                    n = 2*rank
-                    k_n = k+(n-rank)
-                    if (k_n < 0):
-                        k_n = 0
-                    elif (k_n > n2-1):
-                        k_n = n2-1                            
-                    p = 0
-                    for l in range(2*rank+1):
-                        i_l = i+(l-rank)
-                        if (i_l < 0):
-                            i_l = 0
-                        elif (i_l > n0-1):
-                            i_l = n0-1
-                        j_l = size_sq*l
-                        for m in range(2*rank+1):
-                            j_m = j+(m-rank)
-                            if (j_m < 0):
-                                j_m = 0
-                            elif (j_m > n1-1):
-                                j_m = n1-1
-                            j_lm = j_l+size*m
-                            j_lmn = j_lm+n
-                            window[sliding_size+p] = a[i_l,j_m,k_n]  
-                            window_order[sliding_size+p] = j_lmn 
+    i_l_max, j_m_max, k_n_max = n0-1, n1-1, n2-1
+    
+    cdef Py_ssize_t n_max = 2*rank
+    
+    cdef Py_ssize_t wind_indx
+
+    with nogil:
+        for i in prange(n0):
+            thread_id = openmp.omp_get_thread_num()
+            for j in range(n1):
+                for k in range(n2):
+
+                    if (k == 0):
+                        for l in range(size):
+                            i_l = i+(l-rank)
+                            if (i_l < 0):
+                                i_l = 0
+                            elif (i_l > i_l_max):
+                                i_l = i_l_max
+                            j_l = size_sq*l
+                            for m in range(size):
+                                j_m = j+(m-rank)
+                                if (j_m < 0):
+                                    j_m = 0
+                                elif (j_m > j_m_max):
+                                    j_m = j_m_max
+                                j_lm = j_l+size*m
+                                for n in range(size):
+                                    k_n = k+(n-rank)
+                                    if (k_n < 0):
+                                        k_n = 0
+                                    elif (k_n > k_n_max):
+                                        k_n = k_n_max
+                                    j_lmn = j_lm+n
+                                    window[thread_id,j_lmn] = a[i_l,j_m,k_n]  
+                                    window_order[thread_id,j_lmn] = j_lmn
+                    else:
+                        p = 0
+                        while (p < sliding_size):
+                            if (window_order[thread_id,p] % size == 0):
+                                q = p
+                                r = p+1
+                                while (r < window_size):
+                                    if (window_order[thread_id,r] % size != 0):
+                                        window[thread_id,q] = \
+                                        window[thread_id,r]
+                                        window_order[thread_id,q] = \
+                                        window_order[thread_id,r]
+                                        q = q+1
+                                    r = r+1
+                            window_order[thread_id,p] = \
+                            window_order[thread_id,p]-1       
                             p = p+1
-                            
-                sort(window, window_order, window_size)
-            
-                b[i,j,k] = window[med]
+                        n = n_max
+                        k_n = k+(n-rank)
+                        if (k_n < 0):
+                            k_n = 0
+                        elif (k_n > k_n_max):
+                            k_n = k_n_max                            
+                        p = 0
+                        for l in range(size):
+                            i_l = i+(l-rank)
+                            if (i_l < 0):
+                                i_l = 0
+                            elif (i_l > i_l_max):
+                                i_l = i_l_max
+                            j_l = size_sq*l
+                            for m in range(size):
+                                j_m = j+(m-rank)
+                                if (j_m < 0):
+                                    j_m = 0
+                                elif (j_m > j_m_max):
+                                    j_m = j_m_max
+                                j_lm = j_l+size*m
+                                j_lmn = j_lm+n
+                                wind_indx = sliding_size+p
+                                window[thread_id,wind_indx] = a[i_l,j_m,k_n]  
+                                window_order[thread_id,wind_indx] = j_lmn 
+                                p = p+1
+                                    
+                    sort(window, window_order, window_size, thread_id)
+                
+                    b[i,j,k] = window[thread_id,med]
         
     return b_np
