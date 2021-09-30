@@ -429,9 +429,11 @@ cdef void sort(double [:,::1] data,
         
 def padding(data, rank):
     n0, n1, n2 = data.shape
-    padded = np.zeros((n0+2*rank,n1+2*rank,n2+2*rank))
-    padded[rank:-rank,rank:-rank,rank:-rank] = data
-    return padded
+    for _ in range(rank):
+        data = np.concatenate((data[:1,:,:],data,data[-1:,:,:]), axis=0)
+        data = np.concatenate((data[:,:1,:],data,data[:,-1:,:]), axis=1)
+        data = np.concatenate((data[:,:,:1],data,data[:,:,-1:]), axis=2)
+    return data
 
 def median(double [:,:,::1] a, Py_ssize_t size):
     
@@ -485,6 +487,7 @@ def median(double [:,:,::1] a, Py_ssize_t size):
     cdef long long [:,::1] order_i = order_i_np
     cdef long long [:,::1] order_j = order_j_np
     cdef long long [:,::1] order_k = order_k_np
+    
     cdef long long [:,::1] temp_order_i = temp_order_i_np
     cdef long long [:,::1] temp_order_j = temp_order_j_np
     cdef long long [:,::1] temp_order_k = temp_order_k_np
@@ -512,7 +515,7 @@ def median(double [:,:,::1] a, Py_ssize_t size):
             for j in range(n1):
                 for k in range(n2):
     
-                    if (k == 0):
+                    if (j == 0 and k == 0):
                         
                         for l in range(size):
                             i_l = i+l
@@ -523,78 +526,63 @@ def median(double [:,:,::1] a, Py_ssize_t size):
                                 for n in range(size):
                                     k_n = k+n
                                     j_lmn = j_lm+n
+                                    temp_window[thread_id,j_lmn] = a_pad[i_l,j_m,k_n]  
                                     window[thread_id,j_lmn] = a_pad[i_l,j_m,k_n]  
+                                    temp_order_j[thread_id,j_lmn] = m
                                     order_k[thread_id,j_lmn] = n
-                                        
+                        
+                        sort(temp_window, temp_order_j, window_size, thread_id)
                         sort(window, order_k, window_size, thread_id)
-                    
+                        
+                        for p in range(window_size):
+                            temp_order_k[thread_id,p] = order_k[thread_id,p]
+    
                         b[i,j,k] = window[thread_id,med]
                         
-                        # for p in range(window_size):
-                        #     wcache[thread_id,p] = window[thread_id,p]
-                        #     wcache_order[thread_id,p] = window_order[thread_id,p]
-                    
-                    # elif (k == 0):
+                    elif (k == 0):
                         
-                    #     p = 0
-                    #     while (p < sliding_size):
-                    #         if (wcache_order[thread_id,p] // size % size == 0):
-                    #             q = p
-                    #             r = p+1
-                    #             while (r < window_size):
-                    #                 if (wcache_order[thread_id,r] // size \
-                    #                                                % size != 0):
-                    #                     wcache[thread_id,q] = wcache[thread_id,r]
-                    #                     wcache_order[thread_id,q] = \
-                    #                     wcache_order[thread_id,r]
-                    #                     q = q+1
-                    #                 r = r+1
-                    #         wcache_order[thread_id,p] = \
-                    #         wcache_order[thread_id,p]-size     
-                                        
-                    #         window[thread_id,p] = wcache[thread_id,p] 
-                    #         window_order[thread_id,p] = wcache_order[thread_id,p] 
-                    #         p = p+1
+                        p = 0
+                        q = 0
+                        while (p < window_size):
+                            if (temp_order_j[thread_id,p] != 0):
+                                temp_window[thread_id,q] = temp_window[thread_id,p]
+                                temp_order_j[thread_id,q] = temp_order_j[thread_id,p]-1
+                                window[thread_id,q] = temp_window[thread_id,p]
+                                order_k[thread_id,q] = temp_order_k[thread_id,p]
+                                q = q+1
+                            p = p+1
                             
-                    #     m = m_max
-                    #     j_m = j+m
-                    #     p = 0
-                    #     for l in range(size):
-                    #         i_l = i+l
-                    #         j_l = size_sq*l
-                    #         j_lm = j_l+size*m
-                    #         for n in range(size):
-                    #             k_n = k+n
-                    #             j_lmn = j_lm+n
-                    #             wind_indx = sliding_size+p
-                    #             window[thread_id,wind_indx] = a_pad[i_l,j_m,k_n]  
-                    #             window_order[thread_id,wind_indx] = j_lmn
-                    #             p = p+1
-    
-                    #     sort(window, window_order, window_size, thread_id)
+                        p = 0
+                        m = m_max
+                        j_m = j+m                       
+                        for l in range(size):
+                            i_l = i+l
+                            for n in range(size):
+                                k_n = k+n
+                                wind_indx = sliding_size+p
+                                temp_window[thread_id,wind_indx] = a_pad[i_l,j_m,k_n]  
+                                window[thread_id,wind_indx] = a_pad[i_l,j_m,k_n]  
+                                temp_order_j[thread_id,wind_indx] = m
+                                order_k[thread_id,wind_indx] = n
+                                p = p+1
+                                        
+                        sort(temp_window, temp_order_j, window_size, thread_id)
+                        sort(window, order_k, window_size, thread_id)
                         
-                    #     b[i,j,k] = window[thread_id,med]
-                        
-                    #     for p in range(window_size):
-                    #         wcache[thread_id,p] = window[thread_id,p]
-                    #         wcache_order[thread_id,p] = window_order[thread_id,p]     
+                        for p in range(window_size):
+                            temp_order_k[thread_id,p] = order_k[thread_id,p]
+                            
+                        b[i,j,k] = window[thread_id,med]
                             
                     else:
                         
                         p = 0
-                        while (p < sliding_size):
-                            if (order_k[thread_id,p] == 0):
-                                q = p
-                                r = p+1
-                                while (r < window_size):
-                                    if (order_k[thread_id,r] != 0):
-                                        window[thread_id,q] = \
-                                        window[thread_id,r]
-                                        order_k[thread_id,q] = \
-                                        order_k[thread_id,r]
-                                        q = q+1
-                                    r = r+1
-                            order_k[thread_id,p] = order_k[thread_id,p]-1       
+                        q = 0
+                        while (p < window_size):
+                            if (order_k[thread_id,p] != 0):
+                                window[thread_id,q] = window[thread_id,p]
+                                order_k[thread_id,q] = order_k[thread_id,p]-1
+                                q = q+1
                             p = p+1
                             
                         p = 0
