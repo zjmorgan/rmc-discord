@@ -5,7 +5,7 @@ import os
 
 import numpy as np
 
-from disorder.diffuse import experimental, space, scattering
+from disorder.diffuse import experimental, space, filters, scattering
 from disorder.diffuse import monocrystal, powder
 from disorder.diffuse import magnetic, occupational, displacive, refinement
 from disorder.material import crystal, symmetry, tables
@@ -533,13 +533,13 @@ class Model:
                
     def blurring(self, intensity, sigma):
                    
-        return space.blurring(intensity, sigma)
+        return filters.blurring(intensity, sigma)
     
     def gaussian(self, mask, sigma):
                    
-        v_inv = space.gaussian(mask, sigma)
+        v_inv = filters.gaussian(mask, sigma)
         
-        boxes = space.boxblur(sigma, 3)
+        boxes = filters.boxblur(sigma, 3)
             
         return v_inv, boxes
         

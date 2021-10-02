@@ -24,6 +24,81 @@ matplotlib.rcParams['mathtext.rm'] = 'sans'
 matplotlib.rcParams['mathtext.sf'] = 'sans'
 matplotlib.rcParams['mathtext.tt'] = 'monospace'
 
+class MinorSymLogLocator(Locator):
+    
+    def __init__(self, linthresh, nints=10):
+        
+        self.linthresh = linthresh
+        self.nintervals = nints
+
+    def __call__(self):
+        
+        majorlocs = self.axis.get_majorticklocs()
+
+        if len(majorlocs) == 1:
+            return self.raise_if_exceeds(np.array([]))
+
+        dmlower = majorlocs[1]-majorlocs[0]
+        dmupper = majorlocs[-1]-majorlocs[-2]
+
+        if (majorlocs[0] != 0. and 
+            ((majorlocs[0] != self.linthresh and dmlower > self.linthresh) or 
+             (dmlower == self.linthresh and majorlocs[0] < 0))):
+            majorlocs = np.insert(majorlocs, 0, majorlocs[0]*10.)
+        else:
+            majorlocs = np.insert(majorlocs, 0, majorlocs[0]-self.linthresh)
+
+        if (majorlocs[-1] != 0. and 
+            ((np.abs(majorlocs[-1]) != self.linthresh 
+              and dmupper > self.linthresh) or 
+             (dmupper == self.linthresh and majorlocs[-1] > 0))):
+            majorlocs = np.append(majorlocs, majorlocs[-1]*10.)
+        else:
+            majorlocs = np.append(majorlocs, majorlocs[-1]+self.linthresh)
+
+        minorlocs = []
+
+        for i in range(1, len(majorlocs)):
+            majorstep = majorlocs[i]-majorlocs[i-1]
+            if abs(majorlocs[i-1]+majorstep/2) < self.linthresh:
+                ndivs = self.nintervals
+            else:
+                ndivs = self.nintervals-1.
+
+            minorstep = majorstep/ndivs
+            locs = np.arange(majorlocs[i-1], majorlocs[i], minorstep)[1:]
+            minorlocs.extend(locs)
+
+        return self.raise_if_exceeds(np.array(minorlocs))
+
+    def tick_values(self, vmin, vmax):
+        raise NotImplementedError('Cannot get tick locations for a '
+                          '%s type.' % type(self))
+        
+class Plot():
+    
+    def __init__(self, canvas):
+        
+        self.canvas = canvas
+        self.fig = canvas.figure
+        
+    def get_figure(self):
+        
+        return self.fig
+        
+    def save_figure(self, filename):
+        
+        self.fig.savefig(filename)
+        
+    def clear_canvas(self):
+        
+        self.fig = canvas.figure
+        self.fig.clear()
+        
+    def draw_canvas(self):
+        
+        self.canvas.draw()
+
 def _extents(min_x, min_y, max_x, max_y, size_x, size_y):
         
     dx = 0 if size_x <= 1 else (max_x-min_x)/(size_x-1)
@@ -456,55 +531,7 @@ def fast_chi_sq(canvas, ax0, ax1, line0, line1, plot0, plot1, data0, data1):
     ax0.autoscale_view()
     ax1.autoscale_view()
     
-    canvas.draw_idle() 
-    
-class MinorSymLogLocator(Locator):
-    def __init__(self, linthresh, nints=10):
-        self.linthresh = linthresh
-        self.nintervals = nints
-
-    def __call__(self):
-        majorlocs = self.axis.get_majorticklocs()
-
-        if len(majorlocs) == 1:
-            return self.raise_if_exceeds(np.array([]))
-
-        dmlower = majorlocs[1]-majorlocs[0]
-        dmupper = majorlocs[-1]-majorlocs[-2]
-
-        if (majorlocs[0] != 0. and 
-            ((majorlocs[0] != self.linthresh and dmlower > self.linthresh) or 
-             (dmlower == self.linthresh and majorlocs[0] < 0))):
-            majorlocs = np.insert(majorlocs, 0, majorlocs[0]*10.)
-        else:
-            majorlocs = np.insert(majorlocs, 0, majorlocs[0]-self.linthresh)
-
-        if (majorlocs[-1] != 0. and 
-            ((np.abs(majorlocs[-1]) != self.linthresh 
-              and dmupper > self.linthresh) or 
-             (dmupper == self.linthresh and majorlocs[-1] > 0))):
-            majorlocs = np.append(majorlocs, majorlocs[-1]*10.)
-        else:
-            majorlocs = np.append(majorlocs, majorlocs[-1]+self.linthresh)
-
-        minorlocs = []
-
-        for i in range(1, len(majorlocs)):
-            majorstep = majorlocs[i]-majorlocs[i-1]
-            if abs(majorlocs[i-1]+majorstep/2) < self.linthresh:
-                ndivs = self.nintervals
-            else:
-                ndivs = self.nintervals-1.
-
-            minorstep = majorstep/ndivs
-            locs = np.arange(majorlocs[i-1], majorlocs[i], minorstep)[1:]
-            minorlocs.extend(locs)
-
-        return self.raise_if_exceeds(np.array(minorlocs))
-
-    def tick_values(self, vmin, vmax):
-        raise NotImplementedError('Cannot get tick locations for a '
-                          '%s type.' % type(self))
+    canvas.draw_idle()
     
 def correlations_1d(canvas, d, data, error, atm_pair, disorder, 
                     correlation, average, norm, atoms, pairs):

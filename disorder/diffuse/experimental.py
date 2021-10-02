@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 
 import numpy as np
-from scipy import ndimage
 from nexusformat.nexus import nxload
 
 from functools import reduce
 
-from disorder.diffuse.filters import rebin0, rebin1, rebin2
+from disorder.diffuse import filters
 
 def data(filename):
     
@@ -144,39 +143,39 @@ def rebin(a, binsize):
         comp0 = weights(a.shape[0], binsize[0])
         comp1 = weights(a.shape[1], binsize[1])
         comp2 = weights(a.shape[2], binsize[2])
-        b = rebin0(a, comp0)
-        c = rebin1(b, comp1)
-        d = rebin2(c, comp2)
+        b = filters.rebin0(a, comp0)
+        c = filters.rebin1(b, comp1)
+        d = filters.rebin2(c, comp2)
         return d
     elif (changed[0] and changed[1]):
         comp0 = weights(a.shape[0], binsize[0])
         comp1 = weights(a.shape[1], binsize[1])
-        b = rebin0(a, comp0)
-        c = rebin1(b, comp1)
+        b = filters.rebin0(a, comp0)
+        c = filters.rebin1(b, comp1)
         return c
     elif (changed[1] and changed[2]):
         comp1 = weights(a.shape[1], binsize[1])
         comp2 = weights(a.shape[2], binsize[2])
-        b = rebin1(a, comp1)
-        c = rebin2(b, comp2)
+        b = filters.rebin1(a, comp1)
+        c = filters.rebin2(b, comp2)
         return c
     elif (changed[2] and changed[0]):
         comp2 = weights(a.shape[2], binsize[2])
         comp0 = weights(a.shape[0], binsize[0])
-        b = rebin2(a, comp2)
-        c = rebin0(b, comp0)
+        b = filters.rebin2(a, comp2)
+        c = filters.rebin0(b, comp0)
         return c
     elif (changed[0]):
         comp0 = weights(a.shape[0], binsize[0])
-        b = rebin0(a, comp0)
+        b = filters.rebin0(a, comp0)
         return b
     elif (changed[1]):
         comp1 = weights(a.shape[1], binsize[1])
-        b = rebin1(a, comp1)
+        b = filters.rebin1(a, comp1)
         return b  
     elif (changed[2]):
         comp2 = weights(a.shape[2], binsize[2])
-        b = rebin2(a, comp2)
+        b = filters.rebin2(a, comp2)
         return b      
     else:
         return a
@@ -222,20 +221,11 @@ def factors(n):
     return np.unique(reduce(list.__add__, 
       ([i, n/i] for i in range(1, int(n**0.5) + 1) if n % i == 0))).astype(int)
     
-def karen(signal, width):
+def outlier(signal, size):
     
-    median = ndimage.filters.median_filter(signal, size=width)
+    median = filters.median(signal, size)
         
-    mad = ndimage.filters.median_filter(np.abs(signal-median), size=width) 
-    
-    asigma = np.abs(mad*3*1.4826) 
-    
-    mask = np.logical_or(signal < (median-asigma), signal > (median+asigma)) 
-    signal[mask] = np.nan
-
-    median = ndimage.filters.median_filter(signal, size=width)
-        
-    mad = ndimage.filters.median_filter(np.abs(signal-median), size=width) 
+    mad = filters.median(np.abs(signal-median), size=size) 
     
     asigma = np.abs(mad*3*1.4826) 
     

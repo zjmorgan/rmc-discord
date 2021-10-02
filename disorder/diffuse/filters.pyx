@@ -405,6 +405,143 @@ cpdef void filtering(double [::1] t,
         
     weight(t, i, v_inv)
 
+def boxblur(sigma, n):
+    
+    sigma = np.asarray(sigma)
+        
+    l = np.floor(np.sqrt(12*sigma**2/n+1))
+    
+    if (np.size(sigma) == 1): 
+        if (l % 2 == 0):
+            l -= 1
+            
+    else:
+        l[np.mod(l,2) == 0] -= 1
+        
+    u = l+2
+    
+    m = np.round((n*(l*(l+4)+3)-12*sigma**2)/(l+1)/4)
+    
+    if (np.size(sigma) == 1): 
+        
+        sizes = np.zeros(n, dtype=int)
+        
+        for i in range(n):
+       
+            if (i < m):
+                sizes[i] = l
+            else:
+                sizes[i] = u
+    
+    else:
+        
+        sizes = np.zeros((n, np.size(sigma)), dtype=int)
+        
+        for i in range(n):
+            for j in range(np.size(sigma)):
+            
+                if (i < m[j]):
+                    sizes[i,j] = l[j]
+                else:
+                    sizes[i,j] = u[j]
+    
+    return ((np.array(sizes)-1)/2).astype(int).flatten()
+    
+def gaussian(mask, sigma):
+        
+    v = np.ones(mask.shape)
+    v[mask] = 0
+    
+    v = v.flatten()
+    
+    a = np.zeros(mask.size)
+    b = np.zeros(mask.size)
+    c = np.zeros(mask.size)
+    d = np.zeros(mask.size)
+    e = np.zeros(mask.size)
+    f = np.zeros(mask.size)
+    g = np.zeros(mask.size)
+    h = np.zeros(mask.size)
+    
+    w = np.zeros(mask.size)
+    
+    boxes = boxblur(sigma, 3)
+    
+    nh, nk, nl = mask.shape[0], mask.shape[1], mask.shape[2]
+        
+    if (np.isclose(sigma, 0).all()):
+    
+        return v
+    
+    else:
+        
+        gauss(w, v, boxes, a, b, c, d, e, f, g, h, nh, nk, nl) 
+        
+        veil = np.isclose(w,0)
+        
+        if (np.sum(veil) > 0):
+            
+            x = np.zeros(mask.size)
+            
+            gauss(x, v, boxes, a, b, c, d, e, f, g, h, nh, nk, nl) 
+            
+            w[veil] = x[veil].copy()
+                    
+        veil = np.isclose(w,0)
+        
+        w_inv = np.zeros(mask.size)
+        w_inv[~veil] = 1/w[~veil]
+               
+        return w_inv
+        
+def boxfilter(I, mask, sigma, v_inv):
+    
+    a = np.zeros(mask.size)
+    b = np.zeros(mask.size)
+    c = np.zeros(mask.size)
+    d = np.zeros(mask.size)
+    e = np.zeros(mask.size)
+    f = np.zeros(mask.size)
+    g = np.zeros(mask.size)
+    h = np.zeros(mask.size)
+    
+    i = np.zeros(mask.size)    
+    
+    boxes = boxblur(sigma, 3)
+    
+    nh, nk, nl = mask.shape[0], mask.shape[1], mask.shape[2]
+    
+    if (np.isclose(sigma, 0).all()):
+    
+        return  I
+    
+    else:
+        
+        u = I.copy()
+        u[mask] = 0
+        
+        gauss(i, u.flatten(), boxes, a, b, c, d, e, f, g, h, nh, nk, nl) 
+        
+        return (v_inv*i).reshape(nh,nk,nl)
+    
+def blurring(I, sigma):
+    
+    i = np.zeros(I.size)    
+        
+    boxes = boxblur(sigma, 3)
+    
+    nh, nk, nl = I.shape[0], I.shape[1], I.shape[2]
+    
+    if (np.isclose(sigma, 0).all()):
+    
+        return I
+    
+    else:
+                
+        blur(i, I.flatten(), boxes, nh, nk, nl) 
+        
+        return i.reshape(nh,nk,nl)
+    
 cdef void sort(double [:,::1] data, 
                long long [:,::1] order, 
                int n, 
@@ -412,7 +549,7 @@ cdef void sort(double [:,::1] data,
 
     cdef double temp
     
-    cdef Py_ssize_t temp_ind, i, j
+    cdef Py_ssize_t temp_ind, i, j, k
     
     i = 1
     while (i < n):
@@ -420,12 +557,49 @@ cdef void sort(double [:,::1] data,
         temp_ind = order[thread_id,i]
         j = i-1
         while (j >= 0 and data[thread_id,j] > temp):
-            data[thread_id,j+1] = data[thread_id,j]
-            order[thread_id,j+1] = order[thread_id,j]
+            k = j+1
+            data[thread_id,k] = data[thread_id,j]
+            order[thread_id,k] = order[thread_id,j]
             j = j-1
-        data[thread_id,j+1] = temp
-        order[thread_id,j+1] = temp_ind
+        k = j+1
+        data[thread_id,k] = temp
+        order[thread_id,k] = temp_ind
         i = i+1
+
+cdef void copysort(double [:,::1] data, 
+                   double [:,::1] copy_data, 
+                   long long [:,::1] order, 
+                   long long [:,::1] copy_order, 
+                   long long [:,::1] temp_order, 
+                   int n, 
+                   Py_ssize_t thread_id) nogil:
+
+    cdef double temp
+    
+    cdef Py_ssize_t temp_ind, temp_temp_ind, i, j, k
+    
+    i = 1
+    while (i < n):
+        temp = data[thread_id,i]
+        temp_ind = order[thread_id,i]
+        temp_temp_ind = temp_order[thread_id,i]
+        j = i-1
+        while (j >= 0 and data[thread_id,j] > temp):
+            k = j+1
+            data[thread_id,k] = data[thread_id,j]
+            order[thread_id,k] = order[thread_id,j]
+            copy_data[thread_id,k] = copy_data[thread_id,j]
+            copy_order[thread_id,k] = copy_order[thread_id,j]
+            temp_order[thread_id,k] = temp_order[thread_id,j]
+            j = j-1
+        k = j+1
+        data[thread_id,k] = temp
+        order[thread_id,k] = temp_ind
+        copy_data[thread_id,k] = temp
+        copy_order[thread_id,k] = temp_ind
+        temp_order[thread_id,k] = temp_temp_ind
+        i = i+1
+        
         
 def padding(data, rank):
     n0, n1, n2 = data.shape
@@ -446,7 +620,7 @@ def median(double [:,:,::1] a, Py_ssize_t size):
     b_np = np.zeros((n0,n1,n2), dtype=np.double)
     
     cdef double [:,:,::1] b = b_np
-    
+        
     cdef Py_ssize_t rank = size // 2
     
     cdef Py_ssize_t window_size = size**3
@@ -457,14 +631,14 @@ def median(double [:,:,::1] a, Py_ssize_t size):
     
     a_np = np.copy(a, order='c')
     
-    cdef double [:,:,::1] a_pad = padding(a_np, rank)
+    cdef double [:,:,::1] A = padding(a_np, rank)
     
     window_np = np.zeros((num_threads,window_size), dtype=np.double)
 
-    temp_window_np = window_np.copy()
+    temp_wind_np = window_np.copy()
 
     cdef double [:,::1] window = window_np
-    cdef double [:,::1] temp_window = temp_window_np
+    cdef double [:,::1] temp_wind = temp_wind_np
     
     order = np.arange(window_size)
     
@@ -472,25 +646,19 @@ def median(double [:,:,::1] a, Py_ssize_t size):
     
     order_i_np, order_j_np, order_k_np = np.unravel_index(order, dim)
     
-    order_i_np = np.tile(order_i_np, num_threads)
     order_j_np = np.tile(order_j_np, num_threads)
     order_k_np = np.tile(order_k_np, num_threads)
     
-    order_i_np = order_i_np.reshape(num_threads,window_size)
     order_j_np = order_j_np.reshape(num_threads,window_size)
     order_k_np = order_k_np.reshape(num_threads,window_size)
     
-    temp_order_i_np = order_i_np.copy()
-    temp_order_j_np = order_j_np.copy()
-    temp_order_k_np = order_k_np.copy()
+    temp_ord_j_np = order_j_np.copy()
+    temp_ord_k_np = order_k_np.copy()
     
-    cdef long long [:,::1] order_i = order_i_np
-    cdef long long [:,::1] order_j = order_j_np
     cdef long long [:,::1] order_k = order_k_np
     
-    cdef long long [:,::1] temp_order_i = temp_order_i_np
-    cdef long long [:,::1] temp_order_j = temp_order_j_np
-    cdef long long [:,::1] temp_order_k = temp_order_k_np
+    cdef long long [:,::1] temp_ord_j = temp_ord_j_np
+    cdef long long [:,::1] temp_ord_k = temp_ord_k_np
     
     cdef Py_ssize_t i, j, k, l, m, n, p, q, r
     
@@ -499,11 +667,7 @@ def median(double [:,:,::1] a, Py_ssize_t size):
     cdef Py_ssize_t j_l, j_lm, j_lmn
     
     cdef Py_ssize_t i_l, j_m, k_n
-    
-    cdef Py_ssize_t i_l_max, j_m_max, k_n_max
-
-    i_l_max, j_m_max, k_n_max = n0-1, n1-1, n2-1
-    
+        
     cdef Py_ssize_t m_max = 2*rank
     cdef Py_ssize_t n_max = 2*rank
     
@@ -526,29 +690,33 @@ def median(double [:,:,::1] a, Py_ssize_t size):
                                 for n in range(size):
                                     k_n = k+n
                                     j_lmn = j_lm+n
-                                    temp_window[thread_id,j_lmn] = a_pad[i_l,j_m,k_n]  
-                                    window[thread_id,j_lmn] = a_pad[i_l,j_m,k_n]  
-                                    temp_order_j[thread_id,j_lmn] = m
+                                    window[thread_id,j_lmn] = A[i_l,j_m,k_n]  
+                                    temp_wind[thread_id,j_lmn] = A[i_l,j_m,k_n]  
                                     order_k[thread_id,j_lmn] = n
+                                    temp_ord_k[thread_id,j_lmn] = n
+                                    temp_ord_j[thread_id,j_lmn] = m
                         
-                        sort(temp_window, temp_order_j, window_size, thread_id)
-                        sort(window, order_k, window_size, thread_id)
-                        
-                        for p in range(window_size):
-                            temp_order_k[thread_id,p] = order_k[thread_id,p]
-    
-                        b[i,j,k] = window[thread_id,med]
-                        
+                        copysort(window, 
+                                 temp_wind, 
+                                 order_k, 
+                                 temp_ord_k, 
+                                 temp_ord_j, 
+                                 window_size, 
+                                 thread_id)
+                            
                     elif (k == 0):
                         
                         p = 0
                         q = 0
                         while (p < window_size):
-                            if (temp_order_j[thread_id,p] != 0):
-                                temp_window[thread_id,q] = temp_window[thread_id,p]
-                                temp_order_j[thread_id,q] = temp_order_j[thread_id,p]-1
-                                window[thread_id,q] = temp_window[thread_id,p]
-                                order_k[thread_id,q] = temp_order_k[thread_id,p]
+                            if (temp_ord_j[thread_id,p] != 0):
+                                window[thread_id,q] = temp_wind[thread_id,p]
+                                temp_wind[thread_id,q] = temp_wind[thread_id,p]
+                                order_k[thread_id,q] = temp_ord_k[thread_id,p]
+                                temp_ord_k[thread_id,q] = \
+                                temp_ord_k[thread_id,p]
+                                temp_ord_j[thread_id,q] = \
+                                temp_ord_j[thread_id,p]-1
                                 q = q+1
                             p = p+1
                             
@@ -560,20 +728,21 @@ def median(double [:,:,::1] a, Py_ssize_t size):
                             for n in range(size):
                                 k_n = k+n
                                 wind_indx = sliding_size+p
-                                temp_window[thread_id,wind_indx] = a_pad[i_l,j_m,k_n]  
-                                window[thread_id,wind_indx] = a_pad[i_l,j_m,k_n]  
-                                temp_order_j[thread_id,wind_indx] = m
+                                window[thread_id,wind_indx] = A[i_l,j_m,k_n]  
+                                temp_wind[thread_id,wind_indx] = A[i_l,j_m,k_n]  
                                 order_k[thread_id,wind_indx] = n
+                                temp_ord_k[thread_id,wind_indx] = n
+                                temp_ord_j[thread_id,wind_indx] = m
                                 p = p+1
                                         
-                        sort(temp_window, temp_order_j, window_size, thread_id)
-                        sort(window, order_k, window_size, thread_id)
-                        
-                        for p in range(window_size):
-                            temp_order_k[thread_id,p] = order_k[thread_id,p]
-                            
-                        b[i,j,k] = window[thread_id,med]
-                            
+                        copysort(window, 
+                                 temp_wind, 
+                                 order_k, 
+                                 temp_ord_k, 
+                                 temp_ord_j, 
+                                 window_size, 
+                                 thread_id)
+                                                        
                     else:
                         
                         p = 0
@@ -593,12 +762,12 @@ def median(double [:,:,::1] a, Py_ssize_t size):
                             for m in range(size):
                                 j_m = j+m
                                 wind_indx = sliding_size+p
-                                window[thread_id,wind_indx] = a_pad[i_l,j_m,k_n]  
+                                window[thread_id,wind_indx] = A[i_l,j_m,k_n]  
                                 order_k[thread_id,wind_indx] = n 
                                 p = p+1
                                         
                         sort(window, order_k, window_size, thread_id)
                     
-                        b[i,j,k] = window[thread_id,med]
+                    b[i,j,k] = window[thread_id,med]
         
     return b_np
