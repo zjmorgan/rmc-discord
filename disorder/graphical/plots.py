@@ -16,6 +16,8 @@ import matplotlib.transforms as mtransforms
 from matplotlib import ticker
 from matplotlib.ticker import Locator
 
+from itertools import cycle
+
 matplotlib.rcParams['mathtext.fontset'] = 'custom'
 matplotlib.rcParams['mathtext.it'] = 'STIXGeneral:italic'
 matplotlib.rcParams['mathtext.bf'] = 'STIXGeneral:italic:bold'
@@ -23,6 +25,13 @@ matplotlib.rcParams['mathtext.cal'] = 'sans'
 matplotlib.rcParams['mathtext.rm'] = 'sans'
 matplotlib.rcParams['mathtext.sf'] = 'sans'
 matplotlib.rcParams['mathtext.tt'] = 'monospace'
+
+matplotlib.rcParams['axes.titlesize'] = 'medium'
+matplotlib.rcParams['axes.labelsize'] = 'medium'
+
+matplotlib.rcParams['legend.fancybox'] = True
+matplotlib.rcParams['legend.loc'] = 'best'
+matplotlib.rcParams['legend.fontsize'] = 'medium'
 
 class MinorSymLogLocator(Locator):
     
@@ -73,18 +82,16 @@ class MinorSymLogLocator(Locator):
 
     def tick_values(self, vmin, vmax):
         raise NotImplementedError('Cannot get tick locations for a '
-                          '%s type.' % type(self))
-        
+                                  '%s type.' % type(self))
+
 class Plot():
     
     def __init__(self, canvas):
         
         self.canvas = canvas
         self.fig = canvas.figure
-        
-    def get_figure(self):
-        
-        return self.fig
+        self.ax = canvas.figure.add_subplot(111)
+        self.ax.minorticks_on()
         
     def save_figure(self, filename):
         
@@ -92,28 +99,413 @@ class Plot():
         
     def clear_canvas(self):
         
-        self.fig = canvas.figure
+        self.ax.remove()
         self.fig.clear()
+        self.ax = self.fig.add_subplot(111)
+        self.ax.minorticks_on()
         
     def draw_canvas(self):
         
-        self.canvas.draw()
+        self.canvas.draw_idle()
+        
+    def tight_layout(self, pad=3.24):
+        
+        self.fig.tight_layout(pad=pad)
+        
+    def set_labels(self, title='', xlabel='', ylabel=''):
+        
+        self.ax.set_title(title) 
+        self.ax.set_xlabel(xlabel)
+        self.ax.set_ylabel(ylabel)
+                
+class Line(Plot):
+    
+    def __init__(self, canvas):
+        
+        super(Line, self).__init__(canvas)
+        
+        self.p = []
+        
+        self.hl = None
+        self.twin_ax = None
+        
+        self.ax.spines['top'].set_visible(False)
+        self.ax.spines['right'].set_visible(False)
+        
+        prop_cycle = matplotlib.rcParams['axes.prop_cycle']
+        self.colors = cycle(prop_cycle.by_key()['color'])
+        
+    def __get_axis(self, twin=False):
+        
+        if not twin:
+            return self.ax
+        else:
+            if self.twin_ax is None:
+                self.twin_ax = self.ax.twinx()
+            return self.twin_ax
+                
+    def set_labels(self, title='', xlabel='', ylabel='', twin_ylabel=''):
+        
+        super().set_labels(title=title, xlabel=xlabel, ylabel=ylabel)
+        
+        if self.twin_ax:
+            self.twin_ax.set_ylabel(twin_ylabel) 
+        
+    def clear_canvas(self):
+        
+        super().clear_canvas()
+        self.clear_lines()
+        
+        self.ax.spines['top'].set_visible(False)
+        self.ax.spines['right'].set_visible(False)
+        
+    def clear_lines(self):
+        
+        if self.p:
+            for p in self.p:
+                p.lines[0].remove()
+            self.p = []
+            
+        if self.hl: 
+            self.hl.remove()
+            self.hl = None
+        if self.twin_ax: 
+            self.twin_ax.remove()
+            self.twin_ax = None
+        
+        if self.ax.get_legend():
+            self.ax.get_legend().remove()
+        self.set_labels()
+        
+        prop_cycle = matplotlib.rcParams['axes.prop_cycle']
+        self.colors = cycle(prop_cycle.by_key()['color'])
+        
+    def set_normalization(self, norm='linear', twin=False):
+        
+        ax = self.__get_axis(twin)
+        
+        if (norm.lower() == 'linear'): 
+            ax.set_yscale('linear')
+            ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
+            ax.yaxis.set_minor_locator(ticker.AutoMinorLocator())
 
-def _extents(min_x, min_y, max_x, max_y, size_x, size_y):
+        elif (norm.lower() == 'logarithmic'):
+            ax.set_yscale('log')
+            ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
+            # ax.yaxis.set_minor_locator(ticker.LogLocator())
+        else:
+            thresh, scale = 0.1, 0.9
+            ax.set_yscale('symlog', linthresh=thresh, linscale=scale)
+            ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
+            ax.yaxis.set_minor_locator(MinorSymLogLocator(0.1))
+            
+    def set_limts(self, vmin=None, vmax=None, twin=False):
+                
+        xmin, xmax, ymin, ymax = self.ax.axis()
+                
+        if vmin is not None: ymin = vmin
+        if vmax is not None: ymax = vmax
+        
+        margin = 0.05
+        
+        ax = self.__get_axis(twin)
+    
+        transform = ax.yaxis.get_transform()
+        inverse_trans = transform.inverted()
+
+        ymint, ymaxt = transform.transform([ymin,ymax])
+        delta = (ymaxt-ymint)*margin
+
+        ymin, ymax = inverse_trans.transform([ymint-delta,ymaxt+delta])
+        
+        ax.set_xlim([xmin,xmax])
+        ax.set_ylim([ymin,ymax])
+            
+    def reset_view(self, twin=False):
+    
+        ax = self.__get_axis(twin)
+        
+        ax.relim()    
+        ax.autoscale_view()
+        
+    def update_data(self, x, y, i=0):
+            
+        self.p[i].lines[0].set_data(x, y)
+        
+    def get_data(self, i=0):
+            
+        return self.p[i].lines[0].get_xydata().T
+        
+    def plot_data(self, x, y, yerr=None, marker='o', label='', twin=False):
+        
+        ax = self.__get_axis(twin)
+        
+        color = next(self.colors)
+                
+        err = ax.errorbar(x, y, yerr=yerr, fmt=marker, label=label,
+                          color=color, ecolor=color, clip_on=False)
+        
+        self.p.append(err)
+            
+    def show_legend(self):
+                                        
+        handles = [p for p in self.p if p.get_label() != '']
+        labels = [p.get_label() for p in handles]
+        self.ax.legend(handles, labels)
+        
+    def draw_horizontal(self):
+        
+        self.hl = self.ax.axhline(y=0, xmin=0, xmax=1, color='k', \
+                                  linestyle='-', linewidth=0.8)
+            
+    def use_scientific(self, twin=False):
+    
+        ax = self.__get_axis(twin)
+        
+        ax.ticklabel_format(style='sci', scilimits=(0,0), axis='x')
+        ax.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
+            
+def HeatMap(Plot):
+     
+    def __init__(self, canvas):
+        
+        super(HeatMap, self).__init__(canvas)
+        
+        self.im = None
+        
+        self.cmap = plt.cm.viridis
+        
+    def __matrix_transform(self, B, layer='l', T=np.eye(3)):
+    
+        matrix = np.eye(3)
+        
+        Bp = np.linalg.cholesky(np.dot(T.T,np.dot(np.dot(B.T,B),T))).T
+        
+        if (layer == 'h'):
+            Q = Bp[1:3,1:3].copy()
+        elif (layer == 'k'):
+            Q = Bp[0:3:2,0:3:2].copy()
+        elif (layer == 'l'):
+            Q = Bp[0:2,0:2].copy()     
+                       
+        Q /= Q[1,1]
+        
+        scale = 1/Q[0,0]
+        Q[0,:] *= scale
+        
+        matrix[0:2,0:2] = Q
+        
+        return matrix, scale
+        
+    def __extents(self, min_x, min_y, max_x, max_y, size_x, size_y):
+            
+        dx = 0 if size_x <= 1 else (max_x-min_x)/(size_x-1)
+        dy = 0 if size_y <= 1 else (max_y-min_y)/(size_y-1)
+                
+        return [min_x-dx/2, max_x+dx/2, min_y-dy/2, max_y+dy/2]
+            
+    def __transform_extents(self, matrix, extents):
+    
+        ext_min = np.dot(matrix[0:2,0:2], extents[0::2])
+        ext_max = np.dot(matrix[0:2,0:2], extents[1::2])
+        
+        return ext_min, ext_max
+    
+    def __offset(self, matrix, minimum):
+        
+        return -np.dot(matrix, [0,minimum,0])[0]
+    
+    def __transform(self, matrix, extents, scale):
+        
+        ext_min, ext_max = self.__transform_extents(self, matrix, extents)
+        
+        offset = self.__offset(self, matrix, minimum)
+    
+        trans = mtransforms.Affine2D()
+        
+        trans.set_matrix(matrix)
+        
+        shift = mtransforms.Affine2D().translate(offset,0)
+        
+        self.ax.set_aspect(scale)
+        
+        trans_data = trans+shift+self.ax.transData
+        
+        self.im.set_transform(trans_data)
+        
+        self.ax.set_xlim(ext_min[0]+offset,ext_max[0]+offset)
+        self.ax.set_ylim(ext_min[1],ext_max[1])
+    
+    def set_normalization(self, norm='linear'):
+        
+        if np.isclose(self.vmin, self.vmax): self.vmin, self.vmax = 1e-3, 1e+3
+        
+        if (norm.lower() == 'logarithmic'):
+            self.norm = colors.LogNorm(vmin=self.vmin, vmax=self.vmax)
+        else:
+            self.norm = colors.Normalize(vmin=self.vmin, vmax=self.vmax)
+            
+    def update_normalization(self, norm):
+        
+        self.set_normalization(norm)
+    
+        if self.im is not None:
+            self.im.set_cmap(self.cmap)
+            self.im.set_norm(self.norm)
+            self.draw_canvas()
+            
+    def create_colorbar(self, orientation='vertical'):
+        
+        pad = 0.05 if orientation == 'vertical' else 0.2
+        
+        self.cb = fig.colorbar(self.im, ax=self.ax, 
+                               orientation=orientation, pad=pad)
+        
+        self.cb.ax.minorticks_on()
+    
+        if (self.norm == 'linear'):
+            self.cb.formatter.set_powerlimits((0, 0))
+            self.cb.update_ticks()
+            
+    def update_data(self, data, vmin, vmax):
+        
+        if self.im is not None:
+            self.im.set_array(data.T)
+            self.im.set_clim(vmin=vmin, vmax=vmax)
+            
+            self.canvas.draw_idle()
+        
+    def plot(self, data):
+        
+        self.im = self.ax.imshow(data.T, norm=self.norm, 
+                                 interpolation='nearest', origin='lower', 
+                                 extent=extents)
+        
+        self.ax.minorticks_on()
+    
+def Scatter(Plot):
+    
+    def __init__(self, canvas):
+        
+        super(Scatter, self).__init__(canvas)
+        
+        self.s = None
+        
+    def __mask_plane(self, dx, dy, dz, h, k, l, d, A, B, tol):
+                 
+         hx, hy, hz = np.dot(B, [h,k,l])
+             
+         if (not np.isclose(hx**2+hy**2+hz**2,0)):
+             
+             nx, ny, nz = [hx,hy,hz]/np.linalg.norm([hx,hy,hz])
+             
+             Px, Py, Pz = np.cross([0,0,1], [nx,ny,nz])
+             P = np.linalg.norm([Px,Py,Pz])
+             
+             if (np.isclose(P,0)):
+                 Px, Py, Pz = np.cross([0,1,0], [nx,ny,nz])
+                 P = np.linalg.norm([Px,Py,Pz])            
+             elif (np.isclose(np.max([Px,Py,Pz]),0)):
+                 Px, Py, Pz = np.cross([1,0,0], [nx,ny,nz])
+                 P = np.linalg.norm([Px,Py,Pz])
+                 
+             px, py, pz = Px/P, Py/P, Pz/P
+     
+             Qx, Qy, Qz = np.cross([nx,ny,nz], [px,py,pz])
+             Q = np.linalg.norm([Qx,Qy,Qz])                          
+     
+             qx, qy, qz = Qx/Q, Qy/Q, Qz/Q
+    
+             plane = np.isclose(hx*dx+hy*dy+hz*dz, d, rtol=tol)
+                      
+             A_inv = np.linalg.inv(A)
+              
+             pu, pv, pw = np.dot(A_inv, [px,py,pz])
+             qu, qv, qw = np.dot(A_inv, [qx,qy,qz])
+             
+             projx = np.array([pu,pv,pw])
+             projy = np.array([qu,qv,qw])
+                                     
+             scale_dx = projx.max()
+             scale_dy = projy.max()
+             
+             projx = projx/scale_dx
+             projy = projy/scale_dy
+             
+             cor_aspect = scale_dx/scale_dy
+           
+             dx = (px*dx[plane]+py*dy[plane]+pz*dz[plane])*scale_dx
+             dy = (qx*dx[plane]+qy*dy[plane]+qz*dz[plane])*scale_dy
+             
+             return cor_aspect, projx, projy, dx, dy, plane
+
+    def __color_limits(self, correlation):
+        
+        if (correlation == 'correlation'):
+            self.vmin = -1.0
+            self.cmap = plt.cm.bwr
+        else:
+            self.vmin = 0.0
+            self.cmap = plt.cm.binary
+            
+    def plot(self, dx, dy, c):
+    
+        self.s = self.ax.scatter(dx, dy, c=c, norm=self.norm, cmap=self.cmap)
+        
+    def set_normalization(self, norm='linear'):
+        
+        if (norm == 'linear'):
+            self.norm = colors.Normalize(vmin=self.vmin, vmax=1.0)
+        else:
+            self.norm = colors.SymLogNorm(linthresh=0.1, linscale=0.9, base=10, 
+                                          vmin=self.vmin, vmax=1.0)
+            
+    def update_normalization(self, norm):
+        
+        self.set_normalization(norm)
+    
+        if self.s is not None:
+            self.s.set_cmap(self.cmap)
+            self.s.set_norm(self.norm)
+            self.draw_canvas()
+
+def __matrix_transform(B, layer='l', T=np.eye(3)):
+
+    matrix = np.eye(3)
+    
+    Bp = np.linalg.cholesky(np.dot(T.T,np.dot(np.dot(B.T,B),T))).T
+    
+    if (layer == 'h'):
+        Q = Bp[1:3,1:3].copy()
+    elif (layer == 'k'):
+        Q = Bp[0:3:2,0:3:2].copy()
+    elif (layer == 'l'):
+        Q = Bp[0:2,0:2].copy()     
+                   
+    Q /= Q[1,1]
+    
+    scale = 1/Q[0,0]
+    Q[0,:] *= scale
+    
+    matrix[0:2,0:2] = Q
+    
+    return matrix, scale
+    
+def __extents(min_x, min_y, max_x, max_y, size_x, size_y):
         
     dx = 0 if size_x <= 1 else (max_x-min_x)/(size_x-1)
     dy = 0 if size_y <= 1 else (max_y-min_y)/(size_y-1)
             
     return [min_x-dx/2, max_x+dx/2, min_y-dy/2, max_y+dy/2]
         
-def _transform_extents(matrix, extents):
+def __transform_extents(matrix, extents):
 
     ext_min = np.dot(matrix[0:2,0:2], extents[0::2])
     ext_max = np.dot(matrix[0:2,0:2], extents[1::2])
     
     return ext_min, ext_max
 
-def _offset(matrix, minimum):
+def __offset(matrix, minimum):
     
     return -np.dot(matrix, [0,minimum,0])[0]
 
@@ -122,11 +514,11 @@ def plot_exp_h(canvas, data, h, ih, min_k, min_l, max_k, max_l, size_k, size_l,
         
     extents_h = [min_k, max_k, min_l, max_l]
     
-    ext_min_h, ext_max_h = _transform_extents(matrix_h, extents_h)
+    ext_min_h, ext_max_h = __transform_extents(matrix_h, extents_h)
     
-    extents_h = _extents(min_k, min_l, max_k, max_l, size_k, size_l)
+    extents_h = __extents(min_k, min_l, max_k, max_l, size_k, size_l)
     
-    offset_h = _offset(matrix_h, min_l)
+    offset_h = __offset(matrix_h, min_l)
 
     if (norm == 'Logarithmic'):
         normalize = colors.LogNorm(vmin=vmin, vmax=vmax)
@@ -187,11 +579,11 @@ def plot_exp_k(canvas, data, k, ik, min_h, min_l, max_h, max_l, size_h, size_l,
     
     extents_k = [min_h, max_h, min_l, max_l]
     
-    ext_min_k, ext_max_k = _transform_extents(matrix_k, extents_k)
+    ext_min_k, ext_max_k = __transform_extents(matrix_k, extents_k)
     
-    extents_k = _extents(min_h, min_l, max_h, max_l, size_h, size_l)
+    extents_k = __extents(min_h, min_l, max_h, max_l, size_h, size_l)
     
-    offset_k = _offset(matrix_k, min_l)
+    offset_k = __offset(matrix_k, min_l)
 
     if (norm == 'Logarithmic'):
         normalize = colors.LogNorm(vmin=vmin, vmax=vmax)
@@ -252,11 +644,11 @@ def plot_exp_l(canvas, data, l, il, min_h, min_k, max_h, max_k, size_h, size_k,
     
     extents_l = [min_h, max_h, min_k, max_k]
     
-    ext_min_l, ext_max_l = _transform_extents(matrix_l, extents_l)
+    ext_min_l, ext_max_l = __transform_extents(matrix_l, extents_l)
     
-    extents_l = _extents(min_h, min_k, max_h, max_k, size_h, size_k)
+    extents_l = __extents(min_h, min_k, max_h, max_k, size_h, size_k)
     
-    offset_l = _offset(matrix_l, min_k)
+    offset_l = __offset(matrix_l, min_k)
     
     if (norm == 'Logarithmic'):
         normalize = colors.LogNorm(vmin=vmin, vmax=vmax)
@@ -321,17 +713,17 @@ def plot_ref(canvas, data, hkl, slice_hkl, i_hkl,
     extents_k = [min_h, max_h, min_l, max_l]
     extents_l = [min_h, max_h, min_k, max_k]
     
-    ext_min_h, ext_max_h = _transform_extents(matrix_h, extents_h)
-    ext_min_k, ext_max_k = _transform_extents(matrix_k, extents_k)
-    ext_min_l, ext_max_l = _transform_extents(matrix_l, extents_l)
+    ext_min_h, ext_max_h = __transform_extents(matrix_h, extents_h)
+    ext_min_k, ext_max_k = __transform_extents(matrix_k, extents_k)
+    ext_min_l, ext_max_l = __transform_extents(matrix_l, extents_l)
     
-    extents_h = _extents(min_k, min_l, max_k, max_l, size_k, size_l)
-    extents_k = _extents(min_h, min_l, max_h, max_l, size_h, size_l)
-    extents_l = _extents(min_h, min_k, max_h, max_k, size_h, size_k)
+    extents_h = __extents(min_k, min_l, max_k, max_l, size_k, size_l)
+    extents_k = __extents(min_h, min_l, max_h, max_l, size_h, size_l)
+    extents_l = __extents(min_h, min_k, max_h, max_k, size_h, size_k)
     
-    offset_h = _offset(matrix_h, min_l)
-    offset_k = _offset(matrix_k, min_l)
-    offset_l = _offset(matrix_l, min_k)
+    offset_h = __offset(matrix_h, min_l)
+    offset_k = __offset(matrix_k, min_l)
+    offset_l = __offset(matrix_l, min_k)
     
     if (norm == 'Logarithmic'):
         if (np.isclose(vmin, 0) and np.isclose(vmax, 0)):
@@ -533,146 +925,11 @@ def fast_chi_sq(canvas, ax0, ax1, line0, line1, plot0, plot1, data0, data1):
     
     canvas.draw_idle()
     
-def correlations_1d(canvas, d, data, error, atm_pair, disorder, 
-                    correlation, average, norm, atoms, pairs):
-        
-    fig = canvas.figure
-    fig.clear()   
-        
-    ax = fig.add_subplot(111)
-
-    if (correlation == 'Correlation'):   
-        ax.axhline(y=0, xmin=0, xmax=1, color='k', linestyle='-', linewidth=1)
-        
-    if average:  
-        
-        ax.scatter(d, data, marker='o', clip_on=False, zorder=50)
-        
-    else:
-        
-        for atom, pair in zip(atoms, pairs):
-            
-            if (atom == r'self-correlation'):
-                mask = atm_pair == '0'
-                label = atom
-                
-            else:
-                mask = atm_pair == atom+'_'+pair
-                
-                atom0 = re.sub(r'[^a-zA-Z]', '', atom)
-                atom1 = re.sub(r'[^a-zA-Z]', '', pair)
-                
-                pre0, post0 = atom.split(atom0)
-                pre1, post1 = pair.split(atom1)
-                
-                label = r'$^{{{}}}${}$^{{{}}}$-'\
-                        r'$^{{{}}}${}$^{{{}}}$'.format(pre0, atom0, post0,
-                                                       pre1, atom1, post1)
-                        
-            ax.errorbar(d[mask], data[mask], yerr=1.96*np.sqrt(error[mask]),
-                        fmt='o', ls='none', clip_on=False, zorder=50, 
-                        label=label)
-                            
-        if (len(atoms) > 0):
-            ax.legend(loc='best', frameon=True, 
-                      fancybox=True, fontsize='small')        
-          
-    ax.minorticks_on()
-   
-    if (norm == 'Logarithmic'):
-        ax.set_yscale('symlog', linthresh=0.1, linscale=(1-10**-1))
-        ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
-        ax.yaxis.set_minor_locator(MinorSymLogLocator(1e-1))
-    
-    x1,x2,y1,y2 = ax.axis()
-    ax.set_xlim([0,x2])
-
-    if (correlation == 'Correlation'):                
-        ax.set_ylim([-1,1])
-    else:
-        ax.set_ylim([0,1])
-        
-    ax.set_xlabel(r'$r$ [$\AA$]')
-    
-    if (correlation == 'Correlation'):
-        if (disorder == 'Moment'):
-            label = r'$\langle\mathbf{S}(0)\cdot\mathbf{S}(r)\rangle$'
-        elif (disorder == 'Occupancy'):
-            label = r'$\langle\sigma(0)\cdot\sigma(r)\rangle$'
-        else:
-            label = r'$\langle\hat{\mathbf{u}}(0)'\
-                    r'\cdot\hat{\mathbf{u}}(r)\rangle$'
-    else:
-        if (disorder == 'Moment'):
-            label = r'$\langle|\mathbf{S}(0)\cdot\mathbf{S}(r)|^2\rangle$'
-        elif (disorder == 'Occupancy'):
-            label = r'$\langle|\sigma(0)\cdot\sigma(r)|^2\rangle$'
-        else:
-            label = r'$\langle|\hat{\mathbf{u}}(0)'\
-                    r'\cdot\hat{\mathbf{u}}(r)|^2\rangle$'            
-
-    ax.set_ylabel(label)
-    ax.axes.tick_params(labelsize='small')
-
-    ax.spines['top'].set_visible(False)
-    ax.spines['right'].set_visible(False)
-    
-    fig.tight_layout(pad=3.24)
-    canvas.draw()
-    
-def _mask_plane(dx, dy, dz, h, k, l, d, A, B, tol):
-             
-     hx, hy, hz = np.dot(B, [h,k,l])
-         
-     if (not np.isclose(hx**2+hy**2+hz**2,0)):
-         
-         nx, ny, nz = [hx,hy,hz]/np.linalg.norm([hx,hy,hz])
-         
-         Px, Py, Pz = np.cross([0,0,1], [nx,ny,nz])
-         P = np.linalg.norm([Px,Py,Pz])
-         
-         if (np.isclose(P,0)):
-             Px, Py, Pz = np.cross([0,1,0], [nx,ny,nz])
-             P = np.linalg.norm([Px,Py,Pz])            
-         elif (np.isclose(np.max([Px,Py,Pz]),0)):
-             Px, Py, Pz = np.cross([1,0,0], [nx,ny,nz])
-             P = np.linalg.norm([Px,Py,Pz])
-             
-         px, py, pz = Px/P, Py/P, Pz/P
- 
-         Qx, Qy, Qz = np.cross([nx,ny,nz], [px,py,pz])
-         Q = np.linalg.norm([Qx,Qy,Qz])                          
- 
-         qx, qy, qz = Qx/Q, Qy/Q, Qz/Q
-
-         plane = np.isclose(hx*dx+hy*dy+hz*dz, d, rtol=tol)
-                  
-         A_inv = np.linalg.inv(A)
-          
-         pu, pv, pw = np.dot(A_inv, [px,py,pz])
-         qu, qv, qw = np.dot(A_inv, [qx,qy,qz])
-         
-         proj0 = np.array([pu,pv,pw])
-         proj1 = np.array([qu,qv,qw])
-                                 
-         scale_d0 = proj0.max()
-         scale_d1 = proj1.max()
-         
-         proj0 = proj0/scale_d0
-         proj1 = proj1/scale_d1
-         
-         cor_aspect = scale_d0/scale_d1
-       
-         d0 = (px*dx[plane]+py*dy[plane]+pz*dz[plane])*scale_d0
-         d1 = (qx*dx[plane]+qy*dy[plane]+qz*dz[plane])*scale_d1
-         
-         return cor_aspect, proj0, proj1, d0, d1, plane
-    
 def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, atm_pair3d, 
                     disorder, correlation, average, norm, atoms, pairs, 
                     A, B, tol):
     
-    aspect, proj0, proj1, d0, d1, plane = _mask_plane(dx, dy, dz, h, k, l, 
+    aspect, proj0, proj1, d0, d1, plane = __mask_plane(dx, dy, dz, h, k, l, 
                                                       d, A, B, tol)
 
     if (correlation == 'Correlation'):
@@ -818,17 +1075,17 @@ def plot_calc_3d(canvas, data, hkl, slice_hkl, i_hkl, T,
     extents_k = [min_h, max_h, min_l, max_l]
     extents_l = [min_h, max_h, min_k, max_k]
                 
-    ext_min_h, ext_max_h = _transform_extents(matrix_h, extents_h)
-    ext_min_k, ext_max_k = _transform_extents(matrix_k, extents_k)
-    ext_min_l, ext_max_l = _transform_extents(matrix_l, extents_l)
+    ext_min_h, ext_max_h = __transform_extents(matrix_h, extents_h)
+    ext_min_k, ext_max_k = __transform_extents(matrix_k, extents_k)
+    ext_min_l, ext_max_l = __transform_extents(matrix_l, extents_l)
     
-    extents_h = _extents(min_k, min_l, max_k, max_l, size_k, size_l)
-    extents_k = _extents(min_h, min_l, max_h, max_l, size_h, size_l)
-    extents_l = _extents(min_h, min_k, max_h, max_k, size_h, size_k)
+    extents_h = __extents(min_k, min_l, max_k, max_l, size_k, size_l)
+    extents_k = __extents(min_h, min_l, max_h, max_l, size_h, size_l)
+    extents_l = __extents(min_h, min_k, max_h, max_k, size_h, size_k)
     
-    offset_h = _offset(matrix_h, min_l)
-    offset_k = _offset(matrix_k, min_l)
-    offset_l = _offset(matrix_l, min_k)
+    offset_h = __offset(matrix_h, min_l)
+    offset_k = __offset(matrix_k, min_l)
+    offset_l = __offset(matrix_l, min_k)
     
     aligned = np.allclose(T, np.eye(3))
         
@@ -940,32 +1197,4 @@ def plot_calc_3d(canvas, data, hkl, slice_hkl, i_hkl, T,
         cb.ax.xaxis.set_minor_locator(plt.NullLocator())
         
     cb.ax.tick_params(labelsize='small') 
-    canvas.draw()
-    
-def plot_calc_1d(canvas, data, Q, indices, labels, norm, marker):
-                
-    fig = canvas.figure
-    fig.clear()   
-    
-    ax = fig.add_subplot(111)
-        
-    for i in indices:
-        if (norm == 'Logarithmic'): 
-            ax.semilogy(Q/(2*np.pi), data[i], marker, label=labels[i])
-        else:
-            ax.plot(Q/(2*np.pi), data[i], marker, label=labels[i])
-    
-    ax.legend()
-
-    ax.set_xlabel(r'$Q/2\pi$ [$\AA$]', fontsize='small')
-    ax.set_ylabel(r'$I(Q)$ [arb. unit]', fontsize='small')  
-
-    ax.xaxis.tick_bottom()
-    
-    ax.minorticks_on()
-    
-    ax.axes.tick_params(labelsize='small')
-
-    fig.tight_layout(pad=3.24)
-    
     canvas.draw()

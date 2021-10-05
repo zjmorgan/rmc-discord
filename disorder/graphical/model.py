@@ -1192,7 +1192,7 @@ class Model:
         corr1d, coll1d, \
         sigma_sq_corr1d, sigma_sq_coll1d, d = crystal.average1d(arrays, d, tol)
                 
-        return corr1d, coll1d, sigma_sq_corr1d, sigma_sq_col1dl, d
+        return corr1d, coll1d, sigma_sq_corr1d, sigma_sq_coll1d, d
                         
     def scalar_average_1d(self, corr1d, sigma_sq_corr1d, d, tol):
         

@@ -21,6 +21,7 @@ directory = os.path.dirname(os.path.abspath(__file__))
 class test_presenter(unittest.TestCase):      
 
     def setUp(self):
+        
         self.view = View()
         self.presenter = Presenter(Model(), self.view)
             

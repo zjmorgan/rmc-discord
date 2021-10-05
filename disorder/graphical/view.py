@@ -277,7 +277,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_marker_calc_1d.addItem('-')
         self.comboBox_marker_calc_1d.addItem('o')
         self.comboBox_marker_calc_1d.addItem('-o')
-        
+
         self.comboBox_slice_calc_3d.addItem('h =')
         self.comboBox_slice_calc_3d.addItem('k =')
         self.comboBox_slice_calc_3d.addItem('l =')

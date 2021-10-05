@@ -3,9 +3,12 @@
 import os
 import sys
 
+import re
+
 import numpy as np
 
 from disorder.graphical import plots
+from disorder.graphical.plots import Line
 
 class Presenter:
 
@@ -2851,62 +2854,153 @@ class Presenter:
                         
             canvas = self.view.get_plot_chi_sq_canvas()
 
-            plot0 = self.view.get_plot_top_chi_sq()
-            plot1 = self.view.get_plot_bottom_chi_sq()
+            plot_l = self.view.get_plot_top_chi_sq()
+            plot_r = self.view.get_plot_bottom_chi_sq()
             
-            self.plot0, self.plot1 = plot0, plot1
+            self.plot_l, self.plot_r = plot_l, plot_r
                         
             acc_moves, rej_moves = self.acc_moves, self.rej_moves
             temperature, energy = self.temperature, self.energy
             chi_sq, scale = self.chi_sq, self.scale
             
-            ax0, ax1, line0, line1 = plots.chi_sq(canvas, plot0, plot1, 
-                                                  acc_moves, rej_moves, 
-                                                  temperature, energy, 
-                                                  chi_sq, scale)
+            chi_sq_plot = Line(canvas)
+            chi_sq_plot.clear_canvas()
             
-            self.ax0, self.ax1, self.line0, self.line1 = ax0, ax1, line0, line1
+            xlabel = 'Moves'
+            norm = twin_norm = 'logarithmic'
+            twin_ylabel = ''
+            twin = True
+            
+            if (plot_l == 'Accepted' and plot_r == 'Rejected'):
+                ylabel = r'$\chi^2$'
+                twin = False
+                yl, yr = acc_moves.copy(), rej_moves.copy()
+            elif (plot_l == 'Rejected' and plot_r == 'Accepted'):
+                ylabel = r'$\chi^2$'
+                twin = False
+                yl, yr = rej_moves.copy(), acc_moves.copy()
+            
+            if (plot_l == 'Accepted' and not plot_r == 'Rejected'):
+                ylabel = r'$\chi^2$'
+                yl = acc_moves.copy()
+            elif (plot_l == 'Rejected' and not plot_r == 'Accepted'):
+                ylabel = r'$\chi^2$'
+                yl = rej_moves.copy()
+            elif (plot_l == 'Temperature'):              
+                ylabel = r'$T$'
+                yl = temperature.copy()
+            elif (plot_l == 'Energy'):              
+                ylabel = r'$\Delta\chi^2$'
+                yl = energy.copy()
+                norm = 'linear'
+            elif (plot_l == 'Chi-squared'):              
+                ylabel = r'$\chi^2$'
+                yl = chi_sq.copy()
+            elif (plot_l == 'Scale factor'):
+                ylabel = r'$s$'
+                yl = scale.copy()
+                norm = 'linear'
+                
+            if (plot_r == 'Accepted' and not plot_l == 'Rejected'):
+                twin_ylabel = r'$\chi^2$'
+                yr = acc_moves.copy()
+            elif (plot_r == 'Rejected' and not plot_l == 'Accepted'):
+                twin_ylabel = r'$\chi^2$'
+                yr = rej_moves.copy()
+            elif (plot_r == 'Temperature'):              
+                twin_ylabel = r'$T$'
+                yr = temperature.copy()
+            elif (plot_r == 'Energy'):              
+                twin_ylabel = r'$\Delta\chi^2$'
+                yr = energy.copy()
+                twin_norm = 'linear'
+            elif (plot_r == 'Chi-squared'):              
+                twin_ylabel = r'$\chi^2$'
+                yr = chi_sq.copy()
+            elif (plot_r == 'Scale factor'):
+                twin_ylabel = r'$s$'
+                yr = scale.copy()
+                twin_norm = 'linear'
+                                
+            xl, xr = np.arange(len(yl)), np.arange(len(yr))
+
+            chi_sq_plot.plot_data(xl, yl, marker='-', label=plot_l)
+            chi_sq_plot.plot_data(xr, yr, marker='-', label=plot_r, twin=twin)
+  
+            chi_sq_plot.set_labels(xlabel=xlabel, 
+                                   ylabel=ylabel, 
+                                   twin_ylabel=twin_ylabel)
+            
+            chi_sq_plot.set_normalization(norm)
+            chi_sq_plot.set_normalization(twin_norm, twin=twin)
+            
+            chi_sq_plot.tight_layout()
+            
+            chi_sq_plot.use_scientific()
+            chi_sq_plot.use_scientific(twin=twin)
+            
+            chi_sq_plot.show_legend()
+            chi_sq_plot.draw_canvas()
+            
+            self.chi_sq_plot = chi_sq_plot
             
     def fast_redraw_plot_chi_sq(self):
         
         canvas = self.view.get_plot_chi_sq_canvas()
-
-        plot0, plot1 = self.plot0, self.plot1 
+        
+        chi_sq_plot = self.chi_sq_plot
+        
+        plot_l, plot_r = self.plot_l, self.plot_r
                     
         acc_moves, rej_moves = self.acc_moves, self.rej_moves
         temperature, energy = self.temperature, self.energy
         chi_sq, scale = self.chi_sq, self.scale
         
-        if (plot0 == 'Accepted'):
-            data0 = acc_moves.copy()
-        elif (plot0 == 'Reject.copy()ed'):
-            data0 = rej_moves
-        elif (plot0 == 'Temperature'):              
-            data0 = temperature.copy()
-        elif (plot0 == 'Energy'):              
-            data0 = energy.copy()
-        elif (plot0 == 'Chi-squared'):              
-            data0 = chi_sq.copy()
-        else:
-            data0 = scale.copy()
+        twin = True
+        
+        if (plot_l == 'Accepted' and plot_r == 'Rejected'):
+            twin = False
+        elif (plot_l == 'Rejected' and plot_r == 'Accepted'):
+            twin = False
             
-        if (plot1 == 'Accepted'):
-            data1 = acc_moves.copy()
-        elif (plot1 == 'Rejecte.copy()d'):
-            data1 = rej_moves.copy()
-        elif (plot1 == 'Temperature'):              
-            data1 = temperature.copy()
-        elif (plot1 == 'Energy'):              
-            data1 = energy.copy()
-        elif (plot1 == 'Chi-squared'):              
-            data1 = chi_sq.copy()
-        else:
-            data1 = scale.copy()
+        if (plot_l == 'Accepted'):
+            yl = acc_moves.copy()
+        elif (plot_l == 'Rejected'):
+            yl = rej_moves
+        elif (plot_l == 'Temperature'):              
+            yl = temperature.copy()
+        elif (plot_l == 'Energy'):              
+            yl = energy.copy()
+        elif (plot_l == 'Chi-squared'):              
+            yl = chi_sq.copy()
+        elif (plot_l == 'Scale factor'):
+            yl = scale.copy()
+            
+        if (plot_r == 'Accepted'):
+            yr = acc_moves.copy()
+        elif (plot_r == 'Rejected'):
+            yr = rej_moves.copy()
+        elif (plot_r == 'Temperature'):              
+            yr = temperature.copy()
+        elif (plot_r == 'Energy'):              
+            yr = energy.copy()
+        elif (plot_r == 'Chi-squared'):              
+            yr = chi_sq.copy()
+        elif (plot_r == 'Scale factor'):
+            yr = scale.copy()
+                
+        xl, xr = np.arange(len(yl)), np.arange(len(yr))
         
-        ax0, ax1, line0, line1 = self.ax0, self.ax1, self.line0, self.line1
+        chi_sq_plot.update_data(xl, yl, i=0)
+        chi_sq_plot.update_data(xr, yr, i=1)
         
-        plots.fast_chi_sq(canvas, ax0, ax1, line0, line1,
-                          plot0, plot1, data0, data1)
+        chi_sq_plot.reset_view()
+        
+        if twin:
+            chi_sq_plot.reset_view(twin)
+            
+        chi_sq_plot.draw_canvas()
+        
     # ---
     
     def recreate_table_1d(self):
@@ -3054,7 +3148,10 @@ class Presenter:
             disorder = self.view.get_correlations_1d()
             correlation = self.view.get_plot_1d()
             norm = self.view.get_norm_1d()
-                    
+            
+            if (norm == 'Logarithmic'): 
+                norm = 'SymLog'
+                
             average = self.view.average_1d_checked()
             
             d, atm_pair1d = self.d, self.atm_pair1d 
@@ -3074,9 +3171,61 @@ class Presenter:
                 if active:
                     atoms.append(left)
                     pairs.append(right)
+                    
+            correlations_1d = Line(canvas)
+            correlations_1d.clear_canvas()
             
-            plots.correlations_1d(canvas, d, data, error, atm_pair1d, disorder, 
-                                  correlation, average, norm, atoms, pairs)
+            if average:
+                correlations_1d.plot_data(d, data, marker='o')
+            else:
+                for atom, pair in zip(atoms, pairs):
+                    if (atom == r'self-correlation'):
+                        mask = atm_pair1d == '0'
+                        label = atom
+                    else:
+                        mask = atm_pair1d == '{}-{}'.format(atom,pair)
+                        
+                        atm_l = re.sub(r'[^a-zA-Z]', '', atom)
+                        atm_r = re.sub(r'[^a-zA-Z]', '', pair)
+                        
+                        pre_l, post_l = atom.split(atm_l)
+                        pre_r, post_r = pair.split(atm_r)
+                        
+                        left =  [pre_l, atm_l, post_l]
+                        right = [pre_r, atm_r, post_r]
+                        
+                        label = r'$^{{{}}}${}$^{{{}}}$'.format(*left)+'-'+\
+                                r'$^{{{}}}${}$^{{{}}}$'.format(*right)
+                            
+                    correlations_1d.plot_data(d, data, yerr=error,
+                                              marker='o', label=label)
+                correlations_1d.show_legend()
+            
+            correlations_1d.set_normalization(norm)
+            
+            xlabel = r'$r$ [$\AA$]'
+            
+            if (correlation == 'Correlation'):
+                correlations_1d.draw_horizontal()
+                correlations_1d.set_limts(-1,1)
+                if (disorder == 'Moment'):
+                    ylabel = r'$\langle\mathbf{S}(0)\cdot\mathbf{S}(r)\rangle$'
+                elif (disorder == 'Occupancy'):
+                    ylabel = r'$\langle\sigma(0)\cdot\sigma(r)\rangle$'
+                else:
+                    ylabel = r'$\langle\hat{\mathbf{u}}(0)\cdot'\
+                                     r'\hat{\mathbf{u}}(r)\rangle$'
+            else:
+                correlations_1d.set_limts(0,1)
+                if (disorder == 'Moment'):
+                    ylabel = r'$\langle|\mathbf{S}(0)\cdot'\
+                                      r'\mathbf{S}(r)|^2\rangle$'
+                else:
+                    ylabel = r'$\langle|\hat{\mathbf{u}}(0)\cdot'\
+                                      r'\hat{\mathbf{u}}(r)|^2\rangle$'
+                            
+            correlations_1d.set_labels(xlabel=xlabel, ylabel=ylabel)
+            correlations_1d.draw_canvas()
 
     def recreate_table_3d(self):
                 
@@ -3530,8 +3679,28 @@ class Presenter:
             norm = self.view.get_norm_calc_1d()
             
             marker = self.view.get_marker_calc_1d()
-                                                        
-            plots.plot_calc_1d(canvas, data, Q, indices, labels, norm, marker)
+            
+            if (marker == '-'):
+                markers = ['-', '-', '-']
+            if (marker == 'o'):
+                markers = ['o', 'o', 'o']
+            else:
+                markers = ['-o', '-o', '-o']
+                    
+            plot_calc_1d = Line(canvas)
+            plot_calc_1d.clear_canvas()
+            
+            for i in indices:
+                plot_calc_1d.plot_data(Q/(2*np.pi), data[i], \
+                                       marker=markers[i], label=labels[i])
+            
+            plot_calc_1d.set_normalization(norm)
+            plot_calc_1d.show_legend()
+            
+            plot_calc_1d.set_labels(xlabel=r'$Q/2\pi$ [$\AA$]', 
+                                    ylabel=r'$I(Q)$ [arb. unit]') 
+            
+            plot_calc_1d.draw_canvas()
 
     def disorder_check_mag_recalc_3d(self):
         

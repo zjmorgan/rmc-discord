@@ -68,8 +68,8 @@ class test_crystal(unittest.TestCase):
         np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,3], 0.00029)
         
         uc_dict = crystal.unitcell(folder=folder, 
-                                 filename='chlorastrolite.cif', 
-                                 tol=1e-4)
+                                   filename='chlorastrolite.cif', 
+                                   tol=1e-4)
         
         u = uc_dict['u']
         v = uc_dict['v']
