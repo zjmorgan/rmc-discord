@@ -112,5 +112,38 @@ class test_plots(unittest.TestCase):
         self.assertTrue(os.path.exists(filename))
         os.remove(filename)
         
+    def test_heatmap(self):
+            
+        heat_map = HeatMap(self.canvas)
+        
+        xmin, xmax, xsize = 0, 1, 16
+        ymin, ymax, ysize = 2, 4, 32
+        
+        x, y = np.meshgrid(np.linspace(xmin,xmax,xsize),
+                           np.linspace(ymin,ymax,ysize), indexing='ij')
+        
+        z = np.sin(2*np.pi*x)*np.cos(2*np.pi*y)
+        
+        heat_map.plot_data(z, xmin, ymin, xmax, ymax)
+        heat_map.create_colorbar()
+        
+        np.testing.assert_array_equal(heat_map.get_data(), z)
+        
+        filename = os.path.join(directory, 'heatmap.png')
+        heat_map.save_figure(filename)
+        
+        self.assertTrue(os.path.exists(filename))
+        os.remove(filename)
+        
+        heat_map.set_normalization(-1, 1, norm='symlog')
+        heat_map.update_colormap(category='diverging')
+        
+        heat_map.set_labels(r'$z(x,y)$', r'$x$', r'$y$')
+        
+        heat_map.save_figure(filename)
+        
+        self.assertTrue(os.path.exists(filename))
+        os.remove(filename)
+        
 if __name__ == '__main__':
     unittest.main()

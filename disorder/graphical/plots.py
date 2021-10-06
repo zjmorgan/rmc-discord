@@ -265,29 +265,20 @@ class Line(Plot):
         ax.ticklabel_format(style='sci', scilimits=(0,0), axis='x')
         ax.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
             
-def HeatMap(Plot):
-     
+class HeatMap(Plot):
+            
     def __init__(self, canvas):
         
         super(HeatMap, self).__init__(canvas)
         
         self.im = None
+        self.norm = None
+        self.__color_limits()
         
-        self.cmap = plt.cm.viridis
-        
-    def __matrix_transform(self, B, layer='l', T=np.eye(3)):
+    def __matrix_transform(self, Q):
     
         matrix = np.eye(3)
         
-        Bp = np.linalg.cholesky(np.dot(T.T,np.dot(np.dot(B.T,B),T))).T
-        
-        if (layer == 'h'):
-            Q = Bp[1:3,1:3].copy()
-        elif (layer == 'k'):
-            Q = Bp[0:3:2,0:3:2].copy()
-        elif (layer == 'l'):
-            Q = Bp[0:2,0:2].copy()     
-                       
         Q /= Q[1,1]
         
         scale = 1/Q[0,0]
@@ -335,61 +326,108 @@ def HeatMap(Plot):
         
         self.ax.set_xlim(ext_min[0]+offset,ext_max[0]+offset)
         self.ax.set_ylim(ext_min[1],ext_max[1])
-    
-    def set_normalization(self, norm='linear'):
         
-        if np.isclose(self.vmin, self.vmax): self.vmin, self.vmax = 1e-3, 1e+3
+    def __color_limits(self, category='sequential'):
         
-        if (norm.lower() == 'logarithmic'):
-            self.norm = colors.LogNorm(vmin=self.vmin, vmax=self.vmax)
+        if (category.lower() == 'sequential'):
+            self.cmap = plt.cm.viridis
+        elif (category.lower() == 'diverging'):
+            self.cmap = plt.cm.bwr
         else:
-            self.norm = colors.Normalize(vmin=self.vmin, vmax=self.vmax)
+            self.cmap = plt.cm.binary
+    
+    def set_normalization(self, vmin, vmax, norm='linear'):
+        
+        if np.isclose(vmin, vmax): vmin, vmax = 1e-3, 1e+3
+        
+        if (norm.lower() == 'linear'):
+            self.norm = colors.Normalize(vmin=vmin, vmax=vmax)
+        elif (norm.lower() == 'logarithmic'):
+            self.norm = colors.LogNorm(vmin=vmin, vmax=vmax)
+        else:
+            self.norm = colors.SymLogNorm(linthresh=0.1, linscale=0.9, base=10, 
+                                          vmin=vmin, vmax=vmax)
             
-    def update_normalization(self, norm):
+        if self.im.colorbar is not None:
+            
+            orientation = self.im.colorbar.orientation
+
+            self.remove_colorbar()
+            self.create_colorbar(orientation, norm)
+            
+    def update_normalization(self, norm='linear'):
         
         self.set_normalization(norm)
     
         if self.im is not None:
-            self.im.set_cmap(self.cmap)
-            self.im.set_norm(self.norm)
-            self.draw_canvas()
             
-    def create_colorbar(self, orientation='vertical'):
+            self.im.set_norm(self.norm)
+            
+    def update_colormap(self, category='sequential'):
+            
+        self.__color_limits(category)
         
-        pad = 0.05 if orientation == 'vertical' else 0.2
+        if self.im is not None:
+            
+            self.im.set_cmap(self.cmap)
+            
+    def create_colorbar(self, orientation='vertical', norm='linear'):
         
-        self.cb = fig.colorbar(self.im, ax=self.ax, 
-                               orientation=orientation, pad=pad)
+        self.remove_colorbar()
+        
+        pad = 0.05 if orientation.lower() == 'vertical' else 0.2
+        
+        self.cb = self.fig.colorbar(self.im, ax=self.ax, 
+                                    orientation=orientation, pad=pad)
         
         self.cb.ax.minorticks_on()
     
-        if (self.norm == 'linear'):
+        if (norm.lower() == 'linear'):
             self.cb.formatter.set_powerlimits((0, 0))
             self.cb.update_ticks()
             
+    def remove_colorbar(self):
+        
+        if self.im.colorbar is not None:
+            
+            self.im.colorbar.remove()
+            
+    def reset_color_limits(self):
+            
+        self.im.autoscale()
+                    
     def update_data(self, data, vmin, vmax):
         
         if self.im is not None:
+            
             self.im.set_array(data.T)
             self.im.set_clim(vmin=vmin, vmax=vmax)
             
-            self.canvas.draw_idle()
+    def get_data(self):
         
-    def plot(self, data):
+        if self.im is not None:
+            
+            return self.im.get_array().T
+                    
+    def plot_data(self, data, min_x, min_y, max_x, max_y):
         
-        self.im = self.ax.imshow(data.T, norm=self.norm, 
-                                 interpolation='nearest', origin='lower', 
-                                 extent=extents)
+        size_x, size_y = data.shape[1], data.shape[0]
+        
+        extents = self.__extents(min_x, min_y, max_x, max_y, size_x, size_y)
+        
+        self.im = self.ax.imshow(data.T, interpolation='nearest', 
+                                 origin='lower', extent=extents)
         
         self.ax.minorticks_on()
     
-def Scatter(Plot):
+class Scatter(Plot):
     
     def __init__(self, canvas):
         
         super(Scatter, self).__init__(canvas)
         
         self.s = None
+        self.__color_limits()
         
     def __mask_plane(self, dx, dy, dz, h, k, l, d, A, B, tol):
                  
@@ -439,16 +477,16 @@ def Scatter(Plot):
              
              return cor_aspect, projx, projy, dx, dy, plane
 
-    def __color_limits(self, correlation):
+    def __color_limits(self, category='sequential'):
         
-        if (correlation == 'correlation'):
-            self.vmin = -1.0
+        if (category == 'sequential'):
+            self.cmap = plt.cm.viridis
+        elif (category == 'diverging'):
             self.cmap = plt.cm.bwr
         else:
-            self.vmin = 0.0
             self.cmap = plt.cm.binary
             
-    def plot(self, dx, dy, c):
+    def plot_data(self, dx, dy, c):
     
         self.s = self.ax.scatter(dx, dy, c=c, norm=self.norm, cmap=self.cmap)
         
@@ -458,7 +496,7 @@ def Scatter(Plot):
             self.norm = colors.Normalize(vmin=self.vmin, vmax=1.0)
         else:
             self.norm = colors.SymLogNorm(linthresh=0.1, linscale=0.9, base=10, 
-                                          vmin=self.vmin, vmax=1.0)
+                                          vmin=vmin, vmax=1.0)
             
     def update_normalization(self, norm):
         
