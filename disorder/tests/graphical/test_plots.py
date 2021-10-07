@@ -126,6 +126,7 @@ class test_plots(unittest.TestCase):
         
         heat_map.plot_data(z, xmin, ymin, xmax, ymax)
         heat_map.create_colorbar()
+        heat_map.update_colormap('binary')
         
         np.testing.assert_array_equal(heat_map.get_data(), z)
         
@@ -139,6 +140,17 @@ class test_plots(unittest.TestCase):
         heat_map.update_colormap(category='diverging')
         
         heat_map.set_labels(r'$z(x,y)$', r'$x$', r'$y$')
+        
+        heat_map.save_figure(filename)
+        
+        self.assertTrue(os.path.exists(filename))
+        os.remove(filename)
+        
+        z = 100*np.exp(-2*x)*np.exp(-y)
+        
+        heat_map.update_data(z, 1, 10)
+        heat_map.update_normalization('logarithmic')
+        heat_map.update_colormap(category='sequential')
         
         heat_map.save_figure(filename)
         

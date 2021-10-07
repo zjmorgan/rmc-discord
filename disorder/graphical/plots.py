@@ -303,28 +303,7 @@ class HeatMap(Plot):
     def __offset(self, matrix, minimum):
         
         return -np.dot(matrix, [0,minimum,0])[0]
-    
-    def __transform(self, matrix, extents, scale):
-        
-        ext_min, ext_max = self.__transform_extents(self, matrix, extents)
-        
-        offset = self.__offset(self, matrix, minimum)
-    
-        trans = mtransforms.Affine2D()
-        
-        trans.set_matrix(matrix)
-        
-        shift = mtransforms.Affine2D().translate(offset,0)
-        
-        self.ax.set_aspect(scale)
-        
-        trans_data = trans+shift+self.ax.transData
-        
-        self.im.set_transform(trans_data)
-        
-        self.ax.set_xlim(ext_min[0]+offset,ext_max[0]+offset)
-        self.ax.set_ylim(ext_min[1],ext_max[1])
-        
+            
     def __color_limits(self, category='sequential'):
         
         if (category.lower() == 'sequential'):
@@ -355,7 +334,9 @@ class HeatMap(Plot):
             
     def update_normalization(self, norm='linear'):
         
-        self.set_normalization(norm)
+        vmin, vmax = self.im.get_clim()
+        
+        self.set_normalization(vmin, vmax, norm)
     
         if self.im is not None:
             
@@ -407,7 +388,7 @@ class HeatMap(Plot):
             
             return self.im.get_array().T
                     
-    def plot_data(self, data, min_x, min_y, max_x, max_y):
+    def plot_data(self, data, min_x, min_y, max_x, max_y, matrix=np.eye(2)):
         
         size_x, size_y = data.shape[1], data.shape[0]
         
@@ -416,7 +397,43 @@ class HeatMap(Plot):
         self.im = self.ax.imshow(data.T, interpolation='nearest', 
                                  origin='lower', extent=extents)
         
+        # self.transform_axes(matrix, extents)
+        
         self.ax.minorticks_on()
+        
+    # def transform_axes(self, matrix, extents):
+                    
+    #     min_x, min_y, max_x, max_y = extents
+        
+    #     ext_min, ext_max = self.__transform_extents(matrix, extents)
+        
+    #     extents = self.__extents(min_x, min_y, max_x, max_y, size_x, size_y)
+    
+    #     offset = self.__offset(trans_matrix, min_y)
+
+        
+    #     trans_matrix, scale = self.__matrix_transform(matrix)
+        
+    #     ext_min, ext_max = self.__transform_extents(trans_matrix, extents)
+        
+    #     extents = __extents(min_k, min_l, max_k, max_l, size_k, size_l)
+        
+    #     offset = self.__offset(trans_matrix, minimum)
+    
+    #     trans = mtransforms.Affine2D()
+        
+    #     trans.set_matrix(trans_matrix)
+        
+    #     shift = mtransforms.Affine2D().translate(offset,0)
+        
+    #     self.ax.set_aspect(scale)
+        
+    #     trans_data = trans+shift+self.ax.transData
+        
+    #     self.im.set_transform(trans_data)
+        
+    #     self.ax.set_xlim(ext_min[0]+offset,ext_max[0]+offset)
+    #     self.ax.set_ylim(ext_min[1],ext_max[1])
     
 class Scatter(Plot):
     
