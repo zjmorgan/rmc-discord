@@ -4,10 +4,10 @@ import unittest
 from unittest.mock import MagicMock
 
 import numpy as np
-from matplotlib.testing.decorators import check_figures_equal
+#from matplotlib.testing.decorators import check_figures_equal
 
 from disorder.graphical.canvas import Canvas
-from disorder.graphical.plots import Plot, Line, Scatter, Line, HeatMap
+from disorder.graphical.plots import Plot, Line, Scatter, HeatMap
 
 import os
 directory = os.path.dirname(os.path.abspath(__file__))

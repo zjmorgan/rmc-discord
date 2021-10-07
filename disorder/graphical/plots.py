@@ -4,8 +4,6 @@ import re
 import numpy as np
 
 import matplotlib
-matplotlib.use('Qt5Agg')
-
 import matplotlib.style as mplstyle
 mplstyle.use('fast')
 
@@ -505,7 +503,6 @@ class Scatter(Plot):
         if self.s is not None:
             self.s.set_cmap(self.cmap)
             self.s.set_norm(self.norm)
-            self.draw_canvas()
 
 def __matrix_transform(B, layer='l', T=np.eye(3)):
 
