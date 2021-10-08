@@ -119,8 +119,8 @@ class test_plots(unittest.TestCase):
         xmin, xmax, xsize = 0, 1, 16
         ymin, ymax, ysize = 2, 4, 32
         
-        x, y = np.meshgrid(np.linspace(xmin,xmax,xsize),
-                           np.linspace(ymin,ymax,ysize), indexing='ij')
+        x, y = np.meshgrid(np.linspace(xmin, xmax, xsize),
+                           np.linspace(ymin, ymax, ysize), indexing='ij')
         
         z = np.sin(2*np.pi*x)*np.cos(2*np.pi*y)
         
@@ -152,7 +152,35 @@ class test_plots(unittest.TestCase):
         heat_map.update_normalization('logarithmic')
         heat_map.update_colormap(category='sequential')
         
+        transform = np.array([[1.0,0.5],[-0.5,1.0]])
+        heat_map.transform_axes(transform)
+        
         heat_map.save_figure(filename)
+        
+        self.assertTrue(os.path.exists(filename))
+        os.remove(filename)
+        
+    def test_scatter(self):
+            
+        scatter_plot = Scatter(self.canvas)
+        
+        size = 64
+        xmin, xmax = 0, 1
+        ymin, ymax, = 2, 4
+        
+        x = np.random.uniform(xmin, xmax, size)
+        y = np.random.uniform(ymin, ymax, size)
+        
+        c = np.sin(2*np.pi*x)*np.cos(2*np.pi*y)
+        
+        scatter_plot.plot_data(x, y, c)
+        scatter_plot.create_colorbar()
+        scatter_plot.update_colormap('binary')
+        
+        np.testing.assert_array_equal(scatter_plot.get_data(), c)
+        
+        filename = os.path.join(directory, 'scatter.png')
+        scatter_plot.save_figure(filename)
         
         self.assertTrue(os.path.exists(filename))
         os.remove(filename)

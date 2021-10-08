@@ -273,17 +273,13 @@ class HeatMap(Plot):
         self.norm = None
         self.__color_limits()
         
-    def __matrix_transform(self, Q):
-    
-        matrix = np.eye(3)
+    def __matrix_transform(self, matrix):
+            
+        matrix /= matrix[1,1]
         
-        Q /= Q[1,1]
-        
-        scale = 1/Q[0,0]
-        Q[0,:] *= scale
-        
-        matrix[0:2,0:2] = Q
-        
+        scale = 1/matrix[0,0]
+        matrix[0,:] *= scale
+                
         return matrix, scale
         
     def __extents(self, min_x, min_y, max_x, max_y, size_x, size_y):
@@ -293,16 +289,35 @@ class HeatMap(Plot):
                 
         return [min_x-dx/2, max_x+dx/2, min_y-dy/2, max_y+dy/2]
             
+    def __reverse_extents(self):
+            
+        extents = self.im.get_extent()
+        size_x, size_y = self.im.get_size()
+        
+        range_x = extents[1]-extents[0]
+        range_y = extents[3]-extents[2]
+        
+        dx = 0 if size_x <= 1 else range_x/(size_x-1)
+        dy = 0 if size_y <= 1 else range_y/(size_y-1)
+        
+        min_x = extents[0]+dx/2
+        max_x = extents[1]-dx/2
+        
+        min_y = extents[2]+dy/2
+        max_y = extents[3]-dy/2
+        
+        return [min_x, max_x, min_y, max_y]    
+
     def __transform_extents(self, matrix, extents):
     
-        ext_min = np.dot(matrix[0:2,0:2], extents[0::2])
-        ext_max = np.dot(matrix[0:2,0:2], extents[1::2])
+        ext_min = np.dot(matrix, extents[0::2])
+        ext_max = np.dot(matrix, extents[1::2])
         
         return ext_min, ext_max
     
     def __offset(self, matrix, minimum):
         
-        return -np.dot(matrix, [0,minimum,0])[0]
+        return -np.dot(matrix, [0,minimum])[0]
             
     def __color_limits(self, category='sequential'):
         
@@ -333,13 +348,13 @@ class HeatMap(Plot):
             self.create_colorbar(orientation, norm)
             
     def update_normalization(self, norm='linear'):
-        
-        vmin, vmax = self.im.get_clim()
-        
-        self.set_normalization(vmin, vmax, norm)
-    
+
         if self.im is not None:
+
+            vmin, vmax = self.im.get_clim()
             
+            self.set_normalization(vmin, vmax, norm)
+                
             self.im.set_norm(self.norm)
             
     def update_colormap(self, category='sequential'):
@@ -397,43 +412,34 @@ class HeatMap(Plot):
         self.im = self.ax.imshow(data.T, interpolation='nearest', 
                                  origin='lower', extent=extents)
         
-        # self.transform_axes(matrix, extents)
+        self.transform_axes(matrix)
         
         self.ax.minorticks_on()
         
-    # def transform_axes(self, matrix, extents):
-                    
-    #     min_x, min_y, max_x, max_y = extents
+    def transform_axes(self, matrix):
+                            
+        extents = self.__reverse_extents()
+        transformation, scale = self.__matrix_transform(matrix)
+        ext_min, ext_max = self.__transform_extents(transformation, extents)
         
-    #     ext_min, ext_max = self.__transform_extents(matrix, extents)
-        
-    #     extents = self.__extents(min_x, min_y, max_x, max_y, size_x, size_y)
+        min_y = extents[2]
+        offset = self.__offset(transformation, min_y)
     
-    #     offset = self.__offset(trans_matrix, min_y)
-
+        trans = mtransforms.Affine2D()
+                
+        trans_matrix = np.eye(3)
+        trans_matrix[0:2,0:2] = transformation
+        trans.set_matrix(trans_matrix)
         
-    #     trans_matrix, scale = self.__matrix_transform(matrix)
+        shift = mtransforms.Affine2D().translate(offset,0)
         
-    #     ext_min, ext_max = self.__transform_extents(trans_matrix, extents)
+        self.ax.set_aspect(scale)
         
-    #     extents = __extents(min_k, min_l, max_k, max_l, size_k, size_l)
+        trans_data = trans+shift+self.ax.transData
+        self.im.set_transform(trans_data)
         
-    #     offset = self.__offset(trans_matrix, minimum)
-    
-    #     trans = mtransforms.Affine2D()
-        
-    #     trans.set_matrix(trans_matrix)
-        
-    #     shift = mtransforms.Affine2D().translate(offset,0)
-        
-    #     self.ax.set_aspect(scale)
-        
-    #     trans_data = trans+shift+self.ax.transData
-        
-    #     self.im.set_transform(trans_data)
-        
-    #     self.ax.set_xlim(ext_min[0]+offset,ext_max[0]+offset)
-    #     self.ax.set_ylim(ext_min[1],ext_max[1])
+        self.ax.set_xlim(ext_min[0]+offset,ext_max[0]+offset)
+        self.ax.set_ylim(ext_min[1],ext_max[1])
     
 class Scatter(Plot):
     
@@ -500,24 +506,102 @@ class Scatter(Plot):
             self.cmap = plt.cm.bwr
         else:
             self.cmap = plt.cm.binary
-            
-    def plot_data(self, dx, dy, c):
-    
-        self.s = self.ax.scatter(dx, dy, c=c, norm=self.norm, cmap=self.cmap)
+                
+    def set_normalization(self, vmin, vmax, norm='linear'):
         
-    def set_normalization(self, norm='linear'):
+        if np.isclose(vmin, vmax): vmin, vmax = 1e-3, 1e+3
         
-        if (norm == 'linear'):
-            self.norm = colors.Normalize(vmin=self.vmin, vmax=1.0)
+        if (norm.lower() == 'linear'):
+            self.norm = colors.Normalize(vmin=vmin, vmax=vmax)
+        elif (norm.lower() == 'logarithmic'):
+            self.norm = colors.LogNorm(vmin=vmin, vmax=vmax)
         else:
             self.norm = colors.SymLogNorm(linthresh=0.1, linscale=0.9, base=10, 
-                                          vmin=vmin, vmax=1.0)
+                                          vmin=vmin, vmax=vmax)
+            
+        if self.s.colorbar is not None:
+            
+            orientation = self.s.colorbar.orientation
+
+            self.remove_colorbar()
+            self.create_colorbar(orientation, norm)
+            
+    def update_normalization(self, norm='linear'):
+        
+        if self.s is not None:
+
+            vmin, vmax = self.s.get_clim()
+        
+            self.set_normalization(vmin, vmax, norm)
+                
+            self.s.set_norm(self.norm)
+            
+    def update_colormap(self, category='sequential'):
+            
+        self.__color_limits(category)
+        
+        if self.s is not None:
+            
+            self.s.set_cmap(self.cmap)
+            
+    def create_colorbar(self, orientation='vertical', norm='linear'):
+        
+        if self.s is not None:
+            
+            self.remove_colorbar()
+            
+            pad = 0.05 if orientation.lower() == 'vertical' else 0.2
+            
+            self.cb = self.fig.colorbar(self.s, ax=self.ax, 
+                                        orientation=orientation, pad=pad)
+            
+            self.cb.ax.minorticks_on()
+        
+            if (norm.lower() == 'linear'):
+                self.cb.formatter.set_powerlimits((0, 0))
+                self.cb.update_ticks()
+            
+    def remove_colorbar(self):
+        
+        if self.s.colorbar is not None:
+            
+            self.s.colorbar.remove()
+            
+    def set_colorbar_label(self, label):
+        
+        if self.s.colorbar is not None:
+
+            self.s.colorbar.set_label(label)
+            
+    def reset_color_limits(self):
+            
+        if self.s is not None:
+            
+            self.s.autoscale()
+                    
+    def update_data(self, c, vmin, vmax):
+        
+        if self.s is not None:
+            
+            self.s.set_array(c)
+            self.s.set_clim(vmin=vmin, vmax=vmax)
+            
+    def get_data(self):
+        
+        if self.s is not None:
+            
+            return self.s.get_array()
+                    
+    def plot_data(self, x, y, c):
+        
+        self.s = self.ax.scatter(x, y, c=c, cmap=self.cmap)
             
     def update_normalization(self, norm):
         
         self.set_normalization(norm)
     
         if self.s is not None:
+            
             self.s.set_cmap(self.cmap)
             self.s.set_norm(self.norm)
 
@@ -886,96 +970,6 @@ def fast_update_ref(canvas, im, data, hkl, i_hkl, vmin, vmax):
     im.set_clim(vmin=vmin, vmax=vmax)
 
     canvas.draw_idle()           
-
-def chi_sq(canvas, plot0, plot1, acc_moves, rej_moves,
-           temperature, energy, chi_sq, scale):
-
-    fig = canvas.figure
-    fig.clear()   
-    
-    ax0 = fig.add_subplot(211)
-    ax1 = fig.add_subplot(212)
-    
-    if (plot0 == 'Accepted'):
-        line0, = ax0.semilogy(acc_moves, 'C0')
-        ax0.set_ylabel(r'Accepted $\chi^2$', fontsize='small')    
-    elif (plot0 == 'Rejected'):
-        line0, = ax0.semilogy(rej_moves, 'C0')
-        ax0.set_ylabel(r'Rejected $\chi^2$', fontsize='small') 
-    elif (plot0 == 'Temperature'):              
-        line0, = ax0.semilogy(temperature, 'C0')
-        ax0.set_ylabel(r'Temperatrue $T$', fontsize='small') 
-    elif (plot0 == 'Energy'):              
-        line0, = ax0.plot(energy, 'C0')
-        ax0.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
-        ax0.set_ylabel(r'Energy $\Delta\chi^2$', fontsize='small') 
-    elif (plot0 == 'Chi-squared'):              
-        line0, = ax0.semilogy(chi_sq, 'C0')
-        ax0.set_ylabel(r'$\chi^2$', fontsize='small') 
-    else:
-        line0, = ax0.plot(scale, 'C0')
-        ax0.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
-        
-        ax0.set_ylabel(r'Scale factor', fontsize='small') 
-
-    if (plot1 == 'Accepted'):
-        line1, = ax1.semilogy(acc_moves, 'C1')
-        ax1.set_ylabel(r'Accepted $\chi^2$', fontsize='small')    
-    elif (plot1 == 'Rejected'):
-        line1, = ax1.semilogy(rej_moves, 'C1')
-        ax1.set_ylabel(r'Rejected $\chi^2$', fontsize='small') 
-    elif (plot1 == 'Temperature'):              
-        line1, = ax1.semilogy(temperature, 'C1')
-        ax1.set_ylabel(r'Temperature $T$', fontsize='small') 
-    elif (plot1 == 'Energy'):              
-        line1, = ax1.plot(energy, 'C1')
-        ax1.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
-        ax1.set_ylabel(r'Energy $\Delta\chi^2$', fontsize='small') 
-    elif (plot1 == 'Chi-squared'):              
-        line1, = ax1.semilogy(chi_sq, 'C1')
-        ax1.set_ylabel(r'$\chi^2$', fontsize='small') 
-    else:
-        line1, = ax1.plot(scale, 'C1')
-        ax1.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
-        ax1.set_ylabel(r'Scale factor', fontsize='small') 
-     
-    ax0.set_xlabel(r'Moves', fontsize='small')
-    ax1.set_xlabel(r'Moves', fontsize='small')   
-     
-    ax0.axes.tick_params(labelsize='small')
-    ax1.axes.tick_params(labelsize='small')
-           
-    ax0.ticklabel_format(style='sci', scilimits=(0,0), axis='x')
-    ax1.ticklabel_format(style='sci', scilimits=(0,0), axis='x')
-    
-    ax0.minorticks_on()
-    ax1.minorticks_on()
-    
-    ax0.spines['top'].set_visible(False)
-    ax0.spines['right'].set_visible(False)
-    
-    ax1.spines['top'].set_visible(False)
-    ax1.spines['right'].set_visible(False)
-
-    #ax.set_title(r'\chi^2$', fontsize='small') 
-    
-    fig.tight_layout(pad=3.24)
-    canvas.draw()
-    
-    return ax0, ax1, line0, line1
-    
-def fast_chi_sq(canvas, ax0, ax1, line0, line1, plot0, plot1, data0, data1):
-    
-    line0.set_data(np.arange(len(data0)), data0)
-    line1.set_data(np.arange(len(data1)), data1)
-
-    ax0.relim()
-    ax1.relim()
-    
-    ax0.autoscale_view()
-    ax1.autoscale_view()
-    
-    canvas.draw_idle()
     
 def correlations_3d(canvas, dx, dy, dz, h, k, l, d, data, error, atm_pair3d, 
                     disorder, correlation, average, norm, atoms, pairs, 
