@@ -384,7 +384,7 @@ class HeatMap(Plot):
         
         if (vmin > ticks[0]):
             vn = 11 if vmin >= -0.1 and vmin <= 0.1 else 10
-            tmin = inv((np.asarray(ticks[0])-vmin)/(vmax-vmin))
+            tmin = inv((np.array([ticks[0]])-vmin)/(vmax-vmin))
             if (vmin >= -0.1 and vmin <= 0.1):
                 tn = int(vmin/-0.01)
                 nmin = -0.1 if vmin < 0.0 else 0.0
@@ -396,8 +396,8 @@ class HeatMap(Plot):
             minorticks += values.tolist()
         
         for i in range(len(ticks)-1):
-            tmin = inv((np.asarray(ticks[i])-vmin)/(vmax-vmin))
-            tmax = inv((np.asarray(ticks[i+1])-vmin)/(vmax-vmin))
+            tmin = inv((np.array([ticks[i]])-vmin)/(vmax-vmin))
+            tmax = inv((np.array([ticks[i+1]])-vmin)/(vmax-vmin))
             
             tn = 11 if tmin >= -0.1 and tmax <= 0.1 else 10
             
@@ -406,7 +406,7 @@ class HeatMap(Plot):
             
         if (vmax > ticks[-1]):
             vn = 11 if vmax >= -0.1 and vmax <= 0.1 else 10
-            tmax = inv((np.asarray(ticks[-1])-vmin)/(vmax-vmin))    
+            tmax = inv((np.array([ticks[-1]])-vmin)/(vmax-vmin))    
             if (vmax >= -0.1 and vmax <= 0.1): 
                 tn = int(vmax/0.01) 
                 nmax = 0.1 if vmax > 0.0 else 0.0
@@ -613,7 +613,7 @@ class Scatter(Plot):
         self.s = self.ax.scatter(x, y, c=c, cmap=self.cmap)
             
     def reformat_colorbar(self, formatstr='{:.1f}'):
-    
+        
         if (self.cb.orientation == 'vertical'):
             ticks = self.cb.ax.get_yticks()
         else:
@@ -630,7 +630,7 @@ class Scatter(Plot):
         
         if (vmin > ticks[0]):
             vn = 11 if vmin >= -0.1 and vmin <= 0.1 else 10
-            tmin = inv((np.asarray(ticks[0])-vmin)/(vmax-vmin))
+            tmin = inv((np.array([ticks[0]])-vmin)/(vmax-vmin))[0]
             if (vmin >= -0.1 and vmin <= 0.1):
                 tn = int(vmin/-0.01)
                 nmin = -0.1 if vmin < 0.0 else 0.0
@@ -642,8 +642,8 @@ class Scatter(Plot):
             minorticks += values.tolist()
         
         for i in range(len(ticks)-1):
-            tmin = inv((np.asarray(ticks[i])-vmin)/(vmax-vmin))
-            tmax = inv((np.asarray(ticks[i+1])-vmin)/(vmax-vmin))
+            tmin = inv((np.array([ticks[i]])-vmin)/(vmax-vmin))[0]
+            tmax = inv((np.array([ticks[i+1]])-vmin)/(vmax-vmin))[0]
             
             tn = 11 if tmin >= -0.1 and tmax <= 0.1 else 10
             
@@ -652,7 +652,7 @@ class Scatter(Plot):
             
         if (vmax > ticks[-1]):
             vn = 11 if vmax >= -0.1 and vmax <= 0.1 else 10
-            tmax = inv((np.asarray(ticks[-1])-vmin)/(vmax-vmin))    
+            tmax = inv((np.array([ticks[-1]])-vmin)/(vmax-vmin))[0]
             if (vmax >= -0.1 and vmax <= 0.1): 
                 tn = int(vmax/0.01) 
                 nmax = 0.1 if vmax > 0.0 else 0.0
