@@ -376,7 +376,7 @@ class HeatMap(Plot):
         vmin, vmax = self.cb.vmin, self.cb.vmax
         
         inv = self.norm.inverse
-        tscale = (inv(ticks)-vmin)/(vmax-vmin)
+        tscale = inv((ticks-vmin)/(vmax-vmin))
         labels = [formatstr.format(t) for t in tscale]
             
         norm = self.norm
@@ -622,7 +622,7 @@ class Scatter(Plot):
         vmin, vmax = self.cb.vmin, self.cb.vmax
         
         inv = self.norm.inverse
-        tscale = (inv(ticks)-vmin)/(vmax-vmin)
+        tscale = inv((ticks-vmin)/(vmax-vmin))
         labels = [formatstr.format(t) for t in tscale]
             
         norm = self.norm
