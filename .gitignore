@@ -135,6 +135,9 @@ dmypy.json
 # Matplotlib
 *.pdf
 
+# CIF
+*.cif
+
 # NeXus
 *.nxs
 
