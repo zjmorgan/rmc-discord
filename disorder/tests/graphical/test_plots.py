@@ -4,7 +4,7 @@ import unittest
 from unittest.mock import MagicMock
 
 import numpy as np
-#from matplotlib.testing.decorators import check_figures_equal
+np.random.seed(13)
 
 from disorder.graphical.canvas import Canvas
 from disorder.graphical.plots import Plot, Line, Scatter, HeatMap
@@ -33,7 +33,6 @@ class test_plots(unittest.TestCase):
         base_plot.save_figure(filename)
         
         self.assertTrue(os.path.exists(filename))
-            
         os.remove(filename)
         
     def test_line(self):    
@@ -138,6 +137,7 @@ class test_plots(unittest.TestCase):
         
         heat_map.set_normalization(-1, 1, norm='symlog')
         heat_map.update_colormap(category='diverging')
+        heat_map.reformat_colorbar()
         
         heat_map.set_labels(r'$z(x,y)$', r'$x$', r'$y$')
         
@@ -146,9 +146,9 @@ class test_plots(unittest.TestCase):
         self.assertTrue(os.path.exists(filename))
         os.remove(filename)
         
-        z = 100*np.exp(-2*x)*np.exp(-y)
+        z = 1000*np.exp(-2*x)*np.exp(-y)
         
-        heat_map.update_data(z, 1, 10)
+        heat_map.update_data(z, 1, 1000)
         heat_map.update_normalization('logarithmic')
         heat_map.update_colormap(category='sequential')
         
@@ -180,6 +180,28 @@ class test_plots(unittest.TestCase):
         np.testing.assert_array_equal(scatter_plot.get_data(), c)
         
         filename = os.path.join(directory, 'scatter.png')
+        scatter_plot.save_figure(filename)
+        
+        self.assertTrue(os.path.exists(filename))
+        os.remove(filename)
+        
+        scatter_plot.set_normalization(-1, 1, norm='symlog')
+        scatter_plot.update_colormap(category='diverging')
+        scatter_plot.reformat_colorbar()
+        
+        scatter_plot.set_labels(r'$f(x,y)$', r'$x$', r'$y$')
+        
+        scatter_plot.save_figure(filename)
+        
+        self.assertTrue(os.path.exists(filename))
+        os.remove(filename)
+        
+        c = 1000*np.exp(-2*x)*np.exp(-y)
+        
+        scatter_plot.update_data(c, 1, 1000)
+        scatter_plot.update_normalization('logarithmic')
+        scatter_plot.update_colormap(category='sequential')
+        
         scatter_plot.save_figure(filename)
         
         self.assertTrue(os.path.exists(filename))

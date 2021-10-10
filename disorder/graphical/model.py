@@ -371,27 +371,9 @@ class Model:
         
         return minimum+step*(size-1)
             
-    def matrix_transform(self, B, layer='l', T=np.eye(3)):
-    
-        M = np.eye(3)
-        
-        Bp = np.linalg.cholesky(np.dot(T.T,np.dot(np.dot(B.T,B),T))).T
-        
-        if (layer == 'h'):
-            Q = Bp[1:3,1:3].copy()
-        elif (layer == 'k'):
-            Q = Bp[0:3:2,0:3:2].copy()
-        elif (layer == 'l'):
-            Q = Bp[0:2,0:2].copy()     
-                       
-        Q /= Q[1,1]
-        
-        scale = 1/Q[0,0]
-        Q[0,:] *= scale
-        
-        M[0:2,0:2] = Q
-        
-        return M, scale
+    def matrix_transform(self, B, T=np.eye(3)):
+            
+        return np.linalg.cholesky(np.dot(T.T,np.dot(np.dot(B.T,B),T))).T
     
     def mask_array(self, array):
         
@@ -1331,4 +1313,53 @@ class Model:
         atm_pair = np.load('{}-correlations-3d-pair.npy'.format(fname))
         
         return corr, coll, sigma_sq_corr, sigma_sq_coll, dx, dy, dz, atm_pair
-        
+   
+    def mask_plane(self, dx, dy, dz, h, k, l, d, A, B, tol):
+                 
+         hx, hy, hz = np.dot(B, [h,k,l])
+             
+         if (not np.isclose(hx**2+hy**2+hz**2,0)):
+             
+             nx, ny, nz = [hx,hy,hz]/np.linalg.norm([hx,hy,hz])
+             
+             Px, Py, Pz = np.cross([0,0,1], [nx,ny,nz])
+             P = np.linalg.norm([Px,Py,Pz])
+             
+             if (np.isclose(P,0)):
+                 Px, Py, Pz = np.cross([0,1,0], [nx,ny,nz])
+                 P = np.linalg.norm([Px,Py,Pz])            
+             elif (np.isclose(np.max([Px,Py,Pz]),0)):
+                 Px, Py, Pz = np.cross([1,0,0], [nx,ny,nz])
+                 P = np.linalg.norm([Px,Py,Pz])
+                 
+             px, py, pz = Px/P, Py/P, Pz/P
+             
+             Qx, Qy, Qz = np.cross([nx,ny,nz], [px,py,pz])
+             Q = np.linalg.norm([Qx,Qy,Qz])                          
+             
+             qx, qy, qz = Qx/Q, Qy/Q, Qz/Q
+             
+             plane = np.isclose(hx*dx+hy*dy+hz*dz, d, rtol=tol)
+                      
+             A_inv = np.linalg.inv(A)
+              
+             pu, pv, pw = np.dot(A_inv, [px,py,pz])
+             qu, qv, qw = np.dot(A_inv, [qx,qy,qz])
+             
+             projx = np.array([pu,pv,pw])
+             projy = np.array([qu,qv,qw])
+                                     
+             scale_dx = projx.max()
+             scale_dy = projy.max()
+             
+             projx = projx/scale_dx
+             projy = projy/scale_dy
+             
+             cor_aspect = scale_dx/scale_dy
+           
+             dx, dy, dz = dx[plane], dy[plane], dz[plane]
+            
+             Dx, Dy = px*dx+py*dy+pz*dz, qx*dx+qy*dy+qz*dz
+             Dx, Dy = Dx*scale_dx, Dy*scale_dy
+             
+             return cor_aspect, projx, projy, Dx, Dy, plane

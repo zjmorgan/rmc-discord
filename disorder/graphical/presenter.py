@@ -1122,9 +1122,11 @@ class Presenter:
         constants = self.view.get_lattice_parameters()        
         A, B, R, C, D = self.model.crystal_matrices(*constants)
                 
-        matrix_h, scale_h = self.model.matrix_transform(B, 'h')
-        matrix_k, scale_k = self.model.matrix_transform(B, 'k')
-        matrix_l, scale_l = self.model.matrix_transform(B, 'l')
+        Bp = self.model.matrix_transform(B)
+        
+        matrix_h = Bp[1:3,1:3].copy()
+        matrix_k = Bp[0:3:2,0:3:2].copy()
+        matrix_l = Bp[0:2,0:2].copy()
         
         h = self.view.get_slice_h()
         k = self.view.get_slice_k()
@@ -1158,15 +1160,42 @@ class Presenter:
         self.view.validate_min_exp()
         self.view.validate_max_exp()
         
-        plots.plot_exp_h(canvas_h, data, h, ih, min_k, min_l, max_k, max_l, 
-                         nk, nl, matrix_h, scale_h, norm, vmin, vmax)
+        plot_exp_h = plots.HeatMap(canvas_h)
+        plot_exp_k = plots.HeatMap(canvas_k)
+        plot_exp_l = plots.HeatMap(canvas_l)
         
-        plots.plot_exp_k(canvas_k, data, k, ik, min_h, min_l, max_h, max_l, 
-                         nh, nl, matrix_k, scale_k, norm, vmin, vmax)
+        plot_exp_h.clear_canvas()
+        plot_exp_k.clear_canvas()
+        plot_exp_l.clear_canvas()
         
-        plots.plot_exp_l(canvas_l, data, l, il, min_h, min_k, max_h, max_k, 
-                         nh, nk, matrix_l, scale_l, norm, vmin, vmax)
-                        
+        plot_exp_h.plot_data(data[ih,:,:], min_k, min_l, max_k, max_l)
+        plot_exp_k.plot_data(data[:,ik,:], min_h, min_l, max_h, max_l)
+        plot_exp_l.plot_data(data[:,:,il], min_h, min_k, max_h, max_k)
+        
+        plot_exp_h.set_normalization(vmin, vmax, norm=norm)
+        plot_exp_k.set_normalization(vmin, vmax, norm=norm)
+        plot_exp_l.set_normalization(vmin, vmax, norm=norm)
+        
+        plot_exp_h.create_colorbar(orientation='horizontal')
+        plot_exp_k.create_colorbar(orientation='horizontal')
+        plot_exp_l.create_colorbar(orientation='horizontal')
+        
+        plot_exp_h.transform_axes(matrix_h)
+        plot_exp_k.transform_axes(matrix_k)
+        plot_exp_l.transform_axes(matrix_l)
+        
+        plot_exp_h.set_labels(r'$h={}$'.format(h), r'$(0k0)$', r'$(00l)$')
+        plot_exp_k.set_labels(r'$k={}$'.format(k), r'$(h00)$', r'$(00l)$')
+        plot_exp_l.set_labels(r'$l={}$'.format(l), r'$(0k0)$', r'$(0k0)$')
+        
+        plot_exp_h.tight_layout()
+        plot_exp_k.tight_layout()
+        plot_exp_l.tight_layout()
+        
+        plot_exp_h.draw_canvas()
+        plot_exp_k.draw_canvas()
+        plot_exp_l.draw_canvas()
+        
     def redraw_plot_exp(self):
         
         if (self.view.get_plot_exp() == 'Intensity'):
@@ -2760,10 +2789,8 @@ class Presenter:
             
             hkl = self.view.get_slice_hkl()
                     
-            matrix_h, scale_h = self.model.matrix_transform(B, 'h')
-            matrix_k, scale_k = self.model.matrix_transform(B, 'k')
-            matrix_l, scale_l = self.model.matrix_transform(B, 'l')
-            
+            Bp = self.model.matrix_transform(B)
+                        
             nh, min_h, max_h = self.nh, self.min_h, self.max_h
             nk, min_k, max_k = self.nk, self.min_k, self.max_k
             nl, min_l, max_l = self.nl, self.min_l, self.max_l
@@ -2793,7 +2820,7 @@ class Presenter:
                 
             self.hkl = hkl
             self.i_hkl = i_hkl
-            
+                        
             norm = self.view.get_norm_ref()
             
             vmin = self.view.get_min_ref()
@@ -2802,13 +2829,36 @@ class Presenter:
             self.view.validate_min_ref()
             self.view.validate_max_ref()
             
-            im = plots.plot_ref(canvas, data, hkl, slice_hkl, i_hkl, 
-                                min_h, min_k, min_l, max_h, max_k, max_l, 
-                                nh, nk, nl, matrix_h, matrix_k, matrix_l,
-                                scale_h, scale_k, scale_l, 
-                                norm, vmin, vmax)
+            plot_ref = plots.HeatMap(canvas)
+            plot_ref.clear_canvas()
             
-            self.im_ref = im
+            if (hkl == 'h ='):
+                slice_data = data[i_hkl,:,:]
+                limits = min_k, min_l, max_k, max_l
+                matrix = Bp[1:3,1:3]
+                labels = r'$h={}$'.format(slice_hkl), r'$(0k0)$', r'$(00l)$'
+            elif (hkl == 'k ='):
+                slice_data = data[:,i_hkl,:]
+                limits = min_h, min_l, max_h, max_l
+                matrix = Bp[0::2,0::2]
+                labels = r'$k={}$'.format(slice_hkl), r'$(h00)$', r'$(00l)$'
+            else:
+                slice_data = data[:,:,i_hkl]
+                limits = min_h, min_k, max_h, max_k
+                matrix = Bp[0:2,0:2]
+                labels = r'$l={}$'.format(slice_hkl), r'$(0k0)$', r'$(0k0)$'
+            
+            plot_ref.plot_data(slice_data, *limits)
+            plot_ref.transform_axes(matrix)
+            plot_ref.set_labels(*labels)
+            
+            plot_ref.set_normalization(vmin, vmax, norm=norm)
+            plot_ref.create_colorbar()
+            
+            plot_ref.tight_layout()
+            plot_ref.draw_canvas()
+            
+            self.plot_ref = plot_ref
                     
     def redraw_plot_ref(self):
         
@@ -2830,7 +2880,9 @@ class Presenter:
     def fast_redraw_plot_ref(self):
         
         canvas = self.view.get_plot_ref_canvas()
+        plot_ref = self.plot_ref
         plot_type = self.view.get_plot_ref()
+        
         if (plot_type == 'Calculated'):
             self.ref_arr_m = self.refinement_m
         
@@ -2843,11 +2895,18 @@ class Presenter:
             self.view.validate_min_ref()
             self.view.validate_max_ref()
             
-            im = self.im_ref
             data, hkl, i_hkl = self.ref_arr_m, self.hkl, self.i_hkl
             
-            plots.fast_update_ref(canvas, im, data, hkl, i_hkl, vmin, vmax)
+            if (hkl == 'h ='):
+                slice_data = data[i_hkl,:,:]
+            elif (hkl == 'k ='):
+                slice_data = data[:,i_hkl,:]
+            else:
+                slice_data = data[:,:,i_hkl]
                 
+            plot_ref.update_data(slice_data, vmin, vmax)
+            plot_ref.draw_canvas()
+            
     def draw_plot_chi_sq(self):
         
         if self.allocated:
@@ -3147,8 +3206,8 @@ class Presenter:
         
             disorder = self.view.get_correlations_1d()
             correlation = self.view.get_plot_1d()
-            norm = self.view.get_norm_1d()
             
+            norm = self.view.get_norm_1d()
             if (norm == 'Logarithmic'): 
                 norm = 'SymLog'
                 
@@ -3226,6 +3285,8 @@ class Presenter:
                             
             correlations_1d.set_labels(xlabel=xlabel, ylabel=ylabel)
             correlations_1d.draw_canvas()
+            
+            self.correlations_1d = correlations_1d
 
     def recreate_table_3d(self):
                 
@@ -3413,7 +3474,10 @@ class Presenter:
         
             disorder = self.view.get_correlations_3d()
             correlation = self.view.get_plot_3d()
+            
             norm = self.view.get_norm_3d()
+            if (norm == 'Logarithmic'): 
+                norm = 'SymLog'
             
             tol = self.view.get_tol_3d()
             
@@ -3435,7 +3499,13 @@ class Presenter:
             else:
                 data = self.coll3d
                 error = self.sigma_sq_coll3d
-    
+                
+            mask_params = dx, dy, dz, h, k, l, d, A, B, tol
+                
+            proj_params = self.model.mask_plane(*mask_params)
+             
+            cor_aspect, projx, projy, Dx, Dy, plane = proj_params
+
             canvas = self.view.get_plot_3d_canvas()
             
             atoms, pairs = [], []
@@ -3444,16 +3514,106 @@ class Presenter:
                 if active:
                     atoms.append(left)
                     pairs.append(right)
+                    
+            data, error = data[plane], error[plane]
+            atm_pair3d = atm_pair3d[plane]
             
-            h, k, l, d = plots.correlations_3d(canvas, dx, dy, dz, h, k, l, d, 
-                                               data, error, atm_pair3d, 
-                                               disorder, correlation, average, 
-                                               norm, atoms, pairs, A, B, tol)
+            if not average:
+                mask = np.full(data.size, False)
+                for atom, pair in zip(atoms, pairs):
+                    if (atom == 'self-correlation'):
+                        mask[atm_pair3d == '0'] = True
+                    else:
+                        mask[atm_pair3d == atom+'_'+pair] = True
+
+                Dx, Dy, atm_pair3d = Dx[mask], Dy[mask], atm_pair3d[mask]
+                data, error = data[mask], error[mask]
+                    
+            scale = np.gcd.reduce([h, k, l])
+        
+            if (scale != 0):  
+                h, k, l = np.array([h, k, l]) // scale
+    
+            H = '{}'.format(h) if (h >= 0) else r'\bar{{{}}}'.format(h)
+            K = '{}'.format(k) if (k >= 0) else r'\bar{{{}}}'.format(k)
+            L = '{}'.format(k) if (l >= 0) else r'\bar{{{}}}'.format(l)
+            
+            d = np.round(d, int(-np.log10(tol)))
+               
+            plane = r'$({}{}{})\cdot[uvw]={}$'.format(H,K,L,d)
+    
+            uvw = np.array(['u','v','w'])
+            
+            varx = np.repeat(uvw[np.argwhere(np.isclose(projx,1))[0][0]],3)
+            vary = np.repeat(uvw[np.argwhere(np.isclose(projy,1))[0][0]],3)
+            
+            projx = np.round(projx,4)
+            projy = np.round(projy,4)
+            
+            coeffx = projx.astype(str)
+            coeffy = projy.astype(str)
+            
+            varx[np.isclose(projx,0)] = ''
+            vary[np.isclose(projy,0)] = ''
+            
+            coeffx[np.isclose(projx,0)] = '0'
+            coeffy[np.isclose(projy,0)] = '0'
+            
+            coeffx[np.isclose(projx,1)] = ''
+            coeffy[np.isclose(projy,1)] = ''
+            
+            coeffx[np.isclose(projx,1)] = '-'
+            coeffy[np.isclose(projy,1)] = '-'
+            
+            axisx = [coeff+var for coeff, var in zip(coeffx, varx)]
+            axisy = [coeff+var for coeff, var in zip(coeffy, vary)]
+            
+            xlabel = r'$[{},{},{}]$'.format(*axisx)
+            ylabel = r'$[{},{},{}]$'.format(*axisy)
+    
+            if (correlation == 'Correlation'):
+                colormap, vmin = 'diverging', -1
+                if (disorder == 'Moment'):
+                    label = r'$\langle\mathbf{S}(\mathbf{0})'\
+                               r'\cdot\mathbf{S}(\mathbf{r})\rangle$'
+                elif (disorder == 'Occupancy'):
+                    label = r'$\langle\sigma(\mathbf{0})'\
+                               r'\cdot\sigma(\mathbf{r})\rangle$'
+                else:
+                    label = r'$\langle\hat{\mathbf{u}}(\mathbf{0})'\
+                               r'\cdot\hat{\mathbf{u}}(\mathbf{r})\rangle$'
+            else:
+                colormap, vmin = 'binary', 0
+                if (disorder == 'Moment'):
+                    label = r'$\langle|\mathbf{S}(\mathbf{0})'\
+                                r'\cdot\mathbf{S}(\mathbf{r})|^2\rangle$'
+                else:
+                    label = r'$\langle|\hat{\mathbf{u}}(\mathbf{0})'\
+                                r'\cdot\hat{\mathbf{u}}(\mathbf{r})|^2\rangle$'
+
+            correlations_3d = plots.Scatter(canvas)
+            correlations_3d.clear_canvas()
+            
+            correlations_3d.plot_data(Dx, Dy, data)
+ 
+            correlations_3d.update_colormap(colormap)
+            correlations_3d.create_colorbar(norm=norm)
+
+            correlations_3d.set_normalization(vmin, 1, norm=norm)
+            correlations_3d.set_aspect(cor_aspect)
+            
+            if (norm == 'SymLog'): correlations_3d.reformat_colorbar()
+            
+            correlations_3d.set_colorbar_label(label)
+            correlations_3d.set_labels(xlabel=xlabel, ylabel=ylabel)
+            correlations_3d.draw_canvas()
             
             self.view.set_h(h)
             self.view.set_k(k)
             self.view.set_l(l)
             self.view.set_d(d)
+            
+            self.correlations_3d = correlations_3d
             
     # ---
     
@@ -3983,9 +4143,7 @@ class Presenter:
             
             hkl = self.view.get_slice_hkl_calc_3d()
             
-            matrix_h, scale_h = self.model.matrix_transform(B, 'h', T=T)
-            matrix_k, scale_k = self.model.matrix_transform(B, 'k', T=T)
-            matrix_l, scale_l = self.model.matrix_transform(B, 'l', T=T)
+            Bp = self.model.matrix_transform(B, T=T)
             
             dh, nh, min_h, max_h = self.view.get_recalculation_3d_binning_h()
             dk, nk, min_k, max_k = self.view.get_recalculation_3d_binning_k()
@@ -4027,8 +4185,31 @@ class Presenter:
             
             self.view.validate_min_calc_3d()
             self.view.validate_max_calc_3d()
-                                                        
-            plots.plot_calc_3d(canvas, data, hkl, slice_hkl, i_hkl, T, 
-                               min_h, min_k, min_l, max_h, max_k, max_l, 
-                               nh, nk, nl, matrix_h, matrix_k, matrix_l, 
-                               scale_h, scale_k, scale_l, norm, vmin, vmax)
+            
+            plot_calc_3d = plots.HeatMap(canvas)
+            plot_calc_3d.clear_canvas()
+            
+            if (hkl == 'h ='):
+                slice_data = data[i_hkl,:,:]
+                limits = min_k, min_l, max_k, max_l
+                matrix = Bp[1:3,1:3]
+                labels = r'$h={}$'.format(slice_hkl), r'$(0k0)$', r'$(00l)$'
+            elif (hkl == 'k ='):
+                slice_data = data[:,i_hkl,:]
+                limits = min_h, min_l, max_h, max_l
+                matrix = Bp[0::2,0::2]
+                labels = r'$k={}$'.format(slice_hkl), r'$(h00)$', r'$(00l)$'
+            else:
+                slice_data = data[:,:,i_hkl]
+                limits = min_h, min_k, max_h, max_k
+                matrix = Bp[0:2,0:2]
+                labels = r'$l={}$'.format(slice_hkl), r'$(0k0)$', r'$(0k0)$'
+            
+            plot_calc_3d.plot_data(slice_data, *limits)
+            plot_calc_3d.transform_axes(matrix)
+            plot_calc_3d.set_labels(*labels)
+            
+            plot_calc_3d.set_normalization(vmin, vmax, norm=norm)
+            plot_calc_3d.create_colorbar()
+            
+            plot_calc_3d.draw_canvas()
