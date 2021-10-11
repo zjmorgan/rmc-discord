@@ -5,6 +5,7 @@ import sys
 
 import numpy as np
 
+from disorder.material import space
 from disorder.material import crystal
 
 class UnitCell:
