@@ -137,9 +137,7 @@ def transform(A,
          
     return A_k.flatten(), i_dft
 
-def intensity(A_k, 
-              i_dft,
-              factors):
+def intensity(A_k, i_dft, factors):
     
     n_peaks = i_dft.shape[0]
     
@@ -159,9 +157,7 @@ def intensity(A_k,
      
     return I/(n_uvw*n_atm)
 
-def structure(A_k, 
-              i_dft,
-              factors):
+def structure(A_k, i_dft, factors):
     
     n_peaks = i_dft.shape[0]
     

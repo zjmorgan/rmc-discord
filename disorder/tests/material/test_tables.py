@@ -78,5 +78,31 @@ class test_tables(unittest.TestCase):
         
         self.assertEqual(Z_og, (118,))
         
+    def test_space_group(self):
+        
+        sg = tables.sg
+        
+        sg_62 = sg.get('Pnma')
+        sg_227 = sg.get('Fd-3m')
+        
+        self.assertEqual(sg_62, (62,))
+        self.assertEqual(sg_227, (227,))
+        
+    def test_element_radii(self):
+        
+        r = tables.r
+        
+        r_Sn = r.get('Sn')
+        
+        self.assertEqual(r_Sn, (1.58,2.02,0.69,))
+        
+    def test_element_colors(self):
+        
+        rgb = tables.rgb
+        
+        r_Zn = rgb.get('Zn')
+        
+        self.assertEqual(r_Zn, (0.49,0.502,0.69,))
+        
 if __name__ == '__main__':
     unittest.main()

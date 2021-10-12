@@ -13,7 +13,7 @@ from distutils.util import strtobool
 
 from IPython.core.ultratb import ColorTB
 
-_root = os.path.abspath(os.path.dirname(__file__))
+__root = os.path.abspath(os.path.dirname(__file__))
 
 class FractionalDelegate(QtWidgets.QItemDelegate):
     
@@ -233,7 +233,7 @@ def load_gui(ui, settings):
 
 def report_exception(*args):
     ansi = re.compile('\x1b' + r'\[([\dA-Fa-f;]*?)m')
-    icon = os.path.join(_root, 'logo.png')
+    icon = os.path.join(__root, 'logo.png')
     if (len(args) == 3):
         error_type, error, trace = args[:3]
     elif (len(args) == 1):
@@ -251,9 +251,3 @@ def report_exception(*args):
     layout = message_box.layout()
     layout.setColumnMinimumWidth(layout.columnCount()-1, 600)
     return message_box.exec_()
-
-
-def save_screenshot(widget, filename):
-    screen = QtWidgets.QApplication.primaryScreen()
-    screenshot = screen.grabWindow(widget.winId())
-    screenshot.save(filename+'.jpg', 'jpg')
