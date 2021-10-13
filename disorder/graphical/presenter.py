@@ -3459,7 +3459,7 @@ class Presenter:
                 corr3d, sigma_sq_corr3d, dx, dy, dz = ave3d
          
         self.dx, self.dy, self.dz, self.atm_pair3d = dx, dy, dz, atm_pair3d
-        
+                
         self.corr3d, self.sigma_sq_corr3d = corr3d, sigma_sq_corr3d
         
         if (disorder != 'Occupancy'):
@@ -3480,7 +3480,7 @@ class Presenter:
                 norm = 'SymLog'
             
             tol = self.view.get_tol_3d()
-            
+                        
             average = self.view.average_3d_checked()
             
             h, k, l = self.view.get_h(), self.view.get_k(), self.view.get_l()

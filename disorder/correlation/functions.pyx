@@ -474,7 +474,7 @@ def pairs3d(rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
     dx = dx[mask]
     dy = dy[mask]
     dz = dz[mask]
-    distance = distance[mask]
+    distance = np.stack((dx,dy,dz)).T
     
     i = i[mask]
     j = j[mask]
