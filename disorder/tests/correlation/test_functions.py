@@ -15,7 +15,7 @@ class test_functions(unittest.TestCase):
         
         A = crystal.cartesian(a, b, c, alpha, beta, gamma)
         
-        nu, nv, nw = 5, 3, 7
+        nu, nv, nw = 6, 4, 8
         
         Rx, Ry, Rz = space.cell(nu, nv, nw, A)
         
@@ -41,7 +41,17 @@ class test_functions(unittest.TestCase):
         nc = n_atm*(n_atm-1)//2*n_uvw
         nl = n_atm**2*n_uvw*(n_uvw-1)//2
         
-        self.assertEqual(counts.sum(), nc+nl)
+        ns = (1+nu-2*mu)*nv*nw+(1+nv-2*mv)*nw*nu+(1+nw-2*mw)*nu*nv
+        
+        nd = (1+nu-2*mu)*(1+nv-2*mv)*nw\
+           + (1+nv-2*mv)*(1+nw-2*mw)*nu\
+           + (1+nw-2*mw)*(1+nu-2*mu)*nv
+           
+        nt = 0*(1+nu-2*mu)*(1+nv-2*mv)*(1+nw-2*mw)*(2*m_uvw+1)//2
+        
+        nr = n_atm**2*n_uvw*(ns-nd+nt)//2
+        
+        self.assertEqual(counts.sum(), nc+nl-nr)
         
     def test_pairs3d(self):
     
@@ -71,7 +81,6 @@ class test_functions(unittest.TestCase):
         mv = (nv+1) // 2
         mw = (nw+1) // 2
         
-        m_uvw = mu*mv*mw
         n_uvw = nu*nv*nw
         
         nc = n_atm*(n_atm-1)//2*n_uvw
