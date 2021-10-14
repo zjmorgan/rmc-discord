@@ -15,12 +15,12 @@ class test_functions(unittest.TestCase):
         
         A = crystal.cartesian(a, b, c, alpha, beta, gamma)
         
-        nu, nv, nw = 5, 3, 4
+        nu, nv, nw = 5, 3, 7
         
         Rx, Ry, Rz = space.cell(nu, nv, nw, A)
         
-        atm = np.array(['Fe', 'Co', 'Ni'])
-        u, v, w = np.array([0,0.2,0.25]), np.array([0,0.3,0.1]), np.array([0,0.4,0.6])
+        atm = np.array(['Fe', 'Co'])
+        u, v, w = np.array([0,0.2]), np.array([0,0.3]), np.array([0,0.4])
         
         n_atm = atm.shape[0]
         
@@ -28,7 +28,7 @@ class test_functions(unittest.TestCase):
         
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
         
-        data = functions.pairs1d(rx, ry, rz, atms, nu, nv, nw, fract=1.0, tol=1e-2)
+        data = functions.pairs1d(rx, ry, rz, atms, nu, nv, nw, fract=1.0)
         distance, ion_pair, counts, search, coordinate, N = data
        
         mu = (nu+1) // 2
@@ -39,9 +39,9 @@ class test_functions(unittest.TestCase):
         n_uvw = nu*nv*nw
         
         nc = n_atm*(n_atm-1)//2*n_uvw
-        nl = n_atm**2*(n_uvw*(m_uvw*2+1))
+        nl = n_atm**2*n_uvw*(n_uvw-1)//2
         
-        #self.assertEqual(counts.sum(), nc+nl)
+        self.assertEqual(counts.sum(), nc+nl)
         
     def test_pairs3d(self):
     
@@ -49,15 +49,14 @@ class test_functions(unittest.TestCase):
         
         A = crystal.cartesian(a, b, c, alpha, beta, gamma)
         
-        nu, nv, nw = 6, 4, 5
+        nu, nv, nw = 1, 5, 9
         
         Rx, Ry, Rz = space.cell(nu, nv, nw, A)
         
-        atm = np.array(['Fe', 'Co'])
-        u, v, w = np.array([0,0.2]), np.array([0,0.3]), np.array([0,0.4])
-        
         atm = np.array(['Fe', 'Co', 'Ni'])
-        u, v, w = np.array([0,0.2,0.25]), np.array([0,0.3,0.1]), np.array([0,0.4,0.6])
+        u = np.array([0,0.2,0.25])
+        v = np.array([0.01,0.31,0.1])
+        w = np.array([0.1,0.4,0.62])
         
         n_atm = atm.shape[0]
         
@@ -76,9 +75,9 @@ class test_functions(unittest.TestCase):
         n_uvw = nu*nv*nw
         
         nc = n_atm*(n_atm-1)//2*n_uvw
-        nl = n_atm**2*(n_uvw*(m_uvw*2+1))
+        nl = n_atm**2*n_uvw*(n_uvw-1)//2
         
-        #self.assertEqual(counts.sum(), nc+nl)
+        self.assertEqual(counts.sum(), nc+nl)
         
 if __name__ == '__main__':
     unittest.main()
