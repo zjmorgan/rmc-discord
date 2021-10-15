@@ -19,8 +19,8 @@ class test_functions(unittest.TestCase):
         
         Rx, Ry, Rz = space.cell(nu, nv, nw, A)
         
-        atm = np.array(['Fe', 'Co', 'Ni'])
-        u = np.array([0,0.2,0.25])
+        atm = np.array(['Fe','Co','Ni'])
+        u = np.array([0.0,0.2,0.25])
         v = np.array([0.01,0.31,0.1])
         w = np.array([0.1,0.4,0.62])
                 
@@ -75,7 +75,12 @@ class test_functions(unittest.TestCase):
         
         unique_pairs = np.stack([ap.split('_') for ap in atm_pair[:-1]])
         
-        np.testing.assert_array_equal(atm_pair_ij, unique_pairs)  
+        np.testing.assert_array_equal(atm_pair_ij, unique_pairs)
+        
+        data = functions.pairs1d(rx, ry, rz, atms, nu, nv, nw, fract=0.5)
+        distance, atm_pair, counts, search, coordinate, N = data
+                
+        np.testing.assert_array_equal(distance <= Distance.max()*0.5, True)
 
     def test_pairs3d(self):
     
@@ -87,8 +92,8 @@ class test_functions(unittest.TestCase):
         
         Rx, Ry, Rz = space.cell(nu, nv, nw, A)
         
-        atm = np.array(['Fe', 'Co', 'Ni', 'Mn'])
-        u = np.array([0,0.2,0.25,0.25])
+        atm = np.array(['Fe','Co','Ni','Mn'])
+        u = np.array([0.0,0.2,0.25,0.25])
         v = np.array([0.01,0.31,0.1,0.1])
         w = np.array([0.1,0.4,0.62,0.62])
         
@@ -133,6 +138,8 @@ class test_functions(unittest.TestCase):
         Dx = (rx[j]-rx[i])[search[:-1]]
         Dy = (ry[j]-ry[i])[search[:-1]]
         Dz = (rz[j]-rz[i])[search[:-1]]
+        
+        Distance = np.sqrt(Dx**2+Dy**2+Dz**2)
 
         np.testing.assert_array_almost_equal(Dx, dx[:-1])
         np.testing.assert_array_almost_equal(Dy, dy[:-1])
@@ -143,7 +150,160 @@ class test_functions(unittest.TestCase):
         
         unique_pairs = np.stack([ap.split('_') for ap in atm_pair[:-1]])
         
-        np.testing.assert_array_equal(atm_pair_ij, unique_pairs)        
+        np.testing.assert_array_equal(atm_pair_ij, unique_pairs)
         
+        data = functions.pairs3d(rx, ry, rz, atms, nu, nv, nw, fract=0.5)
+        dx, dy, dz, atm_pair, counts, search, coordinate, N = data
+                
+        np.testing.assert_array_equal(dx <= Distance.max()*0.5, True)
+        np.testing.assert_array_equal(dy <= Distance.max()*0.5, True)
+        np.testing.assert_array_equal(dz <= Distance.max()*0.5, True)
+        
+    def test_vector1d(self):
+    
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        
+        nu, nv, nw = 3, 5, 7
+        
+        Rx, Ry, Rz = space.cell(nu, nv, nw, A)
+        
+        atm = np.array(['Fe','Co'])
+        u = np.array([0.0,0.2])
+        v = np.array([0.0,0.3])
+        w = np.array([0.0,0.4])
+                
+        n_atm = atm.shape[0]
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
+        
+        Sx = np.zeros((nu,nv,nw,n_atm))
+        Sy = np.zeros((nu,nv,nw,n_atm))
+        Sz = np.zeros((nu,nv,nw,n_atm))
+        
+        sx, sy, sz = 1, 1, 1
+        theta = np.mod(np.arctan2(sy,sx), 2*np.pi)
+        phi = np.arccos(sz/np.sqrt(sx**2+sy**2+sz**2))
+        
+        Sx[:,:,:,0] = np.sin(phi)*np.cos(theta)
+        Sy[:,:,:,0] = np.sin(phi)*np.sin(theta)
+        Sz[:,:,:,0] = np.cos(phi)
+        
+        sx, sy, sz = -1, -1, 2
+        theta = np.mod(np.arctan2(sy,sx), 2*np.pi)
+        phi = np.arccos(sz/np.sqrt(sx**2+sy**2+sz**2))
+        
+        Sx[:,:,:,1] = np.sin(phi)*np.cos(theta)
+        Sy[:,:,:,1] = np.sin(phi)*np.sin(theta)
+        Sz[:,:,:,1] = np.cos(phi)
+        
+        Sx, Sy, Sz = Sx.flatten(), Sy.flatten(), Sz.flatten()
+        
+        args = [Sx, Sy, Sz, rx, ry, rz, atms, nu, nv, nw, 0.5]
+        data = functions.vector1d(*args)
+        S_corr, S_coll, S_corr_, S_coll_, distance, atm_pair = data
+        
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Co'], 1.0)
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Fe_Fe'], 1.0)
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Fe'], 0.0)
+        
+        np.testing.assert_array_almost_equal(S_coll[atm_pair == 'Co_Co'], 1.0)
+        np.testing.assert_array_almost_equal(S_coll[atm_pair == 'Fe_Fe'], 1.0)
+        np.testing.assert_array_almost_equal(S_coll[atm_pair == 'Co_Fe'], 0.0)
+        
+    def test_vector3d(self):
+    
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        
+        nu, nv, nw = 4, 6, 8
+        
+        Rx, Ry, Rz = space.cell(nu, nv, nw, A)
+        
+        atm = np.array(['Fe','Co'])
+        u = np.array([0.0,0.2])
+        v = np.array([0.0,0.3])
+        w = np.array([0.0,0.4])
+                
+        n_atm = atm.shape[0]
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
+        
+        Sx = np.zeros((nu,nv,nw,n_atm))
+        Sy = np.zeros((nu,nv,nw,n_atm))
+        Sz = np.zeros((nu,nv,nw,n_atm))
+        
+        sx, sy, sz = 2, 1, 1
+        theta = np.mod(np.arctan2(sy,sx), 2*np.pi)
+        phi = np.arccos(sz/np.sqrt(sx**2+sy**2+sz**2))
+        
+        Sx[:,:,:,0] = np.sin(phi)*np.cos(theta)
+        Sy[:,:,:,0] = np.sin(phi)*np.sin(theta)
+        Sz[:,:,:,0] = np.cos(phi)
+        
+        sx, sy, sz = 1, -1, -1
+        theta = np.mod(np.arctan2(sy,sx), 2*np.pi)
+        phi = np.arccos(sz/np.sqrt(sx**2+sy**2+sz**2))
+        
+        Sx[:,:,:,1] = np.sin(phi)*np.cos(theta)
+        Sy[:,:,:,1] = np.sin(phi)*np.sin(theta)
+        Sz[:,:,:,1] = np.cos(phi)
+        
+        Sx, Sy, Sz = Sx.flatten(), Sy.flatten(), Sz.flatten()
+        
+        args = [Sx, Sy, Sz, rx, ry, rz, atms, nu, nv, nw, 0.5]
+        data = functions.vector3d(*args)
+        S_corr, S_coll, S_corr_, S_coll_, dx, dy, dz, atm_pair = data
+        
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Co'], 1.0)
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Fe_Fe'], 1.0)
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Fe'], 0.0)
+        
+        np.testing.assert_array_almost_equal(S_coll[atm_pair == 'Co_Co'], 1.0)
+        np.testing.assert_array_almost_equal(S_coll[atm_pair == 'Fe_Fe'], 1.0)
+        np.testing.assert_array_almost_equal(S_coll[atm_pair == 'Co_Fe'], 0.0)
+
+    def test_scalar1d(self):
+    
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        
+        nu, nv, nw = 5, 5, 6
+        
+        Rx, Ry, Rz = space.cell(nu, nv, nw, A)
+        
+        atm = np.array(['Fe','Co'])
+        u = np.array([0.0,0.2])
+        v = np.array([0.0,0.3])
+        w = np.array([0.0,0.4])
+                
+        n_atm = atm.shape[0]
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
+        
+        A_r = np.zeros((nu,nv,nw,n_atm))
+        
+        A_r[:,:,:,0] = 0.5
+        A_r[:,:,:,1] = -1
+
+        A_r = A_r.flatten()
+        
+        args = [A_r, rx, ry, rz, atms, nu, nv, nw, 0.5]
+        data = functions.scalar1d(*args)
+        S_corr, S_corr_, distance, atm_pair = data
+        
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Co'], 1.0)
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Fe_Fe'], 1.0)
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Fe'], -1.0)
+                
 if __name__ == '__main__':
     unittest.main()
