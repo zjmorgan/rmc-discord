@@ -206,6 +206,11 @@ class test_functions(unittest.TestCase):
         data = functions.vector1d(*args)
         S_corr, S_coll, S_corr_, S_coll_, distance, atm_pair = data
         
+        self.assertAlmostEqual(S_corr[np.isclose(distance, 0)], 1.0)
+        self.assertAlmostEqual(S_coll[np.isclose(distance, 0)], 1.0)
+        self.assertAlmostEqual(S_corr_[np.isclose(distance, 0)], 1.0)
+        self.assertAlmostEqual(S_coll_[np.isclose(distance, 0)], 1.0)
+        
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Co'], 1.0)
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Fe_Fe'], 1.0)
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Fe'], 0.0)
@@ -261,6 +266,13 @@ class test_functions(unittest.TestCase):
         data = functions.vector3d(*args)
         S_corr, S_coll, S_corr_, S_coll_, dx, dy, dz, atm_pair = data
         
+        distance = np.sqrt(dx**2+dy**2+dz**2)
+        
+        self.assertAlmostEqual(S_corr[np.isclose(distance, 0)], 1.0)
+        self.assertAlmostEqual(S_coll[np.isclose(distance, 0)], 1.0)
+        self.assertAlmostEqual(S_corr_[np.isclose(distance, 0)], 1.0)
+        self.assertAlmostEqual(S_coll_[np.isclose(distance, 0)], 1.0)
+        
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Co'], 1.0)
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Fe_Fe'], 1.0)
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Fe'], 0.0)
@@ -300,10 +312,54 @@ class test_functions(unittest.TestCase):
         args = [A_r, rx, ry, rz, atms, nu, nv, nw, 0.5]
         data = functions.scalar1d(*args)
         S_corr, S_corr_, distance, atm_pair = data
+                
+        self.assertAlmostEqual(S_corr[np.isclose(distance, 0)], 1.0)
+        self.assertAlmostEqual(S_corr_[np.isclose(distance, 0)], 1.0)
         
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Co'], 1.0)
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Fe_Fe'], 1.0)
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Fe'], -1.0)
+        
+    def test_scalar3d(self):
+    
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        
+        nu, nv, nw = 4, 8, 5
+        
+        Rx, Ry, Rz = space.cell(nu, nv, nw, A)
+        
+        atm = np.array(['Fe','Co'])
+        u = np.array([0.0,0.2])
+        v = np.array([0.0,0.3])
+        w = np.array([0.0,0.4])
                 
+        n_atm = atm.shape[0]
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
+        
+        A_r = np.zeros((nu,nv,nw,n_atm))
+        
+        A_r[:,:,:,0] = 0.75
+        A_r[:,:,:,1] = -1
+
+        A_r = A_r.flatten()
+        
+        args = [A_r, rx, ry, rz, atms, nu, nv, nw, 0.5]
+        data = functions.scalar3d(*args)
+        S_corr, S_corr_, dx, dy, dz, atm_pair = data
+        
+        distance = np.sqrt(dx**2+dy**2+dz**2)
+        
+        self.assertAlmostEqual(S_corr[np.isclose(distance, 0)], 1.0)
+        self.assertAlmostEqual(S_corr_[np.isclose(distance, 0)], 1.0)
+        
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Co'], 1.0)
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Fe_Fe'], 1.0)
+        np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Fe'], -1.0)
+        
 if __name__ == '__main__':
     unittest.main()

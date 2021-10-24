@@ -31,25 +31,18 @@ def composition(nu, nv, nw, n_atm, value=0.5):
         
     """
                     
-    A = (np.random.random((nu,nv,nw,n_atm))<=value)/value-1
+    A_r = (np.random.random((nu,nv,nw,n_atm))<=value)/value-1
                         
-    return A.flatten()
+    return A_r.flatten()
 
-def transform(A, 
-              H,
-              K,
-              L,
-              nu, 
-              nv, 
-              nw, 
-              n_atm):
+def transform(A_r, H, K, L, nu, nv, nw, n_atm):
     """
     Discrete Fourier transform of relative occupancy parameter.
 
     Parameters
     ----------
-    A : ndarray
-        Relative occupancy parameter :math:`A` 
+    A_r : ndarray
+          Relative occupancy parameter :math:`A` 
     H : ndarray, int
         Supercell index along the :math:`a^*`-axis in reciprocal space
     K : ndarray, int
@@ -77,7 +70,7 @@ def transform(A,
         
     """
     
-    A_k = np.fft.ifftn(A.reshape(nu,nv,nw,n_atm), axes=(0,1,2))*nu*nv*nw
+    A_k = np.fft.ifftn(A_r.reshape(nu,nv,nw,n_atm), axes=(0,1,2))*nu*nv*nw
 
     Ku = np.mod(H, nu).astype(int)
     Kv = np.mod(K, nv).astype(int)
@@ -87,9 +80,7 @@ def transform(A,
          
     return A_k.flatten(), i_dft
 
-def intensity(A_k, 
-              i_dft,
-              factors):
+def intensity(A_k, i_dft, factors):
     """
     Chemical scattering intensity.
 
@@ -127,9 +118,7 @@ def intensity(A_k,
      
     return I/(n_uvw*n_atm)
 
-def structure(A_k,
-              i_dft,
-              factors):
+def structure(A_k, i_dft, factors):
     """
     Partial chemical structure factor.
 

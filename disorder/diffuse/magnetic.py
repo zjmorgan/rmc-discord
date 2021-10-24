@@ -209,16 +209,7 @@ def spin(nu, nv, nw, n_atm, value=1, fixed=True):
 
     return Sx.flatten(), Sy.flatten(), Sz.flatten()
 
-def transform(Sx,
-              Sy,
-              Sz,
-              H,
-              K,
-              L,
-              nu,
-              nv,
-              nw,
-              n_atm):
+def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
     """
     Discrete Fourier transform of spin vectors.
 
@@ -272,14 +263,7 @@ def transform(Sx,
 
     return Sx_k.flatten(), Sy_k.flatten(), Sz_k.flatten(), i_dft
 
-def intensity(Qx_norm,
-              Qy_norm,
-              Qz_norm,
-              Sx_k,
-              Sy_k,
-              Sz_k,
-              i_dft,
-              factors):
+def intensity(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     """
     Magnetic scattering intensity.
 
@@ -341,14 +325,7 @@ def intensity(Qx_norm,
 
     return I/(n_uvw*n_atm)
 
-def structure(Qx_norm,
-              Qy_norm,
-              Qz_norm,
-              Sx_k,
-              Sy_k,
-              Sz_k,
-              i_dft,
-              factors):
+def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     """
     Partial magnetic structure factor.
 

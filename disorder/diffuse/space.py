@@ -76,7 +76,6 @@ def unit(vx, vy, vz):
     mask = np.isclose(v, 0, rtol=1e-4)
         
     if (np.sum(mask) > 0):
-    
         n = np.argwhere(mask)
         v[n] = 1
               
@@ -84,14 +83,12 @@ def unit(vx, vy, vz):
         vx[n], vy[n], vz[n] = 0, 0, 0
         
         v[n] = 0
-        
     else:
-        
         vx, vy, vz = vx/v, vy/v, vz/v
 
     return vx, vy, vz, v
 
-def indices(inverses, mask):
+def indices(mask):
         
     i_mask = np.arange(mask.size)[mask.flatten()]
     
@@ -103,53 +100,45 @@ def prefactors(scattering_length, phase_factor, occupancy, primitive=None):
     
     n_atm = occupancy.shape[0]
     
-    n_peaks = scattering_length.shape[0] // n_atm
+    n_hkl = scattering_length.shape[0] // n_atm
     
-    scattering_length = scattering_length.reshape(n_peaks,n_atm)
-    phase_factor = phase_factor.reshape(n_peaks,n_atm)
+    scattering_length = scattering_length.reshape(n_hkl,n_atm)
+    phase_factor = phase_factor.reshape(n_hkl,n_atm)
     
     factors = scattering_length*phase_factor*occupancy
     
     if (not primitive is None):
-        
         return np.sum(factors[:,primitive],axis=2).flatten()
-        
     else:
-        
         return factors.flatten()
 
-def transform(A, 
-              H,
-              K,
-              L,
-              nu, 
-              nv, 
-              nw, 
-              n_atm):
+def transform(delta_r, H, K, L, nu, nv, nw, n_atm):
     
-    A_k = np.fft.ifftn(A.reshape(nu,nv,nw,n_atm), axes=(0,1,2))*nu*nv*nw
+    n_uvw = nu*nv*nw
+    
+    delta_k = np.fft.ifftn(delta_r.reshape(nu,nv,nw,n_atm), axes=(0,1,2))*n_uvw
 
-    Kx = np.mod(H, nu).astype(int)
-    Ky = np.mod(K, nv).astype(int)
-    Kz = np.mod(L, nw).astype(int)
+    Ku = np.mod(H, nu).astype(int)
+    Kv = np.mod(K, nv).astype(int)
+    Kw = np.mod(L, nw).astype(int)
     
-    i_dft = Kz+nw*(Ky+nv*Kx)
+    i_dft = Kw+nw*(Kv+nv*Ku)
          
-    return A_k.flatten(), i_dft
+    return delta_k.flatten(), i_dft
 
-def intensity(A_k, i_dft, factors):
+def intensity(delta_k, i_dft, factors):
     
-    n_peaks = i_dft.shape[0]
+    n_hkl = i_dft.shape[0]
     
-    n_atm = factors.shape[0] // n_peaks
+    n_atm = factors.shape[0] // n_hkl
         
-    factors = factors.reshape(n_peaks,n_atm)
+    factors = factors.reshape(n_hkl,n_atm)
     
-    n_uvw = A_k.shape[0] // n_atm
+    n_uvw = delta_k.shape[0] // n_atm
     
-    A_k = A_k.reshape(n_uvw,n_atm)
+    delta_k = delta_k.reshape(n_uvw,n_atm)
     
-    prod = factors*A_k[i_dft,:]
+    prod = factors*delta_k[i_dft,:]
 
     F = np.sum(prod, axis=1)
                   
@@ -157,54 +146,31 @@ def intensity(A_k, i_dft, factors):
      
     return I/(n_uvw*n_atm)
 
-def structure(A_k, i_dft, factors):
+def structure(delta_k, i_dft, factors):
     
-    n_peaks = i_dft.shape[0]
+    n_hkl = i_dft.shape[0]
     
-    n_atm = factors.shape[0] // n_peaks
+    n_atm = factors.shape[0] // n_hkl
         
-    factors = factors.reshape(n_peaks,n_atm)
+    factors = factors.reshape(n_hkl,n_atm)
     
-    n_uvw = A_k.shape[0] // n_atm        
+    n_uvw = delta_k.shape[0] // n_atm        
     
-    A_k = A_k.reshape(n_uvw,n_atm)
+    delta_k = delta_k.reshape(n_uvw,n_atm)
     
-    prod = factors*A_k[i_dft,:]
+    prod = factors*delta_k[i_dft,:]
 
     F = np.sum(prod, axis=1)
      
     return F, prod.flatten()
-
-def interpolate(G, mask, n=2, tol=0.0001):
         
-    metric = np.round(G[mask]/tol).astype(int)
-    
-    u, indices, inverses = np.unique(metric, 
-                                     return_index=True, 
-                                     return_inverse=True)
-    
-    G_nuc = G[mask][indices]
-    
-    n_nuc = G_nuc.shape[0]
-    
-    diff = np.diff(G_nuc)/n
-    
-    Q = np.zeros((n_nuc-1)*n)
-    
-    for i in range(n):
-        Q[i::n] = G_nuc[:n_nuc-1]+diff*i
-        
-    Q = np.append(Q,G_nuc[-1]) #np.append(G_nuc[0],Q)
-    
-    return Q, indices, inverses
-        
-def bragg(T, Qx, Qy, Qz, ux, uy, uz, scattering_length, cond, n_atm):
+def bragg(Qx, Qy, Qz, ux, uy, uz, factors, cond, n_atm):
     
     phase_factor = np.exp(1j*(np.kron(Qx[cond],ux)\
                              +np.kron(Qy[cond],uy)\
                              +np.kron(Qz[cond],uz)))
     
-    F = scattering_length*T*phase_factor
+    F = factors*phase_factor
     
     return np.sum(F.reshape(cond.sum(),n_atm),axis=1)
 

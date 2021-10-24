@@ -7589,7 +7589,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_magnetic(CYTHON_UNUSE
  * 
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\             # <<<<<<<<<<<<<<
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\
+ *                                            Uzz[j]*Qz*Qz)-\
  */
                                   __pyx_t_36 = __pyx_v_j;
 
@@ -7597,42 +7597,42 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_magnetic(CYTHON_UNUSE
  * 
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
  *                                            Uyy[j]*Qy*Qy+\             # <<<<<<<<<<<<<<
- *                                            Uzz[j]*Qz*Qz)+\
- *                                            Uyz[j]*Qy*Qz+\
+ *                                            Uzz[j]*Qz*Qz)-\
+ *                                           (Uyz[j]*Qy*Qz+\
  */
                                   __pyx_t_37 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":372
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\             # <<<<<<<<<<<<<<
- *                                            Uyz[j]*Qy*Qz+\
+ *                                            Uzz[j]*Qz*Qz)-\             # <<<<<<<<<<<<<<
+ *                                           (Uyz[j]*Qy*Qz+\
  *                                            Uxz[j]*Qx*Qz+\
  */
                                   __pyx_t_38 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":373
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\
- *                                            Uyz[j]*Qy*Qz+\             # <<<<<<<<<<<<<<
+ *                                            Uzz[j]*Qz*Qz)-\
+ *                                           (Uyz[j]*Qy*Qz+\             # <<<<<<<<<<<<<<
  *                                            Uxz[j]*Qx*Qz+\
- *                                            Uxy[j]*Qx*Qy)
+ *                                            Uxy[j]*Qx*Qy))
  */
                                   __pyx_t_24 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":374
- *                                            Uzz[j]*Qz*Qz)+\
- *                                            Uyz[j]*Qy*Qz+\
+ *                                            Uzz[j]*Qz*Qz)-\
+ *                                           (Uyz[j]*Qy*Qz+\
  *                                            Uxz[j]*Qx*Qz+\             # <<<<<<<<<<<<<<
- *                                            Uxy[j]*Qx*Qy)
+ *                                            Uxy[j]*Qx*Qy))
  * 
  */
                                   __pyx_t_28 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":375
- *                                            Uyz[j]*Qy*Qz+\
+ *                                           (Uyz[j]*Qy*Qz+\
  *                                            Uxz[j]*Qx*Qz+\
- *                                            Uxy[j]*Qx*Qy)             # <<<<<<<<<<<<<<
+ *                                            Uxy[j]*Qx*Qy))             # <<<<<<<<<<<<<<
  * 
  *                     factors = occ*form_factor*phase_factor*dw_factors
  */
@@ -7643,12 +7643,12 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_magnetic(CYTHON_UNUSE
  * 
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\             # <<<<<<<<<<<<<<
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\
+ *                                            Uzz[j]*Qz*Qz)-\
  */
-                                  __pyx_v_dw_factors = __pyx_t_double_complex_from_parts(exp(((((-0.5 * (((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxx.data) + __pyx_t_36)) ))) * __pyx_v_Qx) * __pyx_v_Qx) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyy.data) + __pyx_t_37)) ))) * __pyx_v_Qy) * __pyx_v_Qy)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uzz.data) + __pyx_t_38)) ))) * __pyx_v_Qz) * __pyx_v_Qz))) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyz.data) + __pyx_t_24)) ))) * __pyx_v_Qy) * __pyx_v_Qz)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxz.data) + __pyx_t_28)) ))) * __pyx_v_Qx) * __pyx_v_Qz)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxy.data) + __pyx_t_29)) ))) * __pyx_v_Qx) * __pyx_v_Qy))), 0);
+                                  __pyx_v_dw_factors = __pyx_t_double_complex_from_parts(exp(((-0.5 * (((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxx.data) + __pyx_t_36)) ))) * __pyx_v_Qx) * __pyx_v_Qx) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyy.data) + __pyx_t_37)) ))) * __pyx_v_Qy) * __pyx_v_Qy)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uzz.data) + __pyx_t_38)) ))) * __pyx_v_Qz) * __pyx_v_Qz))) - (((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyz.data) + __pyx_t_24)) ))) * __pyx_v_Qy) * __pyx_v_Qz) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxz.data) + __pyx_t_28)) ))) * __pyx_v_Qx) * __pyx_v_Qz)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxy.data) + __pyx_t_29)) ))) * __pyx_v_Qx) * __pyx_v_Qy)))), 0);
 
                                   /* "disorder/diffuse/monocrystal.pyx":377
- *                                            Uxy[j]*Qx*Qy)
+ *                                            Uxy[j]*Qx*Qy))
  * 
  *                     factors = occ*form_factor*phase_factor*dw_factors             # <<<<<<<<<<<<<<
  * 
@@ -11117,7 +11117,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_2occupational(CYTHON_
  * 
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\             # <<<<<<<<<<<<<<
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\
+ *                                            Uzz[j]*Qz*Qz)-\
  */
                                   __pyx_t_34 = __pyx_v_j;
 
@@ -11125,42 +11125,42 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_2occupational(CYTHON_
  * 
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
  *                                            Uyy[j]*Qy*Qy+\             # <<<<<<<<<<<<<<
- *                                            Uzz[j]*Qz*Qz)+\
- *                                            Uyz[j]*Qy*Qz+\
+ *                                            Uzz[j]*Qz*Qz)-\
+ *                                           (Uyz[j]*Qy*Qz+\
  */
                                   __pyx_t_35 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":673
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\             # <<<<<<<<<<<<<<
- *                                            Uyz[j]*Qy*Qz+\
+ *                                            Uzz[j]*Qz*Qz)-\             # <<<<<<<<<<<<<<
+ *                                           (Uyz[j]*Qy*Qz+\
  *                                            Uxz[j]*Qx*Qz+\
  */
                                   __pyx_t_36 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":674
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\
- *                                            Uyz[j]*Qy*Qz+\             # <<<<<<<<<<<<<<
+ *                                            Uzz[j]*Qz*Qz)-\
+ *                                           (Uyz[j]*Qy*Qz+\             # <<<<<<<<<<<<<<
  *                                            Uxz[j]*Qx*Qz+\
- *                                            Uxy[j]*Qx*Qy)
+ *                                            Uxy[j]*Qx*Qy))
  */
                                   __pyx_t_33 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":675
- *                                            Uzz[j]*Qz*Qz)+\
- *                                            Uyz[j]*Qy*Qz+\
+ *                                            Uzz[j]*Qz*Qz)-\
+ *                                           (Uyz[j]*Qy*Qz+\
  *                                            Uxz[j]*Qx*Qz+\             # <<<<<<<<<<<<<<
- *                                            Uxy[j]*Qx*Qy)
+ *                                            Uxy[j]*Qx*Qy))
  * 
  */
                                   __pyx_t_32 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":676
- *                                            Uyz[j]*Qy*Qz+\
+ *                                           (Uyz[j]*Qy*Qz+\
  *                                            Uxz[j]*Qx*Qz+\
- *                                            Uxy[j]*Qx*Qy)             # <<<<<<<<<<<<<<
+ *                                            Uxy[j]*Qx*Qy))             # <<<<<<<<<<<<<<
  * 
  *                     factors = occ*scattering_length*phase_factor*dw_factors
  */
@@ -11171,12 +11171,12 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_2occupational(CYTHON_
  * 
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\             # <<<<<<<<<<<<<<
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\
+ *                                            Uzz[j]*Qz*Qz)-\
  */
-                                  __pyx_v_dw_factors = __pyx_t_double_complex_from_parts(exp(((((-0.5 * (((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxx.data) + __pyx_t_34)) ))) * __pyx_v_Qx) * __pyx_v_Qx) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyy.data) + __pyx_t_35)) ))) * __pyx_v_Qy) * __pyx_v_Qy)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uzz.data) + __pyx_t_36)) ))) * __pyx_v_Qz) * __pyx_v_Qz))) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyz.data) + __pyx_t_33)) ))) * __pyx_v_Qy) * __pyx_v_Qz)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxz.data) + __pyx_t_32)) ))) * __pyx_v_Qx) * __pyx_v_Qz)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxy.data) + __pyx_t_20)) ))) * __pyx_v_Qx) * __pyx_v_Qy))), 0);
+                                  __pyx_v_dw_factors = __pyx_t_double_complex_from_parts(exp(((-0.5 * (((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxx.data) + __pyx_t_34)) ))) * __pyx_v_Qx) * __pyx_v_Qx) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyy.data) + __pyx_t_35)) ))) * __pyx_v_Qy) * __pyx_v_Qy)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uzz.data) + __pyx_t_36)) ))) * __pyx_v_Qz) * __pyx_v_Qz))) - (((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyz.data) + __pyx_t_33)) ))) * __pyx_v_Qy) * __pyx_v_Qz) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxz.data) + __pyx_t_32)) ))) * __pyx_v_Qx) * __pyx_v_Qz)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxy.data) + __pyx_t_20)) ))) * __pyx_v_Qx) * __pyx_v_Qy)))), 0);
 
                                   /* "disorder/diffuse/monocrystal.pyx":678
- *                                            Uxy[j]*Qx*Qy)
+ *                                            Uxy[j]*Qx*Qy))
  * 
  *                     factors = occ*scattering_length*phase_factor*dw_factors             # <<<<<<<<<<<<<<
  * 
@@ -17864,7 +17864,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structural(CYTHON_UN
  * 
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\             # <<<<<<<<<<<<<<
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\
+ *                                            Uzz[j]*Qz*Qz)-\
  */
                                   __pyx_t_34 = __pyx_v_j;
 
@@ -17872,42 +17872,42 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structural(CYTHON_UN
  * 
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
  *                                            Uyy[j]*Qy*Qy+\             # <<<<<<<<<<<<<<
- *                                            Uzz[j]*Qz*Qz)+\
- *                                            Uyz[j]*Qy*Qz+\
+ *                                            Uzz[j]*Qz*Qz)-\
+ *                                           (Uyz[j]*Qy*Qz+\
  */
                                   __pyx_t_35 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":1261
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\             # <<<<<<<<<<<<<<
- *                                            Uyz[j]*Qy*Qz+\
+ *                                            Uzz[j]*Qz*Qz)-\             # <<<<<<<<<<<<<<
+ *                                           (Uyz[j]*Qy*Qz+\
  *                                            Uxz[j]*Qx*Qz+\
  */
                                   __pyx_t_36 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":1262
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\
- *                                            Uyz[j]*Qy*Qz+\             # <<<<<<<<<<<<<<
+ *                                            Uzz[j]*Qz*Qz)-\
+ *                                           (Uyz[j]*Qy*Qz+\             # <<<<<<<<<<<<<<
  *                                            Uxz[j]*Qx*Qz+\
- *                                            Uxy[j]*Qx*Qy)
+ *                                            Uxy[j]*Qx*Qy))
  */
                                   __pyx_t_33 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":1263
- *                                            Uzz[j]*Qz*Qz)+\
- *                                            Uyz[j]*Qy*Qz+\
+ *                                            Uzz[j]*Qz*Qz)-\
+ *                                           (Uyz[j]*Qy*Qz+\
  *                                            Uxz[j]*Qx*Qz+\             # <<<<<<<<<<<<<<
- *                                            Uxy[j]*Qx*Qy)
+ *                                            Uxy[j]*Qx*Qy))
  * 
  */
                                   __pyx_t_32 = __pyx_v_j;
 
                                   /* "disorder/diffuse/monocrystal.pyx":1264
- *                                            Uyz[j]*Qy*Qz+\
+ *                                           (Uyz[j]*Qy*Qz+\
  *                                            Uxz[j]*Qx*Qz+\
- *                                            Uxy[j]*Qx*Qy)             # <<<<<<<<<<<<<<
+ *                                            Uxy[j]*Qx*Qy))             # <<<<<<<<<<<<<<
  * 
  *                     factors = occ*scattering_length*phase_factor*dw_factors
  */
@@ -17918,12 +17918,12 @@ static PyObject *__pyx_pf_8disorder_7diffuse_11monocrystal_6structural(CYTHON_UN
  * 
  *                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\             # <<<<<<<<<<<<<<
  *                                            Uyy[j]*Qy*Qy+\
- *                                            Uzz[j]*Qz*Qz)+\
+ *                                            Uzz[j]*Qz*Qz)-\
  */
-                                  __pyx_v_dw_factors = __pyx_t_double_complex_from_parts(exp(((((-0.5 * (((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxx.data) + __pyx_t_34)) ))) * __pyx_v_Qx) * __pyx_v_Qx) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyy.data) + __pyx_t_35)) ))) * __pyx_v_Qy) * __pyx_v_Qy)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uzz.data) + __pyx_t_36)) ))) * __pyx_v_Qz) * __pyx_v_Qz))) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyz.data) + __pyx_t_33)) ))) * __pyx_v_Qy) * __pyx_v_Qz)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxz.data) + __pyx_t_32)) ))) * __pyx_v_Qx) * __pyx_v_Qz)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxy.data) + __pyx_t_20)) ))) * __pyx_v_Qx) * __pyx_v_Qy))), 0);
+                                  __pyx_v_dw_factors = __pyx_t_double_complex_from_parts(exp(((-0.5 * (((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxx.data) + __pyx_t_34)) ))) * __pyx_v_Qx) * __pyx_v_Qx) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyy.data) + __pyx_t_35)) ))) * __pyx_v_Qy) * __pyx_v_Qy)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uzz.data) + __pyx_t_36)) ))) * __pyx_v_Qz) * __pyx_v_Qz))) - (((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uyz.data) + __pyx_t_33)) ))) * __pyx_v_Qy) * __pyx_v_Qz) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxz.data) + __pyx_t_32)) ))) * __pyx_v_Qx) * __pyx_v_Qz)) + (((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Uxy.data) + __pyx_t_20)) ))) * __pyx_v_Qx) * __pyx_v_Qy)))), 0);
 
                                   /* "disorder/diffuse/monocrystal.pyx":1266
- *                                            Uxy[j]*Qx*Qy)
+ *                                            Uxy[j]*Qx*Qy))
  * 
  *                     factors = occ*scattering_length*phase_factor*dw_factors             # <<<<<<<<<<<<<<
  * 

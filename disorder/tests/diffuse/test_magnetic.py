@@ -3,8 +3,8 @@
 import unittest
 import numpy as np
 
-from disorder.material import tables
-from disorder.diffuse import magnetic
+from disorder.material import tables, crystal
+from disorder.diffuse import magnetic, space, scattering
 
 class test_magnetic(unittest.TestCase):
     
@@ -117,16 +117,8 @@ class test_magnetic(unittest.TestCase):
         K = np.random.randint(0, 5*nv, size=(16))
         L = np.random.randint(0, 6*nw, size=(16))
         
-        Sx_k, Sy_k, Sz_k, i_dft = magnetic.transform(Sx, 
-                                                     Sy, 
-                                                     Sz, 
-                                                     H, 
-                                                     K, 
-                                                     L, 
-                                                     nu, 
-                                                     nv, 
-                                                     nw, 
-                                                     n_atm)
+        Sx_k, Sy_k, Sz_k, i_dft = magnetic.transform(Sx, Sy, Sz, H, K, L, 
+                                                     nu, nv, nw, n_atm)
         
         Sx = Sx.reshape(nu,nv,nw,n_atm)
         Sy = Sy.reshape(nu,nv,nw,n_atm)
@@ -153,5 +145,249 @@ class test_magnetic(unittest.TestCase):
         np.testing.assert_array_equal(v, np.mod(K, nv))
         np.testing.assert_array_equal(w, np.mod(L, nw))        
         
+    def test_intensity(self):
+        
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+                
+        h_range, nh = [-2,2], 5
+        k_range, nk = [-3,3], 7
+        l_range, nl = [-4,4], 9
+        
+        nu, nv, nw, n_atm = 2, 3, 4, 2
+        
+        u = np.array([0.2,0.1])
+        v = np.array([0.3,0.4])
+        w = np.array([0.4,0.5])
+        
+        atm = np.array(['Fe3+', 'Mn3+'])
+        occupancy = np.array([0.75,0.5])
+        
+        U11 = np.array([0.5,0.3])
+        U22 = np.array([0.6,0.4])
+        U33 = np.array([0.4,0.6])
+        U23 = np.array([0.05,-0.03])
+        U13 = np.array([-0.04,0.02])
+        U12 = np.array([0.03,-0.02])
+        
+        T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
+                               U11, U22, U33, U23, U13, U12, a_, b_, c_)
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+        
+        Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm)
+        
+        index_parameters = crystal.bragg(h_range, k_range, l_range,
+                                         nh, nk, nl, nu, nv, nw)
+         
+        h, k, l, H, K, L, indices, inverses, operators = index_parameters
+        
+        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        
+        Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
+        
+        Qx_norm, Qy_norm, Qz_norm, Q = space.unit(Qx, Qy, Qz)
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        ix, iy, iz = space.cell(nu, nv, nw, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, ix, iy, iz, atm)
+        
+        phase_factor = scattering.phase(Qx, Qy, Qz, ux, uy, uz)
+        
+        form_factor = magnetic.form(Q, atm, g=2)
+        
+        Sx_k, Sy_k, Sz_k, i_dft = magnetic.transform(Sx, Sy, Sz, H, K, L, 
+                                                     nu, nv, nw, n_atm)
+        
+        factors = space.prefactors(form_factor, phase_factor, occupancy)
+        
+        factors *= T
+        
+        I = magnetic.intensity(Qx_norm, Qy_norm, Qz_norm, \
+                               Sx_k, Sy_k, Sz_k, i_dft, factors)
+        
+        n_hkl = Q.size
+        n_xyz = nu*nv*nw*n_atm
+        
+        i, j = np.triu_indices(n_xyz, 1)
+        k, l = np.mod(i, n_atm), np.mod(j, n_atm)
+        
+        m = np.arange(n_xyz)
+        n = np.mod(m, n_atm)
+        
+        rx_ij = rx[j]-rx[i]
+        ry_ij = ry[j]-ry[i]
+        rz_ij = rz[j]-rz[i]
+                
+        mf = form_factor.reshape(n_hkl,n_atm)
+        T = T.reshape(n_hkl,n_atm)
+        
+        Sx_i, Sx_j, Sx_m = Sx[i], Sx[j], Sx[m]
+        Sy_i, Sy_j, Sy_m = Sy[i], Sy[j], Sy[m]
+        Sz_i, Sz_j, Sz_m = Sz[i], Sz[j], Sz[m]
+        c_k, c_l, c_n = occupancy[k], occupancy[l], occupancy[n]
+        f_k, f_l, f_n = mf[:,k], mf[:,l], mf[:,n]
+        T_k, T_l, T_n = T[:,k], T[:,l], T[:,n]
+        
+        Q_norm_dot_S_i = Qx_norm[:,np.newaxis]*Sx_i\
+                       + Qy_norm[:,np.newaxis]*Sy_i\
+                       + Qz_norm[:,np.newaxis]*Sz_i
+        Q_norm_dot_S_j = Qx_norm[:,np.newaxis]*Sx_j\
+                       + Qy_norm[:,np.newaxis]*Sy_j\
+                       + Qz_norm[:,np.newaxis]*Sz_j
+        Q_norm_dot_S_m = Qx_norm[:,np.newaxis]*Sx_m\
+                       + Qy_norm[:,np.newaxis]*Sy_m\
+                       + Qz_norm[:,np.newaxis]*Sz_m
+        
+        Sx_perp_i = Sx_i-(Q_norm_dot_S_i)*Qx_norm[:,np.newaxis]
+        Sx_perp_j = Sx_j-(Q_norm_dot_S_j)*Qx_norm[:,np.newaxis]
+        Sx_perp_m = Sx_m-(Q_norm_dot_S_m)*Qx_norm[:,np.newaxis]
+        
+        Sy_perp_i = Sy_i-(Q_norm_dot_S_i)*Qy_norm[:,np.newaxis]
+        Sy_perp_j = Sy_j-(Q_norm_dot_S_j)*Qy_norm[:,np.newaxis]
+        Sy_perp_m = Sy_m-(Q_norm_dot_S_m)*Qy_norm[:,np.newaxis]
+        
+        Sz_perp_i = Sz_i-(Q_norm_dot_S_i)*Qz_norm[:,np.newaxis]
+        Sz_perp_j = Sz_j-(Q_norm_dot_S_j)*Qz_norm[:,np.newaxis]
+        Sz_perp_m = Sz_m-(Q_norm_dot_S_m)*Qz_norm[:,np.newaxis]
+        
+        I_ref = ((c_n**2*(f_n*f_n.conj()).real*T_n**2*\
+                  (Sx_perp_m**2+Sy_perp_m**2+Sz_perp_m**2)).sum(axis=1)\
+              + 2*(c_k*c_l*(f_k*f_l.conj()).real*T_k*T_l*\
+                  (Sx_perp_i*Sx_perp_j+Sy_perp_i*Sy_perp_j+Sz_perp_i*Sz_perp_j)*\
+                   np.cos(Qx[:,np.newaxis]*rx_ij+\
+                          Qy[:,np.newaxis]*ry_ij+\
+                          Qz[:,np.newaxis]*rz_ij)).sum(axis=1))/n_xyz
+           
+        np.testing.assert_array_almost_equal(I, I_ref)
+        
+    def test_structure(self):
+        
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+                
+        h_range, nh = [-2,2], 5
+        k_range, nk = [-3,3], 7
+        l_range, nl = [-4,4], 9
+        
+        nu, nv, nw, n_atm = 2, 3, 4, 2
+        
+        u = np.array([0.2,0.1])
+        v = np.array([0.3,0.4])
+        w = np.array([0.4,0.5])
+        
+        atm = np.array(['Fe3+', 'Mn3+'])
+        occupancy = np.array([0.75,0.5])
+        
+        U11 = np.array([0.5,0.3])
+        U22 = np.array([0.6,0.4])
+        U33 = np.array([0.4,0.6])
+        U23 = np.array([0.05,-0.03])
+        U13 = np.array([-0.04,0.02])
+        U12 = np.array([0.03,-0.02])
+        
+        T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
+                                U11, U22, U33, U23, U13, U12, a_, b_, c_)
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+        
+        Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm)
+        
+        index_parameters = crystal.bragg(h_range, k_range, l_range,
+                                          nh, nk, nl, nu, nv, nw)
+         
+        h, k, l, H, K, L, indices, inverses, operators = index_parameters
+        
+        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        
+        Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
+        
+        Qx_norm, Qy_norm, Qz_norm, Q = space.unit(Qx, Qy, Qz)
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        ix, iy, iz = space.cell(nu, nv, nw, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, ix, iy, iz, atm)
+        
+        phase_factor = scattering.phase(Qx, Qy, Qz, ux, uy, uz)
+        
+        form_factor = magnetic.form(Q, atm, g=2)
+        
+        Sx_k, Sy_k, Sz_k, i_dft = magnetic.transform(Sx, Sy, Sz, H, K, L, 
+                                                     nu, nv, nw, n_atm)
+        
+        factors = space.prefactors(form_factor, phase_factor, occupancy)
+        
+        factors *= T
+        
+        Fx, Fy, Fz, \
+        prod_x, prod_y, prod_z = magnetic.structure(Qx_norm, Qy_norm, Qz_norm, 
+                                                    Sx_k, Sy_k, Sz_k, i_dft, 
+                                                    factors)
+        
+        n_hkl = Q.size
+        n_xyz = nu*nv*nw*n_atm
+        
+        m = np.arange(n_xyz)
+        n = np.mod(m, n_atm)
+        
+        rx_m = rx[m]
+        ry_m = ry[m]
+        rz_m = rz[m]
+                
+        mf = form_factor.reshape(n_hkl,n_atm)
+        T = T.reshape(n_hkl,n_atm)
+        
+        Sx_m = Sx[m]
+        Sy_m = Sy[m]
+        Sz_m = Sz[m]
+        c_n = occupancy[n]
+        f_n = mf[:,n]
+        T_n = T[:,n]
+        
+        prod_x_ref = (c_n*f_n*Sx_m*T_n*np.exp(1j*(Qx[:,np.newaxis]*rx_m+\
+                                                  Qy[:,np.newaxis]*ry_m+\
+                                                  Qz[:,np.newaxis]*rz_m)))
+            
+        prod_y_ref = (c_n*f_n*Sy_m*T_n*np.exp(1j*(Qx[:,np.newaxis]*rx_m+\
+                                                  Qy[:,np.newaxis]*ry_m+\
+                                                  Qz[:,np.newaxis]*rz_m)))
+            
+        prod_z_ref = (c_n*f_n*Sz_m*T_n*np.exp(1j*(Qx[:,np.newaxis]*rx_m+\
+                                                  Qy[:,np.newaxis]*ry_m+\
+                                                  Qz[:,np.newaxis]*rz_m)))
+            
+        Fx_ref = prod_x_ref.sum(axis=1)
+        Fy_ref = prod_y_ref.sum(axis=1)
+        Fz_ref = prod_z_ref.sum(axis=1)
+        
+        prod_x_ref = prod_x_ref.reshape(n_hkl,nu*nv*nw,n_atm).sum(axis=1)
+        prod_y_ref = prod_y_ref.reshape(n_hkl,nu*nv*nw,n_atm).sum(axis=1)
+        prod_z_ref = prod_z_ref.reshape(n_hkl,nu*nv*nw,n_atm).sum(axis=1)
+        
+        prod_x_ref = prod_x_ref.flatten()
+        prod_y_ref = prod_y_ref.flatten()
+        prod_z_ref = prod_z_ref.flatten()
+           
+        np.testing.assert_array_almost_equal(Fx, Fx_ref)
+        np.testing.assert_array_almost_equal(Fy, Fy_ref)
+        np.testing.assert_array_almost_equal(Fz, Fz_ref)
+        np.testing.assert_array_almost_equal(prod_x, prod_x_ref)
+        np.testing.assert_array_almost_equal(prod_y, prod_y_ref)
+        np.testing.assert_array_almost_equal(prod_z, prod_z_ref)
+
 if __name__ == '__main__':
     unittest.main()

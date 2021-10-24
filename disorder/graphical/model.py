@@ -422,7 +422,7 @@ class Model:
         operators = crystal.bragg(h_range, k_range, l_range, 
                                   nh, nk, nl, nu, nv, nw)
         
-        i_mask, i_unmask = space.indices(inverses, mask)
+        i_mask, i_unmask = space.indices(mask)
             
         return h, k, l, H, K, L, indices, inverses, i_mask, i_unmask 
     

@@ -212,9 +212,9 @@ cpdef void unmask(double [::1] I_calc,
                 
         I_calc[i_hkl] = I[i_unmask[i_hkl]]
    
-def length(ions, Py_ssize_t n_hkl):
+def length(atms, Py_ssize_t n_hkl):
     
-    cdef Py_ssize_t n_atm = len(ions)
+    cdef Py_ssize_t n_atm = len(atms)
     
     b_np = np.zeros(n_hkl*n_atm, dtype=complex)
     
@@ -224,9 +224,9 @@ def length(ions, Py_ssize_t n_hkl):
     
     cdef Py_ssize_t i_hkl, i
             
-    for i, ion in enumerate(ions):
+    for i, atm in enumerate(atms):
     
-        bc = tables.bc.get(ion)
+        bc = tables.bc.get(atm)
         
         for i_hkl in range(n_hkl):
      

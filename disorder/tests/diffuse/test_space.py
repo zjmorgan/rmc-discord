@@ -6,7 +6,7 @@ import numpy as np
 import scipy.ndimage.filters 
 
 from disorder.material import crystal
-from disorder.diffuse import space
+from disorder.diffuse import space, scattering
 
 class test_space(unittest.TestCase):
     
@@ -201,7 +201,326 @@ class test_space(unittest.TestCase):
         
         np.testing.assert_array_equal(u, np.mod(H, nu))
         np.testing.assert_array_equal(v, np.mod(K, nv))
-        np.testing.assert_array_equal(w, np.mod(L, nw))     
+        np.testing.assert_array_equal(w, np.mod(L, nw))
         
+    def test_indices(self):
+        
+        u = np.random.random(13)
+        
+        mask = u < 0.5
+        
+        i_mask, i_unmask = space.indices(mask)
+        
+        indices = np.sort(np.concatenate((i_mask, i_unmask)))
+        
+        np.testing.assert_array_equal(indices, np.arange(13))
+        
+    def test_prefactors(self):
+        
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+                
+        h_range, nh = [-2,2], 5
+        k_range, nk = [-3,3], 7
+        l_range, nl = [-4,4], 9
+        
+        nu, nv, nw = 2, 3, 4
+        
+        u = np.array([0,1])
+        v = np.array([0,1])
+        w = np.array([0,1])
+        
+        atm = np.array(['Fe', 'Mn'])
+        occupancy = np.array([0.75,0.5])
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+        
+        h, k, l = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
+                              np.linspace(k_range[0],k_range[1],nk), 
+                              np.linspace(l_range[0],l_range[1],nl), 
+                              indexing='ij')
+         
+        h, k, l = h.flatten(), k.flatten(), l.flatten()
+        
+        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        
+        Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
+        
+        Qx_norm, Qy_norm, Qz_norm, Q = space.unit(Qx, Qy, Qz)
+                    
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        ix, iy, iz = space.cell(nu, nv, nw, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, ix, iy, iz, atm)
+                
+        phase_factor = scattering.phase(Qx, Qy, Qz, ux, uy, uz)
+                                    
+        scattering_length = scattering.length(atm, Q.size)
+                    
+        factors = space.prefactors(scattering_length, phase_factor, occupancy)
+        
+        bc = scattering.length(atm, 1)
+        
+        np.testing.assert_array_almost_equal(factors[0::2], bc[0]*occupancy[0])
+        np.testing.assert_array_almost_equal(factors[1::2], bc[1]*occupancy[1])
+        
+    def test_intensity(self):
+        
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+                
+        h_range, nh = [-2,2], 5
+        k_range, nk = [-3,3], 7
+        l_range, nl = [-4,4], 9
+        
+        nu, nv, nw, n_atm = 2, 3, 4, 2
+        
+        u = np.array([0.2,0.1])
+        v = np.array([0.3,0.4])
+        w = np.array([0.4,0.5])
+        
+        atm = np.array(['Fe', 'Mn'])
+        occupancy = np.array([0.75,0.5])
+        
+        U11 = np.array([0.5,0.3])
+        U22 = np.array([0.6,0.4])
+        U33 = np.array([0.4,0.6])
+        U23 = np.array([0.05,-0.03])
+        U13 = np.array([-0.04,0.02])
+        U12 = np.array([0.03,-0.02])
+        
+        T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
+                               U11, U22, U33, U23, U13, U12, a_, b_, c_)
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+        
+        delta_r = np.ones((nu,nv,nw,n_atm)).flatten()
+        
+        index_parameters = crystal.bragg(h_range, k_range, l_range,
+                                         nh, nk, nl, nu, nv, nw)
+         
+        h, k, l, H, K, L, indices, inverses, operators = index_parameters
+        
+        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        
+        Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
+        
+        Qx_norm, Qy_norm, Qz_norm, Q = space.unit(Qx, Qy, Qz)
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        ix, iy, iz = space.cell(nu, nv, nw, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, ix, iy, iz, atm)
+        
+        phase_factor = scattering.phase(Qx, Qy, Qz, ux, uy, uz)
+        
+        scattering_length = scattering.length(atm, Q.size)
+        
+        delta_k, i_dft = space.transform(delta_r, H, K, L, nu, nv, nw, n_atm)
+        
+        factors = space.prefactors(scattering_length, phase_factor, occupancy)
+        
+        factors *= T
+        
+        I = space.intensity(delta_k, i_dft, factors)
+        
+        n_hkl = Q.size
+        n_xyz = nu*nv*nw*n_atm
+        
+        i, j = np.triu_indices(n_xyz, 1)
+        k, l = np.mod(i, n_atm), np.mod(j, n_atm)
+        
+        m = np.arange(n_xyz)
+        n = np.mod(m, n_atm)
+        
+        rx_ij = rx[j]-rx[i]
+        ry_ij = ry[j]-ry[i]
+        rz_ij = rz[j]-rz[i]
+                
+        bc = scattering.length(atm, 1)
+        T = T.reshape(n_hkl,n_atm)
+        
+        delta_i, delta_j, delta_m = delta_r[i], delta_r[j], delta_r[m]
+        c_k, c_l, c_n = occupancy[k], occupancy[l], occupancy[n]
+        b_k, b_l, b_n = bc[k], bc[l], bc[n]
+        T_k, T_l, T_n = T[:,k], T[:,l], T[:,n]
+        
+        I_ref = ((c_n**2*(b_n*b_n.conj()).real*delta_m**2*T_n**2).sum(axis=1)\
+              + 2*(c_k*c_l*(b_k*b_l.conj()).real*delta_i*delta_j*T_k*T_l*\
+                   np.cos(Qx[:,np.newaxis]*rx_ij+\
+                          Qy[:,np.newaxis]*ry_ij+\
+                          Qz[:,np.newaxis]*rz_ij)).sum(axis=1))/n_xyz
+           
+        np.testing.assert_array_almost_equal(I, I_ref)
+        
+    def test_structure(self):
+        
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+                
+        h_range, nh = [-2,2], 5
+        k_range, nk = [-3,3], 7
+        l_range, nl = [-4,4], 9
+        
+        nu, nv, nw, n_atm = 2, 3, 4, 2
+        
+        u = np.array([0.2,0.1])
+        v = np.array([0.3,0.4])
+        w = np.array([0.4,0.5])
+        
+        atm = np.array(['Fe', 'Mn'])
+        occupancy = np.array([0.75,0.5])
+        
+        U11 = np.array([0.5,0.3])
+        U22 = np.array([0.6,0.4])
+        U33 = np.array([0.4,0.6])
+        U23 = np.array([0.05,-0.03])
+        U13 = np.array([-0.04,0.02])
+        U12 = np.array([0.03,-0.02])
+        
+        T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
+                               U11, U22, U33, U23, U13, U12, a_, b_, c_)
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+        
+        delta_r = np.ones((nu,nv,nw,n_atm)).flatten()
+        
+        index_parameters = crystal.bragg(h_range, k_range, l_range,
+                                         nh, nk, nl, nu, nv, nw)
+         
+        h, k, l, H, K, L, indices, inverses, operators = index_parameters
+        
+        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        
+        Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
+        
+        Qx_norm, Qy_norm, Qz_norm, Q = space.unit(Qx, Qy, Qz)
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        ix, iy, iz = space.cell(nu, nv, nw, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, ix, iy, iz, atm)
+        
+        phase_factor = scattering.phase(Qx, Qy, Qz, ux, uy, uz)
+        
+        scattering_length = scattering.length(atm, Q.size)
+        
+        delta_k, i_dft = space.transform(delta_r, H, K, L, nu, nv, nw, n_atm)
+        
+        factors = space.prefactors(scattering_length, phase_factor, occupancy)
+        
+        factors *= T
+        
+        F, prod = space.structure(delta_k, i_dft, factors)
+        
+        n_hkl = Q.size
+        n_xyz = nu*nv*nw*n_atm
+        
+        m = np.arange(n_xyz)
+        n = np.mod(m, n_atm)
+        
+        rx_m = rx[m]
+        ry_m = ry[m]
+        rz_m = rz[m]
+                
+        bc = scattering.length(atm, 1)
+        T = T.reshape(n_hkl,n_atm)
+        
+        delta_m = delta_r[m]
+        c_n = occupancy[n]
+        b_n = bc[n]
+        T_n = T[:,n]
+        
+        prod_ref = (c_n*b_n*delta_m*T_n*np.exp(1j*(Qx[:,np.newaxis]*rx_m+\
+                                                   Qy[:,np.newaxis]*ry_m+\
+                                                   Qz[:,np.newaxis]*rz_m)))
+            
+        F_ref = prod_ref.sum(axis=1)
+        prod_ref = prod_ref.reshape(n_hkl,nu*nv*nw,n_atm).sum(axis=1).flatten()
+           
+        np.testing.assert_array_almost_equal(F, F_ref)
+        np.testing.assert_array_almost_equal(prod, prod_ref)
+
+    def test_debye_waller(self):
+        
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+                
+        h_range, nh = [-2,2], 9
+        k_range, nk = [-3,3], 13
+        l_range, nl = [-4,4], 17
+        
+        U11 = np.array([0.5,0.3])
+        U22 = np.array([0.6,0.4])
+        U33 = np.array([0.4,0.6])
+        U23 = np.array([0.05,-0.03])
+        U13 = np.array([-0.04,0.02])
+        U12 = np.array([0.03,-0.02])
+        
+        T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
+                               U11, U22, U33, U23, U13, U12, a_, b_, c_)
+        
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+        
+        h, k, l = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
+                              np.linspace(k_range[0],k_range[1],nk), 
+                              np.linspace(l_range[0],l_range[1],nl), 
+                              indexing='ij')
+         
+        h, k, l = h.flatten(), k.flatten(), l.flatten()
+
+        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+
+        Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
+        
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+        
+        Uxx, Uyy, Uzz, Uyz, Uxz, Uxy = [], [], [], [], [], []
+        for i in range(2):
+            U = np.array([[U11[i],U12[i],U13[i]],
+                          [U12[i],U22[i],U23[i]],
+                          [U13[i],U23[i],U33[i]]])
+            Up = np.dot(np.dot(D, U), D.T)
+            Uxx.append(Up[0,0])
+            Uyy.append(Up[1,1])
+            Uzz.append(Up[2,2])
+            Uyz.append(Up[1,2])
+            Uxz.append(Up[0,2])
+            Uxy.append(Up[0,1])
+        
+        Uxx, Uyy, Uzz = np.array(Uxx), np.array(Uyy), np.array(Uzz)
+        Uyz, Uxz, Uxy = np.array(Uyz), np.array(Uxz), np.array(Uxy)
+
+        dw_factors = np.exp(-0.5*(Uxx*(Qx*Qx)[:,np.newaxis]+\
+                                  Uyy*(Qy*Qy)[:,np.newaxis]+\
+                                  Uzz*(Qz*Qz)[:,np.newaxis])-\
+                                 (Uyz*(Qy*Qz)[:,np.newaxis]+\
+                                  Uxz*(Qx*Qz)[:,np.newaxis]+\
+                                  Uxy*(Qx*Qy)[:,np.newaxis])).flatten()
+        
+        np.testing.assert_array_almost_equal(T, dw_factors)
+
 if __name__ == '__main__':
     unittest.main()

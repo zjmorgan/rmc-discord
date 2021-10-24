@@ -369,10 +369,10 @@ def magnetic(double [::1] Sx,
     
                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
                                            Uyy[j]*Qy*Qy+\
-                                           Uzz[j]*Qz*Qz)+\
-                                           Uyz[j]*Qy*Qz+\
+                                           Uzz[j]*Qz*Qz)-\
+                                          (Uyz[j]*Qy*Qz+\
                                            Uxz[j]*Qx*Qz+\
-                                           Uxy[j]*Qx*Qy)
+                                           Uxy[j]*Qx*Qy))
                     
                     factors = occ*form_factor*phase_factor*dw_factors
                     
@@ -670,10 +670,10 @@ def occupational(double [::1] A_r,
                     
                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
                                            Uyy[j]*Qy*Qy+\
-                                           Uzz[j]*Qz*Qz)+\
-                                           Uyz[j]*Qy*Qz+\
+                                           Uzz[j]*Qz*Qz)-\
+                                          (Uyz[j]*Qy*Qz+\
                                            Uxz[j]*Qx*Qz+\
-                                           Uxy[j]*Qx*Qy)
+                                           Uxy[j]*Qx*Qy))
                     
                     factors = occ*scattering_length*phase_factor*dw_factors
                     
@@ -1258,10 +1258,10 @@ def structural(double [::1] occupancy,
                     
                     dw_factors = exp(-0.5*(Uxx[j]*Qx*Qx+\
                                            Uyy[j]*Qy*Qy+\
-                                           Uzz[j]*Qz*Qz)+\
-                                           Uyz[j]*Qy*Qz+\
+                                           Uzz[j]*Qz*Qz)-\
+                                          (Uyz[j]*Qy*Qz+\
                                            Uxz[j]*Qx*Qz+\
-                                           Uxy[j]*Qx*Qy)
+                                           Uxy[j]*Qx*Qy))
                     
                     factors = occ*scattering_length*phase_factor*dw_factors
                     

@@ -2,14 +2,6 @@
 
 import numpy as np
 
-from scipy.optimize import fsolve
-
-def f(x,y):
-    return (x-np.sin(x))/np.pi-y
-
-def g(x,y):
-    return (1-np.cos(x))/np.pi
-
 def expansion(nu, nv, nw, n_atm, value=1, fixed=True): 
     """
     Generate random displacement vectors.
@@ -88,74 +80,6 @@ def expansion(nu, nv, nw, n_atm, value=1, fixed=True):
     
     return Ux.flatten(), Uy.flatten(), Uz.flatten()
 
-def rotation(ux, uy, uz, nu, nv, nw, n_atm, value, structure): 
-    
-    rx = (ux[structure].T-ux[structure[:,0]]).T
-    ry = (uy[structure].T-uy[structure[:,0]]).T
-    rz = (uz[structure].T-uz[structure[:,0]]).T
-    
-    Rx = np.zeros((nu*nv*nw*n_atm))
-    Ry = np.zeros((nu*nv*nw*n_atm))
-    Rz = np.zeros((nu*nv*nw*n_atm))
-    
-    Px = np.zeros((nu*nv*nw*n_atm))
-    Py = np.zeros((nu*nv*nw*n_atm))
-    Pz = np.zeros((nu*nv*nw*n_atm))
-    
-    Rx[structure] = rx
-    Ry[structure] = ry
-    Rz[structure] = rz
-    
-    m = structure.shape[0]
-    n = structure.shape[1]
-    
-    psi = np.zeros((m,n))
-    
-    theta = np.repeat(2*np.pi*np.random.rand(m),n).reshape(m,n)
-    phi = np.repeat(np.arccos(1-2*np.random.rand(m)),n).reshape(m,n)
-    
-    for i in range(m):    
-        psi[i,:] = fsolve(f, np.pi/2, args=(np.random.rand()), fprime=g)
-    
-    u = np.sin(phi)*np.cos(theta)
-    v = np.sin(phi)*np.sin(theta)
-    w = np.cos(phi)
-    
-    theta = np.repeat(2*np.pi*np.random.rand(m),n).reshape(m,n)
-    phi = np.repeat(np.arccos(1-2*np.random.rand(m)),n).reshape(m,n)
-    
-    a = np.sin(phi)*np.cos(theta)
-    b = np.sin(phi)*np.sin(theta)
-    c = np.cos(phi)
-    
-    Rxx = np.cos(psi)+u**2*(1-np.cos(psi))
-    Rxy = u*v*(1-np.cos(psi))-w*np.sin(psi)
-    Rxz = u*w*(1-np.cos(psi))+v*np.sin(psi)
-
-    Ryx = v*u*(1-np.cos(psi))+w*np.sin(psi)    
-    Ryy = np.cos(psi)+v**2*(1-np.cos(psi))
-    Ryz = v*w*(1-np.cos(psi))-u*np.sin(psi)
- 
-    Rzx = w*u*(1-np.cos(psi))-v*np.sin(psi)
-    Rzy = w*v*(1-np.cos(psi))+u*np.sin(psi)
-    Rzz = np.cos(psi)+w**2*(1-np.cos(psi))
-    
-    Px[structure] = Rxx*Rx[structure]+Rxy*Ry[structure]+Rxz*Rz[structure]
-    Py[structure] = Ryx*Rx[structure]+Ryy*Ry[structure]+Ryz*Rz[structure]
-    Pz[structure] = Rzx*Rx[structure]+Rzy*Ry[structure]+Rzz*Rz[structure]
-    
-    V = np.random.rand(m,n)*value
-    
-    Px[structure] += V*a
-    Py[structure] += V*b
-    Pz[structure] += V*c
-        
-    Ux = Px-Rx
-    Uy = Py-Ry
-    Uz = Pz-Rz
-    
-    return Ux, Uy, Uz, Px, Py, Pz, Rx, Ry, Rz
-
 def number(m):
     
     return (m+1)*(m+2) // 2
@@ -205,14 +129,7 @@ def products(Vx, Vy, Vz, p):
     
     return V.flatten()
 
-def transform(U, 
-              H,
-              K,
-              L,
-              nu, 
-              nv, 
-              nw, 
-              n_atm):
+def transform(U, H, K, L, nu, nv, nw, n_atm):
     """
     Discrete Fourier transform of Taylor expansion displacement products.
 
@@ -259,14 +176,7 @@ def transform(U,
              
     return U_k.flatten(), i_dft
 
-def intensity(U_k, 
-              Q_k,
-              coeffs,
-              cond,
-              p,
-              i_dft,
-              factors,
-              subtract=True):    
+def intensity(U_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):    
     """
     Displacive scattering intensity.
 
@@ -301,19 +211,19 @@ def intensity(U_k,
     
     n_prod = coeffs.shape[0]
     
-    n_peaks = i_dft.shape[0]
+    n_hkl = i_dft.shape[0]
     
-    n_atm = factors.shape[0] // n_peaks
+    n_atm = factors.shape[0] // n_hkl
         
-    factors = factors.reshape(n_peaks,n_atm)
+    factors = factors.reshape(n_hkl,n_atm)
     
     n_uvw = U_k.shape[0] // n_prod // n_atm        
     
     U_k = U_k.reshape(n_prod,n_uvw,n_atm)
-    Q_k = Q_k.reshape(n_prod,n_peaks)
+    Q_k = Q_k.reshape(n_prod,n_hkl)
         
-    V_k = np.zeros(factors.shape, dtype=np.complex)
-    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=np.complex)
+    V_k = np.zeros(factors.shape, dtype=complex)
+    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=complex)
     
     start = (np.cumsum(number(np.arange(p+1)))-number(np.arange(p+1)))[::2]
     end = np.cumsum(number(np.arange(p+1)))[::2]
@@ -324,7 +234,6 @@ def intensity(U_k,
         even += range(start[k], end[k])
     
     even = np.array(even)
-    #even = np.arange(coeffs.size)
     
     for j in range(n_atm):
         V_k[:,j] = coeffs.dot(U_k[:,i_dft,j]*Q_k[:,:])
@@ -337,30 +246,19 @@ def intensity(U_k,
     F = np.sum(prod, axis=1)
     F_nuc = np.sum(prod_nuc, axis=1)
     
-    if (subtract):
-        
+    if subtract:
         F[cond] -= F_nuc
-                      
-        I = np.real(F)**2+np.imag(F)**2
-         
-        return I/(n_uvw*n_atm)
-    
-    else:
         
-        F_bragg = np.zeros(F.shape, dtype=np.complex)
+        I = np.real(F)**2+np.imag(F)**2
+        return I/(n_uvw*n_atm)
+    else:
+        F_bragg = np.zeros(F.shape, dtype=complex)
         F_bragg[cond] = F_nuc
                               
         I = np.real(F)**2+np.imag(F)**2
-         
         return I/(n_uvw*n_atm), F_bragg
 
-def structure(U_k, 
-              Q_k, 
-              coeffs, 
-              cond,
-              p,
-              i_dft,
-              factors):
+def structure(U_k, Q_k, coeffs, cond, p, i_dft, factors):
     """
     Partial displacive structure factor.
 
@@ -408,19 +306,19 @@ def structure(U_k,
     
     n_prod = coeffs.shape[0]
     
-    n_peaks = i_dft.shape[0]
+    n_hkl = i_dft.shape[0]
     
-    n_atm = factors.shape[0] // n_peaks
+    n_atm = factors.shape[0] // n_hkl
         
-    factors = factors.reshape(n_peaks,n_atm)
+    factors = factors.reshape(n_hkl,n_atm)
     
     n_uvw = U_k.shape[0] // n_prod // n_atm
     
     U_k = U_k.reshape(n_prod,n_uvw,n_atm)
-    Q_k = Q_k.reshape(n_prod,n_peaks)
+    Q_k = Q_k.reshape(n_prod,n_hkl)
         
-    V_k = np.zeros(factors.shape, dtype=np.complex)
-    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=np.complex)
+    V_k = np.zeros(factors.shape, dtype=complex)
+    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=complex)
     
     start = (np.cumsum(number(np.arange(p+1)))-number(np.arange(p+1)))[::2]
     end = np.cumsum(number(np.arange(p+1)))[::2]
@@ -431,7 +329,6 @@ def structure(U_k,
         even += range(start[k], end[k])
     
     even = np.array(even)
-    #even = np.arange(coeffs.size)
     
     for j in range(n_atm):
         V_k[:,j] = coeffs.dot(U_k[:,i_dft,j]*Q_k[:,:])
@@ -444,7 +341,7 @@ def structure(U_k,
     F = np.sum(prod, axis=1)
     F_nuc = np.sum(prod_nuc, axis=1)
     
-    bragg = np.arange(n_peaks)[cond]
+    bragg = np.arange(n_hkl)[cond]
      
     return F, \
            F_nuc, \
@@ -470,6 +367,8 @@ def parameters(Ux, Uy, Uz, D, n_atm):
     U23 = np.zeros(n_atm)
     U13 = np.zeros(n_atm)
     U12 = np.zeros(n_atm)
+    
+    D_inv = np.linalg.inv(D)
 
     for i in range(n_atm):
         
@@ -477,7 +376,7 @@ def parameters(Ux, Uy, Uz, D, n_atm):
                        [Uxy[i], Uyy[i], Uyz[i]],
                        [Uxz[i], Uyz[i], Uzz[i]]])
         
-        U = np.dot(np.dot(D.T, Up), D)
+        U = np.dot(np.dot(D_inv, Up), D_inv.T)
         
         U11[i] = U[0,0]
         U22[i] = U[1,1]
