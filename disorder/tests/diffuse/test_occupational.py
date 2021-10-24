@@ -76,11 +76,11 @@ class test_occupational(unittest.TestCase):
         
         a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
                 
-        h_range, nh = [-2,2], 5
-        k_range, nk = [-3,3], 7
-        l_range, nl = [-4,4], 9
+        h_range, nh = [-1,1], 5
+        k_range, nk = [0,2], 11
+        l_range, nl = [-1,0], 5
         
-        nu, nv, nw, n_atm = 2, 3, 4, 2
+        nu, nv, nw, n_atm = 2, 5, 4, 2
         
         u = np.array([0.2,0.1])
         v = np.array([0.3,0.4])
@@ -126,7 +126,7 @@ class test_occupational(unittest.TestCase):
         
         scattering_length = scattering.length(atm, Q.size)
         
-        A_k, i_dft = space.transform(A_r, H, K, L, nu, nv, nw, n_atm)
+        A_k, i_dft = occupational.transform(A_r, H, K, L, nu, nv, nw, n_atm)
         
         factors = space.prefactors(scattering_length, phase_factor, occupancy)
         
@@ -171,11 +171,11 @@ class test_occupational(unittest.TestCase):
         
         a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
                 
-        h_range, nh = [-2,2], 5
-        k_range, nk = [-3,3], 7
-        l_range, nl = [-4,4], 9
+        h_range, nh = [-1,1], 5
+        k_range, nk = [0,2], 11
+        l_range, nl = [-1,0], 5
         
-        nu, nv, nw, n_atm = 2, 3, 4, 2
+        nu, nv, nw, n_atm = 2, 5, 4, 2
         
         u = np.array([0.2,0.1])
         v = np.array([0.3,0.4])

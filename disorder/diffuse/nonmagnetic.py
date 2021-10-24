@@ -4,25 +4,17 @@ import numpy as np
 
 from disorder.diffuse.displacive import number
 
-def transform(U,
-              A,
-              H,
-              K,
-              L,
-              nu, 
-              nv, 
-              nw, 
-              n_atm):
+def transform(U_r, A_r, H, K, L, nu, nv, nw, n_atm):
     """
     Discrete Fourier transform of Taylor expansion displacement products and \
     relative occupancy parameter.
 
     Parameters
     ----------
-    U : ndarray
-        Displacement parameter :math:`U` (in Cartesian coordinates)
-    A : ndarray
-        Relative occupancy parameter :math:`A` 
+    U_r : ndarray
+          Displacement parameter :math:`U` (in Cartesian coordinates)
+    A_r : ndarray
+          Relative occupancy parameter :math:`A` 
     H : ndarray, int
         Supercell index along the :math:`a^*`-axis in reciprocal space
     K : ndarray, int
@@ -52,13 +44,13 @@ def transform(U,
         
     """
     
-    n_prod = U.shape[0] // (nu*nv*nw*n_atm)
+    n_prod = U_r.shape[0] // (nu*nv*nw*n_atm)
     
-    U_r = U.reshape(n_prod,nu,nv,nw,n_atm)
+    U_r = U_r.reshape(n_prod,nu,nv,nw,n_atm)
     
     U_k = np.fft.ifftn(U_r, axes=(1,2,3))*nu*nv*nw
     
-    A_r = np.tile(A,n_prod).reshape(n_prod,nu,nv,nw,n_atm)
+    A_r = np.tile(A_r, n_prod).reshape(n_prod,nu,nv,nw,n_atm)
     
     A_k = np.fft.ifftn(A_r*U_r, axes=(1,2,3))*nu*nv*nw
 
@@ -70,14 +62,7 @@ def transform(U,
          
     return U_k.flatten(), A_k.flatten(), i_dft
 
-def intensity(U_k,
-              A_k,
-              Q_k,
-              coeffs,
-              cond,
-              p,
-              i_dft,
-              factors):
+def intensity(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
     """
     Chemical scattering intensity.
 
@@ -121,8 +106,8 @@ def intensity(U_k,
     A_k = A_k.reshape(n_prod,n_uvw,n_atm)
     Q_k = Q_k.reshape(n_prod,n_peaks)
         
-    V_k = np.zeros(factors.shape, dtype=np.complex)
-    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=np.complex)
+    V_k = np.zeros(factors.shape, dtype=complex)
+    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=complex)
     
     start = (np.cumsum(number(np.arange(p+1)))-number(np.arange(p+1)))[::2]
     end = np.cumsum(number(np.arange(p+1)))[::2]
@@ -146,20 +131,19 @@ def intensity(U_k,
     F = np.sum(prod, axis=1)
     F_nuc = np.sum(prod_nuc, axis=1)
     
-    F[cond] -= F_nuc
-                  
-    I = np.real(F)**2+np.imag(F)**2
-     
-    return I/(n_uvw*n_atm)
+    if subtract:
+        F[cond] -= F_nuc
+        
+        I = np.real(F)**2+np.imag(F)**2
+        return I/(n_uvw*n_atm)
+    else:
+        F_bragg = np.zeros(F.shape, dtype=complex)
+        F_bragg[cond] = F_nuc
+                              
+        I = np.real(F)**2+np.imag(F)**2
+        return I/(n_uvw*n_atm), F_bragg
 
-def structure(U_k,
-              A_k,
-              Q_k, 
-              coeffs, 
-              cond,
-              p,
-              i_dft,
-              factors):
+def structure(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors):
     """
     Partial displacive structure factor.
 
@@ -222,8 +206,8 @@ def structure(U_k,
     A_k = A_k.reshape(n_prod,n_uvw,n_atm)
     Q_k = Q_k.reshape(n_prod,n_peaks)
         
-    V_k = np.zeros(factors.shape, dtype=np.complex)
-    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=np.complex)
+    V_k = np.zeros(factors.shape, dtype=complex)
+    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=complex)
     
     start = (np.cumsum(number(np.arange(p+1)))-number(np.arange(p+1)))[::2]
     end = np.cumsum(number(np.arange(p+1)))[::2]

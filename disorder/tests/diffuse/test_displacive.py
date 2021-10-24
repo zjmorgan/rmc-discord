@@ -173,11 +173,11 @@ class test_displacive(unittest.TestCase):
         
         a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
                 
-        h_range, nh = [-2,2], 5
-        k_range, nk = [-3,3], 7
-        l_range, nl = [-4,4], 9
+        h_range, nh = [-1,1], 5
+        k_range, nk = [0,2], 11
+        l_range, nl = [-1,0], 5
         
-        nu, nv, nw, n_atm = 2, 3, 4, 2
+        nu, nv, nw, n_atm = 2, 5, 4, 2
         
         u = np.array([0.2,0.1])
         v = np.array([0.3,0.4])
@@ -287,11 +287,11 @@ class test_displacive(unittest.TestCase):
         
         a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
                 
-        h_range, nh = [-2,2], 5
-        k_range, nk = [-3,3], 7
-        l_range, nl = [-4,4], 9
+        h_range, nh = [-1,1], 5
+        k_range, nk = [0,2], 11
+        l_range, nl = [-1,0], 5
         
-        nu, nv, nw, n_atm = 2, 3, 4, 2
+        nu, nv, nw, n_atm = 2, 5, 4, 2
         
         u = np.array([0.2,0.1])
         v = np.array([0.3,0.4])

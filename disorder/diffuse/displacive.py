@@ -129,14 +129,14 @@ def products(Vx, Vy, Vz, p):
     
     return V.flatten()
 
-def transform(U, H, K, L, nu, nv, nw, n_atm):
+def transform(U_r, H, K, L, nu, nv, nw, n_atm):
     """
     Discrete Fourier transform of Taylor expansion displacement products.
 
     Parameters
     ----------
-    U : ndarray
-        Displacement parameter :math:`U` (in Cartesian coordinates)
+    U_r : ndarray
+          Displacement parameter :math:`U` (in Cartesian coordinates)
     H : ndarray, int
         Supercell index along the :math:`a^*`-axis in reciprocal space
     K : ndarray, int
@@ -164,9 +164,9 @@ def transform(U, H, K, L, nu, nv, nw, n_atm):
         
     """
     
-    n_prod = U.shape[0] // (nu*nv*nw*n_atm)
+    n_prod = U_r.shape[0] // (nu*nv*nw*n_atm)
     
-    U_k = np.fft.ifftn(U.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))*nu*nv*nw
+    U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))*nu*nv*nw
 
     Ku = np.mod(H, nu).astype(int)
     Kv = np.mod(K, nv).astype(int)

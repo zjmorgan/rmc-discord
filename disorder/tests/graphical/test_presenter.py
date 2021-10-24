@@ -26,9 +26,9 @@ class test_presenter(unittest.TestCase):
         self.view = View()
         self.presenter = Presenter(Model(), self.view)
         
-    def tearDown(self):
+    # def tearDown(self):
         
-        plt.close('all')
+    #     plt.close('all')
             
     def test_supercell_n(self):
         
