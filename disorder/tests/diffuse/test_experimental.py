@@ -31,7 +31,59 @@ class test_experimental(unittest.TestCase):
         shape = (13,7,26)
         np.testing.assert_array_almost_equal(signal, np.random.random(shape))
         np.testing.assert_array_almost_equal(sigma_sq, np.random.random(shape))
+        
+    def test_mask(self):
+        
+        np.random.seed(13)
+        
+        signal = 1000*np.random.random((10,11,12))
+        error_sq = np.sqrt(signal)
+        
+        signal[1,2,3] = np.nan
+        signal[2,3,4] = np.inf
+        signal[4,5,6] = -1
+        
+        error_sq[2,3,4] = np.nan
+        error_sq[3,4,5] = -1
+        
+        mask = experimental.mask(signal, error_sq)
+        
+        self.assertTrue((signal[~mask] > 0).all())
+        self.assertTrue((error_sq[~mask] > 0).all())
+        
+    # def test_rebin(self):
+        
+    #     x, y, z = np.meshgrid(np.arange(6), 
+    #                           np.arange(14), 
+    #                           np.arange(10), indexing='ij')
+        
+    #     data = 0.5*x+2.5*y-z
+        
+    #     tmp_data = experimental.rebin(data, [6,14,10])
+    #     np.testing.assert_array_almost_equal(tmp_data, data)
+        
+    #     tmp_data = experimental.rebin(data, [3,14,10])
+    #     np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=0)*2, 
+    #                                          np.sum(data, axis=0))
+        
+    #     tmp_data = experimental.rebin(data, [6,14,5])
+    #     np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=2)*2, 
+    #                                          np.sum(data, axis=2))
     
+    def test_weights(self):
+        
+        weight = experimental.weights(4, 2)
+        np.testing.assert_array_almost_equal(weight.sum(axis=0), 0.5)
+        np.testing.assert_array_almost_equal(weight.sum(axis=1), 1.0)
+            
+        weight = experimental.weights(10, 2)
+        np.testing.assert_array_almost_equal(weight.sum(axis=0), 0.2)
+        np.testing.assert_array_almost_equal(weight.sum(axis=1), 1.0)
+        
+        weight = experimental.weights(5, 3)
+        np.testing.assert_array_almost_equal(weight.sum(axis=0), 0.6)
+        np.testing.assert_array_almost_equal(weight.sum(axis=1), 1.0)
+        
     def test_factors(self):
         
         fact = np.array([1, 2, 5, 10])
