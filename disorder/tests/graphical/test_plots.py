@@ -70,7 +70,7 @@ class test_plots(unittest.TestCase):
         X = np.linspace(-1,1,256)
         Y = np.arctan(2*np.pi*X)
         
-        line_plot.plot_data(X, Y, marker='-', label=r'$\arctan(2 \pi x)$')
+        line_plot.plot_data(X, Y, marker='-', label=r'$y=f(x)$')
         
         x = np.linspace(-1,1,16)
         y = np.arctan(2*np.pi*x)
