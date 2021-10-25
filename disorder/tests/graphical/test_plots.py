@@ -47,11 +47,11 @@ class test_plots(unittest.TestCase):
         
         ys = np.sin(2*np.pi*x)
         
-        line_plot.plot_data(x, ys, marker='o', label=r'$\sin( 2\pi x)$')
+        line_plot.plot_data(x, ys, marker='o', label=r'$\sin(2 \pi x)$')
         
         yc = np.cos(2*np.pi*x)
         
-        line_plot.plot_data(x, yc, marker='s', label=r'$\cos( 2\pi x)$')
+        line_plot.plot_data(x, yc, marker='s', label=r'$\cos(2 \pi x)$')
         
         line_plot.show_legend()
         
@@ -70,7 +70,7 @@ class test_plots(unittest.TestCase):
         X = np.linspace(-1,1,256)
         Y = np.arctan(2*np.pi*X)
         
-        # line_plot.plot_data(X, Y, marker='-', label=r'$\arctan( 2\pi x)$')
+        line_plot.plot_data(X, Y, marker='-', label=r'$\arctan(2 \pi x)$')
         
         x = np.linspace(-1,1,16)
         y = np.arctan(2*np.pi*x)
