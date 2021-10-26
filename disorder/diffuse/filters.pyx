@@ -36,12 +36,12 @@ def rebin0(double [:,:,::1] a, double [:,::1] comp):
     cdef Py_ssize_t i, j, k, l, m
 
     with nogil:
-        for m in prange(n):
+        for m in range(n):
             i = ind_i[m]
             l = ind_l[m]
             weight = comp[i,l]
             for j in range(m1):
-                for k in range(m2):
+                for k in prange(m2):
                     b[i,j,k] += weight*a[l,j,k]
                         
     return b_np
@@ -69,12 +69,12 @@ def rebin1(double [:,:,::1] a, double [:,::1] comp):
     cdef Py_ssize_t i, j, k, l, m
   
     with nogil:
-        for m in prange(n):
+        for m in range(n):
             j = ind_j[m]
             l = ind_l[m]
             for i in range(m0):
                 weight = comp[j,l]
-                for k in range(m2):
+                for k in prange(m2):
                     b[i,j,k] += weight*a[i,l,k]
                     
     return b_np
@@ -102,11 +102,11 @@ def rebin2(double [:,:,::1] a, double [:,::1] comp):
     cdef Py_ssize_t i, j, k, l, m
     
     with nogil:
-        for m in prange(n):
+        for m in range(n):
             k = ind_k[m]
             l = ind_l[m]
             for i in range(m0):
-                for j in range(m1):
+                for j in prange(m1):
                     weight = comp[k,l]
                     b[i,j,k] += weight*a[i,j,l]
                         

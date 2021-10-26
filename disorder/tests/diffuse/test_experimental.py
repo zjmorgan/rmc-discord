@@ -51,25 +51,45 @@ class test_experimental(unittest.TestCase):
         self.assertTrue((signal[~mask] > 0).all())
         self.assertTrue((error_sq[~mask] > 0).all())
         
-    # def test_rebin(self):
+    def test_rebin(self):
         
-    #     x, y, z = np.meshgrid(np.arange(6), 
-    #                           np.arange(14), 
-    #                           np.arange(10), indexing='ij')
+        x, y, z = np.meshgrid(np.arange(6), 
+                              np.arange(14), 
+                              np.arange(10), indexing='ij')
         
-    #     data = 0.5*x+2.5*y-z
+        data = 0.5*x+2.5*y-z
+
+        tmp_data = experimental.rebin(data, [6,14,10])
+        np.testing.assert_array_almost_equal(tmp_data, data)
         
-    #     tmp_data = experimental.rebin(data, [6,14,10])
-    #     np.testing.assert_array_almost_equal(tmp_data, data)
+        tmp_data = experimental.rebin(data, [3,14,10])
+        np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=0)*2, 
+                                             np.sum(data, axis=0))
         
-    #     tmp_data = experimental.rebin(data, [3,14,10])
-    #     np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=0)*2, 
-    #                                          np.sum(data, axis=0))
+        tmp_data = experimental.rebin(data, [6,7,10])
+        np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=1)*2, 
+                                             np.sum(data, axis=1))
         
-    #     tmp_data = experimental.rebin(data, [6,14,5])
-    #     np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=2)*2, 
-    #                                          np.sum(data, axis=2))
-    
+        tmp_data = experimental.rebin(data, [6,14,2])
+        np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=2)*5, 
+                                             np.sum(data, axis=2))
+        
+        tmp_data = experimental.rebin(data, [3,7,10])
+        np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=(0,1))*4, 
+                                             np.sum(data, axis=(0,1)))
+        
+        tmp_data = experimental.rebin(data, [6,7,2])
+        np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=(1,2))*10, 
+                                             np.sum(data, axis=(1,2)))
+        
+        tmp_data = experimental.rebin(data, [3,14,2])
+        np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=(0,2))*10, 
+                                             np.sum(data, axis=(0,2)))
+        
+        tmp_data = experimental.rebin(data, [3,7,2])
+        np.testing.assert_array_almost_equal(np.sum(tmp_data, axis=(0,1,2))*20, 
+                                             np.sum(data, axis=(0,1,2)))
+        
     def test_weights(self):
         
         weight = experimental.weights(4, 2)
@@ -83,6 +103,22 @@ class test_experimental(unittest.TestCase):
         weight = experimental.weights(5, 3)
         np.testing.assert_array_almost_equal(weight.sum(axis=0), 0.6)
         np.testing.assert_array_almost_equal(weight.sum(axis=1), 1.0)
+        
+    def test_crop(self):
+        
+        data  = np.random.random((23,24,25))
+        
+        tmp_data = experimental.crop(data, [0,23],[0,24],[0,25])
+        
+        np.testing.assert_array_almost_equal(tmp_data, data)
+        
+        tmp_data = experimental.crop(data, [3,6],[4,8],[5,10])
+        
+        self.assertEqual(tmp_data.shape[0], 3)
+        self.assertEqual(tmp_data.shape[1], 4)
+        self.assertEqual(tmp_data.shape[2], 5)
+        
+        self.assertAlmostEqual(tmp_data[0,0,0], data[3,4,5])
         
     def test_factors(self):
         

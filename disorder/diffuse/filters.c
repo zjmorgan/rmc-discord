@@ -2126,9 +2126,6 @@ static CYTHON_INLINE char __Pyx_PyInt_As_char(PyObject *);
 /* CheckBinaryVersion.proto */
 static int __Pyx_check_binary_version(void);
 
-/* FunctionExport.proto */
-static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig);
-
 /* InitStrings.proto */
 static int __Pyx_InitStrings(__Pyx_StringTabEntry *t);
 
@@ -2142,10 +2139,6 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
 static PyObject *__pyx_memoryview_assign_item_from_object(struct __pyx_memoryview_obj *__pyx_v_self, char *__pyx_v_itemp, PyObject *__pyx_v_value); /* proto*/
 static PyObject *__pyx_memoryviewslice_convert_item_to_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp); /* proto*/
 static PyObject *__pyx_memoryviewslice_assign_item_from_object(struct __pyx_memoryviewslice_obj *__pyx_v_self, char *__pyx_v_itemp, PyObject *__pyx_v_value); /* proto*/
-
-/* Module declarations from 'cython.view' */
-
-/* Module declarations from 'cython' */
 
 /* Module declarations from 'cpython.buffer' */
 
@@ -2185,6 +2178,10 @@ static PyTypeObject *__pyx_ptype_5numpy_flexible = 0;
 static PyTypeObject *__pyx_ptype_5numpy_character = 0;
 static PyTypeObject *__pyx_ptype_5numpy_ufunc = 0;
 
+/* Module declarations from 'cython.view' */
+
+/* Module declarations from 'cython' */
+
 /* Module declarations from 'openmp' */
 
 /* Module declarations from 'libc.math' */
@@ -2206,8 +2203,8 @@ static void __pyx_f_8disorder_7diffuse_7filters_blur1(__Pyx_memviewslice, __Pyx_
 static void __pyx_f_8disorder_7diffuse_7filters_blur2(__Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, Py_ssize_t); /*proto*/
 static void __pyx_f_8disorder_7diffuse_7filters_weight(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
 static void __pyx_f_8disorder_7diffuse_7filters_gauss(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, int __pyx_skip_dispatch); /*proto*/
-static void __pyx_f_8disorder_7diffuse_7filters_filtering(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, int __pyx_skip_dispatch); /*proto*/
 static void __pyx_f_8disorder_7diffuse_7filters_blur(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, int __pyx_skip_dispatch); /*proto*/
+static void __pyx_f_8disorder_7diffuse_7filters_filtering(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, int __pyx_skip_dispatch); /*proto*/
 static void __pyx_f_8disorder_7diffuse_7filters_sort(__Pyx_memviewslice, __Pyx_memviewslice, int, Py_ssize_t); /*proto*/
 static void __pyx_f_8disorder_7diffuse_7filters_copysort(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, int, Py_ssize_t); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
@@ -2885,7 +2882,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_rebin0(CYTHON_UNUSED PyObj
   PyObject *__pyx_v_ind_l_np = NULL;
   __Pyx_memviewslice __pyx_v_ind_i = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_ind_l = { 0, 0, { 0 }, { 0 }, { 0 } };
-  CYTHON_UNUSED Py_ssize_t __pyx_v_n;
+  Py_ssize_t __pyx_v_n;
   PyObject *__pyx_v_b_np = NULL;
   __Pyx_memviewslice __pyx_v_b = { 0, 0, { 0 }, { 0 }, { 0 } };
   double __pyx_v_weight;
@@ -3135,7 +3132,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_rebin0(CYTHON_UNUSED PyObj
  *     cdef Py_ssize_t i, j, k, l, m
  * 
  *     with nogil:             # <<<<<<<<<<<<<<
- *         for m in prange(n):
+ *         for m in range(n):
  *             i = ind_i[m]
  */
   {
@@ -3149,97 +3146,91 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_rebin0(CYTHON_UNUSED PyObj
         /* "disorder/diffuse/filters.pyx":39
  * 
  *     with nogil:
- *         for m in prange(n):             # <<<<<<<<<<<<<<
+ *         for m in range(n):             # <<<<<<<<<<<<<<
  *             i = ind_i[m]
  *             l = ind_l[m]
  */
         __pyx_t_9 = __pyx_v_n;
-        if ((1 == 0)) abort();
-        {
-            #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
-                #undef likely
-                #undef unlikely
-                #define likely(x)   (x)
-                #define unlikely(x) (x)
-            #endif
-            __pyx_t_11 = (__pyx_t_9 - 0 + 1 - 1/abs(1)) / 1;
-            if (__pyx_t_11 > 0)
-            {
-                #ifdef _OPENMP
-                #pragma omp parallel private(__pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16, __pyx_t_17, __pyx_t_18, __pyx_t_19, __pyx_t_20, __pyx_t_21, __pyx_t_22, __pyx_t_23)
-                #endif /* _OPENMP */
-                {
-                    #ifdef _OPENMP
-                    #pragma omp for lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_k) lastprivate(__pyx_v_l) firstprivate(__pyx_v_m) lastprivate(__pyx_v_m) lastprivate(__pyx_v_weight)
-                    #endif /* _OPENMP */
-                    for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_11; __pyx_t_10++){
-                        {
-                            __pyx_v_m = (Py_ssize_t)(0 + 1 * __pyx_t_10);
-                            /* Initialize private variables to invalid values */
-                            __pyx_v_i = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_j = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_k = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_l = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_weight = ((double)__PYX_NAN());
+        __pyx_t_10 = __pyx_t_9;
+        for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
+          __pyx_v_m = __pyx_t_11;
 
-                            /* "disorder/diffuse/filters.pyx":40
+          /* "disorder/diffuse/filters.pyx":40
  *     with nogil:
- *         for m in prange(n):
+ *         for m in range(n):
  *             i = ind_i[m]             # <<<<<<<<<<<<<<
  *             l = ind_l[m]
  *             weight = comp[i,l]
  */
-                            __pyx_t_12 = __pyx_v_m;
-                            __pyx_v_i = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_i.data + __pyx_t_12 * __pyx_v_ind_i.strides[0]) )));
+          __pyx_t_12 = __pyx_v_m;
+          __pyx_v_i = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_i.data + __pyx_t_12 * __pyx_v_ind_i.strides[0]) )));
 
-                            /* "disorder/diffuse/filters.pyx":41
- *         for m in prange(n):
+          /* "disorder/diffuse/filters.pyx":41
+ *         for m in range(n):
  *             i = ind_i[m]
  *             l = ind_l[m]             # <<<<<<<<<<<<<<
  *             weight = comp[i,l]
  *             for j in range(m1):
  */
-                            __pyx_t_12 = __pyx_v_m;
-                            __pyx_v_l = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_l.data + __pyx_t_12 * __pyx_v_ind_l.strides[0]) )));
+          __pyx_t_12 = __pyx_v_m;
+          __pyx_v_l = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_l.data + __pyx_t_12 * __pyx_v_ind_l.strides[0]) )));
 
-                            /* "disorder/diffuse/filters.pyx":42
+          /* "disorder/diffuse/filters.pyx":42
  *             i = ind_i[m]
  *             l = ind_l[m]
  *             weight = comp[i,l]             # <<<<<<<<<<<<<<
  *             for j in range(m1):
- *                 for k in range(m2):
+ *                 for k in prange(m2):
  */
-                            __pyx_t_12 = __pyx_v_i;
-                            __pyx_t_13 = __pyx_v_l;
-                            __pyx_v_weight = (*((double *) ( /* dim=1 */ ((char *) (((double *) ( /* dim=0 */ (__pyx_v_comp.data + __pyx_t_12 * __pyx_v_comp.strides[0]) )) + __pyx_t_13)) )));
+          __pyx_t_12 = __pyx_v_i;
+          __pyx_t_13 = __pyx_v_l;
+          __pyx_v_weight = (*((double *) ( /* dim=1 */ ((char *) (((double *) ( /* dim=0 */ (__pyx_v_comp.data + __pyx_t_12 * __pyx_v_comp.strides[0]) )) + __pyx_t_13)) )));
 
-                            /* "disorder/diffuse/filters.pyx":43
+          /* "disorder/diffuse/filters.pyx":43
  *             l = ind_l[m]
  *             weight = comp[i,l]
  *             for j in range(m1):             # <<<<<<<<<<<<<<
- *                 for k in range(m2):
+ *                 for k in prange(m2):
  *                     b[i,j,k] += weight*a[l,j,k]
  */
-                            __pyx_t_14 = __pyx_v_m1;
-                            __pyx_t_15 = __pyx_t_14;
-                            for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
-                              __pyx_v_j = __pyx_t_16;
+          __pyx_t_14 = __pyx_v_m1;
+          __pyx_t_15 = __pyx_t_14;
+          for (__pyx_t_16 = 0; __pyx_t_16 < __pyx_t_15; __pyx_t_16+=1) {
+            __pyx_v_j = __pyx_t_16;
 
-                              /* "disorder/diffuse/filters.pyx":44
+            /* "disorder/diffuse/filters.pyx":44
  *             weight = comp[i,l]
  *             for j in range(m1):
- *                 for k in range(m2):             # <<<<<<<<<<<<<<
+ *                 for k in prange(m2):             # <<<<<<<<<<<<<<
  *                     b[i,j,k] += weight*a[l,j,k]
  * 
  */
-                              __pyx_t_17 = __pyx_v_m2;
-                              __pyx_t_18 = __pyx_t_17;
-                              for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
-                                __pyx_v_k = __pyx_t_19;
+            __pyx_t_17 = __pyx_v_m2;
+            if ((1 == 0)) abort();
+            {
+                #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
+                    #undef likely
+                    #undef unlikely
+                    #define likely(x)   (x)
+                    #define unlikely(x) (x)
+                #endif
+                __pyx_t_19 = (__pyx_t_17 - 0 + 1 - 1/abs(1)) / 1;
+                if (__pyx_t_19 > 0)
+                {
+                    #ifdef _OPENMP
+                    #pragma omp parallel private(__pyx_t_12, __pyx_t_13, __pyx_t_20, __pyx_t_21, __pyx_t_22, __pyx_t_23)
+                    #endif /* _OPENMP */
+                    {
+                        #ifdef _OPENMP
+                        #pragma omp for firstprivate(__pyx_v_k) lastprivate(__pyx_v_k)
+                        #endif /* _OPENMP */
+                        for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_19; __pyx_t_18++){
+                            {
+                                __pyx_v_k = (Py_ssize_t)(0 + 1 * __pyx_t_18);
 
                                 /* "disorder/diffuse/filters.pyx":45
  *             for j in range(m1):
- *                 for k in range(m2):
+ *                 for k in prange(m2):
  *                     b[i,j,k] += weight*a[l,j,k]             # <<<<<<<<<<<<<<
  * 
  *     return b_np
@@ -3251,26 +3242,26 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_rebin0(CYTHON_UNUSED PyObj
                                 __pyx_t_22 = __pyx_v_j;
                                 __pyx_t_23 = __pyx_v_k;
                                 *((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_21 * __pyx_v_b.strides[0]) ) + __pyx_t_22 * __pyx_v_b.strides[1]) )) + __pyx_t_23)) )) += (__pyx_v_weight * (*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_a.data + __pyx_t_13 * __pyx_v_a.strides[0]) ) + __pyx_t_12 * __pyx_v_a.strides[1]) )) + __pyx_t_20)) ))));
-                              }
                             }
                         }
                     }
                 }
             }
+            #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
+                #undef likely
+                #undef unlikely
+                #define likely(x)   __builtin_expect(!!(x), 1)
+                #define unlikely(x) __builtin_expect(!!(x), 0)
+            #endif
+          }
         }
-        #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
-            #undef likely
-            #undef unlikely
-            #define likely(x)   __builtin_expect(!!(x), 1)
-            #define unlikely(x) __builtin_expect(!!(x), 0)
-        #endif
       }
 
       /* "disorder/diffuse/filters.pyx":38
  *     cdef Py_ssize_t i, j, k, l, m
  * 
  *     with nogil:             # <<<<<<<<<<<<<<
- *         for m in prange(n):
+ *         for m in range(n):
  *             i = ind_i[m]
  */
       /*finally:*/ {
@@ -3411,7 +3402,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_2rebin1(CYTHON_UNUSED PyOb
   PyObject *__pyx_v_ind_l_np = NULL;
   __Pyx_memviewslice __pyx_v_ind_j = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_ind_l = { 0, 0, { 0 }, { 0 }, { 0 } };
-  CYTHON_UNUSED Py_ssize_t __pyx_v_n;
+  Py_ssize_t __pyx_v_n;
   PyObject *__pyx_v_b_np = NULL;
   __Pyx_memviewslice __pyx_v_b = { 0, 0, { 0 }, { 0 }, { 0 } };
   double __pyx_v_weight;
@@ -3661,7 +3652,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_2rebin1(CYTHON_UNUSED PyOb
  *     cdef Py_ssize_t i, j, k, l, m
  * 
  *     with nogil:             # <<<<<<<<<<<<<<
- *         for m in prange(n):
+ *         for m in range(n):
  *             j = ind_j[m]
  */
   {
@@ -3675,97 +3666,91 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_2rebin1(CYTHON_UNUSED PyOb
         /* "disorder/diffuse/filters.pyx":72
  * 
  *     with nogil:
- *         for m in prange(n):             # <<<<<<<<<<<<<<
+ *         for m in range(n):             # <<<<<<<<<<<<<<
  *             j = ind_j[m]
  *             l = ind_l[m]
  */
         __pyx_t_9 = __pyx_v_n;
-        if ((1 == 0)) abort();
-        {
-            #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
-                #undef likely
-                #undef unlikely
-                #define likely(x)   (x)
-                #define unlikely(x) (x)
-            #endif
-            __pyx_t_11 = (__pyx_t_9 - 0 + 1 - 1/abs(1)) / 1;
-            if (__pyx_t_11 > 0)
-            {
-                #ifdef _OPENMP
-                #pragma omp parallel private(__pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16, __pyx_t_17, __pyx_t_18, __pyx_t_19, __pyx_t_20, __pyx_t_21, __pyx_t_22, __pyx_t_23)
-                #endif /* _OPENMP */
-                {
-                    #ifdef _OPENMP
-                    #pragma omp for lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_k) lastprivate(__pyx_v_l) firstprivate(__pyx_v_m) lastprivate(__pyx_v_m) lastprivate(__pyx_v_weight)
-                    #endif /* _OPENMP */
-                    for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_11; __pyx_t_10++){
-                        {
-                            __pyx_v_m = (Py_ssize_t)(0 + 1 * __pyx_t_10);
-                            /* Initialize private variables to invalid values */
-                            __pyx_v_i = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_j = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_k = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_l = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_weight = ((double)__PYX_NAN());
+        __pyx_t_10 = __pyx_t_9;
+        for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
+          __pyx_v_m = __pyx_t_11;
 
-                            /* "disorder/diffuse/filters.pyx":73
+          /* "disorder/diffuse/filters.pyx":73
  *     with nogil:
- *         for m in prange(n):
+ *         for m in range(n):
  *             j = ind_j[m]             # <<<<<<<<<<<<<<
  *             l = ind_l[m]
  *             for i in range(m0):
  */
-                            __pyx_t_12 = __pyx_v_m;
-                            __pyx_v_j = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_j.data + __pyx_t_12 * __pyx_v_ind_j.strides[0]) )));
+          __pyx_t_12 = __pyx_v_m;
+          __pyx_v_j = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_j.data + __pyx_t_12 * __pyx_v_ind_j.strides[0]) )));
 
-                            /* "disorder/diffuse/filters.pyx":74
- *         for m in prange(n):
+          /* "disorder/diffuse/filters.pyx":74
+ *         for m in range(n):
  *             j = ind_j[m]
  *             l = ind_l[m]             # <<<<<<<<<<<<<<
  *             for i in range(m0):
  *                 weight = comp[j,l]
  */
-                            __pyx_t_12 = __pyx_v_m;
-                            __pyx_v_l = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_l.data + __pyx_t_12 * __pyx_v_ind_l.strides[0]) )));
+          __pyx_t_12 = __pyx_v_m;
+          __pyx_v_l = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_l.data + __pyx_t_12 * __pyx_v_ind_l.strides[0]) )));
 
-                            /* "disorder/diffuse/filters.pyx":75
+          /* "disorder/diffuse/filters.pyx":75
  *             j = ind_j[m]
  *             l = ind_l[m]
  *             for i in range(m0):             # <<<<<<<<<<<<<<
  *                 weight = comp[j,l]
- *                 for k in range(m2):
+ *                 for k in prange(m2):
  */
-                            __pyx_t_13 = __pyx_v_m0;
-                            __pyx_t_14 = __pyx_t_13;
-                            for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
-                              __pyx_v_i = __pyx_t_15;
+          __pyx_t_13 = __pyx_v_m0;
+          __pyx_t_14 = __pyx_t_13;
+          for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
+            __pyx_v_i = __pyx_t_15;
 
-                              /* "disorder/diffuse/filters.pyx":76
+            /* "disorder/diffuse/filters.pyx":76
  *             l = ind_l[m]
  *             for i in range(m0):
  *                 weight = comp[j,l]             # <<<<<<<<<<<<<<
- *                 for k in range(m2):
+ *                 for k in prange(m2):
  *                     b[i,j,k] += weight*a[i,l,k]
  */
-                              __pyx_t_12 = __pyx_v_j;
-                              __pyx_t_16 = __pyx_v_l;
-                              __pyx_v_weight = (*((double *) ( /* dim=1 */ ((char *) (((double *) ( /* dim=0 */ (__pyx_v_comp.data + __pyx_t_12 * __pyx_v_comp.strides[0]) )) + __pyx_t_16)) )));
+            __pyx_t_12 = __pyx_v_j;
+            __pyx_t_16 = __pyx_v_l;
+            __pyx_v_weight = (*((double *) ( /* dim=1 */ ((char *) (((double *) ( /* dim=0 */ (__pyx_v_comp.data + __pyx_t_12 * __pyx_v_comp.strides[0]) )) + __pyx_t_16)) )));
 
-                              /* "disorder/diffuse/filters.pyx":77
+            /* "disorder/diffuse/filters.pyx":77
  *             for i in range(m0):
  *                 weight = comp[j,l]
- *                 for k in range(m2):             # <<<<<<<<<<<<<<
+ *                 for k in prange(m2):             # <<<<<<<<<<<<<<
  *                     b[i,j,k] += weight*a[i,l,k]
  * 
  */
-                              __pyx_t_17 = __pyx_v_m2;
-                              __pyx_t_18 = __pyx_t_17;
-                              for (__pyx_t_19 = 0; __pyx_t_19 < __pyx_t_18; __pyx_t_19+=1) {
-                                __pyx_v_k = __pyx_t_19;
+            __pyx_t_17 = __pyx_v_m2;
+            if ((1 == 0)) abort();
+            {
+                #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
+                    #undef likely
+                    #undef unlikely
+                    #define likely(x)   (x)
+                    #define unlikely(x) (x)
+                #endif
+                __pyx_t_19 = (__pyx_t_17 - 0 + 1 - 1/abs(1)) / 1;
+                if (__pyx_t_19 > 0)
+                {
+                    #ifdef _OPENMP
+                    #pragma omp parallel private(__pyx_t_12, __pyx_t_16, __pyx_t_20, __pyx_t_21, __pyx_t_22, __pyx_t_23)
+                    #endif /* _OPENMP */
+                    {
+                        #ifdef _OPENMP
+                        #pragma omp for firstprivate(__pyx_v_k) lastprivate(__pyx_v_k)
+                        #endif /* _OPENMP */
+                        for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_19; __pyx_t_18++){
+                            {
+                                __pyx_v_k = (Py_ssize_t)(0 + 1 * __pyx_t_18);
 
                                 /* "disorder/diffuse/filters.pyx":78
  *                 weight = comp[j,l]
- *                 for k in range(m2):
+ *                 for k in prange(m2):
  *                     b[i,j,k] += weight*a[i,l,k]             # <<<<<<<<<<<<<<
  * 
  *     return b_np
@@ -3777,26 +3762,26 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_2rebin1(CYTHON_UNUSED PyOb
                                 __pyx_t_22 = __pyx_v_j;
                                 __pyx_t_23 = __pyx_v_k;
                                 *((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_21 * __pyx_v_b.strides[0]) ) + __pyx_t_22 * __pyx_v_b.strides[1]) )) + __pyx_t_23)) )) += (__pyx_v_weight * (*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_a.data + __pyx_t_16 * __pyx_v_a.strides[0]) ) + __pyx_t_12 * __pyx_v_a.strides[1]) )) + __pyx_t_20)) ))));
-                              }
                             }
                         }
                     }
                 }
             }
+            #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
+                #undef likely
+                #undef unlikely
+                #define likely(x)   __builtin_expect(!!(x), 1)
+                #define unlikely(x) __builtin_expect(!!(x), 0)
+            #endif
+          }
         }
-        #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
-            #undef likely
-            #undef unlikely
-            #define likely(x)   __builtin_expect(!!(x), 1)
-            #define unlikely(x) __builtin_expect(!!(x), 0)
-        #endif
       }
 
       /* "disorder/diffuse/filters.pyx":71
  *     cdef Py_ssize_t i, j, k, l, m
  * 
  *     with nogil:             # <<<<<<<<<<<<<<
- *         for m in prange(n):
+ *         for m in range(n):
  *             j = ind_j[m]
  */
       /*finally:*/ {
@@ -3937,7 +3922,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_4rebin2(CYTHON_UNUSED PyOb
   PyObject *__pyx_v_ind_l_np = NULL;
   __Pyx_memviewslice __pyx_v_ind_k = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_ind_l = { 0, 0, { 0 }, { 0 }, { 0 } };
-  CYTHON_UNUSED Py_ssize_t __pyx_v_n;
+  Py_ssize_t __pyx_v_n;
   PyObject *__pyx_v_b_np = NULL;
   __Pyx_memviewslice __pyx_v_b = { 0, 0, { 0 }, { 0 }, { 0 } };
   double __pyx_v_weight;
@@ -4187,7 +4172,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_4rebin2(CYTHON_UNUSED PyOb
  *     cdef Py_ssize_t i, j, k, l, m
  * 
  *     with nogil:             # <<<<<<<<<<<<<<
- *         for m in prange(n):
+ *         for m in range(n):
  *             k = ind_k[m]
  */
   {
@@ -4201,86 +4186,82 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_4rebin2(CYTHON_UNUSED PyOb
         /* "disorder/diffuse/filters.pyx":105
  * 
  *     with nogil:
- *         for m in prange(n):             # <<<<<<<<<<<<<<
+ *         for m in range(n):             # <<<<<<<<<<<<<<
  *             k = ind_k[m]
  *             l = ind_l[m]
  */
         __pyx_t_9 = __pyx_v_n;
-        if ((1 == 0)) abort();
-        {
-            #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
-                #undef likely
-                #undef unlikely
-                #define likely(x)   (x)
-                #define unlikely(x) (x)
-            #endif
-            __pyx_t_11 = (__pyx_t_9 - 0 + 1 - 1/abs(1)) / 1;
-            if (__pyx_t_11 > 0)
-            {
-                #ifdef _OPENMP
-                #pragma omp parallel private(__pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16, __pyx_t_17, __pyx_t_18, __pyx_t_19, __pyx_t_20, __pyx_t_21, __pyx_t_22, __pyx_t_23)
-                #endif /* _OPENMP */
-                {
-                    #ifdef _OPENMP
-                    #pragma omp for lastprivate(__pyx_v_i) lastprivate(__pyx_v_j) lastprivate(__pyx_v_k) lastprivate(__pyx_v_l) firstprivate(__pyx_v_m) lastprivate(__pyx_v_m) lastprivate(__pyx_v_weight)
-                    #endif /* _OPENMP */
-                    for (__pyx_t_10 = 0; __pyx_t_10 < __pyx_t_11; __pyx_t_10++){
-                        {
-                            __pyx_v_m = (Py_ssize_t)(0 + 1 * __pyx_t_10);
-                            /* Initialize private variables to invalid values */
-                            __pyx_v_i = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_j = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_k = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_l = ((Py_ssize_t)0xbad0bad0);
-                            __pyx_v_weight = ((double)__PYX_NAN());
+        __pyx_t_10 = __pyx_t_9;
+        for (__pyx_t_11 = 0; __pyx_t_11 < __pyx_t_10; __pyx_t_11+=1) {
+          __pyx_v_m = __pyx_t_11;
 
-                            /* "disorder/diffuse/filters.pyx":106
+          /* "disorder/diffuse/filters.pyx":106
  *     with nogil:
- *         for m in prange(n):
+ *         for m in range(n):
  *             k = ind_k[m]             # <<<<<<<<<<<<<<
  *             l = ind_l[m]
  *             for i in range(m0):
  */
-                            __pyx_t_12 = __pyx_v_m;
-                            __pyx_v_k = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_k.data + __pyx_t_12 * __pyx_v_ind_k.strides[0]) )));
+          __pyx_t_12 = __pyx_v_m;
+          __pyx_v_k = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_k.data + __pyx_t_12 * __pyx_v_ind_k.strides[0]) )));
 
-                            /* "disorder/diffuse/filters.pyx":107
- *         for m in prange(n):
+          /* "disorder/diffuse/filters.pyx":107
+ *         for m in range(n):
  *             k = ind_k[m]
  *             l = ind_l[m]             # <<<<<<<<<<<<<<
  *             for i in range(m0):
- *                 for j in range(m1):
+ *                 for j in prange(m1):
  */
-                            __pyx_t_12 = __pyx_v_m;
-                            __pyx_v_l = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_l.data + __pyx_t_12 * __pyx_v_ind_l.strides[0]) )));
+          __pyx_t_12 = __pyx_v_m;
+          __pyx_v_l = (*((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_ind_l.data + __pyx_t_12 * __pyx_v_ind_l.strides[0]) )));
 
-                            /* "disorder/diffuse/filters.pyx":108
+          /* "disorder/diffuse/filters.pyx":108
  *             k = ind_k[m]
  *             l = ind_l[m]
  *             for i in range(m0):             # <<<<<<<<<<<<<<
- *                 for j in range(m1):
+ *                 for j in prange(m1):
  *                     weight = comp[k,l]
  */
-                            __pyx_t_13 = __pyx_v_m0;
-                            __pyx_t_14 = __pyx_t_13;
-                            for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
-                              __pyx_v_i = __pyx_t_15;
+          __pyx_t_13 = __pyx_v_m0;
+          __pyx_t_14 = __pyx_t_13;
+          for (__pyx_t_15 = 0; __pyx_t_15 < __pyx_t_14; __pyx_t_15+=1) {
+            __pyx_v_i = __pyx_t_15;
 
-                              /* "disorder/diffuse/filters.pyx":109
+            /* "disorder/diffuse/filters.pyx":109
  *             l = ind_l[m]
  *             for i in range(m0):
- *                 for j in range(m1):             # <<<<<<<<<<<<<<
+ *                 for j in prange(m1):             # <<<<<<<<<<<<<<
  *                     weight = comp[k,l]
  *                     b[i,j,k] += weight*a[i,j,l]
  */
-                              __pyx_t_16 = __pyx_v_m1;
-                              __pyx_t_17 = __pyx_t_16;
-                              for (__pyx_t_18 = 0; __pyx_t_18 < __pyx_t_17; __pyx_t_18+=1) {
-                                __pyx_v_j = __pyx_t_18;
+            __pyx_t_16 = __pyx_v_m1;
+            if ((1 == 0)) abort();
+            {
+                #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
+                    #undef likely
+                    #undef unlikely
+                    #define likely(x)   (x)
+                    #define unlikely(x) (x)
+                #endif
+                __pyx_t_18 = (__pyx_t_16 - 0 + 1 - 1/abs(1)) / 1;
+                if (__pyx_t_18 > 0)
+                {
+                    #ifdef _OPENMP
+                    #pragma omp parallel private(__pyx_t_12, __pyx_t_19, __pyx_t_20, __pyx_t_21, __pyx_t_22, __pyx_t_23)
+                    #endif /* _OPENMP */
+                    {
+                        #ifdef _OPENMP
+                        #pragma omp for firstprivate(__pyx_v_j) lastprivate(__pyx_v_j) lastprivate(__pyx_v_weight)
+                        #endif /* _OPENMP */
+                        for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_18; __pyx_t_17++){
+                            {
+                                __pyx_v_j = (Py_ssize_t)(0 + 1 * __pyx_t_17);
+                                /* Initialize private variables to invalid values */
+                                __pyx_v_weight = ((double)__PYX_NAN());
 
                                 /* "disorder/diffuse/filters.pyx":110
  *             for i in range(m0):
- *                 for j in range(m1):
+ *                 for j in prange(m1):
  *                     weight = comp[k,l]             # <<<<<<<<<<<<<<
  *                     b[i,j,k] += weight*a[i,j,l]
  * 
@@ -4290,7 +4271,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_4rebin2(CYTHON_UNUSED PyOb
                                 __pyx_v_weight = (*((double *) ( /* dim=1 */ ((char *) (((double *) ( /* dim=0 */ (__pyx_v_comp.data + __pyx_t_12 * __pyx_v_comp.strides[0]) )) + __pyx_t_19)) )));
 
                                 /* "disorder/diffuse/filters.pyx":111
- *                 for j in range(m1):
+ *                 for j in prange(m1):
  *                     weight = comp[k,l]
  *                     b[i,j,k] += weight*a[i,j,l]             # <<<<<<<<<<<<<<
  * 
@@ -4303,26 +4284,26 @@ static PyObject *__pyx_pf_8disorder_7diffuse_7filters_4rebin2(CYTHON_UNUSED PyOb
                                 __pyx_t_22 = __pyx_v_j;
                                 __pyx_t_23 = __pyx_v_k;
                                 *((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_21 * __pyx_v_b.strides[0]) ) + __pyx_t_22 * __pyx_v_b.strides[1]) )) + __pyx_t_23)) )) += (__pyx_v_weight * (*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_a.data + __pyx_t_19 * __pyx_v_a.strides[0]) ) + __pyx_t_12 * __pyx_v_a.strides[1]) )) + __pyx_t_20)) ))));
-                              }
                             }
                         }
                     }
                 }
             }
+            #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
+                #undef likely
+                #undef unlikely
+                #define likely(x)   __builtin_expect(!!(x), 1)
+                #define unlikely(x) __builtin_expect(!!(x), 0)
+            #endif
+          }
         }
-        #if ((defined(__APPLE__) || defined(__OSX__)) && (defined(__GNUC__) && (__GNUC__ > 2 || (__GNUC__ == 2 && (__GNUC_MINOR__ > 95)))))
-            #undef likely
-            #undef unlikely
-            #define likely(x)   __builtin_expect(!!(x), 1)
-            #define unlikely(x) __builtin_expect(!!(x), 0)
-        #endif
       }
 
       /* "disorder/diffuse/filters.pyx":104
  *     cdef Py_ssize_t i, j, k, l, m
  * 
  *     with nogil:             # <<<<<<<<<<<<<<
- *         for m in prange(n):
+ *         for m in range(n):
  *             k = ind_k[m]
  */
       /*finally:*/ {
@@ -28104,7 +28085,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 43, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 39, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 947, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(2, 133, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(2, 148, __pyx_L1_error)
@@ -28608,22 +28589,10 @@ static int __Pyx_modinit_variable_export_code(void) {
 
 static int __Pyx_modinit_function_export_code(void) {
   __Pyx_RefNannyDeclarations
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__Pyx_modinit_function_export_code", 0);
   /*--- Function export code ---*/
-  if (__Pyx_ExportFunction("blur0", (void (*)(void))__pyx_f_8disorder_7diffuse_7filters_blur0, "void (__Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, Py_ssize_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("blur1", (void (*)(void))__pyx_f_8disorder_7diffuse_7filters_blur1, "void (__Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, Py_ssize_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("blur2", (void (*)(void))__pyx_f_8disorder_7diffuse_7filters_blur2, "void (__Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, Py_ssize_t)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("weight", (void (*)(void))__pyx_f_8disorder_7diffuse_7filters_weight, "void (__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("gauss", (void (*)(void))__pyx_f_8disorder_7diffuse_7filters_gauss, "void (__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
-  if (__Pyx_ExportFunction("filtering", (void (*)(void))__pyx_f_8disorder_7diffuse_7filters_filtering, "void (__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, int __pyx_skip_dispatch)") < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
-  __pyx_L1_error:;
-  __Pyx_RefNannyFinishContext();
-  return -1;
 }
 
 static int __Pyx_modinit_type_init_code(void) {
@@ -28958,7 +28927,7 @@ if (!__Pyx_RefNanny) {
   /*--- Global type/function init code ---*/
   (void)__Pyx_modinit_global_init_code();
   (void)__Pyx_modinit_variable_export_code();
-  if (unlikely(__Pyx_modinit_function_export_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
+  (void)__Pyx_modinit_function_export_code();
   if (unlikely(__Pyx_modinit_type_init_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
   if (unlikely(__Pyx_modinit_type_import_code() < 0)) __PYX_ERR(0, 1, __pyx_L1_error)
   (void)__Pyx_modinit_variable_import_code();
@@ -34007,43 +33976,6 @@ raise_neg_overflow:
         return PyErr_WarnEx(NULL, message, 1);
     }
     return 0;
-}
-
-/* FunctionExport */
-  static int __Pyx_ExportFunction(const char *name, void (*f)(void), const char *sig) {
-    PyObject *d = 0;
-    PyObject *cobj = 0;
-    union {
-        void (*fp)(void);
-        void *p;
-    } tmp;
-    d = PyObject_GetAttrString(__pyx_m, (char *)"__pyx_capi__");
-    if (!d) {
-        PyErr_Clear();
-        d = PyDict_New();
-        if (!d)
-            goto bad;
-        Py_INCREF(d);
-        if (PyModule_AddObject(__pyx_m, (char *)"__pyx_capi__", d) < 0)
-            goto bad;
-    }
-    tmp.fp = f;
-#if PY_VERSION_HEX >= 0x02070000
-    cobj = PyCapsule_New(tmp.p, sig, 0);
-#else
-    cobj = PyCObject_FromVoidPtrAndDesc(tmp.p, (void *)sig, 0);
-#endif
-    if (!cobj)
-        goto bad;
-    if (PyDict_SetItemString(d, name, cobj) < 0)
-        goto bad;
-    Py_DECREF(cobj);
-    Py_DECREF(d);
-    return 0;
-bad:
-    Py_XDECREF(cobj);
-    Py_XDECREF(d);
-    return -1;
 }
 
 /* InitStrings */

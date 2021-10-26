@@ -9,6 +9,38 @@ from disorder.diffuse import filters
 
 class test_filters(unittest.TestCase):
     
+    def test_rebin(self):
+                
+        x, y, z = np.meshgrid(np.arange(6), 
+                              np.arange(14), 
+                              np.arange(10), indexing='ij')
+        
+        data = 0.5*x+2.5*y-z
+        
+        weights = np.full(18, 1/6.).reshape(3,6)
+        tmp_data = filters.rebin0(data, weights)
+        
+        self.assertEqual(tmp_data.shape, (3,14,10))
+        
+        np.testing.assert_array_almost_equal(np.mean(tmp_data, axis=0), 
+                                             np.mean(data, axis=0))
+        
+        weights = np.full(98, 1/14.).reshape(7,14)
+        tmp_data = filters.rebin1(data, weights)
+        
+        self.assertEqual(tmp_data.shape, (6,7,10))
+        
+        np.testing.assert_array_almost_equal(np.mean(tmp_data, axis=1), 
+                                             np.mean(data, axis=1))
+        
+        weights = np.full(20, 1/10.).reshape(2,10)
+        tmp_data = filters.rebin2(data, weights)
+        
+        self.assertEqual(tmp_data.shape, (6,14,2))
+        
+        np.testing.assert_array_almost_equal(np.mean(tmp_data, axis=2), 
+                                             np.mean(data, axis=2))
+    
     def test_boxblur(self):
         
         sigma, n = 2, 3
