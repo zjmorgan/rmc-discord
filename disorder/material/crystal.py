@@ -406,7 +406,66 @@ def laue(folder, filename):
     for symm in symmetries:
         if (set(lauesym[symm]) == set(symops)):
             return symm
-           
+        
+def twins(folder, filename):
+    
+    cf = CifFile.ReadCif(os.path.join(folder, filename))
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
+                
+    cif_dict = dict(cb.items())
+    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
+    
+    if ('_twin_individual_id' in cif_dict):
+        twin_ids = cif_dict['_twin_individual_id']
+        n_var = len(twin_ids)
+    else:
+        n_var = 1 
+            
+    if ('_twin_individual_mass_fraction_refined' in cif_dict):
+        twin_mf = cif_dict['_twin_individual_mass_fraction_refined']
+        twin_mf = [float(re.sub(r'\([^()]*\)', '', mf)) for mf in twin_mf]
+
+        T11s = cif_dict['_twin_individual_twin_matrix_11']
+        T12s = cif_dict['_twin_individual_twin_matrix_12']
+        T13s = cif_dict['_twin_individual_twin_matrix_13']
+        T21s = cif_dict['_twin_individual_twin_matrix_21']
+        T22s = cif_dict['_twin_individual_twin_matrix_22']
+        T23s = cif_dict['_twin_individual_twin_matrix_23']
+        T31s = cif_dict['_twin_individual_twin_matrix_31']
+        T32s = cif_dict['_twin_individual_twin_matrix_32']
+        T33s = cif_dict['_twin_individual_twin_matrix_33']
+        
+        T11s = [float(re.sub(r'\([^()]*\)', '', T11)) for T11 in T11s]
+        T12s = [float(re.sub(r'\([^()]*\)', '', T12)) for T12 in T12s]
+        T13s = [float(re.sub(r'\([^()]*\)', '', T13)) for T13 in T13s]
+        T21s = [float(re.sub(r'\([^()]*\)', '', T21)) for T21 in T21s]
+        T22s = [float(re.sub(r'\([^()]*\)', '', T22)) for T22 in T22s]
+        T23s = [float(re.sub(r'\([^()]*\)', '', T23)) for T23 in T23s]
+        T31s = [float(re.sub(r'\([^()]*\)', '', T31)) for T31 in T31s]
+        T32s = [float(re.sub(r'\([^()]*\)', '', T32)) for T32 in T32s]
+        T33s = [float(re.sub(r'\([^()]*\)', '', T33)) for T33 in T33s]
+    else:
+        twin_mf = [1.0]
+        
+        T11s = [1.0]
+        T12s = [0.0]
+        T13s = [0.0]
+        T21s = [0.0]
+        T22s = [1.0]
+        T23s = [0.0]
+        T31s = [0.0]
+        T32s = [0.0]
+        T33s = [1.0]
+        
+    weight = np.array(twin_mf)
+    
+    U = np.stack((T11s,T12s,T13s,
+                  T21s,T22s,T23s,
+                  T31s,T32s,T33s)).T.reshape(n_var,3,3)
+    
+    return U, weight
+    
 def bragg(h_range, 
           k_range, 
           l_range, 

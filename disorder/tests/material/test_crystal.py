@@ -285,6 +285,27 @@ class test_crystal(unittest.TestCase):
         
         self.assertAlmostEqual(laue, '2/m')
         
+    def test_twins(self):
+        
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+        
+        twins, fraction = crystal.twins(folder=folder, filename='bixbyite.cif')
+        
+        U = np.eye(3)
+        np.testing.assert_array_almost_equal(twins[0], U)
+        
+        U = np.array([[0,-1,0],[-1,0,0],[0,0,-1]])
+        np.testing.assert_array_almost_equal(twins[1], U)
+        
+        self.assertAlmostEqual(fraction.sum(), 1.0)
+        
+        twins, fraction = crystal.twins(folder=folder, filename='Cu3Au.cif')
+        
+        np.testing.assert_array_almost_equal(twins[0], np.eye(3))
+                
+        self.assertAlmostEqual(fraction, 1.0)
+            
+    
     def test_parameters(self):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
