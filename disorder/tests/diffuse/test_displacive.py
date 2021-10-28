@@ -200,12 +200,12 @@ class test_displacive(unittest.TestCase):
         U = np.row_stack((U11,U22,U33,U23,U13,U12))
         Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, value=U)
         
-        index_parameters = crystal.bragg(h_range, k_range, l_range,
+        index_parameters = space.mapping(h_range, k_range, l_range,
                                          nh, nk, nl, nu, nv, nw)
          
         h, k, l, H, K, L, indices, inverses, operators = index_parameters
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -225,7 +225,7 @@ class test_displacive(unittest.TestCase):
         
         coeffs = displacive.coefficients(p)
 
-        H_nuc, K_nuc, L_nuc, cond = crystal.nuclear(H, K, L, h, k, l, \
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L,
                                                     nu, nv, nw, centering='P') 
         
         U_r = displacive.products(Ux, Uy, Uz, p)
@@ -308,7 +308,7 @@ class test_displacive(unittest.TestCase):
         U12 = np.array([0.03,-0.02])
         
         T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
-                                U11, U22, U33, U23, U13, U12, a_, b_, c_)
+                               U11, U22, U33, U23, U13, U12, a_, b_, c_)
         
         A = crystal.cartesian(a, b, c, alpha, beta, gamma)
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
@@ -317,12 +317,12 @@ class test_displacive(unittest.TestCase):
         U = np.row_stack((U11,U22,U33,U23,U13,U12))
         Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, value=U)
         
-        index_parameters = crystal.bragg(h_range, k_range, l_range,
-                                          nh, nk, nl, nu, nv, nw)
+        index_parameters = space.mapping(h_range, k_range, l_range,
+                                         nh, nk, nl, nu, nv, nw)
          
         h, k, l, H, K, L, indices, inverses, operators = index_parameters
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -342,8 +342,8 @@ class test_displacive(unittest.TestCase):
         
         coeffs = displacive.coefficients(p)
 
-        H_nuc, K_nuc, L_nuc, cond = crystal.nuclear(H, K, L, h, k, l, \
-                                                    nu, nv, nw, centering='P') 
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L,
+                                                    nu, nv, nw, centering='P')  
             
         U_r = displacive.products(Ux, Uy, Uz, p)
         Q_k = displacive.products(Qx, Qy, Qz, p)

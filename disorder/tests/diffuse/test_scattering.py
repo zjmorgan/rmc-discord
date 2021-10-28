@@ -27,7 +27,7 @@ class test_scattering(unittest.TestCase):
         
         h, k, l = np.array([-7,-3]), np.array([2,2]), np.array([2,5])
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
                 

@@ -56,22 +56,6 @@ class test_space(unittest.TestCase):
         Q = np.sqrt(Qh**2+Qk**2+Ql**2)
         
         np.testing.assert_array_almost_equal(d, 2*np.pi/Q)
-        
-    def test_nuclear(self):
-
-        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
-        
-        A, B, R = crystal.matrices(a, b, c, alpha, beta, gamma)       
-        
-        h, k, l = -3, 1, 2
-        
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
-    
-        d = crystal.d(a, b, c, alpha, beta, gamma, h, k, l)
-        
-        Q = np.sqrt(Qh**2+Qk**2+Ql**2)
-        
-        self.assertAlmostEqual(d, 2*np.pi/Q)
             
     def test_cell(self):
 
@@ -85,7 +69,7 @@ class test_space(unittest.TestCase):
         
         h, k, l = -3, 1, 2
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -110,7 +94,7 @@ class test_space(unittest.TestCase):
         
         h, k, l = -3, 2, 5
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -247,7 +231,7 @@ class test_space(unittest.TestCase):
          
         h, k, l = h.flatten(), k.flatten(), l.flatten()
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -307,12 +291,12 @@ class test_space(unittest.TestCase):
         
         delta_r = np.ones((nu,nv,nw,n_atm)).flatten()
         
-        index_parameters = crystal.bragg(h_range, k_range, l_range,
+        index_parameters = space.mapping(h_range, k_range, l_range,
                                          nh, nk, nl, nu, nv, nw)
          
         h, k, l, H, K, L, indices, inverses, operators = index_parameters
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -402,12 +386,12 @@ class test_space(unittest.TestCase):
         
         delta_r = np.ones((nu,nv,nw,n_atm)).flatten()
         
-        index_parameters = crystal.bragg(h_range, k_range, l_range,
+        index_parameters = space.mapping(h_range, k_range, l_range,
                                          nh, nk, nl, nu, nv, nw)
          
         h, k, l, H, K, L, indices, inverses, operators = index_parameters
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -491,7 +475,7 @@ class test_space(unittest.TestCase):
          
         h, k, l = h.flatten(), k.flatten(), l.flatten()
 
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
 
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -521,6 +505,59 @@ class test_space(unittest.TestCase):
                                   Uxy*(Qx*Qy)[:,np.newaxis])).flatten()
         
         np.testing.assert_array_almost_equal(T, dw_factors)
-
+        
+    def test_condition(self):
+    
+        h_range, nh = [-2,2], 9
+        k_range, nk = [-3,3], 13
+        l_range, nl = [-4,4], 17
+        
+        nu, nv, nw = 2, 5, 4
+        
+        h, k, l = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
+                              np.linspace(k_range[0],k_range[1],nk), 
+                              np.linspace(l_range[0],l_range[1],nl), 
+                              indexing='ij')
+         
+        h, k, l = h.flatten(), k.flatten(), l.flatten()
+        
+        H, K, L = (h*nu).astype(int), (k*nv).astype(int), (l*nw).astype(int)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'P')
+        
+        # np.testing.assert_array_equal(np.mod(H_nuc, 1), 0)
+        # np.testing.assert_array_equal(np.mod(K_nuc, 1), 0)
+        # np.testing.assert_array_equal(np.mod(L_nuc, 1), 0)
+        
+        np.testing.assert_array_equal(np.mod(h[cond], 1), 0)
+        np.testing.assert_array_equal(np.mod(k[cond], 1), 0)
+        np.testing.assert_array_equal(np.mod(l[cond], 1), 0)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'I')
+        
+        np.testing.assert_array_equal(np.mod(h[cond]+k[cond]+l[cond], 2), 0)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'F')
+        
+        np.testing.assert_array_equal(np.mod(h[cond]+k[cond], 2), 0)
+        np.testing.assert_array_equal(np.mod(k[cond]+l[cond], 2), 0)
+        np.testing.assert_array_equal(np.mod(l[cond]+h[cond], 2), 0)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'R')
+        
+        np.testing.assert_array_equal(np.mod(-h[cond]+k[cond]+l[cond], 3), 0)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'C')
+        
+        np.testing.assert_array_equal(np.mod(h[cond]+k[cond], 2), 0)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'A')
+        
+        np.testing.assert_array_equal(np.mod(k[cond]+l[cond], 2), 0)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'B')
+        
+        np.testing.assert_array_equal(np.mod(l[cond]+h[cond], 2), 0)
+                
 if __name__ == '__main__':
     unittest.main()

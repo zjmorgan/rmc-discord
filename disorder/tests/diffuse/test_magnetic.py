@@ -182,12 +182,12 @@ class test_magnetic(unittest.TestCase):
         
         Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm)
         
-        index_parameters = crystal.bragg(h_range, k_range, l_range,
+        index_parameters = space.mapping(h_range, k_range, l_range,
                                          nh, nk, nl, nu, nv, nw)
          
         h, k, l, H, K, L, indices, inverses, operators = index_parameters
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -305,12 +305,12 @@ class test_magnetic(unittest.TestCase):
         
         Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm)
         
-        index_parameters = crystal.bragg(h_range, k_range, l_range,
-                                          nh, nk, nl, nu, nv, nw)
+        index_parameters = space.mapping(h_range, k_range, l_range,
+                                         nh, nk, nl, nu, nv, nw)
          
         h, k, l, H, K, L, indices, inverses, operators = index_parameters
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         

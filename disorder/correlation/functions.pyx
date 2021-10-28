@@ -621,3 +621,198 @@ def combination3d(delta, Sx, Sy, Sz, rx, ry, rz, \
     S_corr  = np.concatenate((S_corr,S_corr[:N-1]))
     
     return S_corr, dx, dy, dz, ion_pair
+
+def symmetrize(arrays, dx, dy, dz, ion, A, laue, tol=1e-4):
+        
+    arrays = np.hstack(list((arrays,)))
+    
+    if (arrays.ndim == 1):
+        
+        arrays = arrays[np.newaxis,:]
+            
+    M = arrays.shape[0]
+        
+    symops = np.array(symmetry.laue(laue))
+        
+    symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])     
+        
+    N = arrays.shape[1]
+    
+    A_inv = np.linalg.inv(A)
+        
+    total = []
+    
+    arr = []
+    
+    pairs = []
+    pair_labels = []
+    
+    ions, ion_labels = np.unique(ion, return_inverse=True)
+                        
+    for n in range(N):
+        
+        x = A_inv[0,0]*dx[n]+A_inv[0,1]*dy[n]+A_inv[0,2]*dz[n]
+        y = A_inv[1,0]*dx[n]+A_inv[1,1]*dy[n]+A_inv[1,2]*dz[n]
+        z = A_inv[2,0]*dx[n]+A_inv[2,1]*dy[n]+A_inv[2,2]*dz[n]    
+
+        displacement = []
+        
+        for symop in symops:
+                        
+            transformed = symmetry.evaluate(symop, [x,y,z], translate=False)
+                    
+            displacement.append(transformed)
+        
+        displacement.append(transformed)
+
+        symmetries = np.unique(np.array(displacement), axis=0)
+                                    
+        total.append(symmetries)
+        
+        arr.append(np.tile(arrays[:,n], symmetries.shape[0]))
+        
+        pairs.append(np.tile(ion[n], symmetries.shape[0]))
+        pair_labels.append(np.tile(ion_labels[n], symmetries.shape[0]))
+     
+    total = np.vstack(np.array(total, dtype=object)).astype(float)
+        
+    arr = np.hstack(np.array(arr, dtype=object)).astype(float)
+    
+    arr = arr.reshape(arr.shape[0] // M, M)
+    
+    pairs = np.hstack(np.array(pairs, dtype=object))   
+    pair_labels = np.hstack(np.array(pair_labels, dtype=object)).astype(int)
+                
+    metric = np.vstack((np.round(np.round( \
+                        total.astype(float).T/tol,1)).astype(int), \
+                        pair_labels)).T
+                                         
+    sort = np.lexsort(np.fliplr(metric).T)
+            
+    arr = arr[sort]
+    
+    pairs = pairs[sort]
+            
+    unique, indices, counts = np.unique(metric[sort],
+                                        axis=0,
+                                        return_index=True, 
+                                        return_counts=True)
+                
+    search = np.append(indices,len(arr))
+    
+    D = unique.shape[0]
+    
+    u_symm = total[sort][indices,0]
+    v_symm = total[sort][indices,1]
+    w_symm = total[sort][indices,2]
+    ion_symm = pairs[indices]
+    
+    arrays_ave = np.zeros((M,D))
+    
+    for i in range(M):
+        for r in range(D):
+            for s in range(search[r],search[r+1]):
+                arrays_ave[i,r] += arr[s,i]/counts[r]
+            
+    dx_symm = (A[0,0]*u_symm+A[0,1]*v_symm+A[0,2]*w_symm).astype(float)
+    dy_symm = (A[1,0]*u_symm+A[1,1]*v_symm+A[1,2]*w_symm).astype(float)
+    dz_symm = (A[2,0]*u_symm+A[2,1]*v_symm+A[2,2]*w_symm).astype(float)
+
+    arrays_ave = arrays_ave.flatten()
+        
+    output = tuple(np.split(arrays_ave, M))
+    output = (*output, dx_symm, dy_symm, dz_symm, ion_symm)
+        
+    return output
+
+def average1d(arrays, d, tol=1e-4):
+    
+    arrays = np.hstack(list((arrays,)))
+    
+    if (arrays.ndim == 1):
+        
+        arrays = arrays[np.newaxis,:]
+    
+    M = arrays.shape[0]
+    
+    metric = (np.round(np.round(d/tol,1))).astype(int)
+    
+    sort = np.argsort(metric)
+
+    metric = metric[sort]
+    d = d[sort]
+    arrays = arrays[:,sort]
+    
+    unique, indices, counts = np.unique(metric, 
+                                        axis=0,
+                                        return_index=True, 
+                                        return_counts=True)
+    
+    search = np.append(indices,len(d))
+    
+    D = unique.shape[0]
+    
+    arrays_ave = np.zeros((M,D))
+     
+    for i in range(M):
+        for r in range(D):
+            for s in range(search[r],search[r+1]):
+                arrays_ave[i,r] += arrays[i][s]/counts[r]
+            
+    d_ave = d[indices]
+    
+    arrays_ave = arrays_ave.flatten()
+        
+    output = tuple(np.split(arrays_ave, M))
+    output = (*output, d_ave)
+        
+    return output
+
+def average3d(arrays, dx, dy, dz, tol=1e-4):
+    
+    arrays = np.hstack(list((arrays,)))
+    
+    if (arrays.ndim == 1):
+        
+        arrays = arrays[np.newaxis,:]
+    
+    M = arrays.shape[0]
+    
+    distance = np.stack((dx,dy,dz)).T
+    
+    metric = (np.round(np.round(distance.astype(float)/tol,1))).astype(int)
+    
+    sort = np.lexsort(np.fliplr(metric).T)
+    
+    metric = metric[sort]
+    dx = dx[sort]
+    dy = dy[sort]
+    dz = dz[sort]
+    arrays = arrays[:,sort]
+    
+    unique, indices, counts = np.unique(metric, 
+                                        axis=0,
+                                        return_index=True, 
+                                        return_counts=True)    
+    
+    search = np.append(indices,len(distance))
+    
+    D = unique.shape[0]
+    
+    arrays_ave = np.zeros((M,D))
+    
+    for i in range(M):
+        for r in range(D):
+            for s in range(search[r],search[r+1]):                
+                arrays_ave[i,r] += arrays[i][s]/counts[r]
+            
+    dx_ave = dx[indices].astype(float)
+    dy_ave = dy[indices].astype(float)
+    dz_ave = dz[indices].astype(float)
+        
+    arrays_ave = arrays_ave.flatten()
+    
+    output = tuple(np.split(arrays_ave, M))
+    output = (*output, dx_ave, dy_ave, dz_ave)
+    
+    return output

@@ -2134,8 +2134,10 @@ class Presenter:
         indices, \
         inverses, \
         i_mask, \
-        i_unmask = self.model.reciprocal_mapping(h_range, k_range, l_range,
-                                                 nu, nv, nw, mask)
+        i_unmask = self.model.reciprocal_space_mapping(h_range,
+                                                       k_range, 
+                                                       l_range,
+                                                       nu, nv, nw, mask)
         
         self.h, self.k, self.l = h, k, l
         self.H, self.K, self.L = H, K, L
@@ -2387,7 +2389,7 @@ class Presenter:
             if (centering == 'R'):
                 centering = 'P'
                         
-        arrays = self.model.initialize_displacive(Ux, Uy, Uz, h, k, l, H, K, L, 
+        arrays = self.model.initialize_displacive(Ux, Uy, Uz, H, K, L, 
                                                   Qx, Qy, Qz, indices, factors, 
                                                   nu, nv, nw, n_atm, p, 
                                                   centering)
@@ -4008,7 +4010,7 @@ class Presenter:
                         
             indices, inverses, operators, \
             Nu, Nv, Nw, \
-            symop = self.model.reduced_crystal_symmetry(
+            symop = self.model.reduced_reciprocal_space_symmetry(
                         h_range, k_range, l_range, nh, nk, nl, 
                         nu, nv, nw, T, laue)
                                                     

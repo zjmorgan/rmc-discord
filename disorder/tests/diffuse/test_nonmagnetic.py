@@ -95,12 +95,12 @@ class test_nonmagnetic(unittest.TestCase):
         
         A_r = occupational.composition(nu, nv, nw, n_atm, value=occupancy)
         
-        index_parameters = crystal.bragg(h_range, k_range, l_range,
+        index_parameters = space.mapping(h_range, k_range, l_range,
                                          nh, nk, nl, nu, nv, nw)
          
         h, k, l, H, K, L, indices, inverses, operators = index_parameters
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -120,7 +120,7 @@ class test_nonmagnetic(unittest.TestCase):
         
         coeffs = displacive.coefficients(p)
 
-        H_nuc, K_nuc, L_nuc, cond = crystal.nuclear(H, K, L, h, k, l, \
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L,
                                                     nu, nv, nw, centering='P') 
         
         U_r = displacive.products(Ux, Uy, Uz, p)
@@ -215,12 +215,12 @@ class test_nonmagnetic(unittest.TestCase):
         
         A_r = occupational.composition(nu, nv, nw, n_atm, value=occupancy)
         
-        index_parameters = crystal.bragg(h_range, k_range, l_range,
-                                          nh, nk, nl, nu, nv, nw)
+        index_parameters = space.mapping(h_range, k_range, l_range,
+                                         nh, nk, nl, nu, nv, nw)
          
         h, k, l, H, K, L, indices, inverses, operators = index_parameters
         
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -240,7 +240,7 @@ class test_nonmagnetic(unittest.TestCase):
         
         coeffs = displacive.coefficients(p)
 
-        H_nuc, K_nuc, L_nuc, cond = crystal.nuclear(H, K, L, h, k, l, \
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L,
                                                     nu, nv, nw, centering='P') 
             
         U_r = displacive.products(Ux, Uy, Uz, p)

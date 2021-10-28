@@ -572,6 +572,22 @@ class test_crystal(unittest.TestCase):
         self.assertAlmostEqual(np.arccos(np.dot(C[:,0],C[:,1])), gamma)
         self.assertAlmostEqual(np.arccos(np.dot(C[:,1],C[:,2])), alpha)
         self.assertAlmostEqual(np.arccos(np.dot(C[:,2],C[:,0])), beta)
+        
+    def test_vector(self):
+
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        A, B, R = crystal.matrices(a, b, c, alpha, beta, gamma)       
+        
+        h, k, l = -3, 1, 2
+        
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
+    
+        d = crystal.d(a, b, c, alpha, beta, gamma, h, k, l)
+        
+        Q = np.sqrt(Qh**2+Qk**2+Ql**2)
+        
+        self.assertAlmostEqual(d, 2*np.pi/Q)
 
     def test_transform(self):
         

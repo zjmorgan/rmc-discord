@@ -412,14 +412,15 @@ class Model:
         
             return signal[~mask], 1/error_sq[~mask]
     
-    def reciprocal_mapping(self, h_range, k_range, l_range, nu, nv, nw, mask):
+    def reciprocal_space_mapping(self, h_range, k_range, l_range, 
+                                 nu, nv, nw, mask):
         
         nh, nk, nl = mask.shape
         
         h, k, l, \
         H, K, L, \
         indices, inverses, \
-        operators = crystal.bragg(h_range, k_range, l_range, 
+        operators = space.mapping(h_range, k_range, l_range, 
                                   nh, nk, nl, nu, nv, nw)
         
         i_mask, i_unmask = space.indices(mask)
@@ -428,7 +429,7 @@ class Model:
     
     def reciprocal_space_coordinate_transform(self, h, k, l, B, R):
             
-        Qh, Qk, Ql = space.nuclear(h, k, l, B)
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
         
         Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
         
@@ -609,7 +610,7 @@ class Model:
         return A_k, A_k_orig, A_k_cand, F, F_orig, F_cand, \
                prod, prod_orig, prod_cand, i_dft
             
-    def initialize_displacive(self, Ux, Uy, Uz, h, k, l, H, K, L, Qx, Qy, Qz, 
+    def initialize_displacive(self, Ux, Uy, Uz, H, K, L, Qx, Qy, Qz, 
                               indices, factors, nu, nv, nw, n_atm, 
                               p, centering):
         
@@ -623,7 +624,7 @@ class Model:
         U_k, i_dft = displacive.transform(U_r, H, K, L, nu, nv, nw, n_atm)
         
         H_nuc, K_nuc, L_nuc, \
-        cond = crystal.nuclear(H, K, L, h, k, l, nu, nv, nw, centering)    
+        cond = space.condition(H, K, L, nu, nv, nw, centering)    
         
         F, F_nuc, \
         prod, prod_nuc, \
@@ -667,12 +668,12 @@ class Model:
                prod_nuc, prod_nuc_orig, prod_nuc_cand, \
                i_dft, coeffs, H_nuc, K_nuc, L_nuc, cond, even, bragg
                
-    def reduced_crystal_symmetry(self, h_range, k_range, l_range, nh, nk, nl, 
-                                 nu, nv, nw, T, laue):
+    def reduced_reciprocal_space_symmetry(self, h_range, k_range, l_range, 
+                                          nh, nk, nl, nu, nv, nw, T, laue):
                
         indices, inverses, operators, \
-        Nu, Nv, Nw = crystal.reduced(h_range, k_range, l_range, nh, nk, nl,
-                                     nu, nv, nw, T=T, laue=laue)
+        Nu, Nv, Nw = space.reduced(h_range, k_range, l_range, nh, nk, nl,
+                                   nu, nv, nw, T=T, laue=laue)
         
         lauesym = symmetry.operators(invert=True)
         
@@ -1170,19 +1171,14 @@ class Model:
                           sigma_sq_coll1d, d, tol):
     
         arrays = (corr1d, coll1d, sigma_sq_corr1d, sigma_sq_coll1d)
-        
-        corr1d, coll1d, \
-        sigma_sq_corr1d, sigma_sq_coll1d, d = crystal.average1d(arrays, d, tol)
                 
-        return corr1d, coll1d, sigma_sq_corr1d, sigma_sq_coll1d, d
+        return  correlations.average1d(arrays, d, tol)
                         
     def scalar_average_1d(self, corr1d, sigma_sq_corr1d, d, tol):
         
         arrays = (corr1d, sigma_sq_corr1d)
-            
-        corr1d, sigma_sq_corr1d, d = crystal.average1d(arrays, d, tol)
-        
-        return corr1d, sigma_sq_corr1d, d
+                    
+        return correlations.average1d(arrays, d, tol)
             
     def vector_correlations_3d(self, Ux, Uy, Uz, rx, ry, rz, atms,
                                nu, nv, nw, fract, tol):  
@@ -1210,27 +1206,29 @@ class Model:
         
         arrays = (corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d)
         
-        return crystal.symmetrize(arrays, dx, dy, dz, atm_pair3d, A, laue, tol)
+        return correlations.symmetrize(arrays, dx, dy, dz, 
+                                       atm_pair3d, A, laue, tol)
         
     def scalar_symmetrizes_3d(self, corr3d, sigma_sq_corr3d, dx, dy, dz, 
                               atm_pair3d, A, laue, tol):
 
         arrays = (corr3d, sigma_sq_corr3d)
         
-        return crystal.symmetrize(arrays, dx, dy, dz, atm_pair3d, A, laue, tol)
+        return correlations.symmetrize(arrays, dx, dy, dz, 
+                                       atm_pair3d, A, laue, tol)
         
     def vector_average_3d(self, corr3d, coll3d, 
                           sigma_sq_corr3d, sigma_sq_coll3d, dx, dy, dz, tol):
         
         arrays = (corr3d, coll3d, sigma_sq_corr3d, sigma_sq_coll3d)
         
-        return crystal.average3d(arrays, dx, dy, dz, tol=tol)                          
+        return correlations.average3d(arrays, dx, dy, dz, tol=tol)                          
         
     def scalar_average_3d(self, corr3d, sigma_sq_corr3d, dx, dy, dz, tol):
 
         arrays = (corr3d, sigma_sq_corr3d)
         
-        return crystal.average3d(arrays, dx, dy, dz, tol=tol)
+        return correlations.average3d(arrays, dx, dy, dz, tol=tol)
     
     def save_scalar_1d(self, fname, corr, sigma_sq_corr, d, atm_pair):
         
