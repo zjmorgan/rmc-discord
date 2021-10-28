@@ -9,6 +9,8 @@ cimport cython
 
 from libc.math cimport sqrt, fabs
 
+from disorder.material import symmetry
+
 cdef double iszero(double a) nogil:
     
     cdef double atol = 1e-08

@@ -2,8 +2,6 @@
 
 import numpy as np
 
-from scipy import spatial
-
 from disorder.material import crystal
 from disorder.material import symmetry
 
