@@ -12,7 +12,13 @@ class test_scattering(unittest.TestCase):
     
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
         
-        A, B, R = crystal.matrices(a, b, c, alpha, beta, gamma)
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
         
         nu, nv, nw = 5, 3, 4
         

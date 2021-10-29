@@ -492,9 +492,9 @@ def occupational(double [::1] A_r,
                  Py_ssize_t nu,
                  Py_ssize_t nv,
                  Py_ssize_t nw,
-                 technique='Neutron'):
+                 source='Neutron'):
     
-    cdef bint neutron = technique == 'Neutron'
+    cdef bint neutron = source == 'Neutron'
     
     cdef Py_ssize_t n_atm = occupancy.shape[0]
     
@@ -866,9 +866,9 @@ def displacive(double [::1] Ux,
                Py_ssize_t nv,
                Py_ssize_t nw,
                int order,
-               technique='Neutron'):
+               source='Neutron'):
 
-    cdef bint neutron = technique == 'Neutron'
+    cdef bint neutron = source == 'Neutron'
     
     cdef Py_ssize_t thread_id, num_threads = openmp.omp_get_max_threads()
 
@@ -1332,9 +1332,9 @@ def structural(double [::1] occupancy,
                Py_ssize_t nu,
                Py_ssize_t nv,
                Py_ssize_t nw,
-               technique='Neutron'):
+               source='Neutron'):
     
-    cdef bint neutron = technique == 'Neutron'
+    cdef bint neutron = source == 'Neutron'
     
     cdef Py_ssize_t n_atm = occupancy.shape[0]
     

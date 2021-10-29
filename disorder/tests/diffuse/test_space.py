@@ -14,7 +14,11 @@ class test_space(unittest.TestCase):
         
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
         
-        A, B, R = crystal.matrices(a, b, c, alpha, beta, gamma)
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+        
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
         
         np.random.seed(13)
         
@@ -61,7 +65,13 @@ class test_space(unittest.TestCase):
 
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
         
-        A, B, R = crystal.matrices(a, b, c, alpha, beta, gamma)
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
         
         nu, nv, nw = 5, 3, 4
         
@@ -79,7 +89,13 @@ class test_space(unittest.TestCase):
 
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
         
-        A, B, R = crystal.matrices(a, b, c, alpha, beta, gamma)
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
         
         nu, nv, nw = 5, 3, 4
         
@@ -524,11 +540,7 @@ class test_space(unittest.TestCase):
         H, K, L = (h*nu).astype(int), (k*nv).astype(int), (l*nw).astype(int)
         
         H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'P')
-        
-        # np.testing.assert_array_equal(np.mod(H_nuc, 1), 0)
-        # np.testing.assert_array_equal(np.mod(K_nuc, 1), 0)
-        # np.testing.assert_array_equal(np.mod(L_nuc, 1), 0)
-        
+
         np.testing.assert_array_equal(np.mod(h[cond], 1), 0)
         np.testing.assert_array_equal(np.mod(k[cond], 1), 0)
         np.testing.assert_array_equal(np.mod(l[cond], 1), 0)

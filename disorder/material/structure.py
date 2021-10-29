@@ -5,9 +5,57 @@ import sys
 
 import numpy as np
 
-from disorder.material import space
-from disorder.material import crystal
+from disorder.diffuse import scattering, space
+from disorder.material import crystal, tables
 
+def factor(u, v, w, atms, occupancy, a, b, c, alpha, beta, gamma, 
+           dmin=0.3, source='Neutron'):
+    
+    n_atm = atms.shape[0]
+    
+    inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+    
+    a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+    
+    B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+
+    hmax, kmax, lmax = np.floor(np.array([a,b,c])/dmin).astype(int)
+    
+    h, k, l = np.meshgrid(np.arange(-hmax, hmax+1), 
+                          np.arange(-kmax, kmax+1), 
+                          np.arange(-lmax, lmax+1), indexing='ij')
+    
+    h = np.delete(h, [hmax,kmax,lmax])
+    k = np.delete(k, [hmax,kmax,lmax])
+    l = np.delete(l, [hmax,kmax,lmax])
+    
+    Qh, Qk, Ql = crystal.vector(h, k, l, B)
+    
+    Q = np.sqrt(Qh**2+Qk**2+Ql**2)
+    
+    n_hkl = Q.size
+    
+    indices = np.argsort(Q)
+    
+    Q, h, k, l = h[indices], h[indices], k[indices], l[indices]
+    
+    d = 2*np.pi/Q
+        
+    phase_factor = np.exp(2j*np.pi*(h[:,np.newaxis]*u+
+                                    k[:,np.newaxis]*v+
+                                    l[:,np.newaxis]*w))
+            
+    if (source == 'Neutron'):
+        scattering_power = scattering.length(atms, n_hkl).reshape(n_hkl,n_atm)
+    else:
+        scattering_power = scattering.form(atms, Q).reshape(n_hkl,n_atm)
+        
+    factors = scattering_power*occupancy*phase_factor
+    
+    structure_factors = factors.sum(axis=1)
+    
+    return structure_factors
+        
 class UnitCell:
 
     def __init__(self, filename, tol=1e-2):

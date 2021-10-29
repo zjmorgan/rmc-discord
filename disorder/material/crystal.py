@@ -124,7 +124,7 @@ def unitcell(folder=folder,
             
     if (ani and iso):
         adp_type = 'ani'
-        _, D = orthogonalized(*parameters(folder, filename))
+        D = cartesian_displacement(*parameters(folder, filename))
         iso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
         iso_labels = cif_dict['_atom_site_label']
         ani_labels = cif_dict['_atom_site_aniso_label']
@@ -619,53 +619,9 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
     
     return interplanar_angle
 
-def matrices(a, b, c, alpha, beta, gamma):
-    
-    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
-                                                   b, 
-                                                   c, 
-                                                   alpha, 
-                                                   beta, 
-                                                   gamma)
-    
-    A = np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
-                  [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
-                  [0, 0,                1/c_]])
-    
-    B = np.array([[a_, b_*np.cos(gamma_),  c_*np.cos(beta_)],
-                  [0,  b_*np.sin(gamma_), -c_*np.sin(beta_)*np.cos(alpha)],
-                  [0,  0,                  1/c]])
-    
-    R = np.dot(np.linalg.inv(A).T, np.linalg.inv(B))
-                                                      
-    return A, B, R
-
-def orthogonalized(a, b, c, alpha, beta, gamma):
-    
-    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
-                                                   b, 
-                                                   c, 
-                                                   alpha, 
-                                                   beta, 
-                                                   gamma)
-    
-    A = np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
-                  [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
-                  [0, 0,                1/c_]])
-    
-    L = np.array([[a,0,0],[0,b,0],[0,0,c]])
-    L_ = np.array([[a_,0,0],[0,b_,0],[0,0,c_]])
-        
-    return np.dot(A, np.linalg.inv(L)), np.dot(A, L_)
-
 def cartesian(a, b, c, alpha, beta, gamma):
     
-    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
-                                                   b, 
-                                                   c, 
-                                                   alpha, 
-                                                   beta, 
-                                                   gamma)
+    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
     
     return np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
                      [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
@@ -673,15 +629,10 @@ def cartesian(a, b, c, alpha, beta, gamma):
                                                       
 def cartesian_rotation(a, b, c, alpha, beta, gamma):
     
-    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
-                                                   b, 
-                                                   c, 
-                                                   alpha, 
-                                                   beta, 
-                                                   gamma)
-    
+    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
+
     A = cartesian(a, b, c, alpha, beta, gamma)
-    
+
     B = cartesian(a_, b_, c_, alpha_, beta_, gamma_)
     
     R = np.dot(np.linalg.inv(A).T, np.linalg.inv(B))
@@ -690,12 +641,7 @@ def cartesian_rotation(a, b, c, alpha, beta, gamma):
 
 def cartesian_moment(a, b, c, alpha, beta, gamma):
     
-    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
-                                                   b, 
-                                                   c, 
-                                                   alpha, 
-                                                   beta, 
-                                                   gamma)
+    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
     
     A = np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
                   [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
@@ -707,12 +653,7 @@ def cartesian_moment(a, b, c, alpha, beta, gamma):
 
 def cartesian_displacement(a, b, c, alpha, beta, gamma):
     
-    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, 
-                                                   b, 
-                                                   c, 
-                                                   alpha, 
-                                                   beta, 
-                                                   gamma)
+    a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
     
     A = np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
                   [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
@@ -832,13 +773,20 @@ def supercell(atm,
         
         if (np.shape(disp)[1] == 1):
             
-            C, D = orthogonalized(a,
-                                  b, 
-                                  c, 
-                                  np.deg2rad(alpha), 
-                                  np.deg2rad(beta), 
-                                  np.deg2rad(gamma))
+            C = cartesian_moment(a,
+                                 b, 
+                                 c, 
+                                 np.deg2rad(alpha), 
+                                 np.deg2rad(beta), 
+                                 np.deg2rad(gamma))
             
+            D = cartesian_displacement(a,
+                                       b, 
+                                       c, 
+                                       np.deg2rad(alpha), 
+                                       np.deg2rad(beta), 
+                                       np.deg2rad(gamma))
+
             uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
             u11, u22, u33 = uiso[0,0], uiso[1,1], uiso[2,2]
             u23, u13, u12 = uiso[1,2], uiso[0,2], uiso[0,1]

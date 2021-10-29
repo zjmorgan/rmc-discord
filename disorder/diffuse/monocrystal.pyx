@@ -435,9 +435,9 @@ def occupational(double [::1] A_r,
                  Py_ssize_t Nu,
                  Py_ssize_t Nv,
                  Py_ssize_t Nw,
-                 technique='Neutron'):
+                 source='Neutron'):
     
-    cdef bint neutron = technique == 'Neutron'
+    cdef bint neutron = source == 'Neutron'
     
     cdef Py_ssize_t n_atm = len(atms)
         
@@ -718,9 +718,9 @@ def displacive(double [::1] U_r,
                Py_ssize_t p,
                long [::1] even,
                Py_ssize_t centering,
-               technique='Neutron'):
+               source='Neutron'):
     
-    cdef bint neutron = technique == 'Neutron'
+    cdef bint neutron = source == 'Neutron'
 
     cdef Py_ssize_t n_atm = len(atms)
         
@@ -1025,9 +1025,9 @@ def structural(double [::1] occupancy,
                Py_ssize_t Nv,
                Py_ssize_t Nw,
                Py_ssize_t centering,
-               technique='Neutron'):
+               source='Neutron'):
     
-    cdef bint neutron = technique == 'Neutron'
+    cdef bint neutron = source == 'Neutron'
     
     cdef Py_ssize_t n_atm = len(atms)
         

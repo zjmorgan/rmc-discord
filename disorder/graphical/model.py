@@ -106,21 +106,35 @@ class Model:
     
     def crystal_matrices(self, a, b, c, alpha, beta, gamma):
         
-        A, B, R = crystal.matrices(a, b, c, alpha, beta, gamma)
-    
-        C, D = crystal.orthogonalized(a, b, c, alpha, beta, gamma)
+        constants = a, b, c, alpha, beta, gamma
+        
+        inv_constants = crystal.reciprocal(*constants)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+        
+        A = crystal.cartesian(*constants)
+        B = crystal.cartesian(*inv_constants)
+        R = crystal.cartesian_rotation(*constants)
+        
+        C = crystal.cartesian_moment(*constants)
+        D = crystal.cartesian_displacement(*constants)
         
         return A, B, R, C, D
     
     def crystal_reciprocal_matrices(self, a, b, c, alpha, beta, gamma):
         
-        a_, b_, c_, \
-        alpha_, beta_, gamma_ = crystal.reciprocal(a, b, c, 
-                                                   alpha, beta, gamma)
-      
-        A_, B_, R_ = crystal.matrices(a_, b_, c_, alpha_, beta_, gamma_)
-    
-        C_, D_ = crystal.orthogonalized(a_, b_, c_, alpha_, beta_, gamma_)
+        constants = a, b, c, alpha, beta, gamma
+        
+        inv_constants = crystal.reciprocal(*constants)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+        
+        A_ = crystal.cartesian(*inv_constants)
+        B_ = crystal.cartesian(*constants)
+        R_ = crystal.cartesian_rotation(*inv_constants)
+        
+        C_ = crystal.cartesian_moment(*inv_constants)
+        D_ = crystal.cartesian_displacement(*inv_constants)
         
         return A_, B_, R_, C_, D_
     
