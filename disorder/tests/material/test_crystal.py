@@ -63,10 +63,7 @@ class test_crystal(unittest.TestCase):
         np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,0], 0.02200)
         np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,1], 0.00497)
         np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,2], 0.00537)
-        np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,5], 0.00069)
-        np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,4], -0.00098)
-        np.testing.assert_array_almost_equal(disp[atm == 'Ca'][:,3], 0.00029)
-        
+
         uc_dict = crystal.unitcell(folder=folder, 
                                    filename='chlorastrolite.cif', 
                                    tol=1e-4)
@@ -304,7 +301,6 @@ class test_crystal(unittest.TestCase):
         np.testing.assert_array_almost_equal(twins[0], np.eye(3))
                 
         self.assertAlmostEqual(fraction, 1.0)
-            
     
     def test_parameters(self):
         
@@ -329,6 +325,15 @@ class test_crystal(unittest.TestCase):
         
         self.assertEqual(sg, 'P121/a1')
         self.assertEqual(hm, 14)
+        
+    def test_operators(self):
+        
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+        
+        symops = crystal.operators(folder=folder, filename='copper.cif')
+        
+        self.assertEqual(symops[0], u'x,y,z')
+        self.assertEqual(len(symops), 192)
                                      
     def test_d(self):
 

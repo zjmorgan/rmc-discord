@@ -52,6 +52,21 @@ class test_symmetry(unittest.TestCase):
         mom = symmetry.evaluate_mag(operator, moments)        
         np.testing.assert_array_almost_equal(mom, np.array([-mx,-my,-mz]))
         
+    def test_evaluate_disp(self):
+        
+        operator = u'-y+1/2,x-y,z-1/2'
+        displacements = [1,2,3,0.1,0.2,-0.3]
+        
+        U11, U22, U33, U23, U13, U12 = displacements
+        
+        disp = symmetry.evaluate_disp(operator, displacements)        
+        np.testing.assert_array_almost_equal(disp, np.array([U22,
+                                                             U11+U22-2*U12, 
+                                                             U33, 
+                                                             U13-U23, 
+                                                             -U23, 
+                                                             U22-U12]))
+        
     def test_reverse(self):
         
         operator = u'-y+1/2,x-y,z-1/2'
@@ -83,6 +98,45 @@ class test_symmetry(unittest.TestCase):
         
         operator = symmetry.binary(operator1, operator0)
         self.assertEqual(operator, 'y-1/2,-x+y,-z+1/2')
+        
+    def test_classification(self):
+        
+        operator = u'-z,-x+1/2,y'
+        
+        rotation, k, wg = symmetry.classification(operator)
+        
+        self.assertEqual(rotation, '3')
+        self.assertEqual(k, 3)
+        
+        np.testing.assert_array_almost_equal(wg, np.array([-1/6,1/6,1/6]))
+        
+        operator = u'-y+1/2,-x,z+3/4'
+        
+        rotation, k, wg = symmetry.classification(operator)
+        
+        self.assertEqual(rotation, 'm')
+        self.assertEqual(k, 2)
+        
+        np.testing.assert_array_almost_equal(wg, np.array([1/4,-1/4,3/4]))
+        
+    def test_absence(self):
+        
+        operators = [u'x,y,z',
+                     u'x+1/2,y+1/2,z+1/2',
+                     u'x,-y,-z',
+                     u'-y,-x,-z-1/4']
+        
+        absent = symmetry.absence(operators, 1, 1, 0)
+        self.assertEqual(absent, False)
+        
+        absent = symmetry.absence(operators, 1, 1, 1)
+        self.assertEqual(absent, True)        
+        
+        absent = symmetry.absence(operators, 0, 0, 4)
+        self.assertEqual(absent, False)
+        
+        absent = symmetry.absence(operators, 0, 0, 5)
+        self.assertEqual(absent, True)
         
 if __name__ == '__main__':
     unittest.main()

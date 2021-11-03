@@ -414,30 +414,18 @@ def reduced(h_range,
         
     H = np.round(h*Nu).astype(np.int16)
     
-    iH = np.mod(H, Nu) # // (Nu // nu)
-    mask = (iH < Nu // nu) & (~np.isclose(np.mod(h*Nu, Nu),0))
-    # H[mask] += Nu//nu
-    del iH, mask
-    
-    del h
+    iH = np.mod(H, Nu) 
+    del iH, h
         
     K = np.round(k*Nv).astype(np.int16)
     
-    iK = np.mod(K, Nv) # // (Nv // nv)
-    mask = (iK < Nv // nv) & (~np.isclose(np.mod(k*Nv, Nv),0))
-    # K[mask] += Nv//nv
-    del iK, mask
-    
-    del k
+    iK = np.mod(K, Nv) 
+    del iK, k
     
     L = np.round(l*Nw).astype(np.int16)
     
-    iL = np.mod(L, Nw) # // (Nw // nw)
-    mask = (iL < Nw // nw) & (~np.isclose(np.mod(l*Nw, Nw),0))
-    # L[mask] += Nw//nw
-    del iL, mask  
-        
-    del l
+    iL = np.mod(L, Nw) 
+    del iL, l
             
     if (laue == None or laue == 'None'):
         
@@ -492,5 +480,4 @@ def reduced(h_range,
                        
     return index[coindices][indices], \
            reverses[inverses][coinverses], \
-           symops, \
-           Nu, Nv, Nw
+           symops, Nu, Nv, Nw

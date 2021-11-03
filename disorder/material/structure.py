@@ -6,17 +6,17 @@ import sys
 import numpy as np
 
 from disorder.diffuse import scattering, space
-from disorder.material import crystal, tables
+from disorder.material import crystal, symmetry, tables
 
-def factor(u, v, w, atms, occupancy, a, b, c, alpha, beta, gamma, 
-           dmin=0.3, source='Neutron'):
+def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
+           a, b, c, alpha, beta, gamma, symops, dmin=0.3, source='Neutron'):
     
     n_atm = atms.shape[0]
     
     inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
     
     a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
-    
+        
     B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
     hmax, kmax, lmax = np.floor(np.array([a,b,c])/dmin).astype(int)
@@ -25,22 +25,28 @@ def factor(u, v, w, atms, occupancy, a, b, c, alpha, beta, gamma,
                           np.arange(-kmax, kmax+1), 
                           np.arange(-lmax, lmax+1), indexing='ij')
     
-    h = np.delete(h, [hmax,kmax,lmax])
-    k = np.delete(k, [hmax,kmax,lmax])
-    l = np.delete(l, [hmax,kmax,lmax])
+    h = np.delete(h, lmax+(2*lmax+1)*(kmax+(2*kmax+1)*hmax))
+    k = np.delete(k, lmax+(2*lmax+1)*(kmax+(2*kmax+1)*hmax))
+    l = np.delete(l, lmax+(2*lmax+1)*(kmax+(2*kmax+1)*hmax))
     
+    h, k, l = h[::-1], k[::-1], l[::-1]
+        
     Qh, Qk, Ql = crystal.vector(h, k, l, B)
     
     Q = np.sqrt(Qh**2+Qk**2+Ql**2)
     
+    d = 2*np.pi/Q
+    
+    ind = d >= dmin
+    
+    h, k, l, d, Q = h[ind], k[ind], l[ind], d[ind], Q[ind]
+    
+    ind = ~symmetry.absence(symops, h, k, l)
+            
+    h, k, l, d, Q = h[ind], k[ind], l[ind], d[ind], Q[ind]
+    
     n_hkl = Q.size
     
-    indices = np.argsort(Q)
-    
-    Q, h, k, l = h[indices], h[indices], k[indices], l[indices]
-    
-    d = 2*np.pi/Q
-        
     phase_factor = np.exp(2j*np.pi*(h[:,np.newaxis]*u+
                                     k[:,np.newaxis]*v+
                                     l[:,np.newaxis]*w))
@@ -49,12 +55,48 @@ def factor(u, v, w, atms, occupancy, a, b, c, alpha, beta, gamma,
         scattering_power = scattering.length(atms, n_hkl).reshape(n_hkl,n_atm)
     else:
         scattering_power = scattering.form(atms, Q).reshape(n_hkl,n_atm)
+
+    T = np.exp(-2*np.pi**2*(U11*(h*a_)[:,np.newaxis]**2+
+                            U22*(k*b_)[:,np.newaxis]**2+
+                            U33*(l*c_)[:,np.newaxis]**2+
+                            U23*(k*l*b_*c_*2)[:,np.newaxis]+
+                            U13*(h*l*a_*c_*2)[:,np.newaxis]+
+                            U12*(h*k*a_*b_*2)[:,np.newaxis]))
+                
+    factors = scattering_power*occupancy*T*phase_factor
+    
+    F = factors.sum(axis=1)   
         
-    factors = scattering_power*occupancy*phase_factor
+    coordinate = np.stack((h,k,l))
     
-    structure_factors = factors.sum(axis=1)
+    symops = np.unique(symmetry.inverse(symops))
+        
+    total = []
+    for symop in symops:
+        
+        transformed = symmetry.evaluate(symop, coordinate, translate=False)
+        total.append(transformed.T.tolist())
+
+    total = np.array(total)
+
+    for i in range(coordinate.shape[1]):
+        
+        total[:,i,:] = total[np.lexsort(total[:,i,:].T),i,:]
+        
+    total = np.hstack(total)
     
-    return structure_factors
+    metric = total.T
+    
+    metric, ind, mult = np.unique(metric, axis=1, 
+                                  return_index=True, return_counts=True)
+                
+    h, k, l, d, F = h[ind], k[ind], l[ind], d[ind], F[ind]
+        
+    ind = np.argsort(d)[::-1]
+    
+    h, k, l, d, F, mult = h[ind], k[ind], l[ind], d[ind], F[ind], mult[ind]
+            
+    return h, k, l, d, F, mult
         
 class UnitCell:
 

@@ -13,9 +13,7 @@ from disorder.material import tables
 directory = os.path.dirname(os.path.abspath(__file__))
 folder = os.path.abspath(os.path.join(directory, '..', 'data'))
 
-def unitcell(folder=folder, 
-             filename='copper.cif', 
-             tol=1e-2):
+def unitcell(folder=folder, filename='copper.cif', tol=1e-2):
     
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \
@@ -199,6 +197,8 @@ def unitcell(folder=folder,
                 
     total, types, operators, mag_operators = [], [], [], []
 
+    cf = 8*np.pi**2
+
     for i, asite in enumerate(atomic_sites):
         
         x, y, z = float(xs[i]), float(ys[i]), float(zs[i])
@@ -214,8 +214,6 @@ def unitcell(folder=folder,
                 B23 = float(B23s[i])
                 B13 = float(B13s[i])          
                 B12 = float(B12s[i])
-                
-                cf = 8*np.pi**2
                 U11, U22, U33 = B11/cf, B22/cf, B33/cf
                 U23, U13, U12 = B23/cf, B13/cf, B12/cf
             else:
@@ -225,26 +223,27 @@ def unitcell(folder=folder,
                 U23 = float(U23s[i])
                 U13 = float(U13s[i])          
                 U12 = float(U12s[i])
-                
-            disp = [U11,U22,U33,U23,U13,U12]
-                
+                                
         else:
             if (adp_U is False):
                 Biso = float(Bisos[i])
-
                 Uiso = Biso/(8*np.pi**2)
             else:
                 Uiso = float(Uisos[i])
-
-            disp = [Uiso]
 
         symbol = symbols[i]
             
         for symop, mag_symop in zip(symops, mag_symops):
                             
-            transformed = symmetry.evaluate(symop, [x,y,z])[:3]
+            transformed = symmetry.evaluate(symop, [x,y,z])
                             
             mom = symmetry.evaluate_mag(mag_symop, [Mx,My,Mz])
+            
+            if (adp_type == 'ani'):
+                disp = symmetry.evaluate_disp(symop, [U11,U22,U33,
+                                                      U23,U13,U12])
+            else:
+                disp = [Uiso]
             
             transformed = [tf+(tf < 0)-(tf >= 1) for tf in transformed]
 
@@ -486,6 +485,28 @@ def group(folder=None, filename=None):
             group = tables.sg[hm]
     
     return group, hm
+
+def operators(folder=folder, filename='copper.cif'):
+    
+    cf = CifFile.ReadCif(os.path.join(folder, filename))
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
+                
+    cif_dict = dict(cb.items())
+    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
+    
+    loop_ops = ['_space_group_symop_operation_xyz',
+                '_symmetry_equiv_pos_as_xyz',
+                '_space_group_symop_magn_operation_xyz']
+            
+    ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
+                    if loop_key in cif_dict), None)          
+    
+    symops = cif_dict[loop_ops[ind_ops]]
+    
+    symops = [symop.replace(' ', '') for symop in symops]
+    
+    return symops
 
 def lattice(a, b, c, alpha, beta, gamma):
     

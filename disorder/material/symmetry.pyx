@@ -525,6 +525,26 @@ def evaluate_mag(operator, moments):
                 
     return np.array(eval(operator))
 
+def evaluate_disp(operator, displacements):
+    
+    operator = str(operator)
+    
+    U11, U22, U33, U23, U13, U12 = displacements
+    
+    U = np.array([[U11,U12,U13],
+                  [U12,U22,U23],
+                  [U13,U23,U33]])
+    
+    W = np.zeros((3,3))
+        
+    W[:,0] = evaluate(operator, [1,0,0], translate=False)
+    W[:,1] = evaluate(operator, [0,1,0], translate=False)
+    W[:,2] = evaluate(operator, [0,0,1], translate=False)
+    
+    Up = np.dot(np.dot(W,U),W.T)
+                
+    return Up[0,0], Up[1,1], Up[2,2], Up[1,2], Up[0,2], Up[0,1]
+
 def reverse(symops):
     
     if (type(symops) == str or type(symops) == np.str_):
@@ -674,6 +694,83 @@ def binary(symop0, symop1):
             
     return symop
 
+def classification(symop):
+    
+    W = np.zeros((3,3))
+    
+    W[:,0] = evaluate(symop, [1,0,0], translate=False)
+    W[:,1] = evaluate(symop, [0,1,0], translate=False)
+    W[:,2] = evaluate(symop, [0,0,1], translate=False)
+    
+    w = evaluate(symop, [0,0,0], translate=True)
+    
+    W_det = np.linalg.det(W)
+    W_tr = np.trace(W)
+    
+    if np.isclose(W_det, 1):
+        if np.isclose(W_tr, 3):
+            rotation, k = '1', 1
+        elif np.isclose(W_tr, 2):
+            rotation, k = '6', 6
+        elif np.isclose(W_tr, 1):
+            rotation, k = '4', 4
+        elif np.isclose(W_tr, 0):
+            rotation, k = '3', 3
+        elif np.isclose(W_tr, -1):
+            rotation, k = '2', 2
+    elif np.isclose(W_det, -1):
+        if np.isclose(W_tr, -3):
+            rotation, k = '-1', 2
+        elif np.isclose(W_tr, -2):
+            rotation, k = '-6', 6
+        elif np.isclose(W_tr, -1):
+            rotation, k = '-4', 4
+        elif np.isclose(W_tr, 0):
+            rotation, k = '-3', 6
+        elif np.isclose(W_tr, 1):
+            rotation, k = 'm', 2
+            
+    symop_ord = symop
+    
+    for _ in range(1,k):
+        symop_ord = binary(symop_ord, symop)
+        
+    wg = (1/k)*evaluate(symop_ord, [0,0,0], translate=True)
+    
+    return rotation, k, wg
+    
+def absence(symops, h, k, l):
+    
+    H = np.array([h,k,l])
+    
+    n = 1 if H.size == 3 else H.shape[1]
+    
+    if (n == 1): H = H.reshape(3,1)
+    
+    absent = np.full((len(symops),n), False)
+    
+    W = np.zeros((3,3))
+    
+    for i, symop in enumerate(symops):
+            
+        rotation, k, wg = classification(symop)
+                    
+        W[:,0] = evaluate(symop, [1,0,0], translate=False)
+        W[:,1] = evaluate(symop, [0,1,0], translate=False)
+        W[:,2] = evaluate(symop, [0,0,1], translate=False)
+        
+        w = evaluate(symop, [0,0,0], translate=True)   
+                
+        absent[i,:] = np.all(np.isclose(np.dot(H.T,W), H.T), axis=1) & \
+                    ~ np.isclose(np.mod(np.dot(H.T,wg),1), 0)
+                      
+    absent = absent.any(axis=0)                   
+    
+    if (H.shape[1] == 1):            
+        return absent[0]
+    else:
+        return absent
+
 def operators(invert=False):
     
     laue = {
@@ -733,7 +830,7 @@ def operators(invert=False):
     
     }
     
-    if (invert):
+    if invert:
     
         symmetry = list(laue.keys())
                 
