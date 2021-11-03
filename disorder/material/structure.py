@@ -92,7 +92,7 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
                 
     h, k, l, d, F = h[ind], k[ind], l[ind], d[ind], F[ind]
         
-    ind = np.argsort(d)[::-1]
+    ind = np.lexsort((h,k,l,d),axis=0)[::-1]
     
     h, k, l, d, F, mult = h[ind], k[ind], l[ind], d[ind], F[ind], mult[ind]
             

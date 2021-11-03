@@ -44,10 +44,10 @@ class test_structure(unittest.TestCase):
         U23, U13, U12 = Uiso*uiso[1,2], Uiso*uiso[0,2], Uiso*uiso[0,1]
         
         h, k, l, d, F, mult = structure.factor(u, v, w, atm, occ, 
-                                                U11, U22, U33, U23, U13, U12,
-                                                a, b, c, alpha, beta, gamma, 
-                                                symops, dmin=0.7, 
-                                                source='Neutron')
+                                               U11, U22, U33, U23, U13, U12,
+                                               a, b, c, alpha, beta, gamma, 
+                                               symops, dmin=0.7, 
+                                               source='Neutron')
         
         data = np.loadtxt(os.path.join(folder, 'Cu3Au.csv'),
                           dtype={'names': names, 'formats': formats},
