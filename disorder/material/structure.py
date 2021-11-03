@@ -83,12 +83,10 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
         
         total[:,i,:] = total[np.lexsort(total[:,i,:].T),i,:]
         
-    total = np.hstack(total)
-    
-    metric = total.T
-    
-    metric, ind, mult = np.unique(metric, axis=1, 
-                                  return_index=True, return_counts=True)
+    total = np.hstack(total).T
+        
+    total, ind, mult = np.unique(total, axis=1, 
+                                 return_index=True, return_counts=True)
                 
     h, k, l, d, F = h[ind], k[ind], l[ind], d[ind], F[ind]
         

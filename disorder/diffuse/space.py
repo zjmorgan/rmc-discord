@@ -167,22 +167,9 @@ def bragg(Qx, Qy, Qz, ux, uy, uz, factors, cond, n_atm):
     
     return np.sum(F.reshape(cond.sum(),n_atm),axis=1)
 
-def debye_waller(h_range, 
-                 k_range, 
-                 l_range, 
-                 nh, 
-                 nk,
-                 nl, 
-                 U11, 
-                 U22, 
-                 U33, 
-                 U23, 
-                 U13, 
-                 U12, 
-                 a_, 
-                 b_, 
-                 c_,
-                 T=np.eye(3)):
+def debye_waller(h_range, k_range, l_range, nh, nk, nl, 
+                 U11, U22, U33, U23, U13, U12, 
+                 a_, b_, c_, T=np.eye(3)):
     
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
                              np.linspace(k_range[0],k_range[1],nk), 
@@ -246,17 +233,8 @@ def condition(H, K, L, nu=1, nv=1, nw=1, centering=None):
         
     return H[cond], K[cond], L[cond], cond
 
-def mapping(h_range, 
-            k_range, 
-            l_range, 
-            nh,
-            nk,
-            nl,
-            nu,
-            nv,
-            nw,
-            T=np.eye(3),
-            laue=None):
+def mapping(h_range, k_range, l_range, nh, nk, nl, 
+            nu, nv, nw, T=np.eye(3), laue=None):
     
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
                              np.linspace(k_range[0],k_range[1],nk), 
@@ -292,15 +270,7 @@ def mapping(h_range,
         
         index = np.arange(nh*nk*nl)
         
-        return h, \
-               k, \
-               l, \
-               H, \
-               K, \
-               L, \
-               index, \
-               index, \
-               np.array([u'x,y,z'])
+        return h, k, l, H, K, L, index,  index, np.array([u'x,y,z'])
 
     symops = np.array(symmetry.laue(laue))
     
@@ -339,28 +309,22 @@ def mapping(h_range,
                                      return_inverse=True)
         
     reverses = np.arange(indices.shape[0])
-                       
-    return h[coindices][indices], \
-           k[coindices][indices], \
-           l[coindices][indices], \
-           H[coindices][indices], \
-           K[coindices][indices], \
-           L[coindices][indices], \
-           index[coindices][indices], \
-           reverses[inverses][coinverses], \
-           symops
+    
+    h = h[coindices][indices]
+    k = k[coindices][indices]
+    l = l[coindices][indices]
+    
+    H = H[coindices][indices]
+    K = K[coindices][indices]
+    L = L[coindices][indices]
+    
+    index = index[coindices][indices]
+    reverses = reverses[inverses][coinverses]
+               
+    return h, k, l, H, K, L, index, reverses, symops 
 
-def reduced(h_range, 
-            k_range, 
-            l_range, 
-            nh,
-            nk,
-            nl,
-            nu,
-            nv,
-            nw,
-            T=np.eye(3), 
-            laue=None):
+def reduced(h_range, k_range, l_range, nh, nk, nl,
+            nu, nv, nw, T=np.eye(3), laue=None):
     
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
                              np.linspace(k_range[0],k_range[1],nk), 
@@ -431,7 +395,7 @@ def reduced(h_range,
         
         index = np.arange(nh*nk*nl)
         
-        return index, index, np.array([u'x,y,z']), Nu,  Nv, Nw
+        return index, index, np.array([u'x,y,z']), Nu, Nv, Nw
                
     symops = np.array(symmetry.laue(laue))
     
@@ -477,7 +441,8 @@ def reduced(h_range,
     _, indices, inverses = symmetry.unique(total)
     
     reverses = np.arange(indices.shape[0])
+    
+    index = index[coindices][indices]
+    reverses = reverses[coindices][indices]
                        
-    return index[coindices][indices], \
-           reverses[inverses][coinverses], \
-           symops, Nu, Nv, Nw
+    return index, reverses, symops, Nu, Nv, Nw
