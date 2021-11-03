@@ -14,7 +14,7 @@ class test_structure(unittest.TestCase):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
         
-        names = ('h', 'k', 'l', 'd (Å)', 'F(real)', 'F(imag)', 'M')
+        names = ('h', 'k', 'l', 'd(angstrom)', 'F(real)', 'F(imag)', 'mult')
         formats = (int, int, int, float, float, float, int)
                                         
         uc_dict = crystal.unitcell(folder=folder, 

@@ -20,13 +20,13 @@ class test_symmetry(unittest.TestCase):
         
         array, ind, inv = symmetry.unique(data)
                 
-        np.testing.assert_array_equal(array, np.array([[0,2,1],
-                                                       [1,2,-3],
-                                                       [2,0,1],
-                                                       [-1,2,3]]))
+        np.testing.assert_array_equal(array, [[0,2,1],
+                                              [1,2,-3], 
+                                              [2,0,1],
+                                              [-1,2,3]])
         
-        np.testing.assert_array_equal(ind, np.array([1,5,0,6]))
-        np.testing.assert_array_equal(inv, np.array([2,0,2,0,2,1,3,3]))
+        np.testing.assert_array_equal(ind, [1,5,0,6])
+        np.testing.assert_array_equal(inv, [2,0,2,0,2,1,3,3])
         
     def test_evaluate(self):
         
@@ -36,11 +36,10 @@ class test_symmetry(unittest.TestCase):
         x, y, z = coordinates
         
         coord = symmetry.evaluate(operator, coordinates, translate=True)        
-        np.testing.assert_array_almost_equal(coord, 
-                                             np.array([-y+1/2,x-y,z-1/2]))
+        np.testing.assert_array_almost_equal(coord, [-y+1/2,x-y,z-1/2])
         
         coord = symmetry.evaluate(operator, coordinates, translate=False)        
-        np.testing.assert_array_almost_equal(coord, np.array([-y,x-y,z]))
+        np.testing.assert_array_almost_equal(coord, [-y,x-y,z])
         
     def test_evaluate_mag(self):
         
@@ -50,22 +49,18 @@ class test_symmetry(unittest.TestCase):
         mx, my, mz = moments
         
         mom = symmetry.evaluate_mag(operator, moments)        
-        np.testing.assert_array_almost_equal(mom, np.array([-mx,-my,-mz]))
+        np.testing.assert_array_almost_equal(mom, [-mx,-my,-mz])
         
     def test_evaluate_disp(self):
         
         operator = u'-y+1/2,x-y,z-1/2'
-        displacements = [1,2,3,0.1,0.2,-0.3]
+        displacements = [1.35,2.12,3.04,0.1,0.2,-0.3]
         
         U11, U22, U33, U23, U13, U12 = displacements
         
         disp = symmetry.evaluate_disp(operator, displacements)        
-        np.testing.assert_array_almost_equal(disp, np.array([U22,
-                                                             U11+U22-2*U12, 
-                                                             U33, 
-                                                             U13-U23, 
-                                                             -U23, 
-                                                             U22-U12]))
+        np.testing.assert_array_almost_equal(disp, [U22, U11+U22-2*U12, U33, 
+                                                    U13-U23, -U23, U22-U12])
         
     def test_reverse(self):
         
@@ -78,7 +73,7 @@ class test_symmetry(unittest.TestCase):
         rev_operator = symmetry.reverse(operator)[0]
         coordinates = symmetry.evaluate(rev_operator, coord, translate=True)     
         
-        np.testing.assert_array_almost_equal(coordinates, np.array([x,y,z]))
+        np.testing.assert_array_almost_equal(coordinates, [x,y,z])
         
     def test_inverse(self):
         
@@ -86,7 +81,7 @@ class test_symmetry(unittest.TestCase):
         
         inv_operator = symmetry.inverse(operator)[0]
         
-        self.assertEqual(inv_operator, np.array(['-x-y,x,z']))
+        self.assertEqual(inv_operator, '-x-y,x,z')
         
     def test_binary(self):
         
@@ -108,7 +103,7 @@ class test_symmetry(unittest.TestCase):
         self.assertEqual(rotation, '3')
         self.assertEqual(k, 3)
         
-        np.testing.assert_array_almost_equal(wg, np.array([-1/6,1/6,1/6]))
+        np.testing.assert_array_almost_equal(wg, [-1/6,1/6,1/6])
         
         operator = u'-y+1/2,-x,z+3/4'
         
@@ -117,7 +112,7 @@ class test_symmetry(unittest.TestCase):
         self.assertEqual(rotation, 'm')
         self.assertEqual(k, 2)
         
-        np.testing.assert_array_almost_equal(wg, np.array([1/4,-1/4,3/4]))
+        np.testing.assert_array_almost_equal(wg, [1/4,-1/4,3/4])
         
     def test_absence(self):
         
