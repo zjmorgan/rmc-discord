@@ -3,8 +3,6 @@
 import unittest
 import numpy as np
 
-import scipy.ndimage.filters 
-
 from disorder.material import crystal
 from disorder.diffuse import space, scattering
 
@@ -592,6 +590,8 @@ class test_space(unittest.TestCase):
         l_range, nl = [-4,4], 17
         
         nu, nv, nw = 4, 5, 6
+        
+        array = np.random.random((nh,nk,nl))
 
         mapping_params = space.mapping(h_range, k_range, l_range, 
                                        nh, nk, nl, nu, nv, nw)
@@ -602,7 +602,10 @@ class test_space(unittest.TestCase):
         np.testing.assert_array_almost_equal(np.mod(k[K % nv == 0], 1), 0)
         np.testing.assert_array_almost_equal(np.mod(l[L % nw == 0], 1), 0)
         
+        data = array[::,::,::].flatten()
+        
         np.testing.assert_array_equal(index, reverses)
+        np.testing.assert_array_almost_equal(data[index][reverses], data)
         
         self.assertEqual(symops, u'x,y,z')
         
@@ -625,21 +628,18 @@ class test_space(unittest.TestCase):
         np.testing.assert_array_almost_equal(h+k, 2*h_.flatten())
         np.testing.assert_array_almost_equal(k-h, 2*k_.flatten())
         np.testing.assert_array_almost_equal(l, l_.flatten())
-        
-        np.random.seed(13)
-        array = np.random.random((nh,nk,nl))
-        
+                
         mapping_params = space.mapping(h_range, k_range, l_range, 
                                        nh, nk, nl, nu, nv, nw, laue='-1')
     
         h, k, l, H, K, L, index, reverses, symops = mapping_params
         
-        data = (array[::,::,::]+array[::-1,::-1,::-1]).flatten()
+        data += array[::-1,::-1,::-1].flatten()
                         
         np.testing.assert_array_almost_equal(data[index][reverses], data)
         
         mapping_params = space.mapping(h_range, k_range, l_range, 
-                                       nh, nk, nl, nu, nv, nw, laue='-2/m')
+                                       nh, nk, nl, nu, nv, nw, laue='2/m')
         
         h, k, l, H, K, L, index, reverses, symops = mapping_params
         
@@ -648,12 +648,48 @@ class test_space(unittest.TestCase):
         np.testing.assert_array_almost_equal(data[index][reverses], data)
         
         mapping_params = space.mapping(h_range, k_range, l_range, 
-                                       nh, nk, nl, nu, nv, nw, laue='-mmm')
+                                       nh, nk, nl, nu, nv, nw, laue='mmm')
         
         h, k, l, H, K, L, index, reverses, symops = mapping_params
         
         data += (array[::-1,::-1,::]+array[::,::-1,::-1]+
                  array[::,::,::-1]+array[::-1,::,::]).flatten()
+                        
+        np.testing.assert_array_almost_equal(data[index][reverses], data)
+        
+        h_range, nh = [-3,3], 13
+        k_range, nk = [-3,3], 13
+        l_range, nl = [-4,4], 17
+        
+        nu, nv, nw = 5, 5, 4
+        
+        array = np.random.random((nh,nk,nl))
+                
+        mapping_params = space.mapping(h_range, k_range, l_range, 
+                                       nh, nk, nl, nu, nv, nw, laue='4/m')
+        
+        h, k, l, H, K, L, index, reverses, symops = mapping_params
+        
+        data = (array[::,::,::]+array[::-1,::-1,::]+
+                array[::-1,::-1,::-1]+array[::,::,::-1]+
+                np.swapaxes(array[::,::-1,::], 0, 1)+
+                np.swapaxes(array[::-1,::,::], 0, 1)+
+                np.swapaxes(array[::-1,::,::-1], 0, 1)+
+                np.swapaxes(array[::,::-1,::-1], 0, 1)).flatten()
+                        
+        np.testing.assert_array_almost_equal(data[index][reverses], data)
+        
+        mapping_params = space.mapping(h_range, k_range, l_range, 
+                                        nh, nk, nl, nu, nv, nw, laue='4/mmm')
+        
+        h, k, l, H, K, L, index, reverses, symops = mapping_params
+        
+        data += (array[::-1,::,::-1]+array[::,::-1,::-1]+
+                 array[::,::-1,::]+array[::-1,::,::]+
+                 np.swapaxes(array[::,::,::-1], 0, 1)+
+                 np.swapaxes(array[::-1,::-1,::-1], 0, 1)+
+                 np.swapaxes(array[::-1,::-1,::], 0, 1)+
+                 np.swapaxes(array[::,::,::], 0, 1)).flatten()
                         
         np.testing.assert_array_almost_equal(data[index][reverses], data)
     

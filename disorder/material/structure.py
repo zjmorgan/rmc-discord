@@ -1,12 +1,10 @@
 #!/usr/bin/env/python3
 
 import os
-import sys
-
 import numpy as np
 
 from disorder.diffuse import scattering, space
-from disorder.material import crystal, symmetry, tables
+from disorder.material import crystal, symmetry
 
 def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
            a, b, c, alpha, beta, gamma, symops, dmin=0.3, source='Neutron'):

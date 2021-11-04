@@ -664,9 +664,7 @@ def cartesian_moment(a, b, c, alpha, beta, gamma):
     
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
     
-    A = np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
-                  [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
-                  [0, 0,                1/c_]])
+    A = cartesian(a, b, c, alpha, beta, gamma)
     
     L = np.array([[a,0,0],[0,b,0],[0,0,c]])
         
@@ -676,19 +674,17 @@ def cartesian_displacement(a, b, c, alpha, beta, gamma):
     
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
     
-    A = np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
-                  [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
-                  [0, 0,                1/c_]])
+    A = cartesian(a, b, c, alpha, beta, gamma)
     
     L_ = np.array([[a_,0,0],[0,b_,0],[0,0,c_]])
         
     return np.dot(A, L_)
 
-def vector(h, k, l, B):    
-        
-    Qh = 2*np.pi*(B[0,0]*h+B[0,1]*k+B[0,2]*l)
-    Qk = 2*np.pi*(B[1,0]*h+B[1,1]*k+B[1,2]*l)
-    Ql = 2*np.pi*(B[2,0]*h+B[2,1]*k+B[2,2]*l)
+def vector(h, k, l, B):
+    
+    qh, qk, ql = transform(h, k, l, B)
+    
+    Qh, Qk, Ql = 2*np.pi*qh, 2*np.pi*qk, 2*np.pi*ql
     
     return Qh, Qk, Ql
 
