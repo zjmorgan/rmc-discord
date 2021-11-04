@@ -431,7 +431,6 @@ class Model:
         
         nh, nk, nl = mask.shape
         
-        h, k, l, \
         H, K, L, \
         indices, inverses, \
         operators = space.mapping(h_range, k_range, l_range, 
@@ -439,7 +438,7 @@ class Model:
         
         i_mask, i_unmask = space.indices(mask)
             
-        return h, k, l, H, K, L, indices, inverses, i_mask, i_unmask 
+        return H, K, L, indices, inverses, i_mask, i_unmask 
     
     def reciprocal_space_coordinate_transform(self, h, k, l, B, R):
             

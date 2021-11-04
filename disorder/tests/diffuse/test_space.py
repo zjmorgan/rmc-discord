@@ -555,9 +555,15 @@ class test_space(unittest.TestCase):
         np.testing.assert_array_equal(np.mod(k[cond]+l[cond], 2), 0)
         np.testing.assert_array_equal(np.mod(l[cond]+h[cond], 2), 0)
         
-        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'R')
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, 
+                                                    nu, nv, nw, 'R(obv)')
         
         np.testing.assert_array_equal(np.mod(-h[cond]+k[cond]+l[cond], 3), 0)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, 
+                                                    nu, nv, nw, 'R(rev)')
+        
+        np.testing.assert_array_equal(np.mod(h[cond]-k[cond]+l[cond], 3), 0)
         
         H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'C')
         
@@ -570,6 +576,86 @@ class test_space(unittest.TestCase):
         H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'B')
         
         np.testing.assert_array_equal(np.mod(l[cond]+h[cond], 2), 0)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'H')
+        
+        np.testing.assert_array_equal(np.mod(h[cond]-k[cond], 3), 0)
+        
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw, 'D')
+        
+        np.testing.assert_array_equal(np.mod(h[cond]+k[cond]+l[cond], 3), 0)
                 
+    def test_mapping(self):
+        
+        h_range, nh = [-2,2], 9
+        k_range, nk = [-3,3], 13
+        l_range, nl = [-4,4], 17
+        
+        nu, nv, nw = 4, 5, 6
+
+        mapping_params = space.mapping(h_range, k_range, l_range, 
+                                       nh, nk, nl, nu, nv, nw)
+    
+        h, k, l, H, K, L, index, reverses, symops = mapping_params
+                
+        np.testing.assert_array_almost_equal(np.mod(h[H % nu == 0], 1), 0)
+        np.testing.assert_array_almost_equal(np.mod(k[K % nv == 0], 1), 0)
+        np.testing.assert_array_almost_equal(np.mod(l[L % nw == 0], 1), 0)
+        
+        np.testing.assert_array_equal(index, reverses)
+        
+        self.assertEqual(symops, u'x,y,z')
+        
+        T = np.array([[1,-1,0],[1,1,0],[0,0,1]])
+        
+        mapping_params = space.mapping(h_range, k_range, l_range,
+                                       nh, nk, nl, nu, nv, nw, T=T)
+    
+        h, k, l, H, K, L, index, reverses, symops = mapping_params
+                
+        np.testing.assert_array_almost_equal(np.mod(h[H % nu == 0], 1), 0)
+        np.testing.assert_array_almost_equal(np.mod(k[K % nv == 0], 1), 0)
+        np.testing.assert_array_almost_equal(np.mod(l[L % nw == 0], 1), 0)
+        
+        h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
+                                 np.linspace(k_range[0],k_range[1],nk), 
+                                 np.linspace(l_range[0],l_range[1],nl), 
+                                 indexing='ij')
+        
+        np.testing.assert_array_almost_equal(h+k, 2*h_.flatten())
+        np.testing.assert_array_almost_equal(k-h, 2*k_.flatten())
+        np.testing.assert_array_almost_equal(l, l_.flatten())
+        
+        np.random.seed(13)
+        array = np.random.random((nh,nk,nl))
+        
+        mapping_params = space.mapping(h_range, k_range, l_range, 
+                                       nh, nk, nl, nu, nv, nw, laue='-1')
+    
+        h, k, l, H, K, L, index, reverses, symops = mapping_params
+        
+        data = (array[::,::,::]+array[::-1,::-1,::-1]).flatten()
+                        
+        np.testing.assert_array_almost_equal(data[index][reverses], data)
+        
+        mapping_params = space.mapping(h_range, k_range, l_range, 
+                                       nh, nk, nl, nu, nv, nw, laue='-2/m')
+        
+        h, k, l, H, K, L, index, reverses, symops = mapping_params
+        
+        data += (array[::-1,::,::-1]+array[::,::-1,::]).flatten()
+                        
+        np.testing.assert_array_almost_equal(data[index][reverses], data)
+        
+        mapping_params = space.mapping(h_range, k_range, l_range, 
+                                       nh, nk, nl, nu, nv, nw, laue='-mmm')
+        
+        h, k, l, H, K, L, index, reverses, symops = mapping_params
+        
+        data += (array[::-1,::-1,::]+array[::,::-1,::-1]+
+                 array[::,::,::-1]+array[::-1,::,::]).flatten()
+                        
+        np.testing.assert_array_almost_equal(data[index][reverses], data)
+    
 if __name__ == '__main__':
     unittest.main()

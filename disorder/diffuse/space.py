@@ -222,14 +222,20 @@ def condition(H, K, L, nu=1, nv=1, nw=1, centering=None):
         cond = ((h+k) % 2 == 0) \
              & ((k+l) % 2 == 0) \
              & ((l+h) % 2 == 0) & (dft_cond)
-    elif (centering == 'R'):
+    elif (centering == 'R(obv)'):
         cond = ((-h+k+l) % 3 == 0) & (dft_cond)
+    elif (centering == 'R(rev)'):
+        cond = ((h-k+l) % 3 == 0) & (dft_cond)
     elif (centering == 'C'):
         cond = ((h+k) % 2 == 0) & (dft_cond)
     elif (centering == 'A'):
         cond = ((k+l) % 2 == 0) & (dft_cond)
     elif (centering == 'B'):
         cond = ((l+h) % 2 == 0) & (dft_cond)
+    elif (centering == 'H'):
+        cond = ((h-k) % 3 == 0) & (dft_cond)
+    elif (centering == 'D'):
+        cond = ((h+k+l) % 3 == 0) & (dft_cond)
         
     return H[cond], K[cond], L[cond], cond
 
@@ -249,9 +255,9 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
     k = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
     l = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
     
-    H = (h*nu).astype(int)
-    K = (k*nv).astype(int)
-    L = (l*nw).astype(int)
+    H = np.round(h*nu).astype(int)
+    K = np.round(k*nv).astype(int)
+    L = np.round(l*nw).astype(int)
     
     iH = np.mod(H, nu)
     iK = np.mod(K, nv)
@@ -271,10 +277,8 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
         index = np.arange(nh*nk*nl)
         
         return h, k, l, H, K, L, index,  index, np.array([u'x,y,z'])
-
-    symops = np.array(symmetry.laue(laue))
     
-    symops = symmetry.inverse(symops)
+    symops = symmetry.inverse(symmetry.laue(laue))
     
     symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
                 
