@@ -692,6 +692,75 @@ class test_space(unittest.TestCase):
                  np.swapaxes(array[::,::,::], 0, 1)).flatten()
                         
         np.testing.assert_array_almost_equal(data[index][reverses], data)
+        
+        h_range, nh = [-3,3], 13
+        k_range, nk = [-3,3], 13
+        l_range, nl = [-3,3], 13
+        
+        nu, nv, nw = 5, 5, 5
+        
+        array = np.random.random((nh,nk,nl))
+                
+        mapping_params = space.mapping(h_range, k_range, l_range, 
+                                       nh, nk, nl, nu, nv, nw, laue='m-3')
+        
+        h, k, l, H, K, L, index, reverses, symops = mapping_params
+        
+        data = (array[::,::,::]+array[::-1,::-1,::]+
+                array[::-1,::,::-1]+array[::,::-1,::-1]+
+                array[::-1,::-1,::-1]+array[::,::,::-1]+
+                array[::,::-1,::]+array[::-1,::,::]+
+                np.swapaxes(np.swapaxes(array[::,::,::], 1, 2), 0, 1)+
+                np.swapaxes(np.swapaxes(array[::-1,::-1,::], 1, 2), 0, 1)+
+                np.swapaxes(np.swapaxes(array[::-1,::,::-1], 1, 2), 0, 1)+
+                np.swapaxes(np.swapaxes(array[::,::-1,::-1], 1, 2), 0, 1)+
+                np.swapaxes(np.swapaxes(array[::,::,::], 0, 1), 1, 2)+
+                np.swapaxes(np.swapaxes(array[::-1,::-1,::], 0, 1), 1, 2)+
+                np.swapaxes(np.swapaxes(array[::-1,::,::-1], 0, 1), 1, 2)+
+                np.swapaxes(np.swapaxes(array[::,::-1,::-1], 0, 1), 1, 2)+
+                np.swapaxes(np.swapaxes(array[::-1,::-1,::-1], 1, 2), 0, 1)+
+                np.swapaxes(np.swapaxes(array[::,::,::-1], 1, 2), 0, 1)+   
+                np.swapaxes(np.swapaxes(array[::,::-1,::], 1, 2), 0, 1)+
+                np.swapaxes(np.swapaxes(array[::-1,::,::], 1, 2), 0, 1)+
+                np.swapaxes(np.swapaxes(array[::-1,::-1,::-1], 0, 1), 1, 2)+
+                np.swapaxes(np.swapaxes(array[::,::,::-1], 0, 1), 1, 2)+
+                np.swapaxes(np.swapaxes(array[::,::-1,::], 0, 1), 1, 2)+
+                np.swapaxes(np.swapaxes(array[::-1,::,::], 0, 1), 1, 2)
+                ).flatten()
+                        
+        np.testing.assert_array_almost_equal(data[index][reverses], data)
+        
+        mapping_params = space.mapping(h_range, k_range, l_range, 
+                                       nh, nk, nl, nu, nv, nw, laue='m-3m')
+        
+        h, k, l, H, K, L, index, reverses, symops = mapping_params
+        
+        data += (np.swapaxes(array[::,::,::-1], 0, 1)+
+                 np.swapaxes(array[::-1,::-1,::-1], 0, 1)+
+                 np.swapaxes(array[::-1,::,::], 0, 1)+
+                 np.swapaxes(array[::,::-1,::], 0, 1)+
+                 np.swapaxes(array[::,::-1,::], 1, 2)+
+                 np.swapaxes(array[::-1,::,::], 1, 2)+
+                 np.swapaxes(array[::-1,::-1,::-1], 1, 2)+
+                 np.swapaxes(array[::,::,::-1], 1, 2)+
+                 np.swapaxes(array[::-1,::,::], 2, 0)+
+                 np.swapaxes(array[::,::-1,::], 2, 0)+
+                 np.swapaxes(array[::,::,::-1], 2, 0)+
+                 np.swapaxes(array[::-1,::-1,::-1], 2, 0)+
+                 np.swapaxes(array[::,::,::], 0, 1)+ 
+                 np.swapaxes(array[::,::-1,::-1], 0, 1)+
+                 np.swapaxes(array[::-1,::,::-1], 0, 1)+
+                 np.swapaxes(array[::-1,::-1,::], 0, 1)+
+                 np.swapaxes(array[::-1,::,::-1], 1, 2)+
+                 np.swapaxes(array[::,::-1,::-1], 1, 2)+
+                 np.swapaxes(array[::,::,::], 1, 2)+
+                 np.swapaxes(array[::-1,::-1,::], 1, 2)+
+                 np.swapaxes(array[::,::-1,::-1], 2, 0)+
+                 np.swapaxes(array[::-1,::,::-1], 2, 0)+
+                 np.swapaxes(array[::-1,::-1,::], 2, 0)+
+                 np.swapaxes(array[::,::,::], 2, 0)).flatten()
+
+        np.testing.assert_array_almost_equal(data[index][reverses], data)
     
 if __name__ == '__main__':
     unittest.main()

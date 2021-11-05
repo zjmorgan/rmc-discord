@@ -13,10 +13,8 @@ def reciprocal(h_range, k_range, l_range, mask, B, T=np.eye(3)):
                               np.linspace(k_range[0],k_range[1],nk), 
                               np.linspace(l_range[0],l_range[1],nl), 
                               indexing='ij')
-    
-    h = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
-    k = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
-    l = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
+        
+    h, k, l = crystal.transform(h_, k_, l_, T)
     
     Qh, Qk, Ql = crystal.vector(h, k, l, B)
     
@@ -28,9 +26,7 @@ def cell(nu, nv, nw, A):
                           np.arange(nv), 
                           np.arange(nw), indexing='ij')
     
-    ix = A[0,0]*i+A[0,1]*j+A[0,2]*k
-    iy = A[1,0]*i+A[1,1]*j+A[1,2]*k
-    iz = A[2,0]*i+A[2,1]*j+A[2,2]*k
+    ix, iy, iz = crystal.transform(i, j, k, A)
     
     return ix.flatten(), iy.flatten(), iz.flatten()
 
@@ -176,9 +172,7 @@ def debye_waller(h_range, k_range, l_range, nh, nk, nl,
                              np.linspace(l_range[0],l_range[1],nl), 
                              indexing='ij')
     
-    h = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
-    k = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
-    l = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
+    h, k, l = crystal.transform(h_, k_, l_, T)
         
     h = h.flatten()
     k = k.flatten()
@@ -251,9 +245,7 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
     k_ = k_.flatten()
     l_ = l_.flatten()
     
-    h = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
-    k = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
-    l = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
+    h, k, l = crystal.transform(h_, k_, l_, T)
     
     H = np.round(h*nu).astype(int)
     K = np.round(k*nv).astype(int)
@@ -335,10 +327,8 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
                              np.linspace(l_range[0],l_range[1],nl), 
                              indexing='ij')
     
-    h = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
-    k = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
-    l = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
-        
+    h, k, l = crystal.transform(h_, k_, l_, T)
+
     h = h.flatten()
     k = k.flatten()
     l = l.flatten()
