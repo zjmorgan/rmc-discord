@@ -378,3 +378,32 @@ def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     Fz = np.sum(prod_z, axis=1)
 
     return Fx, Fy, Fz, prod_x.flatten(), prod_y.flatten(), prod_z.flatten()
+
+def magnitude(mu1, mu2, mu3, C):
+    
+    M = np.array([mu1,mu2,mu3])
+    n = np.size(mu1)
+    
+    M = M.reshape(3,n)
+
+    mu = []
+    for i in range(n):
+        mu.append(np.linalg.norm(np.dot(C, M[:,i])))
+    
+    return np.array(mu)
+
+def cartesian(mu1, mu2, mu3, C):
+    
+    M = np.array([mu1,mu2,mu3])
+    n = np.size(mu1)
+    
+    M = M.reshape(3,n)
+
+    mux, muy, muz = [], [], []
+    for i in range(n):
+        Mp = np.dot(C, M[:,i])
+        mux.append(Mp[0])
+        muy.append(Mp[1])
+        muz.append(Mp[2])
+    
+    return np.array(mux), np.array(muy), np.array(muz)

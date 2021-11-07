@@ -1,5 +1,7 @@
 import mayavi.mlab as mlab
 import numpy as np
+
+from scipy.stats import chi2
 from scipy.spatial.transform.rotation import Rotation
 
 from mayavi.api import Engine
@@ -18,7 +20,7 @@ def probability_ellipsoid(Uxx, Uyy, Uzz, Uyz, Uxz, Uxy, p=0.99):
     
     w, v = np.linalg.eig(np.linalg.inv(U))
     
-    r_eff = -2*np.log(1-p)
+    r_eff = chi2.ppf(1-p, 3)
     
     radii = np.sqrt(r_eff/w)
     

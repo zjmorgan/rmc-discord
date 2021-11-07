@@ -105,6 +105,12 @@ class test_magnetic(unittest.TestCase):
         np.testing.assert_array_almost_equal(theta, 2*np.pi*u.flatten())
         np.testing.assert_array_almost_equal(phi, np.arccos(1-2*v.flatten()))
         
+        c = np.array([0.6,0.4]) 
+        Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm, value=c, fixed=False)
+        S = np.sqrt(Sx**2+Sy**2+Sz**2)
+
+        np.testing.assert_array_equal(S.reshape(nu*nv*nw,n_atm) < c, True)
+        
     def test_transform(self):
         
         nu, nv, nw, n_atm = 2, 3, 4, 2
@@ -163,7 +169,7 @@ class test_magnetic(unittest.TestCase):
         v = np.array([0.3,0.4])
         w = np.array([0.4,0.5])
         
-        atm = np.array(['Fe3+', 'Mn3+'])
+        atm = np.array(['Fe3+','Mn3+'])
         occupancy = np.array([0.75,0.5])
         
         U11 = np.array([0.5,0.3])
@@ -286,7 +292,7 @@ class test_magnetic(unittest.TestCase):
         v = np.array([0.3,0.4])
         w = np.array([0.4,0.5])
         
-        atm = np.array(['Fe3+', 'Mn3+'])
+        atm = np.array(['Fe3+','Mn3+'])
         occupancy = np.array([0.75,0.5])
         
         U11 = np.array([0.5,0.3])
@@ -388,6 +394,36 @@ class test_magnetic(unittest.TestCase):
         np.testing.assert_array_almost_equal(prod_x, prod_x_ref)
         np.testing.assert_array_almost_equal(prod_y, prod_y_ref)
         np.testing.assert_array_almost_equal(prod_z, prod_z_ref)
+
+    def test_magnitude(self):
+                
+        mu1 = np.array([0.4,0.3])
+        mu2 = np.array([0.5,0.4])
+        mu3 = np.array([0.6,0.6])
+
+        a, b, c, alpha, beta, gamma = 5, 5, 5, np.pi/2, np.pi/2, np.pi/2
+
+        C = crystal.cartesian_moment(a, b, c, alpha, beta, gamma)
+                
+        mu = magnetic.magnitude(mu1, mu2, mu3, C)
+            
+        np.testing.assert_array_almost_equal(mu, np.sqrt(mu1**2+mu2**2+mu3**2))
+        
+    def test_cartesian(self):
+                
+        mu1 = np.array([0.4,0.3])
+        mu2 = np.array([0.5,0.4])
+        mu3 = np.array([0.6,0.6])
+
+        a, b, c, alpha, beta, gamma = 5, 5, 5, np.pi/2, np.pi/2, np.pi/2
+
+        C = crystal.cartesian_moment(a, b, c, alpha, beta, gamma)
+                        
+        mux, muy, muz = magnetic.cartesian(mu1, mu2, mu3, C)
+        
+        np.testing.assert_array_almost_equal(mux, mu1)
+        np.testing.assert_array_almost_equal(muy, mu2)
+        np.testing.assert_array_almost_equal(muz, mu3)
 
 if __name__ == '__main__':
     unittest.main()

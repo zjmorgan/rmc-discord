@@ -130,6 +130,49 @@ class test_experimental(unittest.TestCase):
         
         fact = np.array([1, 5, 25])
         np.testing.assert_array_equal(experimental.factors(25), fact)
+        
+    def test_punch(self):
+        
+        h_range, nh = [-3,3], 25
+        k_range, nk = [-4,4], 33
+        l_range, nl = [-5,5], 41
+        
+        radius_h, radius_k, radius_l = 2, 3, 4
+        
+        h, k, l = np.meshgrid(np.linspace(h_range[0],h_range[1],nh), 
+                              np.linspace(k_range[0],k_range[1],nk), 
+                              np.linspace(l_range[0],l_range[1],nl),
+                              indexing='ij')
+        
+        signal = np.random.random((nh,nk,nl))
+
+        mask = np.isclose(np.mod(h,1),0)\
+             & np.isclose(np.mod(k,1),0)\
+             & np.isclose(np.mod(l,1),0)
+                          
+        signal[mask] = 10
+        
+        data = experimental.punch(signal, radius_h, radius_k, radius_l, 
+                                  h_range, k_range, l_range, punch='Box')
+            
+        np.testing.assert_array_equal(np.isnan(data[mask]), True)
+        
+        data = experimental.punch(signal, radius_h, radius_k, radius_l, 
+                                  h_range, k_range, l_range, punch='Ellipsoid')
+            
+        np.testing.assert_array_equal(np.isnan(data[mask]), True)
+        
+    def test_outlier(self):
+        
+        signal = np.random.random((25,26,27))
+        signal[3,4,5] = 2
+        signal[13,14,15] = -1
+        
+        size = 3
+        data = experimental.outlier(signal, size)
+        
+        self.assertTrue(np.isnan(data[3,4,5]))
+        self.assertTrue(np.isnan(data[13,14,15]))
 
     def test_reflections(self):
         
@@ -163,22 +206,22 @@ class test_experimental(unittest.TestCase):
         self.assertEqual(experimental.reflections(5, 3, 2, centering=cntr), 1)
         self.assertEqual(experimental.reflections(2, 6, 3, centering=cntr), 1)
         
-        cntr = 'R (hexagonal axes, triple obverse cell)'
+        cntr = 'R(obv)'
         self.assertEqual(experimental.reflections(1, 2, 3, centering=cntr), 0)
         self.assertEqual(experimental.reflections(1, 2, 2, centering=cntr), 1)
         self.assertEqual(experimental.reflections(1, 2, 5, centering=cntr), 1)
         
-        cntr = 'R (hexagonal axes, triple reverse cell)'
+        cntr = 'R(rev)'
         self.assertEqual(experimental.reflections(1, 2, 3, centering=cntr), 0)
         self.assertEqual(experimental.reflections(1, 2, 4, centering=cntr), 1)
         self.assertEqual(experimental.reflections(1, 2, 5, centering=cntr), 0)
         
-        cntr = 'H (hexagonal axes, triple hexagonal cell)'
+        cntr = 'H'
         self.assertEqual(experimental.reflections(1, 2, 3, centering=cntr), 0)
         self.assertEqual(experimental.reflections(1, 4, 4, centering=cntr), 1)
         self.assertEqual(experimental.reflections(1, 4, 5, centering=cntr), 1)
         
-        cntr = 'D (rhombohedral axes, triple rhombohedral cell)'
+        cntr = 'D'
         self.assertEqual(experimental.reflections(1, 2, 3, centering=cntr), 1)
         self.assertEqual(experimental.reflections(1, 4, 4, centering=cntr), 1)
         self.assertEqual(experimental.reflections(1, 4, 5, centering=cntr), 0)

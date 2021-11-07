@@ -329,7 +329,7 @@ def structure(U_k, Q_k, coeffs, cond, p, i_dft, factors):
         even += range(start[k], end[k])
     
     even = np.array(even)
-    
+        
     for j in range(n_atm):
         V_k[:,j] = coeffs.dot(U_k[:,i_dft,j]*Q_k[:,:])
         V_k_nuc[:,j] = coeffs[even].dot(U_k[:,i_dft,j][even,:][:,cond]\
@@ -343,14 +343,8 @@ def structure(U_k, Q_k, coeffs, cond, p, i_dft, factors):
     
     bragg = np.arange(n_hkl)[cond]
      
-    return F, \
-           F_nuc, \
-           prod.flatten(), \
-           prod_nuc.flatten(), \
-           V_k.flatten(), \
-           V_k_nuc.flatten(), \
-           even, \
-           bragg
+    return F, F_nuc, prod.flatten(), prod_nuc.flatten(), \
+           V_k.flatten(), V_k_nuc.flatten(), even, bragg
            
 def parameters(Ux, Uy, Uz, D, n_atm):
     
@@ -386,3 +380,63 @@ def parameters(Ux, Uy, Uz, D, n_atm):
         U12[i] = U[0,1]
         
     return U11, U22, U33, U23, U13, U12
+
+def equivalent(Uiso, D):
+
+    uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
+    
+    U11, U22, U33 = Uiso*uiso[0,0], Uiso*uiso[1,1], Uiso*uiso[2,2]
+    U23, U13, U12 = Uiso*uiso[1,2], Uiso*uiso[0,2], Uiso*uiso[0,1]
+    
+    return U11, U22, U33, U23, U13, U12
+    
+def isotropic(U11, U22, U33, U23, U13, U12, D):
+    
+    U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
+    n = np.size(U11)
+    
+    U = U.reshape(3,3,n)
+    
+    Uiso = []
+    for i in range(n):
+        Up, _ = np.linalg.eig(np.dot(np.dot(D, U[...,i]), D.T))
+        Uiso.append(np.mean(Up).real)
+    
+    return np.array(Uiso)
+
+def principal(U11, U22, U33, U23, U13, U12, D):
+    
+    U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
+    n = np.size(U11)
+    
+    U = U.reshape(3,3,n)
+    
+    U1, U2, U3 = [], [], []
+    for i in range(n):
+        Up, _ = np.linalg.eig(np.dot(np.dot(D, U[...,i]), D.T))
+        Up.sort()
+        U1.append(Up[0].real)
+        U2.append(Up[1].real)
+        U3.append(Up[2].real)
+    
+    return np.array(U1), np.array(U2), np.array(U3)
+
+def cartesian(U11, U22, U33, U23, U13, U12, D):
+    
+    U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
+    n = np.size(U11)
+    
+    U = U.reshape(3,3,n)
+    
+    Uxx, Uyy, Uzz, Uyz, Uxz, Uxy = [], [], [], [], [], []
+    for i in range(n):
+        Up = np.dot(np.dot(D, U[...,i]), D.T)
+        Uxx.append(Up[0,0])
+        Uyy.append(Up[1,1])
+        Uzz.append(Up[2,2])
+        Uyz.append(Up[1,2])
+        Uxz.append(Up[0,2])
+        Uxy.append(Up[0,1])
+    
+    return np.array(Uxx), np.array(Uyy), np.array(Uzz), \
+           np.array(Uyz), np.array(Uxz), np.array(Uxy)

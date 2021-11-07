@@ -143,7 +143,7 @@ def structure(delta_k, i_dft, factors):
         
     factors = factors.reshape(n_hkl,n_atm)
     
-    n_uvw = delta_k.shape[0] // n_atm        
+    n_uvw = delta_k.shape[0] // n_atm  
     
     delta_k = delta_k.reshape(n_uvw,n_atm)
     
@@ -153,15 +153,20 @@ def structure(delta_k, i_dft, factors):
      
     return F, prod.flatten()
         
-def bragg(Qx, Qy, Qz, ux, uy, uz, factors, cond, n_atm):
+def bragg(Qx, Qy, Qz, rx, ry, rz, factors, cond):
     
-    phase_factor = np.exp(1j*(np.kron(Qx[cond],ux)\
-                             +np.kron(Qy[cond],uy)\
-                             +np.kron(Qz[cond],uz)))
+    n_hkl = cond.sum()
+    n_xyz = factors.size // Qx.shape[0]
     
-    F = factors*phase_factor
-    
-    return np.sum(F.reshape(cond.sum(),n_atm),axis=1)
+    factors = factors.reshape(factors.size // n_xyz,n_xyz)[cond,:]
+        
+    phase_factor = np.exp(1j*(np.kron(Qx[cond],rx)\
+                             +np.kron(Qy[cond],ry)\
+                             +np.kron(Qz[cond],rz)))
+        
+    phase_factor = phase_factor.reshape(n_hkl,n_xyz)
+                                   
+    return (factors*phase_factor).sum(axis=1)
 
 def debye_waller(h_range, k_range, l_range, nh, nk, nl, 
                  U11, U22, U33, U23, U13, U12, 

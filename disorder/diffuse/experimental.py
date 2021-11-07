@@ -145,19 +145,12 @@ def factors(n):
     return np.unique(reduce(list.__add__, 
       ([i, n/i] for i in range(1, int(n**0.5) + 1) if n % i == 0))).astype(int)
     
-def punch(data,
-          radius_h, 
-          radius_k, 
-          radius_l, 
-          step_h, 
-          step_k, 
-          step_l, 
-          h_range, 
-          k_range, 
-          l_range, 
-          centering='P',
-          outlier=1.5,
-          punch='Box'):
+def punch(data, radius_h, radius_k, radius_l, h_range, k_range, l_range, 
+          centering='P', outlier=1.5, punch='Box'):
+    
+    step_h = (h_range[1]-h_range[0])/data.shape[0]
+    step_k = (k_range[1]-k_range[0])/data.shape[1]
+    step_l = (l_range[1]-l_range[0])/data.shape[2]
     
     box = [int(round(radius_h)), int(round(radius_k)), int(round(radius_l))]
         
@@ -182,9 +175,7 @@ def punch(data,
                     h0, h1 = i_hkl[0]-box[0], i_hkl[0]+box[0]+1  
                     k0, k1 = i_hkl[1]-box[1], i_hkl[1]+box[1]+1      
                     l0, l1 = i_hkl[2]-box[2], i_hkl[2]+box[2]+1
-                    
-                    h0 = i_hkl[0]-box[0]
-                    
+                                        
                     if (h0 < 0): h0 = 0
                     if (k0 < 0): k0 = 0
                     if (l0 < 0): l0 = 0
@@ -259,19 +250,19 @@ def reflections(h, k, l, centering='P'):
         if ((h+k) % 2 != 0):
             allow = 0
             
-    elif (centering == 'R (hexagonal axes, triple obverse cell)'):
+    elif (centering == 'R(obv)'): # (hexagonal axes, triple obverse cell)
         if ((-h+k+l) % 3 != 0):
             allow = 0
             
-    elif (centering == 'R (hexagonal axes, triple reverse cell)'):
+    elif (centering == 'R(rev)'): # (hexagonal axes, triple reverse cell)
         if ((h-k+l) % 3 != 0):
             allow = 0
             
-    elif (centering == 'H (hexagonal axes, triple hexagonal cell)'):
+    elif (centering == 'H'): # (hexagonal axes, triple hexagonal cell)
         if ((h-k) % 3 != 0):
             allow = 0
-            
-    elif (centering == 'D (rhombohedral axes, triple rhombohedral cell)'):
+    
+    elif (centering == 'D'): # (rhombohedral axes, triple rhombohedral cell)
         if ((h+k+l) % 3 != 0):
             allow = 0    
             

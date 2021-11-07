@@ -86,7 +86,7 @@ class test_occupational(unittest.TestCase):
         v = np.array([0.3,0.4])
         w = np.array([0.4,0.5])
         
-        atm = np.array(['Fe', 'Mn'])
+        atm = np.array(['Fe','Mn'])
         occupancy = np.array([0.75,0.5])
         
         U11 = np.array([0.5,0.3])
@@ -181,7 +181,7 @@ class test_occupational(unittest.TestCase):
         v = np.array([0.3,0.4])
         w = np.array([0.4,0.5])
         
-        atm = np.array(['Fe', 'Mn'])
+        atm = np.array(['Fe','Mn'])
         occupancy = np.array([0.75,0.5])
         
         U11 = np.array([0.5,0.3])

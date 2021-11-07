@@ -49,6 +49,25 @@ class test_displacive(unittest.TestCase):
         np.testing.assert_array_almost_equal(theta, 2*np.pi*u.flatten())
         np.testing.assert_array_almost_equal(phi, np.arccos(1-2*v.flatten()))
         
+        Uxx = np.array([0.5,0.3])
+        Uyy = np.array([0.6,0.4])
+        Uzz = np.array([0.4,0.6])
+        Uyz = np.array([0.0,0.0])
+        Uxz = np.array([0.0,0.0])
+        Uxy = np.array([0.0,0.0])
+                
+        U = np.row_stack((Uxx,Uyy,Uzz,Uyz,Uxz,Uxy))
+        Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, U, False)
+        
+        l = 16.26623619623813 # (99.9%) 1/1000
+        rx = l*np.sqrt(Uxx)
+        ry = l*np.sqrt(Uyy)
+        rz = l*np.sqrt(Uzz)
+                
+        np.testing.assert_array_equal(Ux.reshape(nu*nv*nw,n_atm) < rx, True)
+        np.testing.assert_array_equal(Uy.reshape(nu*nv*nw,n_atm) < ry, True)
+        np.testing.assert_array_equal(Uz.reshape(nu*nv*nw,n_atm) < rz, True)
+                        
     def test_number(self):
         
         m = np.arange(10)
@@ -183,7 +202,7 @@ class test_displacive(unittest.TestCase):
         v = np.array([0.3,0.4])
         w = np.array([0.4,0.5])
         
-        atm = np.array(['Fe', 'Mn'])
+        atm = np.array(['Fe','Mn'])
         occupancy = np.array([0.75,0.5])
         
         U11 = np.array([0.5,0.3])
@@ -274,8 +293,7 @@ class test_displacive(unittest.TestCase):
                     (exp_iQ_dot_U_i*exp_iQ_dot_U_j.conj()*\
                     np.sin(Qx[:,np.newaxis]*rx_ij+\
                            Qy[:,np.newaxis]*ry_ij+\
-                           Qz[:,np.newaxis]*rz_ij)).imag
-                        )).sum(axis=1))/n_xyz
+                           Qz[:,np.newaxis]*rz_ij)).imag)).sum(axis=1))/n_xyz
            
         np.testing.assert_array_almost_equal(I, I_ref)
         
@@ -297,7 +315,7 @@ class test_displacive(unittest.TestCase):
         v = np.array([0.3,0.4])
         w = np.array([0.4,0.5])
         
-        atm = np.array(['Fe', 'Mn'])
+        atm = np.array(['Fe','Mn'])
         occupancy = np.array([0.75,0.5])
         
         U11 = np.array([0.5,0.3])
@@ -342,8 +360,7 @@ class test_displacive(unittest.TestCase):
         
         coeffs = displacive.coefficients(p)
 
-        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L,
-                                                    nu, nv, nw, centering='P')  
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L, nu, nv, nw)  
             
         U_r = displacive.products(Ux, Uy, Uz, p)
         Q_k = displacive.products(Qx, Qy, Qz, p)
@@ -378,54 +395,159 @@ class test_displacive(unittest.TestCase):
         
         exp_iQ_dot_U_m = np.dot(coeffs*U_m.T, Q_k).T
         
-        prod_ref = (c_n*b_n*exp_iQ_dot_U_m*np.exp(1j*(Qx[:,np.newaxis]*rx_m+\
-                                                      Qy[:,np.newaxis]*ry_m+\
-                                                      Qz[:,np.newaxis]*rz_m)))
+        prod_ref = c_n*b_n*exp_iQ_dot_U_m*np.exp(1j*(Qx[:,np.newaxis]*rx_m+\
+                                                     Qy[:,np.newaxis]*ry_m+\
+                                                     Qz[:,np.newaxis]*rz_m))
             
         F_ref = prod_ref.sum(axis=1)
         prod_ref = prod_ref.reshape(n_hkl,nu*nv*nw,n_atm).sum(axis=1).flatten()
            
         np.testing.assert_array_almost_equal(F, F_ref)
         np.testing.assert_array_almost_equal(prod, prod_ref)
+                                
+        cos_iQ_dot_U_m = np.dot((coeffs*U_m.T)[:,even], Q_k[even,:]).T
+                
+        prod_nuc_ref = c_n*b_n*cos_iQ_dot_U_m*\
+                       np.exp(1j*(Qx[:,np.newaxis]*rx_m+\
+                                  Qy[:,np.newaxis]*ry_m+\
+                                  Qz[:,np.newaxis]*rz_m))
+            
+        F_nuc_ref = prod_nuc_ref.sum(axis=1)[cond]
+        prod_nuc_ref = prod_nuc_ref.reshape(n_hkl,
+                                            nu*nv*nw,
+                                            n_atm).sum(axis=1)[cond].flatten()
+                   
+        np.testing.assert_array_almost_equal(F_nuc, F_nuc_ref)
+        np.testing.assert_array_almost_equal(prod_nuc, prod_nuc_ref)
+        
+        factors = (c_n*b_n*cos_iQ_dot_U_m).flatten()
+        
+        F_nuc_ref = space.bragg(Qx, Qy, Qz, rx, ry, rz, factors, cond)
+                
+        np.testing.assert_array_almost_equal(F_nuc, F_nuc_ref)
+        
+        # ---
+        
+        # D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+        
+        # ani_disp_params = displacive.parameters(Ux, Uy, Uz, D, n_atm)
+        
+        # U11, U22, U33, U23, U13, U12 = ani_disp_params
+        
+        # T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
+        #                        U11, U22, U33, U23, U13, U12, a_, b_, c_)
+        
+        # T = np.repeat(T, nu*nv*nw).reshape(n_hkl,n_atm,nu*nv*nw)
+        # T = np.swapaxes(T, 1, 2).reshape(n_hkl,nu*nv*nw*n_atm)
+        
+        # factors = (c_n*b_n*T).flatten()
+        
+        # F_nuc_ref = space.bragg(Qx, Qy, Qz, rx, ry, rz, factors, cond)
+                
+        # print(np.stack((F_nuc, F_nuc_ref)).T)
+        
+        # np.testing.assert_array_almost_equal(F_nuc, F_nuc_ref)
         
     def test_parameters(self):
-    
+
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
 
-        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
-        
-        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
-        
         D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
         
         nu, nv, nw, n_atm = 2, 3, 4, 2
         
         np.random.seed(13)
         
-        c =np.array([0.1,0.2])
+        c = np.array([0.1,0.2])
         Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, value=c**2)
         
-        ani_disp_params = displacive.parameters(Ux, Uy, Uz, D, n_atm)
-        
-        U11, U22, U33, U23, U13, U12 = ani_disp_params
+        U11, U22, U33, \
+        U23, U13, U12 = displacive.parameters(Ux, Uy, Uz, D, n_atm)
                 
-        Uiso = np.zeros(n_atm)
-        
-        for i in range(n_atm):
-            
-            U = np.array([[U11[i], U12[i], U13[i]],
-                          [U12[i], U22[i], U23[i]],
-                          [U13[i], U23[i], U33[i]]])
-                        
-            Up, _ = np.linalg.eig(np.dot(np.dot(D, U), D.T))
-            
-            Uiso[i] = np.mean(Up).real
+        Uiso = displacive.isotropic(U11, U22, U33, U23, U13, U12, D)
             
         U_sq = Ux**2+Uy**2+Uz**2
         
         Uiso_ref = np.mean(U_sq.reshape(nu*nv*nw,n_atm), axis=0)/3
         
         np.testing.assert_array_almost_equal(Uiso, Uiso_ref)
+        
+    def test_equivalent(self):
+        
+        Uiso = np.array([1.5,1.2])
+        
+        a, b, c, alpha, beta, gamma = 5, 5, 5, np.pi/2, np.pi/2, np.pi/2
+        
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+        
+        U11, U22, U33, U23, U13, U12  = displacive.equivalent(Uiso, D)
+        
+        np.testing.assert_array_almost_equal(U11, Uiso)
+        np.testing.assert_array_almost_equal(U22, Uiso)
+        np.testing.assert_array_almost_equal(U33, Uiso)
+        np.testing.assert_array_almost_equal(U23, 0)
+        np.testing.assert_array_almost_equal(U13, 0)
+        np.testing.assert_array_almost_equal(U12, 0)
+        
+    def test_isotropic(self):
+        
+        U11 = np.array([0.5,0.3])
+        U22 = np.array([0.6,0.4])
+        U33 = np.array([0.4,0.6])
+        U23 = np.array([0.05,-0.03])
+        U13 = np.array([-0.04,0.02])
+        U12 = np.array([0.03,-0.02])
+        
+        a, b, c, alpha, beta, gamma = 5, 5, 5, np.pi/2, np.pi/2, np.pi/2
+        
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+        
+        Uiso = displacive.isotropic(U11, U22, U33, U23, U13, U12, D)
+        
+        np.testing.assert_array_almost_equal(Uiso, (U11+U22+U33)/3)
+        
+    def test_principal(self):
+                
+        U11 = np.array([0.4,0.3])
+        U22 = np.array([0.5,0.4])
+        U33 = np.array([0.6,0.6])
+        U23 = np.array([0.0,0.0])
+        U13 = np.array([0.0,0.0])
+        U12 = np.array([0.0,0.0])
+        
+        a, b, c, alpha, beta, gamma = 5, 5, 5, np.pi/2, np.pi/2, np.pi/2
+
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+                
+        U1, U2, U3 = displacive.principal(U11, U22, U33, U23, U13, U12, D)
+            
+        np.testing.assert_array_almost_equal(U1, U11)
+        np.testing.assert_array_almost_equal(U2, U22)
+        np.testing.assert_array_almost_equal(U3, U33)
+        
+    def test_cartesian(self):
+                
+        U11 = np.array([0.4,0.3])
+        U22 = np.array([0.5,0.4])
+        U33 = np.array([0.6,0.6])
+        U23 = np.array([0.0,0.0])
+        U13 = np.array([0.0,0.0])
+        U12 = np.array([0.0,0.0])
+        
+        a, b, c, alpha, beta, gamma = 5, 5, 5, np.pi/2, np.pi/2, np.pi/2
+
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+                        
+        Uxx, Uyy, Uzz, \
+        Uyz, Uxz, Uxy = displacive.cartesian(U11, U22, U33, 
+                                             U23, U13, U12, D)
+        
+        np.testing.assert_array_almost_equal(Uxx, U11)
+        np.testing.assert_array_almost_equal(Uyy, U22)
+        np.testing.assert_array_almost_equal(Uzz, U33)
+        np.testing.assert_array_almost_equal(Uyz, U23)
+        np.testing.assert_array_almost_equal(Uxz, U13)
+        np.testing.assert_array_almost_equal(Uyz, U12)
         
 if __name__ == '__main__':
     unittest.main()

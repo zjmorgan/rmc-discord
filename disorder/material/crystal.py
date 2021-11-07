@@ -790,13 +790,6 @@ def supercell(atm,
         
         if (np.shape(disp)[1] == 1):
             
-            C = cartesian_moment(a,
-                                 b, 
-                                 c, 
-                                 np.deg2rad(alpha), 
-                                 np.deg2rad(beta), 
-                                 np.deg2rad(gamma))
-            
             D = cartesian_displacement(a,
                                        b, 
                                        c, 
@@ -999,9 +992,7 @@ def disordered(delta,
         
         A_inv = np.linalg.inv(A)
         
-        u = A_inv[0,0]*ux+A_inv[0,1]*uy+A_inv[0,2]*uz
-        v = A_inv[1,0]*ux+A_inv[1,1]*uy+A_inv[1,2]*uz
-        w = A_inv[2,0]*ux+A_inv[2,1]*uy+A_inv[2,2]*uz
+        u, v, w = transform(ux, uy, uz, A_inv)
         
         mx = np.round(Sx[mask],4)
         my = np.round(Sy[mask],4)
@@ -1078,9 +1069,7 @@ def periodic(u, v, w, centers, neighbors, A, nu, nv, nw):
     V = (v+img_v[:,np.newaxis]).flatten()
     W = (w+img_w[:,np.newaxis]).flatten()
     
-    rx = A[0,0]*U+A[0,1]*V+A[0,2]*W
-    ry = A[1,0]*U+A[1,1]*V+A[1,2]*W
-    rz = A[2,0]*U+A[2,1]*V+A[2,2]*W
+    rx, ry, rz = transform(U, V, W, A)
         
     points = np.column_stack((rx, ry, rz))
     tree = spatial.cKDTree(points)
@@ -1179,9 +1168,7 @@ def pairs(u, v, w, neighbors, A, nu, nv, nw):
     J = (offset+img_v[:,np.newaxis]).flatten()
     K = (offset+img_w[:,np.newaxis]).flatten()
     
-    rx = A[0,0]*U+A[0,1]*V+A[0,2]*W
-    ry = A[1,0]*U+A[1,1]*V+A[1,2]*W
-    rz = A[2,0]*U+A[2,1]*V+A[2,2]*W
+    rx, ry, rz = transform(U, V, W, A)
     
     points = np.column_stack((rx, ry, rz))
     tree = spatial.cKDTree(points)
@@ -1218,9 +1205,7 @@ def nearest(u, v, w, A, nu, nv, nw):
     V = (v+img_v[:,np.newaxis]).flatten()
     W = (w+img_w[:,np.newaxis]).flatten()
     
-    rx = A[0,0]*U+A[0,1]*V+A[0,2]*W
-    ry = A[1,0]*U+A[1,1]*V+A[1,2]*W
-    rz = A[2,0]*U+A[2,1]*V+A[2,2]*W
+    rx, ry, rz = transform(U, V, W, A)
     
     points = np.column_stack((rx, ry, rz))
     tree = spatial.cKDTree(points)
