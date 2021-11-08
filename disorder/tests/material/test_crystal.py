@@ -570,5 +570,66 @@ class test_crystal(unittest.TestCase):
         lat = crystal.lattice(5, 6, 7, np.pi/2, np.pi/3, np.pi/4)
         self.assertEqual(lat, 'Triclinic')
         
+    def test_pairs(self):
+        
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+                                        
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='Cu3Au.cif', 
+                                   tol=1e-4)
+        
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        
+        a, b, c, alpha, beta, gamma = crystal.parameters(folder=folder, 
+                                                         filename='Cu3Au.cif')
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+                
+        neighbors = 12
+        
+        pairs = crystal.pairs(u, v, w, neighbors, A)
+        
+        atm_ind, img_ind_i, img_ind_j, img_ind_k, dist, dx, dy, dz = pairs
+                
+        np.testing.assert_array_almost_equal(dist, 2.64458)
+        
+        dx_ref = a*((img_ind_i+u[atm_ind]).T-u).T
+        dy_ref = b*((img_ind_j+v[atm_ind]).T-v).T
+        dz_ref = c*((img_ind_k+w[atm_ind]).T-w).T
+
+        np.testing.assert_array_almost_equal(dx, dx_ref)
+        np.testing.assert_array_almost_equal(dy, dy_ref)
+        np.testing.assert_array_almost_equal(dz, dz_ref)
+            
+    def test_nearest(self):
+        
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+                                        
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='Cu3Au.cif', 
+                                   tol=1e-4)
+        
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        
+        a, b, c, alpha, beta, gamma = crystal.parameters(folder=folder, 
+                                                         filename='Cu3Au.cif')
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+    
+        dist, dx, dy, dz = crystal.nearest(u, v, w, A)
+                        
+        np.testing.assert_array_almost_equal(dist, 2.64458)
+        
+        uvw = np.sort(np.abs(np.stack((dx.flatten(),
+                                       dy.flatten(),
+                                       dz.flatten()))/1.87),axis=0).T
+        
+        for i in range(uvw.shape[0]):
+            np.testing.assert_array_almost_equal(uvw[i,:], [0,1,1])
+        
 if __name__ == '__main__':
     unittest.main()

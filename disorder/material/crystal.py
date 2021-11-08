@@ -1112,9 +1112,9 @@ def periodic(u, v, w, centers, neighbors, A, nu, nv, nw):
     
     n = np.sum(centers)
     
-    img_ind_u = np.zeros(primitive.shape, dtype=np.int)
-    img_ind_v = np.zeros(primitive.shape, dtype=np.int)
-    img_ind_w = np.zeros(primitive.shape, dtype=np.int)
+    img_ind_u = np.zeros(primitive.shape, dtype=int)
+    img_ind_v = np.zeros(primitive.shape, dtype=int)
+    img_ind_w = np.zeros(primitive.shape, dtype=int)
     
     diff_u = (u[primitive].T-u[primitive[:,0]]).T
     diff_v = (v[primitive].T-v[primitive[:,0]]).T
@@ -1143,10 +1143,11 @@ def periodic(u, v, w, centers, neighbors, A, nu, nv, nw):
     
     structure = primitive[:,:,np.newaxis]+n_atm*(K+nw*(J+nv*I))
     
-    return np.rollaxis(structure, -1).reshape(nu*nv*nw*n,1+neighbors), \
-           primitive
+    structure = np.rollaxis(structure, -1).reshape(nu*nv*nw*n,1+neighbors)
+    
+    return structure, primitive
            
-def pairs(u, v, w, neighbors, A, nu, nv, nw):
+def pairs(u, v, w, neighbors, A):
     
     n_atm = u.shape[0]
     
@@ -1158,7 +1159,7 @@ def pairs(u, v, w, neighbors, A, nu, nv, nw):
     img_v = img_v.flatten()
     img_w = img_w.flatten()
     
-    offset = np.zeros(n_atm, dtype=np.int)
+    offset = np.zeros(n_atm, dtype=int)
     
     U = (u+img_u[:,np.newaxis]).flatten()
     V = (v+img_v[:,np.newaxis]).flatten()
@@ -1189,7 +1190,7 @@ def pairs(u, v, w, neighbors, A, nu, nv, nw):
     
     return atm_ind, img_ind_i, img_ind_j, img_ind_k, dist, dx, dy, dz
 
-def nearest(u, v, w, A, nu, nv, nw):
+def nearest(u, v, w, A):
     
     n_atm = u.shape[0]
     

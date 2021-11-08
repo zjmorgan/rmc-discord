@@ -442,6 +442,6 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
     reverses = np.arange(indices.shape[0])
     
     index = index[coindices][indices]
-    reverses = reverses[coindices][indices]
+    reverses = reverses[inverses][coinverses]
                        
     return index, reverses, symops, Nu, Nv, Nw
