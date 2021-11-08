@@ -24,7 +24,7 @@ class test_scattering(unittest.TestCase):
         
         Rx, Ry, Rz = space.cell(nu, nv, nw, A)
         
-        atm = np.array(['Fe', 'Co'])
+        atm = np.array(['Fe','Co'])
         u, v, w = np.array([0,0.2]), np.array([0,0.3]), np.array([0,0.4])
         
         ux, uy, uz = crystal.transform(u, v, w, A)

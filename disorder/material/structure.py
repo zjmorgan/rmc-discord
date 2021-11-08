@@ -4,6 +4,7 @@ import os
 import numpy as np
 
 from disorder.diffuse import scattering, space
+from disorder.diffuse import displacive, magnetic
 from disorder.material import crystal, symmetry
 
 def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
@@ -299,39 +300,16 @@ class UnitCell:
         
         U11, U22, U33, U23, U13, U12 = adps
         
-        U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
-        n = np.size(U11)
-        
-        U = U.reshape(3,3,n)
-        
-        Uiso = []
-        for i in range(n):
-            Up, _ = np.linalg.eig(np.dot(np.dot(D, U[...,i]), D.T))
-            Uiso.append(np.mean(Up).real)
-        
-        return np.array(Uiso)
+        return displacive.isotropic(U11, U22, U33, U23, U13, U12, D)
     
     def get_principal_displacement_parameters(self):
         
-        D = self.get_atomic_displacement_cartesian_transform()
+        D = self.get_atomic_displacement_cartesian_transform()        
         adps = self.get_anisotropic_displacement_parameters()
         
         U11, U22, U33, U23, U13, U12 = adps
         
-        U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
-        n = np.size(U11)
-        
-        U = U.reshape(3,3,n)
-        
-        U1, U2, U3 = [], [], []
-        for i in range(n):
-            Up, _ = np.linalg.eig(np.dot(np.dot(D, U[...,i]), D.T))
-            Up.sort()
-            U1.append(Up[0].real)
-            U2.append(Up[1].real)
-            U3.append(Up[2].real)
-        
-        return np.array(U1), np.array(U2), np.array(U3)
+        return displacive.principal(U11, U22, U33, U23, U13, U12, D)
     
     def get_cartesian_anistropic_displacement_parameters(self):
         
@@ -340,23 +318,7 @@ class UnitCell:
         
         U11, U22, U33, U23, U13, U12 = adps
         
-        U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
-        n = np.size(U11)
-        
-        U = U.reshape(3,3,n)
-        
-        Uxx, Uyy, Uzz, Uyz, Uxz, Uxy = [], [], [], [], [], []
-        for i in range(n):
-            Up = np.dot(np.dot(D, U[...,i]), D.T)
-            Uxx.append(Up[0,0])
-            Uyy.append(Up[1,1])
-            Uzz.append(Up[2,2])
-            Uyz.append(Up[1,2])
-            Uxz.append(Up[0,2])
-            Uxy.append(Up[0,1])
-        
-        return np.array(Uxx), np.array(Uyy), np.array(Uzz), \
-               np.array(Uyz), np.array(Uxz), np.array(Uxy)
+        return displacive.cartesian(U11, U22, U33, U23, U13, U12, D)
                
     def get_crystal_axis_magnetic_moments(self):
         
@@ -380,36 +342,15 @@ class UnitCell:
         
         C = self.get_moment_cartesian_transform()
         mu1, mu2, mu3 = self.get_crystal_axis_magnetic_moments()
-        
-        M = np.array([mu1,mu2,mu3])
-        n = np.size(mu1)
-        
-        M = M.reshape(3,n)
 
-        mu = []
-        for i in range(n):
-            mu.append(np.linalg.norm(np.dot(C, M[:,i])))
-        
-        return np.array(mu)
+        return magnetic.magnitude(mu1, mu2, mu3, C)
     
     def get_cartesian_magnetic_moments(self):
         
         C = self.get_moment_cartesian_transform()
         mu1, mu2, mu3 = self.get_crystal_axis_magnetic_moments()
         
-        M = np.array([mu1,mu2,mu3])
-        n = np.size(mu1)
-        
-        M = M.reshape(3,n)
-
-        mux, muy, muz = [], [], []
-        for i in range(n):
-            Mp = np.dot(C, M[:,i])
-            mux.append(Mp[0])
-            muy.append(Mp[1])
-            muz.append(Mp[2])
-        
-        return np.array(mux), np.array(muy), np.array(muz)
+        return magnetic.cartesian(mu1, mu2, mu3, C)
     
     def get_g_factors(self):
         

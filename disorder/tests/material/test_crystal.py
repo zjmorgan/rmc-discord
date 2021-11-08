@@ -4,8 +4,8 @@ import unittest
 import numpy as np
 import scipy.linalg
 
-from disorder.material import crystal
-from disorder.material import symmetry
+from disorder.material import crystal, symmetry
+from disorder.diffuse import space, magnetic, occupational, displacive
 
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
@@ -273,7 +273,74 @@ class test_crystal(unittest.TestCase):
         self.assertEqual((atm == 'O').sum()*n_uvw, (Atm == 'O').sum())
         
         os.remove(folder+'/supercell_CuMnO2.mcif')
-    
+        
+    def test_disordered(self):
+
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+                
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='CaTiOSiO4.cif', 
+                                   tol=1e-4)
+        
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        occ = uc_dict['occupancy']
+        disp = uc_dict['displacement']
+        mom = uc_dict['moment']
+        site = uc_dict['site']
+        atm = uc_dict['atom']
+        n_atm = uc_dict['n_atom']
+        
+        nu, nv, nw = 2, 3, 4
+        
+        constants = crystal.parameters(folder=folder, filename='CaTiOSiO4.cif')
+        
+        A = crystal.cartesian(*constants)
+        C = crystal.cartesian_moment(*constants)
+        D = crystal.cartesian_displacement(*constants)
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        ix, iy, iz = space.cell(nu, nv, nw, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, ix, iy, iz, atm)
+        
+        U11, U22, U33, U23, U13, U12 = disp.T
+        U = np.row_stack(displacive.cartesian(U11, U22, U33, U23, U13, U12, D))
+        Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, U)    
+        
+        A_r = occupational.composition(nu, nv, nw, n_atm, occ)
+        delta = (occ*(1+A_r.reshape(nu,nv,nw,n_atm))).flatten()
+        
+        mu1, mu2, mu3 = mom.T
+        mu = np.row_stack(magnetic.cartesian(mu1, mu2, mu3, C))
+        Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm, mu)
+        
+        crystal.disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz, 
+                           nu, nv, nw, atm, A, 
+                           folder+'/disordered_CaTiOSiO4.cif', 
+                           folder=folder, filename='CaTiOSiO4.cif', 
+                           ulim=[0,nu], vlim=[0,nv], wlim=[0,nw])
+        
+        UC_dict = crystal.unitcell(folder=folder, 
+                                   filename='disordered_CaTiOSiO4.cif', 
+                                   tol=1e-4)
+        
+        U = UC_dict['u']
+        V = UC_dict['v']
+        W = UC_dict['w']
+        Occ = UC_dict['occupancy']
+        Disp = UC_dict['displacement']
+        Mom = UC_dict['moment']
+        Site = UC_dict['site']
+        Atm = UC_dict['atom']
+        N_atm = UC_dict['n_atom']
+                
+        np.testing.assert_array_equal(atms == Atm, True)
+            
+        os.remove(folder+'/disordered_CaTiOSiO4.cif')
+        
     def test_laue(self):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))

@@ -128,7 +128,7 @@ class test_plots(unittest.TestCase):
         z = np.sin(2*np.pi*x)*np.cos(2*np.pi*y)
         
         heat_map.plot_data(z, xmin, ymin, xmax, ymax)
-        heat_map.create_colorbar()
+        heat_map.create_colorbar(orientation='horizontal')
         heat_map.update_colormap('binary')
         
         np.testing.assert_array_equal(heat_map.get_data(), z)

@@ -694,19 +694,8 @@ def transform(p, q, r, U):
            U[1,0]*p+U[1,1]*q+U[1,2]*r,\
            U[2,0]*p+U[2,1]*q+U[2,2]*r
             
-def supercell(atm,
-              occ,
-              disp,
-              mom,
-              u, 
-              v, 
-              w,
-              nu,
-              nv,
-              nw,
-              name,
-              folder=None,
-              filename=None):
+def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw, 
+              name, folder=None, filename=None):
     
     if (filename != None):
                 
@@ -908,27 +897,9 @@ def supercell(atm,
         
         outfile.close()
         
-def disordered(delta,
-               Ux,
-               Uy, 
-               Uz, 
-               Sx,
-               Sy,
-               Sz,
-               rx, 
-               ry, 
-               rz,
-               nu,
-               nv,
-               nw,
-               atm, 
-               A,
-               name,
-               folder=None,
-               filename=None,
-               ulim=[0,1], 
-               vlim=[0,1], 
-               wlim=[0,1]):
+def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz, 
+               nu, nv, nw, atm, A, name, folder=None, filename=None, 
+               ulim=[0,1], vlim=[0,1], wlim=[0,1]):
     
     if (filename != None):
                 
@@ -966,6 +937,11 @@ def disordered(delta,
         for asite in atomic_sites:
             cb.RemoveLoopItem(asite)
               
+        atomic_disp = cb.GetLoopNames('_atom_site_aniso_label')
+        
+        for adisp in atomic_disp:
+            cb.RemoveLoopItem(adisp)
+            
         n_atm = atm.shape[0]
         
         i0, i1 = ulim[0], ulim[1]

@@ -426,28 +426,6 @@ class test_displacive(unittest.TestCase):
                 
         np.testing.assert_array_almost_equal(F_nuc, F_nuc_ref)
         
-        # ---
-        
-        # D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
-        
-        # ani_disp_params = displacive.parameters(Ux, Uy, Uz, D, n_atm)
-        
-        # U11, U22, U33, U23, U13, U12 = ani_disp_params
-        
-        # T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
-        #                        U11, U22, U33, U23, U13, U12, a_, b_, c_)
-        
-        # T = np.repeat(T, nu*nv*nw).reshape(n_hkl,n_atm,nu*nv*nw)
-        # T = np.swapaxes(T, 1, 2).reshape(n_hkl,nu*nv*nw*n_atm)
-        
-        # factors = (c_n*b_n*T).flatten()
-        
-        # F_nuc_ref = space.bragg(Qx, Qy, Qz, rx, ry, rz, factors, cond)
-                
-        # print(np.stack((F_nuc, F_nuc_ref)).T)
-        
-        # np.testing.assert_array_almost_equal(F_nuc, F_nuc_ref)
-        
     def test_parameters(self):
 
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4

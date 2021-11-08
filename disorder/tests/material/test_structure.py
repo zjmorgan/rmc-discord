@@ -10,7 +10,7 @@ directory = os.path.dirname(os.path.abspath(__file__))
 
 class test_structure(unittest.TestCase):
     
-    def test_structure(self):
+    def test_factor(self):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
         
