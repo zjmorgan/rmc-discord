@@ -341,6 +341,68 @@ class test_crystal(unittest.TestCase):
             
         os.remove(folder+'/disordered_CaTiOSiO4.cif')
         
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='CuMnO2.mcif', 
+                                   tol=1e-4)
+        
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        occ = uc_dict['occupancy']
+        disp = uc_dict['displacement']
+        mom = uc_dict['moment']
+        site = uc_dict['site']
+        atm = uc_dict['atom']
+        n_atm = uc_dict['n_atom']
+        
+        nu, nv, nw = 2, 3, 4
+        
+        constants = crystal.parameters(folder=folder, filename='CuMnO2.mcif')
+        
+        A = crystal.cartesian(*constants)
+        C = crystal.cartesian_moment(*constants)
+        D = crystal.cartesian_displacement(*constants)
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        ix, iy, iz = space.cell(nu, nv, nw, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, ix, iy, iz, atm)
+        
+        Uiso = disp.flatten()
+        Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, Uiso)    
+        
+        A_r = occupational.composition(nu, nv, nw, n_atm, occ)
+        delta = (occ*(1+A_r.reshape(nu,nv,nw,n_atm))).flatten()
+        
+        mu1, mu2, mu3 = mom.T
+        mu = np.row_stack(magnetic.cartesian(mu1, mu2, mu3, C))
+        Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm, mu)
+        
+        crystal.disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz, 
+                           nu, nv, nw, atm, A, 
+                           folder+'/disordered_CuMnO2.mcif', 
+                           folder=folder, filename='CuMnO2.mcif', 
+                           ulim=[0,nu], vlim=[0,nv], wlim=[0,nw])
+        
+        UC_dict = crystal.unitcell(folder=folder, 
+                                   filename='disordered_CuMnO2.mcif', 
+                                   tol=1e-4)
+        
+        U = UC_dict['u']
+        V = UC_dict['v']
+        W = UC_dict['w']
+        Occ = UC_dict['occupancy']
+        Disp = UC_dict['displacement']
+        Mom = UC_dict['moment']
+        Site = UC_dict['site']
+        Atm = UC_dict['atom']
+        N_atm = UC_dict['n_atom']
+                
+        np.testing.assert_array_equal(atms == Atm, True)
+            
+        os.remove(folder+'/disordered_CuMnO2.mcif')
+        
     def test_laue(self):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
@@ -417,9 +479,10 @@ class test_crystal(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
         
         u_, v_, w_ = np.dot(B, [1,0,0]), np.dot(B, [0,1,0]), np.dot(B, [0,0,1])
+        
+        d_ref = 1/np.sqrt(np.dot(h*u_+k*v_+l*w_, h*u_+k*v_+l*w_))
 
-        self.assertAlmostEqual(d, 1/np.sqrt(np.dot(h*u_+k*v_+l*w_, 
-                                                   h*u_+k*v_+l*w_)))
+        self.assertAlmostEqual(d, d_ref)
 
     def test_interplanar(self):
 
@@ -438,11 +501,12 @@ class test_crystal(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
         
         u_, v_, w_ = np.dot(B, [1,0,0]), np.dot(B, [0,1,0]), np.dot(B, [0,0,1])
+        
+        angle_ref = np.arccos(np.dot(h0*u_+k0*v_+l0*w_, h1*u_+k1*v_+l1*w_)
+                    / np.linalg.norm(h0*u_+k0*v_+l0*w_)
+                    / np.linalg.norm(h1*u_+k1*v_+l1*w_))
 
-        self.assertAlmostEqual(angle, np.arccos(np.dot(h0*u_+k0*v_+l0*w_, 
-                                                       h1*u_+k1*v_+l1*w_)
-                                      / np.linalg.norm(h0*u_+k0*v_+l0*w_)
-                                      / np.linalg.norm(h1*u_+k1*v_+l1*w_)))
+        self.assertAlmostEqual(angle, angle_ref)
         
     def test_volume(self):
         

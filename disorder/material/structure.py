@@ -67,7 +67,7 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
     F = factors.sum(axis=1)   
         
     coordinate = np.stack((h,k,l))
-    
+        
     symops = np.unique(symmetry.inverse(symops))
         
     total = []
@@ -75,9 +75,9 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
         
         transformed = symmetry.evaluate(symop, coordinate, translate=False)
         total.append(transformed.T.tolist())
-
+        
     total = np.array(total)
-
+    
     for i in range(coordinate.shape[1]):
         
         total[:,i,:] = total[np.lexsort(total[:,i,:].T),i,:]
@@ -85,7 +85,8 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
     total = np.hstack(total).T
         
     total, ind, mult = np.unique(total, axis=1, 
-                                 return_index=True, return_counts=True)
+                                 return_index=True, 
+                                 return_counts=True)
                 
     h, k, l, d, F = h[ind], k[ind], l[ind], d[ind], F[ind]
         

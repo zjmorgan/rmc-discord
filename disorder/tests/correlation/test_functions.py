@@ -3,7 +3,7 @@
 import unittest
 import numpy as np
 
-from disorder.material import crystal
+from disorder.material import crystal, symmetry
 from disorder.diffuse import space
 from disorder.correlation import functions
 
@@ -361,5 +361,58 @@ class test_functions(unittest.TestCase):
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Fe_Fe'], 1.0)
         np.testing.assert_array_almost_equal(S_corr[atm_pair == 'Co_Fe'], -1.0)
         
+    def test_symmetrize(self):
+    
+        a, b, c, alpha, beta, gamma = 5, 5, 5, np.pi/2, np.pi/2, np.pi/2
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        
+        nu, nv, nw = 3, 3, 3
+        
+        Rx, Ry, Rz = space.cell(nu, nv, nw, A)
+        
+        atm = np.array(['Fe','Fe'])
+        u = np.array([0.0,0.5])
+        v = np.array([0.0,0.5])
+        w = np.array([0.0,0.5])
+                
+        n_atm = atm.shape[0]
+        
+        ux, uy, uz = crystal.transform(u, v, w, A)
+        
+        rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
+                
+        data = functions.pairs3d(rx, ry, rz, atms, nu, nv, nw, fract=1.0)
+        dx, dy, dz, atm_pair, counts, search, coordinate, N = data
+        
+        arr = np.random.random(atm_pair.shape)
+        
+        symm_data = functions.symmetrize(arr, dx, dy, dz, atm_pair, A, 'm-3m')
+        symm_arr, dx_symm, dy_symm, dz_symm, ion_symm = symm_data
+        
+        symops = symmetry.laue('m-3m')
+                
+        coordinate = np.stack((dx_symm,dy_symm,dz_symm))
+                            
+        total = []
+        for symop in symops:
+            
+            transformed = symmetry.evaluate(symop, coordinate, translate=False)
+            total.append(transformed.T.tolist())
+    
+        total = np.array(total)
+    
+        for i in range(coordinate.shape[1]):
+            
+            total[:,i,:] = total[np.lexsort(total[:,i,:].T),i,:]
+            
+        total = np.hstack(total).T
+            
+        total, ind, inv = np.unique(total, axis=1, 
+                                    return_index=True, 
+                                    return_inverse=True)
+        
+        np.testing.assert_array_almost_equal(symm_arr[ind][inv], symm_arr)
+                
 if __name__ == '__main__':
     unittest.main()
