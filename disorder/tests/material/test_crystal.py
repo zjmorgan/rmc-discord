@@ -467,10 +467,6 @@ class test_crystal(unittest.TestCase):
     def test_d(self):
 
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
-        
-        h, k, l = 1, 2, -3
-
-        d = crystal.d(a, b, c, alpha, beta, gamma, h, k, l)
 
         inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
         
@@ -480,13 +476,42 @@ class test_crystal(unittest.TestCase):
         
         u_, v_, w_ = np.dot(B, [1,0,0]), np.dot(B, [0,1,0]), np.dot(B, [0,0,1])
         
+        h, k, l = 1, 2, -3
+
+        d = crystal.d(a, b, c, alpha, beta, gamma, h, k, l)
+        
         d_ref = 1/np.sqrt(np.dot(h*u_+k*v_+l*w_, h*u_+k*v_+l*w_))
 
         self.assertAlmostEqual(d, d_ref)
+        
+        h, k, l = np.array([2,3]), np.array([3,2]), np.array([-4,4])
+
+        d = crystal.d(a, b, c, alpha, beta, gamma, h, k, l)
+                
+        d_ref = np.zeros(2)
+        
+        for i in range(2):
+            inv_d = np.sqrt(np.dot(h[i]*u_+k[i]*v_+l[i]*w_, 
+                                   h[i]*u_+k[i]*v_+l[i]*w_))
+            
+            if np.isclose(inv_d, 0):
+                d_ref[i] = np.nan
+            else:
+                d_ref[i] = 1/inv_d
+
+        np.testing.assert_array_almost_equal(d, d_ref)
 
     def test_interplanar(self):
 
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+        
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+        
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        
+        u_, v_, w_ = np.dot(B, [1,0,0]), np.dot(B, [0,1,0]), np.dot(B, [0,0,1])
         
         h0, k0, l0 = 1, 2, -3
         h1, k1, l1 = 2, -1, -4
@@ -494,19 +519,33 @@ class test_crystal(unittest.TestCase):
         angle = crystal.interplanar(a, b, c, alpha, beta, gamma, \
                                     h0, k0, l0, h1, k1, l1)
         
-        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
-        
-        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
-
-        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
-        
-        u_, v_, w_ = np.dot(B, [1,0,0]), np.dot(B, [0,1,0]), np.dot(B, [0,0,1])
-        
         angle_ref = np.arccos(np.dot(h0*u_+k0*v_+l0*w_, h1*u_+k1*v_+l1*w_)
                     / np.linalg.norm(h0*u_+k0*v_+l0*w_)
                     / np.linalg.norm(h1*u_+k1*v_+l1*w_))
 
         self.assertAlmostEqual(angle, angle_ref)
+        
+        h0, k0, l0 = np.array([2,3]), np.array([3,2]), np.array([-4,4])
+        h1, k1, l1 = np.array([-3,3]), np.array([2,2]), np.array([-1,4])
+
+        angle = crystal.interplanar(a, b, c, alpha, beta, gamma, \
+                                    h0, k0, l0, h1, k1, l1)
+            
+        angle_ref = np.zeros(2)
+        
+        for i in range(2):
+            dot = np.dot(h0[i]*u_+k0[i]*v_+l0[i]*w_,
+                         h1[i]*u_+k1[i]*v_+l1[i]*w_)
+                                 
+            norm0 = np.linalg.norm(h0[i]*u_+k0[i]*v_+l0[i]*w_)
+            norm1 = np.linalg.norm(h1[i]*u_+k1[i]*v_+l1[i]*w_)
+            
+            if (np.isclose(norm0, 0) or np.isclose(norm1, 0)):
+                angle_ref[i] = np.nan
+            else:
+                angle_ref[i] = np.arccos(dot/(norm0*norm1))
+
+        np.testing.assert_array_almost_equal(angle, angle_ref)
         
     def test_volume(self):
         

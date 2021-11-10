@@ -910,16 +910,13 @@ def d(a, b, c, alpha, beta, gamma, h, k, l):
     mask = np.isclose(inv_d_spacing, 0)
     
     if (np.sum(mask) > 0):
-    
         n = np.argwhere(mask)
         inv_d_spacing[n] = 1
               
         d_spacing = 1/inv_d_spacing
         
         d_spacing[n] = np.nan
-        
     else:
-        
         d_spacing = 1/inv_d_spacing
         
     return d_spacing
@@ -942,7 +939,6 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
     mask1 = np.isclose(inv_d1_spacing, 0)
     
     if (np.sum(mask0) > 0):
-    
         n0 = np.argwhere(mask0)
         inv_d0_spacing[n0] = 1
               
@@ -951,20 +947,16 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
         d0_spacing[n0] = np.nan
         
     else:
-        
         d0_spacing = 1/inv_d0_spacing
 
     if (np.sum(mask1) > 0):
-    
         n1 = np.argwhere(mask1)
         inv_d1_spacing[n1] = 1
               
         d1_spacing = 1/inv_d1_spacing
         
         d1_spacing[n1] = np.nan
-        
     else:
-        
         d1_spacing = 1/inv_d1_spacing
         
     inv_01 = G_[0,0]*h0*h1+G_[0,1]*k0*h1+G_[0,2]*l0*h1+\
