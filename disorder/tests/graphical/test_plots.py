@@ -109,6 +109,8 @@ class test_plots(unittest.TestCase):
         
         line_plot.show_legend()
         line_plot.set_labels(r'$y=f(x)$', r'$x$', r'$y$', r'$z=(y+1)/2$')
+        
+        line_plot.set_aspect(0.75)
 
         line_plot.save_figure(filename)
         
@@ -143,6 +145,12 @@ class test_plots(unittest.TestCase):
         heat_map.update_colormap(category='diverging')
         heat_map.reformat_colorbar()
         
+        heat_map.set_normalization(-1.1, 1.1, norm='symlog')
+        heat_map.reformat_colorbar()
+        
+        heat_map.set_normalization(-0.4, 0.4, norm='symlog')
+        heat_map.reformat_colorbar()
+        
         heat_map.set_labels(r'$z(x,y)$', r'$x$', r'$y$')
         
         heat_map.save_figure(filename)
@@ -158,7 +166,7 @@ class test_plots(unittest.TestCase):
         
         transform = np.array([[1.0,0.5],[-0.5,1.0]])
         heat_map.transform_axes(transform)
-        
+                
         heat_map.save_figure(filename)
         
         self.assertTrue(os.path.exists(filename))
@@ -191,6 +199,12 @@ class test_plots(unittest.TestCase):
         
         scatter_plot.set_normalization(-1, 1, norm='symlog')
         scatter_plot.update_colormap(category='diverging')
+        scatter_plot.reformat_colorbar()
+        
+        scatter_plot.set_normalization(-1.1, 1.1, norm='symlog')
+        scatter_plot.reformat_colorbar()
+        
+        scatter_plot.set_normalization(-0.4, 0.4, norm='symlog')
         scatter_plot.reformat_colorbar()
         
         scatter_plot.set_labels(r'$f(x,y)$', r'$x$', r'$y$')

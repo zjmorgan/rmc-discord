@@ -381,8 +381,8 @@ class HeatMap(Plot):
             
         norm = self.norm
         minorticks = []
-        
-        if (vmin > ticks[0]):
+                
+        if (vmin < ticks[0]):
             vn = 11 if vmin >= -0.1 and vmin <= 0.1 else 10
             tmin = inv((np.array([ticks[0]])-vmin)/(vmax-vmin))[0]
             if (vmin >= -0.1 and vmin <= 0.1):
@@ -392,7 +392,7 @@ class HeatMap(Plot):
                 tn = int(vmin/tmin) 
                 nmin = tmin*10
         
-            values = (vmax-vmin)*norm(np.linspace(nmin, tmin, vn))[tn:-1]+vmin
+            values = (vmax-vmin)*norm(np.linspace(nmin, tmin, vn))[-tn:-1]+vmin
             minorticks += values.tolist()
         
         for i in range(len(ticks)-1):
@@ -414,7 +414,7 @@ class HeatMap(Plot):
                 tn = int(vmax/tmax)
                 nmax =  tmax*10
     
-            values = (vmax-vmin)*norm(np.linspace(tmax, nmax, vn))[1:tn]+vmin        
+            values = (vmax-vmin)*norm(np.linspace(tmax, nmax, vn))[1:tn]+vmin    
             minorticks += values.tolist()
                             
         if (self.cb.orientation == 'vertical'):        
@@ -628,7 +628,7 @@ class Scatter(Plot):
         norm = self.norm
         minorticks = []
         
-        if (vmin > ticks[0]):
+        if (vmin < ticks[0]):
             vn = 11 if vmin >= -0.1 and vmin <= 0.1 else 10
             tmin = inv((np.array([ticks[0]])-vmin)/(vmax-vmin))[0]
             if (vmin >= -0.1 and vmin <= 0.1):
@@ -638,7 +638,7 @@ class Scatter(Plot):
                 tn = int(vmin/tmin) 
                 nmin = tmin*10
         
-            values = (vmax-vmin)*norm(np.linspace(nmin, tmin, vn))[tn:-1]+vmin
+            values = (vmax-vmin)*norm(np.linspace(nmin, tmin, vn))[-tn:-1]+vmin
             minorticks += values.tolist()
         
         for i in range(len(ticks)-1):
