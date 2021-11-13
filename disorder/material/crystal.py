@@ -1060,25 +1060,26 @@ def pairs(u, v, w, ion, A):
                 
         sort = np.lexsort(metric[mask].T)
         
-        l = j[mask][sort]
+        # l = j[mask][sort]
                         
-        #pair_dict[k] = ion[k], l.tolist(), ion[l], d[mask][sort].tolist()
+        # pair_dict[k] = ion[k], l.tolist(), ion[l], d[mask][sort].tolist()
         
-        _, ion_ind = np.unique(ion_labels[mask][sort], return_index=True)
+        # _, ion_ind = np.unique(ion_labels[mask][sort], return_index=True)
         
         label_dict = { }
         
         d_ref = d[mask][sort]
-        ion_ref = ion_ion[mask][sort]
+        ion_ref = ion_labels[mask][sort]
         
-        # print(ion_ind)
-        
-        for label in ion_ref[ion_ind]:
+        l, m = [], []
+        l.append(ion_ref[0])
+        for ind in range(ion_ref.shape[0]-1):
+            if ion_ref[ind] != ion_ref[ind+1]:
+                m.append(l)
+                l = []
+            l.append(ion_ref[ind+1])
+        m.append(l)       
+         
+        pair_dict[k] = m
             
-            veil = ion_ref == label
-        
-            label_dict[label] = d_ref[veil]
-                
-        pair_dict[k] = label_dict
-            
-    # print(pair_dict)
+    print(pair_dict)
