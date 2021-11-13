@@ -1026,10 +1026,6 @@ def pairs(u, v, w, ion, A):
     dv = v[j]-v[i]
     dw = w[j]-w[i]
     
-    img_u = -1*(du > 0.5)+1*(du < 0.5)
-    img_v = -1*(dv > 0.5)+1*(dv < 0.5)
-    img_w = -1*(dw > 0.5)+1*(dw < 0.5)
-    
     du[du > 0.5] -= 1
     dv[dv > 0.5] -= 1
     dw[dw > 0.5] -= 1
@@ -1044,10 +1040,7 @@ def pairs(u, v, w, ion, A):
                         
     atms = np.stack((ion[i],ion[j]))
     
-    #sort = np.argsort(atms, axis=0)
-                
-    #atms = np.take_along_axis(atms, sort, axis=0)
-    ion_ion = np.array(['{}_{}'.format(a,b) for a, b in zip(*atms)])
+    ion_ion = np.array(['_'.join((a,b)) for a, b in zip(*atms)])
     ions, ion_labels = np.unique(ion_ion, return_inverse=True)
     
     metric = np.stack((dx,dy,dz,d)).T
@@ -1060,26 +1053,25 @@ def pairs(u, v, w, ion, A):
                 
         sort = np.lexsort(metric[mask].T)
         
-        # l = j[mask][sort]
-                        
-        # pair_dict[k] = ion[k], l.tolist(), ion[l], d[mask][sort].tolist()
-        
-        # _, ion_ind = np.unique(ion_labels[mask][sort], return_index=True)
-        
         label_dict = { }
         
-        d_ref = d[mask][sort]
-        ion_ref = ion_labels[mask][sort]
-        
-        l, m = [], []
-        l.append(ion_ref[0])
-        for ind in range(ion_ref.shape[0]-1):
-            if ion_ref[ind] != ion_ref[ind+1]:
-                m.append(l)
-                l = []
-            l.append(ion_ref[ind+1])
-        m.append(l)       
+        l = j[mask][sort]
+        ion_lab = ion_labels[mask][sort]
+        ion_ref = [ion_pair.split('_')[1] for ion_pair in ion_ion[mask][sort]]
+
+        c = 0
+        m = []
+        m.append(l[0])
+        for ind in range(ion_lab.shape[0]-1):
+            if ion_lab[ind] != ion_lab[ind+1]:
+                key = c, ion_ref[ind]
+                label_dict[key] = m
+                m = []
+                c += 1
+            m.append(l[ind+1])
+        key = c, ion_ref[ind]
+        label_dict[key] = m
          
-        pair_dict[k] = m
+        pair_dict[k] = label_dict
             
-    print(pair_dict)
+    return pair_dict

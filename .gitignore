@@ -136,7 +136,7 @@ dmypy.json
 *.pdf
 
 # CIF
-*.cif
+#*.cif
 
 # NeXus
 *.nxs

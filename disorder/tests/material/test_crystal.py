@@ -145,7 +145,6 @@ class test_crystal(unittest.TestCase):
         occ = uc_dict['occupancy']
         disp = uc_dict['displacement']
         mom = uc_dict['moment']
-        site = uc_dict['site']
         atm = uc_dict['atom']
         n_atm = uc_dict['n_atom']
         
@@ -179,7 +178,6 @@ class test_crystal(unittest.TestCase):
         Occ = UC_dict['occupancy']
         Disp = UC_dict['displacement']
         Mom = UC_dict['moment']
-        Site = UC_dict['site']
         Atm = UC_dict['atom']
         N_atm = UC_dict['n_atom']
         
@@ -230,7 +228,6 @@ class test_crystal(unittest.TestCase):
         occ = uc_dict['occupancy']
         disp = uc_dict['displacement']
         mom = uc_dict['moment']
-        site = uc_dict['site']
         atm = uc_dict['atom']
         n_atm = uc_dict['n_atom']
                 
@@ -260,7 +257,6 @@ class test_crystal(unittest.TestCase):
         Occ = UC_dict['occupancy']
         Disp = UC_dict['displacement']
         Mom = UC_dict['moment']
-        Site = UC_dict['site']
         Atm = UC_dict['atom']
         N_atm = UC_dict['n_atom']
         
@@ -327,15 +323,7 @@ class test_crystal(unittest.TestCase):
                                    filename='disordered_CaTiOSiO4.cif', 
                                    tol=1e-4)
         
-        U = UC_dict['u']
-        V = UC_dict['v']
-        W = UC_dict['w']
-        Occ = UC_dict['occupancy']
-        Disp = UC_dict['displacement']
-        Mom = UC_dict['moment']
-        Site = UC_dict['site']
         Atm = UC_dict['atom']
-        N_atm = UC_dict['n_atom']
                 
         np.testing.assert_array_equal(atms == Atm, True)
             
@@ -351,7 +339,6 @@ class test_crystal(unittest.TestCase):
         occ = uc_dict['occupancy']
         disp = uc_dict['displacement']
         mom = uc_dict['moment']
-        site = uc_dict['site']
         atm = uc_dict['atom']
         n_atm = uc_dict['n_atom']
         
@@ -389,18 +376,11 @@ class test_crystal(unittest.TestCase):
                                    filename='disordered_CuMnO2.mcif', 
                                    tol=1e-4)
         
-        U = UC_dict['u']
-        V = UC_dict['v']
-        W = UC_dict['w']
-        Occ = UC_dict['occupancy']
-        Disp = UC_dict['displacement']
-        Mom = UC_dict['moment']
-        Site = UC_dict['site']
+
         Atm = UC_dict['atom']
-        N_atm = UC_dict['n_atom']
                 
         np.testing.assert_array_equal(atms == Atm, True)
-            
+                    
         os.remove(folder+'/disordered_CuMnO2.mcif')
         
     def test_laue(self):
@@ -759,11 +739,59 @@ class test_crystal(unittest.TestCase):
         
         A = crystal.cartesian(*constants)
                         
-        pairs = crystal.pairs(u, v, w, atms, A)
-
-        # np.testing.assert_array_almost_equal(dx, dx_ref)
-        # np.testing.assert_array_almost_equal(dy, dy_ref)
-        # np.testing.assert_array_almost_equal(dz, dz_ref)
+        pair_dict = crystal.pairs(u, v, w, atms, A)
         
+        pairs = []
+        coordination = []
+        for key in pair_dict.keys():
+            atm = atms[key]
+            if (atm != 'O'):
+                pair_num, pair_atm = list(pair_dict[key])[0]
+                coord_num = len(pair_dict[key][(pair_num,pair_atm)])
+            pairs.append('_'.join((atm,pair_atm)))
+            coordination.append(coord_num)
+            
+        pairs = np.array(pairs)
+        coordination = np.array(coordination)
+        
+        mask = pairs == 'Ca_O'
+        np.testing.assert_array_equal(coordination[mask], 7)
+        
+        mask = pairs == 'Ti_O'
+        np.testing.assert_array_equal(coordination[mask], 6)
+
+        mask = pairs == 'Si_O'
+        np.testing.assert_array_equal(coordination[mask], 4)
+        
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+                                        
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='Tb2Ir3Ga9.cif', 
+                                   tol=1e-4)
+        
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        atms = uc_dict['atom']
+        
+        constants = crystal.parameters(folder=folder, filename='Tb2Ir3Ga9.cif')
+        
+        A = crystal.cartesian(*constants)
+                        
+        pair_dict = crystal.pairs(u, v, w, atms, A)
+        
+        pairs = []
+        for key in pair_dict.keys():
+            atm = atms[key]
+            if (atm == 'Tb'):
+                for pair in pair_dict[key].keys():
+                    if pair[1] == 'Tb':
+                        for ind in pair_dict[key][pair]:
+                            pairs.append([key, ind])
+                
+        pairs = np.unique(pairs)
+        
+        self.assertEqual(pairs.size, (atms == 'Tb').sum())
+            
 if __name__ == '__main__':
     unittest.main()

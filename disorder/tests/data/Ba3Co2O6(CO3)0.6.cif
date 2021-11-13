@@ -1,0 +1,81 @@
+
+#(C) 2021 by FIZ Karlsruhe - Leibniz Institute for Information Infrastructure.  All rights reserved.
+data_89999-ICSD
+_database_code_ICSD 89999
+_audit_creation_date 2002-04-01
+_chemical_name_common 'Barium cobalt oxide carbonate (3/2/6/0.6)'
+_chemical_formula_structural 'Ba3 Co2 O6 (C O3)0.6'
+_chemical_formula_sum 'C0.6 Ba3 Co2 O7.8'
+_exptl_crystal_density_diffrn 5.69
+_citation_title
+'The oxycarbonate Ba3 Co2 O6 (C O3)0.60 with a 2H-(A B O3)-related structure'
+loop_
+_citation_id
+_citation_journal_full
+_citation_year
+_citation_journal_volume
+_citation_page_first
+_citation_page_last
+_citation_journal_id_ASTM
+primary 'Chemistry of Materials' 2000 12 966 972 CMATEX
+loop_
+_citation_author_citation_id
+_citation_author_name
+primary 'Boulahya, K.'
+primary 'Amador, U.'
+primary 'Parras, M.'
+primary 'Gonzalez Calbet, J.M.'
+_cell_length_a 9.683(1)
+_cell_length_b 9.683(1)
+_cell_length_c 9.5180(8)
+_cell_angle_alpha 90.
+_cell_angle_beta 90.
+_cell_angle_gamma 120.
+_cell_volume 772.85
+_cell_formula_units_Z 4
+_space_group_name_H-M_alt 'P -6'
+_space_group_IT_number 174
+loop_
+_space_group_symop_id
+_space_group_symop_operation_xyz
+1 '-x+y, -x, -z'
+2 '-y, x-y, -z'
+3 'x, y, -z'
+4 '-x+y, -x, z'
+5 '-y, x-y, z'
+6 'x, y, z'
+loop_
+_atom_type_symbol
+_atom_type_oxidation_number
+Ba2+ 2
+Co3+ 3.6
+C4+ 4
+O2- -2
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_symmetry_multiplicity
+_atom_site_Wyckoff_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_B_iso_or_equiv
+_atom_site_occupancy
+Ba1 Ba2+ 3 j 0.335(1) 0.012(1) 0 0.3(1) 1.
+Ba2 Ba2+ 3 k -.004(1) 0.310(1) 0.5 0.3(1) 1.
+Ba3 Ba2+ 6 l 0.327(1) 0.335(1) 0.256(1) 0.3(1) 1.
+Co1 Co3+ 2 g 0 0 0.134(1) 0.5(1) 1.
+Co2 Co3+ 2 g 0 0 0.625(1) 0.5(1) 1.
+Co3 Co3+ 2 i 0.6667 0.3333 0.376(1) 0.5(1) 1.
+Co4 Co3+ 2 i 0.6667 0.3333 0.136(1) 0.5(1) 1.
+C1 C4+ 1 d 0.3333 0.6667 0.5 0.62(5) 0.78(2)
+C2 C4+ 2 h 0.3333 0.6667 0.187(7) 0.62(5) 0.80(2)
+O1 O2- 6 l 0.848(1) 0.847(1) 0.250(1) 0.62(5) 1.
+O2 O2- 3 k 0.848(1) 0.001(1) 0.5 0.62(5) 1.
+O3 O2- 3 j 0.001(1) 0.847(1) 0 0.62(5) 1.
+O4 O2- 3 k 0.516(1) 0.340(1) 0.5 0.62(5) 1.
+O5 O2- 6 l 0.520(1) 0.184(1) 0.252(1) 0.62(5) 1.
+O6 O2- 3 j 0.657(1) 0.173(1) 0 0.62(5) 1.
+O7 O2- 3 k 0.322(2) 0.523(3) 0.5 0.62(5) 0.78(1)
+O8 O2- 6 l 0.203(2) 0.529(2) 0.187(7) 0.62(5) 0.80(1)
+#End of TTdata_89999-ICSD
