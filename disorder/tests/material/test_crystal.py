@@ -545,7 +545,6 @@ class test_crystal(unittest.TestCase):
             else:
                 angle_ref[i] = np.arccos(dot/(norm0*norm1))
 
-        print(angle, angle_ref)
         np.testing.assert_array_almost_equal(angle, angle_ref)
         
     def test_volume(self):
