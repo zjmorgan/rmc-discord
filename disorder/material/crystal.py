@@ -3,8 +3,6 @@
 import CifFile
 import numpy as np
 
-from scipy import spatial
-
 import sys, os, io, re
 
 from disorder.material import symmetry
@@ -914,7 +912,6 @@ def d(a, b, c, alpha, beta, gamma, h, k, l):
         inv_d_spacing[n] = 1
               
         d_spacing = 1/inv_d_spacing
-        
         d_spacing[n] = np.nan
     else:
         d_spacing = 1/inv_d_spacing
@@ -943,9 +940,7 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
         inv_d0_spacing[n0] = 1
               
         d0_spacing = 1/inv_d0_spacing
-        
         d0_spacing[n0] = np.nan
-        
     else:
         d0_spacing = 1/inv_d0_spacing
 
@@ -954,7 +949,6 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
         inv_d1_spacing[n1] = 1
               
         d1_spacing = 1/inv_d1_spacing
-        
         d1_spacing[n1] = np.nan
     else:
         d1_spacing = 1/inv_d1_spacing
@@ -962,7 +956,7 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
     inv_01 = G_[0,0]*h0*h1+G_[0,1]*k0*h1+G_[0,2]*l0*h1+\
              G_[1,0]*h0*k1+G_[1,1]*k0*k1+G_[1,2]*l0*k1+\
              G_[2,0]*h0*l1+G_[2,1]*k0*l1+G_[2,2]*l0*l1
-        
+                     
     interplanar_angle = np.arccos(inv_01*d0_spacing*d1_spacing)
     
     return interplanar_angle
@@ -1021,170 +1015,70 @@ def transform(p, q, r, U):
            U[1,0]*p+U[1,1]*q+U[1,2]*r,\
            U[2,0]*p+U[2,1]*q+U[2,2]*r
             
-def periodic(u, v, w, centers, neighbors, A, nu, nv, nw):
+def pairs(u, v, w, ion, A):
     
-    n_atm = u.shape[0]
+    n_atm = ion.shape[0]
     
-    img = np.array([-1, 0, 1])
+    i, j = np.triu_indices(n_atm, k=1)
+    i, j = np.concatenate((i,j)), np.concatenate((j,i))
     
-    img_u, img_v, img_w = np.meshgrid(img, img, img, indexing='ij')
+    du = u[j]-u[i]
+    dv = v[j]-v[i]
+    dw = w[j]-w[i]
     
-    img_u = img_u.flatten()
-    img_v = img_v.flatten()
-    img_w = img_w.flatten()
+    img_u = -1*(du > 0.5)+1*(du < 0.5)
+    img_v = -1*(dv > 0.5)+1*(dv < 0.5)
+    img_w = -1*(dw > 0.5)+1*(dw < 0.5)
     
-    U = (u+img_u[:,np.newaxis]).flatten()
-    V = (v+img_v[:,np.newaxis]).flatten()
-    W = (w+img_w[:,np.newaxis]).flatten()
+    du[du > 0.5] -= 1
+    dv[dv > 0.5] -= 1
+    dw[dw > 0.5] -= 1
     
-    rx, ry, rz = transform(U, V, W, A)
+    du[du <= -0.5] += 1
+    dv[dv <= -0.5] += 1
+    dw[dw <= -0.5] += 1
+    
+    dx, dy, dz = transform(du, dv, dw, A)
+    
+    d = np.sqrt(dx**2+dy**2+dz**2)
+                        
+    atms = np.stack((ion[i],ion[j]))
+    
+    #sort = np.argsort(atms, axis=0)
+                
+    #atms = np.take_along_axis(atms, sort, axis=0)
+    ion_ion = np.array(['{}_{}'.format(a,b) for a, b in zip(*atms)])
+    ions, ion_labels = np.unique(ion_ion, return_inverse=True)
+    
+    metric = np.stack((dx,dy,dz,d)).T
+    
+    pair_dict = { }
+    
+    for k in range(n_atm):
         
-    points = np.column_stack((rx, ry, rz))
-    tree = spatial.cKDTree(points)
-   
-    d, pairs = tree.query(points, 1+neighbors)
-    
-    mask = np.tile(centers, 27)
+        mask = i == k
+                
+        sort = np.lexsort(metric[mask].T)
         
-    indices = np.mod(pairs[mask], n_atm)
-    
-    sort = np.sort(indices[:,1:], axis=1)
-    
-    indices[:,1:] = sort
+        l = j[mask][sort]
+                        
+        #pair_dict[k] = ion[k], l.tolist(), ion[l], d[mask][sort].tolist()
+        
+        _, ion_ind = np.unique(ion_labels[mask][sort], return_index=True)
+        
+        label_dict = { }
+        
+        d_ref = d[mask][sort]
+        ion_ref = ion_ion[mask][sort]
+        
+        # print(ion_ind)
+        
+        for label in ion_ref[ion_ind]:
             
-    primitive, ind = np.unique(indices, return_index=True, axis=0)
-    
-    # ---
-    
-    bound = np.min([A[0,0],A[1,1],A[2,2]])/2
-    
-    cutoff = np.all(d[ind].reshape(primitive.shape) < bound, axis=1)
-    
-    primitive = primitive[cutoff]
-    ind = ind[cutoff]
-    
-    d = d[ind]
-   
-    while (primitive.shape[0] > centers.sum()):
+            veil = ion_ref == label
         
-        maximum = np.max(d[:,-1])
-        
-        mask = np.isclose(d[:,-1],maximum)
-        
-        primitive = primitive[~mask]
-        d = d[~mask]
-    
-    # ---
-    
-    n = np.sum(centers)
-    
-    img_ind_u = np.zeros(primitive.shape, dtype=int)
-    img_ind_v = np.zeros(primitive.shape, dtype=int)
-    img_ind_w = np.zeros(primitive.shape, dtype=int)
-    
-    diff_u = (u[primitive].T-u[primitive[:,0]]).T
-    diff_v = (v[primitive].T-v[primitive[:,0]]).T
-    diff_w = (w[primitive].T-w[primitive[:,0]]).T
-    
-    img_ind_u[diff_u > 0.5] = -1
-    img_ind_u[diff_u < -0.5] = 1
-    
-    img_ind_v[diff_v > 0.5] = -1
-    img_ind_v[diff_v < -0.5] = 1
-    
-    img_ind_w[diff_w > 0.5] = -1
-    img_ind_w[diff_w < -0.5] = 1
-    
-    i, j, k = np.meshgrid(np.arange(nu), 
-                          np.arange(nv), 
-                          np.arange(nw), indexing='ij')
-    
-    i = i.flatten()
-    j = j.flatten()
-    k = k.flatten()
-    
-    I = np.mod(img_ind_u[:,:,np.newaxis]+i, nu)
-    J = np.mod(img_ind_v[:,:,np.newaxis]+j, nv)
-    K = np.mod(img_ind_w[:,:,np.newaxis]+k, nw)
-    
-    structure = primitive[:,:,np.newaxis]+n_atm*(K+nw*(J+nv*I))
-    
-    structure = np.rollaxis(structure, -1).reshape(nu*nv*nw*n,1+neighbors)
-    
-    return structure, primitive
-           
-def pairs(u, v, w, neighbors, A):
-    
-    n_atm = u.shape[0]
-    
-    img = np.array([-1, 0, 1])
-    
-    img_u, img_v, img_w = np.meshgrid(img, img, img, indexing='ij')
-    
-    img_u = img_u.flatten()
-    img_v = img_v.flatten()
-    img_w = img_w.flatten()
-    
-    offset = np.zeros(n_atm, dtype=int)
-    
-    U = (u+img_u[:,np.newaxis]).flatten()
-    V = (v+img_v[:,np.newaxis]).flatten()
-    W = (w+img_w[:,np.newaxis]).flatten()
-    
-    I = (offset+img_u[:,np.newaxis]).flatten()
-    J = (offset+img_v[:,np.newaxis]).flatten()
-    K = (offset+img_w[:,np.newaxis]).flatten()
-    
-    rx, ry, rz = transform(U, V, W, A)
-    
-    points = np.column_stack((rx, ry, rz))
-    tree = spatial.cKDTree(points)
-    
-    d, pairs = tree.query(points, 1+neighbors)
-    
-    indices = pairs[np.arange(n_atm)+n_atm*13,1:]
-    
-    atm_ind = np.mod(indices, n_atm)
-    
-    img_ind_i, img_ind_j, img_ind_k = I[indices], J[indices], K[indices]
-    
-    dist = d[np.arange(n_atm)+n_atm*13,1:]
-    
-    dx = rx[indices]-rx[np.arange(n_atm)+n_atm*13,np.newaxis]
-    dy = ry[indices]-ry[np.arange(n_atm)+n_atm*13,np.newaxis]
-    dz = rz[indices]-rz[np.arange(n_atm)+n_atm*13,np.newaxis]
-    
-    return atm_ind, img_ind_i, img_ind_j, img_ind_k, dist, dx, dy, dz
-
-def nearest(u, v, w, A):
-    
-    n_atm = u.shape[0]
-    
-    img = np.array([-1, 0, 1])
-    
-    img_u, img_v, img_w = np.meshgrid(img, img, img, indexing='ij')
-    
-    img_u = img_u.flatten()
-    img_v = img_v.flatten()
-    img_w = img_w.flatten()
-        
-    U = (u+img_u[:,np.newaxis]).flatten()
-    V = (v+img_v[:,np.newaxis]).flatten()
-    W = (w+img_w[:,np.newaxis]).flatten()
-    
-    rx, ry, rz = transform(U, V, W, A)
-    
-    points = np.column_stack((rx, ry, rz))
-    tree = spatial.cKDTree(points)
-    
-    d, pairs = tree.query(points, k=2)
-    
-    indices = pairs[np.arange(n_atm)+n_atm*13,1:]
-        
-    dist = d[np.arange(n_atm)+n_atm*13,1:]
-    
-    dx = rx[indices]-rx[np.arange(n_atm)+n_atm*13,np.newaxis]
-    dy = ry[indices]-ry[np.arange(n_atm)+n_atm*13,np.newaxis]
-    dz = rz[indices]-rz[np.arange(n_atm)+n_atm*13,np.newaxis]
-    
-    return dist.flatten(), dx.flatten(), dy.flatten(), dz.flatten()
+            label_dict[label] = d_ref[veil]
+                
+        pair_dict[k] = label_dict
+            
+    # print(pair_dict)
