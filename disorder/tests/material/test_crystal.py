@@ -539,8 +539,10 @@ class test_crystal(unittest.TestCase):
                                  
             norm0 = np.linalg.norm(h0[i]*u_+k0[i]*v_+l0[i]*w_)
             norm1 = np.linalg.norm(h1[i]*u_+k1[i]*v_+l1[i]*w_)
-
+            #print
             if (np.isclose(norm0, 0) or np.isclose(norm1, 0)):
+                angle_ref[i] = 0
+            elif np.isclose(dot/norm0/norm1,1):
                 angle_ref[i] = 0
             else:
                 angle_ref[i] = np.arccos(dot/(norm0*norm1))

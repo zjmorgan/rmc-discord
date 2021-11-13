@@ -956,7 +956,7 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
     inv_01 = G_[0,0]*h0*h1+G_[0,1]*k0*h1+G_[0,2]*l0*h1+\
              G_[1,0]*h0*k1+G_[1,1]*k0*k1+G_[1,2]*l0*k1+\
              G_[2,0]*h0*l1+G_[2,1]*k0*l1+G_[2,2]*l0*l1
-                     
+
     interplanar_angle = np.arccos(inv_01*d0_spacing*d1_spacing)
     
     return interplanar_angle
