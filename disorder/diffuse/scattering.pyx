@@ -1,10 +1,12 @@
 #cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
 #cython: language_level=3
 
+import os, sys
+
 import numpy as np
 cimport numpy as np
 
-from cython.parallel import prange
+from cython.parallel cimport prange, parallel
 
 cimport cython
 cimport openmp
@@ -13,9 +15,7 @@ from libc.math cimport M_PI, cos, sin, exp, sqrt, acos, fabs
 
 from disorder.material import tables
 
-import os, sys
-
-def parallelism():
+def parallelism(app=True):
     
     threads = os.environ.get('OMP_NUM_THREADS')
     
@@ -24,7 +24,7 @@ def parallelism():
     for i_thread in prange(1, nogil=True):
         num_threads = openmp.omp_get_max_threads()
         
-    if (len(sys.argv) > 1):
+    if (len(sys.argv) > 1 and app):
         openmp.omp_set_num_threads(int(sys.argv[1]))
     elif (threads is None):
         if (num_threads > 8):
@@ -34,14 +34,28 @@ def parallelism():
     
     for i_thread in prange(1, nogil=True):
         num_threads = openmp.omp_get_max_threads()
+        
+    os.environ['OMP_NUM_THREADS'] = str(num_threads)
 
     print('threads:', num_threads)
     
 def threads():
     
-    cdef Py_ssize_t thread_id = openmp.omp_get_thread_num()
+    cdef Py_ssize_t i_thread, thread_id, num_threads
     
-    print('id:', thread_id)
+    for i_thread in prange(1, nogil=True):
+        num_threads = openmp.omp_get_max_threads()
+    
+    buf_np = np.zeros(num_threads, dtype=int)
+    
+    cdef long [:] buf = buf_np
+    
+    with nogil, parallel(num_threads=num_threads):
+        thread_id = openmp.omp_get_thread_num()
+        buf[thread_id] = thread_id
+    
+    for i_thread in range(num_threads):
+        print('id:', buf[i_thread])
 
 cdef double complex cexp(double complex z) nogil:
     cdef double x = z.real

@@ -1,5 +1,9 @@
 #!/usr/bin/env python3U
 
+import io
+import os
+import sys
+
 import unittest
 import numpy as np
 
@@ -7,6 +11,68 @@ from disorder.material import crystal
 from disorder.diffuse import space, scattering
 
 class test_scattering(unittest.TestCase):
+    
+    def test_parallelism(self):
+                    
+        out = io.StringIO()
+        sys.stdout = out
+        
+        scattering.parallelism(app=False)
+        
+        sys.stdout = sys.__stdout__
+        
+        num_threads = os.environ.get('OMP_NUM_THREADS')
+        
+        self.assertEqual(out.getvalue(), 'threads: {}\n'.format(num_threads))
+        
+    def test_threads(self):
+                    
+        out = io.StringIO()
+        sys.stdout = out
+        
+        scattering.threads()
+        
+        sys.stdout = sys.__stdout__
+        
+        num_threads = os.environ.get('OMP_NUM_THREADS')
+        
+        self.assertEqual(out.getvalue(), 
+                         ''.join(['id: {}\n'.format(i_thread) \
+                                  for i_thread in range(int(num_threads))]))
+    
+    def test_extract(self):
+        
+        n_hkl, n_atm = 101, 3
+        
+        n = n_hkl*n_atm
+        
+        data = np.random.random(n)+1j*np.random.random(n)
+        values = np.zeros(n_hkl, dtype=complex)
+                
+        j = 1
+        scattering.extract(values, data, j, n_atm)
+        np.testing.assert_array_almost_equal(values, data[j::n_atm])
+        
+        j = 2
+        scattering.extract(values, data, j, n_atm)
+        np.testing.assert_array_almost_equal(values, data[j::n_atm])
+        
+    def test_insert(self):
+        
+        n_hkl, n_atm = 101, 3
+        
+        n = n_hkl*n_atm
+        
+        data = np.random.random(n)+1j*np.random.random(n)
+        values = np.random.random(n_hkl)+1j*np.random.random(n_hkl)
+                
+        j = 1
+        scattering.insert(data, values, j, n_atm)
+        np.testing.assert_array_almost_equal(values, data[j::n_atm])
+        
+        j = 2
+        scattering.insert(data, values, j, n_atm)
+        np.testing.assert_array_almost_equal(values, data[j::n_atm])
 
     def test_phase(self):
     

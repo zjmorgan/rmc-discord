@@ -726,9 +726,7 @@ class test_crystal(unittest.TestCase):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
                                         
-        uc_dict = crystal.unitcell(folder=folder, 
-                                   filename='CaTiOSiO4.cif', 
-                                   tol=1e-4)
+        uc_dict = crystal.unitcell(folder=folder, filename='CaTiOSiO4.cif')
         
         u = uc_dict['u']
         v = uc_dict['v']
@@ -765,9 +763,7 @@ class test_crystal(unittest.TestCase):
         
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
                                         
-        uc_dict = crystal.unitcell(folder=folder, 
-                                   filename='Tb2Ir3Ga9.cif', 
-                                   tol=1e-4)
+        uc_dict = crystal.unitcell(folder=folder, filename='Tb2Ir3Ga9.cif')
         
         u = uc_dict['u']
         v = uc_dict['v']
