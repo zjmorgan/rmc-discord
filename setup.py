@@ -19,7 +19,9 @@ if (sys.platform == 'win32'):
     compile_openmp = '/openmp'
     link_openmp = '/openmp'
 elif (sys.platform == 'darwin'):
-    compile_openmp = '-Xpreprocessor -fopenmp'
+    compile_openmp = '-Xpreprocessor -fopenmp '\
+                     '-I"$(brew --prefix libomp)/include" '\
+                     '-L"$(brew --prefix libomp)/lib"'
     link_openmp = '-lomp'
 else:
     compile_openmp = '-fopenmp'
