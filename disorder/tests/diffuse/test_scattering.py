@@ -22,24 +22,24 @@ class test_scattering(unittest.TestCase):
         sys.stdout = sys.__stdout__
         
         num_threads = os.environ.get('OMP_NUM_THREADS')
-        
+
         self.assertEqual(out.getvalue(), 'threads: {}\n'.format(num_threads))
-        
-    def test_threads(self):
+                        
+    # def test_threads(self):
                     
-        out = io.StringIO()
-        sys.stdout = out
+    #     out = io.StringIO()
+    #     sys.stdout = out
         
-        scattering.threads()
+    #     scattering.threads()
         
-        sys.stdout = sys.__stdout__
+    #     sys.stdout = sys.__stdout__
         
-        num_threads = os.environ.get('OMP_NUM_THREADS')
+    #     num_threads = os.environ.get('OMP_NUM_THREADS')
         
-        self.assertEqual(out.getvalue(), 
-                         ''.join(['id: {}\n'.format(i_thread) \
-                                  for i_thread in range(int(num_threads))]))
-    
+    #     self.assertEqual(out.getvalue(), 
+    #                      ''.join(['id: {}\n'.format(i_thread) \
+    #                               for i_thread in range(int(num_threads))]))
+            
     def test_extract(self):
         
         n_hkl, n_atm = 101, 3
