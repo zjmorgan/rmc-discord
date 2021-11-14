@@ -25,7 +25,7 @@ jobs:
         env:
            CIBW_ARCHS: auto64
            CIBW_SKIP: pp*
-           CIBW_BEFORE_ALL_MACOS: brew install libomp
+           CIBW_BEFORE_ALL_MACOS: brew install llvm libomp
            CIBW_ENVIRONMENT: "QT_QPA_PLATFORM=offscreen"
            CIBW_TEST_REQUIRES: pytest ipython
            CIBW_TEST_COMMAND: python -m pytest --pyargs disorder
