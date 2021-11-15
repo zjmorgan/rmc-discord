@@ -34,13 +34,11 @@ class test_scattering(unittest.TestCase):
         
         sys.stdout = sys.__stdout__
         
-        # num_threads = os.environ.get('OMP_NUM_THREADS')
-        
-        print(out.getvalue())
-        
-        # self.assertEqual(out.getvalue(), 
-        #                   ''.join(['id: {}\n'.format(i_thread) \
-        #                           for i_thread in range(int(num_threads))]))
+        num_threads = os.environ.get('OMP_NUM_THREADS')
+                
+        self.assertEqual(out.getvalue(), 
+                          ''.join(['id: {}\n'.format(i_thread) \
+                                  for i_thread in range(int(num_threads))]))
             
     def test_extract(self):
         
