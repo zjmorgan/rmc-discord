@@ -16,16 +16,18 @@ import numpy as np
 import sys, re
 
 if (sys.platform == 'win32'):
-    compile_openmp = '/openmp'
-    link_openmp = '/openmp'
+    compile_openmp = ['/openmp']
+    link_openmp = ['/openmp']
 elif (sys.platform == 'darwin'):
-    compile_openmp = '-Xpreprocessor -fopenmp -lomp '\
-                     '-I"$(brew --prefix libomp)/include" '\
-                     '-L"$(brew --prefix libomp)/lib"'
-    link_openmp = '-lomp'
+    compile_openmp = ['-Xpreprocessor','-fopenmp','-lomp,',
+                     '-I"$(brew --prefix libomp)/include"',
+                     '-L"$(brew --prefix libomp)/lib"']
+    link_openmp = ['-lomp']
 else:
-    compile_openmp = '-fopenmp'
-    link_openmp = '-fopenmp'
+    compile_openmp = ['-fopenmp']
+    link_openmp = ['-fopenmp']
+    
+np_include_dir = np.get_include()
     
 with open('README.md', 'r') as fh:
     long_description = fh.read()
@@ -39,65 +41,65 @@ ext_modules = [
     Extension(
         'disorder.diffuse.scattering',
         ['disorder/diffuse/scattering'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.filters',
         ['disorder/diffuse/filters'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.original',
         ['disorder/diffuse/original'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.candidate',
         ['disorder/diffuse/candidate'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.powder',
         ['disorder/diffuse/powder'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.refinement',
         ['disorder/diffuse/refinement'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir
     ),
     Extension(
         'disorder.correlation.functions',
         ['disorder/correlation/functions'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir
     ),
     Extension(
         'disorder.material.symmetry',
         ['disorder/material/symmetry'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.monocrystal',
         ['disorder/diffuse/monocrystal'+ext],
-        extra_compile_args=[compile_openmp],
-        extra_link_args=[link_openmp],
-        include_dirs=[np.get_include()]
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir
     ),
 ]
 
