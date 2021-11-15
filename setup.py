@@ -27,7 +27,7 @@ else:
     compile_openmp = ['-fopenmp']
     link_openmp = ['-fopenmp']
     
-np_include_dir = np.get_include()
+np_include_dir = [np.get_include()]
     
 with open('README.md', 'r') as fh:
     long_description = fh.read()
