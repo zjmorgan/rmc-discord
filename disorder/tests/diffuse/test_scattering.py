@@ -73,7 +73,44 @@ class test_scattering(unittest.TestCase):
         j = 2
         scattering.insert(data, values, j, n_atm)
         np.testing.assert_array_almost_equal(values, data[j::n_atm])
+        
+    def test_form(self):
+        
+        ions = ['Mn3+']
+        
+        Q = np.array([0.,5.,100.])
+        
+        f = scattering.form(ions, Q)
+        
+        self.assertAlmostEqual(f[0], 22.000047, 3)
+        self.assertAlmostEqual(f[1], 13.077269, 3)
+        self.assertAlmostEqual(f[2], 0.3939741, 3)
+        
+        ions = ['La3+']
+        
+        Q = np.array([0.,5.,100.])
+        
+        f = scattering.form(ions, Q)
+        
+        self.assertAlmostEqual(f[0], 54.002148, 3)
+        self.assertAlmostEqual(f[1], 34.475719, 3)
+        self.assertAlmostEqual(f[2], 2.4086025, 3)
 
+        ions = ['O','Mg']
+        
+        Q = 4*np.pi*np.array([0.01,0.05,0.1])
+        
+        f = scattering.form(ions, Q, electron=True)
+        f = f.reshape(Q.size,len(ions))
+        
+        self.assertAlmostEqual(f[0,0], 1.981, 2)
+        self.assertAlmostEqual(f[1,0], 1.937, 2)
+        self.assertAlmostEqual(f[2,0], 1.808, 2)
+        
+        self.assertAlmostEqual(f[0,1], 5.187, 2)
+        self.assertAlmostEqual(f[1,1], 4.717, 2)
+        self.assertAlmostEqual(f[2,1], 3.656, 2)
+        
     def test_phase(self):
     
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
