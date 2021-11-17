@@ -1,6 +1,7 @@
-#cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
-#cython: language_level=3
+#!/usr/bin/env python3
 
+import re
+        
 import numpy as np
 
 from disorder.material import tables
@@ -51,8 +52,16 @@ def form(ions, Q, source='x-ray'):
                              + a3*np.exp(-b3*s**2)\
                              + a4*np.exp(-b4*s**2)\
                              + a5*np.exp(-b5*s**2)
+                                 
+    factor[factor < 0] = 0
+     
+    if (source == 'electron'):
+        
+        for i, ion in enumerate(ions):
     
-        factor[factor < 0] = 0
+            delta_Z = re.sub(r'[a-zA-Z]', '', ion)[::-1]
+            delta_Z = int(delta_Z) if delta_Z != '' else 0
+            factor[i::n_atm] += 0.023934*delta_Z/s**2
             
     return factor
      

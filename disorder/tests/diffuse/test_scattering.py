@@ -1,9 +1,5 @@
 #!/usr/bin/env python3U
 
-import io
-import os
-import sys
-
 import unittest
 import numpy as np
 
@@ -64,6 +60,21 @@ class test_scattering(unittest.TestCase):
         self.assertAlmostEqual(f[0,1], 5.187, 2)
         self.assertAlmostEqual(f[1,1], 4.717, 2)
         self.assertAlmostEqual(f[2,1], 3.656, 2)
+        
+        ions = ['O1-','Mg2+']
+                
+        Q = 4*np.pi*np.array([0.01,0.05,0.1])
+        
+        f = scattering.form(ions, Q, source='electron')
+        f = f.reshape(Q.size,len(ions))
+        
+        self.assertAlmostEqual(f[0,0], -236.025, 1)
+        self.assertAlmostEqual(f[1,0], -6.41, 1)
+        self.assertAlmostEqual(f[2,0], 0.39, 1)
+        
+        self.assertAlmostEqual(f[0,1], 479.502, 1)
+        self.assertAlmostEqual(f[1,1], 19.970, 1)
+        self.assertAlmostEqual(f[2,1], 5.593, 1)
         
     def test_phase(self):
     
