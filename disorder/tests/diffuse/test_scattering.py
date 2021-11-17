@@ -12,75 +12,29 @@ from disorder.diffuse import space, scattering
 
 class test_scattering(unittest.TestCase):
     
-    def test_parallelism(self):
-                    
-        out = io.StringIO()
-        sys.stdout = out
+    def test_length(self):
         
-        scattering.parallelism(app=False)
-        
-        sys.stdout = sys.__stdout__
-        
-        num_threads = os.environ.get('OMP_NUM_THREADS')
-
-        self.assertEqual(out.getvalue(), 'threads: {}\n'.format(num_threads))
-                        
-    def test_threads(self):
-                    
-        out = io.StringIO()
-        sys.stdout = out
-        
-        scattering.threads()
-        
-        sys.stdout = sys.__stdout__
-        
-        num_threads = os.environ.get('OMP_NUM_THREADS')
+        atms = ['H']
                 
-        self.assertEqual(out.getvalue(), 
-                          ''.join(['id: {}\n'.format(i_thread) \
-                                  for i_thread in range(int(num_threads))]))
-            
-    def test_extract(self):
+        b = scattering.length(atms, 10)
         
-        n_hkl, n_atm = 101, 3
-        
-        n = n_hkl*n_atm
-        
-        data = np.random.random(n)+1j*np.random.random(n)
-        values = np.zeros(n_hkl, dtype=complex)
+        np.testing.assert_array_almost_equal(b, -3.7390, 3)
+ 
+        atms = ['1H','2H','3H']
                 
-        j = 1
-        scattering.extract(values, data, j, n_atm)
-        np.testing.assert_array_almost_equal(values, data[j::n_atm])
+        b = scattering.length(atms, 13)
         
-        j = 2
-        scattering.extract(values, data, j, n_atm)
-        np.testing.assert_array_almost_equal(values, data[j::n_atm])
-        
-    def test_insert(self):
-        
-        n_hkl, n_atm = 101, 3
-        
-        n = n_hkl*n_atm
-        
-        data = np.random.random(n)+1j*np.random.random(n)
-        values = np.random.random(n_hkl)+1j*np.random.random(n_hkl)
-                
-        j = 1
-        scattering.insert(data, values, j, n_atm)
-        np.testing.assert_array_almost_equal(values, data[j::n_atm])
-        
-        j = 2
-        scattering.insert(data, values, j, n_atm)
-        np.testing.assert_array_almost_equal(values, data[j::n_atm])
-        
+        np.testing.assert_array_almost_equal(b.reshape(13,3)[:,0], -3.7406, 3)
+        np.testing.assert_array_almost_equal(b.reshape(13,3)[:,1], 6.671, 3)
+        np.testing.assert_array_almost_equal(b.reshape(13,3)[:,2], 4.792, 3)
+    
     def test_form(self):
         
         ions = ['Mn3+']
         
         Q = np.array([0.,5.,100.])
         
-        f = scattering.form(ions, Q)
+        f = scattering.form(ions, Q, source='x-ray')
         
         self.assertAlmostEqual(f[0], 22.000047, 3)
         self.assertAlmostEqual(f[1], 13.077269, 3)
@@ -90,7 +44,7 @@ class test_scattering(unittest.TestCase):
         
         Q = np.array([0.,5.,100.])
         
-        f = scattering.form(ions, Q)
+        f = scattering.form(ions, Q, source='x-ray')
         
         self.assertAlmostEqual(f[0], 54.002148, 3)
         self.assertAlmostEqual(f[1], 34.475719, 3)
@@ -100,7 +54,7 @@ class test_scattering(unittest.TestCase):
         
         Q = 4*np.pi*np.array([0.01,0.05,0.1])
         
-        f = scattering.form(ions, Q, electron=True)
+        f = scattering.form(ions, Q, source='electron')
         f = f.reshape(Q.size,len(ions))
         
         self.assertAlmostEqual(f[0,0], 1.981, 2)

@@ -116,8 +116,8 @@ class test_crystal(unittest.TestCase):
             np.testing.assert_array_almost_equal(mom[atm == 'Mn'][i], moment)
             
         uc_dict = crystal.unitcell(folder=folder, 
-                                 filename='natrolite.cif', 
-                                 tol=1e-4)
+                                   filename='natrolite.cif', 
+                                   tol=1e-4)
         
         disp = uc_dict['displacement']
         
@@ -130,7 +130,23 @@ class test_crystal(unittest.TestCase):
         adp = [0.032, 0.032, 0.032, 0, 0, 0]
         for i in range(168, 184):
             np.testing.assert_array_almost_equal(disp[i], adp)
+            
+        # ---
         
+        # uc_dict = crystal.unitcell(folder=folder, 
+        #                            filename='Ba3Co2O6(CO3)0.6.cif', 
+        #                            tol=1e-4)
+        
+        # site = uc_dict['site']
+        # atm = uc_dict['atom']
+        
+        # print(site)
+        
+        # np.testing.assert_array_equal(atm[site == 0], 'Ba2+')
+        # np.testing.assert_array_equal(atm[site == 1], 'Co3+')
+        # np.testing.assert_array_equal(atm[site == 2], 'C4+')
+        # np.testing.assert_array_equal(atm[site == 3], 'O2-')
+                
     def test_supercell(self):
 
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))

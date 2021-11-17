@@ -48,7 +48,9 @@ def unitcell(folder=folder, filename='copper.cif', tol=1e-2):
     
     atomic_sites = [re.sub(r'[0-9]', '', asite) for asite in atomic_sites]
     
-    if ('_atom_site_symbol' in cif_dict):
+    if ('_atom_site_type_symbol' in cif_dict):
+        symbols = cif_dict['_atom_site_type_symbol']
+    elif ('_atom_site_symbol' in cif_dict):
         symbols = cif_dict['_atom_site_symbol']
     else:
         symbols = atomic_sites

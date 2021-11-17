@@ -39,8 +39,8 @@ ext = '.pyx' if USE_CYTHON else '.c'
 
 ext_modules = [
     Extension(
-        'disorder.diffuse.scattering',
-        ['disorder/diffuse/scattering'+ext],
+        'disorder.diffuse.refinement',
+        ['disorder/diffuse/refinement'+ext],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
         include_dirs=np_include_dir

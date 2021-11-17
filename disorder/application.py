@@ -9,7 +9,7 @@ from disorder.graphical.view import View
 from disorder.graphical.presenter import Presenter
 from disorder.graphical.utilities import report_exception
 
-from disorder.diffuse.scattering import parallelism
+from disorder.diffuse.refinement import parallelism
 
 class Window:
 
