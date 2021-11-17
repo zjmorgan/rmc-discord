@@ -41,7 +41,6 @@ cdef bint nuclear(double h, double k, double l, int centering) nogil:
     cdef int H, K, L
     
     H, K, L = int(round2even(h)), int(round2even(k)), int(round2even(l))
-    #H, K, L = int(h), int(k), int(l)
     
     if (centering == 0):
         cond = 0
@@ -435,9 +434,9 @@ def occupational(double [::1] A_r,
                  Py_ssize_t Nu,
                  Py_ssize_t Nv,
                  Py_ssize_t Nw,
-                 source='Neutron'):
+                 source='neutron'):
     
-    cdef bint neutron = source == 'Neutron'
+    cdef bint neutron = source == 'neutron'
     
     cdef Py_ssize_t n_atm = len(atms)
         
@@ -718,9 +717,9 @@ def displacive(double [::1] U_r,
                Py_ssize_t p,
                long [::1] even,
                Py_ssize_t centering,
-               source='Neutron'):
+               source='neutron'):
     
-    cdef bint neutron = source == 'Neutron'
+    cdef bint neutron = source == 'neutron'
 
     cdef Py_ssize_t n_atm = len(atms)
         
@@ -1025,9 +1024,9 @@ def structural(double [::1] occupancy,
                Py_ssize_t Nv,
                Py_ssize_t Nw,
                Py_ssize_t centering,
-               source='Neutron'):
+               source='neutron'):
     
-    cdef bint neutron = source == 'Neutron'
+    cdef bint neutron = source == 'neutron'
     
     cdef Py_ssize_t n_atm = len(atms)
         

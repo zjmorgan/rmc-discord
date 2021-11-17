@@ -3,7 +3,7 @@
 import unittest
 import numpy as np
 
-from disorder.material import structure, crystal, symmetry
+from disorder.material import structure, crystal
 
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
@@ -27,7 +27,6 @@ class test_structure(unittest.TestCase):
         occ = uc_dict['occupancy']
         disp = uc_dict['displacement']
         atm = uc_dict['atom']
-        n_atm = uc_dict['n_atom']
         
         constants = crystal.parameters(folder=folder, filename='Cu3Au.cif')
                 
@@ -47,7 +46,7 @@ class test_structure(unittest.TestCase):
                                                U11, U22, U33, U23, U13, U12,
                                                a, b, c, alpha, beta, gamma, 
                                                symops, dmin=0.7, 
-                                               source='Neutron')
+                                               source='neutron')
         
         data = np.loadtxt(os.path.join(folder, 'Cu3Au.csv'),
                           dtype={'names': names, 'formats': formats},
@@ -72,7 +71,6 @@ class test_structure(unittest.TestCase):
         occ = uc_dict['occupancy']
         disp = uc_dict['displacement']
         atm = uc_dict['atom']
-        n_atm = uc_dict['n_atom']
                                 
         constants = crystal.parameters(folder=folder, filename='CaTiOSiO4.cif')
                 
@@ -86,7 +84,7 @@ class test_structure(unittest.TestCase):
                                                U11, U22, U33, U23, U13, U12,
                                                a, b, c, alpha, beta, gamma, 
                                                symops, dmin=0.7, 
-                                               source='Neutron')
+                                               source='neutron')
         
         data = np.loadtxt(os.path.join(folder, 'CaTiOSiO4.csv'),
                           dtype={'names': names, 'formats': formats},
@@ -100,6 +98,21 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(d, data[3])
         np.testing.assert_array_almost_equal(F.real, data[4], decimal=4)
         np.testing.assert_array_almost_equal(F.imag, data[5], decimal=4)
-                
+        
+    def test_UnitCell(self):
+
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+        
+        cif_file = 'CaTiOSiO4.cif'
+        
+        filename = os.path.join(folder, cif_file)
+        
+        uc = structure.UnitCell(filename, tol=1e-4)
+        
+        self.assertEqual(uc.get_filepath(), folder)
+        self.assertEqual(uc.get_filename(), cif_file)
+        
+        self.assertTrue(uc.get_active_sites().all())
+                        
 if __name__ == '__main__':
     unittest.main()

@@ -1033,9 +1033,7 @@ class Model:
                                 h_range, k_range, l_range, indices, symop,
                                 T, B, R, D, twins, variants, nh, nk, nl, 
                                 nu, nv, nw, Nu, Nv, Nw, cntr, mask):
-                            
-        n_atm = np.size(occupancy)
-                
+                                            
         I_calc = monocrystal.structural(occupancy,
                                         U11, U22, U33, U23, U13, U12, 
                                         ux, uy, uz, atm,

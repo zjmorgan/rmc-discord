@@ -8,7 +8,7 @@ from disorder.diffuse import displacive, magnetic
 from disorder.material import crystal, symmetry
 
 def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
-           a, b, c, alpha, beta, gamma, symops, dmin=0.3, source='Neutron'):
+           a, b, c, alpha, beta, gamma, symops, dmin=0.3, source='neutron'):
     
     n_atm = atms.shape[0]
     
@@ -50,7 +50,7 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
                                     k[:,np.newaxis]*v+
                                     l[:,np.newaxis]*w))
             
-    if (source == 'Neutron'):
+    if (source == 'neutron'):
         scattering_power = scattering.length(atms, n_hkl).reshape(n_hkl,n_atm)
     else:
         scattering_power = scattering.form(atms, Q).reshape(n_hkl,n_atm)
@@ -184,6 +184,14 @@ class UnitCell:
         
         return mask
     
+    def get_filepath(self):
+        
+        return self.__folder
+    
+    def get_filename(self):
+        
+        return self.__filename
+    
     def get_sites(self):
                 
         return self.__site
@@ -199,14 +207,6 @@ class UnitCell:
     def get_number_atoms_per_unit_cell(self):
                 
         return self.__get_mask().sum()
-            
-    def get_filepath(self):
-        
-        return self.__folder
-    
-    def get_filename(self):
-        
-        return self.__filename
     
     def get_fractional_coordinates(self):
         

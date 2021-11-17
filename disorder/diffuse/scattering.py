@@ -5,6 +5,9 @@ import re
 import numpy as np
 
 from disorder.material import tables
+from disorder.material.structure import SuperCell
+
+from disorder.diffuse import refinement
    
 def length(atms, n_hkl):
     
