@@ -660,7 +660,6 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
         
         outfile.close()
         
-
 def laue(folder, filename):
                            
     cf = CifFile.ReadCif(os.path.join(folder, filename))

@@ -133,19 +133,17 @@ class test_crystal(unittest.TestCase):
             
         # ---
         
-        # uc_dict = crystal.unitcell(folder=folder, 
-        #                            filename='Ba3Co2O6(CO3)0.6.cif', 
-        #                            tol=1e-4)
+        uc_dict = crystal.unitcell(folder=folder, 
+                                   filename='Ba3Co2O6(CO3)0.6.cif', 
+                                   tol=1e-4)
         
-        # site = uc_dict['site']
-        # atm = uc_dict['atom']
+        site = uc_dict['site']
+        atm = uc_dict['atom']
         
-        # print(site)
-        
-        # np.testing.assert_array_equal(atm[site == 0], 'Ba2+')
-        # np.testing.assert_array_equal(atm[site == 1], 'Co3+')
-        # np.testing.assert_array_equal(atm[site == 2], 'C4+')
-        # np.testing.assert_array_equal(atm[site == 3], 'O2-')
+        np.testing.assert_array_equal(atm[site < 3], 'Ba2+')
+        np.testing.assert_array_equal(atm[(site >= 3) & (site < 7)], 'Co3+')
+        np.testing.assert_array_equal(atm[(site >= 7) & (site < 9)], 'C4+')
+        np.testing.assert_array_equal(atm[site >= 9], 'O2-')
                 
     def test_supercell(self):
 
@@ -300,7 +298,6 @@ class test_crystal(unittest.TestCase):
         occ = uc_dict['occupancy']
         disp = uc_dict['displacement']
         mom = uc_dict['moment']
-        site = uc_dict['site']
         atm = uc_dict['atom']
         n_atm = uc_dict['n_atom']
         
@@ -535,7 +532,6 @@ class test_crystal(unittest.TestCase):
                                  
             norm0 = np.linalg.norm(h0[i]*u_+k0[i]*v_+l0[i]*w_)
             norm1 = np.linalg.norm(h1[i]*u_+k1[i]*v_+l1[i]*w_)
-            #print
             if (np.isclose(norm0, 0) or np.isclose(norm1, 0)):
                 angle_ref[i] = 0
             elif np.isclose(dot/norm0/norm1,1):
