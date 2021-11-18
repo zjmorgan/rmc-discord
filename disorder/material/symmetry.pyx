@@ -771,6 +771,21 @@ def absence(symops, h, k, l):
     else:
         return absent
 
+def symmetry_id(symops):
+    
+    laue_sym = operators(invert=True)
+    
+    symop_id = [11,1]
+    
+    for c, sym in enumerate(list(laue_sym.keys())):
+        if (np.array([symops[p] in laue_sym.get(sym) \
+                      for p in range(symops.shape[0])]).all() and \
+             len(laue_sym.get(sym)) == symops.shape[0]):
+            
+            symop_id = [c,len(laue_sym.get(sym))]
+        
+    return symop_id
+
 def operators(invert=False):
     
     laue = {

@@ -422,17 +422,8 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
         
     total = np.zeros((n_symm,3), dtype=np.int16)
     
-    laue_sym = symmetry.operators(invert=True)
+    symop = symmetry.symmetry_id(symops)
     
-    symop = [11,1]
-    
-    for count, sym in enumerate(list(laue_sym.keys())):
-        if (np.array([symops[p] in laue_sym.get(sym) \
-                      for p in range(symops.shape[0])]).all() and \
-             len(laue_sym.get(sym)) == symops.shape[0]):
-            
-            symop = [count,len(laue_sym.get(sym))]
-        
     index = np.arange(n)
                 
     symmetry.sorting(total, cosymmetries, symop)
