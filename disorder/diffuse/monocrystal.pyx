@@ -957,7 +957,7 @@ def displacive(double [::1] U_r,
                     
                     factors = occ*scattering_length*phase_factor
                     
-                    if ((iH <= Fu and iK <= Fv and iL <= Fw) and \
+                    if ((iH < Fu and iK < Fv and iL < Fw) and \
                         nuclear(h, k, l, centering)):
                     
                         for g in range(n_odd):

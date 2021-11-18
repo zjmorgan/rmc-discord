@@ -243,7 +243,7 @@ class test_displacive(unittest.TestCase):
         p = 3
         
         coeffs = displacive.coefficients(p)
-
+        
         H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L,
                                                     nu, nv, nw, centering='P') 
         
@@ -324,9 +324,6 @@ class test_displacive(unittest.TestCase):
         U23 = np.array([0.05,-0.03])
         U13 = np.array([-0.04,0.02])
         U12 = np.array([0.03,-0.02])
-        
-        T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
-                               U11, U22, U33, U23, U13, U12, a_, b_, c_)
         
         A = crystal.cartesian(a, b, c, alpha, beta, gamma)
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)

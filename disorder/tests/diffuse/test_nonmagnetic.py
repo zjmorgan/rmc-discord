@@ -203,9 +203,6 @@ class test_nonmagnetic(unittest.TestCase):
         U13 = np.array([-0.04,0.02])
         U12 = np.array([0.03,-0.02])
         
-        T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl, 
-                                U11, U22, U33, U23, U13, U12, a_, b_, c_)
-        
         A = crystal.cartesian(a, b, c, alpha, beta, gamma)
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
         R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)

@@ -84,6 +84,18 @@ def number(m):
     
     return (m+1)*(m+2) // 2
 
+def indices(m):
+    
+    tri_numbers = number(np.arange(m+1))
+    
+    total_terms = np.cumsum(tri_numbers)
+    
+    first_index = total_terms-tri_numbers
+    
+    split = [np.arange(j,k) for j, k in zip(first_index,total_terms)]
+        
+    return np.concatenate(split[0::2]), np.concatenate(split[1::2])
+
 def factorial(n):
     
     if (n == 1 or n == 0):
@@ -225,15 +237,7 @@ def intensity(U_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
     V_k = np.zeros(factors.shape, dtype=complex)
     V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=complex)
     
-    start = (np.cumsum(number(np.arange(p+1)))-number(np.arange(p+1)))[::2]
-    end = np.cumsum(number(np.arange(p+1)))[::2]
-    
-    even = []
-    
-    for k in range(len(end)):
-        even += range(start[k], end[k])
-    
-    even = np.array(even)
+    even, odd = indices(p)
     
     for j in range(n_atm):
         V_k[:,j] = coeffs.dot(U_k[:,i_dft,j]*Q_k[:,:])
@@ -320,15 +324,7 @@ def structure(U_k, Q_k, coeffs, cond, p, i_dft, factors):
     V_k = np.zeros(factors.shape, dtype=complex)
     V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=complex)
     
-    start = (np.cumsum(number(np.arange(p+1)))-number(np.arange(p+1)))[::2]
-    end = np.cumsum(number(np.arange(p+1)))[::2]
-    
-    even = []
-    
-    for k in range(len(end)):
-        even += range(start[k], end[k])
-    
-    even = np.array(even)
+    even, odd = indices(p)
         
     for j in range(n_atm):
         V_k[:,j] = coeffs.dot(U_k[:,i_dft,j]*Q_k[:,:])
