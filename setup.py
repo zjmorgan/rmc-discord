@@ -101,6 +101,14 @@ ext_modules = [
         extra_link_args=link_openmp,
         include_dirs=np_include_dir
     ),
+    Extension(
+        'disorder.diffuse.simulation',
+        ['disorder/diffuse/simulation'+ext],
+        extra_compile_args=compile_openmp,
+        extra_link_args=link_openmp,
+        include_dirs=np_include_dir,
+        language='c++'
+    )
 ]
 
 if (USE_CYTHON):

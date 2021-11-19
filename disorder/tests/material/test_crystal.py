@@ -800,6 +800,8 @@ class test_crystal(unittest.TestCase):
         pairs = np.unique(pairs)
 
         self.assertEqual(pairs.size, (atms == 'Tb').sum())
-
+        
+        pair_dict = crystal.pairs(u, v, w, atms, A, extend=False)
+        
 if __name__ == '__main__':
     unittest.main()

@@ -1011,12 +1011,14 @@ def vector(h, k, l, B):
     return Qh, Qk, Ql
 
 def transform(p, q, r, U):
+    
+    x = U[0,0]*p+U[0,1]*q+U[0,2]*r
+    y = U[1,0]*p+U[1,1]*q+U[1,2]*r
+    z = U[2,0]*p+U[2,1]*q+U[2,2]*r
         
-    return U[0,0]*p+U[0,1]*q+U[0,2]*r,\
-           U[1,0]*p+U[1,1]*q+U[1,2]*r,\
-           U[2,0]*p+U[2,1]*q+U[2,2]*r
+    return x, y, z
             
-def pairs(u, v, w, ion, A):
+def pairs(u, v, w, ion, A, extend=False):
     
     n_atm = ion.shape[0]
     
@@ -1035,6 +1037,35 @@ def pairs(u, v, w, ion, A):
     dv[dv <= -0.5] += 1
     dw[dw <= -0.5] += 1
     
+    if extend:
+        
+        U, V, W = np.meshgrid(np.arange(-1,2),
+                              np.arange(-1,2),
+                              np.arange(-1,2), indexing='ij')
+        
+        U = np.delete(U.flatten(), 13)[:,np.newaxis]
+        V = np.delete(V.flatten(), 13)[:,np.newaxis]
+        W = np.delete(W.flatten(), 13)[:,np.newaxis]
+        
+        du, dv, dw = (du+U).flatten(), (dv+V).flatten(), (dw+W).flatten()
+        
+        U = np.repeat(U, n_atm)
+        V = np.repeat(V, n_atm)
+        W = np.repeat(W, n_atm)
+        
+        du = np.concatenate((du,U))
+        dv = np.concatenate((dv,V))
+        dw = np.concatenate((dw,W))
+        
+        i = np.tile(i, 26)
+        j = np.tile(j, 26)
+        
+        I = np.tile(np.arange(n_atm), 26)
+        J = np.tile(np.arange(n_atm), 26)
+        
+        i = np.concatenate((i,I))
+        j = np.concatenate((j,J))
+            
     dx, dy, dz = transform(du, dv, dw, A)
     
     d = np.sqrt(dx**2+dy**2+dz**2)
