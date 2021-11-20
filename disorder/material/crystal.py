@@ -1095,7 +1095,6 @@ def pairs(u, v, w, ion, A, extend=False):
         sort = np.lexsort(metric[mask].T)
 
         label_dict = { }
-        cell_dict = { }
 
         l = j[mask][sort]
         ion_lab = ion_labels[mask][sort]
@@ -1105,24 +1104,19 @@ def pairs(u, v, w, ion, A, extend=False):
         # ru, rv, rw = du[mask][sort], dv[mask][sort], dw[mask][sort]
 
         c = 0
-        m, cu, cv, cw = [], [], [], []
+        m, c_uvw = [], []
         m.append(l[0])
-        cu.append(iu[0])
-        cv.append(iv[0])
-        cw.append(iw[0])
+        c_uvw.append((iu[0],iv[0],iw[0]))
         for ind in range(ion_lab.shape[0]-1):
             if ion_lab[ind] != ion_lab[ind+1]:
                 key = c, ion_ref[ind]
-                label_dict[key] = m
-                cell_dict[key] = cu, cv, cw
-                m, cu, cv, cw = [], [], [], []
+                label_dict[key] = m, c_uvw
+                m, c_uvw = [], []
                 c += 1
             m.append(l[ind+1])
-            cu.append(iu[ind+1])
-            cv.append(iv[ind+1])
-            cw.append(iw[ind+1])
+            c_uvw.append((iu[ind+1],iv[ind+1],iw[ind+1]))
         key = c, ion_ref[ind+1]
-        label_dict[key] = m
+        label_dict[key] = m, c_uvw
 
         pair_dict[k] = label_dict
 

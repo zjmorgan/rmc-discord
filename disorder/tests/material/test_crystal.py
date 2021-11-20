@@ -753,11 +753,11 @@ class test_crystal(unittest.TestCase):
 
         pairs = []
         coordination = []
-        for key in pair_dict.keys():
-            atm = atms[key]
+        for i in pair_dict.keys():
+            atm = atms[i]
             if (atm != 'O'):
-                pair_num, pair_atm = list(pair_dict[key])[0]
-                coord_num = len(pair_dict[key][(pair_num,pair_atm)])
+                pair_num, pair_atm = list(pair_dict[i])[0]
+                coord_num = len(pair_dict[i][(pair_num,pair_atm)][0])
             pairs.append('_'.join((atm,pair_atm)))
             coordination.append(coord_num)
 
@@ -787,21 +787,33 @@ class test_crystal(unittest.TestCase):
         pair_dict = crystal.pairs(u, v, w, atms, A)
 
         pairs = []
-        for key in pair_dict.keys():
-            atm = atms[key]
+        for i in pair_dict.keys():
+            atm = atms[i]
             if (atm == 'Tb'):
-                for pair in pair_dict[key].keys():
+                for pair in pair_dict[i].keys():
                     if pair[1] == 'Tb':
-                        for ind in pair_dict[key][pair]:
-                            pairs.append([key, ind])
+                        for ind in pair_dict[i][pair][0]:
+                            pairs.append([i, ind])
 
         pairs = np.unique(pairs)
-
+        
         self.assertEqual(pairs.size, (atms == 'Tb').sum())
         
         pair_dict = crystal.pairs(u, v, w, atms, A, extend=True)
         
-        print(pair_dict)
-        
+        for i in pair_dict.keys():
+            d_ref = 0
+            for pair in pair_dict[i].keys():
+                j, atm_j = pair
+                for j, img in zip(*pair_dict[i][pair]):
+                    du = u[j]-u[i]+img[0]
+                    dv = v[j]-v[i]+img[1]
+                    dw = w[j]-w[i]+img[2]
+                    dx, dy, dz = crystal.transform(du, dv, dw, A)
+                    d = np.sqrt(dx**2+dy**2+dz**2)
+                    self.assertGreaterEqual(np.round(d,6), np.round(d_ref,6))
+                    self.assertEqual(atms[j], atm_j)
+                    d_ref = d
+                    
 if __name__ == '__main__':
     unittest.main()
