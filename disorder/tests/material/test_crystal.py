@@ -796,11 +796,11 @@ class test_crystal(unittest.TestCase):
                             pairs.append([i, ind])
 
         pairs = np.unique(pairs)
-        
+
         self.assertEqual(pairs.size, (atms == 'Tb').sum())
-        
+
         pair_dict = crystal.pairs(u, v, w, atms, A, extend=True)
-        
+
         for i in pair_dict.keys():
             d_ref = 0
             for pair in pair_dict[i].keys():
@@ -814,6 +814,6 @@ class test_crystal(unittest.TestCase):
                     self.assertGreaterEqual(np.round(d,6), np.round(d_ref,6))
                     self.assertEqual(atms[j], atm_j)
                     d_ref = d
-                    
+
 if __name__ == '__main__':
     unittest.main()
