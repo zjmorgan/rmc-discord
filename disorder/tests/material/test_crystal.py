@@ -773,8 +773,6 @@ class test_crystal(unittest.TestCase):
         mask = pairs == 'Si_O'
         np.testing.assert_array_equal(coordination[mask], 4)
 
-        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
-
         uc_dict = crystal.unitcell(folder=folder, filename='Tb2Ir3Ga9.cif')
 
         u = uc_dict['u']
@@ -801,7 +799,9 @@ class test_crystal(unittest.TestCase):
 
         self.assertEqual(pairs.size, (atms == 'Tb').sum())
         
-        pair_dict = crystal.pairs(u, v, w, atms, A, extend=False)
+        pair_dict = crystal.pairs(u, v, w, atms, A, extend=True)
+        
+        print(pair_dict)
         
 if __name__ == '__main__':
     unittest.main()
