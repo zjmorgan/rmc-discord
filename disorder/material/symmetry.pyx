@@ -695,7 +695,7 @@ def binary(symop0, symop1):
     return symop
 
 def classification(symop):
-    
+        
     W = np.zeros((3,3))
     
     W[:,0] = evaluate(symop, [1,0,0], translate=False)
@@ -703,7 +703,7 @@ def classification(symop):
     W[:,2] = evaluate(symop, [0,0,1], translate=False)
     
     w = evaluate(symop, [0,0,0], translate=True)
-    
+        
     W_det = np.linalg.det(W)
     W_tr = np.trace(W)
     
@@ -731,12 +731,12 @@ def classification(symop):
             rotation, k = 'm', 2
             
     symop_ord = symop
-    
+        
     for _ in range(1,k):
         symop_ord = binary(symop_ord, symop)
-        
+                
     wg = (1/k)*evaluate(symop_ord, [0,0,0], translate=True)
-    
+        
     return rotation, k, wg
     
 def absence(symops, h, k, l):
@@ -770,8 +770,86 @@ def absence(symops, h, k, l):
         return absent[0]
     else:
         return absent
+    
+def site(symops, coordinates, A, tol=1e-1):
+    
+    u, v, w = coordinates
+    
+    W = np.zeros((3,3))
+    
+    metric = []
+    operators = []
+    
+    for i, symop in enumerate(symops):
+            
+        x, y, z = evaluate(symop, coordinates, translate=True)
+        
+        du, dv, dw = x-u, y-v, z-w
+        
+        if du > 0.5: du -= 1
+        if dv > 0.5: dv -= 1
+        if dw > 0.5: dw -= 1
+        
+        if du <= -0.5: du += 1
+        if dv <= -0.5: dv += 1
+        if dw <= -0.5: dw += 1
+        
+        dx, dy, dz = np.dot(A, [du,dv,dw])
+        
+        d = np.sqrt(dx**2+dy**2+dz**2)
+        
+        if (d < tol):
+            metric.append(d)
+            operators.append(symop)
+        
+    sort = np.argsort(metric)
+    
+    for i in sort:
+        print(operators[i])
+    
+    G_cand = operators[sort[0]]
+    W = np.zeros((3,3))
+    w = np.zeros(3)
+    
+    W[:,0] = evaluate(G_cand, [1,0,0], translate=False)
+    W[:,1] = evaluate(G_cand, [0,1,0], translate=False)
+    W[:,2] = evaluate(G_cand, [0,0,1], translate=False)
+            
+    w = evaluate(G_cand, [0,0,0], translate=True)
+    
+    print(W,w)
+    
+    G = [G_cand]    
+    G_mult = G_cand
+    
+    i = 0
+    
+    for i in range(len(operators)-1):
+        
+        if (not (np.allclose(W, np.eye(3)) and np.linalg.norm(w) > 0)):
+                                        
+            G_mult = binary(operators[sort[i]], operators[sort[i+1]])
+            
+            W[:,0] = evaluate(G_mult, [1,0,0], translate=False)
+            W[:,1] = evaluate(G_mult, [0,1,0], translate=False)
+            W[:,2] = evaluate(G_mult, [0,0,1], translate=False)
+                    
+            w = evaluate(G_mult, [0,0,0], translate=True)
+                    
+            G_cand = G_mult
+            G.append(G_cand)
+            
+    rotation, k, wg = classification(G[len(G)-1])
+    
+    return rotation, G
+        
+# def special_position():
+    
+# def site_label():
+    
+# def special_label():
 
-def symmetry_id(symops):
+def laue_id(symops):
     
     laue_sym = operators(invert=True)
     

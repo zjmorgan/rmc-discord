@@ -3,7 +3,7 @@
 import unittest
 import numpy as np
 
-from disorder.material import symmetry
+from disorder.material import symmetry, crystal
 
 class test_symmetry(unittest.TestCase):
         
@@ -116,10 +116,8 @@ class test_symmetry(unittest.TestCase):
         
     def test_absence(self):
         
-        operators = [u'x,y,z',
-                     u'x+1/2,y+1/2,z+1/2',
-                     u'x,-y,-z',
-                     u'-y,-x,-z-1/4']
+        operators = [u'x,y,z', u'x+1/2,y+1/2,z+1/2', 
+                      u'x,-y,-z', u'-y,-x,-z-1/4']
         
         absent = symmetry.absence(operators, 1, 1, 0)
         self.assertEqual(absent, False)
@@ -132,6 +130,39 @@ class test_symmetry(unittest.TestCase):
         
         absent = symmetry.absence(operators, 0, 0, 5)
         self.assertEqual(absent, True)
+        
+    def test_site(self):
+        
+        a = b = 10
+        c = 13
+        
+        alpha = beta = np.pi/2
+        gamma = 2*np.pi/3
+        
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        
+        operators = [u'x,y,z', u'-y,x-y,z', u'-x+y,-x,z',
+                     u'-x,-y,z', u'y,-x+y,z', u'x-y,x,z']
+        
+        coordinates = [0.35,0.65,0.1234]
+        site_symmetry = symmetry.site(operators, coordinates, A, tol=1e-4)
+        print(site_symmetry)
+        # self.assertEqual(site_symmetry, '1')
+        
+        coordinates = [0.5,0.0,0.1234]
+        site_symmetry = symmetry.site(operators, coordinates, A, tol=1e-4)
+        print(site_symmetry)
+        # self.assertEqual(site_symmetry, '2')
+        
+        coordinates = [0.3333,0.6667,0.1234]
+        site_symmetry = symmetry.site(operators, coordinates, A, tol=1e-4)
+        print(site_symmetry)
+        # self.assertEqual(site_symmetry, '3')
+        
+        coordinates = [0.0,0.0,0.1234]
+        site_symmetry = symmetry.site(operators, coordinates, A, tol=1e-4)
+        print(site_symmetry)
+        # self.assertEqual(site_symmetry, '6')
         
 if __name__ == '__main__':
     unittest.main()

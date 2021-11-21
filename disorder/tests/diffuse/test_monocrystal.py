@@ -88,7 +88,7 @@ class test_monocrystal(unittest.TestCase):
 
         indices, reverses, symops, Nu, Nv, Nw = reduced_params
 
-        symop = symmetry.symmetry_id(symops)
+        symop = symmetry.laue_id(symops)
 
         I = monocrystal.magnetic(Sx, Sy, Sz, occupancy,
                                  U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
@@ -174,7 +174,7 @@ class test_monocrystal(unittest.TestCase):
 
         indices, reverses, symops, Nu, Nv, Nw = reduced_params
 
-        symop = symmetry.symmetry_id(symops)
+        symop = symmetry.laue_id(symops)
 
         I = monocrystal.occupational(A_r, occupancy,
                                      U11, U22, U33, U23, U13, U12, ux, uy, uz,
@@ -265,7 +265,7 @@ class test_monocrystal(unittest.TestCase):
 
         indices, reverses, symops, Nu, Nv, Nw = reduced_params
 
-        symop = symmetry.symmetry_id(symops)
+        symop = symmetry.laue_id(symops)
 
         centering = 1
 
@@ -326,7 +326,7 @@ class test_monocrystal(unittest.TestCase):
 
         indices, reverses, symops, Nu, Nv, Nw = reduced_params
 
-        symop = symmetry.symmetry_id(symops)
+        symop = symmetry.laue_id(symops)
 
         I = monocrystal.structural(occupancy, U11, U22, U33, U23, U13, U12,
                                    ux, uy, uz, atm, h_range, k_range, l_range,

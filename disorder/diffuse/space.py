@@ -422,7 +422,7 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
 
     total = np.zeros((n_symm,3), dtype=np.int16)
 
-    symop = symmetry.symmetry_id(symops)
+    symop = symmetry.laue_id(symops)
 
     index = np.arange(n)
 
