@@ -432,13 +432,13 @@ cdef int compare(const void *p, const void *q) nogil:
 
     cdef signed short diff
 
-    diff = x[2] - y[2]
+    diff = x[2]-y[2]
     if (diff):
         return diff
-    diff = x[1] - y[1]
+    diff = x[1]-y[1]
     if (diff):
         return diff
-    return x[0] - y[0]
+    return x[0]-y[0]
 
 cdef void colsort(signed short [:,::1] arr) nogil:
 
@@ -519,6 +519,7 @@ def evaluate(operator, coordinates, translate=True):
         ops = [re.sub(r'\.', '', op) for op in ops]
         ops = [re.sub(r'\/', '', op) for op in ops]
         ops = [re.sub(r'[-+][\d]+', '', op) for op in ops]
+        ops = [re.sub(r'[\d]', '', op) for op in ops]
         operator = ','.join(ops)
 
     return np.array(eval(operator))
@@ -701,7 +702,7 @@ def binary(symop0, symop1):
     return symop
 
 def classification(symop):
-
+    
     W = np.zeros((3,3))
 
     W[:,0] = evaluate(symop, [1,0,0], translate=False)
@@ -712,7 +713,7 @@ def classification(symop):
 
     W_det = np.linalg.det(W)
     W_tr = np.trace(W)
-
+    
     if np.isclose(W_det, 1):
         if np.isclose(W_tr, 3):
             rotation, k = '1', 1
