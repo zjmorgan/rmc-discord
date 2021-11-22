@@ -139,8 +139,8 @@ cdef double magnetic(double [:,:,:,::1] Sx,
                      double uy,
                      double uz,
                      double [:,:,::1] J,
-                     double [:,::1] A,
-                     double [:,::1] g,
+                     double [:,:,::1] A,
+                     double [:,:,::1] g,
                      double [::1] B,
                      long [:,::1] atm_ind,
                      long [:,::1] img_ind_i,
@@ -197,17 +197,17 @@ cdef double magnetic(double [:,:,:,::1] Sx,
               +  dy*(J[t,1,0]*wx+J[t,1,1]*wy+J[t,1,2]*wz)\
               +  dz*(J[t,2,0]*wx+J[t,2,1]*wy+J[t,2,2]*wz)
               
-    E -= vx*(A[0,0]*vx+A[0,1]*vy+A[0,2]*vz)\
-      +  vy*(A[1,0]*vx+A[1,1]*vy+A[1,2]*vz)\
-      +  vz*(A[2,0]*vx+A[2,1]*vy+A[2,2]*vz)
+    E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+      +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+      +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
       
-    E += ux*(A[0,0]*ux+A[0,1]*uy+A[0,2]*uz)\
-      +  uy*(A[1,0]*ux+A[1,1]*uy+A[1,2]*uz)\
-      +  uz*(A[2,0]*ux+A[2,1]*uy+A[2,2]*uz)
+    E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+      +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+      +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
               
-    E -= Bx*(g[0,0]*dx+g[0,1]*dy+g[0,2]*dz)\
-      +  By*(g[1,0]*dx+g[1,1]*dy+g[1,2]*dz)\
-      +  Bz*(g[2,0]*dx+g[2,1]*dy+g[2,2]*dz)
+    E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+      +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+      +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
 
     return E
 
@@ -215,8 +215,8 @@ def heisenberg(double [:,:,:,::1] Sx,
                double [:,:,:,::1] Sy,
                double [:,:,:,::1] Sz,
                double [:,:,::1] J,
-               double [:,::1] A,
-               double [:,::1] g,
+               double [:,:,::1] A,
+               double [:,:,::1] g,
                double [::1] B,
                long [:,::1] atm_ind,
                long [:,::1] img_ind_i,
@@ -281,8 +281,8 @@ def energy(double [:,:,:,::1] Sx,
            double [:,:,:,::1] Sy,
            double [:,:,:,::1] Sz,
            double [:,:,::1] J,
-           double [:,::1] A,
-           double [:,::1] g,
+           double [:,:,::1] A,
+           double [:,:,::1] g,
            double [::1] B,
            long [:,::1] atm_ind,
            long [:,::1] img_ind_i,
@@ -321,14 +321,15 @@ def energy(double [:,:,:,::1] Sx,
                     
                     ux, uy, uz = Sx[i,j,k,a], Sy[i,j,k,a], Sz[i,j,k,a]
                        
-                    e[i,j,k,a,n_pairs] = -(ux*(A[0,0]*ux+A[0,1]*uy+A[0,2]*uz)\
-                                         + uy*(A[1,0]*ux+A[1,1]*uy+A[1,2]*uz)\
-                                         + uz*(A[2,0]*ux+A[2,1]*uy+A[2,2]*uz))
+                    e[i,j,k,a,n_pairs] = \
+                                    -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+                                    + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+                                    + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
                                                 
                     e[i,j,k,a,n_pairs+1] = \
-                                         -(Bx*(g[0,0]*ux+g[0,1]*uy+g[0,2]*uz)\
-                                         + By*(g[1,0]*ux+g[1,1]*uy+g[1,2]*uz)\
-                                         + Bz*(g[2,0]*ux+g[2,1]*uy+g[2,2]*uz))
+                                    -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
+                                    + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
+                                    + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
                                                 
                     for p in range(n_pairs):
                         
@@ -366,8 +367,8 @@ cdef void annealing_cluster(double [:,:,:,::1] Sx,
                             double ny,
                             double nz,
                             double [:,:,::1] J,
-                            double [:,::1] A,
-                            double [:,::1] g,
+                            double [:,::,::1] A,
+                            double [:,::,::1] g,
                             double [::1] B,
                             Py_ssize_t [::1] clust_i, 
                             Py_ssize_t [::1] clust_j, 
@@ -428,21 +429,21 @@ cdef void annealing_cluster(double [:,:,:,::1] Sx,
         vy = uy-2*ny*n_dot_u
         vz = uz-2*nz*n_dot_u      
                     
-        E -= vx*(A[0,0]*vx+A[0,1]*vy+A[0,2]*vz)\
-          +  vy*(A[1,0]*vx+A[1,1]*vy+A[1,2]*vz)\
-          +  vz*(A[2,0]*vx+A[2,1]*vy+A[2,2]*vz)
+        E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+          +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+          +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
           
-        E += ux*(A[0,0]*ux+A[0,1]*uy+A[0,2]*uz)\
-          +  uy*(A[1,0]*ux+A[1,1]*uy+A[1,2]*uz)\
-          +  uz*(A[2,0]*ux+A[2,1]*uy+A[2,2]*uz)
+        E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+          +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+          +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
           
         dx = vx-ux
         dy = vy-uy
         dz = vz-uz
           
-        E -= Bx*(g[0,0]*dx+g[0,1]*dy+g[0,2]*dz)\
-          +  By*(g[1,0]*dx+g[1,1]*dy+g[1,2]*dz)\
-          +  Bz*(g[2,0]*dx+g[2,1]*dy+g[2,2]*dz)
+        E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+          +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+          +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
         
         E += h_eff[i,j,k,a]
          
@@ -613,8 +614,8 @@ def heisenberg_cluster(double [:,:,:,::1] Sx,
                        double [:,:,:,::1] Sy,
                        double [:,:,:,::1] Sz,
                        double [:,:,::1] J,
-                       double [:,::1] A,
-                       double [:,::1] g,
+                       double [:,::,::1] A,
+                       double [:,::,::1] g,
                        double [::1] B,
                        long [:,::1] atm_ind,
                        long [:,::1] img_ind_i,
