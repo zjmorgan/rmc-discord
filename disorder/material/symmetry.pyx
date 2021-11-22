@@ -577,11 +577,7 @@ def reverse(symops):
         w_inv = -np.dot(W_inv, w)
 
         W_inv = W_inv.astype(int).astype(str)
-        w_inv = [Fraction(c).limit_denominator(100) for c in w_inv]
-        w_inv = [str(f.as_integer_ratio()) for f in w_inv]
-        w_inv = [f.lstrip('(',).rstrip(')') for f in w_inv]
-        w_inv = [f.replace(', ','/') for f in w_inv]
-        w_inv = [f.replace('0/1','').replace('1/1','1') for f in w_inv]
+        w_inv = [str(Fraction(c).limit_denominator(100)) for c in w_inv]
 
         rop = u''
 
@@ -595,7 +591,7 @@ def reverse(symops):
                         string += uvw[j]
                     else:
                         string += '+'+uvw[j]
-            if (len(w_inv[i]) > 0):
+            if (w_inv[i] != '0'):
                 if (w_inv[i][0] == '-'):
                     string += w_inv[i]
                 else:
@@ -672,11 +668,7 @@ def binary(symop0, symop1):
     W = np.dot(W0, W1).round().astype(int).astype(str)
 
     w = np.dot(W0, w1)+w0
-
-    w = [Fraction(c).limit_denominator(100) for c in w]
-    w = [str(f.as_integer_ratio()) for f in w]
-    w = [f.lstrip('(').rstrip(')') for f in w]
-    w = [f.replace(', ','/').replace('0/1','').replace('1/1','1') for f in w]
+    w = [str(Fraction(c).limit_denominator(100)) for c in w]
 
     symop = u''
 
@@ -690,7 +682,7 @@ def binary(symop0, symop1):
                     string += uvw[j]
                 else:
                     string += '+'+uvw[j]
-        if (len(w[i]) > 0):
+        if (w[i] != '0'):
             if (w[i][0] == '-'):
                 string += w[i]
             else:
@@ -994,20 +986,10 @@ def site(symops, coordinates, A, tol=1e-1):
     T /= nm
     t /= nm
 
-    t = [Fraction(c).limit_denominator(100) for c in t]
-    t = [str(f.as_integer_ratio()) for f in t]
-    t = [f.lstrip('(',).rstrip(')') for f in t]
-    t = [f.replace(', ','/').rstrip('0/1').rstrip('/1') for f in t]
-    t = [f.replace('0/1','').replace('1/1','1') for f in t]
+    t = [str(Fraction(c).limit_denominator(100)) for c in t]
 
     T = T.flatten()
-
-    T = [Fraction(c).limit_denominator(100) for c in T]
-    T = [str(f.as_integer_ratio()) for f in T]
-    T = [f.lstrip('(',).rstrip(')') for f in T]
-    T = [f.replace(', ','/') for f in T]
-    T = [f.replace('0/1','').replace('1/1','1') for f in T]
-
+    T = [str(Fraction(c).limit_denominator(100)) for c in T]
     T = np.array(T).reshape(3,3).tolist()
 
     uvw = np.array(['x','y','z'])
@@ -1016,7 +998,7 @@ def site(symops, coordinates, A, tol=1e-1):
     for i in range(3):
         string = ''
         for j in range(3):
-            if (T[i][j] != ''):
+            if (T[i][j] != '0'):
                 if (T[i][j] == '1'):
                     if (len(string) > 0):
                         string += '+'
@@ -1027,7 +1009,7 @@ def site(symops, coordinates, A, tol=1e-1):
                     if (len(string) > 0):
                         string += '+'
                     string += uvw[j]
-        if (t[i] != ''):
+        if (t[i] != '0'):
             if (t[i] == '-1'):
                 string += '-'
             elif (len(string) > 0):
