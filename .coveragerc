@@ -1,0 +1,9 @@
+[run]
+plugins = Cython.Coverage
+source= disorder
+
+[report]
+show_missing = true
+omit =
+    *__init__.py
+    *test_*

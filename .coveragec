@@ -1,5 +1,0 @@
-[run]
-plugins = Cython.Coverage
-source = disorder
-omit =
-    *__init__.py
