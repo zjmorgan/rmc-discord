@@ -5,11 +5,11 @@ import re
 import numpy as np
 cimport numpy as np
 
-from cython.parallel import prange
-
 cimport cython
 
 from libc.stdlib cimport qsort
+
+from fractions import Fraction
 
 cpdef (double, double, double) transform(double x,
                                          double y,
@@ -577,11 +577,11 @@ def reverse(symops):
         w_inv = -np.dot(W_inv, w)
 
         W_inv = W_inv.astype(int).astype(str)
-        w_inv = [str(float.as_integer_ratio(c)).replace('(', '')\
-                                               .replace(')', '')\
-                                               .replace(', ', '/')\
-                                               .replace('0/1', '')\
-                                               for c in w_inv]
+        w_inv = [Fraction(c).limit_denominator(100) for c in w_inv]
+        w_inv = [str(f.as_integer_ratio()) for f in w_inv]
+        w_inv = [f.lstrip('(',).rstrip(')') for f in w_inv]
+        w_inv = [f.replace(', ','/') for f in w_inv]
+        w_inv = [f.replace('0/1','').replace('1/1','1') for f in w_inv]
 
         rop = u''
 
@@ -673,10 +673,10 @@ def binary(symop0, symop1):
 
     w = np.dot(W0, w1)+w0
 
-    w = [str(float.as_integer_ratio(c)).replace('(', '')\
-                                       .replace(')', '')\
-                                       .replace(', ', '/')\
-                                       .replace('0/1', '') for c in w]
+    w = [Fraction(c).limit_denominator(100) for c in w]
+    w = [str(f.as_integer_ratio()) for f in w]
+    w = [f.lstrip('(').rstrip(')') for f in w]
+    w = [f.replace(', ','/').replace('0/1','').replace('1/1','1') for f in w]
 
     symop = u''
 
@@ -702,7 +702,7 @@ def binary(symop0, symop1):
     return symop
 
 def classification(symop):
-    
+
     W = np.zeros((3,3))
 
     W[:,0] = evaluate(symop, [1,0,0], translate=False)
@@ -713,7 +713,7 @@ def classification(symop):
 
     W_det = np.linalg.det(W)
     W_tr = np.trace(W)
-    
+
     if np.isclose(W_det, 1):
         if np.isclose(W_tr, 3):
             rotation, k = '1', 1
@@ -874,10 +874,19 @@ def site(symops, coordinates, A, tol=1e-1):
                     if (np.allclose(W, np.eye(3)) and np.linalg.norm(w) > 0):
                         G.discard(op)
 
+    T = np.zeros((3,3))
+    t = np.zeros(3)
+
     rot = []
     for op in G:
         rotation, k, wg = classification(op)
         rot.append(rotation)
+        W[:,0] = evaluate(op, [1,0,0], translate=False)
+        W[:,1] = evaluate(op, [0,1,0], translate=False)
+        W[:,2] = evaluate(op, [0,0,1], translate=False)
+        w = evaluate(op, [0,0,0], translate=True)
+        T += W
+        t += w
     rot = np.array(rot)
 
     n_rot_1 = (rot == '1').sum()
@@ -982,7 +991,55 @@ def site(symops, coordinates, A, tol=1e-1):
         else:
             pg = '-1'
 
-    return pg, mult
+    T /= nm
+    t /= nm
+
+    t = [Fraction(c).limit_denominator(100) for c in t]
+    t = [str(f.as_integer_ratio()) for f in t]
+    t = [f.lstrip('(',).rstrip(')') for f in t]
+    t = [f.replace(', ','/').rstrip('0/1').rstrip('/1') for f in t]
+    t = [f.replace('0/1','').replace('1/1','1') for f in t]
+
+    T = T.flatten()
+
+    T = [Fraction(c).limit_denominator(100) for c in T]
+    T = [str(f.as_integer_ratio()) for f in T]
+    T = [f.lstrip('(',).rstrip(')') for f in T]
+    T = [f.replace(', ','/') for f in T]
+    T = [f.replace('0/1','').replace('1/1','1') for f in T]
+
+    T = np.array(T).reshape(3,3).tolist()
+
+    uvw = np.array(['x','y','z'])
+    sppos = u''
+
+    for i in range(3):
+        string = ''
+        for j in range(3):
+            if (T[i][j] != ''):
+                if (T[i][j] == '1'):
+                    if (len(string) > 0):
+                        string += '+'
+                    string += uvw[j]
+                elif (T[i][j] == '-1'):
+                    string += '-'+uvw[j]
+                else:
+                    if (len(string) > 0):
+                        string += '+'
+                    string += uvw[j]
+        if (t[i] != ''):
+            if (t[i] == '-1'):
+                string += '-'
+            elif (len(string) > 0):
+                string += '+'
+            string += t[i]
+        if (string == ''):
+            string = '0'
+        sppos += string
+        if (i != 2):
+            sppos += ','
+
+    return pg, mult, sppos
 
 def laue_id(symops):
 
