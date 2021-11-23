@@ -174,7 +174,11 @@ class UnitCell:
         laue =  crystal.laue(folder=folder, filename=filename)
 
         self.__laue = laue
-
+        
+        self.__pg = np.empty(n_atm, dtype=object)
+        self.__mult = np.empty(n_atm, dtype=int)
+        self.__sppos = np.empty(n_atm, dtype=object)
+        
     def __get_mask(self):
 
         active = self.get_active_sites()
@@ -183,6 +187,18 @@ class UnitCell:
         mask = active[site]
 
         return mask
+    
+    def __calculate_site_symmetries(self):
+        
+        A = self.get_fractional_cartesian_transform()
+        
+        for i, (u, v, w) in enumerate(zip(self.__u,self.__v,self.__w)):
+    
+            pg, mult, sppos = symmetry.site(self.__op, [u,v,w], A, tol=1e-2)
+            
+            self.__pg[i] = pg
+            self.__mult[i] = mult
+            self.__sppos[i] = sppos
 
     def get_filepath(self):
 
@@ -491,6 +507,18 @@ class UnitCell:
     def get_laue(self):
 
         return self.__laue
+    
+    def get_site_symmetries(self):
+        
+        return self.__pg
+    
+    def get_wyckoff_special_positions(self):
+        
+        return self.__sppos
+    
+    def get_site_multiplicities(self):
+        
+        return self.__mult
 
 class SuperCell(UnitCell):
 

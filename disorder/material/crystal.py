@@ -1101,7 +1101,6 @@ def pairs(u, v, w, ion, A, extend=False):
         ion_ref = [ion_pair.split('_')[1] for ion_pair in ion_ion[mask][sort]]
 
         iu, iv, iw = u_img[mask][sort], v_img[mask][sort], w_img[mask][sort]
-        # ru, rv, rw = du[mask][sort], dv[mask][sort], dw[mask][sort]
 
         c = 0
         m, c_uvw = [], []
