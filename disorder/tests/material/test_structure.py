@@ -135,14 +135,31 @@ class test_structure(unittest.TestCase):
         occ_ref = uc.get_occupancies()
         np.testing.assert_array_almost_equal(occ, occ_ref)
         
-        # disp_params = uc.get_anisotropic_displacement_parameters()
-        # uc.set_anisotropic_displacement_parameters(*disp_params)
+        disp_params = uc.get_anisotropic_displacement_parameters()
+        uc.set_anisotropic_displacement_parameters(*disp_params)
         
-        # disp_params_ref = uc.get_anisotropic_displacement_parameters()
-        # np.testing.assert_array_almost_equal(disp_params, disp_params_ref)
+        disp_params_ref = uc.get_anisotropic_displacement_parameters()
+        np.testing.assert_array_almost_equal(disp_params, disp_params_ref)
         
-        # print(disp_params)
-        # print(disp_params_ref)
+        mu1, mu2, mu3 = uc.get_crystal_axis_magnetic_moments()
+        uc.set_crystal_axis_magnetic_moments(mu1, mu2, mu3)
+        
+        mu1_ref, mu2_ref, mu3_ref = uc.get_crystal_axis_magnetic_moments()
+        np.testing.assert_array_almost_equal(mu1, mu1_ref)
+        np.testing.assert_array_almost_equal(mu2, mu2_ref)
+        np.testing.assert_array_almost_equal(mu3, mu3_ref)
+        
+        g = uc.get_g_factors()
+        uc.set_g_factors(g)
+        
+        g_ref = uc.get_g_factors()
+        np.testing.assert_array_almost_equal(g, g_ref)
+        
+        constants = uc.get_lattice_constants()
+        uc.set_lattice_constants(*constants)
+
+        constants_ref = uc.get_lattice_constants()
+        np.testing.assert_array_almost_equal(constants, constants_ref)
 
 if __name__ == '__main__':
     unittest.main()

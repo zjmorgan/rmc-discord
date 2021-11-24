@@ -158,12 +158,12 @@ class UnitCell:
         if (displacement.shape[1] != 6):
             self.set_isotropic_displacement_parameter(displacement.flatten())
         else:
-            self.__U11 = displacement[0]
-            self.__U22 = displacement[1]
-            self.__U33 = displacement[2]
-            self.__U23 = displacement[3]
-            self.__U13 = displacement[4]
-            self.__U12 = displacement[5]
+            self.__U11 = displacement.T[0]
+            self.__U22 = displacement.T[1]
+            self.__U33 = displacement.T[2]
+            self.__U23 = displacement.T[3]
+            self.__U13 = displacement.T[4]
+            self.__U12 = displacement.T[5]
 
         self.__mu1, self.__mu2, self.__mu3 = uc_dict['moment'].T
 
@@ -197,6 +197,13 @@ class UnitCell:
     def __get_inverse(self):
 
         return np.arange(self.__act.size)[self.__site][self.__get_index()]
+
+    def __get_all_lattice_constants(self):
+
+        constants = self.__a, self.__b, self.__c, \
+                    self.__alpha, self.__beta, self.__gamma
+
+        return constants
     
     def __calculate_site_symmetries(self):
         
@@ -234,18 +241,6 @@ class UnitCell:
         
         return self.__act[self.__site].sum()
     
-    def get_symmetry_operators(self):
-
-        mask = self.__get_mask()
-
-        return self.__op[mask]
-    
-    def get_magnetic_symmetry_operators(self):
-
-        mask = self.__get_mask()
-
-        return self.__mag_op[mask]
-
     def get_fractional_coordinates(self):
 
         mask = self.__get_mask()
@@ -274,9 +269,10 @@ class UnitCell:
 
     def set_unit_cell_atoms(self, atm):
 
-        mask = self.__get_mask()
-
-        self.__atm[mask] = atm
+        ind = self.__get_index()
+        inv = self.__get_inverse()
+        
+        self.__atm[ind] = atm[inv]
 
     def get_occupancies(self):
 
@@ -286,9 +282,10 @@ class UnitCell:
 
     def set_occupancies(self, occ):
 
-        mask = self.__get_mask()
-
-        self.__occ[mask] = occ
+        ind = self.__get_index()
+        inv = self.__get_inverse()
+        
+        self.__occ[ind] = occ[inv]
 
     def get_anisotropic_displacement_parameters(self):
 
@@ -306,23 +303,35 @@ class UnitCell:
     def set_anisotropic_displacement_parameters(self, U11, U22, U33,
                                                       U23, U13, U12):
 
-        mask = self.__get_mask()
+        ind = self.__get_index()
+        inv = self.__get_inverse()
         
-        #operators = self.get_symmetry_operators()
+        operators = self.get_symmetry_operators()
         
-        #symmetry.evaluate_disp()
-
-        self.__U11[mask] = U11
-        self.__U22[mask] = U22
-        self.__U33[mask] = U33
-        self.__U23[mask] = U23
-        self.__U13[mask] = U13
-        self.__U12[mask] = U12
+        U11p = U11[inv]
+        U22p = U22[inv]
+        U33p = U33[inv]
+        U23p = U23[inv]
+        U13p = U13[inv]
+        U12p = U12[inv]
+        
+        for i, operator in enumerate(operators):
+            disp = [U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i]]
+            disp = symmetry.evaluate_disp(operator, disp)
+            U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i] = disp
+        
+        self.__U11[ind] = U11p
+        self.__U22[ind] = U22p
+        self.__U33[ind] = U33p
+        self.__U23[ind] = U23p
+        self.__U13[ind] = U13p
+        self.__U12[ind] = U12p
 
     def set_isotropic_displacement_parameter(self, Uiso):
 
-        mask = self.__get_mask()
-
+        ind = self.__get_index()
+        inv = self.__get_inverse()
+        
         D = self.get_atomic_displacement_cartesian_transform()
 
         uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
@@ -330,12 +339,12 @@ class UnitCell:
         U11, U22, U33 = Uiso*uiso[0,0], Uiso*uiso[1,1], Uiso*uiso[2,2]
         U23, U13, U12 = Uiso*uiso[1,2], Uiso*uiso[0,2], Uiso*uiso[0,1]
 
-        self.__U11[mask] = U11
-        self.__U22[mask] = U22
-        self.__U33[mask] = U33
-        self.__U23[mask] = U23
-        self.__U13[mask] = U13
-        self.__U12[mask] = U12
+        self.__U11[ind] = U11[inv]
+        self.__U22[ind] = U22[inv]
+        self.__U33[ind] = U33[inv]
+        self.__U23[ind] = U23[inv]
+        self.__U13[ind] = U13[inv]
+        self.__U12[ind] = U12[inv]
 
     def get_isotropic_displacement_parameter(self):
 
@@ -376,11 +385,23 @@ class UnitCell:
 
     def set_crystal_axis_magnetic_moments(self, mu1, mu2, mu3):
 
-        mask = self.__get_mask()
-
-        self.__mu1[mask] = mu1
-        self.__mu2[mask] = mu2
-        self.__mu2[mask] = mu3
+        ind = self.__get_index()
+        inv = self.__get_inverse()
+        
+        operators = self.get_magnetic_symmetry_operators()
+        
+        mu1p = mu1[inv]
+        mu2p = mu2[inv]
+        mu3p = mu3[inv]
+        
+        for i, operator in enumerate(operators):
+            mag = [mu1p[i], mu2p[i], mu3p[i]]
+            mag = symmetry.evaluate_mag(operator, mag)
+            mu1p[i], mu2p[i], mu3p[i] = mag
+        
+        self.__mu1[ind] = mu1p
+        self.__mu2[ind] = mu2p
+        self.__mu3[ind] = mu3p
 
     def get_magnetic_moment_magnitude(self):
 
@@ -404,24 +425,53 @@ class UnitCell:
 
     def set_g_factors(self, g):
 
-        mask = self.__get_mask()
-
-        self.__g = g[mask]
-
+        ind = self.__get_index()
+        inv = self.__get_inverse()
+        
+        self.__g[ind] = g[inv]
+        
     def get_lattice_constants(self):
 
-        constants = self.__a, self.__b, self.__c, \
-                    self.__alpha, self.__beta, self.__gamma
+        lat = self.get_lattice_system()
+        
+        a = self.__a
+        b = self.__b 
+        c = self.__c
+        alpha = self.__alpha
+        beta = self.__beta
+        gamma = self.__gamma
 
+        if (lat == 'Cubic'):
+            constants = a
+        elif (lat == 'Hexagonal' or lat == 'Tetragonal'):
+            constants = a, c
+        elif (lat == 'Rhobmohedral'):
+            constants = a, alpha
+        elif (lat == 'Orthorhombic'):
+            constants = a, b, c
+        elif (lat == 'Monoclinic'):
+            if (not np.isclose(beta, np.pi/2)):
+                constants = a, b, c, alpha, gamma 
+            else:
+                constants = a, b, c, alpha, beta
+        else:
+            constants = a, b, c, alpha, beta, gamma 
+            
         return constants
 
     def set_lattice_constants(self, *constants):
 
         lat = self.get_lattice_system()
-        a, b, c, alpha, beta, gamma = self.get_lattice_constants()
+        
+        a = self.__a
+        b = self.__b 
+        c = self.__c
+        alpha = self.__alpha
+        beta = self.__beta
+        gamma = self.__gamma
 
         if (lat == 'Cubic'):
-            a, = constants
+            a = constants
             b = c = a
         elif (lat == 'Hexagonal' or lat == 'Tetragonal'):
             a, c = constants
@@ -432,6 +482,7 @@ class UnitCell:
             beta = gamma = alpha
         elif (lat == 'Orthorhombic'):
             a, b, c = constants
+            alpha = beta = gamma = np.pi/2
         elif (lat == 'Monoclinic'):
             if (not np.isclose(beta, np.pi/2)):
                 a, b, c, alpha, gamma = constants
@@ -471,55 +522,55 @@ class UnitCell:
 
     def get_lattice_volume(self):
 
-        constants = self.get_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.volume(*constants)
 
     def get_reciprocal_lattice_volume(self):
 
-        constants = self.get_reciprocal_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.volume(*constants)
 
     def get_metric_tensor(self):
 
-        constants = self.get_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.metric(*constants)
 
     def get_reciprocal_metric_tensor(self):
 
-        constants = self.get_reciprocal_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.metric(*constants)
 
     def get_fractional_cartesian_transform(self):
 
-        constants = self.get_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian(*constants)
 
     def get_miller_cartesian_transform(self):
 
-        constants = self.get_reciprocal_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian(*constants)
 
     def get_cartesian_rotation(self):
 
-        constants = self.get_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian_rotation(*constants)
 
     def get_moment_cartesian_transform(self):
 
-        constants = self.get_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian_moment(*constants)
 
     def get_atomic_displacement_cartesian_transform(self):
 
-        constants = self.get_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian_displacement(*constants)
 
@@ -537,15 +588,21 @@ class UnitCell:
     
     def get_site_symmetries(self):
         
-        return self.__pg
+        mask = self.__get_mask()
+        
+        return self.__pg[mask]
     
     def get_wyckoff_special_positions(self):
         
-        return self.__sppos
+        mask = self.__get_mask()
+
+        return self.__sppos[mask]
     
     def get_site_multiplicities(self):
         
-        return self.__mult
+        mask = self.__get_mask()
+        
+        return self.__mult[mask]
 
 class SuperCell(UnitCell):
 
