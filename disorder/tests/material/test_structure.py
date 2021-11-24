@@ -43,10 +43,10 @@ class test_structure(unittest.TestCase):
         U23, U13, U12 = Uiso*uiso[1,2], Uiso*uiso[0,2], Uiso*uiso[0,1]
         
         h, k, l, d, F, mult = structure.factor(u, v, w, atm, occ, 
-                                               U11, U22, U33, U23, U13, U12,
-                                               a, b, c, alpha, beta, gamma, 
-                                               symops, dmin=0.7, 
-                                               source='neutron')
+                                                U11, U22, U33, U23, U13, U12,
+                                                a, b, c, alpha, beta, gamma, 
+                                                symops, dmin=0.7, 
+                                                source='neutron')
         
         data = np.loadtxt(os.path.join(folder, 'Cu3Au.csv'),
                           dtype={'names': names, 'formats': formats},
@@ -62,8 +62,8 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(F.imag, data[5], decimal=4)
         
         uc_dict = crystal.unitcell(folder=folder, 
-                                   filename='CaTiOSiO4.cif', 
-                                   tol=1e-4)
+                                    filename='CaTiOSiO4.cif', 
+                                    tol=1e-4)
                 
         u = uc_dict['u']
         v = uc_dict['v']
@@ -81,10 +81,10 @@ class test_structure(unittest.TestCase):
         U11, U22, U33, U23, U13, U12 = disp.T
                                 
         h, k, l, d, F, mult = structure.factor(u, v, w, atm, occ, 
-                                               U11, U22, U33, U23, U13, U12,
-                                               a, b, c, alpha, beta, gamma, 
-                                               symops, dmin=0.7, 
-                                               source='neutron')
+                                                U11, U22, U33, U23, U13, U12,
+                                                a, b, c, alpha, beta, gamma, 
+                                                symops, dmin=0.7, 
+                                                source='neutron')
         
         data = np.loadtxt(os.path.join(folder, 'CaTiOSiO4.csv'),
                           dtype={'names': names, 'formats': formats},
@@ -120,7 +120,7 @@ class test_structure(unittest.TestCase):
         
         active_sites[atms == 'O'] = False
         uc.set_active_sites(active_sites)
-                        
+                                
         u, v, w = uc.get_fractional_coordinates()
         uc.set_fractional_coordinates(u, v, w)
         
@@ -128,7 +128,7 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(u, u_ref)
         np.testing.assert_array_almost_equal(v, v_ref)
         np.testing.assert_array_almost_equal(w, w_ref)
-
+        
         occ = uc.get_occupancies()
         uc.set_occupancies(occ)
         
@@ -140,6 +140,32 @@ class test_structure(unittest.TestCase):
         
         disp_params_ref = uc.get_anisotropic_displacement_parameters()
         np.testing.assert_array_almost_equal(disp_params, disp_params_ref)
+        
+        constants = uc.get_lattice_constants()
+        uc.set_lattice_constants(*constants)
+
+        constants_ref = uc.get_lattice_constants()
+        np.testing.assert_array_almost_equal(constants, constants_ref)
+        
+        # ---
+        
+        cif_file = 'Li2Co(SO4)2.mcif'
+        
+        filename = os.path.join(folder, cif_file)
+        
+        uc = structure.UnitCell(filename, tol=1e-4)
+        
+        self.assertEqual(uc.get_filepath(), folder)
+        self.assertEqual(uc.get_filename(), cif_file)
+        
+        self.assertTrue(uc.get_active_sites().all())
+        self.assertEqual(uc.get_number_atoms_per_unit_cell(), 104)
+        
+        active_sites = uc.get_active_sites()
+        atms = uc.get_unit_cell_atoms()
+        
+        active_sites[atms == 'O'] = False
+        uc.set_active_sites(active_sites)
         
         mu1, mu2, mu3 = uc.get_crystal_axis_magnetic_moments()
         uc.set_crystal_axis_magnetic_moments(mu1, mu2, mu3)
@@ -154,12 +180,6 @@ class test_structure(unittest.TestCase):
         
         g_ref = uc.get_g_factors()
         np.testing.assert_array_almost_equal(g, g_ref)
-        
-        constants = uc.get_lattice_constants()
-        uc.set_lattice_constants(*constants)
-
-        constants_ref = uc.get_lattice_constants()
-        np.testing.assert_array_almost_equal(constants, constants_ref)
 
 if __name__ == '__main__':
     unittest.main()

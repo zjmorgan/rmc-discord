@@ -145,28 +145,28 @@ class test_symmetry(unittest.TestCase):
                      u'-x,-y,z', u'y,-x+y,z', u'x-y,x,z']
 
         coordinates = [0.35,0.65,0.1234]
-        pg, mult, sppos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '1')
         self.assertEqual(mult, 6)
-        self.assertEqual(sppos, 'x,y,z')
+        self.assertEqual(sp_pos, 'x,y,z')
 
         coordinates = [0.5,0.0,0.1234]
-        pg, mult, sppos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '2')
         self.assertEqual(mult, 3)
-        self.assertEqual(sppos, '1/2,0,z')
+        self.assertEqual(sp_pos, '1/2,0,z')
 
         coordinates = [0.3333,0.6667,0.1234]
-        pg, mult, sppos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '3')
         self.assertEqual(mult, 2)
-        self.assertEqual(sppos, '1/3,2/3,z')
+        self.assertEqual(sp_pos, '1/3,2/3,z')
 
         coordinates = [0.0,0.0,0.1234]
-        pg, mult, sppos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '6')
         self.assertEqual(mult, 1)
-        self.assertEqual(sppos, '0,0,z')
+        self.assertEqual(sp_pos, '0,0,z')
 
 if __name__ == '__main__':
     unittest.main()

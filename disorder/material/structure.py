@@ -133,6 +133,10 @@ class UnitCell:
         
         self.__act = np.full(uni.size, True)
         self.__ind = ind
+            
+        self.__mask = self.__ind[self.__act]
+        self.__index = self.__act[self.__site]
+        self.__inverse = np.arange(self.__act.size)[self.__site][self.__index]
 
         self.__op = uc_dict['operator']
         self.__mag_op = uc_dict['magnetic_operator']
@@ -152,10 +156,8 @@ class UnitCell:
         self.__U13 = np.zeros(n_atm)
         self.__U12 = np.zeros(n_atm)
 
-        if (len(displacement.shape) != 2):
-            displacement = displacement.reshape(displacement.size, 1)
 
-        if (displacement.shape[1] != 6):
+        if (displacement.shape[1] == 1):
             self.set_isotropic_displacement_parameter(displacement.flatten())
         else:
             self.__U11 = displacement.T[0]
@@ -184,19 +186,17 @@ class UnitCell:
         
         self.__pg = np.empty(n_atm, dtype=object)
         self.__mult = np.empty(n_atm, dtype=int)
-        self.__sppos = np.empty(n_atm, dtype=object)
+        self.__sp_pos = np.empty(n_atm, dtype=object)
         
-    def __get_mask(self):
-
-        return self.__ind[self.__act]
+        A = self.get_fractional_cartesian_transform()
+        
+        for i, (u, v, w) in enumerate(zip(self.__u,self.__v,self.__w)):
     
-    def __get_index(self):
-
-        return self.__act[self.__site]
-    
-    def __get_inverse(self):
-
-        return np.arange(self.__act.size)[self.__site][self.__get_index()]
+            pg, mult, sp_pos = symmetry.site(self.__op, [u,v,w], A, tol=1e-2)
+            
+            self.__pg[i] = pg
+            self.__mult[i] = mult
+            self.__sp_pos[i] = sp_pos
 
     def __get_all_lattice_constants(self):
 
@@ -204,18 +204,6 @@ class UnitCell:
                     self.__alpha, self.__beta, self.__gamma
 
         return constants
-    
-    def __calculate_site_symmetries(self):
-        
-        A = self.get_fractional_cartesian_transform()
-        
-        for i, (u, v, w) in enumerate(zip(self.__u,self.__v,self.__w)):
-    
-            pg, mult, sppos = symmetry.site(self.__op, [u,v,w], A, tol=1e-2)
-            
-            self.__pg[i] = pg
-            self.__mult[i] = mult
-            self.__sppos[i] = sppos
 
     def get_filepath(self):
 
@@ -236,6 +224,10 @@ class UnitCell:
     def set_active_sites(self, act):
 
         self.__act = act
+        
+        self.__mask = self.__ind[self.__act]
+        self.__index = self.__act[self.__site]
+        self.__inverse = np.arange(self.__act.size)[self.__site][self.__index]
 
     def get_number_atoms_per_unit_cell(self):
         
@@ -243,16 +235,29 @@ class UnitCell:
     
     def get_fractional_coordinates(self):
 
-        mask = self.__get_mask()
+        mask = self.__mask
         
         return self.__u[mask], self.__v[mask], self.__w[mask]
 
     def set_fractional_coordinates(self, u, v, w):
 
-        ind = self.__get_index()
-        inv = self.__get_inverse()
-                                
-        self.__u[ind], self.__v[ind], self.__w[ind] = u[inv], v[inv], w[inv]
+        mask = self.__mask
+        
+        ind = self.__index
+        inv = self.__inverse
+        
+        operators = self.__op[ind]
+        operators_p = self.__op[mask][inv]
+        
+        up, vp, wp = u[inv], v[inv], w[inv]      
+        
+        for i, (operator, operator_p) in enumerate(zip(operators,operators_p)):
+            operator = symmetry.binary(operator_p, operator)
+            coord = [up[i], vp[i], wp[i]]
+            coord = np.mod(symmetry.evaluate(operator, coord), 1)
+            up[i], vp[i], wp[i] = coord
+        
+        self.__u[ind], self.__v[ind], self.__w[ind] = up, vp, wp
 
     def get_unit_cell_cartesian_atomic_coordinates(self):
 
@@ -263,33 +268,33 @@ class UnitCell:
 
     def get_unit_cell_atoms(self):
 
-        mask = self.__get_mask()
+        mask = self.__mask
 
         return self.__atm[mask]
 
     def set_unit_cell_atoms(self, atm):
 
-        ind = self.__get_index()
-        inv = self.__get_inverse()
+        ind = self.__index
+        inv = self.__inverse
         
         self.__atm[ind] = atm[inv]
 
     def get_occupancies(self):
 
-        mask = self.__get_mask()
+        mask = self.__mask
 
         return self.__occ[mask]
 
     def set_occupancies(self, occ):
 
-        ind = self.__get_index()
-        inv = self.__get_inverse()
+        ind = self.__index
+        inv = self.__inverse
         
         self.__occ[ind] = occ[inv]
 
     def get_anisotropic_displacement_parameters(self):
 
-        mask = self.__get_mask()
+        mask = self.__mask
 
         U11 = self.__U11[mask]
         U22 = self.__U22[mask]
@@ -303,11 +308,14 @@ class UnitCell:
     def set_anisotropic_displacement_parameters(self, U11, U22, U33,
                                                       U23, U13, U12):
 
-        ind = self.__get_index()
-        inv = self.__get_inverse()
+        mask = self.__mask
+
+        ind = self.__index
+        inv = self.__inverse
         
-        operators = self.get_symmetry_operators()
-        
+        operators = self.__op[ind]
+        operators_p = self.__op[mask][inv]
+
         U11p = U11[inv]
         U22p = U22[inv]
         U33p = U33[inv]
@@ -315,7 +323,8 @@ class UnitCell:
         U13p = U13[inv]
         U12p = U12[inv]
         
-        for i, operator in enumerate(operators):
+        for i, (operator, operator_p) in enumerate(zip(operators,operators_p)):
+            operator = symmetry.binary(operator_p, operator)
             disp = [U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i]]
             disp = symmetry.evaluate_disp(operator, disp)
             U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i] = disp
@@ -329,8 +338,8 @@ class UnitCell:
 
     def set_isotropic_displacement_parameter(self, Uiso):
 
-        ind = self.__get_index()
-        inv = self.__get_inverse()
+        ind = self.__index
+        inv = self.__inverse
         
         D = self.get_atomic_displacement_cartesian_transform()
 
@@ -375,7 +384,7 @@ class UnitCell:
 
     def get_crystal_axis_magnetic_moments(self):
 
-        mask = self.__get_mask()
+        mask = self.__mask
 
         mu1 = self.__mu1[mask]
         mu2 = self.__mu2[mask]
@@ -384,18 +393,22 @@ class UnitCell:
         return mu1, mu2, mu3
 
     def set_crystal_axis_magnetic_moments(self, mu1, mu2, mu3):
+        
+        mask = self.__mask
+        
+        ind = self.__index
+        inv = self.__inverse
+        
+        operators = self.__mag_op[ind]
+        operators_p = self.__mag_op[mask][inv]
 
-        ind = self.__get_index()
-        inv = self.__get_inverse()
-        
-        operators = self.get_magnetic_symmetry_operators()
-        
         mu1p = mu1[inv]
         mu2p = mu2[inv]
         mu3p = mu3[inv]
         
-        for i, operator in enumerate(operators):
+        for i, (operator, operator_p) in enumerate(zip(operators,operators_p)):
             mag = [mu1p[i], mu2p[i], mu3p[i]]
+            mag = symmetry.evaluate_mag(operator_p, mag)
             mag = symmetry.evaluate_mag(operator, mag)
             mu1p[i], mu2p[i], mu3p[i] = mag
         
@@ -419,14 +432,14 @@ class UnitCell:
 
     def get_g_factors(self):
 
-        mask = self.__get_mask()
+        mask = self.__mask
 
         return self.__g[mask]
 
     def set_g_factors(self, g):
 
-        ind = self.__get_index()
-        inv = self.__get_inverse()
+        ind = self.__index
+        inv = self.__inverse
         
         self.__g[ind] = g[inv]
         
@@ -500,19 +513,19 @@ class UnitCell:
 
     def get_reciprocal_lattice_constants(self):
 
-        constants = self.get_lattice_constants()
+        constants = self.__get_all_lattice_constants()
 
         return crystal.reciprocal(*constants)
 
     def get_symmetry_operators(self):
 
-        mask = self.__get_mask()
+        mask = self.__mask
 
         return self.__op[mask]
 
     def get_magnetic_symmetry_operators(self):
 
-        mask = self.__get_mask()
+        mask = self.__mask
 
         return self.__mag_op[mask]
 
@@ -588,19 +601,19 @@ class UnitCell:
     
     def get_site_symmetries(self):
         
-        mask = self.__get_mask()
+        mask = self.__mask
         
         return self.__pg[mask]
     
     def get_wyckoff_special_positions(self):
         
-        mask = self.__get_mask()
+        mask = self.__mask
 
-        return self.__sppos[mask]
+        return self.__sp_pos[mask]
     
     def get_site_multiplicities(self):
         
-        mask = self.__get_mask()
+        mask = self.__mask
         
         return self.__mult[mask]
 
