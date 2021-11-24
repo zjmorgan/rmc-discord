@@ -113,6 +113,36 @@ class test_structure(unittest.TestCase):
         self.assertEqual(uc.get_filename(), cif_file)
         
         self.assertTrue(uc.get_active_sites().all())
+        self.assertEqual(uc.get_number_atoms_per_unit_cell(), 32)
+        
+        active_sites = uc.get_active_sites()
+        atms = uc.get_unit_cell_atoms()
+        
+        active_sites[atms == 'O'] = False
+        uc.set_active_sites(active_sites)
                         
+        u, v, w = uc.get_fractional_coordinates()
+        uc.set_fractional_coordinates(u, v, w)
+        
+        u_ref, v_ref, w_ref = uc.get_fractional_coordinates()
+        np.testing.assert_array_almost_equal(u, u_ref)
+        np.testing.assert_array_almost_equal(v, v_ref)
+        np.testing.assert_array_almost_equal(w, w_ref)
+
+        occ = uc.get_occupancies()
+        uc.set_occupancies(occ)
+        
+        occ_ref = uc.get_occupancies()
+        np.testing.assert_array_almost_equal(occ, occ_ref)
+        
+        # disp_params = uc.get_anisotropic_displacement_parameters()
+        # uc.set_anisotropic_displacement_parameters(*disp_params)
+        
+        # disp_params_ref = uc.get_anisotropic_displacement_parameters()
+        # np.testing.assert_array_almost_equal(disp_params, disp_params_ref)
+        
+        # print(disp_params)
+        # print(disp_params_ref)
+
 if __name__ == '__main__':
     unittest.main()

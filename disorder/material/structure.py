@@ -129,8 +129,10 @@ class UnitCell:
         self.__atm = uc_dict['atom']
         self.__site = uc_dict['site']
 
-        uni = np.unique(self.__site)
+        uni, ind = np.unique(self.__site, return_index=True)
+        
         self.__act = np.full(uni.size, True)
+        self.__ind = ind
 
         self.__op = uc_dict['operator']
         self.__mag_op = uc_dict['magnetic_operator']
@@ -153,10 +155,15 @@ class UnitCell:
         if (len(displacement.shape) != 2):
             displacement = displacement.reshape(displacement.size, 1)
 
-        if (displacement.shape[1] == 6):
-            self.set_anisotropic_displacement_parameters(*displacement.T)
-        else:
+        if (displacement.shape[1] != 6):
             self.set_isotropic_displacement_parameter(displacement.flatten())
+        else:
+            self.__U11 = displacement[0]
+            self.__U22 = displacement[1]
+            self.__U33 = displacement[2]
+            self.__U23 = displacement[3]
+            self.__U13 = displacement[4]
+            self.__U12 = displacement[5]
 
         self.__mu1, self.__mu2, self.__mu3 = uc_dict['moment'].T
 
@@ -181,12 +188,15 @@ class UnitCell:
         
     def __get_mask(self):
 
-        active = self.get_active_sites()
-        site = self.get_sites()
+        return self.__ind[self.__act]
+    
+    def __get_index(self):
 
-        mask = active[site]
+        return self.__act[self.__site]
+    
+    def __get_inverse(self):
 
-        return mask
+        return np.arange(self.__act.size)[self.__site][self.__get_index()]
     
     def __calculate_site_symmetries(self):
         
@@ -221,20 +231,33 @@ class UnitCell:
         self.__act = act
 
     def get_number_atoms_per_unit_cell(self):
+        
+        return self.__act[self.__site].sum()
+    
+    def get_symmetry_operators(self):
 
-        return self.__get_mask().sum()
+        mask = self.__get_mask()
+
+        return self.__op[mask]
+    
+    def get_magnetic_symmetry_operators(self):
+
+        mask = self.__get_mask()
+
+        return self.__mag_op[mask]
 
     def get_fractional_coordinates(self):
 
         mask = self.__get_mask()
-
+        
         return self.__u[mask], self.__v[mask], self.__w[mask]
 
     def set_fractional_coordinates(self, u, v, w):
 
-        mask = self.__get_mask()
-
-        self.__u[mask], self.__v[mask], self.__w[mask] = u, v, w
+        ind = self.__get_index()
+        inv = self.__get_inverse()
+                                
+        self.__u[ind], self.__v[ind], self.__w[ind] = u[inv], v[inv], w[inv]
 
     def get_unit_cell_cartesian_atomic_coordinates(self):
 
@@ -284,6 +307,10 @@ class UnitCell:
                                                       U23, U13, U12):
 
         mask = self.__get_mask()
+        
+        #operators = self.get_symmetry_operators()
+        
+        #symmetry.evaluate_disp()
 
         self.__U11[mask] = U11
         self.__U22[mask] = U22
