@@ -1,7 +1,5 @@
 #cython: boundscheck=False, wraparound=False, language_level=3
 
-import re
-
 import numpy as np
 cimport numpy as np
 
@@ -516,10 +514,7 @@ def evaluate(operator, coordinates, translate=True):
 
     if (not translate):
         ops = operator.split(',')
-        ops = [re.sub(r'\.', '', op) for op in ops]
-        ops = [re.sub(r'\/', '', op) for op in ops]
-        ops = [re.sub(r'[-+][\d]+', '', op) for op in ops]
-        ops = [re.sub(r'[\d]', '', op) for op in ops]
+        ops = [op.replace('/', '//') for op in ops]
         operator = ','.join(ops)
 
     return np.array(eval(operator))
