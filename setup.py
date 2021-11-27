@@ -88,13 +88,6 @@ ext_modules = [
         include_dirs=np_include_dir
     ),
     Extension(
-        'disorder.material.symmetry',
-        ['disorder/material/symmetry'+ext],
-        extra_compile_args=compile_openmp,
-        extra_link_args=link_openmp,
-        include_dirs=np_include_dir
-    ),
-    Extension(
         'disorder.diffuse.monocrystal',
         ['disorder/diffuse/monocrystal'+ext],
         extra_compile_args=compile_openmp,

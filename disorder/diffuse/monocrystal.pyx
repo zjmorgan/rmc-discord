@@ -19,8 +19,207 @@ cdef (double, double, double) transform(double x,
                                         Py_ssize_t sym,
                                         Py_ssize_t op) nogil:
 
-    return symmetry.transform(x, y, z, sym, op)
+    if (sym == 0):
 
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x,-y,z
+        elif (op == 2): return -x,y,-z
+        elif (op == 3): return x,-y,-z
+        elif (op == 4): return z,x,y
+        elif (op == 5): return z,-x,-y
+        elif (op == 6): return -z,-x,y
+        elif (op == 7): return -z,x,-y
+        elif (op == 8): return y,z,x
+        elif (op == 9): return -y,z,-x
+        elif (op == 10): return y,-z,-x
+        elif (op == 11): return -y,-z,x
+        elif (op == 12): return y,x,-z
+        elif (op == 13): return -y,-x,-z
+        elif (op == 14): return y,-x,z
+        elif (op == 15): return -y,x,z
+        elif (op == 16): return x,z,-y
+        elif (op == 17): return -x,z,y
+        elif (op == 18): return -x,-z,-y
+        elif (op == 19): return x,-z,y
+        elif (op == 20): return z,y,-x
+        elif (op == 21): return z,-y,x
+        elif (op == 22): return -z,y,x
+        elif (op == 23): return -z,-y,-x
+        elif (op == 24): return -x,-y,-z
+        elif (op == 25): return x,y,-z
+        elif (op == 26): return x,-y,z
+        elif (op == 27): return -x,y,z
+        elif (op == 28): return -z,-x,-y
+        elif (op == 29): return -z,x,y
+        elif (op == 30): return z,x,-y
+        elif (op == 31): return z,-x,y
+        elif (op == 32): return -y,-z,-x
+        elif (op == 33): return y,-z,x
+        elif (op == 34): return -y,z,x
+        elif (op == 35): return y,z,-x
+        elif (op == 36): return -y,-x,z
+        elif (op == 37): return y,x,z
+        elif (op == 38): return -y,x,-z
+        elif (op == 39): return y,-x,-z
+        elif (op == 40): return -x,-z,y
+        elif (op == 41): return x,-z,-y
+        elif (op == 42): return x,z,y
+        elif (op == 43): return -x,z,-y
+        elif (op == 44): return -z,-y,x
+        elif (op == 45): return -z,y,-x
+        elif (op == 46): return z,-y,-x
+        else: return z,y,x
+
+    elif (sym == 1):
+
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x,-y,z
+        elif (op == 2): return -x,y,-z
+        elif (op == 3): return x,-y,-z
+        elif (op == 4): return z,x,y
+        elif (op == 5): return z,-x,-y
+        elif (op == 6): return -z,-x,y
+        elif (op == 7): return -z,x,-y
+        elif (op == 8): return y,z,x
+        elif (op == 9): return -y,z,-x
+        elif (op == 10): return y,-z,-x
+        elif (op == 11): return -y,-z,x
+        elif (op == 12): return -x,-y,-z
+        elif (op == 13): return x,y,-z
+        elif (op == 14): return x,-y,z
+        elif (op == 15): return -x,y,z
+        elif (op == 16): return -z,-x,-y
+        elif (op == 17): return -z,x,y
+        elif (op == 18): return z,x,-y
+        elif (op == 19): return z,-x,y
+        elif (op == 20): return -y,-z,-x
+        elif (op == 21): return y,-z,x
+        elif (op == 22): return -y,z,x
+        else: return y,z,-x
+
+    elif (sym == 2):
+
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x-y,x,z
+        elif (op == 2): return y,-x-y,z
+        elif (op == 3): return -x,-y,z
+        elif (op == 4): return x+y,-x,z
+        elif (op == 5): return -y,x+y,z
+        elif (op == 6): return y,x,-z
+        elif (op == 7): return x,-x-y,-z
+        elif (op == 8): return -x-y,y,-z
+        elif (op == 9): return -y,-x,-z
+        elif (op == 10): return -x,x+y,-z
+        elif (op == 11): return x+y,-y,-z
+        elif (op == 12): return -x,-y,-z
+        elif (op == 13): return x+y,-x,-z
+        elif (op == 14): return -y,x+y,-z
+        elif (op == 15): return x,y,-z
+        elif (op == 16): return -x-y,x,-z
+        elif (op == 17): return y,-x-y,-z
+        elif (op == 18): return -y,-x,z
+        elif (op == 19): return -x,x+y,z
+        elif (op == 20): return x+y,-y,z
+        elif (op == 21): return y,x,z
+        elif (op == 22): return x,-x-y,z
+        else: return -x-y,y,z
+
+    elif (sym == 3):
+
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x-y,x,z
+        elif (op == 2): return y,-x-y,z
+        elif (op == 3): return -x,-y,z
+        elif (op == 4): return x+y,-x,z
+        elif (op == 5): return -y,x+y,z
+        elif (op == 6): return -x,-y,-z
+        elif (op == 7): return x+y,-x,-z
+        elif (op == 8): return -y,x+y,-z
+        elif (op == 9): return x,y,-z
+        elif (op == 10): return -x-y,x,-z
+        else: return y,-x-y,-z
+
+    elif (sym == 4):
+
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x-y,x,z
+        elif (op == 2): return y,-x-y,z
+        elif (op == 3): return -y,-x,-z
+        elif (op == 4): return -x,x+y,-z
+        elif (op == 5): return x+y,-y,-z
+        elif (op == 6): return -x,-y,-z
+        elif (op == 7): return x+y,-x,-z
+        elif (op == 8): return -y,x+y,-z
+        elif (op == 9): return y,x,z
+        elif (op == 10): return x,-x-y,z
+        else: return -x-y,y,z
+
+    elif (sym == 5):
+
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x-y,x,z
+        elif (op == 2): return y,-x-y,z
+        elif (op == 3): return -x,-y,-z
+        elif (op == 4): return x+y,-x,-z
+        else: return -y,x+y,-z
+
+    elif (sym == 6):
+
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x,-y,z
+        elif (op == 2): return -y,x,z
+        elif (op == 3): return y,-x,z
+        elif (op == 4): return -x,y,-z
+        elif (op == 5): return x,-y,-z
+        elif (op == 6): return y,x,-z
+        elif (op == 7): return -y,-x,-z
+        elif (op == 8): return -x,-y,-z
+        elif (op == 9): return x,y,-z
+        elif (op == 10): return y,-x,-z
+        elif (op == 11): return -y,x,-z
+        elif (op == 12): return x,-y,z
+        elif (op == 13): return -x,y,z
+        elif (op == 14): return -y,-x,z
+        else: return y,x,z
+
+    elif (sym == 7):
+
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x,-y,z
+        elif (op == 2): return -y,x,z
+        elif (op == 3): return y,-x,z
+        elif (op == 4): return -x,-y,-z
+        elif (op == 5): return x,y,-z
+        elif (op == 6): return y,-x,-z
+        else: return -y,x,-z
+
+    elif (sym == 8):
+
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x,-y,z
+        elif (op == 2): return -x,y,-z
+        elif (op == 3): return x,-y,-z
+        elif (op == 4): return -x,-y,-z
+        elif (op == 5): return x,y,-z
+        elif (op == 6): return x,-y,z
+        else: return -x,y,z
+
+    elif (sym == 9):
+
+        if (op == 0): return x,y,z
+        elif (op == 1): return -x,y,-z
+        elif (op == 2): return -x,-y,-z
+        else: return x,-y,z
+
+    elif (sym == 10):
+
+        if (op == 0): return x,y,z
+        else: return -x,-y,-z
+
+    else:
+
+        return x,y,z
+    
 cdef double round2even(double x) nogil:
     x -= remainder(x, 1.0)
     return x

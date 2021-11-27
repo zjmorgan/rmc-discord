@@ -6,17 +6,49 @@ import numpy as np
 from disorder.material import symmetry, crystal
 
 class test_symmetry(unittest.TestCase):
-
+    
+    def test_fraction(self):
+        
+        self.assertEqual(symmetry.fraction(0.0), '0')
+        self.assertEqual(symmetry.fraction(1.0), '1')
+        self.assertEqual(symmetry.fraction(-1.0), '-1')
+        
+        self.assertEqual(symmetry.fraction(3/4), '3/4')
+        self.assertEqual(symmetry.fraction(-3/4), '-3/4')
+        
+        self.assertEqual(symmetry.fraction(2/3), '2/3')
+        self.assertEqual(symmetry.fraction(-2/3), '-2/3')
+        
+        self.assertEqual(symmetry.fraction(1/2), '1/2')
+        self.assertEqual(symmetry.fraction(-1/2), '-1/2')
+    
+        self.assertEqual(symmetry.fraction(1/3), '1/3')
+        self.assertEqual(symmetry.fraction(-1/3), '-1/3')
+        
+        self.assertEqual(symmetry.fraction(1/4), '1/4')
+        self.assertEqual(symmetry.fraction(-1/4), '-1/4')
+        
+        self.assertEqual(symmetry.fraction(3/2), '3/2')
+        self.assertEqual(symmetry.fraction(-3/2), '-3/2')
+        
+        self.assertEqual(symmetry.fraction(0.999), '1')
+        self.assertEqual(symmetry.fraction(0.499), '1/2')
+        
+        self.assertEqual(symmetry.fraction(1.333), '4/3')
+        self.assertEqual(symmetry.fraction(1.666), '5/3')
+        
+        self.assertEqual(symmetry.fraction(1.234), '11/9')
+        
     def test_unique(self):
 
         data = np.array([[2,0,1],
-                         [0,2,1],
-                         [2,0,1],
-                         [0,2,1],
-                         [2,0,1],
-                         [1,2,-3],
-                         [-1,2,3],
-                         [-1,2,3]])
+                          [0,2,1],
+                          [2,0,1],
+                          [0,2,1],
+                          [2,0,1],
+                          [1,2,-3],
+                          [-1,2,3],
+                          [-1,2,3]])
 
         array, ind, inv = symmetry.unique(data)
 
@@ -142,7 +174,7 @@ class test_symmetry(unittest.TestCase):
         A = crystal.cartesian(a, b, c, alpha, beta, gamma)
 
         operators = [u'x,y,z', u'-y,x-y,z', u'-x+y,-x,z',
-                     u'-x,-y,z', u'y,-x+y,z', u'x-y,x,z']
+                      u'-x,-y,z', u'y,-x+y,z', u'x-y,x,z']
 
         coordinates = [0.35,0.65,0.1234]
         pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)

@@ -273,7 +273,7 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
 
         index = np.arange(nh*nk*nl)
 
-        return h, k, l, H, K, L, index,  index, np.array([u'x,y,z'])
+        return h, k, l, H, K, L, index, index, np.array([u'x,y,z'])
 
     symops = symmetry.inverse(symmetry.laue(laue))
 
@@ -402,36 +402,44 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
 
     symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
 
-    coordinate = np.ascontiguousarray(np.stack(((H,-H),(K,-K),(L,-L))).T)
-
-    del H, K, L
-
+    coordinate = np.stack((H,K,L)).T
     n = coordinate.shape[0]
+    
+    del H, K, L
+    
+    coordinate = np.stack((coordinate,-coordinate)).T
 
-    pair = np.zeros((n,3), dtype=np.int16)
-
-    symmetry.friedel(pair, coordinate)
-
-    del coordinate
+    sort = np.lexsort(coordinate, axis=1)[:,0]
+    pair = coordinate.reshape(3,2*n)[:,sort+2*np.arange(n)].T
+    index = np.arange(n)
+        
+    del coordinate, sort
 
     cosymmetries, coindices, coinverses = symmetry.unique(pair)
+    h_, k_, l_ = cosymmetries.T
+    n = cosymmetries.shape[0]
+ 
+    del cosymmetries
+            
+    sym, n_symops = symmetry.laue_id(symops)
 
-    del pair
+    ops = np.zeros((3,n,n_symops), dtype=np.int16)
 
-    n_symm = cosymmetries.shape[0]
+    for i in range(n_symops):
 
-    total = np.zeros((n_symm,3), dtype=np.int16)
+        h, k, l = symmetry.bragg(h_, k_, l_, sym, i)
 
-    symop = symmetry.laue_id(symops)
-
-    index = np.arange(n)
-
-    symmetry.sorting(total, cosymmetries, symop)
+        ops[0,:,i], ops[1,:,i], ops[2,:,i] = h, k, l
+        
+    sort = np.lexsort(ops, axis=1)[:,0]
+    total = ops.reshape(3,n_symops*n)[:,sort+n_symops*np.arange(n)].T
+    
+    del ops, h, k, l
 
     _, indices, inverses = symmetry.unique(total)
 
     reverses = np.arange(indices.shape[0])
-
+    
     index = index[coindices][indices]
     reverses = reverses[inverses][coinverses]
 
