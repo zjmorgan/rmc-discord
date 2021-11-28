@@ -34,9 +34,10 @@ def unitcell(folder=folder, filename='copper.cif', tol=1e-2):
         combine = []
         for symop in symops:
             for add_symop in add_symops:
-                combine.append(symmetry.binary(
-                               ','.join(symop.split(',')[:3]),
-                               ','.join(add_symop.split(',')[:3])))
+                left_op = ','.join(symop.split(',')[:3])
+                right_op = ','.join(add_symop.split(',')[:3])
+                combine_op = symmetry.binary([left_op],[right_op])
+                combine += combine_op
         symops = combine
 
     atomic_sites = cif_dict['_atom_site_label']
@@ -235,13 +236,13 @@ def unitcell(folder=folder, filename='copper.cif', tol=1e-2):
 
         for symop, mag_symop in zip(symops, mag_symops):
 
-            transformed = symmetry.evaluate(symop, [x,y,z])
-
-            mom = symmetry.evaluate_mag(mag_symop, [Mx,My,Mz])
+            transformed = symmetry.evaluate([symop], [x,y,z]).flatten()
+            
+            mom = symmetry.evaluate_mag([mag_symop], [Mx,My,Mz]).flatten()
 
             if (adp_type == 'ani'):
-                disp = symmetry.evaluate_disp(symop, [U11,U22,U33,
-                                                      U23,U13,U12])
+                disp = symmetry.evaluate_disp([symop], [U11,U22,U33,
+                                                        U23,U13,U12])
             else:
                 disp = [Uiso]
 
@@ -270,7 +271,7 @@ def unitcell(folder=folder, filename='copper.cif', tol=1e-2):
     metric = np.round(np.round(total/tol, 1)).astype(int)
 
     _, labels = np.unique(types, return_inverse=True)
-
+    
     metric = np.column_stack((metric, labels))
 
     symmetries, indices = np.unique(metric, axis=0, return_index=True)
@@ -352,9 +353,10 @@ def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
             combine = []
             for symop in symops:
                 for add_symop in add_symops:
-                    combine.append(symmetry.binary(
-                                   ','.join(symop.split(',')[:3]),
-                                   ','.join(add_symop.split(',')[:3])))
+                    left_op = ','.join(symop.split(',')[:3])
+                    right_op = ','.join(add_symop.split(',')[:3])
+                    combine_op = symmetry.binary([left_op],[right_op])
+                    combine += combine_op
             symops = combine
 
         symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]
@@ -556,9 +558,10 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
             combine = []
             for symop in symops:
                 for add_symop in add_symops:
-                    combine.append(symmetry.binary(
-                                   ','.join(symop.split(',')[:3]),
-                                   ','.join(add_symop.split(',')[:3])))
+                    left_op = ','.join(symop.split(',')[:3])
+                    right_op = ','.join(add_symop.split(',')[:3])
+                    combine_op = symmetry.binary([left_op],[right_op])
+                    combine += combine_op
             symops = combine
 
         for symop in symops:
@@ -688,18 +691,18 @@ def laue(folder, filename):
                                ','.join(add_symop.split(',')[:3])))
         symops = combine
 
-    symops = symmetry.inverse(symmetry.inverse(symops)).tolist()
+    symops = symmetry.inverse(symmetry.inverse(symops))
 
     symops.append(u'-x,-y,-z')
 
     symops = np.unique(symops)
 
-    lauesym = symmetry.operators(invert=False)
+    laue_sym = symmetry.operators(invert=False)
 
-    symmetries = list(lauesym.keys())
+    symmetries = list(laue_sym.keys())
 
     for symm in symmetries:
-        if (set(lauesym[symm]) == set(symops)):
+        if (set(laue_sym[symm]) == set(symops)):
             return symm
 
 def twins(folder, filename):

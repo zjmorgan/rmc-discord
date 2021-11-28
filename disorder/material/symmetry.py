@@ -206,18 +206,48 @@ def bragg(x, y, z, sym, op):
     else:
 
         return x,y,z
-    
-def fraction(x):
 
-    if (x >= 0):
+def whole(val, col=0):
+
+    if (col == 0):
+        sym = 'x'
+    elif (col == 1):
+        sym = 'y'
+    else:
+        sym = 'z'
+
+    if (val == 0):
         sign = ''
+    elif (val > 0):
+        if (col == 0):
+            sign = ''
+        else:
+            sign = '+'
     else:
         sign = '-'
-    
-    x = abs(x)
-    
-    q, r = int(x // 1), x % 1
-        
+
+    v = int(abs(val))
+
+    if (v == 0):
+        w = ''
+    elif (v == 1):
+        w = sym
+    else:
+        w = str(v)+sym
+
+    return sign+w
+
+def fraction(val):
+
+    if (val >= 0):
+        sign = '+'
+    else:
+        sign = '-'
+
+    val = abs(val)
+
+    q, r = int(val // 1), val % 1
+
     if (r < 0.47):
         if (r < 0.24):
             if (r < 0.16):
@@ -243,16 +273,19 @@ def fraction(x):
                     else:
                         f = str(q*9+2)+'/9' # 0.2222...
         else:
-            if (r < 0.37): 
-                if (r < 0.28): 
+            if (r < 0.37):
+                if (r < 0.28):
                     f = str(q*4+1)+'/4' # 0.25
                 else:
-                    if (r < 0.31):
+                    if (r < 0.29):
                         f = str(q*7+2)+'/7' # 0.2857...
                     else:
-                        f = str(q*3+1)+'/3' # 0.3333...
+                        if (r < 0.31):
+                            f = str(q*10+3)+'/10' # 0.3
+                        else:
+                            f = str(q*3+1)+'/3' # 0.3333...
             else:
-                if (r < 0.42): 
+                if (r < 0.42):
                     if (r < 0.40):
                         f = str(q*8+3)+'/8' # 0.375
                     else:
@@ -273,10 +306,16 @@ def fraction(x):
                     else:
                         f = str(q*7+4)+'/7' # 0.5714
             else:
-                if (r < 0.62): 
+                if (r < 0.62):
                     f = str(q*5+3)+'/5' # 0.6
                 else:
-                    f = str(q*3+2)+'/3' # 0.6666...
+                    if (r < 0.64):
+                        f = str(q*8+5)+'/8' # 0.625
+                    else:
+                        if (r < 0.68):
+                            f = str(q*3+2)+'/3' # 0.6666...
+                        else:
+                            f = str(q*10+7)+'/10' # 0.7
         else:
             if (r < 0.80):
                 if (r < 0.74):
@@ -310,47 +349,46 @@ def fraction(x):
     return sign+f
 
 def unique(data):
-    
+
     data_type = data.dtype
     item_size = data_type.itemsize
     data_size = data.shape[1]
-    
+
     dtype = np.dtype((np.void, item_size*data_size))
 
     b = np.ascontiguousarray(data).view(dtype)
-   
+
     u, ind, inv = np.unique(b, return_index=True, return_inverse=True)
 
     return u.view(data_type).reshape(-1, data_size), ind, inv
 
-def evaluate(operator, coordinates, translate=True):
-
-    operator = str(operator)
-
+def evaluate(operators, coordinates, translate=True):
+    
+    operators = str([[op] for op in operators])
+    
     x, y, z = coordinates
 
     if (not translate):
-        ops = operator.split(',')
         #ops = [op.replace('/', '//') for op in ops]
-        ops = [re.sub(r'\.', '', op) for op in ops]
-        ops = [re.sub(r'\/', '', op) for op in ops]
-        ops = [re.sub(r'[-+][\d]+', '', op) for op in ops]
-        ops = [re.sub(r'[\d]', '', op) for op in ops]
-        operator = ','.join(ops)
+        operators = re.sub(r'\.', '', operators)
+        operators = re.sub(r'\/', '', operators)
+        operators = re.sub(r'[-+][\d]+', '', operators)
+        operators = re.sub(r'[\d]', '', operators)
+    operators = operators.replace("'","")
+    
+    return np.array(eval(operators))
 
-    return np.array(eval(operator))
-
-def evaluate_mag(operator, moments):
-
-    operator = str(operator)
-
+def evaluate_mag(operators, moments):
+    
+    operators = str([[op] for op in operators])
+    
     mx, my, mz = moments
+    
+    operators = operators.replace("'","")
 
-    return np.array(eval(operator))
+    return np.array(eval(operators))
 
 def evaluate_disp(operator, displacements):
-
-    operator = str(operator)
 
     U11, U22, U33, U23, U13, U12 = displacements
 
@@ -358,11 +396,11 @@ def evaluate_disp(operator, displacements):
                   [U12,U22,U23],
                   [U13,U23,U33]])
 
-    W = np.zeros((3,3))
-
-    W[:,0] = evaluate(operator, [1,0,0], translate=False)
-    W[:,1] = evaluate(operator, [0,1,0], translate=False)
-    W[:,2] = evaluate(operator, [0,0,1], translate=False)
+    W_0 = evaluate(operator, [1,0,0], translate=False)
+    W_1 = evaluate(operator, [0,1,0], translate=False)
+    W_2 = evaluate(operator, [0,0,1], translate=False)
+    
+    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3).T
 
     Up = np.dot(np.dot(W,U),W.T)
 
@@ -370,222 +408,209 @@ def evaluate_disp(operator, displacements):
 
 def reverse(symops):
 
-    if (type(symops) == str or type(symops) == np.str_):
-        symops = [symops]
+    n = len(symops)
 
-    uvw = np.array(['x','y','z'])
+    w = evaluate(symops, [0,0,0], translate=True)
+    
+    w = w.reshape(n,3)
 
-    rsymops = []
+    W_0 = evaluate(symops, [1,0,0], translate=False)
+    W_1 = evaluate(symops, [0,1,0], translate=False)
+    W_2 = evaluate(symops, [0,0,1], translate=False)
+    
+    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
+    
+    W_inv = np.linalg.inv(W).round()
+    
+    w_inv = -np.einsum('ijk,ik->ij', W_inv, w)
+    
+    W_inv = np.array([whole(c,col=i%3) for i, c \
+                      in enumerate(W_inv.flatten())])
+        
+    w_inv = np.array([fraction(c) for c in w_inv.flatten()])
+    
+    W_inv = W_inv.reshape(n,3,3)
+    w_inv = w_inv.reshape(n,3)
 
-    for symop in symops:
+    rev_symops = []
+    for i in range(n):
+        rev_symop = [u''.join(W_inv[i,0,:])+w_inv[i,0],
+                     u''.join(W_inv[i,1,:])+w_inv[i,1],
+                     u''.join(W_inv[i,2,:])+w_inv[i,2]]
+        
+        rev_symop = [op.lstrip('+') for op in rev_symop]
+        rev_symop = [op.rstrip('0') for op in rev_symop]
+        rev_symop = [op.rstrip('+') for op in rev_symop]
+        
+        rev_symop = ','.join(rev_symop)
+        rev_symops.append(rev_symop)
 
-        symop = str(symop)
-
-        W = np.zeros((3,3))
-
-        W[:,0] = evaluate(symop, [1,0,0], translate=False)
-        W[:,1] = evaluate(symop, [0,1,0], translate=False)
-        W[:,2] = evaluate(symop, [0,0,1], translate=False)
-
-        w = evaluate(symop, [0,0,0], translate=True)
-
-        W_inv = np.linalg.inv(W)
-        w_inv = -np.dot(W_inv, w)
-
-        W_inv = W_inv.round().astype(int).astype(str)
-        w_inv = [fraction(c) for c in w_inv]
-
-        rop = u''
-
-        for i in range(3):
-            string = ''
-            for j in range(3):
-                if (W_inv[i,j] == '-1'):
-                    string += '-'+uvw[j]
-                elif (W_inv[i,j] == '1'):
-                    if (len(string) == 0):
-                        string += uvw[j]
-                    else:
-                        string += '+'+uvw[j]
-            if (w_inv[i] != '0'):
-                if (w_inv[i][0] == '-'):
-                    string += w_inv[i]
-                else:
-                    string += '+'+w_inv[i]
-            rop += string
-            if (i != 2):
-                rop += ','
-
-        rsymops.append(rop)
-
-    return np.array(rsymops)
+    return rev_symops
 
 def inverse(symops):
 
-    if (type(symops) == str or type(symops) == np.str_):
-        symops = [symops]
+    n = len(symops)
+                
+    W_0 = evaluate(symops, [1,0,0], translate=False)
+    W_1 = evaluate(symops, [0,1,0], translate=False)
+    W_2 = evaluate(symops, [0,0,1], translate=False)
 
-    uvw = np.array(['x','y','z'])
+    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
+    
+    W_inv = np.linalg.inv(W).round()
+    
+    W_inv = np.array([whole(c,col=(i//3)%3) for i, c \
+                      in enumerate(W_inv.flatten())])
 
-    rsymops = []
+    W_inv = W_inv.reshape(n,3,3)
 
-    for symop in symops:
+    inv_symops = []
+    for i in range(n):
+        inv_symop = [u''.join(W_inv[i,:,0]),
+                     u''.join(W_inv[i,:,1]),
+                     u''.join(W_inv[i,:,2])]
+        
+        inv_symop = [op.lstrip('+') for op in inv_symop]
+        inv_symop = [op.rstrip('0') for op in inv_symop]
+        inv_symop = [op.rstrip('+') for op in inv_symop]
+        
+        inv_symop = ','.join(inv_symop)
+        inv_symops.append(inv_symop)
 
-        symop = str(symop)
-
-        W = np.zeros((3,3))
-
-        W[:,0] = evaluate(symop, [1,0,0], translate=False)
-        W[:,1] = evaluate(symop, [0,1,0], translate=False)
-        W[:,2] = evaluate(symop, [0,0,1], translate=False)
-
-        W_inv = np.linalg.inv(W).T.round().astype(int).astype(str)
-
-        rop = u''
-
-        for i in range(3):
-            string = ''
-            for j in range(3):
-                if (W_inv[i,j] == '-1'):
-                    string += '-'+uvw[j]
-                elif (W_inv[i,j] == '1'):
-                    if (len(string) == 0):
-                        string += uvw[j]
-                    else:
-                        string += '+'+uvw[j]
-            rop += string
-            if (i != 2):
-                rop += ','
-
-        rsymops.append(rop)
-
-    return np.array(rsymops)
+    return inv_symops
 
 def binary(symop0, symop1):
 
-    symop0 = str(symop0)
-    symop1 = str(symop1)
-
-    uvw = np.array(['x','y','z'])
-
-    W0, W1 = np.zeros((3,3)), np.zeros((3,3))
+    n0, n1 = len(symop0), len(symop1)
 
     w0 = evaluate(symop0, [0,0,0], translate=True)
     w1 = evaluate(symop1, [0,0,0], translate=True)
-
-    W0[:,0] = evaluate(symop0, [1,0,0], translate=False)
-    W0[:,1] = evaluate(symop0, [0,1,0], translate=False)
-    W0[:,2] = evaluate(symop0, [0,0,1], translate=False)
-
-    W1[:,0] = evaluate(symop1, [1,0,0], translate=False)
-    W1[:,1] = evaluate(symop1, [0,1,0], translate=False)
-    W1[:,2] = evaluate(symop1, [0,0,1], translate=False)
-
-    W = np.dot(W0, W1).round().astype(int).astype(str)
     
-    w = np.dot(W0, w1)+w0
-    w = [fraction(c) for c in w]
-            
-    symop = u''
+    w0 = w0.reshape(n0,3)
+    w1 = w1.reshape(n1,3)
 
-    for i in range(3):
-        string = ''
-        for j in range(3):
-            if (W[i,j][0] == '-'):
-                if (W[i,j] == '-1'):
-                    string += '-'+uvw[j]
-                else:
-                    string += W[i,j]+'*'+uvw[j]
-            elif (W[i,j] == '1'):
-                if (len(string) == 0):
-                    string += uvw[j]
-                else:
-                    string += '+'+uvw[j]
-            elif (W[i,j] != '0'):
-                if (len(string) == 0):
-                    string += W[i,j]+'*'+uvw[j]
-                else:
-                    string += '+'+W[i,j]+'*'+uvw[j]
-        if (w[i] != '0'):
-            if (w[i][0] == '-'):
-                string += w[i]
-            else:
-                string += '+'+w[i]
-        symop += string
-        if (i != 2):
-            symop += ','
+    W0_0 = evaluate(symop0, [1,0,0], translate=False)
+    W0_1 = evaluate(symop0, [0,1,0], translate=False)
+    W0_2 = evaluate(symop0, [0,0,1], translate=False)
 
-    return symop
+    W1_0 = evaluate(symop1, [1,0,0], translate=False)
+    W1_1 = evaluate(symop1, [0,1,0], translate=False)
+    W1_2 = evaluate(symop1, [0,0,1], translate=False)
 
-def classification(symop):
+    W0 = np.vstack((W0_0.T,W0_1.T,W0_2.T)).reshape(3,3,n0).T
+    W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3,n1).T
 
-    W = np.zeros((3,3))
+    W = np.einsum('ijk,ikl->ijl', W0, W1).round()
+    w = np.einsum('ijk,ik->ij', W0, w1)+w0
+    
+    W = np.array([whole(c,col=i%3) for i, c in enumerate(W.flatten())])
+    w = np.array([fraction(c) for c in w.flatten()])
 
-    W[:,0] = evaluate(symop, [1,0,0], translate=False)
-    W[:,1] = evaluate(symop, [0,1,0], translate=False)
-    W[:,2] = evaluate(symop, [0,0,1], translate=False)
+    W = W.reshape(n0,3,3)
+    w = w.reshape(n0,3)
+    
+    symops = []
+    for i in range(n0):
+        symop = [u''.join(W[i,0,:])+w[i,0],
+                 u''.join(W[i,1,:])+w[i,1],
+                 u''.join(W[i,2,:])+w[i,2]]
+        
+        symop = [op.lstrip('+') for op in symop]
+        symop = [op.rstrip('0') for op in symop]
+        symop = [op.rstrip('+') for op in symop]
+        
+        symop = ','.join(symop)
+        symops.append(symop)
+
+    return symops
+
+def classification(symops):
+
+    n = len(symops)
+                
+    W_0 = evaluate(symops, [1,0,0], translate=False)
+    W_1 = evaluate(symops, [0,1,0], translate=False)
+    W_2 = evaluate(symops, [0,0,1], translate=False)
+
+    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
 
     W_det = np.linalg.det(W)
-    W_tr = np.trace(W)
+    W_tr = np.trace(W, axis1=1, axis2=2)
+
+    rotations, ks = [], []
+
+    symops_ord = []
+    for i, symop in enumerate(symops):
+                        
+        if np.isclose(W_det[i], 1):
+            if np.isclose(W_tr[i], 3):
+                rotation, k = '1', 1
+            elif np.isclose(W_tr[i], 2):
+                rotation, k = '6', 6
+            elif np.isclose(W_tr[i], 1):
+                rotation, k = '4', 4
+            elif np.isclose(W_tr[i], 0):
+                rotation, k = '3', 3
+            elif np.isclose(W_tr[i], -1):
+                rotation, k = '2', 2
+        elif np.isclose(W_det[i], -1):
+            if np.isclose(W_tr[i], -3):
+                rotation, k = '-1', 2
+            elif np.isclose(W_tr[i], -2):
+                rotation, k = '-6', 6
+            elif np.isclose(W_tr[i], -1):
+                rotation, k = '-4', 4
+            elif np.isclose(W_tr[i], 0):
+                rotation, k = '-3', 6
+            elif np.isclose(W_tr[i], 1):
+                rotation, k = 'm', 2
+                
+        rotations.append(rotation)
+        ks.append(k)
     
-    if np.isclose(W_det, 1):
-        if np.isclose(W_tr, 3):
-            rotation, k = '1', 1
-        elif np.isclose(W_tr, 2):
-            rotation, k = '6', 6
-        elif np.isclose(W_tr, 1):
-            rotation, k = '4', 4
-        elif np.isclose(W_tr, 0):
-            rotation, k = '3', 3
-        elif np.isclose(W_tr, -1):
-            rotation, k = '2', 2
-    elif np.isclose(W_det, -1):
-        if np.isclose(W_tr, -3):
-            rotation, k = '-1', 2
-        elif np.isclose(W_tr, -2):
-            rotation, k = '-6', 6
-        elif np.isclose(W_tr, -1):
-            rotation, k = '-4', 4
-        elif np.isclose(W_tr, 0):
-            rotation, k = '-3', 6
-        elif np.isclose(W_tr, 1):
-            rotation, k = 'm', 2
-
-    symop_ord = symop
-
-    for _ in range(1,k):
-        symop_ord = binary(symop_ord, symop)
+        symop_ord = [symop]
         
-    wg = (1/k)*evaluate(symop_ord, [0,0,0], translate=True)
+        for _ in range(1,k):
+            symop_ord = binary(symop_ord, [symop])
+        symops_ord += symop_ord
 
-    return rotation, k, wg
+    k_inv = 1/np.array(ks)
+    
+    w_symop_ord = evaluate(symops_ord, [0,0,0], translate=True)
+    w_symop_ord = w_symop_ord.reshape(n,3)
+
+    wgs = k_inv[:,np.newaxis]*w_symop_ord
+
+    return rotations, ks, wgs.tolist()
 
 def absence(symops, h, k, l):
+    
+    n = len(symops)
 
     H = np.array([h,k,l])
 
-    n = 1 if H.size == 3 else H.shape[1]
+    m = 1 if H.size == 3 else H.shape[1]
 
-    if (n == 1): H = H.reshape(3,1)
+    if (m == 1): H = H.reshape(3,1)
 
-    absent = np.full((len(symops),n), False)
+    absent = np.full((len(symops),m), False)
 
-    W = np.zeros((3,3))
+    W_0 = evaluate(symops, [1,0,0], translate=False)
+    W_1 = evaluate(symops, [0,1,0], translate=False)
+    W_2 = evaluate(symops, [0,0,1], translate=False)
 
-    for i, symop in enumerate(symops):
+    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
+        
+    rotation, k, wg = classification(symops)
+    
+    for i in range(n):
 
-        rotation, k, wg = classification(symop)
-
-        W[:,0] = evaluate(symop, [1,0,0], translate=False)
-        W[:,1] = evaluate(symop, [0,1,0], translate=False)
-        W[:,2] = evaluate(symop, [0,0,1], translate=False)
-
-        absent[i,:] = np.all(np.isclose(np.dot(H.T,W), H.T), axis=1) & \
-                    ~ np.isclose(np.mod(np.dot(H.T,wg),1), 0)
+        absent[i,:] = np.all(np.isclose(np.dot(H.T,W[i]), H.T), axis=1) & \
+                    ~ np.isclose(np.mod(np.dot(H.T,wg[i]),1), 0)
 
     absent = absent.any(axis=0)
 
-    if (H.shape[1] == 1):
+    if (m == 1):
         return absent[0]
     else:
         return absent
@@ -607,10 +632,10 @@ def site(symops, coordinates, A, tol=1e-1):
     V = V.flatten()
     W = W.flatten()
 
-    for i, symop in enumerate(symops):
-        
+    for symop in symops:
+
         x, y, z = evaluate(symop, coordinates, translate=True)
-        
+
         du, dv, dw = x-u, y-v, z-w
 
         if (du > 0.5): du -= 1
@@ -622,7 +647,7 @@ def site(symops, coordinates, A, tol=1e-1):
         if (dw <= -0.5): dw += 1
 
         nu, nv, nw = int(round(u-du)), int(round(v-dv)), int(round(w-dw))
-        
+
         for iu, iv, iw in zip(U,V,W):
 
             cu, cv, cw = iu+nu, iv+nv, iw+nw
@@ -638,7 +663,7 @@ def site(symops, coordinates, A, tol=1e-1):
             if (cw > 0): tw = '+{}'.format(cw)
 
             trans_symop = binary('x{},y{},z{}'.format(tu,tv,tw), symop)
-            
+
             x, y, z = evaluate(trans_symop, coordinates, translate=True)
 
             du, dv, dw = x-u, y-v, z-w
@@ -646,14 +671,14 @@ def site(symops, coordinates, A, tol=1e-1):
             dx, dy, dz = np.dot(A, [du,dv,dw])
 
             d = np.sqrt(dx**2+dy**2+dz**2)
-                        
+
             if (d < tol):
                 metric.append(d)
                 operators.append(trans_symop)
 
     sort = np.argsort(metric)
     op = operators[sort[0]]
-    
+
     W = np.zeros((3,3))
     w = np.zeros(3)
 
@@ -664,14 +689,14 @@ def site(symops, coordinates, A, tol=1e-1):
     w = evaluate(op, [0,0,0], translate=True)
 
     G = set({op})
-    
+
     for i in range(len(operators)-1):
 
         op = operators[sort[i+1]]
 
         G.add(op)
         Gc = G.copy()
-        
+
         for op_0 in Gc:
             for op_1 in Gc:
                 if (op_0 != op_1):
@@ -682,10 +707,10 @@ def site(symops, coordinates, A, tol=1e-1):
                     W[:,2] = evaluate(symop, [0,0,1], translate=False)
 
                     w = evaluate(symop, [0,0,0], translate=True)
-                                        
+
                     if (np.allclose(W, np.eye(3)) and np.linalg.norm(w) > 0):
                         G.discard(op)
-        
+
     T = np.zeros((3,3))
     t = np.zeros(3)
 
@@ -693,16 +718,16 @@ def site(symops, coordinates, A, tol=1e-1):
     for op in G:
         rotation, k, wg = classification(op)
         rot.append(rotation)
-        
+
         W[:,0] = evaluate(op, [1,0,0], translate=False)
         W[:,1] = evaluate(op, [0,1,0], translate=False)
         W[:,2] = evaluate(op, [0,0,1], translate=False)
-        
+
         w = evaluate(op, [0,0,0], translate=True)
-        
+
         T += W
         t += w
-                
+
     rot = np.array(rot)
 
     n_rot_6 = (rot == '6').sum()
@@ -847,15 +872,16 @@ def site(symops, coordinates, A, tol=1e-1):
     return pg, mult, sppos
 
 def laue_id(symops):
+    
+    n = len(symops)
 
     laue_sym = operators(invert=True)
 
     symop_id = [11,1]
 
     for c, sym in enumerate(list(laue_sym.keys())):
-        if (np.array([symops[p] in laue_sym.get(sym) \
-                      for p in range(symops.shape[0])]).all() and \
-             len(laue_sym.get(sym)) == symops.shape[0]):
+        if (np.all([symops[p] in laue_sym.get(sym) for p in range(n)]) and \
+            len(laue_sym.get(sym)) == n):
 
             symop_id = [c,len(laue_sym.get(sym))]
 
@@ -926,7 +952,7 @@ def operators(invert=False):
 
         for sym in symmetry:
 
-            laue[sym] = inverse(laue.get(sym)).tolist()
+            laue[sym] = inverse(laue.get(sym))
 
     return laue
 

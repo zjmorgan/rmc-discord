@@ -89,7 +89,8 @@ class test_crystal(unittest.TestCase):
 
         x, y, z = np.array([0.2541,0.242,0.4976])
         for i in range(8):
-            ux, vy, wz = symmetry.evaluate(op[atm == 'FeY'][i], [x,y,z])
+            symop = op[atm == 'FeY'][i]
+            ux, vy, wz = symmetry.evaluate([symop], [x,y,z]).flatten()
             ux += 1*(ux < 0)-1*(ux >= 1)
             vy += 1*(vy < 0)-1*(vy >= 1)
             wz += 1*(wz < 0)-1*(wz >= 1)
@@ -112,7 +113,8 @@ class test_crystal(unittest.TestCase):
 
         mx, my, mz = np.array([1.8,0.0,1.4])
         for i in range(8):
-            moment = symmetry.evaluate_mag(mag_op[atm == 'Mn'][i], [mx,my,mz])
+            sym_op = mag_op[atm == 'Mn'][i]
+            moment = symmetry.evaluate_mag([sym_op], [mx,my,mz]).flatten()
             np.testing.assert_array_almost_equal(mom[atm == 'Mn'][i], moment)
 
         uc_dict = crystal.unitcell(folder=folder,

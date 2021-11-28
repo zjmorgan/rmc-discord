@@ -1,5 +1,5 @@
 import setuptools
-setuptools.dist.Distribution().fetch_build_eggs(['Cython>=0.15.1', 
+setuptools.dist.Distribution().fetch_build_eggs(['Cython>=0.15.1',
                                                  'numpy>=1.10'])
 
 from distutils.extension import Extension
@@ -10,7 +10,7 @@ except ImportError:
     USE_CYTHON = False
 else:
     USE_CYTHON = True
-    
+
 import numpy as np
 
 import sys, re
@@ -26,15 +26,15 @@ elif (sys.platform == 'darwin'):
 else:
     compile_openmp = ['-fopenmp']
     link_openmp = ['-fopenmp']
-    
+
 np_include_dir = [np.get_include()]
-    
+
 with open('README.md', 'r') as fh:
     long_description = fh.read()
-    
+
 ver = open('disorder/version.py', "rt").read()
 version = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", ver, re.M).group(1)
-   
+
 ext = '.pyx' if USE_CYTHON else '.c'
 
 ext_modules = [
@@ -110,7 +110,7 @@ else:
     cmdclass = { }
 
 setuptools.setup(
-    name='rmc-discord', 
+    name='rmc-discord',
     version=version,
     author='Zachary Morgan',
     author_email='morganzj@ornl.gov',
@@ -125,7 +125,7 @@ setuptools.setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.6', 
+    python_requires='>=3.6',
     install_requires=[
         'numpy',
         'scipy',

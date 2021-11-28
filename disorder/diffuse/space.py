@@ -277,8 +277,6 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
 
     symops = symmetry.inverse(symmetry.laue(laue))
 
-    symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
-
     total = []
 
     coordinate = np.stack((H,K,L))
@@ -290,22 +288,21 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
 
     for op in symops:
 
-        transformed = symmetry.evaluate(op, cosymmetries, translate=False)
-
-        total.append(transformed.T.tolist())
+        transformed = symmetry.evaluate([op], cosymmetries, translate=False)
+        total.append(transformed)
 
     index = np.arange(coordinate.shape[1])
 
-    total = np.array(total)
+    total = np.vstack(total)
 
     for i in range(cosymmetries.shape[1]):
 
-        total[:,i,:] = total[np.lexsort(total[:,i,:].T),i,:]
+        total[:,:,i] = total[np.lexsort(total[:,:,i].T),:,i]
 
-    total = np.hstack(total)
+    total = np.vstack(total)
 
     _, indices, inverses = np.unique(total,
-                                     axis=0,
+                                     axis=1,
                                      return_index=True,
                                      return_inverse=True)
 
@@ -399,8 +396,6 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
     symops = np.array(symmetry.laue(laue))
 
     symops = symmetry.inverse(symops)
-
-    symops = np.roll(symops, -np.argwhere(symops==u'x,y,z')[0][0])
 
     coordinate = np.stack((H,K,L)).T
     n = coordinate.shape[0]

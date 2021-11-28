@@ -248,12 +248,12 @@ class Model:
     def symmetry(self, operator, coordinate):
         
         coord = symmetry.evaluate(operator, coordinate)
-                
+
         return [c+(c < 0)-(c > 1) for c in coord]
     
     def reverse_symmetry(self, operator, coordinate):
         
-        rev_operator = symmetry.reverse(operator)[0]
+        rev_operator = symmetry.reverse(operator)
         
         coord = symmetry.evaluate(rev_operator, coordinate)
         

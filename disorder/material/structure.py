@@ -66,24 +66,24 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
 
     F = factors.sum(axis=1)
 
-    coordinate = np.stack((h,k,l))
+    coordinate = [h,k,l]
 
     symops = np.unique(symmetry.inverse(symops))
 
     total = []
     for symop in symops:
 
-        transformed = symmetry.evaluate(symop, coordinate, translate=False)
-        total.append(transformed.T.tolist())
+        transformed = symmetry.evaluate([symop], coordinate, translate=False)
+        total.append(transformed)
 
-    total = np.array(total)
+    total = np.vstack(total)
 
-    for i in range(coordinate.shape[1]):
+    for i in range(n_hkl):
 
-        total[:,i,:] = total[np.lexsort(total[:,i,:].T),i,:]
+        total[:,:,i] = total[np.lexsort(total[:,:,i].T),:,i]
 
-    total = np.hstack(total).T
-
+    total = np.vstack(total)
+    
     total, ind, mult = np.unique(total, axis=1,
                                  return_index=True,
                                  return_counts=True)
@@ -190,13 +190,13 @@ class UnitCell:
         
         A = self.get_fractional_cartesian_transform()
         
-        for i, (u, v, w) in enumerate(zip(self.__u,self.__v,self.__w)):
+        # for i, (u, v, w) in enumerate(zip(self.__u,self.__v,self.__w)):
     
-            pg, mult, sp_pos = symmetry.site(self.__op, [u,v,w], A, tol=1e-2)
+        #     pg, mult, sp_pos = symmetry.site(self.__op, [u,v,w], A, tol=1e-2)
             
-            self.__pg[i] = pg
-            self.__mult[i] = mult
-            self.__sp_pos[i] = sp_pos
+        #     self.__pg[i] = pg
+        #     self.__mult[i] = mult
+        #     self.__sp_pos[i] = sp_pos
 
     def __get_all_lattice_constants(self):
 

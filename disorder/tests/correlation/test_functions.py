@@ -375,9 +375,7 @@ class test_functions(unittest.TestCase):
         u = np.array([0.0,0.5])
         v = np.array([0.0,0.5])
         w = np.array([0.0,0.5])
-                
-        n_atm = atm.shape[0]
-        
+                        
         ux, uy, uz = crystal.transform(u, v, w, A)
         
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
@@ -391,22 +389,22 @@ class test_functions(unittest.TestCase):
         symm_arr, dx_symm, dy_symm, dz_symm, ion_symm = symm_data
         
         symops = symmetry.laue('m-3m')
-                
-        coordinate = np.stack((dx_symm,dy_symm,dz_symm))
-                            
+                                            
         total = []
         for symop in symops:
             
-            transformed = symmetry.evaluate(symop, coordinate, translate=False)
-            total.append(transformed.T.tolist())
+            transformed = symmetry.evaluate([symop], 
+                                            [dx_symm,dy_symm,dz_symm], 
+                                            translate=False)
+            total.append(transformed)
     
-        total = np.array(total)
+        total = np.vstack(total)
     
-        for i in range(coordinate.shape[1]):
+        for i in range(ion_symm.shape[0]):
             
-            total[:,i,:] = total[np.lexsort(total[:,i,:].T),i,:]
+            total[:,:,i] = total[np.lexsort(total[:,:,i].T),:,i]
             
-        total = np.hstack(total).T
+        total = np.vstack(total)
             
         total, ind, inv = np.unique(total, axis=1, 
                                     return_index=True, 

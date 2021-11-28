@@ -195,33 +195,33 @@ class test_model(unittest.TestCase):
 
     def test_magnetic_symmetry(self):
         
-        operator = '-mx,my,-mz'
+        operator = ['-mx,my,-mz']
         moment = [0.27,0.47,-0.31]
         
         transformed_moment = self.model.magnetic_symmetry(operator, moment)
         
         np.testing.assert_array_almost_equal(transformed_moment, 
-                                             np.array([-0.27,0.47,0.31]))
+                                             [[-0.27,0.47,0.31]])
         
     def test_symmetry(self):
         
-        operator = 'x-y,x-1/4,z+3/4'
+        operator = ['x-y,x-1/4,z+3/4']
         coordinate = [0.24,0.24,0.26]
         
         transformed = self.model.symmetry(operator, coordinate)
         
-        np.testing.assert_array_almost_equal(transformed, 
-                                             np.array([0.0,0.99,0.01]))
+        np.testing.assert_array_almost_equal(transformed, [[0.0,0.99,0.01]])
         
     def test_reverse_symmetry(self):
         
-        operator = 'x-y,x-1/4,z+3/4'
+        operator = ['x-y,x-1/4,z+3/4']
         coordinate = [0.24,0.24,0.26]
         
         transformed = self.model.symmetry(operator, coordinate)
+        transformed = np.array(transformed).flatten().tolist()
         transformed = self.model.reverse_symmetry(operator, transformed)
         
-        np.testing.assert_array_almost_equal(transformed, coordinate)
+        np.testing.assert_array_almost_equal(transformed, [[0.24,0.24,0.26]])
         
     def test_slice_value(self):
         
