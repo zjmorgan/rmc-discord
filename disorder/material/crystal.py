@@ -686,9 +686,10 @@ def laue(folder, filename):
         combine = []
         for symop in symops:
             for add_symop in add_symops:
-                combine.append(symmetry.binary(
-                               ','.join(symop.split(',')[:3]),
-                               ','.join(add_symop.split(',')[:3])))
+                left_op = ','.join(symop.split(',')[:3])
+                right_op = ','.join(add_symop.split(',')[:3])
+                combine_op = symmetry.binary([left_op],[right_op])
+                combine += combine_op
         symops = combine
 
     symops = symmetry.inverse(symmetry.inverse(symops))

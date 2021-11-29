@@ -363,9 +363,9 @@ def unique(data):
     return u.view(data_type).reshape(-1, data_size), ind, inv
 
 def evaluate(operators, coordinates, translate=True):
-    
+
     operators = str([[op] for op in operators])
-    
+
     x, y, z = coordinates
 
     if (not translate):
@@ -375,15 +375,15 @@ def evaluate(operators, coordinates, translate=True):
         operators = re.sub(r'[-+][\d]+', '', operators)
         operators = re.sub(r'[\d]', '', operators)
     operators = operators.replace("'","")
-    
+
     return np.array(eval(operators))
 
 def evaluate_mag(operators, moments):
-    
+
     operators = str([[op] for op in operators])
-    
+
     mx, my, mz = moments
-    
+
     operators = operators.replace("'","")
 
     return np.array(eval(operators))
@@ -399,7 +399,7 @@ def evaluate_disp(operator, displacements):
     W_0 = evaluate(operator, [1,0,0], translate=False)
     W_1 = evaluate(operator, [0,1,0], translate=False)
     W_2 = evaluate(operator, [0,0,1], translate=False)
-    
+
     W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3).T
 
     Up = np.dot(np.dot(W,U),W.T)
@@ -411,24 +411,24 @@ def reverse(symops):
     n = len(symops)
 
     w = evaluate(symops, [0,0,0], translate=True)
-    
+
     w = w.reshape(n,3)
 
     W_0 = evaluate(symops, [1,0,0], translate=False)
     W_1 = evaluate(symops, [0,1,0], translate=False)
     W_2 = evaluate(symops, [0,0,1], translate=False)
-    
+
     W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
-    
+
     W_inv = np.linalg.inv(W).round()
-    
+
     w_inv = -np.einsum('ijk,ik->ij', W_inv, w)
-    
+
     W_inv = np.array([whole(c,col=i%3) for i, c \
                       in enumerate(W_inv.flatten())])
-        
+
     w_inv = np.array([fraction(c) for c in w_inv.flatten()])
-    
+
     W_inv = W_inv.reshape(n,3,3)
     w_inv = w_inv.reshape(n,3)
 
@@ -437,11 +437,11 @@ def reverse(symops):
         rev_symop = [u''.join(W_inv[i,0,:])+w_inv[i,0],
                      u''.join(W_inv[i,1,:])+w_inv[i,1],
                      u''.join(W_inv[i,2,:])+w_inv[i,2]]
-        
+
         rev_symop = [op.lstrip('+') for op in rev_symop]
         rev_symop = [op.rstrip('0') for op in rev_symop]
         rev_symop = [op.rstrip('+') for op in rev_symop]
-        
+
         rev_symop = ','.join(rev_symop)
         rev_symops.append(rev_symop)
 
@@ -450,15 +450,15 @@ def reverse(symops):
 def inverse(symops):
 
     n = len(symops)
-                
+
     W_0 = evaluate(symops, [1,0,0], translate=False)
     W_1 = evaluate(symops, [0,1,0], translate=False)
     W_2 = evaluate(symops, [0,0,1], translate=False)
 
     W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
-    
+
     W_inv = np.linalg.inv(W).round()
-    
+
     W_inv = np.array([whole(c,col=(i//3)%3) for i, c \
                       in enumerate(W_inv.flatten())])
 
@@ -469,11 +469,11 @@ def inverse(symops):
         inv_symop = [u''.join(W_inv[i,:,0]),
                      u''.join(W_inv[i,:,1]),
                      u''.join(W_inv[i,:,2])]
-        
+
         inv_symop = [op.lstrip('+') for op in inv_symop]
         inv_symop = [op.rstrip('0') for op in inv_symop]
         inv_symop = [op.rstrip('+') for op in inv_symop]
-        
+
         inv_symop = ','.join(inv_symop)
         inv_symops.append(inv_symop)
 
@@ -485,7 +485,7 @@ def binary(symop0, symop1):
 
     w0 = evaluate(symop0, [0,0,0], translate=True)
     w1 = evaluate(symop1, [0,0,0], translate=True)
-    
+
     w0 = w0.reshape(n0,3)
     w1 = w1.reshape(n1,3)
 
@@ -502,23 +502,23 @@ def binary(symop0, symop1):
 
     W = np.einsum('ijk,ikl->ijl', W0, W1).round()
     w = np.einsum('ijk,ik->ij', W0, w1)+w0
-    
+
     W = np.array([whole(c,col=i%3) for i, c in enumerate(W.flatten())])
     w = np.array([fraction(c) for c in w.flatten()])
 
     W = W.reshape(n0,3,3)
     w = w.reshape(n0,3)
-    
+
     symops = []
     for i in range(n0):
         symop = [u''.join(W[i,0,:])+w[i,0],
                  u''.join(W[i,1,:])+w[i,1],
                  u''.join(W[i,2,:])+w[i,2]]
-        
+
         symop = [op.lstrip('+') for op in symop]
         symop = [op.rstrip('0') for op in symop]
         symop = [op.rstrip('+') for op in symop]
-        
+
         symop = ','.join(symop)
         symops.append(symop)
 
@@ -527,7 +527,7 @@ def binary(symop0, symop1):
 def classification(symops):
 
     n = len(symops)
-                
+
     W_0 = evaluate(symops, [1,0,0], translate=False)
     W_1 = evaluate(symops, [0,1,0], translate=False)
     W_2 = evaluate(symops, [0,0,1], translate=False)
@@ -541,7 +541,7 @@ def classification(symops):
 
     symops_ord = []
     for i, symop in enumerate(symops):
-                        
+
         if np.isclose(W_det[i], 1):
             if np.isclose(W_tr[i], 3):
                 rotation, k = '1', 1
@@ -564,18 +564,18 @@ def classification(symops):
                 rotation, k = '-3', 6
             elif np.isclose(W_tr[i], 1):
                 rotation, k = 'm', 2
-                
+
         rotations.append(rotation)
         ks.append(k)
-    
+
         symop_ord = [symop]
-        
+
         for _ in range(1,k):
             symop_ord = binary(symop_ord, [symop])
         symops_ord += symop_ord
 
     k_inv = 1/np.array(ks)
-    
+
     w_symop_ord = evaluate(symops_ord, [0,0,0], translate=True)
     w_symop_ord = w_symop_ord.reshape(n,3)
 
@@ -584,7 +584,7 @@ def classification(symops):
     return rotations, ks, wgs.tolist()
 
 def absence(symops, h, k, l):
-    
+
     n = len(symops)
 
     H = np.array([h,k,l])
@@ -600,9 +600,9 @@ def absence(symops, h, k, l):
     W_2 = evaluate(symops, [0,0,1], translate=False)
 
     W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
-        
+
     rotation, k, wg = classification(symops)
-    
+
     for i in range(n):
 
         absent[i,:] = np.all(np.isclose(np.dot(H.T,W[i]), H.T), axis=1) & \
@@ -634,7 +634,9 @@ def site(symops, coordinates, A, tol=1e-1):
 
     for symop in symops:
 
-        x, y, z = evaluate(symop, coordinates, translate=True)
+        xyz = evaluate([symop], coordinates, translate=True)
+
+        x, y, z = np.array(xyz).flatten()
 
         du, dv, dw = x-u, y-v, z-w
 
@@ -662,9 +664,11 @@ def site(symops, coordinates, A, tol=1e-1):
             if (cv > 0): tv = '+{}'.format(cv)
             if (cw > 0): tw = '+{}'.format(cw)
 
-            trans_symop = binary('x{},y{},z{}'.format(tu,tv,tw), symop)
+            trans_symop = binary(['x{},y{},z{}'.format(tu,tv,tw)], [symop])
 
-            x, y, z = evaluate(trans_symop, coordinates, translate=True)
+            xyz = evaluate([trans_symop], coordinates, translate=True)
+            
+            x, y, z = np.array(xyz).flatten()
 
             du, dv, dw = x-u, y-v, z-w
 
@@ -674,20 +678,19 @@ def site(symops, coordinates, A, tol=1e-1):
 
             if (d < tol):
                 metric.append(d)
-                operators.append(trans_symop)
+                operators += trans_symop
 
     sort = np.argsort(metric)
     op = operators[sort[0]]
 
-    W = np.zeros((3,3))
-    w = np.zeros(3)
+    W_0 = evaluate([op], [1,0,0], translate=False)
+    W_1 = evaluate([op], [0,1,0], translate=False)
+    W_2 = evaluate([op], [0,0,1], translate=False)
 
-    W[:,0] = evaluate(op, [1,0,0], translate=False)
-    W[:,1] = evaluate(op, [0,1,0], translate=False)
-    W[:,2] = evaluate(op, [0,0,1], translate=False)
+    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3).T
 
-    w = evaluate(op, [0,0,0], translate=True)
-
+    w = evaluate([op], [0,0,0], translate=True)
+    
     G = set({op})
 
     for i in range(len(operators)-1):
@@ -700,30 +703,36 @@ def site(symops, coordinates, A, tol=1e-1):
         for op_0 in Gc:
             for op_1 in Gc:
                 if (op_0 != op_1):
-                    symop = binary(op_0, op_1)
+                    symop = binary([op_0], [op_1])
 
-                    W[:,0] = evaluate(symop, [1,0,0], translate=False)
-                    W[:,1] = evaluate(symop, [0,1,0], translate=False)
-                    W[:,2] = evaluate(symop, [0,0,1], translate=False)
-
-                    w = evaluate(symop, [0,0,0], translate=True)
+                    W_0 = evaluate([op], [1,0,0], translate=False)
+                    W_1 = evaluate([op], [0,1,0], translate=False)
+                    W_2 = evaluate([op], [0,0,1], translate=False)
+                
+                    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3).T
+                    
+                    w = evaluate([op], [0,0,0], translate=True)
 
                     if (np.allclose(W, np.eye(3)) and np.linalg.norm(w) > 0):
                         G.discard(op)
 
-    T = np.zeros((3,3))
-    t = np.zeros(3)
+    n = 1
+
+    T = np.zeros((n,3,3))
+    t = np.zeros((n,3))
 
     rot = []
     for op in G:
-        rotation, k, wg = classification(op)
+        rotation, k, wg = classification([op])
         rot.append(rotation)
 
-        W[:,0] = evaluate(op, [1,0,0], translate=False)
-        W[:,1] = evaluate(op, [0,1,0], translate=False)
-        W[:,2] = evaluate(op, [0,0,1], translate=False)
+        W_0 = evaluate([op], [1,0,0], translate=False)
+        W_1 = evaluate([op], [0,1,0], translate=False)
+        W_2 = evaluate([op], [0,0,1], translate=False)
 
-        w = evaluate(op, [0,0,0], translate=True)
+        W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
+
+        w = evaluate([op], [0,0,0], translate=True)
 
         T += W
         t += w
@@ -834,45 +843,29 @@ def site(symops, coordinates, A, tol=1e-1):
     T /= nm
     t /= nm
 
-    t = [fraction(c) for c in t]
+    T = np.array([whole(c,col=i%3) for i, c in enumerate(T.flatten())])
+    t = np.array([fraction(c) for c in t.flatten()])
 
-    T = T.flatten()
-    T = [fraction(c) for c in T]
-    T = np.array(T).reshape(3,3).tolist()
+    T = T.reshape(n,3,3)
+    t = t.reshape(n,3)
 
-    uvw = np.array(['x','y','z'])
-    sppos = u''
+    spposs = []
+    for i in range(n):
+        sppos = [u''.join(T[i,0,:])+t[i,0],
+                 u''.join(T[i,1,:])+t[i,1],
+                 u''.join(T[i,2,:])+t[i,2]]
 
-    for i in range(3):
-        string = ''
-        for j in range(3):
-            if (T[i][j] != '0'):
-                if (T[i][j] == '1'):
-                    if (len(string) > 0):
-                        string += '+'
-                    string += uvw[j]
-                elif (T[i][j] == '-1'):
-                    string += '-'+uvw[j]
-                else:
-                    if (len(string) > 0):
-                        string += '+'
-                    string += uvw[j]
-        if (t[i] != '0'):
-            if (t[i] == '-1'):
-                string += '-'
-            elif (len(string) > 0):
-                string += '+'
-            string += t[i]
-        if (string == ''):
-            string = '0'
-        sppos += string
-        if (i != 2):
-            sppos += ','
+        sppos = [op.lstrip('+') for op in sppos]
+        sppos = [op.rstrip('0') for op in sppos]
+        sppos = [op.rstrip('+') for op in sppos]
+
+        sppos = ','.join(sppos)
+        spposs.append(sppos)
 
     return pg, mult, sppos
 
 def laue_id(symops):
-    
+
     n = len(symops)
 
     laue_sym = operators(invert=True)

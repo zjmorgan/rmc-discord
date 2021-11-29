@@ -190,13 +190,13 @@ class UnitCell:
         
         A = self.get_fractional_cartesian_transform()
         
-        # for i, (u, v, w) in enumerate(zip(self.__u,self.__v,self.__w)):
+        for i, (u, v, w) in enumerate(zip(self.__u,self.__v,self.__w)):
     
-        #     pg, mult, sp_pos = symmetry.site(self.__op, [u,v,w], A, tol=1e-2)
+            pg, mult, sp_pos = symmetry.site(self.__op, [u,v,w], A, tol=1e-2)
             
-        #     self.__pg[i] = pg
-        #     self.__mult[i] = mult
-        #     self.__sp_pos[i] = sp_pos
+            self.__pg[i] = pg
+            self.__mult[i] = mult
+            self.__sp_pos[i] = sp_pos
 
     def __get_all_lattice_constants(self):
 
@@ -252,10 +252,10 @@ class UnitCell:
         up, vp, wp = u[inv], v[inv], w[inv]      
         
         for i, (operator, operator_p) in enumerate(zip(operators,operators_p)):
-            operator = symmetry.binary(operator_p, operator)
+            operator = symmetry.binary([operator_p], [operator])
             coord = [up[i], vp[i], wp[i]]
-            coord = np.mod(symmetry.evaluate(operator, coord), 1)
-            up[i], vp[i], wp[i] = coord
+            uvw = np.mod(symmetry.evaluate([operator], coord), 1)
+            up[i], vp[i], wp[i] = np.array(uvw).flatten()
         
         self.__u[ind], self.__v[ind], self.__w[ind] = up, vp, wp
 
@@ -324,9 +324,9 @@ class UnitCell:
         U12p = U12[inv]
         
         for i, (operator, operator_p) in enumerate(zip(operators,operators_p)):
-            operator = symmetry.binary(operator_p, operator)
+            operator = symmetry.binary([operator_p], [operator])
             disp = [U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i]]
-            disp = symmetry.evaluate_disp(operator, disp)
+            disp = symmetry.evaluate_disp([operator], disp)
             U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i] = disp
         
         self.__U11[ind] = U11p
@@ -408,9 +408,10 @@ class UnitCell:
         
         for i, (operator, operator_p) in enumerate(zip(operators,operators_p)):
             mag = [mu1p[i], mu2p[i], mu3p[i]]
-            mag = symmetry.evaluate_mag(operator_p, mag)
-            mag = symmetry.evaluate_mag(operator, mag)
-            mu1p[i], mu2p[i], mu3p[i] = mag
+            mag = symmetry.evaluate_mag([operator_p], mag)
+            mag = np.array(mag).flatten()
+            mag = symmetry.evaluate_mag([operator], mag)
+            mu1p[i], mu2p[i], mu3p[i] = np.array(mag).flatten()
         
         self.__mu1[ind] = mu1p
         self.__mu2[ind] = mu2p

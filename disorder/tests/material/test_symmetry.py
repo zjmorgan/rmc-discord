@@ -241,42 +241,42 @@ class test_symmetry(unittest.TestCase):
         absent = symmetry.absence(operators, 0, 0, 5)
         self.assertEqual(absent, True)
 
-    # def test_site(self):
+    def test_site(self):
 
-    #     a = b = 10
-    #     c = 13
+        a = b = 10
+        c = 13
 
-    #     alpha = beta = np.pi/2
-    #     gamma = 2*np.pi/3
+        alpha = beta = np.pi/2
+        gamma = 2*np.pi/3
 
-    #     A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
 
-    #     operators = [u'x,y,z', u'-y,x-y,z', u'-x+y,-x,z',
-    #                   u'-x,-y,z', u'y,-x+y,z', u'x-y,x,z']
+        operators = [u'x,y,z', u'-y,x-y,z', u'-x+y,-x,z',
+                     u'-x,-y,z', u'y,-x+y,z', u'x-y,x,z']
 
-    #     coordinates = [0.35,0.65,0.1234]
-    #     pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
-    #     self.assertEqual(pg, '1')
-    #     self.assertEqual(mult, 6)
-    #     self.assertEqual(sp_pos, 'x,y,z')
+        coordinates = [0.35,0.65,0.1234]
+        pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        # self.assertEqual(pg, '1')
+        # self.assertEqual(mult, 6)
+        # self.assertEqual(sp_pos, 'x,y,z')
 
-    #     coordinates = [0.5,0.0,0.1234]
-    #     pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
-    #     self.assertEqual(pg, '2')
-    #     self.assertEqual(mult, 3)
-    #     self.assertEqual(sp_pos, '1/2,0,z')
+        # coordinates = [0.5,0.0,0.1234]
+        # pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        # self.assertEqual(pg, '2')
+        # self.assertEqual(mult, 3)
+        # self.assertEqual(sp_pos, '1/2,0,z')
 
-    #     coordinates = [0.3333,0.6667,0.1234]
-    #     pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
-    #     self.assertEqual(pg, '3')
-    #     self.assertEqual(mult, 2)
-    #     self.assertEqual(sp_pos, '1/3,2/3,z')
+        # coordinates = [0.3333,0.6667,0.1234]
+        # pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        # self.assertEqual(pg, '3')
+        # self.assertEqual(mult, 2)
+        # self.assertEqual(sp_pos, '1/3,2/3,z')
 
-    #     coordinates = [0.0,0.0,0.1234]
-    #     pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
-    #     self.assertEqual(pg, '6')
-    #     self.assertEqual(mult, 1)
-    #     self.assertEqual(sp_pos, '0,0,z')
+        # coordinates = [0.0,0.0,0.1234]
+        # pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        # self.assertEqual(pg, '6')
+        # self.assertEqual(mult, 1)
+        # self.assertEqual(sp_pos, '0,0,z')
 
 if __name__ == '__main__':
     unittest.main()
