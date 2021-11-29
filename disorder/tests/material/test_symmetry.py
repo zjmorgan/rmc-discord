@@ -105,9 +105,9 @@ class test_symmetry(unittest.TestCase):
         uvw = symmetry.evaluate(operator, coordinate, translate=False)
         np.testing.assert_array_almost_equal(uvw, [[-y,x-y,z]])
         
-        coordinates = [np.random.random(3),
-                       np.random.random(3),
-                       np.random.random(3)]
+        coordinates = [np.random.random(4),
+                       np.random.random(4),
+                       np.random.random(4)]
 
         x, y, z = coordinates
 
@@ -123,14 +123,27 @@ class test_symmetry(unittest.TestCase):
         
         uvw = symmetry.evaluate(operators, coordinate, translate=True)
         np.testing.assert_array_almost_equal(uvw, [[-y+1/2,x-y,z-1/2],
-                                                   [-y-1/2,y-x,z+1/2],
-                                                   [z,x,y]])
+                                                    [-y-1/2,y-x,z+1/2],
+                                                    [z,x,y]])
 
         uvw = symmetry.evaluate(operators, coordinate, translate=False)
         np.testing.assert_array_almost_equal(uvw, [[-y,x-y,z],
-                                                   [-y,y-x,z],
-                                                   [z,x,y]])
+                                                    [-y,y-x,z],
+                                                    [z,x,y]])
+        
+        # operators = [u'-y+1/2,x-y,z-1/2',u'-y-1/2,y-x,z+1/2',u'z,x,y']
+                
+        # x, y, z = coordinates
+        
+        # uvw = symmetry.evaluate(operators, coordinates, translate=True)
+        # np.testing.assert_array_almost_equal(uvw, [[-y+1/2,x-y,z-1/2],
+        #                                            [-y-1/2,y-x,z+1/2],
+        #                                            [z,x,y]])
 
+        # uvw = symmetry.evaluate(operators, coordinates, translate=False)
+        # np.testing.assert_array_almost_equal(uvw, [[-y,x-y,z],
+        #                                            [-y,y-x,z],
+        #                                            [z,x,y]])
     def test_evaluate_mag(self):
 
         operator = [u'-mx,-my,-mz']
@@ -256,27 +269,27 @@ class test_symmetry(unittest.TestCase):
 
         coordinates = [0.35,0.65,0.1234]
         pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
-        # self.assertEqual(pg, '1')
-        # self.assertEqual(mult, 6)
-        # self.assertEqual(sp_pos, 'x,y,z')
+        self.assertEqual(pg, '1')
+        self.assertEqual(mult, 6)
+        self.assertEqual(sp_pos, 'x,y,z')
 
-        # coordinates = [0.5,0.0,0.1234]
-        # pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
-        # self.assertEqual(pg, '2')
-        # self.assertEqual(mult, 3)
-        # self.assertEqual(sp_pos, '1/2,0,z')
+        coordinates = [0.5,0.0,0.1234]
+        pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        self.assertEqual(pg, '2')
+        self.assertEqual(mult, 3)
+        self.assertEqual(sp_pos, '1/2,0,z')
 
-        # coordinates = [0.3333,0.6667,0.1234]
-        # pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
-        # self.assertEqual(pg, '3')
-        # self.assertEqual(mult, 2)
-        # self.assertEqual(sp_pos, '1/3,2/3,z')
+        coordinates = [0.3333,0.6667,0.1234]
+        pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        self.assertEqual(pg, '3')
+        self.assertEqual(mult, 2)
+        self.assertEqual(sp_pos, '1/3,2/3,z')
 
-        # coordinates = [0.0,0.0,0.1234]
-        # pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
-        # self.assertEqual(pg, '6')
-        # self.assertEqual(mult, 1)
-        # self.assertEqual(sp_pos, '0,0,z')
+        coordinates = [0.0,0.0,0.1234]
+        pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
+        self.assertEqual(pg, '6')
+        self.assertEqual(mult, 1)
+        self.assertEqual(sp_pos, '0,0,z')
 
 if __name__ == '__main__':
     unittest.main()

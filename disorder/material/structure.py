@@ -194,9 +194,7 @@ class UnitCell:
     
             pg, mult, sp_pos = symmetry.site(self.__op, [u,v,w], A, tol=1e-2)
             
-            self.__pg[i] = pg
-            self.__mult[i] = mult
-            self.__sp_pos[i] = sp_pos
+            self.__pg[i], self.__mult[i], self.__sp_pos[i] = pg, mult, sp_pos
 
     def __get_all_lattice_constants(self):
 
@@ -249,13 +247,13 @@ class UnitCell:
         operators = self.__op[ind]
         operators_p = self.__op[mask][inv]
         
+        operators = symmetry.binary(operators_p, operators)
+        
         up, vp, wp = u[inv], v[inv], w[inv]      
         
-        for i, (operator, operator_p) in enumerate(zip(operators,operators_p)):
-            operator = symmetry.binary([operator_p], [operator])
-            coord = [up[i], vp[i], wp[i]]
-            uvw = np.mod(symmetry.evaluate([operator], coord), 1)
-            up[i], vp[i], wp[i] = np.array(uvw).flatten()
+        for i, operator in enumerate(operators):
+            uvw = symmetry.evaluate([operator], [up[i], vp[i], wp[i]])
+            up[i], vp[i], wp[i] = np.mod(uvw, 1).flatten()
         
         self.__u[ind], self.__v[ind], self.__w[ind] = up, vp, wp
 
@@ -315,6 +313,8 @@ class UnitCell:
         
         operators = self.__op[ind]
         operators_p = self.__op[mask][inv]
+        
+        operators = symmetry.binary(operators_p, operators)
 
         U11p = U11[inv]
         U22p = U22[inv]
@@ -323,8 +323,7 @@ class UnitCell:
         U13p = U13[inv]
         U12p = U12[inv]
         
-        for i, (operator, operator_p) in enumerate(zip(operators,operators_p)):
-            operator = symmetry.binary([operator_p], [operator])
+        for i, operator in enumerate(operators):
             disp = [U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i]]
             disp = symmetry.evaluate_disp([operator], disp)
             U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i] = disp
@@ -401,15 +400,15 @@ class UnitCell:
         
         operators = self.__mag_op[ind]
         operators_p = self.__mag_op[mask][inv]
+        
+        operators = symmetry.binary_mag(operators_p, operators)
 
         mu1p = mu1[inv]
         mu2p = mu2[inv]
         mu3p = mu3[inv]
         
-        for i, (operator, operator_p) in enumerate(zip(operators,operators_p)):
+        for i, operator in enumerate(operators):
             mag = [mu1p[i], mu2p[i], mu3p[i]]
-            mag = symmetry.evaluate_mag([operator_p], mag)
-            mag = np.array(mag).flatten()
             mag = symmetry.evaluate_mag([operator], mag)
             mu1p[i], mu2p[i], mu3p[i] = np.array(mag).flatten()
         
