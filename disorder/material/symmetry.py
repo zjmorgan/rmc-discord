@@ -384,7 +384,7 @@ def evaluate_op(operators, translate=True):
 def evaluate_code(code, coordinates):
 
     x, y, z = coordinates
-    
+
     return np.array(eval(code))
 
 def evaluate_mag(operators, moments):
@@ -500,7 +500,7 @@ def binary(symop0, symop1):
 
     code0 = evaluate_op(symop0, translate=False)
     code1 = evaluate_op(symop1, translate=False)
-    
+
     W0_0 = evaluate_code(code0, [1,0,0])
     W0_1 = evaluate_code(code0, [0,1,0])
     W0_2 = evaluate_code(code0, [0,0,1])
@@ -701,72 +701,59 @@ def site(symops, coordinates, A, tol=1e-1):
         if (dw <= -0.5): dw += 1
 
         nu, nv, nw = int(round(u-du)), int(round(v-dv)), int(round(w-dw))
-        
+
         w0 = np.array([nu,nv,nw])
         # W0 = np.eye(3)
-        
+
         w1 = evaluate([symop], [0,0,0], translate=True).flatten()
-        
+
         code = evaluate_op([symop], translate=False)
-        
+
         W1_0 = evaluate_code(code, [1,0,0])
         W1_1 = evaluate_code(code, [0,1,0])
         W1_2 = evaluate_code(code, [0,0,1])
-        
+
         W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3).T
-        
-        # W = np.dot(W0, W1)
-        # w = np.dot(W0, w1)+w0
-                
+
         up, vp, wp = np.dot(W1, [u,v,w])+w1+w0
-        
+
         up += U
         vp += V
         wp += W
-        
+
         du, dv, dw = up-u, vp-v, wp-w
 
         dx, dy, dz = np.dot(A, [du,dv,dw])
-    
+
         dist = np.sqrt(dx**2+dy**2+dz**2)
-        
+
         mask = dist < tol
-        
+
         W1 = np.array([whole(c,col=i%3) for i, c in enumerate(W1.flatten())])
-        
+
         W1 = W1.reshape(3,3)
 
         for (d, iu, iv, iw) in zip(dist[mask],U[mask],V[mask],W[mask]):
-            
+
             w2 = w0+w1+np.array([iu,iv,iw])
-            
+
             w2 = np.array([fraction(c) for c in w2.flatten()])
-            
+
             symop = [u''.join(W1[0,:])+w2[0],
                      u''.join(W1[1,:])+w2[1],
                      u''.join(W1[2,:])+w2[2]]
-    
+
             symop = [op.lstrip('+') for op in symop]
             symop = [op.rstrip('0') for op in symop]
             symop = [op.rstrip('+') for op in symop]
-            
+
             trans_symop = symop
-            
+
             operators += [','.join(trans_symop)]
             metric.append(d)
-                
+
     sort = np.argsort(metric)
     op = operators[sort[0]]
-
-    code = evaluate_op([op], translate=False)
-
-    W_0 = evaluate_code(code, [1,0,0])
-    W_1 = evaluate_code(code, [0,1,0])
-    W_2 = evaluate_code(code, [0,0,1])
-
-    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3).T
-
-    w = evaluate([op], [0,0,0], translate=True)
 
     G = set({op})
 
@@ -778,19 +765,33 @@ def site(symops, coordinates, A, tol=1e-1):
         Gc = G.copy()
 
         for op_0 in Gc:
-            for op_1 in Gc:
-                if (op_0 != op_1):
-                    symop = binary([op_0], [op_1])
 
-                    code = evaluate_op([symop], translate=False)
-            
-                    W_0 = evaluate_code(code, [1,0,0])
-                    W_1 = evaluate_code(code, [0,1,0])
-                    W_2 = evaluate_code(code, [0,0,1])
-            
-                    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3).T
-            
-                    w = evaluate([symop], [0,0,0], translate=True)
+            code0 = evaluate_op([op_0], translate=False)
+
+            W0_0 = evaluate_code(code0, [1,0,0])
+            W0_1 = evaluate_code(code0, [0,1,0])
+            W0_2 = evaluate_code(code0, [0,0,1])
+
+            W0 = np.vstack((W0_0.T,W0_1.T,W0_2.T)).reshape(3,3).T
+
+            w0 = evaluate([op_0], [0,0,0], translate=True)
+
+            for op_1 in Gc:
+
+                code1 = evaluate_op([op_1], translate=False)
+
+                W1_0 = evaluate_code(code1, [1,0,0])
+                W1_1 = evaluate_code(code1, [0,1,0])
+                W1_2 = evaluate_code(code1, [0,0,1])
+
+                W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3).T
+
+                w1 = evaluate([op_0], [0,0,0], translate=True)
+
+                if (op_0 != op_1):
+
+                    W = np.dot(W0, W1)
+                    w = np.dot(W0, w1.flatten())+w0.flatten()
 
                     if (np.allclose(W, np.eye(3)) and np.linalg.norm(w) > 0):
                         G.discard(op)
@@ -804,7 +805,7 @@ def site(symops, coordinates, A, tol=1e-1):
     for op in G:
         rotation, k, wg = classification([op])
         rot.append(rotation)
-        
+
         code = evaluate_op([op], translate=False)
 
         W_0 = evaluate_code(code, [1,0,0])
