@@ -363,118 +363,38 @@ def unique(data):
     return u.view(data_type).reshape(-1, data_size), ind, inv
 
 def evaluate(operators, coordinates, translate=True):
-    
-    n = len(operators)
 
-    rot_symops = [re.sub(r'\.', '', op) for op in operators]
-    rot_symops = [re.sub(r'\/', '', op) for op in rot_symops]
-    rot_symops = [re.sub(r'[-+][\d]+', '', op) for op in rot_symops]
-    rot_symops = [re.sub(r'[\d]', '', op) for op in rot_symops]
-    
-    trans_symops = [re.sub(r'[-+][x-z]+', '', op) for op in operators]
-    trans_symops = [re.sub(r'[x-z]', '', op) for op in trans_symops]
+    operators = str([[op] for op in operators])
 
-    xyz = np.array(coordinates)
-    
-    m = np.size(xyz) // 3
-    xyz = xyz.reshape(m,3)
-    
-    W = np.zeros((n,3,3))
-    w = np.zeros((n,3))
-    
-    print(rot_symops,trans_symops)
-    
-    for i, op in enumerate(rot_symops):
-        xu, yv, zw = op.split(',')
-        
-        if '-x' in xu:
-            W[i,0,0] = -1
-            xu = re.sub('-x', '', xu)
-        if '-y' in xu:
-            W[i,0,1] = -1
-            xu = re.sub('-y', '', xu)
-        if '-z' in xu:
-            W[i,0,2] = -1
-            xu = re.sub('-z', '', xu)
-            
-        if '-x' in yv:
-            W[i,1,0] = -1
-            yv = re.sub('-x', '', yv)
-        if '-y' in yv:
-            W[i,1,1] = -1
-            yv = re.sub('-y', '', yv)
-        if '-z' in yv:
-            W[i,1,2] = -1
-            yv = re.sub('-z', '', yv)
-            
-        if '-x' in zw:
-            W[i,2,0] = -1
-            zw = re.sub('-x', '', zw)
-        if '-y' in zw:
-            W[i,2,1] = -1
-            zw = re.sub('-y', '', zw)
-        if '-z' in zw:
-            W[i,2,2] = -1
-            zw = re.sub('-z', '', zw)
-            
-        if 'x' in xu:
-            W[i,0,0] = 1
-            xu = re.sub('x', '', xu)
-        if 'y' in xu:
-            W[i,0,1] = 1
-            xu = re.sub('y', '', xu)
-        if 'z' in xu:
-            W[i,0,2] = 1
-            xu = re.sub('z', '', xu)
-            
-        if 'x' in yv:
-            W[i,1,0] = 1
-            yv = re.sub('x', '', yv)
-        if 'y' in yv:
-            W[i,1,1] = 1
-            yv = re.sub('y', '', yv)            
-        if 'z' in yv:
-            W[i,1,2] = 1
-            yv = re.sub('z', '', yv)
-            
-        if 'x' in zw:
-            W[i,2,0] = 1
-            zw = re.sub('x', '', zw)
-        if 'y' in zw:
-            W[i,2,1] = 1
-            zw = re.sub('y', '', zw)            
-        if 'z' in zw:
-            W[i,2,2] = 1
-            zw = re.sub('z', '', zw)
-       
-    if translate:
-        
-        for i, op in enumerate(trans_symops):
-            xu, yv, zw = op.split(',')
-            
-            if '/' in xu:
-                num, denom = xu.split('/')
-                w[i,0] = float(num)/float(denom)
-                
-            if '/' in yv:
-                num, denom = yv.split('/')
-                w[i,1] = float(num)/float(denom)
-    
-            if '/' in zw:
-                num, denom = zw.split('/')
-                w[i,2] = float(num)/float(denom)
+    x, y, z = coordinates
 
-    print(W.shape)
-    print(w.shape)
-    print(xyz.shape)
+    if (not translate):
+        operators = re.sub(r'\.', '', operators)
+        operators = re.sub(r'\/', '', operators)
+        operators = re.sub(r'[-+][\d]+', '', operators)
+        operators = re.sub(r'[\d]', '', operators)
+    operators = operators.replace("'","")
+
+    return np.array(eval(operators))
+
+def evaluate_op(operators, translate=True):
+
+    operators = str([[op] for op in operators])
+
+    if (not translate):
+        operators = re.sub(r'\.', '', operators)
+        operators = re.sub(r'\/', '', operators)
+        operators = re.sub(r'[-+][\d]+', '', operators)
+        operators = re.sub(r'[\d]', '', operators)
+    operators = operators.replace("'","")
+
+    return compile(operators, '<string>', 'eval')
+
+def evaluate_code(code, coordinates):
+
+    x, y, z = coordinates
     
-    if (m == 1):
-        result = np.einsum('ijk,lk->ij', W, xyz).reshape(*w.shape)+w
-    else:
-        print(w.shape,W.shape,xyz.shape)
-        result = np.einsum('ijk,lk->ijl', W, xyz)+np.tile(w,m).reshape(n,3,m)
-        
-    return result
+    return np.array(eval(code))
 
 def evaluate_mag(operators, moments):
 
@@ -586,14 +506,17 @@ def binary(symop0, symop1):
 
     w0 = w0.reshape(n0,3)
     w1 = w1.reshape(n1,3)
+    
+    code0 = evaluate_op(symop0, translate=False)
+    code1 = evaluate_op(symop1, translate=False)
+                    
+    W0_0 = evaluate_code(code0, [1,0,0])
+    W0_1 = evaluate_code(code0, [0,1,0])
+    W0_2 = evaluate_code(code0, [0,0,1])
 
-    W0_0 = evaluate(symop0, [1,0,0], translate=False)
-    W0_1 = evaluate(symop0, [0,1,0], translate=False)
-    W0_2 = evaluate(symop0, [0,0,1], translate=False)
-
-    W1_0 = evaluate(symop1, [1,0,0], translate=False)
-    W1_1 = evaluate(symop1, [0,1,0], translate=False)
-    W1_2 = evaluate(symop1, [0,0,1], translate=False)
+    W1_0 = evaluate_code(code1, [1,0,0])
+    W1_1 = evaluate_code(code1, [0,1,0])
+    W1_2 = evaluate_code(code1, [0,0,1])
 
     W0 = np.vstack((W0_0.T,W0_1.T,W0_2.T)).reshape(3,3,n0).T
     W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3,n1).T
@@ -626,13 +549,13 @@ def binary_mag(symop0, symop1):
 
     n0, n1 = len(symop0), len(symop1)
 
-    W0_0 = evaluate_mag(symop0, [1,0,0], translate=False)
-    W0_1 = evaluate_mag(symop0, [0,1,0], translate=False)
-    W0_2 = evaluate_mag(symop0, [0,0,1], translate=False)
+    W0_0 = evaluate_mag(symop0, [1,0,0])
+    W0_1 = evaluate_mag(symop0, [0,1,0])
+    W0_2 = evaluate_mag(symop0, [0,0,1])
 
-    W1_0 = evaluate_mag(symop1, [1,0,0], translate=False)
-    W1_1 = evaluate_mag(symop1, [0,1,0], translate=False)
-    W1_2 = evaluate_mag(symop1, [0,0,1], translate=False)
+    W1_0 = evaluate_mag(symop1, [1,0,0])
+    W1_1 = evaluate_mag(symop1, [0,1,0])
+    W1_2 = evaluate_mag(symop1, [0,0,1])
 
     W0 = np.vstack((W0_0.T,W0_1.T,W0_2.T)).reshape(3,3,n0).T
     W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3,n1).T
@@ -818,9 +741,11 @@ def site(symops, coordinates, A, tol=1e-1):
     sort = np.argsort(metric)
     op = operators[sort[0]]
 
-    W_0 = evaluate([op], [1,0,0], translate=False)
-    W_1 = evaluate([op], [0,1,0], translate=False)
-    W_2 = evaluate([op], [0,0,1], translate=False)
+    code = evaluate_op([op], translate=False)
+
+    W_0 = evaluate_code(code, [1,0,0])
+    W_1 = evaluate_code(code, [0,1,0])
+    W_2 = evaluate_code(code, [0,0,1])
 
     W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3).T
 
@@ -840,13 +765,15 @@ def site(symops, coordinates, A, tol=1e-1):
                 if (op_0 != op_1):
                     symop = binary([op_0], [op_1])
 
-                    W_0 = evaluate([op], [1,0,0], translate=False)
-                    W_1 = evaluate([op], [0,1,0], translate=False)
-                    W_2 = evaluate([op], [0,0,1], translate=False)
-
+                    code = evaluate_op([symop], translate=False)
+            
+                    W_0 = evaluate_code(code, [1,0,0])
+                    W_1 = evaluate_code(code, [0,1,0])
+                    W_2 = evaluate_code(code, [0,0,1])
+            
                     W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3).T
-
-                    w = evaluate([op], [0,0,0], translate=True)
+            
+                    w = evaluate([symop], [0,0,0], translate=True)
 
                     if (np.allclose(W, np.eye(3)) and np.linalg.norm(w) > 0):
                         G.discard(op)
@@ -860,10 +787,12 @@ def site(symops, coordinates, A, tol=1e-1):
     for op in G:
         rotation, k, wg = classification([op])
         rot.append(rotation)
+        
+        code = evaluate_op([op], translate=False)
 
-        W_0 = evaluate([op], [1,0,0], translate=False)
-        W_1 = evaluate([op], [0,1,0], translate=False)
-        W_2 = evaluate([op], [0,0,1], translate=False)
+        W_0 = evaluate_code(code, [1,0,0])
+        W_1 = evaluate_code(code, [0,1,0])
+        W_2 = evaluate_code(code, [0,0,1])
 
         W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
 

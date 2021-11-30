@@ -8,21 +8,21 @@ from disorder.material import structure, crystal
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
 
-import cProfile, pstats
+# import cProfile, pstats
 
 class test_structure(unittest.TestCase):
     
-    def setUp(self):
+    # def setUp(self):
         
-        self.pr = cProfile.Profile()
-        self.pr.enable()
+    #     self.pr = cProfile.Profile()
+    #     self.pr.enable()
 
-    def tearDown(self):
+    # def tearDown(self):
         
-        p = pstats.Stats(self.pr)
-        p.strip_dirs()
-        p.sort_stats ('cumtime')
-        p.print_stats ()
+    #     p = pstats.Stats(self.pr)
+    #     p.strip_dirs()
+    #     p.sort_stats ('cumtime')
+    #     p.print_stats ()
     
     # def test_factor(self):
         
@@ -119,52 +119,6 @@ class test_structure(unittest.TestCase):
         
         cif_file = 'CaTiOSiO4.cif'
         
-        filename = os.path.join(folder, cif_file)
-        
-        uc = structure.UnitCell(filename, tol=1e-4)
-        
-        self.assertEqual(uc.get_filepath(), folder)
-        self.assertEqual(uc.get_filename(), cif_file)
-        
-        self.assertTrue(uc.get_active_sites().all())
-        self.assertEqual(uc.get_number_atoms_per_unit_cell(), 32)
-        
-        active_sites = uc.get_active_sites()
-        atms = uc.get_unit_cell_atoms()
-        
-        active_sites[atms == 'O'] = False
-        uc.set_active_sites(active_sites)
-                                
-        u, v, w = uc.get_fractional_coordinates()
-        uc.set_fractional_coordinates(u, v, w)
-        
-        u_ref, v_ref, w_ref = uc.get_fractional_coordinates()
-        np.testing.assert_array_almost_equal(u, u_ref)
-        np.testing.assert_array_almost_equal(v, v_ref)
-        np.testing.assert_array_almost_equal(w, w_ref)
-        
-        occ = uc.get_occupancies()
-        uc.set_occupancies(occ)
-        
-        occ_ref = uc.get_occupancies()
-        np.testing.assert_array_almost_equal(occ, occ_ref)
-        
-        disp_params = uc.get_anisotropic_displacement_parameters()
-        uc.set_anisotropic_displacement_parameters(*disp_params)
-        
-        disp_params_ref = uc.get_anisotropic_displacement_parameters()
-        np.testing.assert_array_almost_equal(disp_params, disp_params_ref)
-        
-        constants = uc.get_lattice_constants()
-        uc.set_lattice_constants(*constants)
-
-        constants_ref = uc.get_lattice_constants()
-        np.testing.assert_array_almost_equal(constants, constants_ref)
-        
-        # ---
-        
-        # cif_file = 'Li2Co(SO4)2.mcif'
-        
         # filename = os.path.join(folder, cif_file)
         
         # uc = structure.UnitCell(filename, tol=1e-4)
@@ -173,27 +127,73 @@ class test_structure(unittest.TestCase):
         # self.assertEqual(uc.get_filename(), cif_file)
         
         # self.assertTrue(uc.get_active_sites().all())
-        # self.assertEqual(uc.get_number_atoms_per_unit_cell(), 104)
+        # self.assertEqual(uc.get_number_atoms_per_unit_cell(), 32)
         
         # active_sites = uc.get_active_sites()
         # atms = uc.get_unit_cell_atoms()
         
         # active_sites[atms == 'O'] = False
         # uc.set_active_sites(active_sites)
+                                
+        # u, v, w = uc.get_fractional_coordinates()
+        # uc.set_fractional_coordinates(u, v, w)
         
-        # mu1, mu2, mu3 = uc.get_crystal_axis_magnetic_moments()
-        # uc.set_crystal_axis_magnetic_moments(mu1, mu2, mu3)
+        # u_ref, v_ref, w_ref = uc.get_fractional_coordinates()
+        # np.testing.assert_array_almost_equal(u, u_ref)
+        # np.testing.assert_array_almost_equal(v, v_ref)
+        # np.testing.assert_array_almost_equal(w, w_ref)
         
-        # mu1_ref, mu2_ref, mu3_ref = uc.get_crystal_axis_magnetic_moments()
-        # np.testing.assert_array_almost_equal(mu1, mu1_ref)
-        # np.testing.assert_array_almost_equal(mu2, mu2_ref)
-        # np.testing.assert_array_almost_equal(mu3, mu3_ref)
+        # occ = uc.get_occupancies()
+        # uc.set_occupancies(occ)
         
-        # g = uc.get_g_factors()
-        # uc.set_g_factors(g)
+        # occ_ref = uc.get_occupancies()
+        # np.testing.assert_array_almost_equal(occ, occ_ref)
         
-        # g_ref = uc.get_g_factors()
-        # np.testing.assert_array_almost_equal(g, g_ref)
+        # disp_params = uc.get_anisotropic_displacement_parameters()
+        # uc.set_anisotropic_displacement_parameters(*disp_params)
+        
+        # disp_params_ref = uc.get_anisotropic_displacement_parameters()
+        # np.testing.assert_array_almost_equal(disp_params, disp_params_ref)
+        
+        # constants = uc.get_lattice_constants()
+        # uc.set_lattice_constants(*constants)
+
+        # constants_ref = uc.get_lattice_constants()
+        # np.testing.assert_array_almost_equal(constants, constants_ref)
+        
+        # ---
+        
+        cif_file = 'Li2Co(SO4)2.mcif'
+        
+        filename = os.path.join(folder, cif_file)
+        
+        uc = structure.UnitCell(filename, tol=1e-4)
+        
+        self.assertEqual(uc.get_filepath(), folder)
+        self.assertEqual(uc.get_filename(), cif_file)
+        
+        self.assertTrue(uc.get_active_sites().all())
+        self.assertEqual(uc.get_number_atoms_per_unit_cell(), 104)
+        
+        active_sites = uc.get_active_sites()
+        atms = uc.get_unit_cell_atoms()
+        
+        active_sites[atms == 'O'] = False
+        uc.set_active_sites(active_sites)
+        
+        mu1, mu2, mu3 = uc.get_crystal_axis_magnetic_moments()
+        uc.set_crystal_axis_magnetic_moments(mu1, mu2, mu3)
+        
+        mu1_ref, mu2_ref, mu3_ref = uc.get_crystal_axis_magnetic_moments()
+        np.testing.assert_array_almost_equal(mu1, mu1_ref)
+        np.testing.assert_array_almost_equal(mu2, mu2_ref)
+        np.testing.assert_array_almost_equal(mu3, mu3_ref)
+        
+        g = uc.get_g_factors()
+        uc.set_g_factors(g)
+        
+        g_ref = uc.get_g_factors()
+        np.testing.assert_array_almost_equal(g, g_ref)
 
 if __name__ == '__main__':
     unittest.main()

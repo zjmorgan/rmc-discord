@@ -93,6 +93,8 @@ class test_symmetry(unittest.TestCase):
         np.testing.assert_array_equal(inv, [2,0,2,0,2,1,3,3])
 
     def test_evaluate(self):
+        
+        np.random.seed(13)
 
         operator = [u'-y+1/2,x-y,z-1/2']
         coordinate = [1,2,-3]
@@ -128,22 +130,9 @@ class test_symmetry(unittest.TestCase):
 
         uvw = symmetry.evaluate(operators, coordinate, translate=False)
         np.testing.assert_array_almost_equal(uvw, [[-y,x-y,z],
-                                                    [-y,y-x,z],
-                                                    [z,x,y]])
+                                                   [-y,y-x,z],
+                                                   [z,x,y]])
         
-        # operators = [u'-y+1/2,x-y,z-1/2',u'-y-1/2,y-x,z+1/2',u'z,x,y']
-                
-        # x, y, z = coordinates
-        
-        # uvw = symmetry.evaluate(operators, coordinates, translate=True)
-        # np.testing.assert_array_almost_equal(uvw, [[-y+1/2,x-y,z-1/2],
-        #                                            [-y-1/2,y-x,z+1/2],
-        #                                            [z,x,y]])
-
-        # uvw = symmetry.evaluate(operators, coordinates, translate=False)
-        # np.testing.assert_array_almost_equal(uvw, [[-y,x-y,z],
-        #                                            [-y,y-x,z],
-        #                                            [z,x,y]])
     def test_evaluate_mag(self):
 
         operator = [u'-mx,-my,-mz']
