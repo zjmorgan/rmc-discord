@@ -786,7 +786,7 @@ def site(symops, coordinates, A, tol=1e-1):
 
                 W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3).T
 
-                w1 = evaluate([op_0], [0,0,0], translate=True)
+                w1 = evaluate([op_1], [0,0,0], translate=True)
 
                 if (op_0 != op_1):
 
