@@ -364,18 +364,9 @@ def unique(data):
 
 def evaluate(operators, coordinates, translate=True):
 
-    operators = str([[op] for op in operators])
+    code = evaluate_op(operators, translate=translate)
 
-    x, y, z = coordinates
-
-    if (not translate):
-        operators = re.sub(r'\.', '', operators)
-        operators = re.sub(r'\/', '', operators)
-        operators = re.sub(r'[-+][\d]+', '', operators)
-        operators = re.sub(r'[\d]', '', operators)
-    operators = operators.replace("'","")
-
-    return np.array(eval(operators))
+    return evaluate_code(code, coordinates)
 
 def evaluate_op(operators, translate=True):
 
@@ -506,10 +497,10 @@ def binary(symop0, symop1):
 
     w0 = w0.reshape(n0,3)
     w1 = w1.reshape(n1,3)
-    
+
     code0 = evaluate_op(symop0, translate=False)
     code1 = evaluate_op(symop1, translate=False)
-                    
+    
     W0_0 = evaluate_code(code0, [1,0,0])
     W0_1 = evaluate_code(code0, [0,1,0])
     W0_2 = evaluate_code(code0, [0,0,1])
@@ -710,34 +701,60 @@ def site(symops, coordinates, A, tol=1e-1):
         if (dw <= -0.5): dw += 1
 
         nu, nv, nw = int(round(u-du)), int(round(v-dv)), int(round(w-dw))
-
-        cu, cv, cw = U+nu, V+nv, W+nw
         
-        tu = ['+{}'.format(c) if c >= 0 else '{}'.format(c) for c in cu]
-        tv = ['+{}'.format(c) if c >= 0 else '{}'.format(c) for c in cv]
-        tw = ['+{}'.format(c) if c >= 0 else '{}'.format(c) for c in cw]
-
-        trans_symops = ['x{},y{},z{}'.format(xu,xv,xw) \
-                        for (xu, xv, xw) in zip(tu,tv,tw)]
-            
-        for trans_symop in trans_symops: 
-            
-            trans_symop = binary([trans_symop], [symop])
+        w0 = np.array([nu,nv,nw])
+        # W0 = np.eye(3)
         
-            xyz = evaluate(trans_symop, coordinates, translate=True)
-    
-            x, y, z = np.array(xyz).flatten()
-    
-            du, dv, dw = x-u, y-v, z-w
-    
-            dx, dy, dz = np.dot(A, [du,dv,dw])
-    
-            d = np.sqrt(dx**2+dy**2+dz**2)
+        w1 = evaluate([symop], [0,0,0], translate=True).flatten()
+        
+        code = evaluate_op([symop], translate=False)
+        
+        W1_0 = evaluate_code(code, [1,0,0])
+        W1_1 = evaluate_code(code, [0,1,0])
+        W1_2 = evaluate_code(code, [0,0,1])
+        
+        W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3).T
+        
+        # W = np.dot(W0, W1)
+        # w = np.dot(W0, w1)+w0
+                
+        up, vp, wp = np.dot(W1, [u,v,w])+w1+w0
+        
+        up += U
+        vp += V
+        wp += W
+        
+        du, dv, dw = up-u, vp-v, wp-w
 
-            if (d < tol):
-                metric.append(d)
-                operators += trans_symop
+        dx, dy, dz = np.dot(A, [du,dv,dw])
+    
+        dist = np.sqrt(dx**2+dy**2+dz**2)
+        
+        mask = dist < tol
+        
+        W1 = np.array([whole(c,col=i%3) for i, c in enumerate(W1.flatten())])
+        
+        W1 = W1.reshape(3,3)
 
+        for (d, iu, iv, iw) in zip(dist[mask],U[mask],V[mask],W[mask]):
+            
+            w2 = w0+w1+np.array([iu,iv,iw])
+            
+            w2 = np.array([fraction(c) for c in w2.flatten()])
+            
+            symop = [u''.join(W1[0,:])+w2[0],
+                     u''.join(W1[1,:])+w2[1],
+                     u''.join(W1[2,:])+w2[2]]
+    
+            symop = [op.lstrip('+') for op in symop]
+            symop = [op.rstrip('0') for op in symop]
+            symop = [op.rstrip('+') for op in symop]
+            
+            trans_symop = symop
+            
+            operators += [','.join(trans_symop)]
+            metric.append(d)
+                
     sort = np.argsort(metric)
     op = operators[sort[0]]
 

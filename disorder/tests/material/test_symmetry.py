@@ -94,8 +94,6 @@ class test_symmetry(unittest.TestCase):
 
     def test_evaluate(self):
         
-        np.random.seed(13)
-
         operator = [u'-y+1/2,x-y,z-1/2']
         coordinate = [1,2,-3]
 
@@ -125,8 +123,8 @@ class test_symmetry(unittest.TestCase):
         
         uvw = symmetry.evaluate(operators, coordinate, translate=True)
         np.testing.assert_array_almost_equal(uvw, [[-y+1/2,x-y,z-1/2],
-                                                    [-y-1/2,y-x,z+1/2],
-                                                    [z,x,y]])
+                                                   [-y-1/2,y-x,z+1/2],
+                                                   [z,x,y]])
 
         uvw = symmetry.evaluate(operators, coordinate, translate=False)
         np.testing.assert_array_almost_equal(uvw, [[-y,x-y,z],
