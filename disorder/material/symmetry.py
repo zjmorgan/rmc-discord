@@ -207,7 +207,7 @@ def bragg(x, y, z, sym, op):
 
         return x,y,z
 
-def whole(val, col=0):
+def rotation_operator(val, col=0):
 
     if (col == 0):
         sym = 'x'
@@ -226,18 +226,123 @@ def whole(val, col=0):
     else:
         sign = '-'
 
-    v = int(abs(val))
+    val = abs(val)
+    
+    q, r = int(val // 1), val % 1
 
-    if (v == 0):
-        w = ''
-    elif (v == 1):
-        w = sym
+    if (r < 0.47):
+        if (r < 0.24):
+            if (r < 0.16):
+                if (r < 0.12):
+                    if (r < 0.11):
+                        if (r < 0.09):
+                            num, den = q, '' # 0.0
+                        else:
+                            num, den = q*10+1, '/10' # 0.1
+                    else:
+                        num, den = q*9+1, '/9' # 0.1111....
+                else:
+                    if (r < 0.14):
+                        num, den = q*8+1, '/8' # 0.125
+                    else:
+                        num, den = q*7+1, '/7' # 0.1428...
+            else:
+                if (r < 0.19):
+                    num, den = q*6+1, '/6' # 0.1666...
+                else:
+                    if (r < 0.22):
+                        num, den = q*5+1, '/5' # 0.2
+                    else:
+                        num, den = q*9+2, '/9' # 0.2222...
+        else:
+            if (r < 0.37):
+                if (r < 0.28):
+                    num, den = q*4+1, '/4' # 0.25
+                else:
+                    if (r < 0.29):
+                        num, den = q*7+2, '/7' # 0.2857...
+                    else:
+                        if (r < 0.31):
+                            num, den = q*10+3, '/10' # 0.3
+                        else:
+                            num, den = q*3+1, '/3' # 0.3333...
+            else:
+                if (r < 0.42):
+                    if (r < 0.40):
+                        num, den = q*8+3, '/8' # 0.375
+                    else:
+                        num, den = q*5+2, '/5' # 0.4
+                else:
+                    if (r < 0.44):
+                        num, den = q*7+3, '/7' # 0.4285...
+                    else:
+                        num, den = q*9+4, '/9' # 0.4444...
     else:
-        w = str(v)+sym
+        if (r < 0.71):
+            if (r < 0.60):
+                if (r < 0.55):
+                    num, den = q*2+1, '/2' # 0.5
+                else:
+                    if (r < 0.57):
+                        num, den = q*9+5, '/9' # 0.5555...
+                    else:
+                        num, den = q*7+4, '/7' # 0.5714
+            else:
+                if (r < 0.62):
+                    num, den = q*5+3, '/5' # 0.6
+                else:
+                    if (r < 0.64):
+                        num, den = q*8+5, '/8' # 0.625
+                    else:
+                        if (r < 0.68):
+                            num, den = q*3+2, '/3' # 0.6666...
+                        else:
+                            num, den = q*10+7, '/10' # 0.7
+        else:
+            if (r < 0.80):
+                if (r < 0.74):
+                    num, den = q*7+5, '/7' # 0.7142...
+                else:
+                    if (r < 0.77) :
+                        num, den = q*4+3, '/4' # 0.75
+                    else:
+                        num, den = q*9+7, '/9' # 0.7777...
+            else:
+                if (r < 0.85):
+                    if (r < 0.83):
+                        num, den = q*5+4, '/5' # 0.8
+                    else:
+                        num, den = q*6+5, '/6' # 0.8333...
+                else:
+                    if (r < 0.87):
+                        num, den = q*7+6, '/7' # 0.8571
+                    else:
+                        if (r < 0.88):
+                            num, den = q*8+7, '/8' # 0.875
+                        else:
+                            if (r < 0.90):
+                                num, den = q*9+8, '/9' # 0.8888...
+                            else:
+                                if (r < 0.95):
+                                    num, den = q*10+9, '/10' # 0.9
+                                else:
+                                    num, den = q+1, '' # 1.0
+
+    if (val == 0):
+        w = ''
+    elif (val == 1):
+        w = sym
+    elif (val % 1 == 0):
+        w = str(num)+'*'+sym
+    else:
+        if (num == 1):
+            w = sym+den
+        else:
+            w = str(num)+'*'+sym+den
 
     return sign+w
 
-def fraction(val):
+def translation_operator(val):
 
     if (val >= 0):
         sign = '+'
@@ -433,10 +538,10 @@ def reverse(symops):
 
     w_inv = -np.einsum('ijk,ik->ij', W_inv, w)
 
-    W_inv = np.array([whole(c,col=i%3) for i, c \
+    W_inv = np.array([rotation_operator(c,col=i%3) for i, c \
                       in enumerate(W_inv.flatten())])
 
-    w_inv = np.array([fraction(c) for c in w_inv.flatten()])
+    w_inv = np.array([translation_operator(c) for c in w_inv.flatten()])
 
     W_inv = W_inv.reshape(n,3,3)
     w_inv = w_inv.reshape(n,3)
@@ -468,7 +573,7 @@ def inverse(symops):
 
     W_inv = np.linalg.inv(W).round()
 
-    W_inv = np.array([whole(c,col=(i//3)%3) for i, c \
+    W_inv = np.array([rotation_operator(c,col=(i//3)%3) for i, c \
                       in enumerate(W_inv.flatten())])
 
     W_inv = W_inv.reshape(n,3,3)
@@ -515,8 +620,9 @@ def binary(symop0, symop1):
     W = np.einsum('ijk,ikl->ijl', W0, W1).round()
     w = np.einsum('ijk,ik->ij', W0, w1)+w0
 
-    W = np.array([whole(c,col=i%3) for i, c in enumerate(W.flatten())])
-    w = np.array([fraction(c) for c in w.flatten()])
+    W = np.array([rotation_operator(c,col=i%3) \
+                  for i, c in enumerate(W.flatten())])
+    w = np.array([translation_operator(c) for c in w.flatten()])
 
     W = W.reshape(n0,3,3)
     w = w.reshape(n0,3)
@@ -553,7 +659,8 @@ def binary_mag(symop0, symop1):
 
     W = np.einsum('ijk,ikl->ijl', W0, W1).round()
 
-    W = np.array([whole(c,col=i%3) for i, c in enumerate(W.flatten())])
+    W = np.array([rotation_operator(c,col=i%3) \
+                  for i, c in enumerate(W.flatten())])
 
     W = W.reshape(n0,3,3)
 
@@ -687,7 +794,7 @@ def site(symops, coordinates, A, tol=1e-1):
     for symop in symops:
 
         xyz = evaluate([symop], coordinates, translate=True)
-
+        
         x, y, z = np.array(xyz).flatten()
 
         du, dv, dw = x-u, y-v, z-w
@@ -729,7 +836,8 @@ def site(symops, coordinates, A, tol=1e-1):
 
         mask = dist < tol
 
-        W1 = np.array([whole(c,col=i%3) for i, c in enumerate(W1.flatten())])
+        W1 = np.array([rotation_operator(c,col=i%3) \
+                       for i, c in enumerate(W1.flatten())])
 
         W1 = W1.reshape(3,3)
 
@@ -737,7 +845,7 @@ def site(symops, coordinates, A, tol=1e-1):
 
             w2 = w0+w1+np.array([iu,iv,iw])
 
-            w2 = np.array([fraction(c) for c in w2.flatten()])
+            w2 = np.array([translation_operator(c) for c in w2.flatten()])
 
             symop = [u''.join(W1[0,:])+w2[0],
                      u''.join(W1[1,:])+w2[1],
@@ -925,8 +1033,9 @@ def site(symops, coordinates, A, tol=1e-1):
     T /= nm
     t /= nm
 
-    T = np.array([whole(c,col=i%3) for i, c in enumerate(T.flatten())])
-    t = np.array([fraction(c) for c in t.flatten()])
+    T = np.array([rotation_operator(c, col=i%3) \
+                  for i, c in enumerate(T.flatten())])
+    t = np.array([translation_operator(c) for c in t.flatten()])
 
     T = T.reshape(n,3,3)
     t = t.reshape(n,3)
