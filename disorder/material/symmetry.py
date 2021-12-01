@@ -229,104 +229,107 @@ def rotation_operator(val, col=0):
     val = abs(val)
     
     q, r = int(val // 1), val % 1
-
-    if (r < 0.47):
-        if (r < 0.24):
-            if (r < 0.16):
-                if (r < 0.12):
-                    if (r < 0.11):
-                        if (r < 0.09):
-                            num, den = q, '' # 0.0
-                        else:
-                            num, den = q*10+1, '/10' # 0.1
-                    else:
-                        num, den = q*9+1, '/9' # 0.1111....
-                else:
-                    if (r < 0.14):
-                        num, den = q*8+1, '/8' # 0.125
-                    else:
-                        num, den = q*7+1, '/7' # 0.1428...
-            else:
-                if (r < 0.19):
-                    num, den = q*6+1, '/6' # 0.1666...
-                else:
-                    if (r < 0.22):
-                        num, den = q*5+1, '/5' # 0.2
-                    else:
-                        num, den = q*9+2, '/9' # 0.2222...
-        else:
-            if (r < 0.37):
-                if (r < 0.28):
-                    num, den = q*4+1, '/4' # 0.25
-                else:
-                    if (r < 0.29):
-                        num, den = q*7+2, '/7' # 0.2857...
-                    else:
-                        if (r < 0.31):
-                            num, den = q*10+3, '/10' # 0.3
-                        else:
-                            num, den = q*3+1, '/3' # 0.3333...
-            else:
-                if (r < 0.42):
-                    if (r < 0.40):
-                        num, den = q*8+3, '/8' # 0.375
-                    else:
-                        num, den = q*5+2, '/5' # 0.4
-                else:
-                    if (r < 0.44):
-                        num, den = q*7+3, '/7' # 0.4285...
-                    else:
-                        num, den = q*9+4, '/9' # 0.4444...
+    
+    if (r == 0):
+        num, den = q, ''
     else:
-        if (r < 0.71):
-            if (r < 0.60):
-                if (r < 0.55):
-                    num, den = q*2+1, '/2' # 0.5
-                else:
-                    if (r < 0.57):
-                        num, den = q*9+5, '/9' # 0.5555...
-                    else:
-                        num, den = q*7+4, '/7' # 0.5714
-            else:
-                if (r < 0.62):
-                    num, den = q*5+3, '/5' # 0.6
-                else:
-                    if (r < 0.64):
-                        num, den = q*8+5, '/8' # 0.625
-                    else:
-                        if (r < 0.68):
-                            num, den = q*3+2, '/3' # 0.6666...
-                        else:
-                            num, den = q*10+7, '/10' # 0.7
-        else:
-            if (r < 0.80):
-                if (r < 0.74):
-                    num, den = q*7+5, '/7' # 0.7142...
-                else:
-                    if (r < 0.77) :
-                        num, den = q*4+3, '/4' # 0.75
-                    else:
-                        num, den = q*9+7, '/9' # 0.7777...
-            else:
-                if (r < 0.85):
-                    if (r < 0.83):
-                        num, den = q*5+4, '/5' # 0.8
-                    else:
-                        num, den = q*6+5, '/6' # 0.8333...
-                else:
-                    if (r < 0.87):
-                        num, den = q*7+6, '/7' # 0.8571
-                    else:
-                        if (r < 0.88):
-                            num, den = q*8+7, '/8' # 0.875
-                        else:
-                            if (r < 0.90):
-                                num, den = q*9+8, '/9' # 0.8888...
+        if (r < 0.47):
+            if (r < 0.24):
+                if (r < 0.16):
+                    if (r < 0.12):
+                        if (r < 0.11):
+                            if (r < 0.09):
+                                num, den = q, '' # 0.0
                             else:
-                                if (r < 0.95):
-                                    num, den = q*10+9, '/10' # 0.9
+                                num, den = q*10+1, '/10' # 0.1
+                        else:
+                            num, den = q*9+1, '/9' # 0.1111....
+                    else:
+                        if (r < 0.14):
+                            num, den = q*8+1, '/8' # 0.125
+                        else:
+                            num, den = q*7+1, '/7' # 0.1428...
+                else:
+                    if (r < 0.19):
+                        num, den = q*6+1, '/6' # 0.1666...
+                    else:
+                        if (r < 0.22):
+                            num, den = q*5+1, '/5' # 0.2
+                        else:
+                            num, den = q*9+2, '/9' # 0.2222...
+            else:
+                if (r < 0.37):
+                    if (r < 0.28):
+                        num, den = q*4+1, '/4' # 0.25
+                    else:
+                        if (r < 0.29):
+                            num, den = q*7+2, '/7' # 0.2857...
+                        else:
+                            if (r < 0.31):
+                                num, den = q*10+3, '/10' # 0.3
+                            else:
+                                num, den = q*3+1, '/3' # 0.3333...
+                else:
+                    if (r < 0.42):
+                        if (r < 0.40):
+                            num, den = q*8+3, '/8' # 0.375
+                        else:
+                            num, den = q*5+2, '/5' # 0.4
+                    else:
+                        if (r < 0.44):
+                            num, den = q*7+3, '/7' # 0.4285...
+                        else:
+                            num, den = q*9+4, '/9' # 0.4444...
+        else:
+            if (r < 0.71):
+                if (r < 0.60):
+                    if (r < 0.55):
+                        num, den = q*2+1, '/2' # 0.5
+                    else:
+                        if (r < 0.57):
+                            num, den = q*9+5, '/9' # 0.5555...
+                        else:
+                            num, den = q*7+4, '/7' # 0.5714
+                else:
+                    if (r < 0.62):
+                        num, den = q*5+3, '/5' # 0.6
+                    else:
+                        if (r < 0.64):
+                            num, den = q*8+5, '/8' # 0.625
+                        else:
+                            if (r < 0.68):
+                                num, den = q*3+2, '/3' # 0.6666...
+                            else:
+                                num, den = q*10+7, '/10' # 0.7
+            else:
+                if (r < 0.80):
+                    if (r < 0.74):
+                        num, den = q*7+5, '/7' # 0.7142...
+                    else:
+                        if (r < 0.77) :
+                            num, den = q*4+3, '/4' # 0.75
+                        else:
+                            num, den = q*9+7, '/9' # 0.7777...
+                else:
+                    if (r < 0.85):
+                        if (r < 0.83):
+                            num, den = q*5+4, '/5' # 0.8
+                        else:
+                            num, den = q*6+5, '/6' # 0.8333...
+                    else:
+                        if (r < 0.87):
+                            num, den = q*7+6, '/7' # 0.8571
+                        else:
+                            if (r < 0.88):
+                                num, den = q*8+7, '/8' # 0.875
+                            else:
+                                if (r < 0.90):
+                                    num, den = q*9+8, '/9' # 0.8888...
                                 else:
-                                    num, den = q+1, '' # 1.0
+                                    if (r < 0.95):
+                                        num, den = q*10+9, '/10' # 0.9
+                                    else:
+                                        num, den = q+1, '' # 1.0
 
     if (val == 0):
         w = ''
@@ -687,18 +690,23 @@ def classification(symops):
 
     n = len(symops)
 
-    W_0 = evaluate(symops, [1,0,0], translate=False)
-    W_1 = evaluate(symops, [0,1,0], translate=False)
-    W_2 = evaluate(symops, [0,0,1], translate=False)
+    code = evaluate_op(symops, translate=False)
+
+    W_0 = evaluate_code(code, [1,0,0])
+    W_1 = evaluate_code(code, [0,1,0])
+    W_2 = evaluate_code(code, [0,0,1])
 
     W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
 
     W_det = np.linalg.det(W)
     W_tr = np.trace(W, axis1=1, axis2=2)
 
+    w = evaluate(symops, [0,0,0], translate=True)
+    
+    w_symop_ord = np.zeros((n,3))
+
     rotations, ks = [], []
 
-    symops_ord = []
     for i, symop in enumerate(symops):
 
         if np.isclose(W_det[i], 1):
@@ -726,17 +734,17 @@ def classification(symops):
 
         rotations.append(rotation)
         ks.append(k)
-
-        symop_ord = [symop]
+        
+        W0, w0 = W[i,:,:].copy(), w[i,:].copy()
+        W1, w1 = W[i,:,:].copy(), w[i,:].copy()
 
         for _ in range(1,k):
-            symop_ord = binary(symop_ord, [symop])
-        symops_ord += symop_ord
+            W1 = np.dot(W0,W1)
+            w1 = np.dot(W0,w1)+w0
 
+        w_symop_ord[i,:] = w1
+    
     k_inv = 1/np.array(ks)
-
-    w_symop_ord = evaluate(symops_ord, [0,0,0], translate=True)
-    w_symop_ord = w_symop_ord.reshape(n,3)
 
     wgs = k_inv[:,np.newaxis]*w_symop_ord
 
@@ -810,7 +818,6 @@ def site(symops, coordinates, A, tol=1e-1):
         nu, nv, nw = int(round(u-du)), int(round(v-dv)), int(round(w-dw))
 
         w0 = np.array([nu,nv,nw])
-        # W0 = np.eye(3)
 
         w1 = evaluate([symop], [0,0,0], translate=True).flatten()
 
@@ -1065,10 +1072,13 @@ def laue_id(symops):
     symop_id = [11,1]
 
     for c, sym in enumerate(list(laue_sym.keys())):
-        if (np.all([symops[p] in laue_sym.get(sym) for p in range(n)]) and \
-            len(laue_sym.get(sym)) == n):
+        
+        all_symops = np.all([symops[p] in laue_sym.get(sym) for p in range(n)]) 
+        len_symops = len(laue_sym.get(sym))
+        
+        if (all_symops and len_symops == n):
 
-            symop_id = [c,len(laue_sym.get(sym))]
+            symop_id = [c,len_symops]
 
     return symop_id
 
@@ -1133,11 +1143,9 @@ def operators(invert=False):
 
     if invert:
 
-        symmetry = list(laue.keys())
+        for symmetry in list(laue.keys()):
 
-        for sym in symmetry:
-
-            laue[sym] = inverse(laue.get(sym))
+            laue[symmetry] = inverse(laue.get(symmetry))
 
     return laue
 

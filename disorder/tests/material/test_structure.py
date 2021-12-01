@@ -8,7 +8,21 @@ from disorder.material import structure, crystal
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
 
+# import pstats, cProfile
+
 class test_structure(unittest.TestCase):
+    
+    # def setUp(self):
+        
+    #     self.pr = cProfile.Profile()
+    #     self.pr.enable()
+
+    # def tearDown(self):
+        
+    #     p = pstats.Stats(self.pr)
+    #     p.strip_dirs()
+    #     p.sort_stats('cumtime')
+    #     p.print_stats()
     
     def test_factor(self):
         
