@@ -5,6 +5,7 @@ discord (*noun*) a lack of harmony or agreement
 <!-- <img src="docs/rmc-discord.png" alt="discord (*noun*) a lack of harmony or agreement" width="128" height="128"> --->
 
 *rmc-discord* is an atomistic reverse Monte Carlo (RMC) refinement program for the analysis of diffuse scattering from disordered single crystals.
+https://doi.org/10.1107/S1600576721010141
 
 ## **Overview**
 * [Installation](docs/installation)
