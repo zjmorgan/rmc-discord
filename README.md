@@ -18,3 +18,4 @@ There are several outputs:
 - VTK file of recalculated diffuse scattering pattern
 
 The program is written in Python with underlying performance-critical extensions written in Cython and includes a PyQt5 GUI.
+https://doi.org/10.1107/S1600576721010141
