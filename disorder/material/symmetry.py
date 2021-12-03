@@ -513,11 +513,13 @@ def evaluate_disp(operator, displacements):
                   [U12,U22,U23],
                   [U13,U23,U33]])
 
-    W_0 = evaluate(operator, [1,0,0], translate=False)
-    W_1 = evaluate(operator, [0,1,0], translate=False)
-    W_2 = evaluate(operator, [0,0,1], translate=False)
+    code = evaluate_op(operator, translate=False)
 
-    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3).T
+    W_0 = evaluate_code(code, [1,0,0])
+    W_1 = evaluate_code(code, [0,1,0])
+    W_2 = evaluate_code(code, [0,0,1])
+
+    W = np.hstack((W_0,W_1,W_2)).T.reshape(3,3).T
 
     Up = np.dot(np.dot(W,U),W.T)
 
@@ -531,11 +533,13 @@ def reverse(symops):
 
     w = w.reshape(n,3)
 
-    W_0 = evaluate(symops, [1,0,0], translate=False)
-    W_1 = evaluate(symops, [0,1,0], translate=False)
-    W_2 = evaluate(symops, [0,0,1], translate=False)
+    code = evaluate_op(symops, translate=False)
 
-    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
+    W_0 = evaluate_code(code, [1,0,0])
+    W_1 = evaluate_code(code, [0,1,0])
+    W_2 = evaluate_code(code, [0,0,1])
+    
+    W = np.hstack((W_0,W_1,W_2)).T.reshape(3,3,n).T
 
     W_inv = np.linalg.inv(W).round()
 
@@ -567,12 +571,14 @@ def reverse(symops):
 def inverse(symops):
 
     n = len(symops)
+    
+    code = evaluate_op(symops, translate=False)
 
-    W_0 = evaluate(symops, [1,0,0], translate=False)
-    W_1 = evaluate(symops, [0,1,0], translate=False)
-    W_2 = evaluate(symops, [0,0,1], translate=False)
+    W_0 = evaluate_code(code, [1,0,0])
+    W_1 = evaluate_code(code, [0,1,0])
+    W_2 = evaluate_code(code, [0,0,1])
 
-    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
+    W = np.hstack((W_0,W_1,W_2)).T.reshape(3,3,n).T
 
     W_inv = np.linalg.inv(W).round()
 
@@ -617,8 +623,8 @@ def binary(symop0, symop1):
     W1_1 = evaluate_code(code1, [0,1,0])
     W1_2 = evaluate_code(code1, [0,0,1])
 
-    W0 = np.vstack((W0_0.T,W0_1.T,W0_2.T)).reshape(3,3,n0).T
-    W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3,n1).T
+    W0 = np.hstack((W0_0,W0_1,W0_2)).T.reshape(3,3,n0).T
+    W1 = np.hstack((W1_0,W1_1,W1_2)).T.reshape(3,3,n1).T
 
     W = np.einsum('ijk,ikl->ijl', W0, W1).round()
     w = np.einsum('ijk,ik->ij', W0, w1)+w0
@@ -657,8 +663,8 @@ def binary_mag(symop0, symop1):
     W1_1 = evaluate_mag(symop1, [0,1,0])
     W1_2 = evaluate_mag(symop1, [0,0,1])
 
-    W0 = np.vstack((W0_0.T,W0_1.T,W0_2.T)).reshape(3,3,n0).T
-    W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3,n1).T
+    W0 = np.hstack((W0_0,W0_1,W0_2)).T.reshape(3,3,n0).T
+    W1 = np.hstack((W1_0,W1_1,W1_2)).T.reshape(3,3,n1).T
 
     W = np.einsum('ijk,ikl->ijl', W0, W1).round()
 
@@ -696,7 +702,7 @@ def classification(symops):
     W_1 = evaluate_code(code, [0,1,0])
     W_2 = evaluate_code(code, [0,0,1])
 
-    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
+    W = np.hstack((W_0,W_1,W_2)).T.reshape(3,3,n).T
 
     W_det = np.linalg.det(W)
     W_tr = np.trace(W, axis1=1, axis2=2)
@@ -766,7 +772,7 @@ def absence(symops, h, k, l):
     W_1 = evaluate(symops, [0,1,0], translate=False)
     W_2 = evaluate(symops, [0,0,1], translate=False)
 
-    W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
+    W = np.hstack((W_0,W_1,W_2)).T.reshape(3,3,n).T
 
     rotation, k, wg = classification(symops)
 
@@ -798,6 +804,8 @@ def site(symops, coordinates, A, tol=1e-1):
     U = U.flatten()
     V = V.flatten()
     W = W.flatten()
+    
+    Ws, ws = [], []
 
     for symop in symops:
 
@@ -827,7 +835,7 @@ def site(symops, coordinates, A, tol=1e-1):
         W1_1 = evaluate_code(code, [0,1,0])
         W1_2 = evaluate_code(code, [0,0,1])
 
-        W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3).T
+        W1 = np.hstack((W1_0,W1_1,W1_2)).T.reshape(3,3).T
 
         up, vp, wp = np.dot(W1, [u,v,w])+w1+w0
 
@@ -843,20 +851,20 @@ def site(symops, coordinates, A, tol=1e-1):
 
         mask = dist < tol
 
-        W1 = np.array([rotation_operator(c,col=i%3) \
-                       for i, c in enumerate(W1.flatten())])
+        Wo = np.array([rotation_operator(c,col=i%3) \
+                      for i, c in enumerate(W1.flatten())])
 
-        W1 = W1.reshape(3,3)
+        Wo = Wo.reshape(3,3)
 
         for (d, iu, iv, iw) in zip(dist[mask],U[mask],V[mask],W[mask]):
 
             w2 = w0+w1+np.array([iu,iv,iw])
 
-            w2 = np.array([translation_operator(c) for c in w2.flatten()])
+            wo = np.array([translation_operator(c) for c in w2.flatten()])
 
-            symop = [u''.join(W1[0,:])+w2[0],
-                     u''.join(W1[1,:])+w2[1],
-                     u''.join(W1[2,:])+w2[2]]
+            symop = [u''.join(Wo[0,:])+wo[0],
+                     u''.join(Wo[1,:])+wo[1],
+                     u''.join(Wo[2,:])+wo[2]]
 
             symop = [op.lstrip('+') for op in symop]
             symop = [op.rstrip('0') for op in symop]
@@ -866,32 +874,35 @@ def site(symops, coordinates, A, tol=1e-1):
 
             operators += [','.join(trans_symop)]
             metric.append(d)
+            
+            Ws.append(W1)
+            ws.append(w2)
 
     sort = np.argsort(metric)
-    op = operators[sort[0]]
+    operators = [operators[i] for i in sort]
 
+    op = operators[0]
     G = set({op})
 
-    for i in range(len(operators)-1):
+    for i in range(1,len(operators)):
 
-        op = operators[sort[i+1]]
+        op_0 = operators[i]
+        
+        code0 = evaluate_op([op_0], translate=False)
 
-        G.add(op)
+        W0_0 = evaluate_code(code0, [1,0,0])
+        W0_1 = evaluate_code(code0, [0,1,0])
+        W0_2 = evaluate_code(code0, [0,0,1])
+
+        W0 = np.hstack((W0_0,W0_1,W0_2)).T.reshape(3,3).T
+
+        w0 = evaluate([op_0], [0,0,0], translate=True)
+
         Gc = G.copy()
-
-        for op_0 in Gc:
-
-            code0 = evaluate_op([op_0], translate=False)
-
-            W0_0 = evaluate_code(code0, [1,0,0])
-            W0_1 = evaluate_code(code0, [0,1,0])
-            W0_2 = evaluate_code(code0, [0,0,1])
-
-            W0 = np.vstack((W0_0.T,W0_1.T,W0_2.T)).reshape(3,3).T
-
-            w0 = evaluate([op_0], [0,0,0], translate=True)
-
-            for op_1 in Gc:
+        G.add(op_0)
+        
+        for op_1 in Gc:
+            if (op_0 != op_1):
 
                 code1 = evaluate_op([op_1], translate=False)
 
@@ -899,18 +910,16 @@ def site(symops, coordinates, A, tol=1e-1):
                 W1_1 = evaluate_code(code1, [0,1,0])
                 W1_2 = evaluate_code(code1, [0,0,1])
 
-                W1 = np.vstack((W1_0.T,W1_1.T,W1_2.T)).reshape(3,3).T
+                W1 = np.hstack((W1_0,W1_1,W1_2)).T.reshape(3,3).T
 
                 w1 = evaluate([op_1], [0,0,0], translate=True)
 
-                if (op_0 != op_1):
+                W = np.dot(W0, W1)
+                w = np.dot(W0, w1.flatten())+w0.flatten()
 
-                    W = np.dot(W0, W1)
-                    w = np.dot(W0, w1.flatten())+w0.flatten()
-
-                    if (np.allclose(W, np.eye(3)) and np.linalg.norm(w) > 0):
-                        G.discard(op)
-
+                if (np.allclose(W, np.eye(3)) and np.linalg.norm(w) > 0):
+                    G.discard(op_0)
+    
     n = 1
 
     T = np.zeros((n,3,3))
@@ -927,7 +936,7 @@ def site(symops, coordinates, A, tol=1e-1):
         W_1 = evaluate_code(code, [0,1,0])
         W_2 = evaluate_code(code, [0,0,1])
 
-        W = np.vstack((W_0.T,W_1.T,W_2.T)).reshape(3,3,n).T
+        W = np.hstack((W_0,W_1,W_2)).T.reshape(3,3,n).T
 
         w = evaluate([op], [0,0,0], translate=True)
 

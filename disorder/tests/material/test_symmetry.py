@@ -5,7 +5,21 @@ import numpy as np
 
 from disorder.material import symmetry, crystal
 
+# import pstats, cProfile
+
 class test_symmetry(unittest.TestCase):
+    
+    # def setUp(self):
+        
+    #     self.pr = cProfile.Profile()
+    #     self.pr.enable()
+
+    # def tearDown(self):
+        
+    #     p = pstats.Stats(self.pr)
+    #     p.strip_dirs()
+    #     p.sort_stats('cumtime')
+    #     p.print_stats()
 
     def test_translation_operator(self):
 
@@ -329,7 +343,7 @@ class test_symmetry(unittest.TestCase):
         self.assertEqual(pg, '2')
         self.assertEqual(mult, 3)
         self.assertEqual(sp_pos, '1/2,0,z')
-
+        
         coordinates = [0.3333,0.6667,0.1234]
         pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '3')
