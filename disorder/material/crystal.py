@@ -1110,6 +1110,7 @@ def pairs(u, v, w, ion, A, extend=False):
         m, c_uvw = [], []
         m.append(l[0])
         c_uvw.append((iu[0],iv[0],iw[0]))
+        ind = -1
         for ind in range(ion_lab.shape[0]-1):
             if ion_lab[ind] != ion_lab[ind+1]:
                 key = c, ion_ref[ind]
