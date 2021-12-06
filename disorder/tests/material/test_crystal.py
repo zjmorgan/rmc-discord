@@ -699,9 +699,9 @@ class test_crystal(unittest.TestCase):
 
         u, v, w = np.array([1,1,0]), np.array([-1,1,2]), np.array([2,-2,2])
 
-        u = u/np.linalg.norm(u)
-        v = v/np.linalg.norm(v)
-        w = w/np.linalg.norm(w)
+        u /= np.linalg.norm(u)
+        v /= np.linalg.norm(v)
+        w /= np.linalg.norm(w)
 
         R = np.stack((u,v,w)).T
 

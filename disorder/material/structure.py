@@ -244,10 +244,7 @@ class UnitCell:
         ind = self.__index
         inv = self.__inverse
         
-        operators = self.__op[ind]
-        operators_p = self.__op[mask][inv]
-        
-        operators = symmetry.binary(operators_p, operators)
+        operators = symmetry.binary(self.__op[ind], self.__op[mask][inv])
         
         up, vp, wp = u[inv], v[inv], w[inv]      
         
@@ -311,10 +308,7 @@ class UnitCell:
         ind = self.__index
         inv = self.__inverse
         
-        operators = self.__op[ind]
-        operators_p = self.__op[mask][inv]
-        
-        operators = symmetry.binary(operators_p, operators)
+        operators = symmetry.binary(self.__op[ind], self.__op[mask][inv])
 
         U11p = U11[inv]
         U22p = U22[inv]
@@ -398,10 +392,8 @@ class UnitCell:
         ind = self.__index
         inv = self.__inverse
         
-        operators = self.__mag_op[ind]
-        operators_p = self.__mag_op[mask][inv]
-        
-        operators = symmetry.binary_mag(operators_p, operators)
+        operators = symmetry.binary_mag(self.__mag_op[ind], 
+                                        self.__mag_op[mask][inv])
 
         mu1p = mu1[inv]
         mu2p = mu2[inv]

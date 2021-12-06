@@ -8,7 +8,7 @@ from disorder.material import structure, crystal
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
 
-import pstats, cProfile
+# import pstats, cProfile
 
 class test_structure(unittest.TestCase):
     

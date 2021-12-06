@@ -1056,21 +1056,21 @@ def site(symops, coordinates, A, tol=1e-1):
     T = T.reshape(n,3,3)
     t = t.reshape(n,3)
 
-    spposs = []
+    sp_poss = []
     for i in range(n):
-        sppos = [u''.join(T[i,0,:])+t[i,0],
+        sp_pos = [u''.join(T[i,0,:])+t[i,0],
                  u''.join(T[i,1,:])+t[i,1],
                  u''.join(T[i,2,:])+t[i,2]]
 
-        sppos = [op.lstrip('+') for op in sppos]
-        sppos = [op.rstrip('0') for op in sppos]
-        sppos = [op.rstrip('+') for op in sppos]
-        sppos = ['0' if op == '' else op for op in sppos]
+        sp_pos = [op.lstrip('+') for op in sp_pos]
+        sp_pos = [op.rstrip('0') for op in sp_pos]
+        sp_pos = [op.rstrip('+') for op in sp_pos]
+        sp_pos = ['0' if op == '' else op for op in sp_pos]
 
-        sppos = ','.join(sppos)
-        spposs.append(sppos)
+        sp_pos = ','.join(sp_pos)
+        sp_poss.append(sp_pos)
 
-    return pg, mult, sppos
+    return pg, mult, sp_pos
 
 def laue_id(symops):
 

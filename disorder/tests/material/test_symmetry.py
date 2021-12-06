@@ -5,22 +5,8 @@ import numpy as np
 
 from disorder.material import symmetry, crystal
 
-# import pstats, cProfile
-
 class test_symmetry(unittest.TestCase):
     
-    # def setUp(self):
-        
-    #     self.pr = cProfile.Profile()
-    #     self.pr.enable()
-
-    # def tearDown(self):
-        
-    #     p = pstats.Stats(self.pr)
-    #     p.strip_dirs()
-    #     p.sort_stats('cumtime')
-    #     p.print_stats()
-
     def test_translation_operator(self):
 
         self.assertEqual(symmetry.translation_operator(0.0), '+0')
