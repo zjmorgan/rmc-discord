@@ -442,8 +442,12 @@ def heisenberg_adaptive(double [:,:,:,::1] Sx,
     cdef Py_ssize_t n_gen = 0
 
     cdef double T0, T1
+    
+    cdef double beta
 
     cdef bint accepted
+    
+    print(H)
 
     for t in range(N):
 
@@ -461,9 +465,13 @@ def heisenberg_adaptive(double [:,:,:,::1] Sx,
 
         H_orig = H
         H_cand = H_orig+E
+        
+        beta = 1.0/T_acc
+        
+        # print(T_acc)
 
         accepted = annealing_vector(Sx, Sy, Sz, vx, vy, vz,
-                                    E, T_acc, i, j, k, a)
+                                    E, beta, i, j, k, a)
 
         if accepted:
 
@@ -476,44 +484,40 @@ def heisenberg_adaptive(double [:,:,:,::1] Sx,
                 Sy_best[i,j,k,a] = vy
                 Sz_best[i,j,k,a] = vz 
 
+                ux, uy, uz = vx, vy, vz
+                
                 theta = atan2(uy,ux)
-                phi = acos(sqrt(ux**2+uy**2)/uz)
-
-            ux, uy, uz = vx, vy, vz
-
-            vx = sin(phi)*cos(theta+delta)
-            vy = sin(phi)*sin(theta+delta)
-            vz = cos(phi)
-
-            E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
-                          atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                          pair_ind, pair_ij, i, j, k, a)
-
-            H_orig = H
-            H_cand = H_orig+E
-
-            s0 = fabs(H_cand-H_best)/delta
-
-            s[i,j,k,a,0] = s0
-
-            if (s0 > s_max): smax = s0
-
-            vx = sin(phi+delta)*cos(theta)
-            vy = sin(phi+delta)*sin(theta)
-            vz = cos(phi+delta)
-
-            E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
-                          atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                          pair_ind, pair_ij, i, j, k, a)
-
-            H_orig = H
-            H_cand = H_orig+E
-
-            s1 = fabs(H_cand-H_best)/delta
-
-            s[i,j,k,a,1] = s1
-
-            if (s1 > s_max): smax = s1
+                phi = atan(sqrt(ux**2+uy**2)/uz)
+                
+                vx = sin(phi)*cos(theta+delta)
+                vy = sin(phi)*sin(theta+delta)
+                vz = cos(phi)
+    
+                E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
+                             atm_ind, img_ind_i, img_ind_j, img_ind_k,
+                             pair_ind, pair_ij, i, j, k, a)
+    
+                H_orig = H_best
+                H_cand = H_orig+E
+    
+                s0 = fabs(H_cand-H_best)/delta
+                s[i,j,k,a,0] = s0
+                if (s0 > s_max): smax = s0
+    
+                vx = sin(phi+delta)*cos(theta)
+                vy = sin(phi+delta)*sin(theta)
+                vz = cos(phi+delta)
+    
+                E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
+                             atm_ind, img_ind_i, img_ind_j, img_ind_k,
+                             pair_ind, pair_ij, i, j, k, a)
+    
+                H_orig = H_best
+                H_cand = H_orig+E
+    
+                s1 = fabs(H_cand-H_best)/delta
+                s[i,j,k,a,1] = s1
+                if (s1 > s_max): smax = s1
 
             n_acc += 1
 
@@ -536,13 +540,11 @@ def heisenberg_adaptive(double [:,:,:,::1] Sx,
                          J, A, g, B, atm_ind, img_ind_i, img_ind_j, img_ind_k,
                          pair_ind, pair_ij, i, j, k, a)
 
-            H_orig = H
+            H_orig = H_best
             H_cand = H_orig+E
 
             s0 = fabs(H_cand-H_best)/delta
-
             s[i,j,k,a,0] = s0
-
             if (s0 > s_max): smax = s0
 
             vx = sin(phi+delta)*cos(theta)
@@ -553,21 +555,20 @@ def heisenberg_adaptive(double [:,:,:,::1] Sx,
                          J, A, g, B, atm_ind, img_ind_i, img_ind_j, img_ind_k,
                          pair_ind, pair_ij, i, j, k, a)
 
-            H_orig = H
+            H_orig = H_best
             H_cand = H_orig+E
 
             s1 = fabs(H_cand-H_best)/delta
-
             s[i,j,k,a,1] = s1
-
             if (s1 > s_max): smax = s1
 
             T_gen[i,j,k,a,0] = s_max/s0*T0
             T_gen[i,j,k,a,1] = s_max/s1*T1
 
             T_acc = H_best
-
             T0_acc = H
+            
+            print(T_acc,T0_acc)
 
             k_gen[i,j,k,a,0] = (-1.0/c*log(T_gen[i,j,k,a,0]\
                                           /T0_gen[i,j,k,a,0]))**n
@@ -587,11 +588,12 @@ def heisenberg_adaptive(double [:,:,:,::1] Sx,
 
             T_gen[i,j,k,a,0] = T0_gen[i,j,k,a,0]\
                              * exp(-c*k_gen[i,j,k,a,0]**(1.0/n))
-
             T_gen[i,j,k,a,1] = T0_gen[i,j,k,a,1]\
                              * exp(-c*k_gen[i,j,k,a,1]**(1.0/n))
 
-            T_acc = T0_acc*exp(-c*k_acc**(1/n))
+            T_acc = T0_acc*exp(-c*k_acc**(1.0/n))
+            
+            print(T_acc, T0_acc, k_acc, (1.0/n))
             
 def energy(double [:,:,:,::1] Sx,
            double [:,:,:,::1] Sy,
