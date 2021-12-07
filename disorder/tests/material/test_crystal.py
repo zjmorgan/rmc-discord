@@ -697,7 +697,7 @@ class test_crystal(unittest.TestCase):
 
     def test_transform(self):
 
-        u, v, w = np.array([1,1,0]), np.array([-1,1,2]), np.array([2,-2,2])
+        u, v, w = np.array([1,1,0.]), np.array([-1,1,2.]), np.array([2,-2,2.])
 
         u /= np.linalg.norm(u)
         v /= np.linalg.norm(v)
