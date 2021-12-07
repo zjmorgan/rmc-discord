@@ -82,7 +82,7 @@ cdef (Py_ssize_t,
 
 cdef double sgn(double x):
 
-    if (x > 0.0): return 1.0
+    if (x > 0.0): return +1.0
     if (x < 0.0): return -1.0
 
     return x
@@ -476,42 +476,44 @@ def heisenberg_adaptive(double [:,:,:,::1] Sx,
                 Sy_best[i,j,k,a] = vy
                 Sz_best[i,j,k,a] = vz 
 
-                # theta = atan2(uy,ux)
-                # phi = acos(sqrt(ux**2+uy**2)/uz)
+                theta = atan2(uy,ux)
+                phi = acos(sqrt(ux**2+uy**2)/uz)
 
-                # vx = sin(phi)*cos(theta+delta)
-                # vy = sin(phi)*sin(theta+delta)
-                # vz = cos(phi)
+            ux, uy, uz = vx, vy, vz
 
-                # E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
-                #              atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                #              pair_ind, pair_ij, i, j, k, a)
+            vx = sin(phi)*cos(theta+delta)
+            vy = sin(phi)*sin(theta+delta)
+            vz = cos(phi)
 
-                # H_orig = H
-                # H_cand = H_orig+E
+            E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
+                          atm_ind, img_ind_i, img_ind_j, img_ind_k,
+                          pair_ind, pair_ij, i, j, k, a)
 
-                # s0 = fabs(H_cand-H_best)/delta
+            H_orig = H
+            H_cand = H_orig+E
 
-                # s[i,j,k,a,0] = s0
+            s0 = fabs(H_cand-H_best)/delta
 
-                # if (s0 > s_max): smax = s0
+            s[i,j,k,a,0] = s0
 
-                # vx = sin(phi+delta)*cos(theta)
-                # vy = sin(phi+delta)*sin(theta)
-                # vz = cos(phi+delta)
+            if (s0 > s_max): smax = s0
 
-                # E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
-                #              atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                #              pair_ind, pair_ij, i, j, k, a)
+            vx = sin(phi+delta)*cos(theta)
+            vy = sin(phi+delta)*sin(theta)
+            vz = cos(phi+delta)
 
-                # H_orig = H
-                # H_cand = H_orig+E
+            E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
+                          atm_ind, img_ind_i, img_ind_j, img_ind_k,
+                          pair_ind, pair_ij, i, j, k, a)
 
-                # s1 = fabs(H_cand-H_best)/delta
+            H_orig = H
+            H_cand = H_orig+E
 
-                # s[i,j,k,a,1] = s1
+            s1 = fabs(H_cand-H_best)/delta
 
-                # if (s1 > s_max): smax = s1
+            s[i,j,k,a,1] = s1
+
+            if (s1 > s_max): smax = s1
 
             n_acc += 1
 

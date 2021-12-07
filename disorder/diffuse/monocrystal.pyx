@@ -8,7 +8,6 @@ from cython.parallel import prange
 
 cimport cython
 
-from disorder.material cimport symmetry
 from disorder.material import tables
 
 from libc.math cimport M_PI, cos, sin, exp, sqrt, fabs, fmod, remainder
