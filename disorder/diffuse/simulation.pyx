@@ -8,7 +8,9 @@ from cython.parallel import prange
 
 cimport cython
 
-from libc.math cimport M_PI, sin, cos, acos, fabs, log, exp, sqrt, atan, atan2
+from libc.math cimport M_PI, fabs, log, exp, sqrt
+from libc.math cimport sin, cos, tan
+from libc.math cimport acos, atan, atan2
 
 cdef extern from "<random>" namespace "std":
     cdef cppclass mt19937:
@@ -80,42 +82,48 @@ cdef (Py_ssize_t,
 
     return i, j, k, a
 
-cdef double sgn(double x):
+cdef (double, double) random_gaussian_2d():
+    
+    cdef double x0, x1, w
 
-    if (x > 0.0): return +1.0
-    if (x < 0.0): return -1.0
+    w = 2.0
+    while (w >= 1.0):
+        x0 = 2.0*random()-1.0
+        x1 = 2.0*random()-1.0
+        w = x0*x0+x1*x1
+        
+    w = sqrt(-2.0*log(w)/w)
+    
+    return x0*w, x1*w
 
-    return x
-
-cdef double random_variable(double T):
-
+cdef double random_cauchy():
+    
     cdef double u = random()
+    
+    return tan(M_PI*(u-0.5))
 
-    return sgn(u-0.5)*T*((1+1/T)**fabs(2*u-1)-1)
+# cdef (double, double, double) vector_candidate_cauchy(double sx,
+#                                                       double sy,
+#                                                       double sz,
+#                                                       double T):
 
-cdef (double, double, double) vector_candidate(double sx,
-                                               double sy,
-                                               double sz,
-                                               double Tu,
-                                               double Tv):
+#     cdef double theta = atan2(sy,sx)
+#     cdef double phi = atan(sqrt(sx**2+sy**2)/sz)
 
-    cdef double theta = atan2(sy,sx)
-    cdef double phi = atan(sqrt(sx**2+sy**2)/sz)
+#     cdef double dt = 2*M_PI*
+#     cdef double dp = M_PI*(0.5*(1+random_variable(Tv)))
 
-    cdef double dt = 2*M_PI*(0.5*(1+random_variable(Tu)))
-    cdef double dp = M_PI*(0.5*(1+random_variable(Tv)))
+#     theta += dt
+#     phi += dp
 
-    theta += dt
-    phi += dp
+#     theta %= 2*M_PI
+#     phi %= M_PI
 
-    theta %= 2*M_PI
-    phi %= M_PI
+#     sx = sin(phi)*cos(theta)
+#     sy = sin(phi)*sin(theta)
+#     sz = cos(phi)
 
-    sx = sin(phi)*cos(theta)
-    sy = sin(phi)*sin(theta)
-    sz = cos(phi)
-
-    return sx, sy, sz
+#     return sx, sy, sz
 
 cdef (double, double, double) random_vector_candidate():
 
@@ -147,7 +155,7 @@ cdef (double, double, double) ising_vector_candidate(double ux,
 
     return -ux, -uy, -uz
 
-cdef bint annealing_vector(double [:,:,:,::1] Sx,
+cdef void annealing_vector(double [:,:,:,::1] Sx,
                            double [:,:,:,::1] Sy,
                            double [:,:,:,::1] Sz,
                            double sx,
@@ -165,9 +173,6 @@ cdef bint annealing_vector(double [:,:,:,::1] Sx,
         Sx[i,j,k,a] = sx
         Sy[i,j,k,a] = sy
         Sz[i,j,k,a] = sz
-        return True
-    else:
-        return False
 
 cdef double magnetic(double [:,:,:,::1] Sx,
                      double [:,:,:,::1] Sy,
@@ -316,284 +321,6 @@ def heisenberg(double [:,:,:,::1] Sx,
             beta = exp(log(beta)-constant)
         else:
             beta = beta-constant
-
-def heisenberg_adaptive(double [:,:,:,::1] Sx,
-                        double [:,:,:,::1] Sy,
-                        double [:,:,:,::1] Sz,
-                        double [:,:,::1] J,
-                        double [:,:,::1] A,
-                        double [:,:,::1] g,
-                        double [::1] B,
-                        long [:,::1] atm_ind,
-                        long [:,::1] img_ind_i,
-                        long [:,::1] img_ind_j,
-                        long [:,::1] img_ind_k,
-                        long [:,::1] pair_ind,
-                        long [:,::1] pair_ij,
-                        Py_ssize_t N,
-                        Py_ssize_t N_acc,
-                        Py_ssize_t N_gen,
-                        double c,
-                        double delta):
-
-    cdef Py_ssize_t nu = Sx.shape[0]
-    cdef Py_ssize_t nv = Sx.shape[1]
-    cdef Py_ssize_t nw = Sx.shape[2]
-    cdef Py_ssize_t n_atm = Sx.shape[3]
-
-    initialize_random(nu, nv, nw, n_atm)
-
-    cdef Py_ssize_t i, j, k, a, p, t
-    cdef double E
-    
-    cdef Py_ssize_t n = nu*nv*nw*n_atm*2
-    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
-
-    cdef double ux, uy, uz
-    cdef double vx, vy, vz
-
-    Sx_best_np, Sy_best_np, Sz_best_np = np.copy(Sx), np.copy(Sy), np.copy(Sz)
-
-    cdef double [:,:,:,::1] Sx_best = Sx_best_np
-    cdef double [:,:,:,::1] Sy_best = Sy_best_np
-    cdef double [:,:,:,::1] Sz_best = Sz_best_np
-
-    e_np = energy(Sx, Sy, Sz, J, A, g, B, 
-                  atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                  pair_ind, pair_ij)
-
-    cdef double [:,:,:,:,::1] e = e_np
-
-    cdef double H = 0
-
-    for i in range(nu):
-        for j in range(nv):
-            for k in range(nw):
-                for a in range(n_atm):
-                    for p in range(n_pairs+2):
-                        H += e[i,j,k,a,p]
-
-    cdef double H_best = H
-    cdef double H_orig = H
-    cdef double H_cand = H
-
-    cdef double T0_acc = H
-    cdef double T_acc = H
-
-    T0_gen_np = np.ones((nu,nv,nw,n_atm,2))
-    T_gen_np = np.ones((nu,nv,nw,n_atm,2))
-
-    cdef double [:,:,:,:,::1] T0_gen = T0_gen_np
-    cdef double [:,:,:,:,::1] T_gen = T_gen_np
-
-    cdef double s_max, s0, s1
-
-    s_np = np.zeros((nu,nv,nw,n_atm,2))
-
-    cdef double [:,:,:,:,::1] s = s_np
-
-    cdef double theta, phi
-
-    for i in range(nu):
-        for j in range(nv):
-            for k in range(nw):
-                for a in range(n_atm):
-
-                    ux, uy, uz = Sx[i,j,k,a], Sy[i,j,k,a], Sz[i,j,k,a]
-
-                    theta = atan2(uy,ux)
-                    phi = atan(sqrt(ux**2+uy**2)/uz)
-
-                    vx = sin(phi)*cos(theta+delta)
-                    vy = sin(phi)*sin(theta+delta)
-                    vz = cos(phi)
-
-                    E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g,
-                                 B, atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                                 pair_ind, pair_ij, i, j, k, a)
-
-                    H_orig = H
-                    H_cand = H_orig+E
-
-                    s[i,j,k,a,0] = fabs(H_cand-H_best)/delta
-
-                    vx = sin(phi+delta)*cos(theta)
-                    vy = sin(phi+delta)*sin(theta)
-                    vz = cos(phi+delta)
-
-                    E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g,
-                                 B, atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                                 pair_ind, pair_ij, i, j, k, a)
-
-                    H_orig = H
-                    H_cand = H_orig+E
-
-                    s[i,j,k,a,1] = fabs(H_cand-H_best)/delta
-
-    s_max = np.max(s)
-
-    k_gen_np = np.zeros((nu,nv,nw,n_atm,2))
-
-    cdef double [:,:,:,:,::1] k_gen = k_gen_np
-
-    cdef double k_acc
-
-    cdef Py_ssize_t n_acc = 0
-    cdef Py_ssize_t n_gen = 0
-
-    cdef double T0, T1
-    
-    cdef double beta
-
-    cdef bint accepted
-    
-    print(H)
-
-    for t in range(N):
-
-        i, j, k, a = random_original(nu, nv, nw, n_atm)
-
-        ux, uy, uz = Sx[i,j,k,a], Sy[i,j,k,a], Sz[i,j,k,a]
-
-        T0, T1 = T_gen[i,j,k,a,0], T_gen[i,j,k,a,1]
-
-        vx, vy, vz = vector_candidate(ux, uy, uz, T0, T1)
-
-        E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B, atm_ind,
-                     img_ind_i, img_ind_j, img_ind_k, pair_ind, pair_ij,
-                     i, j, k, a)
-
-        H_orig = H
-        H_cand = H_orig+E
-        
-        beta = 1.0/T_acc
-        
-        # print(T_acc)
-
-        accepted = annealing_vector(Sx, Sy, Sz, vx, vy, vz,
-                                    E, beta, i, j, k, a)
-
-        if accepted:
-
-            H = H_cand
-
-            if (H < H_best):
-                H_best = H
-                
-                Sx_best[i,j,k,a] = vx
-                Sy_best[i,j,k,a] = vy
-                Sz_best[i,j,k,a] = vz 
-
-                ux, uy, uz = vx, vy, vz
-                
-                theta = atan2(uy,ux)
-                phi = atan(sqrt(ux**2+uy**2)/uz)
-                
-                vx = sin(phi)*cos(theta+delta)
-                vy = sin(phi)*sin(theta+delta)
-                vz = cos(phi)
-    
-                E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
-                             atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                             pair_ind, pair_ij, i, j, k, a)
-    
-                H_orig = H_best
-                H_cand = H_orig+E
-    
-                s0 = fabs(H_cand-H_best)/delta
-                s[i,j,k,a,0] = s0
-                if (s0 > s_max): smax = s0
-    
-                vx = sin(phi+delta)*cos(theta)
-                vy = sin(phi+delta)*sin(theta)
-                vz = cos(phi+delta)
-    
-                E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
-                             atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                             pair_ind, pair_ij, i, j, k, a)
-    
-                H_orig = H_best
-                H_cand = H_orig+E
-    
-                s1 = fabs(H_cand-H_best)/delta
-                s[i,j,k,a,1] = s1
-                if (s1 > s_max): smax = s1
-
-            n_acc += 1
-
-        n_gen += 1
-
-        if (n_acc == N_acc):
-
-            n_acc = 0
-
-            ux, uy, uz = Sx_best[i,j,k,a], Sy_best[i,j,k,a], Sz_best[i,j,k,a]
-
-            theta = atan2(uy,ux)
-            phi = atan(sqrt(ux**2+uy**2)/uz)
-
-            vx = sin(phi)*cos(theta+delta)
-            vy = sin(phi)*sin(theta+delta)
-            vz = cos(phi)
-
-            E = magnetic(Sx_best, Sy_best, Sz_best, vx, vy, vz, ux, uy, uz,
-                         J, A, g, B, atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                         pair_ind, pair_ij, i, j, k, a)
-
-            H_orig = H_best
-            H_cand = H_orig+E
-
-            s0 = fabs(H_cand-H_best)/delta
-            s[i,j,k,a,0] = s0
-            if (s0 > s_max): smax = s0
-
-            vx = sin(phi+delta)*cos(theta)
-            vy = sin(phi+delta)*sin(theta)
-            vz = cos(phi+delta)
-
-            E = magnetic(Sx_best, Sy_best, Sz_best, vx, vy, vz, ux, uy, uz,
-                         J, A, g, B, atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                         pair_ind, pair_ij, i, j, k, a)
-
-            H_orig = H_best
-            H_cand = H_orig+E
-
-            s1 = fabs(H_cand-H_best)/delta
-            s[i,j,k,a,1] = s1
-            if (s1 > s_max): smax = s1
-
-            T_gen[i,j,k,a,0] = s_max/s0*T0
-            T_gen[i,j,k,a,1] = s_max/s1*T1
-
-            T_acc = H_best
-            T0_acc = H
-            
-            print(T_acc,T0_acc)
-
-            k_gen[i,j,k,a,0] = (-1.0/c*log(T_gen[i,j,k,a,0]\
-                                          /T0_gen[i,j,k,a,0]))**n
-            k_gen[i,j,k,a,1] = (-1.0/c*log(T_gen[i,j,k,a,1]\
-                                          /T0_gen[i,j,k,a,1]))**n
-
-            k_acc = (-1.0/c*log(T_acc/T0_acc))**n
-
-        if (n_gen == N_gen):
-
-            n_gen = 0
-
-            k_gen[i,j,k,a,0] += 1
-            k_gen[i,j,k,a,1] += 1
-
-            k_acc += 1
-
-            T_gen[i,j,k,a,0] = T0_gen[i,j,k,a,0]\
-                             * exp(-c*k_gen[i,j,k,a,0]**(1.0/n))
-            T_gen[i,j,k,a,1] = T0_gen[i,j,k,a,1]\
-                             * exp(-c*k_gen[i,j,k,a,1]**(1.0/n))
-
-            T_acc = T0_acc*exp(-c*k_acc**(1.0/n))
-            
-            print(T_acc, T0_acc, k_acc, (1.0/n))
             
 def energy(double [:,:,:,::1] Sx,
            double [:,:,:,::1] Sy,
