@@ -116,189 +116,18 @@ cdef (double, double, double) ising_vector_candidate(double ux,
     return -ux, -uy, -uz
 
 cdef void replica_exchange(double [::1] H, double [::1] beta):
-    
+
     cdef Py_ssize_t n_temp = H.shape[0]
-    
+
     cdef Py_ssize_t i, j
-    
+
     for i in range(n_temp):
-        
+
         j = dist_temp(gen)
-        
+
         if (i != j):
             if (random() < alpha(H[i]-H[j], beta[i]-beta[j])):
                 beta[i], beta[j] = beta[i], beta[j]
-                
-cdef void annealing_vector(double [:,:,:,:,::1] Sx,
-                           double [:,:,:,:,::1] Sy,
-                           double [:,:,:,:,::1] Sz,
-                           double [::1] sx,
-                           double [::1] sy,
-                           double [::1] sz,
-                           double [::1] H,
-                           double [::1] E,
-                           double [::1] beta,
-                           Py_ssize_t i,
-                           Py_ssize_t j,
-                           Py_ssize_t k,
-                           Py_ssize_t a):
-    
-    cdef Py_ssize_t n_temp = E.shape[0]
-    
-    cdef Py_ssize_t t
-    
-    for t in range(n_temp):
-
-        if (random() < alpha(E[t], beta[t])):
-            Sx[i,j,k,a,t] = sx[t]
-            Sy[i,j,k,a,t] = sy[t]
-            Sz[i,j,k,a,t] = sz[t]
-            H[t] += E[t]
-
-cdef double magnetic(double [:,:,:,:,::1] Sx,
-                     double [:,:,:,:,::1] Sy,
-                     double [:,:,:,:,::1] Sz,
-                     double vx,
-                     double vy,
-                     double vz,
-                     double ux,
-                     double uy,
-                     double uz,
-                     double [:,:,::1] J,
-                     double [:,:,::1] A,
-                     double [:,:,::1] g,
-                     double [::1] B,
-                     long [:,::1] atm_ind,
-                     long [:,::1] img_ind_i,
-                     long [:,::1] img_ind_j,
-                     long [:,::1] img_ind_k,
-                     long [:,::1] pair_ind,
-                     long [:,::1] pair_ij,
-                     Py_ssize_t i,
-                     Py_ssize_t j,
-                     Py_ssize_t k,
-                     Py_ssize_t a,
-                     Py_ssize_t t):
-
-    cdef Py_ssize_t nu = Sx.shape[0]
-    cdef Py_ssize_t nv = Sx.shape[1]
-    cdef Py_ssize_t nw = Sx.shape[2]
-
-    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
-
-    cdef Py_ssize_t i_, j_, k_, a_, p, q
-
-    cdef bint f
-    
-    cdef double E = 0
-
-    cdef double wx, wy, wz
-
-    cdef double dx, dy, dz
-
-    dx, dy, dz = vx-ux, vy-uy, vz-uz
-
-    cdef double Bx = B[0]
-    cdef double By = B[1]
-    cdef double Bz = B[2]
-
-    for p in range(n_pairs):
-
-        i_ = (i+img_ind_i[a,p]+nu)%nu
-        j_ = (j+img_ind_j[a,p]+nv)%nv
-        k_ = (k+img_ind_k[a,p]+nw)%nw
-        a_ = atm_ind[a,p]
-
-        q = pair_ind[a,p]
-
-        f = pair_ij[a,p]
-
-        wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
-
-        if (f == 1):
-            E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
-              +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
-              +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
-        else:
-            E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
-              +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
-              +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
-
-    E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
-      +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
-      +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
-
-    E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
-      +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
-      +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
-
-    E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
-      +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
-      +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
-
-    return E
-
-def heisenberg(double [:,:,:,:,::1] Sx,
-               double [:,:,:,:,::1] Sy,
-               double [:,:,:,:,::1] Sz,
-               double [:,:,::1] J,
-               double [:,:,::1] A,
-               double [:,:,::1] g,
-               double [::1] B,
-               long [:,::1] atm_ind,
-               long [:,::1] img_ind_i,
-               long [:,::1] img_ind_j,
-               long [:,::1] img_ind_k,
-               long [:,::1] pair_ind,
-               long [:,::1] pair_ij,
-               double [::1] T_range,
-               double kB,
-               Py_ssize_t N):
-
-    cdef Py_ssize_t nu = Sx.shape[0]
-    cdef Py_ssize_t nv = Sx.shape[1]
-    cdef Py_ssize_t nw = Sx.shape[2]
-    cdef Py_ssize_t n_atm = Sx.shape[3]
-
-    cdef Py_ssize_t n_temp = T_range.shape[0]
-
-    initialize_random(nu, nv, nw, n_atm, n_temp)
-
-    cdef Py_ssize_t i, j, k, a, t
-
-    E_np, H_np = np.zeros(n_temp), np.zeros(n_temp)
-
-    cdef double [::1] E = E_np
-    cdef double [::1] H = H_np
-
-    cdef double ux, uy, uz
-    cdef double vx, vy, vz
-    
-    cdef double [::1] sx = np.zeros(n_temp)
-    cdef double [::1] sy = np.zeros(n_temp)
-    cdef double [::1] sz = np.zeros(n_temp)
-
-    cdef double [::1] beta = 1/(kB*np.copy(T_range))
-    
-    for _ in range(N):
-
-        i, j, k, a = random_original(nu, nv, nw, n_atm)
-
-        for t in range(n_temp):
-
-            ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
-
-            vx, vy, vz = random_vector_candidate()
-            
-            sx[t], sy[t], sz[t] = vx, vy, vz
-
-            E[t] = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
-                            atm_ind, img_ind_i, img_ind_j, img_ind_k, pair_ind,
-                            pair_ij, i, j, k, a, t)
-
-        annealing_vector(Sx, Sy, Sz, sx, sy, sz, H, E, beta, i, j, k, a)
-        
-        replica_exchange(H, beta)
 
 def energy(double [:,:,:,:,::1] Sx,
            double [:,:,:,:,::1] Sy,
@@ -386,401 +215,716 @@ def energy(double [:,:,:,:,::1] Sx,
 
     return e_np
 
+cdef void annealing_vector(double [:,:,:,:,::1] Sx,
+                           double [:,:,:,:,::1] Sy,
+                           double [:,:,:,:,::1] Sz,
+                           double [::1] sx,
+                           double [::1] sy,
+                           double [::1] sz,
+                           double [::1] H,
+                           double [::1] E,
+                           double [::1] beta,
+                           Py_ssize_t i,
+                           Py_ssize_t j,
+                           Py_ssize_t k,
+                           Py_ssize_t a):
+
+    cdef Py_ssize_t n_temp = E.shape[0]
+
+    cdef Py_ssize_t t
+
+    for t in range(n_temp):
+
+        if (random() < alpha(E[t], beta[t])):
+            Sx[i,j,k,a,t] = sx[t]
+            Sy[i,j,k,a,t] = sy[t]
+            Sz[i,j,k,a,t] = sz[t]
+            H[t] += E[t]
+
+cdef double magnetic(double [:,:,:,:,::1] Sx,
+                     double [:,:,:,:,::1] Sy,
+                     double [:,:,:,:,::1] Sz,
+                     double vx,
+                     double vy,
+                     double vz,
+                     double ux,
+                     double uy,
+                     double uz,
+                     double [:,:,::1] J,
+                     double [:,:,::1] A,
+                     double [:,:,::1] g,
+                     double [::1] B,
+                     long [:,::1] atm_ind,
+                     long [:,::1] img_ind_i,
+                     long [:,::1] img_ind_j,
+                     long [:,::1] img_ind_k,
+                     long [:,::1] pair_ind,
+                     long [:,::1] pair_ij,
+                     Py_ssize_t i,
+                     Py_ssize_t j,
+                     Py_ssize_t k,
+                     Py_ssize_t a,
+                     Py_ssize_t t):
+
+    cdef Py_ssize_t nu = Sx.shape[0]
+    cdef Py_ssize_t nv = Sx.shape[1]
+    cdef Py_ssize_t nw = Sx.shape[2]
+
+    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+
+    cdef Py_ssize_t i_, j_, k_, a_, p, q
+
+    cdef bint f
+
+    cdef double E = 0
+
+    cdef double wx, wy, wz
+
+    cdef double dx, dy, dz
+
+    dx, dy, dz = vx-ux, vy-uy, vz-uz
+
+    cdef double Bx = B[0]
+    cdef double By = B[1]
+    cdef double Bz = B[2]
+
+    for p in range(n_pairs):
+
+        i_ = (i+img_ind_i[a,p]+nu)%nu
+        j_ = (j+img_ind_j[a,p]+nv)%nv
+        k_ = (k+img_ind_k[a,p]+nw)%nw
+        a_ = atm_ind[a,p]
+
+        q = pair_ind[a,p]
+
+        f = pair_ij[a,p]
+
+        wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
+
+        if (f == 1):
+            E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
+              +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
+              +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
+        else:
+            E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
+              +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
+              +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
+
+    E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+      +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+      +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+
+    E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+      +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+      +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+
+    E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+      +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+      +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+
+    return E
+
+def heisenberg(double [:,:,:,:,::1] Sx,
+               double [:,:,:,:,::1] Sy,
+               double [:,:,:,:,::1] Sz,
+               double [:,:,::1] J,
+               double [:,:,::1] A,
+               double [:,:,::1] g,
+               double [::1] B,
+               long [:,::1] atm_ind,
+               long [:,::1] img_ind_i,
+               long [:,::1] img_ind_j,
+               long [:,::1] img_ind_k,
+               long [:,::1] pair_ind,
+               long [:,::1] pair_ij,
+               double [::1] T_range,
+               double kB,
+               Py_ssize_t N):
+
+    cdef Py_ssize_t nu = Sx.shape[0]
+    cdef Py_ssize_t nv = Sx.shape[1]
+    cdef Py_ssize_t nw = Sx.shape[2]
+    cdef Py_ssize_t n_atm = Sx.shape[3]
+
+    cdef Py_ssize_t n_temp = T_range.shape[0]
+
+    initialize_random(nu, nv, nw, n_atm, n_temp)
+
+    cdef Py_ssize_t i, j, k, a, t, p
+
+    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+
+    cdef double [::1] E = np.zeros(n_temp)
+    cdef double [::1] H = np.zeros(n_temp)
+
+    cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
+                                           img_ind_i, img_ind_j, img_ind_k,
+                                           pair_ind, pair_ij)
+
+    for i in range(nu):
+        for j in range(nv):
+            for k in range(nw):
+                for a in range(n_atm):
+                    for p in range(n_pairs):
+                        for t in range(n_temp):
+                            H[t] += e[i,j,k,a,p,t]
+
+    cdef double ux, uy, uz
+    cdef double vx, vy, vz
+
+    cdef double [::1] sx = np.zeros(n_temp)
+    cdef double [::1] sy = np.zeros(n_temp)
+    cdef double [::1] sz = np.zeros(n_temp)
+
+    cdef double [::1] beta = 1/(kB*np.copy(T_range))
+
+    for _ in range(N):
+
+        i, j, k, a = random_original(nu, nv, nw, n_atm)
+
+        for t in range(n_temp):
+
+            ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+
+            vx, vy, vz = random_vector_candidate()
+
+            sx[t], sy[t], sz[t] = vx, vy, vz
+
+            E[t] = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
+                            atm_ind, img_ind_i, img_ind_j, img_ind_k, pair_ind,
+                            pair_ij, i, j, k, a, t)
+
+        annealing_vector(Sx, Sy, Sz, sx, sy, sz, H, E, beta, i, j, k, a)
+
+        replica_exchange(H, beta)
+
 # ---
 
-# cdef void annealing_cluster(double [:,:,:,::1] Sx,
-#                             double [:,:,:,::1] Sy,
-#                             double [:,:,:,::1] Sz,
-#                             double nx,
-#                             double ny,
-#                             double nz,
-#                             double [:,:,::1] J,
-#                             double [:,::,::1] A,
-#                             double [:,::,::1] g,
-#                             double [::1] B,
-#                             Py_ssize_t [::1] clust_i,
-#                             Py_ssize_t [::1] clust_j,
-#                             Py_ssize_t [::1] clust_k,
-#                             Py_ssize_t [::1] clust_a,
-#                             double [:,:,:,::1] h_eff,
-#                             bint [:,:,:,::1] b,
-#                             bint [:,:,:,::1] c,
-#                             Py_ssize_t n_c,
-#                             long [:,::1] atm_ind,
-#                             long [:,::1] img_ind_i,
-#                             long [:,::1] img_ind_j,
-#                             long [:,::1] img_ind_k,
-#                             long [:,::1] pair_ind,
-#                             long [:,::1] pair_ij,
-#                             double beta,
-#                             bint continuous):
+cdef void annealing_cluster(double [:,:,:,:,::1] Sx,
+                            double [:,:,:,:,::1] Sy,
+                            double [:,:,:,:,::1] Sz,
+                            double [::1] nx,
+                            double [::1] ny,
+                            double [::1] nz,
+                            double [:,:,::1] J,
+                            double [:,::,::1] A,
+                            double [:,::,::1] g,
+                            double [::1] B,
+                            Py_ssize_t [:,::1] clust_i,
+                            Py_ssize_t [:,::1] clust_j,
+                            Py_ssize_t [:,::1] clust_k,
+                            Py_ssize_t [:,::1] clust_a,
+                            double [:,:,:,:,::1] h_eff,
+                            bint [:,:,:,:,::1] b,
+                            bint [:,:,:,:,::1] c,
+                            Py_ssize_t [::1] n_c,
+                            long [:,::1] atm_ind,
+                            long [:,::1] img_ind_i,
+                            long [:,::1] img_ind_j,
+                            long [:,::1] img_ind_k,
+                            long [:,::1] pair_ind,
+                            long [:,::1] pair_ij,
+                            double [::1] H,
+                            double [::1] Eij,
+                            double [::1] beta):
 
-#     cdef Py_ssize_t nu = Sx.shape[0]
-#     cdef Py_ssize_t nv = Sx.shape[1]
-#     cdef Py_ssize_t nw = Sx.shape[2]
-#     cdef Py_ssize_t n_atm = Sx.shape[3]
+    cdef Py_ssize_t n_temp = n_c.shape[0]
 
-#     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
-
-#     cdef double E = 0
-
-#     cdef Py_ssize_t t, p, i_c
-
-#     cdef bint f
-
-#     cdef Py_ssize_t i, j, k, a
-#     cdef Py_ssize_t i_, j_, k_, a_
-
-#     cdef double ux, uy, uz
-#     cdef double vx, vy, vz
-
-#     cdef double dx, dy, dz
-
-#     cdef double n_dot_u
-
-#     cdef double Bx = B[0]
-#     cdef double By = B[1]
-#     cdef double Bz = B[2]
-
-#     for i_c in range(n_c):
-
-#         i = clust_i[i_c]
-#         j = clust_j[i_c]
-#         k = clust_k[i_c]
-#         a = clust_a[i_c]
-
-#         ux, uy, uz = Sx[i,j,k,a], Sy[i,j,k,a], Sz[i,j,k,a]
-
-#         n_dot_u = nx*ux+ny*uy+nz*uz
-
-#         vx = ux-2*nx*n_dot_u
-#         vy = uy-2*ny*n_dot_u
-#         vz = uz-2*nz*n_dot_u
-
-#         E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
-#           +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
-#           +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
-
-#         E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
-#           +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
-#           +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
-
-#         dx = vx-ux
-#         dy = vy-uy
-#         dz = vz-uz
+    cdef Py_ssize_t nu = Sx.shape[0]
+    cdef Py_ssize_t nv = Sx.shape[1]
+    cdef Py_ssize_t nw = Sx.shape[2]
+    cdef Py_ssize_t n_atm = Sx.shape[3]
 
-#         E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
-#           +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
-#           +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
-
-#         E += h_eff[i,j,k,a]
-
-#         b[i,j,k,a] = 0
-#         c[i,j,k,a] = 0
-
-#         h_eff[i,j,k,a] = 0
+    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
 
-#     if (random() < alpha(E, beta)):
+    cdef double Ec = 0
+
+    cdef Py_ssize_t p, i_c
+
+    cdef bint f
+
+    cdef Py_ssize_t i, j, k, a, t
+    cdef Py_ssize_t i_, j_, k_, a_
+
+    cdef double ux, uy, uz
+    cdef double vx, vy, vz
+
+    cdef double dx, dy, dz
+
+    cdef double n_dot_u
+
+    cdef double Bx = B[0]
+    cdef double By = B[1]
+    cdef double Bz = B[2]
+
+    for t in range(n_temp):
+
+        Ec = 0
+
+        for i_c in range(n_c[t]):
+
+            i = clust_i[i_c,t]
+            j = clust_j[i_c,t]
+            k = clust_k[i_c,t]
+            a = clust_a[i_c,t]
+
+            ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+
+            n_dot_u = nx[t]*ux+ny[t]*uy+nz[t]*uz
+
+            vx = ux-2*nx[t]*n_dot_u
+            vy = uy-2*ny[t]*n_dot_u
+            vz = uz-2*nz[t]*n_dot_u
+
+            Ec -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+               +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+               +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+
+            Ec += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+               +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+               +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
 
-#         for i_c in range(n_c):
+            dx = vx-ux
+            dy = vy-uy
+            dz = vz-uz
+
+            Ec -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+               +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+               +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
 
-#             i = clust_i[i_c]
-#             j = clust_j[i_c]
-#             k = clust_k[i_c]
-#             a = clust_a[i_c]
+            Ec += h_eff[i,j,k,a,t]
+
+            b[i,j,k,a,t] = 0
+            c[i,j,k,a,t] = 0
 
-#             ux, uy, uz = Sx[i,j,k,a], Sy[i,j,k,a], Sz[i,j,k,a]
+            h_eff[i,j,k,a,t] = 0
 
-#             if (continuous):
+        if (random() < alpha(Ec, beta[t])):
 
-#                 n_dot_u = nx*ux+ny*uy+nz*uz
+            for i_c in range(n_c[t]):
 
-#                 vx = ux-2*nx*n_dot_u
-#                 vy = uy-2*ny*n_dot_u
-#                 vz = uz-2*nz*n_dot_u
+                i = clust_i[i_c,t]
+                j = clust_j[i_c,t]
+                k = clust_k[i_c,t]
+                a = clust_a[i_c,t]
 
-#             else:
+                ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
 
-#                 vx = -ux
-#                 vy = -uy
-#                 vz = -uz
+                n_dot_u = nx[t]*ux+ny[t]*uy+nz[t]*uz
 
-#             Sx[i,j,k,a] = vx
-#             Sy[i,j,k,a] = vy
-#             Sz[i,j,k,a] = vz
+                vx = ux-2*nx[t]*n_dot_u
+                vy = uy-2*ny[t]*n_dot_u
+                vz = uz-2*nz[t]*n_dot_u
+
+                Sx[i,j,k,a,t] = vx
+                Sy[i,j,k,a,t] = vy
+                Sz[i,j,k,a,t] = vz
+
+            H[t] += Ec+Eij[t]
+
+cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
+                                 double [:,:,:,:,::1] Sy,
+                                 double [:,:,:,:,::1] Sz,
+                                 double nx,
+                                 double ny,
+                                 double nz,
+                                 double ux_perp,
+                                 double uy_perp,
+                                 double uz_perp,
+                                 double n_dot_u,
+                                 double [:,:,::1] J,
+                                 Py_ssize_t [:,::1] clust_i,
+                                 Py_ssize_t [:,::1] clust_j,
+                                 Py_ssize_t [:,::1] clust_k,
+                                 Py_ssize_t [:,::1] clust_a,
+                                 double [:,:,:,:,::1] h_eff,
+                                 double [:,:,:,:,:,::1] h_eff_ij,
+                                 bint [:,:,:,:,::1] b,
+                                 bint [:,:,:,:,::1] c,
+                                 Py_ssize_t [::1] n_c,
+                                 long [:,::1] atm_ind,
+                                 long [:,::1] img_ind_i,
+                                 long [:,::1] img_ind_j,
+                                 long [:,::1] img_ind_k,
+                                 long [:,::1] pair_ind,
+                                 long [:,::1] pair_inv,
+                                 long [:,::1] pair_ij,
+                                 double [::1] beta,
+                                 Py_ssize_t i,
+                                 Py_ssize_t j,
+                                 Py_ssize_t k,
+                                 Py_ssize_t a,
+                                 Py_ssize_t t):
 
-# cdef Py_ssize_t magnetic_cluster(double [:,:,:,::1] Sx,
-#                                  double [:,:,:,::1] Sy,
-#                                  double [:,:,:,::1] Sz,
-#                                  double nx,
-#                                  double ny,
-#                                  double nz,
-#                                  double ux_perp,
-#                                  double uy_perp,
-#                                  double uz_perp,
-#                                  double n_dot_u,
-#                                  double [:,:,::1] J,
-#                                  Py_ssize_t [::1] clust_i,
-#                                  Py_ssize_t [::1] clust_j,
-#                                  Py_ssize_t [::1] clust_k,
-#                                  Py_ssize_t [::1] clust_a,
-#                                  double [:,:,:,::1] h_eff,
-#                                  double [:,:,:,:,::1] h_eff_ij,
-#                                  bint [:,:,:,::1] b,
-#                                  bint [:,:,:,::1] c,
-#                                  Py_ssize_t n_c,
-#                                  long [:,::1] atm_ind,
-#                                  long [:,::1] img_ind_i,
-#                                  long [:,::1] img_ind_j,
-#                                  long [:,::1] img_ind_k,
-#                                  long [:,::1] pair_ind,
-#                                  long [:,::1] pair_inv,
-#                                  long [:,::1] pair_ij,
-#                                  double beta,
-#                                  Py_ssize_t i,
-#                                  Py_ssize_t j,
-#                                  Py_ssize_t k,
-#                                  Py_ssize_t a):
+    cdef Py_ssize_t nu = Sx.shape[0]
+    cdef Py_ssize_t nv = Sx.shape[1]
+    cdef Py_ssize_t nw = Sx.shape[2]
 
-#     cdef Py_ssize_t nu = Sx.shape[0]
-#     cdef Py_ssize_t nv = Sx.shape[1]
-#     cdef Py_ssize_t nw = Sx.shape[2]
+    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
 
-#     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+    cdef Py_ssize_t m_c = n_c[t]
 
-#     cdef Py_ssize_t m_c = n_c
+    cdef double E
 
-#     cdef double E
+    cdef Py_ssize_t i_, j_, k_, a_, p, q, p_
 
-#     cdef Py_ssize_t i_, j_, k_, a_, t, p, p_
+    cdef bint f
 
-#     cdef bint f
+    cdef double vx, vy, vz
+    cdef double vx_perp, vy_perp, vz_perp
 
-#     cdef double vx, vy, vz
-#     cdef double vx_perp, vy_perp, vz_perp
+    cdef double J_eff, J_eff_ij, J_eff_ji
 
-#     cdef double J_eff, J_eff_ij, J_eff_ji
+    cdef double Jx_eff_ij, Jy_eff_ij, Jz_eff_ij
+    cdef double Jx_eff_ji, Jy_eff_ji, Jz_eff_ji
 
-#     cdef double Jx_eff_ij, Jy_eff_ij, Jz_eff_ij
-#     cdef double Jx_eff_ji, Jy_eff_ji, Jz_eff_ji
+    cdef double n_dot_v
 
-#     cdef double n_dot_v
+    for p in range(n_pairs):
 
-#     for p in range(n_pairs):
+        i_ = (i+img_ind_i[a,p]+nu)%nu
+        j_ = (j+img_ind_j[a,p]+nv)%nv
+        k_ = (k+img_ind_k[a,p]+nw)%nw
+        a_ = atm_ind[a,p]
+        p_ = pair_inv[a,p]
 
-#         i_ = (i+img_ind_i[a,p]+nu)%nu
-#         j_ = (j+img_ind_j[a,p]+nv)%nv
-#         k_ = (k+img_ind_k[a,p]+nw)%nw
-#         a_ = atm_ind[a,p]
-#         p_ = pair_inv[a,p]
+        if (b[i_,j_,k_,a_,t] == 0):
 
-#         if (b[i_,j_,k_,a_] == 0):
+            vx = Sx[i_,j_,k_,a_,t]
+            vy = Sy[i_,j_,k_,a_,t]
+            vz = Sz[i_,j_,k_,a_,t]
 
-#             vx, vy, vz = Sx[i_,j_,k_,a_], Sy[i_,j_,k_,a_], Sz[i_,j_,k_,a_]
+            n_dot_v = vx*nx+vy*ny+vz*nz
 
-#             n_dot_v = vx*nx+vy*ny+vz*nz
+            vx_perp = vx-nx*n_dot_v
+            vy_perp = vy-ny*n_dot_v
+            vz_perp = vz-nz*n_dot_v
 
-#             vx_perp = vx-nx*n_dot_v
-#             vy_perp = vy-ny*n_dot_v
-#             vz_perp = vz-nz*n_dot_v
+            q = pair_ind[a,p]
 
-#             t = pair_ind[a,p]
+            f = pair_ij[a,p]
 
-#             f = pair_ij[a,p]
+            if (f == 1):
+                Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+                Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+                Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
 
-#             if (f == 1):
-#                 Jx_eff_ij = J[t,0,0]*nx+J[t,1,0]*ny+J[t,2,0]*nz
-#                 Jy_eff_ij = J[t,0,1]*nx+J[t,1,1]*ny+J[t,2,1]*nz
-#                 Jz_eff_ij = J[t,0,2]*nx+J[t,1,2]*ny+J[t,2,2]*nz
+                Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+                Jy_eff_ji = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+                Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+            else:
+                Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+                Jy_eff_ij = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+                Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
 
-#                 Jx_eff_ji = J[t,0,0]*nx+J[t,0,1]*ny+J[t,0,2]*nz
-#                 Jy_eff_ji = J[t,1,0]*nx+J[t,1,1]*ny+J[t,1,2]*nz
-#                 Jz_eff_ji = J[t,2,0]*nx+J[t,2,1]*ny+J[t,2,2]*nz
-#             else:
-#                 Jx_eff_ij = J[t,0,0]*nx+J[t,0,1]*ny+J[t,0,2]*nz
-#                 Jy_eff_ij = J[t,1,0]*nx+J[t,1,1]*ny+J[t,1,2]*nz
-#                 Jz_eff_ij = J[t,2,0]*nx+J[t,2,1]*ny+J[t,2,2]*nz
+                Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+                Jy_eff_ji = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+                Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
 
-#                 Jx_eff_ji = J[t,0,0]*nx+J[t,1,0]*ny+J[t,2,0]*nz
-#                 Jy_eff_ji = J[t,0,1]*nx+J[t,1,1]*ny+J[t,2,1]*nz
-#                 Jz_eff_ji = J[t,0,2]*nx+J[t,1,2]*ny+J[t,2,2]*nz
+            J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij
 
-#             J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij
+            h_eff_ij[i_,j_,k_,a_,p_,t] = 2*J_eff_ij*n_dot_v
 
-#             h_eff_ij[i_,j_,k_,a_,p_] = 2*J_eff_ij*n_dot_v
-
-#             J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji
-
-#             h_eff_ij[i,j,k,a,p] = 2*J_eff_ji*n_dot_u
-
-#             if (c[i_,j_,k_,a_] == 0):
-
-#                 J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij
-
-#                 E = 2*J_eff*n_dot_u*n_dot_v
-
-#                 if (random() < 1-alpha(E, beta)):
-
-#                     clust_i[m_c] = i_
-#                     clust_j[m_c] = j_
-#                     clust_k[m_c] = k_
-#                     clust_a[m_c] = a_
-
-#                     c[i_,j_,k_,a_] = 1
-
-#                     m_c += 1
-
-#             h_eff[i,j,k,a] += h_eff_ij[i,j,k,a,p]
-
-#         elif (b[i_,j_,k_,a_] == 1):
-
-#             h_eff[i,j,k,a] += h_eff_ij[i,j,k,a,p]
-
-#     return m_c
-
-# def heisenberg_cluster(double [:,:,:,::1] Sx,
-#                        double [:,:,:,::1] Sy,
-#                        double [:,:,:,::1] Sz,
-#                        double [:,:,::1] J,
-#                        double [:,::,::1] A,
-#                        double [:,::,::1] g,
-#                        double [::1] B,
-#                        long [:,::1] atm_ind,
-#                        long [:,::1] img_ind_i,
-#                        long [:,::1] img_ind_j,
-#                        long [:,::1] img_ind_k,
-#                        long [:,::1] pair_ind,
-#                        long [:,::1] pair_inv,
-#                        long [:,::1] pair_ij,
-#                        double [::1] T_range,
-#                        double kB,
-#                        Py_ssize_t N,
-#                        bint logarithmic,
-#                        bint continuous):
-
-#     cdef Py_ssize_t nu = Sx.shape[0]
-#     cdef Py_ssize_t nv = Sx.shape[1]
-#     cdef Py_ssize_t nw = Sx.shape[2]
-#     cdef Py_ssize_t n_atm = Sx.shape[3]
-
-#     initialize_random(nu, nv, nw, n_atm)
-
-#     cdef Py_ssize_t t, n
-#     cdef Py_ssize_t i, j, k, a,
-#     cdef Py_ssize_t i_, j_, k_, a_
-
-#     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
-
-#     n = nu*nv*nw*n_atm
-
-#     cdef Py_ssize_t i_c, n_c = 0
-
-#     cdef bint [:,:,:,::1] b = np.zeros((nu,nv,nw,n_atm), dtype=np.intc)
-#     cdef bint [:,:,:,::1] c = np.zeros((nu,nv,nw,n_atm), dtype=np.intc)
-
-#     cdef double [:,:,:,::1] h_eff = np.zeros((nu,nv,nw,n_atm), dtype=float)
-#     cdef double [:,:,:,:,::1] h_eff_ij = np.zeros((nu,nv,nw,n_atm,n_pairs),
-#                                                   dtype=float)
-
-#     cdef Py_ssize_t [::1] clust_i = np.zeros(n, dtype=np.intp)
-#     cdef Py_ssize_t [::1] clust_j = np.zeros(n, dtype=np.intp)
-#     cdef Py_ssize_t [::1] clust_k = np.zeros(n, dtype=np.intp)
-#     cdef Py_ssize_t [::1] clust_a = np.zeros(n, dtype=np.intp)
-
-#     cdef double ux, uy, uz
-#     cdef double vx, vy, vz
-
-#     cdef double mx, my, mz
-#     cdef double nx, ny, nz
-
-#     cdef double ux_perp, uy_perp, uz_perp
-#     cdef double vx_perp, vy_perp, vz_perp
-
-#     cdef double u, n_dot_u, n_dot_v
-
-#     cdef double constant
-
-#     if (N <= 1):
-#         constant = 0
-#     else:
-#         if logarithmic:
-#             constant = (log(1/kB/T_range[0])-log(1/kB/T_range[1]))/(N-1)
-#         else:
-#             constant = (1/kB/T_range[0]-1/kB/T_range[1])/(N-1)
-
-#     cdef double beta = 1/kB/T_range[0]
-
-#     for t in range(N):
-
-#         i, j, k, a = random_original(nu, nv, nw, n_atm)
-
-#         ux, uy, uz = Sx[i,j,k,a], Sy[i,j,k,a], Sz[i,j,k,a]
-
-#         if (continuous):
-#             nx, ny, nz = random_vector_candidate()
-#         else:
-#             u = sqrt(ux*ux+uy*uy+uz*uz)
-#             nx, ny, nz = ux/u, uy/u, uz/u
-
-#         n_dot_u = ux*nx+uy*ny+uz*nz
-
-#         ux_perp = ux-nx*n_dot_u
-#         uy_perp = uy-ny*n_dot_u
-#         uz_perp = uz-nz*n_dot_u
-
-#         clust_i[0] = i
-#         clust_j[0] = j
-#         clust_k[0] = k
-#         clust_a[0] = a
-
-#         b[i,j,k,a] = 1
-
-#         n_c = 1
-
-#         n_c = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
-#                                ux_perp, uy_perp, uz_perp, n_dot_u, J,
-#                                clust_i, clust_j, clust_k, clust_a,
-#                                h_eff, h_eff_ij, b, c, n_c,
-#                                atm_ind, img_ind_i, img_ind_j, img_ind_k,
-#                                pair_ind, pair_inv, pair_ij, beta,
-#                                i, j, k, a)
-
-#         i_c = 1
-
-#         while i_c < n_c:
-
-#             i_ = clust_i[i_c]
-#             j_ = clust_j[i_c]
-#             k_ = clust_k[i_c]
-#             a_ = clust_a[i_c]
-
-#             vx, vy, vz = Sx[i_,j_,k_,a_], Sy[i_,j_,k_,a_], Sz[i_,j_,k_,a_]
-
-#             n_dot_v = vx*nx+vy*ny+vz*nz
-
-#             vx_perp = vx-nx*n_dot_v
-#             vy_perp = vy-ny*n_dot_v
-#             vz_perp = vz-nz*n_dot_v
-
-#             b[i_,j_,k_,a_] = 1
-
-#             n_c = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
-#                                    vx_perp, vy_perp, vz_perp, n_dot_v, J,
-#                                    clust_i, clust_j, clust_k, clust_a,
-#                                    h_eff, h_eff_ij, b, c, n_c,
-#                                    atm_ind, img_ind_i, img_ind_j, img_ind_k,
-#                                    pair_ind, pair_inv, pair_ij, beta,
-#                                    i_, j_, k_, a_)
-
-#             i_c += 1
-
-#         annealing_cluster(Sx, Sy, Sz, nx, ny, nz, J, A, g, B,
-#                           clust_i, clust_j, clust_k, clust_a,
-#                           h_eff, b, c, n_c,
-#                           atm_ind, img_ind_i, img_ind_j, img_ind_k,
-#                           pair_ind, pair_ij, beta, continuous)
-
-#         if logarithmic:
-#             beta = exp(log(beta)-constant)
-#         else:
-#             beta = beta-constant
+            J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji
+
+            h_eff_ij[i,j,k,a,p,t] = 2*J_eff_ji*n_dot_u
+
+            if (c[i_,j_,k_,a_,t] == 0):
+
+                J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij
+
+                E = 2*J_eff*n_dot_u*n_dot_v
+
+                if (random() < 1-alpha(E, beta[t])):
+
+                    clust_i[m_c,t] = i_
+                    clust_j[m_c,t] = j_
+                    clust_k[m_c,t] = k_
+                    clust_a[m_c,t] = a_
+
+                    c[i_,j_,k_,a_,t] = 1
+
+                    m_c += 1
+
+            h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+
+        elif (b[i_,j_,k_,a_,t] == 1):
+
+            h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+
+    return m_c
+
+cdef double boundary_energy(double [:,:,:,:,::1] Sx,
+                            double [:,:,:,:,::1] Sy,
+                            double [:,:,:,:,::1] Sz,
+                            double nx,
+                            double ny,
+                            double nz,
+                            double ux_perp,
+                            double uy_perp,
+                            double uz_perp,
+                            double n_dot_u,
+                            double [:,:,::1] J,
+                            Py_ssize_t [:,::1] clust_i,
+                            Py_ssize_t [:,::1] clust_j,
+                            Py_ssize_t [:,::1] clust_k,
+                            Py_ssize_t [:,::1] clust_a,
+                            bint [:,:,:,:,::1] c,
+                            Py_ssize_t [::1] n_c,
+                            long [:,::1] atm_ind,
+                            long [:,::1] img_ind_i,
+                            long [:,::1] img_ind_j,
+                            long [:,::1] img_ind_k,
+                            long [:,::1] pair_ind,
+                            long [:,::1] pair_inv,
+                            long [:,::1] pair_ij,
+                            Py_ssize_t t):
+
+    cdef Py_ssize_t nu = Sx.shape[0]
+    cdef Py_ssize_t nv = Sx.shape[1]
+    cdef Py_ssize_t nw = Sx.shape[2]
+
+    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+    
+    cdef Py_ssize_t i_c
+
+    cdef double E = 0
+
+    cdef Py_ssize_t i, j, k, a, p, q, i_, j_, k_, a_, p_
+
+    cdef bint f
+
+    cdef double vx, vy, vz
+    cdef double vx_perp, vy_perp, vz_perp
+
+    cdef double J_eff, J_eff_ij, J_eff_ji
+
+    cdef double Jx_eff_ij, Jy_eff_ij, Jz_eff_ij
+    cdef double Jx_eff_ji, Jy_eff_ji, Jz_eff_ji
+
+    cdef double n_dot_v
+    
+    for i_c in range(n_c[t]):
+
+        i = clust_i[i_c,t]
+        j = clust_j[i_c,t]
+        k = clust_k[i_c,t]
+        a = clust_a[i_c,t]
+
+        for p in range(n_pairs):
+    
+            i_ = (i+img_ind_i[a,p]+nu)%nu
+            j_ = (j+img_ind_j[a,p]+nv)%nv
+            k_ = (k+img_ind_k[a,p]+nw)%nw
+            a_ = atm_ind[a,p]
+            p_ = pair_inv[a,p]
+    
+            if (c[i_,j_,k_,a_,t] == 0):
+    
+                vx = Sx[i_,j_,k_,a_,t]
+                vy = Sy[i_,j_,k_,a_,t]
+                vz = Sz[i_,j_,k_,a_,t]
+    
+                n_dot_v = vx*nx+vy*ny+vz*nz
+    
+                vx_perp = vx-nx*n_dot_v
+                vy_perp = vy-ny*n_dot_v
+                vz_perp = vz-nz*n_dot_v
+    
+                q = pair_ind[a,p]
+    
+                f = pair_ij[a,p]
+    
+                if (f == 1):
+                    Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+                    Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+                    Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+    
+                    Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+                    Jy_eff_ji = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+                    Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+                else:
+                    Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+                    Jy_eff_ij = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+                    Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+    
+                    Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+                    Jy_eff_ji = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+                    Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+    
+                J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij
+        
+                J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji
+        
+                J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij
+    
+                E += 2*J_eff*n_dot_u*n_dot_v
+
+    return E
+
+def heisenberg_cluster(double [:,:,:,:,::1] Sx,
+                       double [:,:,:,:,::1] Sy,
+                       double [:,:,:,:,::1] Sz,
+                       double [:,:,::1] J,
+                       double [:,::,::1] A,
+                       double [:,::,::1] g,
+                       double [::1] B,
+                       long [:,::1] atm_ind,
+                       long [:,::1] img_ind_i,
+                       long [:,::1] img_ind_j,
+                       long [:,::1] img_ind_k,
+                       long [:,::1] pair_ind,
+                       long [:,::1] pair_inv,
+                       long [:,::1] pair_ij,
+                       double [::1] T_range,
+                       double kB,
+                       Py_ssize_t N):
+
+    cdef Py_ssize_t nu = Sx.shape[0]
+    cdef Py_ssize_t nv = Sx.shape[1]
+    cdef Py_ssize_t nw = Sx.shape[2]
+    cdef Py_ssize_t n_atm = Sx.shape[3]
+
+    cdef Py_ssize_t n_temp = T_range.shape[0]
+
+    initialize_random(nu, nv, nw, n_atm, n_temp)
+
+    cdef Py_ssize_t t, n
+    cdef Py_ssize_t i, j, k, a,
+    cdef Py_ssize_t i_, j_, k_, a_
+
+    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+
+    cdef double [::1] E = np.zeros(n_temp)
+    cdef double [::1] H = np.zeros(n_temp)
+
+    cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
+                                           img_ind_i, img_ind_j, img_ind_k,
+                                           pair_ind, pair_ij)
+
+    for i in range(nu):
+        for j in range(nv):
+            for k in range(nw):
+                for a in range(n_atm):
+                    for p in range(n_pairs):
+                        for t in range(n_temp):
+                            H[t] += e[i,j,k,a,p,t]
+
+    n = nu*nv*nw*n_atm
+
+    cdef Py_ssize_t i_c
+    
+    cdef Py_ssize_t [::1] n_c = np.zeros(n_temp, dtype=np.intp)
+    
+    spin_shape = (nu,nv,nw,n_atm,n_temp)
+
+    cdef bint [:,:,:,:,::1] b = np.zeros(spin_shape, dtype=np.intc)
+    cdef bint [:,:,:,:,::1] c = np.zeros(spin_shape, dtype=np.intc)
+
+    pairs_shape = (nu,nv,nw,n_atm,n_pairs,n_temp)
+
+    cdef double [:,:,:,:,::1] h_eff = np.zeros(spin_shape, dtype=float)
+    cdef double [:,:,:,:,:,::1] h_eff_ij = np.zeros(pairs_shape, dtype=float)
+
+    cdef Py_ssize_t [:,::1] clust_i = np.zeros((n,n_temp), dtype=np.intp)
+    cdef Py_ssize_t [:,::1] clust_j = np.zeros((n,n_temp), dtype=np.intp)
+    cdef Py_ssize_t [:,::1] clust_k = np.zeros((n,n_temp), dtype=np.intp)
+    cdef Py_ssize_t [:,::1] clust_a = np.zeros((n,n_temp), dtype=np.intp)
+
+    cdef double ux, uy, uz
+    cdef double vx, vy, vz
+
+    cdef double mx, my, mz
+    cdef double nx, ny, nz
+
+    cdef double ux_perp, uy_perp, uz_perp
+    cdef double vx_perp, vy_perp, vz_perp
+
+    cdef double u, n_dot_u, n_dot_v
+
+    cdef double [::1] sx = np.zeros(n_temp)
+    cdef double [::1] sy = np.zeros(n_temp)
+    cdef double [::1] sz = np.zeros(n_temp)
+
+    cdef double [::1] beta = 1/(kB*np.copy(T_range))
+
+    for _ in range(N):
+
+        i, j, k, a = random_original(nu, nv, nw, n_atm)
+
+        for t in range(n_temp):
+
+            ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+
+            nx, ny, nz = random_vector_candidate()
+
+            sx[t], sy[t], sz[t] = nx, ny, nz
+
+            n_dot_u = ux*nx+uy*ny+uz*nz
+
+            ux_perp = ux-nx*n_dot_u
+            uy_perp = uy-ny*n_dot_u
+            uz_perp = uz-nz*n_dot_u
+
+            clust_i[0,t] = i
+            clust_j[0,t] = j
+            clust_k[0,t] = k
+            clust_a[0,t] = a
+
+            b[i,j,k,a,t] = 1
+
+            n_c[t] = 1
+
+            n_c[t] = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
+                                      ux_perp, uy_perp, uz_perp, n_dot_u, J,
+                                      clust_i, clust_j, clust_k, clust_a,
+                                      h_eff, h_eff_ij, b, c, n_c,
+                                      atm_ind, img_ind_i, img_ind_j, img_ind_k,
+                                      pair_ind, pair_inv, pair_ij, beta,
+                                      i, j, k, a, t)
+
+            i_c = 1
+
+            while i_c < n_c[t]:
+
+                i_ = clust_i[i_c,t]
+                j_ = clust_j[i_c,t]
+                k_ = clust_k[i_c,t]
+                a_ = clust_a[i_c,t]
+
+                vx = Sx[i_,j_,k_,a_,t]
+                vy = Sy[i_,j_,k_,a_,t]
+                vz = Sz[i_,j_,k_,a_,t]
+
+                n_dot_v = vx*nx+vy*ny+vz*nz
+
+                vx_perp = vx-nx*n_dot_v
+                vy_perp = vy-ny*n_dot_v
+                vz_perp = vz-nz*n_dot_v
+
+                b[i_,j_,k_,a_,t] = 1
+
+                n_c[t] = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
+                                          vx_perp, vy_perp, vz_perp,
+                                          n_dot_v, J,
+                                          clust_i, clust_j, clust_k, clust_a,
+                                          h_eff, h_eff_ij, b, c, n_c, atm_ind,
+                                          img_ind_i, img_ind_j, img_ind_k,
+                                          pair_ind, pair_inv, pair_ij, beta,
+                                          i_, j_, k_, a_, t)
+
+                i_c += 1
+            
+            E[t] = boundary_energy(Sx, Sy, Sz, nx, ny, nz,
+                                   vx_perp, vy_perp, vz_perp, n_dot_v, J,
+                                   clust_i, clust_j, clust_k, clust_a, c, n_c, 
+                                   atm_ind, img_ind_i, img_ind_j, img_ind_k,
+                                   pair_ind, pair_inv, pair_ij, t)
+
+        annealing_cluster(Sx, Sy, Sz, sx, sy, sz, J, A, g, B,
+                          clust_i, clust_j, clust_k, clust_a,
+                          h_eff, b, c, n_c,
+                          atm_ind, img_ind_i, img_ind_j, img_ind_k,
+                          pair_ind, pair_ij, H, E, beta)
+
+        replica_exchange(H, beta)

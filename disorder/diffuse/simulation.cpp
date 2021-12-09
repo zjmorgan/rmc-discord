@@ -1993,12 +1993,30 @@ static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_l
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_int(PyObject *, int writable_flag);
 
+/* ObjectToMemviewSlice.proto */
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_d_dc_double(PyObject *, int writable_flag);
+
 /* MemviewDtypeToObject.proto */
 static CYTHON_INLINE PyObject *__pyx_memview_get_double(const char *itemp);
 static CYTHON_INLINE int __pyx_memview_set_double(const char *itemp, PyObject *obj);
 
+/* GCCDiagnostics.proto */
+#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
+#define __Pyx_HAS_GCC_DIAGNOSTIC
+#endif
+
+/* MemviewDtypeToObject.proto */
+static CYTHON_INLINE PyObject *__pyx_memview_get_long(const char *itemp);
+static CYTHON_INLINE int __pyx_memview_set_long(const char *itemp, PyObject *obj);
+
 /* ObjectToMemviewSlice.proto */
-static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_d_dc_double(PyObject *, int writable_flag);
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dc_Py_ssize_t(PyObject *, int writable_flag);
+
+/* ObjectToMemviewSlice.proto */
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_int(PyObject *, int writable_flag);
+
+/* ObjectToMemviewSlice.proto */
+static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_Py_ssize_t(PyObject *, int writable_flag);
 
 /* RealImag.proto */
 #if CYTHON_CCOMPLEX
@@ -2105,22 +2123,17 @@ __pyx_memoryview_copy_new_contig(const __Pyx_memviewslice *from_mvs,
                                  size_t sizeof_dtype, int contig_flag,
                                  int dtype_is_object);
 
-/* GCCDiagnostics.proto */
-#if defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6))
-#define __Pyx_HAS_GCC_DIAGNOSTIC
-#endif
-
-/* CIntFromPy.proto */
-static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
+/* CIntToPy.proto */
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *);
 
-/* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
+/* CIntFromPy.proto */
+static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *);
 
 /* CIntToPy.proto */
-static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value);
+static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
 /* CIntFromPy.proto */
 static CYTHON_INLINE char __Pyx_PyInt_As_char(PyObject *);
@@ -2214,6 +2227,9 @@ static __pyx_ctuple_double__and_double__and_double __pyx_f_8disorder_7diffuse_10
 static void __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
 static void __pyx_f_8disorder_7diffuse_10simulation_annealing_vector(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, Py_ssize_t); /*proto*/
 static double __pyx_f_8disorder_7diffuse_10simulation_magnetic(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, double, double, double, double, double, double, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, Py_ssize_t, Py_ssize_t); /*proto*/
+static void __pyx_f_8disorder_7diffuse_10simulation_annealing_cluster(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice); /*proto*/
+static Py_ssize_t __pyx_f_8disorder_7diffuse_10simulation_magnetic_cluster(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, double, double, double, double, double, double, double, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t, Py_ssize_t, Py_ssize_t, Py_ssize_t, Py_ssize_t); /*proto*/
+static double __pyx_f_8disorder_7diffuse_10simulation_boundary_energy(__Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, double, double, double, double, double, double, double, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, __Pyx_memviewslice, Py_ssize_t); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
 static void *__pyx_align_pointer(void *, size_t); /*proto*/
 static PyObject *__pyx_memoryview_new(PyObject *, int, int, __Pyx_TypeInfo *); /*proto*/
@@ -2250,6 +2266,7 @@ static PyObject *__pyx_unpickle_Enum__set_state(struct __pyx_MemviewEnum_obj *, 
 static __Pyx_TypeInfo __Pyx_TypeInfo_double = { "double", NULL, sizeof(double), { 0 }, 0, 'R', 0, 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_long = { "long", NULL, sizeof(long), { 0 }, 0, IS_UNSIGNED(long) ? 'U' : 'I', IS_UNSIGNED(long), 0 };
 static __Pyx_TypeInfo __Pyx_TypeInfo_int = { "bint", NULL, sizeof(int), { 0 }, 0, IS_UNSIGNED(int) ? 'U' : 'I', IS_UNSIGNED(int), 0 };
+static __Pyx_TypeInfo __Pyx_TypeInfo_Py_ssize_t = { "Py_ssize_t", NULL, sizeof(Py_ssize_t), { 0 }, 0, IS_UNSIGNED(Py_ssize_t) ? 'U' : 'I', IS_UNSIGNED(Py_ssize_t), 0 };
 #define __Pyx_MODULE_NAME "disorder.diffuse.simulation"
 extern int __pyx_module_is_main_disorder__diffuse__simulation;
 int __pyx_module_is_main_disorder__diffuse__simulation = 0;
@@ -2272,6 +2289,7 @@ static const char __pyx_k_J[] = "J";
 static const char __pyx_k_N[] = "N";
 static const char __pyx_k_O[] = "O";
 static const char __pyx_k_a[] = "a";
+static const char __pyx_k_b[] = "b";
 static const char __pyx_k_c[] = "c";
 static const char __pyx_k_e[] = "e";
 static const char __pyx_k_f[] = "f";
@@ -2279,8 +2297,10 @@ static const char __pyx_k_g[] = "g";
 static const char __pyx_k_i[] = "i";
 static const char __pyx_k_j[] = "j";
 static const char __pyx_k_k[] = "k";
+static const char __pyx_k_n[] = "n";
 static const char __pyx_k_p[] = "p";
 static const char __pyx_k_t[] = "t";
+static const char __pyx_k_u[] = "u";
 static const char __pyx_k_Bx[] = "Bx";
 static const char __pyx_k_By[] = "By";
 static const char __pyx_k_Bz[] = "Bz";
@@ -2289,10 +2309,16 @@ static const char __pyx_k_Sy[] = "Sy";
 static const char __pyx_k_Sz[] = "Sz";
 static const char __pyx_k_id[] = "id";
 static const char __pyx_k_kB[] = "kB";
+static const char __pyx_k_mx[] = "mx";
+static const char __pyx_k_my[] = "my";
+static const char __pyx_k_mz[] = "mz";
 static const char __pyx_k_np[] = "np";
 static const char __pyx_k_nu[] = "nu";
 static const char __pyx_k_nv[] = "nv";
 static const char __pyx_k_nw[] = "nw";
+static const char __pyx_k_nx[] = "nx";
+static const char __pyx_k_ny[] = "ny";
+static const char __pyx_k_nz[] = "nz";
 static const char __pyx_k_sx[] = "sx";
 static const char __pyx_k_sy[] = "sy";
 static const char __pyx_k_sz[] = "sz";
@@ -2302,21 +2328,23 @@ static const char __pyx_k_uz[] = "uz";
 static const char __pyx_k_vx[] = "vx";
 static const char __pyx_k_vy[] = "vy";
 static const char __pyx_k_vz[] = "vz";
-static const char __pyx_k__21[] = "_";
+static const char __pyx_k__23[] = "_";
 static const char __pyx_k_a_2[] = "a_";
 static const char __pyx_k_eps[] = "eps";
 static const char __pyx_k_i_2[] = "i_";
+static const char __pyx_k_i_c[] = "i_c";
 static const char __pyx_k_j_2[] = "j_";
 static const char __pyx_k_k_2[] = "k_";
+static const char __pyx_k_n_c[] = "n_c";
 static const char __pyx_k_new[] = "__new__";
 static const char __pyx_k_obj[] = "obj";
-static const char __pyx_k_E_np[] = "E_np";
-static const char __pyx_k_H_np[] = "H_np";
 static const char __pyx_k_base[] = "base";
 static const char __pyx_k_beta[] = "beta";
 static const char __pyx_k_copy[] = "copy";
 static const char __pyx_k_dict[] = "__dict__";
 static const char __pyx_k_e_np[] = "e_np";
+static const char __pyx_k_intc[] = "intc";
+static const char __pyx_k_intp[] = "intp";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_mode[] = "mode";
 static const char __pyx_k_name[] = "name";
@@ -2328,9 +2356,11 @@ static const char __pyx_k_stop[] = "stop";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_ASCII[] = "ASCII";
 static const char __pyx_k_class[] = "__class__";
+static const char __pyx_k_dtype[] = "dtype";
 static const char __pyx_k_error[] = "error";
 static const char __pyx_k_finfo[] = "finfo";
 static const char __pyx_k_flags[] = "flags";
+static const char __pyx_k_h_eff[] = "h_eff";
 static const char __pyx_k_n_atm[] = "n_atm";
 static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_range[] = "range";
@@ -2350,14 +2380,28 @@ static const char __pyx_k_unpack[] = "unpack";
 static const char __pyx_k_update[] = "update";
 static const char __pyx_k_T_range[] = "T_range";
 static const char __pyx_k_atm_ind[] = "atm_ind";
+static const char __pyx_k_clust_a[] = "clust_a";
+static const char __pyx_k_clust_i[] = "clust_i";
+static const char __pyx_k_clust_j[] = "clust_j";
+static const char __pyx_k_clust_k[] = "clust_k";
 static const char __pyx_k_fortran[] = "fortran";
 static const char __pyx_k_memview[] = "memview";
+static const char __pyx_k_n_dot_u[] = "n_dot_u";
+static const char __pyx_k_n_dot_v[] = "n_dot_v";
 static const char __pyx_k_n_pairs[] = "n_pairs";
 static const char __pyx_k_pair_ij[] = "pair_ij";
+static const char __pyx_k_ux_perp[] = "ux_perp";
+static const char __pyx_k_uy_perp[] = "uy_perp";
+static const char __pyx_k_uz_perp[] = "uz_perp";
+static const char __pyx_k_vx_perp[] = "vx_perp";
+static const char __pyx_k_vy_perp[] = "vy_perp";
+static const char __pyx_k_vz_perp[] = "vz_perp";
 static const char __pyx_k_Ellipsis[] = "Ellipsis";
 static const char __pyx_k_getstate[] = "__getstate__";
+static const char __pyx_k_h_eff_ij[] = "h_eff_ij";
 static const char __pyx_k_itemsize[] = "itemsize";
 static const char __pyx_k_pair_ind[] = "pair_ind";
+static const char __pyx_k_pair_inv[] = "pair_inv";
 static const char __pyx_k_pyx_type[] = "__pyx_type";
 static const char __pyx_k_setstate[] = "__setstate__";
 static const char __pyx_k_TypeError[] = "TypeError";
@@ -2372,9 +2416,11 @@ static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_heisenberg[] = "heisenberg";
 static const char __pyx_k_pyx_result[] = "__pyx_result";
 static const char __pyx_k_pyx_vtable[] = "__pyx_vtable__";
+static const char __pyx_k_spin_shape[] = "spin_shape";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_MemoryError[] = "MemoryError";
 static const char __pyx_k_PickleError[] = "PickleError";
+static const char __pyx_k_pairs_shape[] = "pairs_shape";
 static const char __pyx_k_pyx_checksum[] = "__pyx_checksum";
 static const char __pyx_k_stringsource[] = "stringsource";
 static const char __pyx_k_pyx_getbuffer[] = "__pyx_getbuffer";
@@ -2386,6 +2432,7 @@ static const char __pyx_k_pyx_PickleError[] = "__pyx_PickleError";
 static const char __pyx_k_setstate_cython[] = "__setstate_cython__";
 static const char __pyx_k_pyx_unpickle_Enum[] = "__pyx_unpickle_Enum";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
+static const char __pyx_k_heisenberg_cluster[] = "heisenberg_cluster";
 static const char __pyx_k_strided_and_direct[] = "<strided and direct>";
 static const char __pyx_k_strided_and_indirect[] = "<strided and indirect>";
 static const char __pyx_k_contiguous_and_direct[] = "<contiguous and direct>";
@@ -2426,11 +2473,9 @@ static PyObject *__pyx_kp_s_Cannot_assign_to_read_only_memor;
 static PyObject *__pyx_kp_s_Cannot_create_writable_memory_vi;
 static PyObject *__pyx_kp_s_Cannot_index_with_type_s;
 static PyObject *__pyx_n_s_E;
-static PyObject *__pyx_n_s_E_np;
 static PyObject *__pyx_n_s_Ellipsis;
 static PyObject *__pyx_kp_s_Empty_shape_tuple_for_cython_arr;
 static PyObject *__pyx_n_s_H;
-static PyObject *__pyx_n_s_H_np;
 static PyObject *__pyx_n_s_ImportError;
 static PyObject *__pyx_kp_s_Incompatible_checksums_s_vs_0xb0;
 static PyObject *__pyx_n_s_IndexError;
@@ -2453,23 +2498,29 @@ static PyObject *__pyx_n_s_TypeError;
 static PyObject *__pyx_kp_s_Unable_to_convert_item_to_object;
 static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_View_MemoryView;
-static PyObject *__pyx_n_s__21;
+static PyObject *__pyx_n_s__23;
 static PyObject *__pyx_n_s_a;
 static PyObject *__pyx_n_s_a_2;
 static PyObject *__pyx_n_s_allocate_buffer;
 static PyObject *__pyx_n_s_atm_ind;
+static PyObject *__pyx_n_s_b;
 static PyObject *__pyx_n_s_base;
 static PyObject *__pyx_n_s_beta;
 static PyObject *__pyx_n_s_c;
 static PyObject *__pyx_n_u_c;
 static PyObject *__pyx_n_s_class;
 static PyObject *__pyx_n_s_cline_in_traceback;
+static PyObject *__pyx_n_s_clust_a;
+static PyObject *__pyx_n_s_clust_i;
+static PyObject *__pyx_n_s_clust_j;
+static PyObject *__pyx_n_s_clust_k;
 static PyObject *__pyx_kp_s_contiguous_and_direct;
 static PyObject *__pyx_kp_s_contiguous_and_indirect;
 static PyObject *__pyx_n_s_copy;
 static PyObject *__pyx_n_s_dict;
 static PyObject *__pyx_n_s_disorder_diffuse_simulation;
 static PyObject *__pyx_kp_s_disorder_diffuse_simulation_pyx;
+static PyObject *__pyx_n_s_dtype;
 static PyObject *__pyx_n_s_dtype_is_object;
 static PyObject *__pyx_n_s_e;
 static PyObject *__pyx_n_s_e_np;
@@ -2487,14 +2538,20 @@ static PyObject *__pyx_n_u_fortran;
 static PyObject *__pyx_n_s_g;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_kp_s_got_differing_extents_in_dimensi;
+static PyObject *__pyx_n_s_h_eff;
+static PyObject *__pyx_n_s_h_eff_ij;
 static PyObject *__pyx_n_s_heisenberg;
+static PyObject *__pyx_n_s_heisenberg_cluster;
 static PyObject *__pyx_n_s_i;
 static PyObject *__pyx_n_s_i_2;
+static PyObject *__pyx_n_s_i_c;
 static PyObject *__pyx_n_s_id;
 static PyObject *__pyx_n_s_img_ind_i;
 static PyObject *__pyx_n_s_img_ind_j;
 static PyObject *__pyx_n_s_img_ind_k;
 static PyObject *__pyx_n_s_import;
+static PyObject *__pyx_n_s_intc;
+static PyObject *__pyx_n_s_intp;
 static PyObject *__pyx_n_s_itemsize;
 static PyObject *__pyx_kp_s_itemsize_0_for_cython_array;
 static PyObject *__pyx_n_s_j;
@@ -2505,7 +2562,14 @@ static PyObject *__pyx_n_s_k_2;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_memview;
 static PyObject *__pyx_n_s_mode;
+static PyObject *__pyx_n_s_mx;
+static PyObject *__pyx_n_s_my;
+static PyObject *__pyx_n_s_mz;
+static PyObject *__pyx_n_s_n;
 static PyObject *__pyx_n_s_n_atm;
+static PyObject *__pyx_n_s_n_c;
+static PyObject *__pyx_n_s_n_dot_u;
+static PyObject *__pyx_n_s_n_dot_v;
 static PyObject *__pyx_n_s_n_pairs;
 static PyObject *__pyx_n_s_n_temp;
 static PyObject *__pyx_n_s_name;
@@ -2520,11 +2584,16 @@ static PyObject *__pyx_kp_u_numpy_core_multiarray_failed_to;
 static PyObject *__pyx_kp_u_numpy_core_umath_failed_to_impor;
 static PyObject *__pyx_n_s_nv;
 static PyObject *__pyx_n_s_nw;
+static PyObject *__pyx_n_s_nx;
+static PyObject *__pyx_n_s_ny;
+static PyObject *__pyx_n_s_nz;
 static PyObject *__pyx_n_s_obj;
 static PyObject *__pyx_n_s_p;
 static PyObject *__pyx_n_s_pack;
 static PyObject *__pyx_n_s_pair_ij;
 static PyObject *__pyx_n_s_pair_ind;
+static PyObject *__pyx_n_s_pair_inv;
+static PyObject *__pyx_n_s_pairs_shape;
 static PyObject *__pyx_n_s_pickle;
 static PyObject *__pyx_n_s_pyx_PickleError;
 static PyObject *__pyx_n_s_pyx_checksum;
@@ -2542,6 +2611,7 @@ static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
 static PyObject *__pyx_n_s_shape;
 static PyObject *__pyx_n_s_size;
+static PyObject *__pyx_n_s_spin_shape;
 static PyObject *__pyx_n_s_start;
 static PyObject *__pyx_n_s_step;
 static PyObject *__pyx_n_s_stop;
@@ -2555,19 +2625,27 @@ static PyObject *__pyx_n_s_sy;
 static PyObject *__pyx_n_s_sz;
 static PyObject *__pyx_n_s_t;
 static PyObject *__pyx_n_s_test;
+static PyObject *__pyx_n_s_u;
 static PyObject *__pyx_kp_s_unable_to_allocate_array_data;
 static PyObject *__pyx_kp_s_unable_to_allocate_shape_and_str;
 static PyObject *__pyx_n_s_unpack;
 static PyObject *__pyx_n_s_update;
 static PyObject *__pyx_n_s_ux;
+static PyObject *__pyx_n_s_ux_perp;
 static PyObject *__pyx_n_s_uy;
+static PyObject *__pyx_n_s_uy_perp;
 static PyObject *__pyx_n_s_uz;
+static PyObject *__pyx_n_s_uz_perp;
 static PyObject *__pyx_n_s_vx;
+static PyObject *__pyx_n_s_vx_perp;
 static PyObject *__pyx_n_s_vy;
+static PyObject *__pyx_n_s_vy_perp;
 static PyObject *__pyx_n_s_vz;
+static PyObject *__pyx_n_s_vz_perp;
 static PyObject *__pyx_n_s_zeros;
-static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_heisenberg(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij, __Pyx_memviewslice __pyx_v_T_range, double __pyx_v_kB, Py_ssize_t __pyx_v_N); /* proto */
-static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij); /* proto */
+static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij); /* proto */
+static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2heisenberg(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij, __Pyx_memviewslice __pyx_v_T_range, double __pyx_v_kB, Py_ssize_t __pyx_v_N); /* proto */
+static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_4heisenberg_cluster(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_inv, __Pyx_memviewslice __pyx_v_pair_ij, __Pyx_memviewslice __pyx_v_T_range, double __pyx_v_kB, Py_ssize_t __pyx_v_N); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __pyx_array_obj *__pyx_v_self, PyObject *__pyx_v_shape, Py_ssize_t __pyx_v_itemsize, PyObject *__pyx_v_format, PyObject *__pyx_v_mode, int __pyx_v_allocate_buffer); /* proto */
 static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(struct __pyx_array_obj *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_array___pyx_pf_15View_dot_MemoryView_5array_4__dealloc__(struct __pyx_array_obj *__pyx_v_self); /* proto */
@@ -2638,17 +2716,19 @@ static PyObject *__pyx_tuple__16;
 static PyObject *__pyx_tuple__18;
 static PyObject *__pyx_tuple__19;
 static PyObject *__pyx_tuple__20;
-static PyObject *__pyx_tuple__22;
+static PyObject *__pyx_tuple__21;
 static PyObject *__pyx_tuple__24;
 static PyObject *__pyx_tuple__26;
-static PyObject *__pyx_tuple__27;
 static PyObject *__pyx_tuple__28;
 static PyObject *__pyx_tuple__29;
 static PyObject *__pyx_tuple__30;
 static PyObject *__pyx_tuple__31;
-static PyObject *__pyx_codeobj__23;
+static PyObject *__pyx_tuple__32;
+static PyObject *__pyx_tuple__33;
+static PyObject *__pyx_codeobj__22;
 static PyObject *__pyx_codeobj__25;
-static PyObject *__pyx_codeobj__32;
+static PyObject *__pyx_codeobj__27;
+static PyObject *__pyx_codeobj__34;
 /* Late includes */
 
 /* "disorder/diffuse/simulation.pyx":41
@@ -3255,7 +3335,7 @@ static void __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__Pyx_memvi
  *             if (random() < alpha(H[i]-H[j], beta[i]-beta[j])):
  *                 beta[i], beta[j] = beta[i], beta[j]             # <<<<<<<<<<<<<<
  * 
- * cdef void annealing_vector(double [:,:,:,:,::1] Sx,
+ * def energy(double [:,:,:,:,::1] Sx,
  */
         __pyx_t_8 = __pyx_v_i;
         __pyx_t_9 = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_8)) )));
@@ -3300,1514 +3380,15 @@ static void __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__Pyx_memvi
 /* "disorder/diffuse/simulation.pyx":132
  *                 beta[i], beta[j] = beta[i], beta[j]
  * 
- * cdef void annealing_vector(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
- *                            double [:,:,:,:,::1] Sy,
- *                            double [:,:,:,:,::1] Sz,
- */
-
-static void __pyx_f_8disorder_7diffuse_10simulation_annealing_vector(__Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_sx, __Pyx_memviewslice __pyx_v_sy, __Pyx_memviewslice __pyx_v_sz, __Pyx_memviewslice __pyx_v_H, __Pyx_memviewslice __pyx_v_E, __Pyx_memviewslice __pyx_v_beta, Py_ssize_t __pyx_v_i, Py_ssize_t __pyx_v_j, Py_ssize_t __pyx_v_k, Py_ssize_t __pyx_v_a) {
-  Py_ssize_t __pyx_v_n_temp;
-  Py_ssize_t __pyx_v_t;
-  __Pyx_RefNannyDeclarations
-  Py_ssize_t __pyx_t_1;
-  Py_ssize_t __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  int __pyx_t_6;
-  Py_ssize_t __pyx_t_7;
-  Py_ssize_t __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  Py_ssize_t __pyx_t_10;
-  __Pyx_RefNannySetupContext("annealing_vector", 0);
-
-  /* "disorder/diffuse/simulation.pyx":146
- *                            Py_ssize_t a):
- * 
- *     cdef Py_ssize_t n_temp = E.shape[0]             # <<<<<<<<<<<<<<
- * 
- *     cdef Py_ssize_t t
- */
-  __pyx_v_n_temp = (__pyx_v_E.shape[0]);
-
-  /* "disorder/diffuse/simulation.pyx":150
- *     cdef Py_ssize_t t
- * 
- *     for t in range(n_temp):             # <<<<<<<<<<<<<<
- * 
- *         if (random() < alpha(E[t], beta[t])):
- */
-  __pyx_t_1 = __pyx_v_n_temp;
-  __pyx_t_2 = __pyx_t_1;
-  for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
-    __pyx_v_t = __pyx_t_3;
-
-    /* "disorder/diffuse/simulation.pyx":152
- *     for t in range(n_temp):
- * 
- *         if (random() < alpha(E[t], beta[t])):             # <<<<<<<<<<<<<<
- *             Sx[i,j,k,a,t] = sx[t]
- *             Sy[i,j,k,a,t] = sy[t]
- */
-    __pyx_t_4 = __pyx_v_t;
-    __pyx_t_5 = __pyx_v_t;
-    __pyx_t_6 = ((__pyx_f_8disorder_7diffuse_10simulation_random() < __pyx_f_8disorder_7diffuse_10simulation_alpha((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_E.data) + __pyx_t_4)) ))), (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_5)) ))))) != 0);
-    if (__pyx_t_6) {
-
-      /* "disorder/diffuse/simulation.pyx":153
- * 
- *         if (random() < alpha(E[t], beta[t])):
- *             Sx[i,j,k,a,t] = sx[t]             # <<<<<<<<<<<<<<
- *             Sy[i,j,k,a,t] = sy[t]
- *             Sz[i,j,k,a,t] = sz[t]
- */
-      __pyx_t_5 = __pyx_v_t;
-      __pyx_t_4 = __pyx_v_i;
-      __pyx_t_7 = __pyx_v_j;
-      __pyx_t_8 = __pyx_v_k;
-      __pyx_t_9 = __pyx_v_a;
-      __pyx_t_10 = __pyx_v_t;
-      *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_4 * __pyx_v_Sx.strides[0]) ) + __pyx_t_7 * __pyx_v_Sx.strides[1]) ) + __pyx_t_8 * __pyx_v_Sx.strides[2]) ) + __pyx_t_9 * __pyx_v_Sx.strides[3]) )) + __pyx_t_10)) )) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sx.data) + __pyx_t_5)) )));
-
-      /* "disorder/diffuse/simulation.pyx":154
- *         if (random() < alpha(E[t], beta[t])):
- *             Sx[i,j,k,a,t] = sx[t]
- *             Sy[i,j,k,a,t] = sy[t]             # <<<<<<<<<<<<<<
- *             Sz[i,j,k,a,t] = sz[t]
- *             H[t] += E[t]
- */
-      __pyx_t_5 = __pyx_v_t;
-      __pyx_t_10 = __pyx_v_i;
-      __pyx_t_9 = __pyx_v_j;
-      __pyx_t_8 = __pyx_v_k;
-      __pyx_t_7 = __pyx_v_a;
-      __pyx_t_4 = __pyx_v_t;
-      *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_10 * __pyx_v_Sy.strides[0]) ) + __pyx_t_9 * __pyx_v_Sy.strides[1]) ) + __pyx_t_8 * __pyx_v_Sy.strides[2]) ) + __pyx_t_7 * __pyx_v_Sy.strides[3]) )) + __pyx_t_4)) )) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sy.data) + __pyx_t_5)) )));
-
-      /* "disorder/diffuse/simulation.pyx":155
- *             Sx[i,j,k,a,t] = sx[t]
- *             Sy[i,j,k,a,t] = sy[t]
- *             Sz[i,j,k,a,t] = sz[t]             # <<<<<<<<<<<<<<
- *             H[t] += E[t]
- * 
- */
-      __pyx_t_5 = __pyx_v_t;
-      __pyx_t_4 = __pyx_v_i;
-      __pyx_t_7 = __pyx_v_j;
-      __pyx_t_8 = __pyx_v_k;
-      __pyx_t_9 = __pyx_v_a;
-      __pyx_t_10 = __pyx_v_t;
-      *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_4 * __pyx_v_Sz.strides[0]) ) + __pyx_t_7 * __pyx_v_Sz.strides[1]) ) + __pyx_t_8 * __pyx_v_Sz.strides[2]) ) + __pyx_t_9 * __pyx_v_Sz.strides[3]) )) + __pyx_t_10)) )) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sz.data) + __pyx_t_5)) )));
-
-      /* "disorder/diffuse/simulation.pyx":156
- *             Sy[i,j,k,a,t] = sy[t]
- *             Sz[i,j,k,a,t] = sz[t]
- *             H[t] += E[t]             # <<<<<<<<<<<<<<
- * 
- * cdef double magnetic(double [:,:,:,:,::1] Sx,
- */
-      __pyx_t_5 = __pyx_v_t;
-      __pyx_t_10 = __pyx_v_t;
-      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_H.data) + __pyx_t_10)) )) += (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_E.data) + __pyx_t_5)) )));
-
-      /* "disorder/diffuse/simulation.pyx":152
- *     for t in range(n_temp):
- * 
- *         if (random() < alpha(E[t], beta[t])):             # <<<<<<<<<<<<<<
- *             Sx[i,j,k,a,t] = sx[t]
- *             Sy[i,j,k,a,t] = sy[t]
- */
-    }
-  }
-
-  /* "disorder/diffuse/simulation.pyx":132
- *                 beta[i], beta[j] = beta[i], beta[j]
- * 
- * cdef void annealing_vector(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
- *                            double [:,:,:,:,::1] Sy,
- *                            double [:,:,:,:,::1] Sz,
- */
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-}
-
-/* "disorder/diffuse/simulation.pyx":158
- *             H[t] += E[t]
- * 
- * cdef double magnetic(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
- *                      double [:,:,:,:,::1] Sy,
- *                      double [:,:,:,:,::1] Sz,
- */
-
-static double __pyx_f_8disorder_7diffuse_10simulation_magnetic(__Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, double __pyx_v_vx, double __pyx_v_vy, double __pyx_v_vz, double __pyx_v_ux, double __pyx_v_uy, double __pyx_v_uz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij, Py_ssize_t __pyx_v_i, Py_ssize_t __pyx_v_j, Py_ssize_t __pyx_v_k, Py_ssize_t __pyx_v_a, Py_ssize_t __pyx_v_t) {
-  Py_ssize_t __pyx_v_nu;
-  Py_ssize_t __pyx_v_nv;
-  Py_ssize_t __pyx_v_nw;
-  Py_ssize_t __pyx_v_n_pairs;
-  Py_ssize_t __pyx_v_i_;
-  Py_ssize_t __pyx_v_j_;
-  Py_ssize_t __pyx_v_k_;
-  Py_ssize_t __pyx_v_a_;
-  Py_ssize_t __pyx_v_p;
-  Py_ssize_t __pyx_v_q;
-  int __pyx_v_f;
-  double __pyx_v_E;
-  double __pyx_v_wx;
-  double __pyx_v_wy;
-  double __pyx_v_wz;
-  double __pyx_v_dx;
-  double __pyx_v_dy;
-  double __pyx_v_dz;
-  double __pyx_v_Bx;
-  double __pyx_v_By;
-  double __pyx_v_Bz;
-  double __pyx_r;
-  __Pyx_RefNannyDeclarations
-  double __pyx_t_1;
-  double __pyx_t_2;
-  double __pyx_t_3;
-  Py_ssize_t __pyx_t_4;
-  Py_ssize_t __pyx_t_5;
-  Py_ssize_t __pyx_t_6;
-  Py_ssize_t __pyx_t_7;
-  Py_ssize_t __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  Py_ssize_t __pyx_t_10;
-  Py_ssize_t __pyx_t_11;
-  int __pyx_t_12;
-  Py_ssize_t __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
-  Py_ssize_t __pyx_t_15;
-  Py_ssize_t __pyx_t_16;
-  Py_ssize_t __pyx_t_17;
-  Py_ssize_t __pyx_t_18;
-  Py_ssize_t __pyx_t_19;
-  Py_ssize_t __pyx_t_20;
-  Py_ssize_t __pyx_t_21;
-  Py_ssize_t __pyx_t_22;
-  Py_ssize_t __pyx_t_23;
-  Py_ssize_t __pyx_t_24;
-  Py_ssize_t __pyx_t_25;
-  Py_ssize_t __pyx_t_26;
-  Py_ssize_t __pyx_t_27;
-  Py_ssize_t __pyx_t_28;
-  Py_ssize_t __pyx_t_29;
-  Py_ssize_t __pyx_t_30;
-  Py_ssize_t __pyx_t_31;
-  Py_ssize_t __pyx_t_32;
-  Py_ssize_t __pyx_t_33;
-  Py_ssize_t __pyx_t_34;
-  __Pyx_RefNannySetupContext("magnetic", 0);
-
-  /* "disorder/diffuse/simulation.pyx":183
- *                      Py_ssize_t t):
- * 
- *     cdef Py_ssize_t nu = Sx.shape[0]             # <<<<<<<<<<<<<<
- *     cdef Py_ssize_t nv = Sx.shape[1]
- *     cdef Py_ssize_t nw = Sx.shape[2]
- */
-  __pyx_v_nu = (__pyx_v_Sx.shape[0]);
-
-  /* "disorder/diffuse/simulation.pyx":184
- * 
- *     cdef Py_ssize_t nu = Sx.shape[0]
- *     cdef Py_ssize_t nv = Sx.shape[1]             # <<<<<<<<<<<<<<
- *     cdef Py_ssize_t nw = Sx.shape[2]
- * 
- */
-  __pyx_v_nv = (__pyx_v_Sx.shape[1]);
-
-  /* "disorder/diffuse/simulation.pyx":185
- *     cdef Py_ssize_t nu = Sx.shape[0]
- *     cdef Py_ssize_t nv = Sx.shape[1]
- *     cdef Py_ssize_t nw = Sx.shape[2]             # <<<<<<<<<<<<<<
- * 
- *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
- */
-  __pyx_v_nw = (__pyx_v_Sx.shape[2]);
-
-  /* "disorder/diffuse/simulation.pyx":187
- *     cdef Py_ssize_t nw = Sx.shape[2]
- * 
- *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]             # <<<<<<<<<<<<<<
- * 
- *     cdef Py_ssize_t i_, j_, k_, a_, p, q
- */
-  __pyx_v_n_pairs = (__pyx_v_atm_ind.shape[1]);
-
-  /* "disorder/diffuse/simulation.pyx":193
- *     cdef bint f
- * 
- *     cdef double E = 0             # <<<<<<<<<<<<<<
- * 
- *     cdef double wx, wy, wz
- */
-  __pyx_v_E = 0.0;
-
-  /* "disorder/diffuse/simulation.pyx":199
- *     cdef double dx, dy, dz
- * 
- *     dx, dy, dz = vx-ux, vy-uy, vz-uz             # <<<<<<<<<<<<<<
- * 
- *     cdef double Bx = B[0]
- */
-  __pyx_t_1 = (__pyx_v_vx - __pyx_v_ux);
-  __pyx_t_2 = (__pyx_v_vy - __pyx_v_uy);
-  __pyx_t_3 = (__pyx_v_vz - __pyx_v_uz);
-  __pyx_v_dx = __pyx_t_1;
-  __pyx_v_dy = __pyx_t_2;
-  __pyx_v_dz = __pyx_t_3;
-
-  /* "disorder/diffuse/simulation.pyx":201
- *     dx, dy, dz = vx-ux, vy-uy, vz-uz
- * 
- *     cdef double Bx = B[0]             # <<<<<<<<<<<<<<
- *     cdef double By = B[1]
- *     cdef double Bz = B[2]
- */
-  __pyx_t_4 = 0;
-  __pyx_v_Bx = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_4)) )));
-
-  /* "disorder/diffuse/simulation.pyx":202
- * 
- *     cdef double Bx = B[0]
- *     cdef double By = B[1]             # <<<<<<<<<<<<<<
- *     cdef double Bz = B[2]
- * 
- */
-  __pyx_t_4 = 1;
-  __pyx_v_By = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_4)) )));
-
-  /* "disorder/diffuse/simulation.pyx":203
- *     cdef double Bx = B[0]
- *     cdef double By = B[1]
- *     cdef double Bz = B[2]             # <<<<<<<<<<<<<<
- * 
- *     for p in range(n_pairs):
- */
-  __pyx_t_4 = 2;
-  __pyx_v_Bz = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_4)) )));
-
-  /* "disorder/diffuse/simulation.pyx":205
- *     cdef double Bz = B[2]
- * 
- *     for p in range(n_pairs):             # <<<<<<<<<<<<<<
- * 
- *         i_ = (i+img_ind_i[a,p]+nu)%nu
- */
-  __pyx_t_5 = __pyx_v_n_pairs;
-  __pyx_t_6 = __pyx_t_5;
-  for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
-    __pyx_v_p = __pyx_t_7;
-
-    /* "disorder/diffuse/simulation.pyx":207
- *     for p in range(n_pairs):
- * 
- *         i_ = (i+img_ind_i[a,p]+nu)%nu             # <<<<<<<<<<<<<<
- *         j_ = (j+img_ind_j[a,p]+nv)%nv
- *         k_ = (k+img_ind_k[a,p]+nw)%nw
- */
-    __pyx_t_4 = __pyx_v_a;
-    __pyx_t_8 = __pyx_v_p;
-    __pyx_v_i_ = (((__pyx_v_i + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_i.data + __pyx_t_4 * __pyx_v_img_ind_i.strides[0]) )) + __pyx_t_8)) )))) + __pyx_v_nu) % __pyx_v_nu);
-
-    /* "disorder/diffuse/simulation.pyx":208
- * 
- *         i_ = (i+img_ind_i[a,p]+nu)%nu
- *         j_ = (j+img_ind_j[a,p]+nv)%nv             # <<<<<<<<<<<<<<
- *         k_ = (k+img_ind_k[a,p]+nw)%nw
- *         a_ = atm_ind[a,p]
- */
-    __pyx_t_8 = __pyx_v_a;
-    __pyx_t_4 = __pyx_v_p;
-    __pyx_v_j_ = (((__pyx_v_j + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_j.data + __pyx_t_8 * __pyx_v_img_ind_j.strides[0]) )) + __pyx_t_4)) )))) + __pyx_v_nv) % __pyx_v_nv);
-
-    /* "disorder/diffuse/simulation.pyx":209
- *         i_ = (i+img_ind_i[a,p]+nu)%nu
- *         j_ = (j+img_ind_j[a,p]+nv)%nv
- *         k_ = (k+img_ind_k[a,p]+nw)%nw             # <<<<<<<<<<<<<<
- *         a_ = atm_ind[a,p]
- * 
- */
-    __pyx_t_4 = __pyx_v_a;
-    __pyx_t_8 = __pyx_v_p;
-    __pyx_v_k_ = (((__pyx_v_k + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_k.data + __pyx_t_4 * __pyx_v_img_ind_k.strides[0]) )) + __pyx_t_8)) )))) + __pyx_v_nw) % __pyx_v_nw);
-
-    /* "disorder/diffuse/simulation.pyx":210
- *         j_ = (j+img_ind_j[a,p]+nv)%nv
- *         k_ = (k+img_ind_k[a,p]+nw)%nw
- *         a_ = atm_ind[a,p]             # <<<<<<<<<<<<<<
- * 
- *         q = pair_ind[a,p]
- */
-    __pyx_t_8 = __pyx_v_a;
-    __pyx_t_4 = __pyx_v_p;
-    __pyx_v_a_ = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_atm_ind.data + __pyx_t_8 * __pyx_v_atm_ind.strides[0]) )) + __pyx_t_4)) )));
-
-    /* "disorder/diffuse/simulation.pyx":212
- *         a_ = atm_ind[a,p]
- * 
- *         q = pair_ind[a,p]             # <<<<<<<<<<<<<<
- * 
- *         f = pair_ij[a,p]
- */
-    __pyx_t_4 = __pyx_v_a;
-    __pyx_t_8 = __pyx_v_p;
-    __pyx_v_q = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ind.data + __pyx_t_4 * __pyx_v_pair_ind.strides[0]) )) + __pyx_t_8)) )));
-
-    /* "disorder/diffuse/simulation.pyx":214
- *         q = pair_ind[a,p]
- * 
- *         f = pair_ij[a,p]             # <<<<<<<<<<<<<<
- * 
- *         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
- */
-    __pyx_t_8 = __pyx_v_a;
-    __pyx_t_4 = __pyx_v_p;
-    __pyx_v_f = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ij.data + __pyx_t_8 * __pyx_v_pair_ij.strides[0]) )) + __pyx_t_4)) )));
-
-    /* "disorder/diffuse/simulation.pyx":216
- *         f = pair_ij[a,p]
- * 
- *         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
- * 
- *         if (f == 1):
- */
-    __pyx_t_4 = __pyx_v_i_;
-    __pyx_t_8 = __pyx_v_j_;
-    __pyx_t_9 = __pyx_v_k_;
-    __pyx_t_10 = __pyx_v_a_;
-    __pyx_t_11 = __pyx_v_t;
-    __pyx_t_3 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_4 * __pyx_v_Sx.strides[0]) ) + __pyx_t_8 * __pyx_v_Sx.strides[1]) ) + __pyx_t_9 * __pyx_v_Sx.strides[2]) ) + __pyx_t_10 * __pyx_v_Sx.strides[3]) )) + __pyx_t_11)) )));
-    __pyx_t_11 = __pyx_v_i_;
-    __pyx_t_10 = __pyx_v_j_;
-    __pyx_t_9 = __pyx_v_k_;
-    __pyx_t_8 = __pyx_v_a_;
-    __pyx_t_4 = __pyx_v_t;
-    __pyx_t_2 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_11 * __pyx_v_Sy.strides[0]) ) + __pyx_t_10 * __pyx_v_Sy.strides[1]) ) + __pyx_t_9 * __pyx_v_Sy.strides[2]) ) + __pyx_t_8 * __pyx_v_Sy.strides[3]) )) + __pyx_t_4)) )));
-    __pyx_t_4 = __pyx_v_i_;
-    __pyx_t_8 = __pyx_v_j_;
-    __pyx_t_9 = __pyx_v_k_;
-    __pyx_t_10 = __pyx_v_a_;
-    __pyx_t_11 = __pyx_v_t;
-    __pyx_t_1 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_4 * __pyx_v_Sz.strides[0]) ) + __pyx_t_8 * __pyx_v_Sz.strides[1]) ) + __pyx_t_9 * __pyx_v_Sz.strides[2]) ) + __pyx_t_10 * __pyx_v_Sz.strides[3]) )) + __pyx_t_11)) )));
-    __pyx_v_wx = __pyx_t_3;
-    __pyx_v_wy = __pyx_t_2;
-    __pyx_v_wz = __pyx_t_1;
-
-    /* "disorder/diffuse/simulation.pyx":218
- *         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
- * 
- *         if (f == 1):             # <<<<<<<<<<<<<<
- *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
- *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
- */
-    __pyx_t_12 = ((__pyx_v_f == 1) != 0);
-    if (__pyx_t_12) {
-
-      /* "disorder/diffuse/simulation.pyx":219
- * 
- *         if (f == 1):
- *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\             # <<<<<<<<<<<<<<
- *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
- *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
- */
-      __pyx_t_11 = __pyx_v_q;
-      __pyx_t_10 = 0;
-      __pyx_t_9 = 0;
-      __pyx_t_8 = __pyx_v_q;
-      __pyx_t_4 = 1;
-      __pyx_t_13 = 0;
-      __pyx_t_14 = __pyx_v_q;
-      __pyx_t_15 = 2;
-      __pyx_t_16 = 0;
-
-      /* "disorder/diffuse/simulation.pyx":220
- *         if (f == 1):
- *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
- *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\             # <<<<<<<<<<<<<<
- *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
- *         else:
- */
-      __pyx_t_17 = __pyx_v_q;
-      __pyx_t_18 = 0;
-      __pyx_t_19 = 1;
-      __pyx_t_20 = __pyx_v_q;
-      __pyx_t_21 = 1;
-      __pyx_t_22 = 1;
-      __pyx_t_23 = __pyx_v_q;
-      __pyx_t_24 = 2;
-      __pyx_t_25 = 1;
-
-      /* "disorder/diffuse/simulation.pyx":221
- *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
- *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
- *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)             # <<<<<<<<<<<<<<
- *         else:
- *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
- */
-      __pyx_t_26 = __pyx_v_q;
-      __pyx_t_27 = 0;
-      __pyx_t_28 = 2;
-      __pyx_t_29 = __pyx_v_q;
-      __pyx_t_30 = 1;
-      __pyx_t_31 = 2;
-      __pyx_t_32 = __pyx_v_q;
-      __pyx_t_33 = 2;
-      __pyx_t_34 = 2;
-
-      /* "disorder/diffuse/simulation.pyx":219
- * 
- *         if (f == 1):
- *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\             # <<<<<<<<<<<<<<
- *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
- *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
- */
-      __pyx_v_E = (__pyx_v_E - (((__pyx_v_dx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_10 * __pyx_v_J.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_8 * __pyx_v_J.strides[0]) ) + __pyx_t_4 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_14 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_wz))) + (__pyx_v_dy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_17 * __pyx_v_J.strides[0]) ) + __pyx_t_18 * __pyx_v_J.strides[1]) )) + __pyx_t_19)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_20 * __pyx_v_J.strides[0]) ) + __pyx_t_21 * __pyx_v_J.strides[1]) )) + __pyx_t_22)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_23 * __pyx_v_J.strides[0]) ) + __pyx_t_24 * __pyx_v_J.strides[1]) )) + __pyx_t_25)) ))) * __pyx_v_wz)))) + (__pyx_v_dz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_26 * __pyx_v_J.strides[0]) ) + __pyx_t_27 * __pyx_v_J.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_29 * __pyx_v_J.strides[0]) ) + __pyx_t_30 * __pyx_v_J.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_32 * __pyx_v_J.strides[0]) ) + __pyx_t_33 * __pyx_v_J.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_wz)))));
-
-      /* "disorder/diffuse/simulation.pyx":218
- *         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
- * 
- *         if (f == 1):             # <<<<<<<<<<<<<<
- *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
- *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
- */
-      goto __pyx_L5;
-    }
-
-    /* "disorder/diffuse/simulation.pyx":223
- *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
- *         else:
- *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\             # <<<<<<<<<<<<<<
- *               +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
- *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
- */
-    /*else*/ {
-      __pyx_t_34 = __pyx_v_q;
-      __pyx_t_33 = 0;
-      __pyx_t_32 = 0;
-      __pyx_t_31 = __pyx_v_q;
-      __pyx_t_30 = 0;
-      __pyx_t_29 = 1;
-      __pyx_t_28 = __pyx_v_q;
-      __pyx_t_27 = 0;
-      __pyx_t_26 = 2;
-
-      /* "disorder/diffuse/simulation.pyx":224
- *         else:
- *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
- *               +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\             # <<<<<<<<<<<<<<
- *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
- * 
- */
-      __pyx_t_25 = __pyx_v_q;
-      __pyx_t_24 = 1;
-      __pyx_t_23 = 0;
-      __pyx_t_22 = __pyx_v_q;
-      __pyx_t_21 = 1;
-      __pyx_t_20 = 1;
-      __pyx_t_19 = __pyx_v_q;
-      __pyx_t_18 = 1;
-      __pyx_t_17 = 2;
-
-      /* "disorder/diffuse/simulation.pyx":225
- *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
- *               +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
- *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)             # <<<<<<<<<<<<<<
- * 
- *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
- */
-      __pyx_t_16 = __pyx_v_q;
-      __pyx_t_15 = 2;
-      __pyx_t_14 = 0;
-      __pyx_t_13 = __pyx_v_q;
-      __pyx_t_4 = 2;
-      __pyx_t_8 = 1;
-      __pyx_t_9 = __pyx_v_q;
-      __pyx_t_10 = 2;
-      __pyx_t_11 = 2;
-
-      /* "disorder/diffuse/simulation.pyx":223
- *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
- *         else:
- *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\             # <<<<<<<<<<<<<<
- *               +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
- *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
- */
-      __pyx_v_E = (__pyx_v_E - (((__pyx_v_dx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_34 * __pyx_v_J.strides[0]) ) + __pyx_t_33 * __pyx_v_J.strides[1]) )) + __pyx_t_32)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_31 * __pyx_v_J.strides[0]) ) + __pyx_t_30 * __pyx_v_J.strides[1]) )) + __pyx_t_29)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_28 * __pyx_v_J.strides[0]) ) + __pyx_t_27 * __pyx_v_J.strides[1]) )) + __pyx_t_26)) ))) * __pyx_v_wz))) + (__pyx_v_dy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_25 * __pyx_v_J.strides[0]) ) + __pyx_t_24 * __pyx_v_J.strides[1]) )) + __pyx_t_23)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_22 * __pyx_v_J.strides[0]) ) + __pyx_t_21 * __pyx_v_J.strides[1]) )) + __pyx_t_20)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_19 * __pyx_v_J.strides[0]) ) + __pyx_t_18 * __pyx_v_J.strides[1]) )) + __pyx_t_17)) ))) * __pyx_v_wz)))) + (__pyx_v_dz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_16 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_4 * __pyx_v_J.strides[1]) )) + __pyx_t_8)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_9 * __pyx_v_J.strides[0]) ) + __pyx_t_10 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_wz)))));
-    }
-    __pyx_L5:;
-  }
-
-  /* "disorder/diffuse/simulation.pyx":227
- *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
- * 
- *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\             # <<<<<<<<<<<<<<
- *       +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
- *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
- */
-  __pyx_t_11 = __pyx_v_a;
-  __pyx_t_10 = 0;
-  __pyx_t_9 = 0;
-  __pyx_t_8 = __pyx_v_a;
-  __pyx_t_4 = 0;
-  __pyx_t_13 = 1;
-  __pyx_t_14 = __pyx_v_a;
-  __pyx_t_15 = 0;
-  __pyx_t_16 = 2;
-
-  /* "disorder/diffuse/simulation.pyx":228
- * 
- *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
- *       +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\             # <<<<<<<<<<<<<<
- *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
- * 
- */
-  __pyx_t_17 = __pyx_v_a;
-  __pyx_t_18 = 1;
-  __pyx_t_19 = 0;
-  __pyx_t_20 = __pyx_v_a;
-  __pyx_t_21 = 1;
-  __pyx_t_22 = 1;
-  __pyx_t_23 = __pyx_v_a;
-  __pyx_t_24 = 1;
-  __pyx_t_25 = 2;
-
-  /* "disorder/diffuse/simulation.pyx":229
- *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
- *       +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
- *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)             # <<<<<<<<<<<<<<
- * 
- *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
- */
-  __pyx_t_26 = __pyx_v_a;
-  __pyx_t_27 = 2;
-  __pyx_t_28 = 0;
-  __pyx_t_29 = __pyx_v_a;
-  __pyx_t_30 = 2;
-  __pyx_t_31 = 1;
-  __pyx_t_32 = __pyx_v_a;
-  __pyx_t_33 = 2;
-  __pyx_t_34 = 2;
-
-  /* "disorder/diffuse/simulation.pyx":227
- *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
- * 
- *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\             # <<<<<<<<<<<<<<
- *       +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
- *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
- */
-  __pyx_v_E = (__pyx_v_E - (((__pyx_v_vx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_11 * __pyx_v_A.strides[0]) ) + __pyx_t_10 * __pyx_v_A.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_8 * __pyx_v_A.strides[0]) ) + __pyx_t_4 * __pyx_v_A.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_14 * __pyx_v_A.strides[0]) ) + __pyx_t_15 * __pyx_v_A.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_vz))) + (__pyx_v_vy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_17 * __pyx_v_A.strides[0]) ) + __pyx_t_18 * __pyx_v_A.strides[1]) )) + __pyx_t_19)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_20 * __pyx_v_A.strides[0]) ) + __pyx_t_21 * __pyx_v_A.strides[1]) )) + __pyx_t_22)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_23 * __pyx_v_A.strides[0]) ) + __pyx_t_24 * __pyx_v_A.strides[1]) )) + __pyx_t_25)) ))) * __pyx_v_vz)))) + (__pyx_v_vz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_26 * __pyx_v_A.strides[0]) ) + __pyx_t_27 * __pyx_v_A.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_29 * __pyx_v_A.strides[0]) ) + __pyx_t_30 * __pyx_v_A.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_32 * __pyx_v_A.strides[0]) ) + __pyx_t_33 * __pyx_v_A.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_vz)))));
-
-  /* "disorder/diffuse/simulation.pyx":231
- *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
- * 
- *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\             # <<<<<<<<<<<<<<
- *       +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
- *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
- */
-  __pyx_t_34 = __pyx_v_a;
-  __pyx_t_33 = 0;
-  __pyx_t_32 = 0;
-  __pyx_t_31 = __pyx_v_a;
-  __pyx_t_30 = 0;
-  __pyx_t_29 = 1;
-  __pyx_t_28 = __pyx_v_a;
-  __pyx_t_27 = 0;
-  __pyx_t_26 = 2;
-
-  /* "disorder/diffuse/simulation.pyx":232
- * 
- *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
- *       +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\             # <<<<<<<<<<<<<<
- *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
- * 
- */
-  __pyx_t_25 = __pyx_v_a;
-  __pyx_t_24 = 1;
-  __pyx_t_23 = 0;
-  __pyx_t_22 = __pyx_v_a;
-  __pyx_t_21 = 1;
-  __pyx_t_20 = 1;
-  __pyx_t_19 = __pyx_v_a;
-  __pyx_t_18 = 1;
-  __pyx_t_17 = 2;
-
-  /* "disorder/diffuse/simulation.pyx":233
- *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
- *       +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
- *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)             # <<<<<<<<<<<<<<
- * 
- *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
- */
-  __pyx_t_16 = __pyx_v_a;
-  __pyx_t_15 = 2;
-  __pyx_t_14 = 0;
-  __pyx_t_13 = __pyx_v_a;
-  __pyx_t_4 = 2;
-  __pyx_t_8 = 1;
-  __pyx_t_9 = __pyx_v_a;
-  __pyx_t_10 = 2;
-  __pyx_t_11 = 2;
-
-  /* "disorder/diffuse/simulation.pyx":231
- *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
- * 
- *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\             # <<<<<<<<<<<<<<
- *       +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
- *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
- */
-  __pyx_v_E = (__pyx_v_E + (((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_34 * __pyx_v_A.strides[0]) ) + __pyx_t_33 * __pyx_v_A.strides[1]) )) + __pyx_t_32)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_31 * __pyx_v_A.strides[0]) ) + __pyx_t_30 * __pyx_v_A.strides[1]) )) + __pyx_t_29)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_28 * __pyx_v_A.strides[0]) ) + __pyx_t_27 * __pyx_v_A.strides[1]) )) + __pyx_t_26)) ))) * __pyx_v_uz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_25 * __pyx_v_A.strides[0]) ) + __pyx_t_24 * __pyx_v_A.strides[1]) )) + __pyx_t_23)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_22 * __pyx_v_A.strides[0]) ) + __pyx_t_21 * __pyx_v_A.strides[1]) )) + __pyx_t_20)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_19 * __pyx_v_A.strides[0]) ) + __pyx_t_18 * __pyx_v_A.strides[1]) )) + __pyx_t_17)) ))) * __pyx_v_uz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_16 * __pyx_v_A.strides[0]) ) + __pyx_t_15 * __pyx_v_A.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_13 * __pyx_v_A.strides[0]) ) + __pyx_t_4 * __pyx_v_A.strides[1]) )) + __pyx_t_8)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_9 * __pyx_v_A.strides[0]) ) + __pyx_t_10 * __pyx_v_A.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_uz)))));
-
-  /* "disorder/diffuse/simulation.pyx":235
- *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
- * 
- *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\             # <<<<<<<<<<<<<<
- *       +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
- *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
- */
-  __pyx_t_11 = __pyx_v_a;
-  __pyx_t_10 = 0;
-  __pyx_t_9 = 0;
-  __pyx_t_8 = __pyx_v_a;
-  __pyx_t_4 = 0;
-  __pyx_t_13 = 1;
-  __pyx_t_14 = __pyx_v_a;
-  __pyx_t_15 = 0;
-  __pyx_t_16 = 2;
-
-  /* "disorder/diffuse/simulation.pyx":236
- * 
- *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
- *       +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\             # <<<<<<<<<<<<<<
- *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
- * 
- */
-  __pyx_t_17 = __pyx_v_a;
-  __pyx_t_18 = 1;
-  __pyx_t_19 = 0;
-  __pyx_t_20 = __pyx_v_a;
-  __pyx_t_21 = 1;
-  __pyx_t_22 = 1;
-  __pyx_t_23 = __pyx_v_a;
-  __pyx_t_24 = 1;
-  __pyx_t_25 = 2;
-
-  /* "disorder/diffuse/simulation.pyx":237
- *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
- *       +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
- *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)             # <<<<<<<<<<<<<<
- * 
- *     return E
- */
-  __pyx_t_26 = __pyx_v_a;
-  __pyx_t_27 = 2;
-  __pyx_t_28 = 0;
-  __pyx_t_29 = __pyx_v_a;
-  __pyx_t_30 = 2;
-  __pyx_t_31 = 1;
-  __pyx_t_32 = __pyx_v_a;
-  __pyx_t_33 = 2;
-  __pyx_t_34 = 2;
-
-  /* "disorder/diffuse/simulation.pyx":235
- *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
- * 
- *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\             # <<<<<<<<<<<<<<
- *       +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
- *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
- */
-  __pyx_v_E = (__pyx_v_E - (((__pyx_v_Bx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_11 * __pyx_v_g.strides[0]) ) + __pyx_t_10 * __pyx_v_g.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_dx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_8 * __pyx_v_g.strides[0]) ) + __pyx_t_4 * __pyx_v_g.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_dy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_14 * __pyx_v_g.strides[0]) ) + __pyx_t_15 * __pyx_v_g.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_dz))) + (__pyx_v_By * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_17 * __pyx_v_g.strides[0]) ) + __pyx_t_18 * __pyx_v_g.strides[1]) )) + __pyx_t_19)) ))) * __pyx_v_dx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_20 * __pyx_v_g.strides[0]) ) + __pyx_t_21 * __pyx_v_g.strides[1]) )) + __pyx_t_22)) ))) * __pyx_v_dy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_23 * __pyx_v_g.strides[0]) ) + __pyx_t_24 * __pyx_v_g.strides[1]) )) + __pyx_t_25)) ))) * __pyx_v_dz)))) + (__pyx_v_Bz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_26 * __pyx_v_g.strides[0]) ) + __pyx_t_27 * __pyx_v_g.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_dx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_29 * __pyx_v_g.strides[0]) ) + __pyx_t_30 * __pyx_v_g.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_dy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_32 * __pyx_v_g.strides[0]) ) + __pyx_t_33 * __pyx_v_g.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_dz)))));
-
-  /* "disorder/diffuse/simulation.pyx":239
- *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
- * 
- *     return E             # <<<<<<<<<<<<<<
- * 
- * def heisenberg(double [:,:,:,:,::1] Sx,
- */
-  __pyx_r = __pyx_v_E;
-  goto __pyx_L0;
-
-  /* "disorder/diffuse/simulation.pyx":158
- *             H[t] += E[t]
- * 
- * cdef double magnetic(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
- *                      double [:,:,:,:,::1] Sy,
- *                      double [:,:,:,:,::1] Sz,
- */
-
-  /* function exit code */
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "disorder/diffuse/simulation.pyx":241
- *     return E
- * 
- * def heisenberg(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
- *                double [:,:,:,:,::1] Sy,
- *                double [:,:,:,:,::1] Sz,
- */
-
-/* Python wrapper */
-static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_1heisenberg(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8disorder_7diffuse_10simulation_1heisenberg = {"heisenberg", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_10simulation_1heisenberg, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_1heisenberg(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  __Pyx_memviewslice __pyx_v_Sx = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_Sy = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_Sz = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_J = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_A = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_g = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_B = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_atm_ind = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_img_ind_i = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_img_ind_j = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_img_ind_k = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_pair_ind = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_pair_ij = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_T_range = { 0, 0, { 0 }, { 0 }, { 0 } };
-  double __pyx_v_kB;
-  Py_ssize_t __pyx_v_N;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("heisenberg (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_Sx,&__pyx_n_s_Sy,&__pyx_n_s_Sz,&__pyx_n_s_J,&__pyx_n_s_A,&__pyx_n_s_g,&__pyx_n_s_B,&__pyx_n_s_atm_ind,&__pyx_n_s_img_ind_i,&__pyx_n_s_img_ind_j,&__pyx_n_s_img_ind_k,&__pyx_n_s_pair_ind,&__pyx_n_s_pair_ij,&__pyx_n_s_T_range,&__pyx_n_s_kB,&__pyx_n_s_N,0};
-    PyObject* values[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case 16: values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
-        CYTHON_FALLTHROUGH;
-        case 15: values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
-        CYTHON_FALLTHROUGH;
-        case 14: values[13] = PyTuple_GET_ITEM(__pyx_args, 13);
-        CYTHON_FALLTHROUGH;
-        case 13: values[12] = PyTuple_GET_ITEM(__pyx_args, 12);
-        CYTHON_FALLTHROUGH;
-        case 12: values[11] = PyTuple_GET_ITEM(__pyx_args, 11);
-        CYTHON_FALLTHROUGH;
-        case 11: values[10] = PyTuple_GET_ITEM(__pyx_args, 10);
-        CYTHON_FALLTHROUGH;
-        case 10: values[9] = PyTuple_GET_ITEM(__pyx_args, 9);
-        CYTHON_FALLTHROUGH;
-        case  9: values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
-        CYTHON_FALLTHROUGH;
-        case  8: values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
-        CYTHON_FALLTHROUGH;
-        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-        CYTHON_FALLTHROUGH;
-        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-        CYTHON_FALLTHROUGH;
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sx)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sy)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 1); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sz)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 2); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_J)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 3); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_A)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 4); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_g)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 5); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  6:
-        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_B)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 6); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  7:
-        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_atm_ind)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 7); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  8:
-        if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_i)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 8); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  9:
-        if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_j)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 9); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case 10:
-        if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_k)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 10); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case 11:
-        if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pair_ind)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 11); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case 12:
-        if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pair_ij)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 12); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case 13:
-        if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_range)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 13); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case 14:
-        if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_kB)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 14); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case 15:
-        if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 15); __PYX_ERR(0, 241, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "heisenberg") < 0)) __PYX_ERR(0, 241, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 16) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
-      values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
-      values[9] = PyTuple_GET_ITEM(__pyx_args, 9);
-      values[10] = PyTuple_GET_ITEM(__pyx_args, 10);
-      values[11] = PyTuple_GET_ITEM(__pyx_args, 11);
-      values[12] = PyTuple_GET_ITEM(__pyx_args, 12);
-      values[13] = PyTuple_GET_ITEM(__pyx_args, 13);
-      values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
-      values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
-    }
-    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 241, __pyx_L3_error)
-    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 242, __pyx_L3_error)
-    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 243, __pyx_L3_error)
-    __pyx_v_J = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_J.memview)) __PYX_ERR(0, 244, __pyx_L3_error)
-    __pyx_v_A = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_A.memview)) __PYX_ERR(0, 245, __pyx_L3_error)
-    __pyx_v_g = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_g.memview)) __PYX_ERR(0, 246, __pyx_L3_error)
-    __pyx_v_B = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_B.memview)) __PYX_ERR(0, 247, __pyx_L3_error)
-    __pyx_v_atm_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[7], PyBUF_WRITABLE); if (unlikely(!__pyx_v_atm_ind.memview)) __PYX_ERR(0, 248, __pyx_L3_error)
-    __pyx_v_img_ind_i = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[8], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_i.memview)) __PYX_ERR(0, 249, __pyx_L3_error)
-    __pyx_v_img_ind_j = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[9], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_j.memview)) __PYX_ERR(0, 250, __pyx_L3_error)
-    __pyx_v_img_ind_k = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[10], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_k.memview)) __PYX_ERR(0, 251, __pyx_L3_error)
-    __pyx_v_pair_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[11], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ind.memview)) __PYX_ERR(0, 252, __pyx_L3_error)
-    __pyx_v_pair_ij = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[12], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ij.memview)) __PYX_ERR(0, 253, __pyx_L3_error)
-    __pyx_v_T_range = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[13], PyBUF_WRITABLE); if (unlikely(!__pyx_v_T_range.memview)) __PYX_ERR(0, 254, __pyx_L3_error)
-    __pyx_v_kB = __pyx_PyFloat_AsDouble(values[14]); if (unlikely((__pyx_v_kB == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 255, __pyx_L3_error)
-    __pyx_v_N = __Pyx_PyIndex_AsSsize_t(values[15]); if (unlikely((__pyx_v_N == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 256, __pyx_L3_error)
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 241, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("disorder.diffuse.simulation.heisenberg", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8disorder_7diffuse_10simulation_heisenberg(__pyx_self, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_J, __pyx_v_A, __pyx_v_g, __pyx_v_B, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_ij, __pyx_v_T_range, __pyx_v_kB, __pyx_v_N);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_heisenberg(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij, __Pyx_memviewslice __pyx_v_T_range, double __pyx_v_kB, Py_ssize_t __pyx_v_N) {
-  Py_ssize_t __pyx_v_nu;
-  Py_ssize_t __pyx_v_nv;
-  Py_ssize_t __pyx_v_nw;
-  Py_ssize_t __pyx_v_n_atm;
-  Py_ssize_t __pyx_v_n_temp;
-  Py_ssize_t __pyx_v_i;
-  Py_ssize_t __pyx_v_j;
-  Py_ssize_t __pyx_v_k;
-  Py_ssize_t __pyx_v_a;
-  Py_ssize_t __pyx_v_t;
-  PyObject *__pyx_v_E_np = NULL;
-  PyObject *__pyx_v_H_np = NULL;
-  __Pyx_memviewslice __pyx_v_E = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_H = { 0, 0, { 0 }, { 0 }, { 0 } };
-  double __pyx_v_ux;
-  double __pyx_v_uy;
-  double __pyx_v_uz;
-  double __pyx_v_vx;
-  double __pyx_v_vy;
-  double __pyx_v_vz;
-  __Pyx_memviewslice __pyx_v_sx = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_sy = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_sz = { 0, 0, { 0 }, { 0 }, { 0 } };
-  __Pyx_memviewslice __pyx_v_beta = { 0, 0, { 0 }, { 0 }, { 0 } };
-  CYTHON_UNUSED Py_ssize_t __pyx_v__;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  PyObject *__pyx_t_2 = NULL;
-  PyObject *__pyx_t_3 = NULL;
-  PyObject *__pyx_t_4 = NULL;
-  PyObject *__pyx_t_5 = NULL;
-  __Pyx_memviewslice __pyx_t_6 = { 0, 0, { 0 }, { 0 }, { 0 } };
-  Py_ssize_t __pyx_t_7;
-  Py_ssize_t __pyx_t_8;
-  Py_ssize_t __pyx_t_9;
-  __pyx_ctuple_Py_ssize_t__and_Py_ssize_t__and_Py_ssize_t__and_Py_ssize_t __pyx_t_10;
-  Py_ssize_t __pyx_t_11;
-  Py_ssize_t __pyx_t_12;
-  Py_ssize_t __pyx_t_13;
-  Py_ssize_t __pyx_t_14;
-  Py_ssize_t __pyx_t_15;
-  Py_ssize_t __pyx_t_16;
-  Py_ssize_t __pyx_t_17;
-  Py_ssize_t __pyx_t_18;
-  Py_ssize_t __pyx_t_19;
-  double __pyx_t_20;
-  double __pyx_t_21;
-  double __pyx_t_22;
-  __pyx_ctuple_double__and_double__and_double __pyx_t_23;
-  int __pyx_lineno = 0;
-  const char *__pyx_filename = NULL;
-  int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("heisenberg", 0);
-
-  /* "disorder/diffuse/simulation.pyx":258
- *                Py_ssize_t N):
- * 
- *     cdef Py_ssize_t nu = Sx.shape[0]             # <<<<<<<<<<<<<<
- *     cdef Py_ssize_t nv = Sx.shape[1]
- *     cdef Py_ssize_t nw = Sx.shape[2]
- */
-  __pyx_v_nu = (__pyx_v_Sx.shape[0]);
-
-  /* "disorder/diffuse/simulation.pyx":259
- * 
- *     cdef Py_ssize_t nu = Sx.shape[0]
- *     cdef Py_ssize_t nv = Sx.shape[1]             # <<<<<<<<<<<<<<
- *     cdef Py_ssize_t nw = Sx.shape[2]
- *     cdef Py_ssize_t n_atm = Sx.shape[3]
- */
-  __pyx_v_nv = (__pyx_v_Sx.shape[1]);
-
-  /* "disorder/diffuse/simulation.pyx":260
- *     cdef Py_ssize_t nu = Sx.shape[0]
- *     cdef Py_ssize_t nv = Sx.shape[1]
- *     cdef Py_ssize_t nw = Sx.shape[2]             # <<<<<<<<<<<<<<
- *     cdef Py_ssize_t n_atm = Sx.shape[3]
- * 
- */
-  __pyx_v_nw = (__pyx_v_Sx.shape[2]);
-
-  /* "disorder/diffuse/simulation.pyx":261
- *     cdef Py_ssize_t nv = Sx.shape[1]
- *     cdef Py_ssize_t nw = Sx.shape[2]
- *     cdef Py_ssize_t n_atm = Sx.shape[3]             # <<<<<<<<<<<<<<
- * 
- *     cdef Py_ssize_t n_temp = T_range.shape[0]
- */
-  __pyx_v_n_atm = (__pyx_v_Sx.shape[3]);
-
-  /* "disorder/diffuse/simulation.pyx":263
- *     cdef Py_ssize_t n_atm = Sx.shape[3]
- * 
- *     cdef Py_ssize_t n_temp = T_range.shape[0]             # <<<<<<<<<<<<<<
- * 
- *     initialize_random(nu, nv, nw, n_atm, n_temp)
- */
-  __pyx_v_n_temp = (__pyx_v_T_range.shape[0]);
-
-  /* "disorder/diffuse/simulation.pyx":265
- *     cdef Py_ssize_t n_temp = T_range.shape[0]
- * 
- *     initialize_random(nu, nv, nw, n_atm, n_temp)             # <<<<<<<<<<<<<<
- * 
- *     cdef Py_ssize_t i, j, k, a, t
- */
-  __pyx_f_8disorder_7diffuse_10simulation_initialize_random(__pyx_v_nu, __pyx_v_nv, __pyx_v_nw, __pyx_v_n_atm, __pyx_v_n_temp);
-
-  /* "disorder/diffuse/simulation.pyx":269
- *     cdef Py_ssize_t i, j, k, a, t
- * 
- *     E_np, H_np = np.zeros(n_temp), np.zeros(n_temp)             # <<<<<<<<<<<<<<
- * 
- *     cdef double [::1] E = E_np
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 269, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
-    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
-    if (likely(__pyx_t_4)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
-      __Pyx_INCREF(__pyx_t_4);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_3, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 269, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 269, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_5 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_5)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_5);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 269, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_v_E_np = __pyx_t_1;
-  __pyx_t_1 = 0;
-  __pyx_v_H_np = __pyx_t_3;
-  __pyx_t_3 = 0;
-
-  /* "disorder/diffuse/simulation.pyx":271
- *     E_np, H_np = np.zeros(n_temp), np.zeros(n_temp)
- * 
- *     cdef double [::1] E = E_np             # <<<<<<<<<<<<<<
- *     cdef double [::1] H = H_np
- * 
- */
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_v_E_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 271, __pyx_L1_error)
-  __pyx_v_E = __pyx_t_6;
-  __pyx_t_6.memview = NULL;
-  __pyx_t_6.data = NULL;
-
-  /* "disorder/diffuse/simulation.pyx":272
- * 
- *     cdef double [::1] E = E_np
- *     cdef double [::1] H = H_np             # <<<<<<<<<<<<<<
- * 
- *     cdef double ux, uy, uz
- */
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_v_H_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 272, __pyx_L1_error)
-  __pyx_v_H = __pyx_t_6;
-  __pyx_t_6.memview = NULL;
-  __pyx_t_6.data = NULL;
-
-  /* "disorder/diffuse/simulation.pyx":277
- *     cdef double vx, vy, vz
- * 
- *     cdef double [::1] sx = np.zeros(n_temp)             # <<<<<<<<<<<<<<
- *     cdef double [::1] sy = np.zeros(n_temp)
- *     cdef double [::1] sz = np.zeros(n_temp)
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 277, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 277, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 277, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_2)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 277, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 277, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_sx = __pyx_t_6;
-  __pyx_t_6.memview = NULL;
-  __pyx_t_6.data = NULL;
-
-  /* "disorder/diffuse/simulation.pyx":278
- * 
- *     cdef double [::1] sx = np.zeros(n_temp)
- *     cdef double [::1] sy = np.zeros(n_temp)             # <<<<<<<<<<<<<<
- *     cdef double [::1] sz = np.zeros(n_temp)
- * 
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_np); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 278, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_zeros); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 278, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 278, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_2 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_1))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_1);
-    if (likely(__pyx_t_2)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_1);
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_1, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_1, __pyx_t_2, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_1, __pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 278, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 278, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_sy = __pyx_t_6;
-  __pyx_t_6.memview = NULL;
-  __pyx_t_6.data = NULL;
-
-  /* "disorder/diffuse/simulation.pyx":279
- *     cdef double [::1] sx = np.zeros(n_temp)
- *     cdef double [::1] sy = np.zeros(n_temp)
- *     cdef double [::1] sz = np.zeros(n_temp)             # <<<<<<<<<<<<<<
- * 
- *     cdef double [::1] beta = 1/(kB*np.copy(T_range))
- */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 279, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 279, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 279, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-    __pyx_t_2 = PyMethod_GET_SELF(__pyx_t_4);
-    if (likely(__pyx_t_2)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-      __Pyx_INCREF(__pyx_t_2);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_4, function);
-    }
-  }
-  __pyx_t_3 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 279, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_3, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 279, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_v_sz = __pyx_t_6;
-  __pyx_t_6.memview = NULL;
-  __pyx_t_6.data = NULL;
-
-  /* "disorder/diffuse/simulation.pyx":281
- *     cdef double [::1] sz = np.zeros(n_temp)
- * 
- *     cdef double [::1] beta = 1/(kB*np.copy(T_range))             # <<<<<<<<<<<<<<
- * 
- *     for _ in range(N):
- */
-  __pyx_t_3 = PyFloat_FromDouble(__pyx_v_kB); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 281, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_3);
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 281, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_copy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 281, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __pyx_memoryview_fromslice(__pyx_v_T_range, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 281, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = NULL;
-  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_5 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_5)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_5);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_5, __pyx_t_1) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 281, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyNumber_Multiply(__pyx_t_3, __pyx_t_4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 281, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 281, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_6 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_4, PyBUF_WRITABLE); if (unlikely(!__pyx_t_6.memview)) __PYX_ERR(0, 281, __pyx_L1_error)
-  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_v_beta = __pyx_t_6;
-  __pyx_t_6.memview = NULL;
-  __pyx_t_6.data = NULL;
-
-  /* "disorder/diffuse/simulation.pyx":283
- *     cdef double [::1] beta = 1/(kB*np.copy(T_range))
- * 
- *     for _ in range(N):             # <<<<<<<<<<<<<<
- * 
- *         i, j, k, a = random_original(nu, nv, nw, n_atm)
- */
-  __pyx_t_7 = __pyx_v_N;
-  __pyx_t_8 = __pyx_t_7;
-  for (__pyx_t_9 = 0; __pyx_t_9 < __pyx_t_8; __pyx_t_9+=1) {
-    __pyx_v__ = __pyx_t_9;
-
-    /* "disorder/diffuse/simulation.pyx":285
- *     for _ in range(N):
- * 
- *         i, j, k, a = random_original(nu, nv, nw, n_atm)             # <<<<<<<<<<<<<<
- * 
- *         for t in range(n_temp):
- */
-    __pyx_t_10 = __pyx_f_8disorder_7diffuse_10simulation_random_original(__pyx_v_nu, __pyx_v_nv, __pyx_v_nw, __pyx_v_n_atm);
-    __pyx_t_11 = __pyx_t_10.f0;
-    __pyx_t_12 = __pyx_t_10.f1;
-    __pyx_t_13 = __pyx_t_10.f2;
-    __pyx_t_14 = __pyx_t_10.f3;
-    __pyx_v_i = __pyx_t_11;
-    __pyx_v_j = __pyx_t_12;
-    __pyx_v_k = __pyx_t_13;
-    __pyx_v_a = __pyx_t_14;
-
-    /* "disorder/diffuse/simulation.pyx":287
- *         i, j, k, a = random_original(nu, nv, nw, n_atm)
- * 
- *         for t in range(n_temp):             # <<<<<<<<<<<<<<
- * 
- *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
- */
-    __pyx_t_14 = __pyx_v_n_temp;
-    __pyx_t_13 = __pyx_t_14;
-    for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_13; __pyx_t_12+=1) {
-      __pyx_v_t = __pyx_t_12;
-
-      /* "disorder/diffuse/simulation.pyx":289
- *         for t in range(n_temp):
- * 
- *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]             # <<<<<<<<<<<<<<
- * 
- *             vx, vy, vz = random_vector_candidate()
- */
-      __pyx_t_15 = __pyx_v_i;
-      __pyx_t_16 = __pyx_v_j;
-      __pyx_t_17 = __pyx_v_k;
-      __pyx_t_18 = __pyx_v_a;
-      __pyx_t_19 = __pyx_v_t;
-      __pyx_t_20 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_15 * __pyx_v_Sx.strides[0]) ) + __pyx_t_16 * __pyx_v_Sx.strides[1]) ) + __pyx_t_17 * __pyx_v_Sx.strides[2]) ) + __pyx_t_18 * __pyx_v_Sx.strides[3]) )) + __pyx_t_19)) )));
-      __pyx_t_19 = __pyx_v_i;
-      __pyx_t_18 = __pyx_v_j;
-      __pyx_t_17 = __pyx_v_k;
-      __pyx_t_16 = __pyx_v_a;
-      __pyx_t_15 = __pyx_v_t;
-      __pyx_t_21 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_19 * __pyx_v_Sy.strides[0]) ) + __pyx_t_18 * __pyx_v_Sy.strides[1]) ) + __pyx_t_17 * __pyx_v_Sy.strides[2]) ) + __pyx_t_16 * __pyx_v_Sy.strides[3]) )) + __pyx_t_15)) )));
-      __pyx_t_15 = __pyx_v_i;
-      __pyx_t_16 = __pyx_v_j;
-      __pyx_t_17 = __pyx_v_k;
-      __pyx_t_18 = __pyx_v_a;
-      __pyx_t_19 = __pyx_v_t;
-      __pyx_t_22 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_15 * __pyx_v_Sz.strides[0]) ) + __pyx_t_16 * __pyx_v_Sz.strides[1]) ) + __pyx_t_17 * __pyx_v_Sz.strides[2]) ) + __pyx_t_18 * __pyx_v_Sz.strides[3]) )) + __pyx_t_19)) )));
-      __pyx_v_ux = __pyx_t_20;
-      __pyx_v_uy = __pyx_t_21;
-      __pyx_v_uz = __pyx_t_22;
-
-      /* "disorder/diffuse/simulation.pyx":291
- *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
- * 
- *             vx, vy, vz = random_vector_candidate()             # <<<<<<<<<<<<<<
- * 
- *             sx[t], sy[t], sz[t] = vx, vy, vz
- */
-      __pyx_t_23 = __pyx_f_8disorder_7diffuse_10simulation_random_vector_candidate();
-      __pyx_t_22 = __pyx_t_23.f0;
-      __pyx_t_21 = __pyx_t_23.f1;
-      __pyx_t_20 = __pyx_t_23.f2;
-      __pyx_v_vx = __pyx_t_22;
-      __pyx_v_vy = __pyx_t_21;
-      __pyx_v_vz = __pyx_t_20;
-
-      /* "disorder/diffuse/simulation.pyx":293
- *             vx, vy, vz = random_vector_candidate()
- * 
- *             sx[t], sy[t], sz[t] = vx, vy, vz             # <<<<<<<<<<<<<<
- * 
- *             E[t] = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
- */
-      __pyx_t_20 = __pyx_v_vx;
-      __pyx_t_21 = __pyx_v_vy;
-      __pyx_t_22 = __pyx_v_vz;
-      __pyx_t_19 = __pyx_v_t;
-      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sx.data) + __pyx_t_19)) )) = __pyx_t_20;
-      __pyx_t_19 = __pyx_v_t;
-      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sy.data) + __pyx_t_19)) )) = __pyx_t_21;
-      __pyx_t_19 = __pyx_v_t;
-      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sz.data) + __pyx_t_19)) )) = __pyx_t_22;
-
-      /* "disorder/diffuse/simulation.pyx":295
- *             sx[t], sy[t], sz[t] = vx, vy, vz
- * 
- *             E[t] = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,             # <<<<<<<<<<<<<<
- *                             atm_ind, img_ind_i, img_ind_j, img_ind_k, pair_ind,
- *                             pair_ij, i, j, k, a, t)
- */
-      __pyx_t_19 = __pyx_v_t;
-      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_E.data) + __pyx_t_19)) )) = __pyx_f_8disorder_7diffuse_10simulation_magnetic(__pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_vx, __pyx_v_vy, __pyx_v_vz, __pyx_v_ux, __pyx_v_uy, __pyx_v_uz, __pyx_v_J, __pyx_v_A, __pyx_v_g, __pyx_v_B, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_ij, __pyx_v_i, __pyx_v_j, __pyx_v_k, __pyx_v_a, __pyx_v_t);
-    }
-
-    /* "disorder/diffuse/simulation.pyx":299
- *                             pair_ij, i, j, k, a, t)
- * 
- *         annealing_vector(Sx, Sy, Sz, sx, sy, sz, H, E, beta, i, j, k, a)             # <<<<<<<<<<<<<<
- * 
- *         replica_exchange(H, beta)
- */
-    __pyx_f_8disorder_7diffuse_10simulation_annealing_vector(__pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_H, __pyx_v_E, __pyx_v_beta, __pyx_v_i, __pyx_v_j, __pyx_v_k, __pyx_v_a);
-
-    /* "disorder/diffuse/simulation.pyx":301
- *         annealing_vector(Sx, Sy, Sz, sx, sy, sz, H, E, beta, i, j, k, a)
- * 
- *         replica_exchange(H, beta)             # <<<<<<<<<<<<<<
- * 
- * def energy(double [:,:,:,:,::1] Sx,
- */
-    __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__pyx_v_H, __pyx_v_beta);
-  }
-
-  /* "disorder/diffuse/simulation.pyx":241
- *     return E
- * 
- * def heisenberg(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
- *                double [:,:,:,:,::1] Sy,
- *                double [:,:,:,:,::1] Sz,
- */
-
-  /* function exit code */
-  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
-  goto __pyx_L0;
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_XDECREF(__pyx_t_5);
-  __PYX_XDEC_MEMVIEW(&__pyx_t_6, 1);
-  __Pyx_AddTraceback("disorder.diffuse.simulation.heisenberg", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_E_np);
-  __Pyx_XDECREF(__pyx_v_H_np);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_E, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_H, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_sx, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_sy, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_sz, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_beta, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_Sx, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_Sy, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_Sz, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_J, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_A, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_g, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_B, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_atm_ind, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_i, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_j, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_k, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_pair_ind, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_pair_ij, 1);
-  __PYX_XDEC_MEMVIEW(&__pyx_v_T_range, 1);
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "disorder/diffuse/simulation.pyx":303
- *         replica_exchange(H, beta)
- * 
  * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *            double [:,:,:,:,::1] Sy,
  *            double [:,:,:,:,::1] Sz,
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_3energy(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyMethodDef __pyx_mdef_8disorder_7diffuse_10simulation_3energy = {"energy", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_10simulation_3energy, METH_VARARGS|METH_KEYWORDS, 0};
-static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_3energy(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_1energy(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8disorder_7diffuse_10simulation_1energy = {"energy", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_10simulation_1energy, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_1energy(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   __Pyx_memviewslice __pyx_v_Sx = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_Sy = { 0, 0, { 0 }, { 0 }, { 0 } };
   __Pyx_memviewslice __pyx_v_Sz = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -4872,77 +3453,77 @@ static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_3energy(PyObject *__py
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sy)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 1); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 1); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sz)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 2); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 2); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_J)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 3); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 3); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_A)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 4); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 4); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_g)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 5); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 5); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_B)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 6); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 6); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_atm_ind)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 7); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 7); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_i)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 8); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 8); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
         if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_j)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 9); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 9); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 10:
         if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_k)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 10); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 10); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 11:
         if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pair_ind)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 11); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 11); __PYX_ERR(0, 132, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 12:
         if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pair_ij)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 12); __PYX_ERR(0, 303, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, 12); __PYX_ERR(0, 132, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "energy") < 0)) __PYX_ERR(0, 303, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "energy") < 0)) __PYX_ERR(0, 132, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 13) {
       goto __pyx_L5_argtuple_error;
@@ -4961,36 +3542,36 @@ static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_3energy(PyObject *__py
       values[11] = PyTuple_GET_ITEM(__pyx_args, 11);
       values[12] = PyTuple_GET_ITEM(__pyx_args, 12);
     }
-    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 303, __pyx_L3_error)
-    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 304, __pyx_L3_error)
-    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 305, __pyx_L3_error)
-    __pyx_v_J = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_J.memview)) __PYX_ERR(0, 306, __pyx_L3_error)
-    __pyx_v_A = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_A.memview)) __PYX_ERR(0, 307, __pyx_L3_error)
-    __pyx_v_g = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_g.memview)) __PYX_ERR(0, 308, __pyx_L3_error)
-    __pyx_v_B = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_B.memview)) __PYX_ERR(0, 309, __pyx_L3_error)
-    __pyx_v_atm_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[7], PyBUF_WRITABLE); if (unlikely(!__pyx_v_atm_ind.memview)) __PYX_ERR(0, 310, __pyx_L3_error)
-    __pyx_v_img_ind_i = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[8], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_i.memview)) __PYX_ERR(0, 311, __pyx_L3_error)
-    __pyx_v_img_ind_j = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[9], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_j.memview)) __PYX_ERR(0, 312, __pyx_L3_error)
-    __pyx_v_img_ind_k = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[10], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_k.memview)) __PYX_ERR(0, 313, __pyx_L3_error)
-    __pyx_v_pair_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[11], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ind.memview)) __PYX_ERR(0, 314, __pyx_L3_error)
-    __pyx_v_pair_ij = __Pyx_PyObject_to_MemoryviewSlice_d_dc_int(values[12], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ij.memview)) __PYX_ERR(0, 315, __pyx_L3_error)
+    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 132, __pyx_L3_error)
+    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 133, __pyx_L3_error)
+    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 134, __pyx_L3_error)
+    __pyx_v_J = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_J.memview)) __PYX_ERR(0, 135, __pyx_L3_error)
+    __pyx_v_A = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_A.memview)) __PYX_ERR(0, 136, __pyx_L3_error)
+    __pyx_v_g = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_g.memview)) __PYX_ERR(0, 137, __pyx_L3_error)
+    __pyx_v_B = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_B.memview)) __PYX_ERR(0, 138, __pyx_L3_error)
+    __pyx_v_atm_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[7], PyBUF_WRITABLE); if (unlikely(!__pyx_v_atm_ind.memview)) __PYX_ERR(0, 139, __pyx_L3_error)
+    __pyx_v_img_ind_i = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[8], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_i.memview)) __PYX_ERR(0, 140, __pyx_L3_error)
+    __pyx_v_img_ind_j = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[9], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_j.memview)) __PYX_ERR(0, 141, __pyx_L3_error)
+    __pyx_v_img_ind_k = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[10], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_k.memview)) __PYX_ERR(0, 142, __pyx_L3_error)
+    __pyx_v_pair_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[11], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ind.memview)) __PYX_ERR(0, 143, __pyx_L3_error)
+    __pyx_v_pair_ij = __Pyx_PyObject_to_MemoryviewSlice_d_dc_int(values[12], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ij.memview)) __PYX_ERR(0, 144, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 303, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("energy", 1, 13, 13, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 132, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("disorder.diffuse.simulation.energy", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_8disorder_7diffuse_10simulation_2energy(__pyx_self, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_J, __pyx_v_A, __pyx_v_g, __pyx_v_B, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_ij);
+  __pyx_r = __pyx_pf_8disorder_7diffuse_10simulation_energy(__pyx_self, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_J, __pyx_v_A, __pyx_v_g, __pyx_v_B, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_ij);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij) {
+static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij) {
   Py_ssize_t __pyx_v_nu;
   Py_ssize_t __pyx_v_nv;
   Py_ssize_t __pyx_v_nw;
@@ -5088,7 +3669,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("energy", 0);
 
-  /* "disorder/diffuse/simulation.pyx":317
+  /* "disorder/diffuse/simulation.pyx":146
  *            bint [:,::1] pair_ij):
  * 
  *     cdef Py_ssize_t nu = Sx.shape[0]             # <<<<<<<<<<<<<<
@@ -5097,7 +3678,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
  */
   __pyx_v_nu = (__pyx_v_Sx.shape[0]);
 
-  /* "disorder/diffuse/simulation.pyx":318
+  /* "disorder/diffuse/simulation.pyx":147
  * 
  *     cdef Py_ssize_t nu = Sx.shape[0]
  *     cdef Py_ssize_t nv = Sx.shape[1]             # <<<<<<<<<<<<<<
@@ -5106,7 +3687,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
  */
   __pyx_v_nv = (__pyx_v_Sx.shape[1]);
 
-  /* "disorder/diffuse/simulation.pyx":319
+  /* "disorder/diffuse/simulation.pyx":148
  *     cdef Py_ssize_t nu = Sx.shape[0]
  *     cdef Py_ssize_t nv = Sx.shape[1]
  *     cdef Py_ssize_t nw = Sx.shape[2]             # <<<<<<<<<<<<<<
@@ -5115,7 +3696,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
  */
   __pyx_v_nw = (__pyx_v_Sx.shape[2]);
 
-  /* "disorder/diffuse/simulation.pyx":320
+  /* "disorder/diffuse/simulation.pyx":149
  *     cdef Py_ssize_t nv = Sx.shape[1]
  *     cdef Py_ssize_t nw = Sx.shape[2]
  *     cdef Py_ssize_t n_atm = Sx.shape[3]             # <<<<<<<<<<<<<<
@@ -5124,7 +3705,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
  */
   __pyx_v_n_atm = (__pyx_v_Sx.shape[3]);
 
-  /* "disorder/diffuse/simulation.pyx":321
+  /* "disorder/diffuse/simulation.pyx":150
  *     cdef Py_ssize_t nw = Sx.shape[2]
  *     cdef Py_ssize_t n_atm = Sx.shape[3]
  *     cdef Py_ssize_t n_temp = Sx.shape[4]             # <<<<<<<<<<<<<<
@@ -5133,7 +3714,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
  */
   __pyx_v_n_temp = (__pyx_v_Sx.shape[4]);
 
-  /* "disorder/diffuse/simulation.pyx":323
+  /* "disorder/diffuse/simulation.pyx":152
  *     cdef Py_ssize_t n_temp = Sx.shape[4]
  * 
  *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]             # <<<<<<<<<<<<<<
@@ -5142,31 +3723,31 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
  */
   __pyx_v_n_pairs = (__pyx_v_atm_ind.shape[1]);
 
-  /* "disorder/diffuse/simulation.pyx":331
+  /* "disorder/diffuse/simulation.pyx":160
  *     cdef bint f
  * 
  *     e_np = np.zeros((nu,nv,nw,n_atm,n_pairs+2,n_temp))             # <<<<<<<<<<<<<<
  * 
  *     cdef double [:,:,:,:,:,::1] e = e_np
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_nu); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_nu); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_4 = PyInt_FromSsize_t(__pyx_v_nv); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_nw); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_5 = PyInt_FromSsize_t(__pyx_v_nw); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_6 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyInt_FromSsize_t((__pyx_v_n_pairs + 2)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_7 = PyInt_FromSsize_t((__pyx_v_n_pairs + 2)); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
-  __pyx_t_8 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_8 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = PyTuple_New(6); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 331, __pyx_L1_error)
+  __pyx_t_9 = PyTuple_New(6); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_GIVEREF(__pyx_t_2);
   PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_2);
@@ -5199,25 +3780,25 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
   __pyx_t_1 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_9);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 331, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_v_e_np = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "disorder/diffuse/simulation.pyx":333
+  /* "disorder/diffuse/simulation.pyx":162
  *     e_np = np.zeros((nu,nv,nw,n_atm,n_pairs+2,n_temp))
  * 
  *     cdef double [:,:,:,:,:,::1] e = e_np             # <<<<<<<<<<<<<<
  * 
  *     cdef double ux, uy, uz, vx, vy, vz
  */
-  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_d_dc_double(__pyx_v_e_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 333, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_d_dc_double(__pyx_v_e_np, PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 162, __pyx_L1_error)
   __pyx_v_e = __pyx_t_10;
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "disorder/diffuse/simulation.pyx":337
+  /* "disorder/diffuse/simulation.pyx":166
  *     cdef double ux, uy, uz, vx, vy, vz
  * 
  *     cdef double Bx = B[0]             # <<<<<<<<<<<<<<
@@ -5227,7 +3808,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
   __pyx_t_11 = 0;
   __pyx_v_Bx = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_11)) )));
 
-  /* "disorder/diffuse/simulation.pyx":338
+  /* "disorder/diffuse/simulation.pyx":167
  * 
  *     cdef double Bx = B[0]
  *     cdef double By = B[1]             # <<<<<<<<<<<<<<
@@ -5237,7 +3818,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
   __pyx_t_11 = 1;
   __pyx_v_By = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_11)) )));
 
-  /* "disorder/diffuse/simulation.pyx":339
+  /* "disorder/diffuse/simulation.pyx":168
  *     cdef double Bx = B[0]
  *     cdef double By = B[1]
  *     cdef double Bz = B[2]             # <<<<<<<<<<<<<<
@@ -5247,7 +3828,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
   __pyx_t_11 = 2;
   __pyx_v_Bz = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_11)) )));
 
-  /* "disorder/diffuse/simulation.pyx":341
+  /* "disorder/diffuse/simulation.pyx":170
  *     cdef double Bz = B[2]
  * 
  *     for i in range(nu):             # <<<<<<<<<<<<<<
@@ -5259,7 +3840,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
   for (__pyx_t_14 = 0; __pyx_t_14 < __pyx_t_13; __pyx_t_14+=1) {
     __pyx_v_i = __pyx_t_14;
 
-    /* "disorder/diffuse/simulation.pyx":342
+    /* "disorder/diffuse/simulation.pyx":171
  * 
  *     for i in range(nu):
  *         for j in range(nv):             # <<<<<<<<<<<<<<
@@ -5271,7 +3852,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
     for (__pyx_t_17 = 0; __pyx_t_17 < __pyx_t_16; __pyx_t_17+=1) {
       __pyx_v_j = __pyx_t_17;
 
-      /* "disorder/diffuse/simulation.pyx":343
+      /* "disorder/diffuse/simulation.pyx":172
  *     for i in range(nu):
  *         for j in range(nv):
  *             for k in range(nw):             # <<<<<<<<<<<<<<
@@ -5283,7 +3864,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
       for (__pyx_t_20 = 0; __pyx_t_20 < __pyx_t_19; __pyx_t_20+=1) {
         __pyx_v_k = __pyx_t_20;
 
-        /* "disorder/diffuse/simulation.pyx":344
+        /* "disorder/diffuse/simulation.pyx":173
  *         for j in range(nv):
  *             for k in range(nw):
  *                 for a in range(n_atm):             # <<<<<<<<<<<<<<
@@ -5295,7 +3876,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
         for (__pyx_t_23 = 0; __pyx_t_23 < __pyx_t_22; __pyx_t_23+=1) {
           __pyx_v_a = __pyx_t_23;
 
-          /* "disorder/diffuse/simulation.pyx":345
+          /* "disorder/diffuse/simulation.pyx":174
  *             for k in range(nw):
  *                 for a in range(n_atm):
  *                     for t in range(n_temp):             # <<<<<<<<<<<<<<
@@ -5307,7 +3888,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
           for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
             __pyx_v_t = __pyx_t_26;
 
-            /* "disorder/diffuse/simulation.pyx":347
+            /* "disorder/diffuse/simulation.pyx":176
  *                     for t in range(n_temp):
  * 
  *                         ux = Sx[i,j,k,a,t]             # <<<<<<<<<<<<<<
@@ -5321,7 +3902,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_30 = __pyx_v_t;
             __pyx_v_ux = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_11 * __pyx_v_Sx.strides[0]) ) + __pyx_t_27 * __pyx_v_Sx.strides[1]) ) + __pyx_t_28 * __pyx_v_Sx.strides[2]) ) + __pyx_t_29 * __pyx_v_Sx.strides[3]) )) + __pyx_t_30)) )));
 
-            /* "disorder/diffuse/simulation.pyx":348
+            /* "disorder/diffuse/simulation.pyx":177
  * 
  *                         ux = Sx[i,j,k,a,t]
  *                         uy = Sy[i,j,k,a,t]             # <<<<<<<<<<<<<<
@@ -5335,7 +3916,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_11 = __pyx_v_t;
             __pyx_v_uy = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_30 * __pyx_v_Sy.strides[0]) ) + __pyx_t_29 * __pyx_v_Sy.strides[1]) ) + __pyx_t_28 * __pyx_v_Sy.strides[2]) ) + __pyx_t_27 * __pyx_v_Sy.strides[3]) )) + __pyx_t_11)) )));
 
-            /* "disorder/diffuse/simulation.pyx":349
+            /* "disorder/diffuse/simulation.pyx":178
  *                         ux = Sx[i,j,k,a,t]
  *                         uy = Sy[i,j,k,a,t]
  *                         uz = Sz[i,j,k,a,t]             # <<<<<<<<<<<<<<
@@ -5349,7 +3930,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_30 = __pyx_v_t;
             __pyx_v_uz = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_11 * __pyx_v_Sz.strides[0]) ) + __pyx_t_27 * __pyx_v_Sz.strides[1]) ) + __pyx_t_28 * __pyx_v_Sz.strides[2]) ) + __pyx_t_29 * __pyx_v_Sz.strides[3]) )) + __pyx_t_30)) )));
 
-            /* "disorder/diffuse/simulation.pyx":352
+            /* "disorder/diffuse/simulation.pyx":181
  * 
  *                         e[i,j,k,a,n_pairs,t] = \
  *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\             # <<<<<<<<<<<<<<
@@ -5366,7 +3947,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_33 = 0;
             __pyx_t_34 = 2;
 
-            /* "disorder/diffuse/simulation.pyx":353
+            /* "disorder/diffuse/simulation.pyx":182
  *                         e[i,j,k,a,n_pairs,t] = \
  *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
  *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\             # <<<<<<<<<<<<<<
@@ -5383,7 +3964,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_42 = 1;
             __pyx_t_43 = 2;
 
-            /* "disorder/diffuse/simulation.pyx":354
+            /* "disorder/diffuse/simulation.pyx":183
  *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
  *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
  *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))             # <<<<<<<<<<<<<<
@@ -5400,7 +3981,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_51 = 2;
             __pyx_t_52 = 2;
 
-            /* "disorder/diffuse/simulation.pyx":351
+            /* "disorder/diffuse/simulation.pyx":180
  *                         uz = Sz[i,j,k,a,t]
  * 
  *                         e[i,j,k,a,n_pairs,t] = \             # <<<<<<<<<<<<<<
@@ -5415,7 +3996,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_58 = __pyx_v_t;
             *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_53 * __pyx_v_e.strides[0]) ) + __pyx_t_54 * __pyx_v_e.strides[1]) ) + __pyx_t_55 * __pyx_v_e.strides[2]) ) + __pyx_t_56 * __pyx_v_e.strides[3]) ) + __pyx_t_57 * __pyx_v_e.strides[4]) )) + __pyx_t_58)) )) = (-(((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_30 * __pyx_v_A.strides[0]) ) + __pyx_t_29 * __pyx_v_A.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_27 * __pyx_v_A.strides[0]) ) + __pyx_t_11 * __pyx_v_A.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_32 * __pyx_v_A.strides[0]) ) + __pyx_t_33 * __pyx_v_A.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_uz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_35 * __pyx_v_A.strides[0]) ) + __pyx_t_36 * __pyx_v_A.strides[1]) )) + __pyx_t_37)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_38 * __pyx_v_A.strides[0]) ) + __pyx_t_39 * __pyx_v_A.strides[1]) )) + __pyx_t_40)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_41 * __pyx_v_A.strides[0]) ) + __pyx_t_42 * __pyx_v_A.strides[1]) )) + __pyx_t_43)) ))) * __pyx_v_uz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_44 * __pyx_v_A.strides[0]) ) + __pyx_t_45 * __pyx_v_A.strides[1]) )) + __pyx_t_46)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_47 * __pyx_v_A.strides[0]) ) + __pyx_t_48 * __pyx_v_A.strides[1]) )) + __pyx_t_49)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_50 * __pyx_v_A.strides[0]) ) + __pyx_t_51 * __pyx_v_A.strides[1]) )) + __pyx_t_52)) ))) * __pyx_v_uz)))));
 
-            /* "disorder/diffuse/simulation.pyx":357
+            /* "disorder/diffuse/simulation.pyx":186
  * 
  *                         e[i,j,k,a,n_pairs+1,t] = \
  *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\             # <<<<<<<<<<<<<<
@@ -5432,7 +4013,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_45 = 0;
             __pyx_t_44 = 2;
 
-            /* "disorder/diffuse/simulation.pyx":358
+            /* "disorder/diffuse/simulation.pyx":187
  *                         e[i,j,k,a,n_pairs+1,t] = \
  *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
  *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\             # <<<<<<<<<<<<<<
@@ -5449,7 +4030,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_36 = 1;
             __pyx_t_35 = 2;
 
-            /* "disorder/diffuse/simulation.pyx":359
+            /* "disorder/diffuse/simulation.pyx":188
  *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
  *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
  *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))             # <<<<<<<<<<<<<<
@@ -5466,7 +4047,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_29 = 2;
             __pyx_t_30 = 2;
 
-            /* "disorder/diffuse/simulation.pyx":356
+            /* "disorder/diffuse/simulation.pyx":185
  *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
  * 
  *                         e[i,j,k,a,n_pairs+1,t] = \             # <<<<<<<<<<<<<<
@@ -5481,7 +4062,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             __pyx_t_53 = __pyx_v_t;
             *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_58 * __pyx_v_e.strides[0]) ) + __pyx_t_57 * __pyx_v_e.strides[1]) ) + __pyx_t_56 * __pyx_v_e.strides[2]) ) + __pyx_t_55 * __pyx_v_e.strides[3]) ) + __pyx_t_54 * __pyx_v_e.strides[4]) )) + __pyx_t_53)) )) = (-(((__pyx_v_Bx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_52 * __pyx_v_g.strides[0]) ) + __pyx_t_51 * __pyx_v_g.strides[1]) )) + __pyx_t_50)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_49 * __pyx_v_g.strides[0]) ) + __pyx_t_48 * __pyx_v_g.strides[1]) )) + __pyx_t_47)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_46 * __pyx_v_g.strides[0]) ) + __pyx_t_45 * __pyx_v_g.strides[1]) )) + __pyx_t_44)) ))) * __pyx_v_uz))) + (__pyx_v_By * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_43 * __pyx_v_g.strides[0]) ) + __pyx_t_42 * __pyx_v_g.strides[1]) )) + __pyx_t_41)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_40 * __pyx_v_g.strides[0]) ) + __pyx_t_39 * __pyx_v_g.strides[1]) )) + __pyx_t_38)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_37 * __pyx_v_g.strides[0]) ) + __pyx_t_36 * __pyx_v_g.strides[1]) )) + __pyx_t_35)) ))) * __pyx_v_uz)))) + (__pyx_v_Bz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_34 * __pyx_v_g.strides[0]) ) + __pyx_t_33 * __pyx_v_g.strides[1]) )) + __pyx_t_32)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_31 * __pyx_v_g.strides[0]) ) + __pyx_t_11 * __pyx_v_g.strides[1]) )) + __pyx_t_27)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_28 * __pyx_v_g.strides[0]) ) + __pyx_t_29 * __pyx_v_g.strides[1]) )) + __pyx_t_30)) ))) * __pyx_v_uz)))));
 
-            /* "disorder/diffuse/simulation.pyx":361
+            /* "disorder/diffuse/simulation.pyx":190
  *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
  * 
  *                         for p in range(n_pairs):             # <<<<<<<<<<<<<<
@@ -5493,7 +4074,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
             for (__pyx_t_61 = 0; __pyx_t_61 < __pyx_t_60; __pyx_t_61+=1) {
               __pyx_v_p = __pyx_t_61;
 
-              /* "disorder/diffuse/simulation.pyx":363
+              /* "disorder/diffuse/simulation.pyx":192
  *                         for p in range(n_pairs):
  * 
  *                             i_ = (i+img_ind_i[a,p]+nu)%nu             # <<<<<<<<<<<<<<
@@ -5504,7 +4085,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_29 = __pyx_v_p;
               __pyx_v_i_ = (((__pyx_v_i + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_i.data + __pyx_t_30 * __pyx_v_img_ind_i.strides[0]) )) + __pyx_t_29)) )))) + __pyx_v_nu) % __pyx_v_nu);
 
-              /* "disorder/diffuse/simulation.pyx":364
+              /* "disorder/diffuse/simulation.pyx":193
  * 
  *                             i_ = (i+img_ind_i[a,p]+nu)%nu
  *                             j_ = (j+img_ind_j[a,p]+nv)%nv             # <<<<<<<<<<<<<<
@@ -5515,7 +4096,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_30 = __pyx_v_p;
               __pyx_v_j_ = (((__pyx_v_j + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_j.data + __pyx_t_29 * __pyx_v_img_ind_j.strides[0]) )) + __pyx_t_30)) )))) + __pyx_v_nv) % __pyx_v_nv);
 
-              /* "disorder/diffuse/simulation.pyx":365
+              /* "disorder/diffuse/simulation.pyx":194
  *                             i_ = (i+img_ind_i[a,p]+nu)%nu
  *                             j_ = (j+img_ind_j[a,p]+nv)%nv
  *                             k_ = (k+img_ind_k[a,p]+nw)%nw             # <<<<<<<<<<<<<<
@@ -5526,7 +4107,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_29 = __pyx_v_p;
               __pyx_v_k_ = (((__pyx_v_k + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_k.data + __pyx_t_30 * __pyx_v_img_ind_k.strides[0]) )) + __pyx_t_29)) )))) + __pyx_v_nw) % __pyx_v_nw);
 
-              /* "disorder/diffuse/simulation.pyx":366
+              /* "disorder/diffuse/simulation.pyx":195
  *                             j_ = (j+img_ind_j[a,p]+nv)%nv
  *                             k_ = (k+img_ind_k[a,p]+nw)%nw
  *                             a_ = atm_ind[a,p]             # <<<<<<<<<<<<<<
@@ -5537,7 +4118,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_30 = __pyx_v_p;
               __pyx_v_a_ = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_atm_ind.data + __pyx_t_29 * __pyx_v_atm_ind.strides[0]) )) + __pyx_t_30)) )));
 
-              /* "disorder/diffuse/simulation.pyx":368
+              /* "disorder/diffuse/simulation.pyx":197
  *                             a_ = atm_ind[a,p]
  * 
  *                             vx = Sx[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
@@ -5551,7 +4132,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_11 = __pyx_v_t;
               __pyx_v_vx = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_30 * __pyx_v_Sx.strides[0]) ) + __pyx_t_29 * __pyx_v_Sx.strides[1]) ) + __pyx_t_28 * __pyx_v_Sx.strides[2]) ) + __pyx_t_27 * __pyx_v_Sx.strides[3]) )) + __pyx_t_11)) )));
 
-              /* "disorder/diffuse/simulation.pyx":369
+              /* "disorder/diffuse/simulation.pyx":198
  * 
  *                             vx = Sx[i_,j_,k_,a_,t]
  *                             vy = Sy[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
@@ -5565,7 +4146,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_30 = __pyx_v_t;
               __pyx_v_vy = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_11 * __pyx_v_Sy.strides[0]) ) + __pyx_t_27 * __pyx_v_Sy.strides[1]) ) + __pyx_t_28 * __pyx_v_Sy.strides[2]) ) + __pyx_t_29 * __pyx_v_Sy.strides[3]) )) + __pyx_t_30)) )));
 
-              /* "disorder/diffuse/simulation.pyx":370
+              /* "disorder/diffuse/simulation.pyx":199
  *                             vx = Sx[i_,j_,k_,a_,t]
  *                             vy = Sy[i_,j_,k_,a_,t]
  *                             vz = Sz[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
@@ -5579,7 +4160,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_11 = __pyx_v_t;
               __pyx_v_vz = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_30 * __pyx_v_Sz.strides[0]) ) + __pyx_t_29 * __pyx_v_Sz.strides[1]) ) + __pyx_t_28 * __pyx_v_Sz.strides[2]) ) + __pyx_t_27 * __pyx_v_Sz.strides[3]) )) + __pyx_t_11)) )));
 
-              /* "disorder/diffuse/simulation.pyx":372
+              /* "disorder/diffuse/simulation.pyx":201
  *                             vz = Sz[i_,j_,k_,a_,t]
  * 
  *                             t = pair_ind[a,p]             # <<<<<<<<<<<<<<
@@ -5590,7 +4171,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_27 = __pyx_v_p;
               __pyx_v_t = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ind.data + __pyx_t_11 * __pyx_v_pair_ind.strides[0]) )) + __pyx_t_27)) )));
 
-              /* "disorder/diffuse/simulation.pyx":374
+              /* "disorder/diffuse/simulation.pyx":203
  *                             t = pair_ind[a,p]
  * 
  *                             f = pair_ij[a,p]             # <<<<<<<<<<<<<<
@@ -5601,7 +4182,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_11 = __pyx_v_p;
               __pyx_v_f = (*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_pair_ij.data + __pyx_t_27 * __pyx_v_pair_ij.strides[0]) )) + __pyx_t_11)) )));
 
-              /* "disorder/diffuse/simulation.pyx":376
+              /* "disorder/diffuse/simulation.pyx":205
  *                             f = pair_ij[a,p]
  * 
  *                             if (f == 1):             # <<<<<<<<<<<<<<
@@ -5611,7 +4192,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
               __pyx_t_62 = ((__pyx_v_f == 1) != 0);
               if (__pyx_t_62) {
 
-                /* "disorder/diffuse/simulation.pyx":378
+                /* "disorder/diffuse/simulation.pyx":207
  *                             if (f == 1):
  *                                 e[i,j,k,a,p,t] = -0.5\
  *                                     *(ux*(J[t,0,0]*vx+J[t,1,0]*vy+J[t,2,0]*vz)\             # <<<<<<<<<<<<<<
@@ -5628,7 +4209,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
                 __pyx_t_33 = 2;
                 __pyx_t_34 = 0;
 
-                /* "disorder/diffuse/simulation.pyx":379
+                /* "disorder/diffuse/simulation.pyx":208
  *                                 e[i,j,k,a,p,t] = -0.5\
  *                                     *(ux*(J[t,0,0]*vx+J[t,1,0]*vy+J[t,2,0]*vz)\
  *                                     + uy*(J[t,0,1]*vx+J[t,1,1]*vy+J[t,2,1]*vz)\             # <<<<<<<<<<<<<<
@@ -5645,7 +4226,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
                 __pyx_t_42 = 2;
                 __pyx_t_43 = 1;
 
-                /* "disorder/diffuse/simulation.pyx":380
+                /* "disorder/diffuse/simulation.pyx":209
  *                                     *(ux*(J[t,0,0]*vx+J[t,1,0]*vy+J[t,2,0]*vz)\
  *                                     + uy*(J[t,0,1]*vx+J[t,1,1]*vy+J[t,2,1]*vz)\
  *                                     + uz*(J[t,0,2]*vx+J[t,1,2]*vy+J[t,2,2]*vz))             # <<<<<<<<<<<<<<
@@ -5662,7 +4243,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
                 __pyx_t_51 = 2;
                 __pyx_t_52 = 2;
 
-                /* "disorder/diffuse/simulation.pyx":377
+                /* "disorder/diffuse/simulation.pyx":206
  * 
  *                             if (f == 1):
  *                                 e[i,j,k,a,p,t] = -0.5\             # <<<<<<<<<<<<<<
@@ -5677,7 +4258,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
                 __pyx_t_58 = __pyx_v_t;
                 *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_53 * __pyx_v_e.strides[0]) ) + __pyx_t_54 * __pyx_v_e.strides[1]) ) + __pyx_t_55 * __pyx_v_e.strides[2]) ) + __pyx_t_56 * __pyx_v_e.strides[3]) ) + __pyx_t_57 * __pyx_v_e.strides[4]) )) + __pyx_t_58)) )) = (-0.5 * (((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_27 * __pyx_v_J.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_29 * __pyx_v_J.strides[0]) ) + __pyx_t_30 * __pyx_v_J.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_32 * __pyx_v_J.strides[0]) ) + __pyx_t_33 * __pyx_v_J.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_vz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_35 * __pyx_v_J.strides[0]) ) + __pyx_t_36 * __pyx_v_J.strides[1]) )) + __pyx_t_37)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_38 * __pyx_v_J.strides[0]) ) + __pyx_t_39 * __pyx_v_J.strides[1]) )) + __pyx_t_40)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_41 * __pyx_v_J.strides[0]) ) + __pyx_t_42 * __pyx_v_J.strides[1]) )) + __pyx_t_43)) ))) * __pyx_v_vz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_44 * __pyx_v_J.strides[0]) ) + __pyx_t_45 * __pyx_v_J.strides[1]) )) + __pyx_t_46)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_47 * __pyx_v_J.strides[0]) ) + __pyx_t_48 * __pyx_v_J.strides[1]) )) + __pyx_t_49)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_50 * __pyx_v_J.strides[0]) ) + __pyx_t_51 * __pyx_v_J.strides[1]) )) + __pyx_t_52)) ))) * __pyx_v_vz)))));
 
-                /* "disorder/diffuse/simulation.pyx":376
+                /* "disorder/diffuse/simulation.pyx":205
  *                             f = pair_ij[a,p]
  * 
  *                             if (f == 1):             # <<<<<<<<<<<<<<
@@ -5687,7 +4268,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
                 goto __pyx_L15;
               }
 
-              /* "disorder/diffuse/simulation.pyx":383
+              /* "disorder/diffuse/simulation.pyx":212
  *                             else:
  *                                 e[i,j,k,a,p,t] = -0.5\
  *                                     *(ux*(J[t,0,0]*vx+J[t,0,1]*vy+J[t,0,2]*vz)\             # <<<<<<<<<<<<<<
@@ -5705,7 +4286,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
                 __pyx_t_45 = 0;
                 __pyx_t_44 = 2;
 
-                /* "disorder/diffuse/simulation.pyx":384
+                /* "disorder/diffuse/simulation.pyx":213
  *                                 e[i,j,k,a,p,t] = -0.5\
  *                                     *(ux*(J[t,0,0]*vx+J[t,0,1]*vy+J[t,0,2]*vz)\
  *                                     + uy*(J[t,1,0]*vx+J[t,1,1]*vy+J[t,1,2]*vz)\             # <<<<<<<<<<<<<<
@@ -5722,7 +4303,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
                 __pyx_t_36 = 1;
                 __pyx_t_35 = 2;
 
-                /* "disorder/diffuse/simulation.pyx":385
+                /* "disorder/diffuse/simulation.pyx":214
  *                                     *(ux*(J[t,0,0]*vx+J[t,0,1]*vy+J[t,0,2]*vz)\
  *                                     + uy*(J[t,1,0]*vx+J[t,1,1]*vy+J[t,1,2]*vz)\
  *                                     + uz*(J[t,2,0]*vx+J[t,2,1]*vy+J[t,2,2]*vz))             # <<<<<<<<<<<<<<
@@ -5739,7 +4320,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
                 __pyx_t_27 = 2;
                 __pyx_t_11 = 2;
 
-                /* "disorder/diffuse/simulation.pyx":382
+                /* "disorder/diffuse/simulation.pyx":211
  *                                     + uz*(J[t,0,2]*vx+J[t,1,2]*vy+J[t,2,2]*vz))
  *                             else:
  *                                 e[i,j,k,a,p,t] = -0.5\             # <<<<<<<<<<<<<<
@@ -5762,20 +4343,20 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
     }
   }
 
-  /* "disorder/diffuse/simulation.pyx":387
+  /* "disorder/diffuse/simulation.pyx":216
  *                                     + uz*(J[t,2,0]*vx+J[t,2,1]*vy+J[t,2,2]*vz))
  * 
  *     return e_np             # <<<<<<<<<<<<<<
  * 
- * # ---
+ * cdef void annealing_vector(double [:,:,:,:,::1] Sx,
  */
   __Pyx_XDECREF(__pyx_r);
   __Pyx_INCREF(__pyx_v_e_np);
   __pyx_r = __pyx_v_e_np;
   goto __pyx_L0;
 
-  /* "disorder/diffuse/simulation.pyx":303
- *         replica_exchange(H, beta)
+  /* "disorder/diffuse/simulation.pyx":132
+ *                 beta[i], beta[j] = beta[i], beta[j]
  * 
  * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *            double [:,:,:,:,::1] Sy,
@@ -5812,6 +4393,5924 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2energy(CYTHON_UNUSED 
   __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_k, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_v_pair_ind, 1);
   __PYX_XDEC_MEMVIEW(&__pyx_v_pair_ij, 1);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/simulation.pyx":218
+ *     return e_np
+ * 
+ * cdef void annealing_vector(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                            double [:,:,:,:,::1] Sy,
+ *                            double [:,:,:,:,::1] Sz,
+ */
+
+static void __pyx_f_8disorder_7diffuse_10simulation_annealing_vector(__Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_sx, __Pyx_memviewslice __pyx_v_sy, __Pyx_memviewslice __pyx_v_sz, __Pyx_memviewslice __pyx_v_H, __Pyx_memviewslice __pyx_v_E, __Pyx_memviewslice __pyx_v_beta, Py_ssize_t __pyx_v_i, Py_ssize_t __pyx_v_j, Py_ssize_t __pyx_v_k, Py_ssize_t __pyx_v_a) {
+  Py_ssize_t __pyx_v_n_temp;
+  Py_ssize_t __pyx_v_t;
+  __Pyx_RefNannyDeclarations
+  Py_ssize_t __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  Py_ssize_t __pyx_t_5;
+  int __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
+  Py_ssize_t __pyx_t_10;
+  __Pyx_RefNannySetupContext("annealing_vector", 0);
+
+  /* "disorder/diffuse/simulation.pyx":232
+ *                            Py_ssize_t a):
+ * 
+ *     cdef Py_ssize_t n_temp = E.shape[0]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t t
+ */
+  __pyx_v_n_temp = (__pyx_v_E.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":236
+ *     cdef Py_ssize_t t
+ * 
+ *     for t in range(n_temp):             # <<<<<<<<<<<<<<
+ * 
+ *         if (random() < alpha(E[t], beta[t])):
+ */
+  __pyx_t_1 = __pyx_v_n_temp;
+  __pyx_t_2 = __pyx_t_1;
+  for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
+    __pyx_v_t = __pyx_t_3;
+
+    /* "disorder/diffuse/simulation.pyx":238
+ *     for t in range(n_temp):
+ * 
+ *         if (random() < alpha(E[t], beta[t])):             # <<<<<<<<<<<<<<
+ *             Sx[i,j,k,a,t] = sx[t]
+ *             Sy[i,j,k,a,t] = sy[t]
+ */
+    __pyx_t_4 = __pyx_v_t;
+    __pyx_t_5 = __pyx_v_t;
+    __pyx_t_6 = ((__pyx_f_8disorder_7diffuse_10simulation_random() < __pyx_f_8disorder_7diffuse_10simulation_alpha((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_E.data) + __pyx_t_4)) ))), (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_5)) ))))) != 0);
+    if (__pyx_t_6) {
+
+      /* "disorder/diffuse/simulation.pyx":239
+ * 
+ *         if (random() < alpha(E[t], beta[t])):
+ *             Sx[i,j,k,a,t] = sx[t]             # <<<<<<<<<<<<<<
+ *             Sy[i,j,k,a,t] = sy[t]
+ *             Sz[i,j,k,a,t] = sz[t]
+ */
+      __pyx_t_5 = __pyx_v_t;
+      __pyx_t_4 = __pyx_v_i;
+      __pyx_t_7 = __pyx_v_j;
+      __pyx_t_8 = __pyx_v_k;
+      __pyx_t_9 = __pyx_v_a;
+      __pyx_t_10 = __pyx_v_t;
+      *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_4 * __pyx_v_Sx.strides[0]) ) + __pyx_t_7 * __pyx_v_Sx.strides[1]) ) + __pyx_t_8 * __pyx_v_Sx.strides[2]) ) + __pyx_t_9 * __pyx_v_Sx.strides[3]) )) + __pyx_t_10)) )) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sx.data) + __pyx_t_5)) )));
+
+      /* "disorder/diffuse/simulation.pyx":240
+ *         if (random() < alpha(E[t], beta[t])):
+ *             Sx[i,j,k,a,t] = sx[t]
+ *             Sy[i,j,k,a,t] = sy[t]             # <<<<<<<<<<<<<<
+ *             Sz[i,j,k,a,t] = sz[t]
+ *             H[t] += E[t]
+ */
+      __pyx_t_5 = __pyx_v_t;
+      __pyx_t_10 = __pyx_v_i;
+      __pyx_t_9 = __pyx_v_j;
+      __pyx_t_8 = __pyx_v_k;
+      __pyx_t_7 = __pyx_v_a;
+      __pyx_t_4 = __pyx_v_t;
+      *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_10 * __pyx_v_Sy.strides[0]) ) + __pyx_t_9 * __pyx_v_Sy.strides[1]) ) + __pyx_t_8 * __pyx_v_Sy.strides[2]) ) + __pyx_t_7 * __pyx_v_Sy.strides[3]) )) + __pyx_t_4)) )) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sy.data) + __pyx_t_5)) )));
+
+      /* "disorder/diffuse/simulation.pyx":241
+ *             Sx[i,j,k,a,t] = sx[t]
+ *             Sy[i,j,k,a,t] = sy[t]
+ *             Sz[i,j,k,a,t] = sz[t]             # <<<<<<<<<<<<<<
+ *             H[t] += E[t]
+ * 
+ */
+      __pyx_t_5 = __pyx_v_t;
+      __pyx_t_4 = __pyx_v_i;
+      __pyx_t_7 = __pyx_v_j;
+      __pyx_t_8 = __pyx_v_k;
+      __pyx_t_9 = __pyx_v_a;
+      __pyx_t_10 = __pyx_v_t;
+      *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_4 * __pyx_v_Sz.strides[0]) ) + __pyx_t_7 * __pyx_v_Sz.strides[1]) ) + __pyx_t_8 * __pyx_v_Sz.strides[2]) ) + __pyx_t_9 * __pyx_v_Sz.strides[3]) )) + __pyx_t_10)) )) = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sz.data) + __pyx_t_5)) )));
+
+      /* "disorder/diffuse/simulation.pyx":242
+ *             Sy[i,j,k,a,t] = sy[t]
+ *             Sz[i,j,k,a,t] = sz[t]
+ *             H[t] += E[t]             # <<<<<<<<<<<<<<
+ * 
+ * cdef double magnetic(double [:,:,:,:,::1] Sx,
+ */
+      __pyx_t_5 = __pyx_v_t;
+      __pyx_t_10 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_H.data) + __pyx_t_10)) )) += (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_E.data) + __pyx_t_5)) )));
+
+      /* "disorder/diffuse/simulation.pyx":238
+ *     for t in range(n_temp):
+ * 
+ *         if (random() < alpha(E[t], beta[t])):             # <<<<<<<<<<<<<<
+ *             Sx[i,j,k,a,t] = sx[t]
+ *             Sy[i,j,k,a,t] = sy[t]
+ */
+    }
+  }
+
+  /* "disorder/diffuse/simulation.pyx":218
+ *     return e_np
+ * 
+ * cdef void annealing_vector(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                            double [:,:,:,:,::1] Sy,
+ *                            double [:,:,:,:,::1] Sz,
+ */
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "disorder/diffuse/simulation.pyx":244
+ *             H[t] += E[t]
+ * 
+ * cdef double magnetic(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                      double [:,:,:,:,::1] Sy,
+ *                      double [:,:,:,:,::1] Sz,
+ */
+
+static double __pyx_f_8disorder_7diffuse_10simulation_magnetic(__Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, double __pyx_v_vx, double __pyx_v_vy, double __pyx_v_vz, double __pyx_v_ux, double __pyx_v_uy, double __pyx_v_uz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij, Py_ssize_t __pyx_v_i, Py_ssize_t __pyx_v_j, Py_ssize_t __pyx_v_k, Py_ssize_t __pyx_v_a, Py_ssize_t __pyx_v_t) {
+  Py_ssize_t __pyx_v_nu;
+  Py_ssize_t __pyx_v_nv;
+  Py_ssize_t __pyx_v_nw;
+  Py_ssize_t __pyx_v_n_pairs;
+  Py_ssize_t __pyx_v_i_;
+  Py_ssize_t __pyx_v_j_;
+  Py_ssize_t __pyx_v_k_;
+  Py_ssize_t __pyx_v_a_;
+  Py_ssize_t __pyx_v_p;
+  Py_ssize_t __pyx_v_q;
+  int __pyx_v_f;
+  double __pyx_v_E;
+  double __pyx_v_wx;
+  double __pyx_v_wy;
+  double __pyx_v_wz;
+  double __pyx_v_dx;
+  double __pyx_v_dy;
+  double __pyx_v_dz;
+  double __pyx_v_Bx;
+  double __pyx_v_By;
+  double __pyx_v_Bz;
+  double __pyx_r;
+  __Pyx_RefNannyDeclarations
+  double __pyx_t_1;
+  double __pyx_t_2;
+  double __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  Py_ssize_t __pyx_t_5;
+  Py_ssize_t __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
+  Py_ssize_t __pyx_t_10;
+  Py_ssize_t __pyx_t_11;
+  int __pyx_t_12;
+  Py_ssize_t __pyx_t_13;
+  Py_ssize_t __pyx_t_14;
+  Py_ssize_t __pyx_t_15;
+  Py_ssize_t __pyx_t_16;
+  Py_ssize_t __pyx_t_17;
+  Py_ssize_t __pyx_t_18;
+  Py_ssize_t __pyx_t_19;
+  Py_ssize_t __pyx_t_20;
+  Py_ssize_t __pyx_t_21;
+  Py_ssize_t __pyx_t_22;
+  Py_ssize_t __pyx_t_23;
+  Py_ssize_t __pyx_t_24;
+  Py_ssize_t __pyx_t_25;
+  Py_ssize_t __pyx_t_26;
+  Py_ssize_t __pyx_t_27;
+  Py_ssize_t __pyx_t_28;
+  Py_ssize_t __pyx_t_29;
+  Py_ssize_t __pyx_t_30;
+  Py_ssize_t __pyx_t_31;
+  Py_ssize_t __pyx_t_32;
+  Py_ssize_t __pyx_t_33;
+  Py_ssize_t __pyx_t_34;
+  __Pyx_RefNannySetupContext("magnetic", 0);
+
+  /* "disorder/diffuse/simulation.pyx":269
+ *                      Py_ssize_t t):
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ */
+  __pyx_v_nu = (__pyx_v_Sx.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":270
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ * 
+ */
+  __pyx_v_nv = (__pyx_v_Sx.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":271
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+ */
+  __pyx_v_nw = (__pyx_v_Sx.shape[2]);
+
+  /* "disorder/diffuse/simulation.pyx":273
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t i_, j_, k_, a_, p, q
+ */
+  __pyx_v_n_pairs = (__pyx_v_atm_ind.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":279
+ *     cdef bint f
+ * 
+ *     cdef double E = 0             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double wx, wy, wz
+ */
+  __pyx_v_E = 0.0;
+
+  /* "disorder/diffuse/simulation.pyx":285
+ *     cdef double dx, dy, dz
+ * 
+ *     dx, dy, dz = vx-ux, vy-uy, vz-uz             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double Bx = B[0]
+ */
+  __pyx_t_1 = (__pyx_v_vx - __pyx_v_ux);
+  __pyx_t_2 = (__pyx_v_vy - __pyx_v_uy);
+  __pyx_t_3 = (__pyx_v_vz - __pyx_v_uz);
+  __pyx_v_dx = __pyx_t_1;
+  __pyx_v_dy = __pyx_t_2;
+  __pyx_v_dz = __pyx_t_3;
+
+  /* "disorder/diffuse/simulation.pyx":287
+ *     dx, dy, dz = vx-ux, vy-uy, vz-uz
+ * 
+ *     cdef double Bx = B[0]             # <<<<<<<<<<<<<<
+ *     cdef double By = B[1]
+ *     cdef double Bz = B[2]
+ */
+  __pyx_t_4 = 0;
+  __pyx_v_Bx = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_4)) )));
+
+  /* "disorder/diffuse/simulation.pyx":288
+ * 
+ *     cdef double Bx = B[0]
+ *     cdef double By = B[1]             # <<<<<<<<<<<<<<
+ *     cdef double Bz = B[2]
+ * 
+ */
+  __pyx_t_4 = 1;
+  __pyx_v_By = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_4)) )));
+
+  /* "disorder/diffuse/simulation.pyx":289
+ *     cdef double Bx = B[0]
+ *     cdef double By = B[1]
+ *     cdef double Bz = B[2]             # <<<<<<<<<<<<<<
+ * 
+ *     for p in range(n_pairs):
+ */
+  __pyx_t_4 = 2;
+  __pyx_v_Bz = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_4)) )));
+
+  /* "disorder/diffuse/simulation.pyx":291
+ *     cdef double Bz = B[2]
+ * 
+ *     for p in range(n_pairs):             # <<<<<<<<<<<<<<
+ * 
+ *         i_ = (i+img_ind_i[a,p]+nu)%nu
+ */
+  __pyx_t_5 = __pyx_v_n_pairs;
+  __pyx_t_6 = __pyx_t_5;
+  for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+    __pyx_v_p = __pyx_t_7;
+
+    /* "disorder/diffuse/simulation.pyx":293
+ *     for p in range(n_pairs):
+ * 
+ *         i_ = (i+img_ind_i[a,p]+nu)%nu             # <<<<<<<<<<<<<<
+ *         j_ = (j+img_ind_j[a,p]+nv)%nv
+ *         k_ = (k+img_ind_k[a,p]+nw)%nw
+ */
+    __pyx_t_4 = __pyx_v_a;
+    __pyx_t_8 = __pyx_v_p;
+    __pyx_v_i_ = (((__pyx_v_i + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_i.data + __pyx_t_4 * __pyx_v_img_ind_i.strides[0]) )) + __pyx_t_8)) )))) + __pyx_v_nu) % __pyx_v_nu);
+
+    /* "disorder/diffuse/simulation.pyx":294
+ * 
+ *         i_ = (i+img_ind_i[a,p]+nu)%nu
+ *         j_ = (j+img_ind_j[a,p]+nv)%nv             # <<<<<<<<<<<<<<
+ *         k_ = (k+img_ind_k[a,p]+nw)%nw
+ *         a_ = atm_ind[a,p]
+ */
+    __pyx_t_8 = __pyx_v_a;
+    __pyx_t_4 = __pyx_v_p;
+    __pyx_v_j_ = (((__pyx_v_j + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_j.data + __pyx_t_8 * __pyx_v_img_ind_j.strides[0]) )) + __pyx_t_4)) )))) + __pyx_v_nv) % __pyx_v_nv);
+
+    /* "disorder/diffuse/simulation.pyx":295
+ *         i_ = (i+img_ind_i[a,p]+nu)%nu
+ *         j_ = (j+img_ind_j[a,p]+nv)%nv
+ *         k_ = (k+img_ind_k[a,p]+nw)%nw             # <<<<<<<<<<<<<<
+ *         a_ = atm_ind[a,p]
+ * 
+ */
+    __pyx_t_4 = __pyx_v_a;
+    __pyx_t_8 = __pyx_v_p;
+    __pyx_v_k_ = (((__pyx_v_k + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_k.data + __pyx_t_4 * __pyx_v_img_ind_k.strides[0]) )) + __pyx_t_8)) )))) + __pyx_v_nw) % __pyx_v_nw);
+
+    /* "disorder/diffuse/simulation.pyx":296
+ *         j_ = (j+img_ind_j[a,p]+nv)%nv
+ *         k_ = (k+img_ind_k[a,p]+nw)%nw
+ *         a_ = atm_ind[a,p]             # <<<<<<<<<<<<<<
+ * 
+ *         q = pair_ind[a,p]
+ */
+    __pyx_t_8 = __pyx_v_a;
+    __pyx_t_4 = __pyx_v_p;
+    __pyx_v_a_ = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_atm_ind.data + __pyx_t_8 * __pyx_v_atm_ind.strides[0]) )) + __pyx_t_4)) )));
+
+    /* "disorder/diffuse/simulation.pyx":298
+ *         a_ = atm_ind[a,p]
+ * 
+ *         q = pair_ind[a,p]             # <<<<<<<<<<<<<<
+ * 
+ *         f = pair_ij[a,p]
+ */
+    __pyx_t_4 = __pyx_v_a;
+    __pyx_t_8 = __pyx_v_p;
+    __pyx_v_q = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ind.data + __pyx_t_4 * __pyx_v_pair_ind.strides[0]) )) + __pyx_t_8)) )));
+
+    /* "disorder/diffuse/simulation.pyx":300
+ *         q = pair_ind[a,p]
+ * 
+ *         f = pair_ij[a,p]             # <<<<<<<<<<<<<<
+ * 
+ *         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
+ */
+    __pyx_t_8 = __pyx_v_a;
+    __pyx_t_4 = __pyx_v_p;
+    __pyx_v_f = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ij.data + __pyx_t_8 * __pyx_v_pair_ij.strides[0]) )) + __pyx_t_4)) )));
+
+    /* "disorder/diffuse/simulation.pyx":302
+ *         f = pair_ij[a,p]
+ * 
+ *         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ * 
+ *         if (f == 1):
+ */
+    __pyx_t_4 = __pyx_v_i_;
+    __pyx_t_8 = __pyx_v_j_;
+    __pyx_t_9 = __pyx_v_k_;
+    __pyx_t_10 = __pyx_v_a_;
+    __pyx_t_11 = __pyx_v_t;
+    __pyx_t_3 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_4 * __pyx_v_Sx.strides[0]) ) + __pyx_t_8 * __pyx_v_Sx.strides[1]) ) + __pyx_t_9 * __pyx_v_Sx.strides[2]) ) + __pyx_t_10 * __pyx_v_Sx.strides[3]) )) + __pyx_t_11)) )));
+    __pyx_t_11 = __pyx_v_i_;
+    __pyx_t_10 = __pyx_v_j_;
+    __pyx_t_9 = __pyx_v_k_;
+    __pyx_t_8 = __pyx_v_a_;
+    __pyx_t_4 = __pyx_v_t;
+    __pyx_t_2 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_11 * __pyx_v_Sy.strides[0]) ) + __pyx_t_10 * __pyx_v_Sy.strides[1]) ) + __pyx_t_9 * __pyx_v_Sy.strides[2]) ) + __pyx_t_8 * __pyx_v_Sy.strides[3]) )) + __pyx_t_4)) )));
+    __pyx_t_4 = __pyx_v_i_;
+    __pyx_t_8 = __pyx_v_j_;
+    __pyx_t_9 = __pyx_v_k_;
+    __pyx_t_10 = __pyx_v_a_;
+    __pyx_t_11 = __pyx_v_t;
+    __pyx_t_1 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_4 * __pyx_v_Sz.strides[0]) ) + __pyx_t_8 * __pyx_v_Sz.strides[1]) ) + __pyx_t_9 * __pyx_v_Sz.strides[2]) ) + __pyx_t_10 * __pyx_v_Sz.strides[3]) )) + __pyx_t_11)) )));
+    __pyx_v_wx = __pyx_t_3;
+    __pyx_v_wy = __pyx_t_2;
+    __pyx_v_wz = __pyx_t_1;
+
+    /* "disorder/diffuse/simulation.pyx":304
+ *         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
+ * 
+ *         if (f == 1):             # <<<<<<<<<<<<<<
+ *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
+ *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
+ */
+    __pyx_t_12 = ((__pyx_v_f == 1) != 0);
+    if (__pyx_t_12) {
+
+      /* "disorder/diffuse/simulation.pyx":305
+ * 
+ *         if (f == 1):
+ *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\             # <<<<<<<<<<<<<<
+ *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
+ *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
+ */
+      __pyx_t_11 = __pyx_v_q;
+      __pyx_t_10 = 0;
+      __pyx_t_9 = 0;
+      __pyx_t_8 = __pyx_v_q;
+      __pyx_t_4 = 1;
+      __pyx_t_13 = 0;
+      __pyx_t_14 = __pyx_v_q;
+      __pyx_t_15 = 2;
+      __pyx_t_16 = 0;
+
+      /* "disorder/diffuse/simulation.pyx":306
+ *         if (f == 1):
+ *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
+ *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\             # <<<<<<<<<<<<<<
+ *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
+ *         else:
+ */
+      __pyx_t_17 = __pyx_v_q;
+      __pyx_t_18 = 0;
+      __pyx_t_19 = 1;
+      __pyx_t_20 = __pyx_v_q;
+      __pyx_t_21 = 1;
+      __pyx_t_22 = 1;
+      __pyx_t_23 = __pyx_v_q;
+      __pyx_t_24 = 2;
+      __pyx_t_25 = 1;
+
+      /* "disorder/diffuse/simulation.pyx":307
+ *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
+ *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
+ *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)             # <<<<<<<<<<<<<<
+ *         else:
+ *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
+ */
+      __pyx_t_26 = __pyx_v_q;
+      __pyx_t_27 = 0;
+      __pyx_t_28 = 2;
+      __pyx_t_29 = __pyx_v_q;
+      __pyx_t_30 = 1;
+      __pyx_t_31 = 2;
+      __pyx_t_32 = __pyx_v_q;
+      __pyx_t_33 = 2;
+      __pyx_t_34 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":305
+ * 
+ *         if (f == 1):
+ *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\             # <<<<<<<<<<<<<<
+ *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
+ *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
+ */
+      __pyx_v_E = (__pyx_v_E - (((__pyx_v_dx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_10 * __pyx_v_J.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_8 * __pyx_v_J.strides[0]) ) + __pyx_t_4 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_14 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_wz))) + (__pyx_v_dy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_17 * __pyx_v_J.strides[0]) ) + __pyx_t_18 * __pyx_v_J.strides[1]) )) + __pyx_t_19)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_20 * __pyx_v_J.strides[0]) ) + __pyx_t_21 * __pyx_v_J.strides[1]) )) + __pyx_t_22)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_23 * __pyx_v_J.strides[0]) ) + __pyx_t_24 * __pyx_v_J.strides[1]) )) + __pyx_t_25)) ))) * __pyx_v_wz)))) + (__pyx_v_dz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_26 * __pyx_v_J.strides[0]) ) + __pyx_t_27 * __pyx_v_J.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_29 * __pyx_v_J.strides[0]) ) + __pyx_t_30 * __pyx_v_J.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_32 * __pyx_v_J.strides[0]) ) + __pyx_t_33 * __pyx_v_J.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_wz)))));
+
+      /* "disorder/diffuse/simulation.pyx":304
+ *         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
+ * 
+ *         if (f == 1):             # <<<<<<<<<<<<<<
+ *             E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
+ *               +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
+ */
+      goto __pyx_L5;
+    }
+
+    /* "disorder/diffuse/simulation.pyx":309
+ *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
+ *         else:
+ *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\             # <<<<<<<<<<<<<<
+ *               +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
+ *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
+ */
+    /*else*/ {
+      __pyx_t_34 = __pyx_v_q;
+      __pyx_t_33 = 0;
+      __pyx_t_32 = 0;
+      __pyx_t_31 = __pyx_v_q;
+      __pyx_t_30 = 0;
+      __pyx_t_29 = 1;
+      __pyx_t_28 = __pyx_v_q;
+      __pyx_t_27 = 0;
+      __pyx_t_26 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":310
+ *         else:
+ *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
+ *               +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\             # <<<<<<<<<<<<<<
+ *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
+ * 
+ */
+      __pyx_t_25 = __pyx_v_q;
+      __pyx_t_24 = 1;
+      __pyx_t_23 = 0;
+      __pyx_t_22 = __pyx_v_q;
+      __pyx_t_21 = 1;
+      __pyx_t_20 = 1;
+      __pyx_t_19 = __pyx_v_q;
+      __pyx_t_18 = 1;
+      __pyx_t_17 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":311
+ *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
+ *               +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
+ *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)             # <<<<<<<<<<<<<<
+ * 
+ *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+ */
+      __pyx_t_16 = __pyx_v_q;
+      __pyx_t_15 = 2;
+      __pyx_t_14 = 0;
+      __pyx_t_13 = __pyx_v_q;
+      __pyx_t_4 = 2;
+      __pyx_t_8 = 1;
+      __pyx_t_9 = __pyx_v_q;
+      __pyx_t_10 = 2;
+      __pyx_t_11 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":309
+ *               +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
+ *         else:
+ *             E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\             # <<<<<<<<<<<<<<
+ *               +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
+ *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
+ */
+      __pyx_v_E = (__pyx_v_E - (((__pyx_v_dx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_34 * __pyx_v_J.strides[0]) ) + __pyx_t_33 * __pyx_v_J.strides[1]) )) + __pyx_t_32)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_31 * __pyx_v_J.strides[0]) ) + __pyx_t_30 * __pyx_v_J.strides[1]) )) + __pyx_t_29)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_28 * __pyx_v_J.strides[0]) ) + __pyx_t_27 * __pyx_v_J.strides[1]) )) + __pyx_t_26)) ))) * __pyx_v_wz))) + (__pyx_v_dy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_25 * __pyx_v_J.strides[0]) ) + __pyx_t_24 * __pyx_v_J.strides[1]) )) + __pyx_t_23)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_22 * __pyx_v_J.strides[0]) ) + __pyx_t_21 * __pyx_v_J.strides[1]) )) + __pyx_t_20)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_19 * __pyx_v_J.strides[0]) ) + __pyx_t_18 * __pyx_v_J.strides[1]) )) + __pyx_t_17)) ))) * __pyx_v_wz)))) + (__pyx_v_dz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_16 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_wx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_4 * __pyx_v_J.strides[1]) )) + __pyx_t_8)) ))) * __pyx_v_wy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_9 * __pyx_v_J.strides[0]) ) + __pyx_t_10 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_wz)))));
+    }
+    __pyx_L5:;
+  }
+
+  /* "disorder/diffuse/simulation.pyx":313
+ *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
+ * 
+ *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\             # <<<<<<<<<<<<<<
+ *       +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+ *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ */
+  __pyx_t_11 = __pyx_v_a;
+  __pyx_t_10 = 0;
+  __pyx_t_9 = 0;
+  __pyx_t_8 = __pyx_v_a;
+  __pyx_t_4 = 0;
+  __pyx_t_13 = 1;
+  __pyx_t_14 = __pyx_v_a;
+  __pyx_t_15 = 0;
+  __pyx_t_16 = 2;
+
+  /* "disorder/diffuse/simulation.pyx":314
+ * 
+ *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+ *       +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\             # <<<<<<<<<<<<<<
+ *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ * 
+ */
+  __pyx_t_17 = __pyx_v_a;
+  __pyx_t_18 = 1;
+  __pyx_t_19 = 0;
+  __pyx_t_20 = __pyx_v_a;
+  __pyx_t_21 = 1;
+  __pyx_t_22 = 1;
+  __pyx_t_23 = __pyx_v_a;
+  __pyx_t_24 = 1;
+  __pyx_t_25 = 2;
+
+  /* "disorder/diffuse/simulation.pyx":315
+ *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+ *       +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+ *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)             # <<<<<<<<<<<<<<
+ * 
+ *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+ */
+  __pyx_t_26 = __pyx_v_a;
+  __pyx_t_27 = 2;
+  __pyx_t_28 = 0;
+  __pyx_t_29 = __pyx_v_a;
+  __pyx_t_30 = 2;
+  __pyx_t_31 = 1;
+  __pyx_t_32 = __pyx_v_a;
+  __pyx_t_33 = 2;
+  __pyx_t_34 = 2;
+
+  /* "disorder/diffuse/simulation.pyx":313
+ *               +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
+ * 
+ *     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\             # <<<<<<<<<<<<<<
+ *       +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+ *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ */
+  __pyx_v_E = (__pyx_v_E - (((__pyx_v_vx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_11 * __pyx_v_A.strides[0]) ) + __pyx_t_10 * __pyx_v_A.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_8 * __pyx_v_A.strides[0]) ) + __pyx_t_4 * __pyx_v_A.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_14 * __pyx_v_A.strides[0]) ) + __pyx_t_15 * __pyx_v_A.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_vz))) + (__pyx_v_vy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_17 * __pyx_v_A.strides[0]) ) + __pyx_t_18 * __pyx_v_A.strides[1]) )) + __pyx_t_19)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_20 * __pyx_v_A.strides[0]) ) + __pyx_t_21 * __pyx_v_A.strides[1]) )) + __pyx_t_22)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_23 * __pyx_v_A.strides[0]) ) + __pyx_t_24 * __pyx_v_A.strides[1]) )) + __pyx_t_25)) ))) * __pyx_v_vz)))) + (__pyx_v_vz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_26 * __pyx_v_A.strides[0]) ) + __pyx_t_27 * __pyx_v_A.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_29 * __pyx_v_A.strides[0]) ) + __pyx_t_30 * __pyx_v_A.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_32 * __pyx_v_A.strides[0]) ) + __pyx_t_33 * __pyx_v_A.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_vz)))));
+
+  /* "disorder/diffuse/simulation.pyx":317
+ *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ * 
+ *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\             # <<<<<<<<<<<<<<
+ *       +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+ *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+ */
+  __pyx_t_34 = __pyx_v_a;
+  __pyx_t_33 = 0;
+  __pyx_t_32 = 0;
+  __pyx_t_31 = __pyx_v_a;
+  __pyx_t_30 = 0;
+  __pyx_t_29 = 1;
+  __pyx_t_28 = __pyx_v_a;
+  __pyx_t_27 = 0;
+  __pyx_t_26 = 2;
+
+  /* "disorder/diffuse/simulation.pyx":318
+ * 
+ *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+ *       +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\             # <<<<<<<<<<<<<<
+ *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+ * 
+ */
+  __pyx_t_25 = __pyx_v_a;
+  __pyx_t_24 = 1;
+  __pyx_t_23 = 0;
+  __pyx_t_22 = __pyx_v_a;
+  __pyx_t_21 = 1;
+  __pyx_t_20 = 1;
+  __pyx_t_19 = __pyx_v_a;
+  __pyx_t_18 = 1;
+  __pyx_t_17 = 2;
+
+  /* "disorder/diffuse/simulation.pyx":319
+ *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+ *       +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+ *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)             # <<<<<<<<<<<<<<
+ * 
+ *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+ */
+  __pyx_t_16 = __pyx_v_a;
+  __pyx_t_15 = 2;
+  __pyx_t_14 = 0;
+  __pyx_t_13 = __pyx_v_a;
+  __pyx_t_4 = 2;
+  __pyx_t_8 = 1;
+  __pyx_t_9 = __pyx_v_a;
+  __pyx_t_10 = 2;
+  __pyx_t_11 = 2;
+
+  /* "disorder/diffuse/simulation.pyx":317
+ *       +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ * 
+ *     E += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\             # <<<<<<<<<<<<<<
+ *       +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+ *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+ */
+  __pyx_v_E = (__pyx_v_E + (((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_34 * __pyx_v_A.strides[0]) ) + __pyx_t_33 * __pyx_v_A.strides[1]) )) + __pyx_t_32)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_31 * __pyx_v_A.strides[0]) ) + __pyx_t_30 * __pyx_v_A.strides[1]) )) + __pyx_t_29)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_28 * __pyx_v_A.strides[0]) ) + __pyx_t_27 * __pyx_v_A.strides[1]) )) + __pyx_t_26)) ))) * __pyx_v_uz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_25 * __pyx_v_A.strides[0]) ) + __pyx_t_24 * __pyx_v_A.strides[1]) )) + __pyx_t_23)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_22 * __pyx_v_A.strides[0]) ) + __pyx_t_21 * __pyx_v_A.strides[1]) )) + __pyx_t_20)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_19 * __pyx_v_A.strides[0]) ) + __pyx_t_18 * __pyx_v_A.strides[1]) )) + __pyx_t_17)) ))) * __pyx_v_uz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_16 * __pyx_v_A.strides[0]) ) + __pyx_t_15 * __pyx_v_A.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_13 * __pyx_v_A.strides[0]) ) + __pyx_t_4 * __pyx_v_A.strides[1]) )) + __pyx_t_8)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_9 * __pyx_v_A.strides[0]) ) + __pyx_t_10 * __pyx_v_A.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_uz)))));
+
+  /* "disorder/diffuse/simulation.pyx":321
+ *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+ * 
+ *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\             # <<<<<<<<<<<<<<
+ *       +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+ *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+ */
+  __pyx_t_11 = __pyx_v_a;
+  __pyx_t_10 = 0;
+  __pyx_t_9 = 0;
+  __pyx_t_8 = __pyx_v_a;
+  __pyx_t_4 = 0;
+  __pyx_t_13 = 1;
+  __pyx_t_14 = __pyx_v_a;
+  __pyx_t_15 = 0;
+  __pyx_t_16 = 2;
+
+  /* "disorder/diffuse/simulation.pyx":322
+ * 
+ *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+ *       +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\             # <<<<<<<<<<<<<<
+ *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+ * 
+ */
+  __pyx_t_17 = __pyx_v_a;
+  __pyx_t_18 = 1;
+  __pyx_t_19 = 0;
+  __pyx_t_20 = __pyx_v_a;
+  __pyx_t_21 = 1;
+  __pyx_t_22 = 1;
+  __pyx_t_23 = __pyx_v_a;
+  __pyx_t_24 = 1;
+  __pyx_t_25 = 2;
+
+  /* "disorder/diffuse/simulation.pyx":323
+ *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+ *       +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+ *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)             # <<<<<<<<<<<<<<
+ * 
+ *     return E
+ */
+  __pyx_t_26 = __pyx_v_a;
+  __pyx_t_27 = 2;
+  __pyx_t_28 = 0;
+  __pyx_t_29 = __pyx_v_a;
+  __pyx_t_30 = 2;
+  __pyx_t_31 = 1;
+  __pyx_t_32 = __pyx_v_a;
+  __pyx_t_33 = 2;
+  __pyx_t_34 = 2;
+
+  /* "disorder/diffuse/simulation.pyx":321
+ *       +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+ * 
+ *     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\             # <<<<<<<<<<<<<<
+ *       +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+ *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+ */
+  __pyx_v_E = (__pyx_v_E - (((__pyx_v_Bx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_11 * __pyx_v_g.strides[0]) ) + __pyx_t_10 * __pyx_v_g.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_dx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_8 * __pyx_v_g.strides[0]) ) + __pyx_t_4 * __pyx_v_g.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_dy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_14 * __pyx_v_g.strides[0]) ) + __pyx_t_15 * __pyx_v_g.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_dz))) + (__pyx_v_By * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_17 * __pyx_v_g.strides[0]) ) + __pyx_t_18 * __pyx_v_g.strides[1]) )) + __pyx_t_19)) ))) * __pyx_v_dx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_20 * __pyx_v_g.strides[0]) ) + __pyx_t_21 * __pyx_v_g.strides[1]) )) + __pyx_t_22)) ))) * __pyx_v_dy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_23 * __pyx_v_g.strides[0]) ) + __pyx_t_24 * __pyx_v_g.strides[1]) )) + __pyx_t_25)) ))) * __pyx_v_dz)))) + (__pyx_v_Bz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_26 * __pyx_v_g.strides[0]) ) + __pyx_t_27 * __pyx_v_g.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_dx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_29 * __pyx_v_g.strides[0]) ) + __pyx_t_30 * __pyx_v_g.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_dy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_32 * __pyx_v_g.strides[0]) ) + __pyx_t_33 * __pyx_v_g.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_dz)))));
+
+  /* "disorder/diffuse/simulation.pyx":325
+ *       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+ * 
+ *     return E             # <<<<<<<<<<<<<<
+ * 
+ * def heisenberg(double [:,:,:,:,::1] Sx,
+ */
+  __pyx_r = __pyx_v_E;
+  goto __pyx_L0;
+
+  /* "disorder/diffuse/simulation.pyx":244
+ *             H[t] += E[t]
+ * 
+ * cdef double magnetic(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                      double [:,:,:,:,::1] Sy,
+ *                      double [:,:,:,:,::1] Sz,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/simulation.pyx":327
+ *     return E
+ * 
+ * def heisenberg(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                double [:,:,:,:,::1] Sy,
+ *                double [:,:,:,:,::1] Sz,
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_3heisenberg(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8disorder_7diffuse_10simulation_3heisenberg = {"heisenberg", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_10simulation_3heisenberg, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_3heisenberg(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  __Pyx_memviewslice __pyx_v_Sx = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_Sy = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_Sz = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_J = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_A = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_g = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_B = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_atm_ind = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_img_ind_i = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_img_ind_j = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_img_ind_k = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_pair_ind = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_pair_ij = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_T_range = { 0, 0, { 0 }, { 0 }, { 0 } };
+  double __pyx_v_kB;
+  Py_ssize_t __pyx_v_N;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("heisenberg (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_Sx,&__pyx_n_s_Sy,&__pyx_n_s_Sz,&__pyx_n_s_J,&__pyx_n_s_A,&__pyx_n_s_g,&__pyx_n_s_B,&__pyx_n_s_atm_ind,&__pyx_n_s_img_ind_i,&__pyx_n_s_img_ind_j,&__pyx_n_s_img_ind_k,&__pyx_n_s_pair_ind,&__pyx_n_s_pair_ij,&__pyx_n_s_T_range,&__pyx_n_s_kB,&__pyx_n_s_N,0};
+    PyObject* values[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case 16: values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
+        CYTHON_FALLTHROUGH;
+        case 15: values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
+        CYTHON_FALLTHROUGH;
+        case 14: values[13] = PyTuple_GET_ITEM(__pyx_args, 13);
+        CYTHON_FALLTHROUGH;
+        case 13: values[12] = PyTuple_GET_ITEM(__pyx_args, 12);
+        CYTHON_FALLTHROUGH;
+        case 12: values[11] = PyTuple_GET_ITEM(__pyx_args, 11);
+        CYTHON_FALLTHROUGH;
+        case 11: values[10] = PyTuple_GET_ITEM(__pyx_args, 10);
+        CYTHON_FALLTHROUGH;
+        case 10: values[9] = PyTuple_GET_ITEM(__pyx_args, 9);
+        CYTHON_FALLTHROUGH;
+        case  9: values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
+        CYTHON_FALLTHROUGH;
+        case  8: values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
+        CYTHON_FALLTHROUGH;
+        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+        CYTHON_FALLTHROUGH;
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sx)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sy)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 1); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sz)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 2); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_J)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 3); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_A)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 4); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_g)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 5); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  6:
+        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_B)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 6); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  7:
+        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_atm_ind)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 7); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  8:
+        if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_i)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 8); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  9:
+        if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_j)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 9); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 10:
+        if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_k)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 10); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 11:
+        if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pair_ind)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 11); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 12:
+        if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pair_ij)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 12); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 13:
+        if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_range)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 13); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 14:
+        if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_kB)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 14); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 15:
+        if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, 15); __PYX_ERR(0, 327, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "heisenberg") < 0)) __PYX_ERR(0, 327, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 16) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
+      values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
+      values[9] = PyTuple_GET_ITEM(__pyx_args, 9);
+      values[10] = PyTuple_GET_ITEM(__pyx_args, 10);
+      values[11] = PyTuple_GET_ITEM(__pyx_args, 11);
+      values[12] = PyTuple_GET_ITEM(__pyx_args, 12);
+      values[13] = PyTuple_GET_ITEM(__pyx_args, 13);
+      values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
+      values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
+    }
+    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 327, __pyx_L3_error)
+    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 328, __pyx_L3_error)
+    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 329, __pyx_L3_error)
+    __pyx_v_J = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_J.memview)) __PYX_ERR(0, 330, __pyx_L3_error)
+    __pyx_v_A = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_A.memview)) __PYX_ERR(0, 331, __pyx_L3_error)
+    __pyx_v_g = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_g.memview)) __PYX_ERR(0, 332, __pyx_L3_error)
+    __pyx_v_B = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_B.memview)) __PYX_ERR(0, 333, __pyx_L3_error)
+    __pyx_v_atm_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[7], PyBUF_WRITABLE); if (unlikely(!__pyx_v_atm_ind.memview)) __PYX_ERR(0, 334, __pyx_L3_error)
+    __pyx_v_img_ind_i = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[8], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_i.memview)) __PYX_ERR(0, 335, __pyx_L3_error)
+    __pyx_v_img_ind_j = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[9], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_j.memview)) __PYX_ERR(0, 336, __pyx_L3_error)
+    __pyx_v_img_ind_k = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[10], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_k.memview)) __PYX_ERR(0, 337, __pyx_L3_error)
+    __pyx_v_pair_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[11], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ind.memview)) __PYX_ERR(0, 338, __pyx_L3_error)
+    __pyx_v_pair_ij = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[12], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ij.memview)) __PYX_ERR(0, 339, __pyx_L3_error)
+    __pyx_v_T_range = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[13], PyBUF_WRITABLE); if (unlikely(!__pyx_v_T_range.memview)) __PYX_ERR(0, 340, __pyx_L3_error)
+    __pyx_v_kB = __pyx_PyFloat_AsDouble(values[14]); if (unlikely((__pyx_v_kB == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 341, __pyx_L3_error)
+    __pyx_v_N = __Pyx_PyIndex_AsSsize_t(values[15]); if (unlikely((__pyx_v_N == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 342, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("heisenberg", 1, 16, 16, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 327, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("disorder.diffuse.simulation.heisenberg", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_8disorder_7diffuse_10simulation_2heisenberg(__pyx_self, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_J, __pyx_v_A, __pyx_v_g, __pyx_v_B, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_ij, __pyx_v_T_range, __pyx_v_kB, __pyx_v_N);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_2heisenberg(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_ij, __Pyx_memviewslice __pyx_v_T_range, double __pyx_v_kB, Py_ssize_t __pyx_v_N) {
+  Py_ssize_t __pyx_v_nu;
+  Py_ssize_t __pyx_v_nv;
+  Py_ssize_t __pyx_v_nw;
+  Py_ssize_t __pyx_v_n_atm;
+  Py_ssize_t __pyx_v_n_temp;
+  Py_ssize_t __pyx_v_i;
+  Py_ssize_t __pyx_v_j;
+  Py_ssize_t __pyx_v_k;
+  Py_ssize_t __pyx_v_a;
+  Py_ssize_t __pyx_v_t;
+  Py_ssize_t __pyx_v_p;
+  Py_ssize_t __pyx_v_n_pairs;
+  __Pyx_memviewslice __pyx_v_E = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_H = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_e = { 0, 0, { 0 }, { 0 }, { 0 } };
+  double __pyx_v_ux;
+  double __pyx_v_uy;
+  double __pyx_v_uz;
+  double __pyx_v_vx;
+  double __pyx_v_vy;
+  double __pyx_v_vz;
+  __Pyx_memviewslice __pyx_v_sx = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_sy = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_sz = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_beta = { 0, 0, { 0 }, { 0 }, { 0 } };
+  CYTHON_UNUSED Py_ssize_t __pyx_v__;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
+  PyObject *__pyx_t_16 = NULL;
+  PyObject *__pyx_t_17 = NULL;
+  int __pyx_t_18;
+  PyObject *__pyx_t_19 = NULL;
+  __Pyx_memviewslice __pyx_t_20 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_t_21;
+  Py_ssize_t __pyx_t_22;
+  Py_ssize_t __pyx_t_23;
+  Py_ssize_t __pyx_t_24;
+  Py_ssize_t __pyx_t_25;
+  Py_ssize_t __pyx_t_26;
+  Py_ssize_t __pyx_t_27;
+  Py_ssize_t __pyx_t_28;
+  Py_ssize_t __pyx_t_29;
+  Py_ssize_t __pyx_t_30;
+  Py_ssize_t __pyx_t_31;
+  Py_ssize_t __pyx_t_32;
+  Py_ssize_t __pyx_t_33;
+  Py_ssize_t __pyx_t_34;
+  Py_ssize_t __pyx_t_35;
+  Py_ssize_t __pyx_t_36;
+  Py_ssize_t __pyx_t_37;
+  Py_ssize_t __pyx_t_38;
+  Py_ssize_t __pyx_t_39;
+  Py_ssize_t __pyx_t_40;
+  Py_ssize_t __pyx_t_41;
+  Py_ssize_t __pyx_t_42;
+  Py_ssize_t __pyx_t_43;
+  Py_ssize_t __pyx_t_44;
+  Py_ssize_t __pyx_t_45;
+  __pyx_ctuple_Py_ssize_t__and_Py_ssize_t__and_Py_ssize_t__and_Py_ssize_t __pyx_t_46;
+  double __pyx_t_47;
+  double __pyx_t_48;
+  double __pyx_t_49;
+  __pyx_ctuple_double__and_double__and_double __pyx_t_50;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("heisenberg", 0);
+
+  /* "disorder/diffuse/simulation.pyx":344
+ *                Py_ssize_t N):
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ */
+  __pyx_v_nu = (__pyx_v_Sx.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":345
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]
+ */
+  __pyx_v_nv = (__pyx_v_Sx.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":346
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]
+ * 
+ */
+  __pyx_v_nw = (__pyx_v_Sx.shape[2]);
+
+  /* "disorder/diffuse/simulation.pyx":347
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t n_temp = T_range.shape[0]
+ */
+  __pyx_v_n_atm = (__pyx_v_Sx.shape[3]);
+
+  /* "disorder/diffuse/simulation.pyx":349
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]
+ * 
+ *     cdef Py_ssize_t n_temp = T_range.shape[0]             # <<<<<<<<<<<<<<
+ * 
+ *     initialize_random(nu, nv, nw, n_atm, n_temp)
+ */
+  __pyx_v_n_temp = (__pyx_v_T_range.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":351
+ *     cdef Py_ssize_t n_temp = T_range.shape[0]
+ * 
+ *     initialize_random(nu, nv, nw, n_atm, n_temp)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t i, j, k, a, t, p
+ */
+  __pyx_f_8disorder_7diffuse_10simulation_initialize_random(__pyx_v_nu, __pyx_v_nv, __pyx_v_nw, __pyx_v_n_atm, __pyx_v_n_temp);
+
+  /* "disorder/diffuse/simulation.pyx":355
+ *     cdef Py_ssize_t i, j, k, a, t, p
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double [::1] E = np.zeros(n_temp)
+ */
+  __pyx_v_n_pairs = (__pyx_v_atm_ind.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":357
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+ * 
+ *     cdef double [::1] E = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] H = np.zeros(n_temp)
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 357, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_E = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":358
+ * 
+ *     cdef double [::1] E = np.zeros(n_temp)
+ *     cdef double [::1] H = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 358, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 358, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 358, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 358, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 358, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_H = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":360
+ *     cdef double [::1] H = np.zeros(n_temp)
+ * 
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,             # <<<<<<<<<<<<<<
+ *                                            img_ind_i, img_ind_j, img_ind_k,
+ *                                            pair_ind, pair_ij)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_energy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_Sx, 5, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_Sy, 5, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_6 = __pyx_memoryview_fromslice(__pyx_v_Sz, 5, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = __pyx_memoryview_fromslice(__pyx_v_J, 3, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __pyx_t_8 = __pyx_memoryview_fromslice(__pyx_v_A, 3, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_9 = __pyx_memoryview_fromslice(__pyx_v_g, 3, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_10 = __pyx_memoryview_fromslice(__pyx_v_B, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_11 = __pyx_memoryview_fromslice(__pyx_v_atm_ind, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+
+  /* "disorder/diffuse/simulation.pyx":361
+ * 
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
+ *                                            img_ind_i, img_ind_j, img_ind_k,             # <<<<<<<<<<<<<<
+ *                                            pair_ind, pair_ij)
+ * 
+ */
+  __pyx_t_12 = __pyx_memoryview_fromslice(__pyx_v_img_ind_i, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 361, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_13 = __pyx_memoryview_fromslice(__pyx_v_img_ind_j, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 361, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = __pyx_memoryview_fromslice(__pyx_v_img_ind_k, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 361, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+
+  /* "disorder/diffuse/simulation.pyx":362
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
+ *                                            img_ind_i, img_ind_j, img_ind_k,
+ *                                            pair_ind, pair_ij)             # <<<<<<<<<<<<<<
+ * 
+ *     for i in range(nu):
+ */
+  __pyx_t_15 = __pyx_memoryview_fromslice(__pyx_v_pair_ind, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 362, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_16 = __pyx_memoryview_fromslice(__pyx_v_pair_ij, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 362, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_17 = NULL;
+  __pyx_t_18 = 0;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_17 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_17)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_17);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __pyx_t_18 = 1;
+    }
+  }
+  #if CYTHON_FAST_PYCALL
+  if (PyFunction_Check(__pyx_t_2)) {
+    PyObject *__pyx_temp[14] = {__pyx_t_17, __pyx_t_3, __pyx_t_4, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16};
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_18, 13+__pyx_t_18); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 360, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+    __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  } else
+  #endif
+  #if CYTHON_FAST_PYCCALL
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
+    PyObject *__pyx_temp[14] = {__pyx_t_17, __pyx_t_3, __pyx_t_4, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16};
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_18, 13+__pyx_t_18); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 360, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+    __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  } else
+  #endif
+  {
+    __pyx_t_19 = PyTuple_New(13+__pyx_t_18); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 360, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_19);
+    if (__pyx_t_17) {
+      __Pyx_GIVEREF(__pyx_t_17); PyTuple_SET_ITEM(__pyx_t_19, 0, __pyx_t_17); __pyx_t_17 = NULL;
+    }
+    __Pyx_GIVEREF(__pyx_t_3);
+    PyTuple_SET_ITEM(__pyx_t_19, 0+__pyx_t_18, __pyx_t_3);
+    __Pyx_GIVEREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_19, 1+__pyx_t_18, __pyx_t_4);
+    __Pyx_GIVEREF(__pyx_t_6);
+    PyTuple_SET_ITEM(__pyx_t_19, 2+__pyx_t_18, __pyx_t_6);
+    __Pyx_GIVEREF(__pyx_t_7);
+    PyTuple_SET_ITEM(__pyx_t_19, 3+__pyx_t_18, __pyx_t_7);
+    __Pyx_GIVEREF(__pyx_t_8);
+    PyTuple_SET_ITEM(__pyx_t_19, 4+__pyx_t_18, __pyx_t_8);
+    __Pyx_GIVEREF(__pyx_t_9);
+    PyTuple_SET_ITEM(__pyx_t_19, 5+__pyx_t_18, __pyx_t_9);
+    __Pyx_GIVEREF(__pyx_t_10);
+    PyTuple_SET_ITEM(__pyx_t_19, 6+__pyx_t_18, __pyx_t_10);
+    __Pyx_GIVEREF(__pyx_t_11);
+    PyTuple_SET_ITEM(__pyx_t_19, 7+__pyx_t_18, __pyx_t_11);
+    __Pyx_GIVEREF(__pyx_t_12);
+    PyTuple_SET_ITEM(__pyx_t_19, 8+__pyx_t_18, __pyx_t_12);
+    __Pyx_GIVEREF(__pyx_t_13);
+    PyTuple_SET_ITEM(__pyx_t_19, 9+__pyx_t_18, __pyx_t_13);
+    __Pyx_GIVEREF(__pyx_t_14);
+    PyTuple_SET_ITEM(__pyx_t_19, 10+__pyx_t_18, __pyx_t_14);
+    __Pyx_GIVEREF(__pyx_t_15);
+    PyTuple_SET_ITEM(__pyx_t_19, 11+__pyx_t_18, __pyx_t_15);
+    __Pyx_GIVEREF(__pyx_t_16);
+    PyTuple_SET_ITEM(__pyx_t_19, 12+__pyx_t_18, __pyx_t_16);
+    __pyx_t_3 = 0;
+    __pyx_t_4 = 0;
+    __pyx_t_6 = 0;
+    __pyx_t_7 = 0;
+    __pyx_t_8 = 0;
+    __pyx_t_9 = 0;
+    __pyx_t_10 = 0;
+    __pyx_t_11 = 0;
+    __pyx_t_12 = 0;
+    __pyx_t_13 = 0;
+    __pyx_t_14 = 0;
+    __pyx_t_15 = 0;
+    __pyx_t_16 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_19, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 360, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "disorder/diffuse/simulation.pyx":360
+ *     cdef double [::1] H = np.zeros(n_temp)
+ * 
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,             # <<<<<<<<<<<<<<
+ *                                            img_ind_i, img_ind_j, img_ind_k,
+ *                                            pair_ind, pair_ij)
+ */
+  __pyx_t_20 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_d_dc_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_20.memview)) __PYX_ERR(0, 360, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_e = __pyx_t_20;
+  __pyx_t_20.memview = NULL;
+  __pyx_t_20.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":364
+ *                                            pair_ind, pair_ij)
+ * 
+ *     for i in range(nu):             # <<<<<<<<<<<<<<
+ *         for j in range(nv):
+ *             for k in range(nw):
+ */
+  __pyx_t_21 = __pyx_v_nu;
+  __pyx_t_22 = __pyx_t_21;
+  for (__pyx_t_23 = 0; __pyx_t_23 < __pyx_t_22; __pyx_t_23+=1) {
+    __pyx_v_i = __pyx_t_23;
+
+    /* "disorder/diffuse/simulation.pyx":365
+ * 
+ *     for i in range(nu):
+ *         for j in range(nv):             # <<<<<<<<<<<<<<
+ *             for k in range(nw):
+ *                 for a in range(n_atm):
+ */
+    __pyx_t_24 = __pyx_v_nv;
+    __pyx_t_25 = __pyx_t_24;
+    for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+      __pyx_v_j = __pyx_t_26;
+
+      /* "disorder/diffuse/simulation.pyx":366
+ *     for i in range(nu):
+ *         for j in range(nv):
+ *             for k in range(nw):             # <<<<<<<<<<<<<<
+ *                 for a in range(n_atm):
+ *                     for p in range(n_pairs):
+ */
+      __pyx_t_27 = __pyx_v_nw;
+      __pyx_t_28 = __pyx_t_27;
+      for (__pyx_t_29 = 0; __pyx_t_29 < __pyx_t_28; __pyx_t_29+=1) {
+        __pyx_v_k = __pyx_t_29;
+
+        /* "disorder/diffuse/simulation.pyx":367
+ *         for j in range(nv):
+ *             for k in range(nw):
+ *                 for a in range(n_atm):             # <<<<<<<<<<<<<<
+ *                     for p in range(n_pairs):
+ *                         for t in range(n_temp):
+ */
+        __pyx_t_30 = __pyx_v_n_atm;
+        __pyx_t_31 = __pyx_t_30;
+        for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
+          __pyx_v_a = __pyx_t_32;
+
+          /* "disorder/diffuse/simulation.pyx":368
+ *             for k in range(nw):
+ *                 for a in range(n_atm):
+ *                     for p in range(n_pairs):             # <<<<<<<<<<<<<<
+ *                         for t in range(n_temp):
+ *                             H[t] += e[i,j,k,a,p,t]
+ */
+          __pyx_t_33 = __pyx_v_n_pairs;
+          __pyx_t_34 = __pyx_t_33;
+          for (__pyx_t_35 = 0; __pyx_t_35 < __pyx_t_34; __pyx_t_35+=1) {
+            __pyx_v_p = __pyx_t_35;
+
+            /* "disorder/diffuse/simulation.pyx":369
+ *                 for a in range(n_atm):
+ *                     for p in range(n_pairs):
+ *                         for t in range(n_temp):             # <<<<<<<<<<<<<<
+ *                             H[t] += e[i,j,k,a,p,t]
+ * 
+ */
+            __pyx_t_36 = __pyx_v_n_temp;
+            __pyx_t_37 = __pyx_t_36;
+            for (__pyx_t_38 = 0; __pyx_t_38 < __pyx_t_37; __pyx_t_38+=1) {
+              __pyx_v_t = __pyx_t_38;
+
+              /* "disorder/diffuse/simulation.pyx":370
+ *                     for p in range(n_pairs):
+ *                         for t in range(n_temp):
+ *                             H[t] += e[i,j,k,a,p,t]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double ux, uy, uz
+ */
+              __pyx_t_39 = __pyx_v_i;
+              __pyx_t_40 = __pyx_v_j;
+              __pyx_t_41 = __pyx_v_k;
+              __pyx_t_42 = __pyx_v_a;
+              __pyx_t_43 = __pyx_v_p;
+              __pyx_t_44 = __pyx_v_t;
+              __pyx_t_45 = __pyx_v_t;
+              *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_H.data) + __pyx_t_45)) )) += (*((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_39 * __pyx_v_e.strides[0]) ) + __pyx_t_40 * __pyx_v_e.strides[1]) ) + __pyx_t_41 * __pyx_v_e.strides[2]) ) + __pyx_t_42 * __pyx_v_e.strides[3]) ) + __pyx_t_43 * __pyx_v_e.strides[4]) )) + __pyx_t_44)) )));
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* "disorder/diffuse/simulation.pyx":375
+ *     cdef double vx, vy, vz
+ * 
+ *     cdef double [::1] sx = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] sy = np.zeros(n_temp)
+ *     cdef double [::1] sz = np.zeros(n_temp)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_19 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_16 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_19))) {
+    __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_19);
+    if (likely(__pyx_t_16)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_19);
+      __Pyx_INCREF(__pyx_t_16);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_19, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_19, __pyx_t_16, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_19, __pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 375, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_sx = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":376
+ * 
+ *     cdef double [::1] sx = np.zeros(n_temp)
+ *     cdef double [::1] sy = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] sz = np.zeros(n_temp)
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_19, __pyx_n_s_np); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_19, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  __pyx_t_19 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __pyx_t_16 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_16)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_16);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_16, __pyx_t_19) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_19);
+  __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 376, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_sy = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":377
+ *     cdef double [::1] sx = np.zeros(n_temp)
+ *     cdef double [::1] sy = np.zeros(n_temp)
+ *     cdef double [::1] sz = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double [::1] beta = 1/(kB*np.copy(T_range))
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_19 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_16 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_19))) {
+    __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_19);
+    if (likely(__pyx_t_16)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_19);
+      __Pyx_INCREF(__pyx_t_16);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_19, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_19, __pyx_t_16, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_19, __pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 377, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_sz = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":379
+ *     cdef double [::1] sz = np.zeros(n_temp)
+ * 
+ *     cdef double [::1] beta = 1/(kB*np.copy(T_range))             # <<<<<<<<<<<<<<
+ * 
+ *     for _ in range(N):
+ */
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_kB); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_copy); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __pyx_memoryview_fromslice(__pyx_v_T_range, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_15 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_16))) {
+    __pyx_t_15 = PyMethod_GET_SELF(__pyx_t_16);
+    if (likely(__pyx_t_15)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_16);
+      __Pyx_INCREF(__pyx_t_15);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_16, function);
+    }
+  }
+  __pyx_t_19 = (__pyx_t_15) ? __Pyx_PyObject_Call2Args(__pyx_t_16, __pyx_t_15, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_16, __pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __pyx_t_16 = PyNumber_Multiply(__pyx_t_1, __pyx_t_19); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  __pyx_t_19 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_16); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_19, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  __pyx_v_beta = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":381
+ *     cdef double [::1] beta = 1/(kB*np.copy(T_range))
+ * 
+ *     for _ in range(N):             # <<<<<<<<<<<<<<
+ * 
+ *         i, j, k, a = random_original(nu, nv, nw, n_atm)
+ */
+  __pyx_t_21 = __pyx_v_N;
+  __pyx_t_22 = __pyx_t_21;
+  for (__pyx_t_23 = 0; __pyx_t_23 < __pyx_t_22; __pyx_t_23+=1) {
+    __pyx_v__ = __pyx_t_23;
+
+    /* "disorder/diffuse/simulation.pyx":383
+ *     for _ in range(N):
+ * 
+ *         i, j, k, a = random_original(nu, nv, nw, n_atm)             # <<<<<<<<<<<<<<
+ * 
+ *         for t in range(n_temp):
+ */
+    __pyx_t_46 = __pyx_f_8disorder_7diffuse_10simulation_random_original(__pyx_v_nu, __pyx_v_nv, __pyx_v_nw, __pyx_v_n_atm);
+    __pyx_t_24 = __pyx_t_46.f0;
+    __pyx_t_25 = __pyx_t_46.f1;
+    __pyx_t_26 = __pyx_t_46.f2;
+    __pyx_t_27 = __pyx_t_46.f3;
+    __pyx_v_i = __pyx_t_24;
+    __pyx_v_j = __pyx_t_25;
+    __pyx_v_k = __pyx_t_26;
+    __pyx_v_a = __pyx_t_27;
+
+    /* "disorder/diffuse/simulation.pyx":385
+ *         i, j, k, a = random_original(nu, nv, nw, n_atm)
+ * 
+ *         for t in range(n_temp):             # <<<<<<<<<<<<<<
+ * 
+ *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+ */
+    __pyx_t_27 = __pyx_v_n_temp;
+    __pyx_t_26 = __pyx_t_27;
+    for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_26; __pyx_t_25+=1) {
+      __pyx_v_t = __pyx_t_25;
+
+      /* "disorder/diffuse/simulation.pyx":387
+ *         for t in range(n_temp):
+ * 
+ *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]             # <<<<<<<<<<<<<<
+ * 
+ *             vx, vy, vz = random_vector_candidate()
+ */
+      __pyx_t_44 = __pyx_v_i;
+      __pyx_t_43 = __pyx_v_j;
+      __pyx_t_42 = __pyx_v_k;
+      __pyx_t_41 = __pyx_v_a;
+      __pyx_t_40 = __pyx_v_t;
+      __pyx_t_47 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_44 * __pyx_v_Sx.strides[0]) ) + __pyx_t_43 * __pyx_v_Sx.strides[1]) ) + __pyx_t_42 * __pyx_v_Sx.strides[2]) ) + __pyx_t_41 * __pyx_v_Sx.strides[3]) )) + __pyx_t_40)) )));
+      __pyx_t_40 = __pyx_v_i;
+      __pyx_t_41 = __pyx_v_j;
+      __pyx_t_42 = __pyx_v_k;
+      __pyx_t_43 = __pyx_v_a;
+      __pyx_t_44 = __pyx_v_t;
+      __pyx_t_48 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_40 * __pyx_v_Sy.strides[0]) ) + __pyx_t_41 * __pyx_v_Sy.strides[1]) ) + __pyx_t_42 * __pyx_v_Sy.strides[2]) ) + __pyx_t_43 * __pyx_v_Sy.strides[3]) )) + __pyx_t_44)) )));
+      __pyx_t_44 = __pyx_v_i;
+      __pyx_t_43 = __pyx_v_j;
+      __pyx_t_42 = __pyx_v_k;
+      __pyx_t_41 = __pyx_v_a;
+      __pyx_t_40 = __pyx_v_t;
+      __pyx_t_49 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_44 * __pyx_v_Sz.strides[0]) ) + __pyx_t_43 * __pyx_v_Sz.strides[1]) ) + __pyx_t_42 * __pyx_v_Sz.strides[2]) ) + __pyx_t_41 * __pyx_v_Sz.strides[3]) )) + __pyx_t_40)) )));
+      __pyx_v_ux = __pyx_t_47;
+      __pyx_v_uy = __pyx_t_48;
+      __pyx_v_uz = __pyx_t_49;
+
+      /* "disorder/diffuse/simulation.pyx":389
+ *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+ * 
+ *             vx, vy, vz = random_vector_candidate()             # <<<<<<<<<<<<<<
+ * 
+ *             sx[t], sy[t], sz[t] = vx, vy, vz
+ */
+      __pyx_t_50 = __pyx_f_8disorder_7diffuse_10simulation_random_vector_candidate();
+      __pyx_t_49 = __pyx_t_50.f0;
+      __pyx_t_48 = __pyx_t_50.f1;
+      __pyx_t_47 = __pyx_t_50.f2;
+      __pyx_v_vx = __pyx_t_49;
+      __pyx_v_vy = __pyx_t_48;
+      __pyx_v_vz = __pyx_t_47;
+
+      /* "disorder/diffuse/simulation.pyx":391
+ *             vx, vy, vz = random_vector_candidate()
+ * 
+ *             sx[t], sy[t], sz[t] = vx, vy, vz             # <<<<<<<<<<<<<<
+ * 
+ *             E[t] = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
+ */
+      __pyx_t_47 = __pyx_v_vx;
+      __pyx_t_48 = __pyx_v_vy;
+      __pyx_t_49 = __pyx_v_vz;
+      __pyx_t_40 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sx.data) + __pyx_t_40)) )) = __pyx_t_47;
+      __pyx_t_40 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sy.data) + __pyx_t_40)) )) = __pyx_t_48;
+      __pyx_t_40 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sz.data) + __pyx_t_40)) )) = __pyx_t_49;
+
+      /* "disorder/diffuse/simulation.pyx":393
+ *             sx[t], sy[t], sz[t] = vx, vy, vz
+ * 
+ *             E[t] = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,             # <<<<<<<<<<<<<<
+ *                             atm_ind, img_ind_i, img_ind_j, img_ind_k, pair_ind,
+ *                             pair_ij, i, j, k, a, t)
+ */
+      __pyx_t_40 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_E.data) + __pyx_t_40)) )) = __pyx_f_8disorder_7diffuse_10simulation_magnetic(__pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_vx, __pyx_v_vy, __pyx_v_vz, __pyx_v_ux, __pyx_v_uy, __pyx_v_uz, __pyx_v_J, __pyx_v_A, __pyx_v_g, __pyx_v_B, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_ij, __pyx_v_i, __pyx_v_j, __pyx_v_k, __pyx_v_a, __pyx_v_t);
+    }
+
+    /* "disorder/diffuse/simulation.pyx":397
+ *                             pair_ij, i, j, k, a, t)
+ * 
+ *         annealing_vector(Sx, Sy, Sz, sx, sy, sz, H, E, beta, i, j, k, a)             # <<<<<<<<<<<<<<
+ * 
+ *         replica_exchange(H, beta)
+ */
+    __pyx_f_8disorder_7diffuse_10simulation_annealing_vector(__pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_H, __pyx_v_E, __pyx_v_beta, __pyx_v_i, __pyx_v_j, __pyx_v_k, __pyx_v_a);
+
+    /* "disorder/diffuse/simulation.pyx":399
+ *         annealing_vector(Sx, Sy, Sz, sx, sy, sz, H, E, beta, i, j, k, a)
+ * 
+ *         replica_exchange(H, beta)             # <<<<<<<<<<<<<<
+ * 
+ * # ---
+ */
+    __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__pyx_v_H, __pyx_v_beta);
+  }
+
+  /* "disorder/diffuse/simulation.pyx":327
+ *     return E
+ * 
+ * def heisenberg(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                double [:,:,:,:,::1] Sy,
+ *                double [:,:,:,:,::1] Sz,
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
+  __Pyx_XDECREF(__pyx_t_16);
+  __Pyx_XDECREF(__pyx_t_17);
+  __Pyx_XDECREF(__pyx_t_19);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_20, 1);
+  __Pyx_AddTraceback("disorder.diffuse.simulation.heisenberg", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __PYX_XDEC_MEMVIEW(&__pyx_v_E, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_H, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_e, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_sx, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_sy, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_sz, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_beta, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_Sx, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_Sy, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_Sz, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_J, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_A, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_g, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_B, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_atm_ind, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_i, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_j, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_k, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_pair_ind, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_pair_ij, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_T_range, 1);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/simulation.pyx":403
+ * # ---
+ * 
+ * cdef void annealing_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                             double [:,:,:,:,::1] Sy,
+ *                             double [:,:,:,:,::1] Sz,
+ */
+
+static void __pyx_f_8disorder_7diffuse_10simulation_annealing_cluster(__Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_nx, __Pyx_memviewslice __pyx_v_ny, __Pyx_memviewslice __pyx_v_nz, CYTHON_UNUSED __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_clust_i, __Pyx_memviewslice __pyx_v_clust_j, __Pyx_memviewslice __pyx_v_clust_k, __Pyx_memviewslice __pyx_v_clust_a, __Pyx_memviewslice __pyx_v_h_eff, __Pyx_memviewslice __pyx_v_b, __Pyx_memviewslice __pyx_v_c, __Pyx_memviewslice __pyx_v_n_c, __Pyx_memviewslice __pyx_v_atm_ind, CYTHON_UNUSED __Pyx_memviewslice __pyx_v_img_ind_i, CYTHON_UNUSED __Pyx_memviewslice __pyx_v_img_ind_j, CYTHON_UNUSED __Pyx_memviewslice __pyx_v_img_ind_k, CYTHON_UNUSED __Pyx_memviewslice __pyx_v_pair_ind, CYTHON_UNUSED __Pyx_memviewslice __pyx_v_pair_ij, __Pyx_memviewslice __pyx_v_H, __Pyx_memviewslice __pyx_v_Eij, __Pyx_memviewslice __pyx_v_beta) {
+  Py_ssize_t __pyx_v_n_temp;
+  CYTHON_UNUSED Py_ssize_t __pyx_v_nu;
+  CYTHON_UNUSED Py_ssize_t __pyx_v_nv;
+  CYTHON_UNUSED Py_ssize_t __pyx_v_nw;
+  CYTHON_UNUSED Py_ssize_t __pyx_v_n_atm;
+  CYTHON_UNUSED Py_ssize_t __pyx_v_n_pairs;
+  double __pyx_v_Ec;
+  Py_ssize_t __pyx_v_i_c;
+  Py_ssize_t __pyx_v_i;
+  Py_ssize_t __pyx_v_j;
+  Py_ssize_t __pyx_v_k;
+  Py_ssize_t __pyx_v_a;
+  Py_ssize_t __pyx_v_t;
+  double __pyx_v_ux;
+  double __pyx_v_uy;
+  double __pyx_v_uz;
+  double __pyx_v_vx;
+  double __pyx_v_vy;
+  double __pyx_v_vz;
+  double __pyx_v_dx;
+  double __pyx_v_dy;
+  double __pyx_v_dz;
+  double __pyx_v_n_dot_u;
+  double __pyx_v_Bx;
+  double __pyx_v_By;
+  double __pyx_v_Bz;
+  __Pyx_RefNannyDeclarations
+  Py_ssize_t __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  Py_ssize_t __pyx_t_5;
+  Py_ssize_t __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
+  Py_ssize_t __pyx_t_10;
+  Py_ssize_t __pyx_t_11;
+  double __pyx_t_12;
+  double __pyx_t_13;
+  double __pyx_t_14;
+  Py_ssize_t __pyx_t_15;
+  Py_ssize_t __pyx_t_16;
+  Py_ssize_t __pyx_t_17;
+  Py_ssize_t __pyx_t_18;
+  Py_ssize_t __pyx_t_19;
+  Py_ssize_t __pyx_t_20;
+  Py_ssize_t __pyx_t_21;
+  Py_ssize_t __pyx_t_22;
+  Py_ssize_t __pyx_t_23;
+  Py_ssize_t __pyx_t_24;
+  Py_ssize_t __pyx_t_25;
+  Py_ssize_t __pyx_t_26;
+  Py_ssize_t __pyx_t_27;
+  Py_ssize_t __pyx_t_28;
+  Py_ssize_t __pyx_t_29;
+  Py_ssize_t __pyx_t_30;
+  Py_ssize_t __pyx_t_31;
+  Py_ssize_t __pyx_t_32;
+  Py_ssize_t __pyx_t_33;
+  Py_ssize_t __pyx_t_34;
+  Py_ssize_t __pyx_t_35;
+  Py_ssize_t __pyx_t_36;
+  int __pyx_t_37;
+  __Pyx_RefNannySetupContext("annealing_cluster", 0);
+
+  /* "disorder/diffuse/simulation.pyx":431
+ *                             double [::1] beta):
+ * 
+ *     cdef Py_ssize_t n_temp = n_c.shape[0]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ */
+  __pyx_v_n_temp = (__pyx_v_n_c.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":433
+ *     cdef Py_ssize_t n_temp = n_c.shape[0]
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ */
+  __pyx_v_nu = (__pyx_v_Sx.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":434
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]
+ */
+  __pyx_v_nv = (__pyx_v_Sx.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":435
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]
+ * 
+ */
+  __pyx_v_nw = (__pyx_v_Sx.shape[2]);
+
+  /* "disorder/diffuse/simulation.pyx":436
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+ */
+  __pyx_v_n_atm = (__pyx_v_Sx.shape[3]);
+
+  /* "disorder/diffuse/simulation.pyx":438
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double Ec = 0
+ */
+  __pyx_v_n_pairs = (__pyx_v_atm_ind.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":440
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+ * 
+ *     cdef double Ec = 0             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t p, i_c
+ */
+  __pyx_v_Ec = 0.0;
+
+  /* "disorder/diffuse/simulation.pyx":456
+ *     cdef double n_dot_u
+ * 
+ *     cdef double Bx = B[0]             # <<<<<<<<<<<<<<
+ *     cdef double By = B[1]
+ *     cdef double Bz = B[2]
+ */
+  __pyx_t_1 = 0;
+  __pyx_v_Bx = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_1)) )));
+
+  /* "disorder/diffuse/simulation.pyx":457
+ * 
+ *     cdef double Bx = B[0]
+ *     cdef double By = B[1]             # <<<<<<<<<<<<<<
+ *     cdef double Bz = B[2]
+ * 
+ */
+  __pyx_t_1 = 1;
+  __pyx_v_By = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_1)) )));
+
+  /* "disorder/diffuse/simulation.pyx":458
+ *     cdef double Bx = B[0]
+ *     cdef double By = B[1]
+ *     cdef double Bz = B[2]             # <<<<<<<<<<<<<<
+ * 
+ *     for t in range(n_temp):
+ */
+  __pyx_t_1 = 2;
+  __pyx_v_Bz = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_B.data) + __pyx_t_1)) )));
+
+  /* "disorder/diffuse/simulation.pyx":460
+ *     cdef double Bz = B[2]
+ * 
+ *     for t in range(n_temp):             # <<<<<<<<<<<<<<
+ * 
+ *         Ec = 0
+ */
+  __pyx_t_2 = __pyx_v_n_temp;
+  __pyx_t_3 = __pyx_t_2;
+  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
+    __pyx_v_t = __pyx_t_4;
+
+    /* "disorder/diffuse/simulation.pyx":462
+ *     for t in range(n_temp):
+ * 
+ *         Ec = 0             # <<<<<<<<<<<<<<
+ * 
+ *         for i_c in range(n_c[t]):
+ */
+    __pyx_v_Ec = 0.0;
+
+    /* "disorder/diffuse/simulation.pyx":464
+ *         Ec = 0
+ * 
+ *         for i_c in range(n_c[t]):             # <<<<<<<<<<<<<<
+ * 
+ *             i = clust_i[i_c,t]
+ */
+    __pyx_t_1 = __pyx_v_t;
+    __pyx_t_5 = (*((Py_ssize_t *) ( /* dim=0 */ ((char *) (((Py_ssize_t *) __pyx_v_n_c.data) + __pyx_t_1)) )));
+    __pyx_t_6 = __pyx_t_5;
+    for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+      __pyx_v_i_c = __pyx_t_7;
+
+      /* "disorder/diffuse/simulation.pyx":466
+ *         for i_c in range(n_c[t]):
+ * 
+ *             i = clust_i[i_c,t]             # <<<<<<<<<<<<<<
+ *             j = clust_j[i_c,t]
+ *             k = clust_k[i_c,t]
+ */
+      __pyx_t_1 = __pyx_v_i_c;
+      __pyx_t_8 = __pyx_v_t;
+      __pyx_v_i = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_i.data + __pyx_t_1 * __pyx_v_clust_i.strides[0]) )) + __pyx_t_8)) )));
+
+      /* "disorder/diffuse/simulation.pyx":467
+ * 
+ *             i = clust_i[i_c,t]
+ *             j = clust_j[i_c,t]             # <<<<<<<<<<<<<<
+ *             k = clust_k[i_c,t]
+ *             a = clust_a[i_c,t]
+ */
+      __pyx_t_8 = __pyx_v_i_c;
+      __pyx_t_1 = __pyx_v_t;
+      __pyx_v_j = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_j.data + __pyx_t_8 * __pyx_v_clust_j.strides[0]) )) + __pyx_t_1)) )));
+
+      /* "disorder/diffuse/simulation.pyx":468
+ *             i = clust_i[i_c,t]
+ *             j = clust_j[i_c,t]
+ *             k = clust_k[i_c,t]             # <<<<<<<<<<<<<<
+ *             a = clust_a[i_c,t]
+ * 
+ */
+      __pyx_t_1 = __pyx_v_i_c;
+      __pyx_t_8 = __pyx_v_t;
+      __pyx_v_k = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_k.data + __pyx_t_1 * __pyx_v_clust_k.strides[0]) )) + __pyx_t_8)) )));
+
+      /* "disorder/diffuse/simulation.pyx":469
+ *             j = clust_j[i_c,t]
+ *             k = clust_k[i_c,t]
+ *             a = clust_a[i_c,t]             # <<<<<<<<<<<<<<
+ * 
+ *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+ */
+      __pyx_t_8 = __pyx_v_i_c;
+      __pyx_t_1 = __pyx_v_t;
+      __pyx_v_a = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_a.data + __pyx_t_8 * __pyx_v_clust_a.strides[0]) )) + __pyx_t_1)) )));
+
+      /* "disorder/diffuse/simulation.pyx":471
+ *             a = clust_a[i_c,t]
+ * 
+ *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]             # <<<<<<<<<<<<<<
+ * 
+ *             n_dot_u = nx[t]*ux+ny[t]*uy+nz[t]*uz
+ */
+      __pyx_t_1 = __pyx_v_i;
+      __pyx_t_8 = __pyx_v_j;
+      __pyx_t_9 = __pyx_v_k;
+      __pyx_t_10 = __pyx_v_a;
+      __pyx_t_11 = __pyx_v_t;
+      __pyx_t_12 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_1 * __pyx_v_Sx.strides[0]) ) + __pyx_t_8 * __pyx_v_Sx.strides[1]) ) + __pyx_t_9 * __pyx_v_Sx.strides[2]) ) + __pyx_t_10 * __pyx_v_Sx.strides[3]) )) + __pyx_t_11)) )));
+      __pyx_t_11 = __pyx_v_i;
+      __pyx_t_10 = __pyx_v_j;
+      __pyx_t_9 = __pyx_v_k;
+      __pyx_t_8 = __pyx_v_a;
+      __pyx_t_1 = __pyx_v_t;
+      __pyx_t_13 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_11 * __pyx_v_Sy.strides[0]) ) + __pyx_t_10 * __pyx_v_Sy.strides[1]) ) + __pyx_t_9 * __pyx_v_Sy.strides[2]) ) + __pyx_t_8 * __pyx_v_Sy.strides[3]) )) + __pyx_t_1)) )));
+      __pyx_t_1 = __pyx_v_i;
+      __pyx_t_8 = __pyx_v_j;
+      __pyx_t_9 = __pyx_v_k;
+      __pyx_t_10 = __pyx_v_a;
+      __pyx_t_11 = __pyx_v_t;
+      __pyx_t_14 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_1 * __pyx_v_Sz.strides[0]) ) + __pyx_t_8 * __pyx_v_Sz.strides[1]) ) + __pyx_t_9 * __pyx_v_Sz.strides[2]) ) + __pyx_t_10 * __pyx_v_Sz.strides[3]) )) + __pyx_t_11)) )));
+      __pyx_v_ux = __pyx_t_12;
+      __pyx_v_uy = __pyx_t_13;
+      __pyx_v_uz = __pyx_t_14;
+
+      /* "disorder/diffuse/simulation.pyx":473
+ *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+ * 
+ *             n_dot_u = nx[t]*ux+ny[t]*uy+nz[t]*uz             # <<<<<<<<<<<<<<
+ * 
+ *             vx = ux-2*nx[t]*n_dot_u
+ */
+      __pyx_t_11 = __pyx_v_t;
+      __pyx_t_10 = __pyx_v_t;
+      __pyx_t_9 = __pyx_v_t;
+      __pyx_v_n_dot_u = ((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_nx.data) + __pyx_t_11)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_ny.data) + __pyx_t_10)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_nz.data) + __pyx_t_9)) ))) * __pyx_v_uz));
+
+      /* "disorder/diffuse/simulation.pyx":475
+ *             n_dot_u = nx[t]*ux+ny[t]*uy+nz[t]*uz
+ * 
+ *             vx = ux-2*nx[t]*n_dot_u             # <<<<<<<<<<<<<<
+ *             vy = uy-2*ny[t]*n_dot_u
+ *             vz = uz-2*nz[t]*n_dot_u
+ */
+      __pyx_t_9 = __pyx_v_t;
+      __pyx_v_vx = (__pyx_v_ux - ((2.0 * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_nx.data) + __pyx_t_9)) )))) * __pyx_v_n_dot_u));
+
+      /* "disorder/diffuse/simulation.pyx":476
+ * 
+ *             vx = ux-2*nx[t]*n_dot_u
+ *             vy = uy-2*ny[t]*n_dot_u             # <<<<<<<<<<<<<<
+ *             vz = uz-2*nz[t]*n_dot_u
+ * 
+ */
+      __pyx_t_9 = __pyx_v_t;
+      __pyx_v_vy = (__pyx_v_uy - ((2.0 * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_ny.data) + __pyx_t_9)) )))) * __pyx_v_n_dot_u));
+
+      /* "disorder/diffuse/simulation.pyx":477
+ *             vx = ux-2*nx[t]*n_dot_u
+ *             vy = uy-2*ny[t]*n_dot_u
+ *             vz = uz-2*nz[t]*n_dot_u             # <<<<<<<<<<<<<<
+ * 
+ *             Ec -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+ */
+      __pyx_t_9 = __pyx_v_t;
+      __pyx_v_vz = (__pyx_v_uz - ((2.0 * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_nz.data) + __pyx_t_9)) )))) * __pyx_v_n_dot_u));
+
+      /* "disorder/diffuse/simulation.pyx":479
+ *             vz = uz-2*nz[t]*n_dot_u
+ * 
+ *             Ec -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\             # <<<<<<<<<<<<<<
+ *                +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+ *                +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ */
+      __pyx_t_9 = __pyx_v_a;
+      __pyx_t_10 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_8 = __pyx_v_a;
+      __pyx_t_1 = 0;
+      __pyx_t_15 = 1;
+      __pyx_t_16 = __pyx_v_a;
+      __pyx_t_17 = 0;
+      __pyx_t_18 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":480
+ * 
+ *             Ec -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+ *                +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\             # <<<<<<<<<<<<<<
+ *                +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ * 
+ */
+      __pyx_t_19 = __pyx_v_a;
+      __pyx_t_20 = 1;
+      __pyx_t_21 = 0;
+      __pyx_t_22 = __pyx_v_a;
+      __pyx_t_23 = 1;
+      __pyx_t_24 = 1;
+      __pyx_t_25 = __pyx_v_a;
+      __pyx_t_26 = 1;
+      __pyx_t_27 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":481
+ *             Ec -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+ *                +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+ *                +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)             # <<<<<<<<<<<<<<
+ * 
+ *             Ec += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+ */
+      __pyx_t_28 = __pyx_v_a;
+      __pyx_t_29 = 2;
+      __pyx_t_30 = 0;
+      __pyx_t_31 = __pyx_v_a;
+      __pyx_t_32 = 2;
+      __pyx_t_33 = 1;
+      __pyx_t_34 = __pyx_v_a;
+      __pyx_t_35 = 2;
+      __pyx_t_36 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":479
+ *             vz = uz-2*nz[t]*n_dot_u
+ * 
+ *             Ec -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\             # <<<<<<<<<<<<<<
+ *                +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+ *                +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ */
+      __pyx_v_Ec = (__pyx_v_Ec - (((__pyx_v_vx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_9 * __pyx_v_A.strides[0]) ) + __pyx_t_10 * __pyx_v_A.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_8 * __pyx_v_A.strides[0]) ) + __pyx_t_1 * __pyx_v_A.strides[1]) )) + __pyx_t_15)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_16 * __pyx_v_A.strides[0]) ) + __pyx_t_17 * __pyx_v_A.strides[1]) )) + __pyx_t_18)) ))) * __pyx_v_vz))) + (__pyx_v_vy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_19 * __pyx_v_A.strides[0]) ) + __pyx_t_20 * __pyx_v_A.strides[1]) )) + __pyx_t_21)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_22 * __pyx_v_A.strides[0]) ) + __pyx_t_23 * __pyx_v_A.strides[1]) )) + __pyx_t_24)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_25 * __pyx_v_A.strides[0]) ) + __pyx_t_26 * __pyx_v_A.strides[1]) )) + __pyx_t_27)) ))) * __pyx_v_vz)))) + (__pyx_v_vz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_28 * __pyx_v_A.strides[0]) ) + __pyx_t_29 * __pyx_v_A.strides[1]) )) + __pyx_t_30)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_31 * __pyx_v_A.strides[0]) ) + __pyx_t_32 * __pyx_v_A.strides[1]) )) + __pyx_t_33)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_34 * __pyx_v_A.strides[0]) ) + __pyx_t_35 * __pyx_v_A.strides[1]) )) + __pyx_t_36)) ))) * __pyx_v_vz)))));
+
+      /* "disorder/diffuse/simulation.pyx":483
+ *                +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ * 
+ *             Ec += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\             # <<<<<<<<<<<<<<
+ *                +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+ *                +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+ */
+      __pyx_t_36 = __pyx_v_a;
+      __pyx_t_35 = 0;
+      __pyx_t_34 = 0;
+      __pyx_t_33 = __pyx_v_a;
+      __pyx_t_32 = 0;
+      __pyx_t_31 = 1;
+      __pyx_t_30 = __pyx_v_a;
+      __pyx_t_29 = 0;
+      __pyx_t_28 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":484
+ * 
+ *             Ec += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+ *                +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\             # <<<<<<<<<<<<<<
+ *                +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+ * 
+ */
+      __pyx_t_27 = __pyx_v_a;
+      __pyx_t_26 = 1;
+      __pyx_t_25 = 0;
+      __pyx_t_24 = __pyx_v_a;
+      __pyx_t_23 = 1;
+      __pyx_t_22 = 1;
+      __pyx_t_21 = __pyx_v_a;
+      __pyx_t_20 = 1;
+      __pyx_t_19 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":485
+ *             Ec += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+ *                +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+ *                +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)             # <<<<<<<<<<<<<<
+ * 
+ *             dx = vx-ux
+ */
+      __pyx_t_18 = __pyx_v_a;
+      __pyx_t_17 = 2;
+      __pyx_t_16 = 0;
+      __pyx_t_15 = __pyx_v_a;
+      __pyx_t_1 = 2;
+      __pyx_t_8 = 1;
+      __pyx_t_11 = __pyx_v_a;
+      __pyx_t_10 = 2;
+      __pyx_t_9 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":483
+ *                +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
+ * 
+ *             Ec += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\             # <<<<<<<<<<<<<<
+ *                +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+ *                +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+ */
+      __pyx_v_Ec = (__pyx_v_Ec + (((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_36 * __pyx_v_A.strides[0]) ) + __pyx_t_35 * __pyx_v_A.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_33 * __pyx_v_A.strides[0]) ) + __pyx_t_32 * __pyx_v_A.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_30 * __pyx_v_A.strides[0]) ) + __pyx_t_29 * __pyx_v_A.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_uz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_27 * __pyx_v_A.strides[0]) ) + __pyx_t_26 * __pyx_v_A.strides[1]) )) + __pyx_t_25)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_24 * __pyx_v_A.strides[0]) ) + __pyx_t_23 * __pyx_v_A.strides[1]) )) + __pyx_t_22)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_21 * __pyx_v_A.strides[0]) ) + __pyx_t_20 * __pyx_v_A.strides[1]) )) + __pyx_t_19)) ))) * __pyx_v_uz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_18 * __pyx_v_A.strides[0]) ) + __pyx_t_17 * __pyx_v_A.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_15 * __pyx_v_A.strides[0]) ) + __pyx_t_1 * __pyx_v_A.strides[1]) )) + __pyx_t_8)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_11 * __pyx_v_A.strides[0]) ) + __pyx_t_10 * __pyx_v_A.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_uz)))));
+
+      /* "disorder/diffuse/simulation.pyx":487
+ *                +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
+ * 
+ *             dx = vx-ux             # <<<<<<<<<<<<<<
+ *             dy = vy-uy
+ *             dz = vz-uz
+ */
+      __pyx_v_dx = (__pyx_v_vx - __pyx_v_ux);
+
+      /* "disorder/diffuse/simulation.pyx":488
+ * 
+ *             dx = vx-ux
+ *             dy = vy-uy             # <<<<<<<<<<<<<<
+ *             dz = vz-uz
+ * 
+ */
+      __pyx_v_dy = (__pyx_v_vy - __pyx_v_uy);
+
+      /* "disorder/diffuse/simulation.pyx":489
+ *             dx = vx-ux
+ *             dy = vy-uy
+ *             dz = vz-uz             # <<<<<<<<<<<<<<
+ * 
+ *             Ec -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+ */
+      __pyx_v_dz = (__pyx_v_vz - __pyx_v_uz);
+
+      /* "disorder/diffuse/simulation.pyx":491
+ *             dz = vz-uz
+ * 
+ *             Ec -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\             # <<<<<<<<<<<<<<
+ *                +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+ *                +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+ */
+      __pyx_t_9 = __pyx_v_a;
+      __pyx_t_10 = 0;
+      __pyx_t_11 = 0;
+      __pyx_t_8 = __pyx_v_a;
+      __pyx_t_1 = 0;
+      __pyx_t_15 = 1;
+      __pyx_t_16 = __pyx_v_a;
+      __pyx_t_17 = 0;
+      __pyx_t_18 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":492
+ * 
+ *             Ec -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+ *                +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\             # <<<<<<<<<<<<<<
+ *                +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+ * 
+ */
+      __pyx_t_19 = __pyx_v_a;
+      __pyx_t_20 = 1;
+      __pyx_t_21 = 0;
+      __pyx_t_22 = __pyx_v_a;
+      __pyx_t_23 = 1;
+      __pyx_t_24 = 1;
+      __pyx_t_25 = __pyx_v_a;
+      __pyx_t_26 = 1;
+      __pyx_t_27 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":493
+ *             Ec -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+ *                +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+ *                +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)             # <<<<<<<<<<<<<<
+ * 
+ *             Ec += h_eff[i,j,k,a,t]
+ */
+      __pyx_t_28 = __pyx_v_a;
+      __pyx_t_29 = 2;
+      __pyx_t_30 = 0;
+      __pyx_t_31 = __pyx_v_a;
+      __pyx_t_32 = 2;
+      __pyx_t_33 = 1;
+      __pyx_t_34 = __pyx_v_a;
+      __pyx_t_35 = 2;
+      __pyx_t_36 = 2;
+
+      /* "disorder/diffuse/simulation.pyx":491
+ *             dz = vz-uz
+ * 
+ *             Ec -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\             # <<<<<<<<<<<<<<
+ *                +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+ *                +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+ */
+      __pyx_v_Ec = (__pyx_v_Ec - (((__pyx_v_Bx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_9 * __pyx_v_g.strides[0]) ) + __pyx_t_10 * __pyx_v_g.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_dx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_8 * __pyx_v_g.strides[0]) ) + __pyx_t_1 * __pyx_v_g.strides[1]) )) + __pyx_t_15)) ))) * __pyx_v_dy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_16 * __pyx_v_g.strides[0]) ) + __pyx_t_17 * __pyx_v_g.strides[1]) )) + __pyx_t_18)) ))) * __pyx_v_dz))) + (__pyx_v_By * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_19 * __pyx_v_g.strides[0]) ) + __pyx_t_20 * __pyx_v_g.strides[1]) )) + __pyx_t_21)) ))) * __pyx_v_dx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_22 * __pyx_v_g.strides[0]) ) + __pyx_t_23 * __pyx_v_g.strides[1]) )) + __pyx_t_24)) ))) * __pyx_v_dy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_25 * __pyx_v_g.strides[0]) ) + __pyx_t_26 * __pyx_v_g.strides[1]) )) + __pyx_t_27)) ))) * __pyx_v_dz)))) + (__pyx_v_Bz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_28 * __pyx_v_g.strides[0]) ) + __pyx_t_29 * __pyx_v_g.strides[1]) )) + __pyx_t_30)) ))) * __pyx_v_dx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_31 * __pyx_v_g.strides[0]) ) + __pyx_t_32 * __pyx_v_g.strides[1]) )) + __pyx_t_33)) ))) * __pyx_v_dy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_34 * __pyx_v_g.strides[0]) ) + __pyx_t_35 * __pyx_v_g.strides[1]) )) + __pyx_t_36)) ))) * __pyx_v_dz)))));
+
+      /* "disorder/diffuse/simulation.pyx":495
+ *                +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+ * 
+ *             Ec += h_eff[i,j,k,a,t]             # <<<<<<<<<<<<<<
+ * 
+ *             b[i,j,k,a,t] = 0
+ */
+      __pyx_t_36 = __pyx_v_i;
+      __pyx_t_35 = __pyx_v_j;
+      __pyx_t_34 = __pyx_v_k;
+      __pyx_t_33 = __pyx_v_a;
+      __pyx_t_32 = __pyx_v_t;
+      __pyx_v_Ec = (__pyx_v_Ec + (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_h_eff.data + __pyx_t_36 * __pyx_v_h_eff.strides[0]) ) + __pyx_t_35 * __pyx_v_h_eff.strides[1]) ) + __pyx_t_34 * __pyx_v_h_eff.strides[2]) ) + __pyx_t_33 * __pyx_v_h_eff.strides[3]) )) + __pyx_t_32)) ))));
+
+      /* "disorder/diffuse/simulation.pyx":497
+ *             Ec += h_eff[i,j,k,a,t]
+ * 
+ *             b[i,j,k,a,t] = 0             # <<<<<<<<<<<<<<
+ *             c[i,j,k,a,t] = 0
+ * 
+ */
+      __pyx_t_32 = __pyx_v_i;
+      __pyx_t_33 = __pyx_v_j;
+      __pyx_t_34 = __pyx_v_k;
+      __pyx_t_35 = __pyx_v_a;
+      __pyx_t_36 = __pyx_v_t;
+      *((int *) ( /* dim=4 */ ((char *) (((int *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_32 * __pyx_v_b.strides[0]) ) + __pyx_t_33 * __pyx_v_b.strides[1]) ) + __pyx_t_34 * __pyx_v_b.strides[2]) ) + __pyx_t_35 * __pyx_v_b.strides[3]) )) + __pyx_t_36)) )) = 0;
+
+      /* "disorder/diffuse/simulation.pyx":498
+ * 
+ *             b[i,j,k,a,t] = 0
+ *             c[i,j,k,a,t] = 0             # <<<<<<<<<<<<<<
+ * 
+ *             h_eff[i,j,k,a,t] = 0
+ */
+      __pyx_t_36 = __pyx_v_i;
+      __pyx_t_35 = __pyx_v_j;
+      __pyx_t_34 = __pyx_v_k;
+      __pyx_t_33 = __pyx_v_a;
+      __pyx_t_32 = __pyx_v_t;
+      *((int *) ( /* dim=4 */ ((char *) (((int *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_c.data + __pyx_t_36 * __pyx_v_c.strides[0]) ) + __pyx_t_35 * __pyx_v_c.strides[1]) ) + __pyx_t_34 * __pyx_v_c.strides[2]) ) + __pyx_t_33 * __pyx_v_c.strides[3]) )) + __pyx_t_32)) )) = 0;
+
+      /* "disorder/diffuse/simulation.pyx":500
+ *             c[i,j,k,a,t] = 0
+ * 
+ *             h_eff[i,j,k,a,t] = 0             # <<<<<<<<<<<<<<
+ * 
+ *         if (random() < alpha(Ec, beta[t])):
+ */
+      __pyx_t_32 = __pyx_v_i;
+      __pyx_t_33 = __pyx_v_j;
+      __pyx_t_34 = __pyx_v_k;
+      __pyx_t_35 = __pyx_v_a;
+      __pyx_t_36 = __pyx_v_t;
+      *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_h_eff.data + __pyx_t_32 * __pyx_v_h_eff.strides[0]) ) + __pyx_t_33 * __pyx_v_h_eff.strides[1]) ) + __pyx_t_34 * __pyx_v_h_eff.strides[2]) ) + __pyx_t_35 * __pyx_v_h_eff.strides[3]) )) + __pyx_t_36)) )) = 0.0;
+    }
+
+    /* "disorder/diffuse/simulation.pyx":502
+ *             h_eff[i,j,k,a,t] = 0
+ * 
+ *         if (random() < alpha(Ec, beta[t])):             # <<<<<<<<<<<<<<
+ * 
+ *             for i_c in range(n_c[t]):
+ */
+    __pyx_t_36 = __pyx_v_t;
+    __pyx_t_37 = ((__pyx_f_8disorder_7diffuse_10simulation_random() < __pyx_f_8disorder_7diffuse_10simulation_alpha(__pyx_v_Ec, (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_36)) ))))) != 0);
+    if (__pyx_t_37) {
+
+      /* "disorder/diffuse/simulation.pyx":504
+ *         if (random() < alpha(Ec, beta[t])):
+ * 
+ *             for i_c in range(n_c[t]):             # <<<<<<<<<<<<<<
+ * 
+ *                 i = clust_i[i_c,t]
+ */
+      __pyx_t_36 = __pyx_v_t;
+      __pyx_t_5 = (*((Py_ssize_t *) ( /* dim=0 */ ((char *) (((Py_ssize_t *) __pyx_v_n_c.data) + __pyx_t_36)) )));
+      __pyx_t_6 = __pyx_t_5;
+      for (__pyx_t_7 = 0; __pyx_t_7 < __pyx_t_6; __pyx_t_7+=1) {
+        __pyx_v_i_c = __pyx_t_7;
+
+        /* "disorder/diffuse/simulation.pyx":506
+ *             for i_c in range(n_c[t]):
+ * 
+ *                 i = clust_i[i_c,t]             # <<<<<<<<<<<<<<
+ *                 j = clust_j[i_c,t]
+ *                 k = clust_k[i_c,t]
+ */
+        __pyx_t_36 = __pyx_v_i_c;
+        __pyx_t_35 = __pyx_v_t;
+        __pyx_v_i = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_i.data + __pyx_t_36 * __pyx_v_clust_i.strides[0]) )) + __pyx_t_35)) )));
+
+        /* "disorder/diffuse/simulation.pyx":507
+ * 
+ *                 i = clust_i[i_c,t]
+ *                 j = clust_j[i_c,t]             # <<<<<<<<<<<<<<
+ *                 k = clust_k[i_c,t]
+ *                 a = clust_a[i_c,t]
+ */
+        __pyx_t_35 = __pyx_v_i_c;
+        __pyx_t_36 = __pyx_v_t;
+        __pyx_v_j = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_j.data + __pyx_t_35 * __pyx_v_clust_j.strides[0]) )) + __pyx_t_36)) )));
+
+        /* "disorder/diffuse/simulation.pyx":508
+ *                 i = clust_i[i_c,t]
+ *                 j = clust_j[i_c,t]
+ *                 k = clust_k[i_c,t]             # <<<<<<<<<<<<<<
+ *                 a = clust_a[i_c,t]
+ * 
+ */
+        __pyx_t_36 = __pyx_v_i_c;
+        __pyx_t_35 = __pyx_v_t;
+        __pyx_v_k = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_k.data + __pyx_t_36 * __pyx_v_clust_k.strides[0]) )) + __pyx_t_35)) )));
+
+        /* "disorder/diffuse/simulation.pyx":509
+ *                 j = clust_j[i_c,t]
+ *                 k = clust_k[i_c,t]
+ *                 a = clust_a[i_c,t]             # <<<<<<<<<<<<<<
+ * 
+ *                 ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+ */
+        __pyx_t_35 = __pyx_v_i_c;
+        __pyx_t_36 = __pyx_v_t;
+        __pyx_v_a = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_a.data + __pyx_t_35 * __pyx_v_clust_a.strides[0]) )) + __pyx_t_36)) )));
+
+        /* "disorder/diffuse/simulation.pyx":511
+ *                 a = clust_a[i_c,t]
+ * 
+ *                 ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]             # <<<<<<<<<<<<<<
+ * 
+ *                 n_dot_u = nx[t]*ux+ny[t]*uy+nz[t]*uz
+ */
+        __pyx_t_36 = __pyx_v_i;
+        __pyx_t_35 = __pyx_v_j;
+        __pyx_t_34 = __pyx_v_k;
+        __pyx_t_33 = __pyx_v_a;
+        __pyx_t_32 = __pyx_v_t;
+        __pyx_t_14 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_36 * __pyx_v_Sx.strides[0]) ) + __pyx_t_35 * __pyx_v_Sx.strides[1]) ) + __pyx_t_34 * __pyx_v_Sx.strides[2]) ) + __pyx_t_33 * __pyx_v_Sx.strides[3]) )) + __pyx_t_32)) )));
+        __pyx_t_32 = __pyx_v_i;
+        __pyx_t_33 = __pyx_v_j;
+        __pyx_t_34 = __pyx_v_k;
+        __pyx_t_35 = __pyx_v_a;
+        __pyx_t_36 = __pyx_v_t;
+        __pyx_t_13 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_32 * __pyx_v_Sy.strides[0]) ) + __pyx_t_33 * __pyx_v_Sy.strides[1]) ) + __pyx_t_34 * __pyx_v_Sy.strides[2]) ) + __pyx_t_35 * __pyx_v_Sy.strides[3]) )) + __pyx_t_36)) )));
+        __pyx_t_36 = __pyx_v_i;
+        __pyx_t_35 = __pyx_v_j;
+        __pyx_t_34 = __pyx_v_k;
+        __pyx_t_33 = __pyx_v_a;
+        __pyx_t_32 = __pyx_v_t;
+        __pyx_t_12 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_36 * __pyx_v_Sz.strides[0]) ) + __pyx_t_35 * __pyx_v_Sz.strides[1]) ) + __pyx_t_34 * __pyx_v_Sz.strides[2]) ) + __pyx_t_33 * __pyx_v_Sz.strides[3]) )) + __pyx_t_32)) )));
+        __pyx_v_ux = __pyx_t_14;
+        __pyx_v_uy = __pyx_t_13;
+        __pyx_v_uz = __pyx_t_12;
+
+        /* "disorder/diffuse/simulation.pyx":513
+ *                 ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+ * 
+ *                 n_dot_u = nx[t]*ux+ny[t]*uy+nz[t]*uz             # <<<<<<<<<<<<<<
+ * 
+ *                 vx = ux-2*nx[t]*n_dot_u
+ */
+        __pyx_t_32 = __pyx_v_t;
+        __pyx_t_33 = __pyx_v_t;
+        __pyx_t_34 = __pyx_v_t;
+        __pyx_v_n_dot_u = ((((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_nx.data) + __pyx_t_32)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_ny.data) + __pyx_t_33)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_nz.data) + __pyx_t_34)) ))) * __pyx_v_uz));
+
+        /* "disorder/diffuse/simulation.pyx":515
+ *                 n_dot_u = nx[t]*ux+ny[t]*uy+nz[t]*uz
+ * 
+ *                 vx = ux-2*nx[t]*n_dot_u             # <<<<<<<<<<<<<<
+ *                 vy = uy-2*ny[t]*n_dot_u
+ *                 vz = uz-2*nz[t]*n_dot_u
+ */
+        __pyx_t_34 = __pyx_v_t;
+        __pyx_v_vx = (__pyx_v_ux - ((2.0 * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_nx.data) + __pyx_t_34)) )))) * __pyx_v_n_dot_u));
+
+        /* "disorder/diffuse/simulation.pyx":516
+ * 
+ *                 vx = ux-2*nx[t]*n_dot_u
+ *                 vy = uy-2*ny[t]*n_dot_u             # <<<<<<<<<<<<<<
+ *                 vz = uz-2*nz[t]*n_dot_u
+ * 
+ */
+        __pyx_t_34 = __pyx_v_t;
+        __pyx_v_vy = (__pyx_v_uy - ((2.0 * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_ny.data) + __pyx_t_34)) )))) * __pyx_v_n_dot_u));
+
+        /* "disorder/diffuse/simulation.pyx":517
+ *                 vx = ux-2*nx[t]*n_dot_u
+ *                 vy = uy-2*ny[t]*n_dot_u
+ *                 vz = uz-2*nz[t]*n_dot_u             # <<<<<<<<<<<<<<
+ * 
+ *                 Sx[i,j,k,a,t] = vx
+ */
+        __pyx_t_34 = __pyx_v_t;
+        __pyx_v_vz = (__pyx_v_uz - ((2.0 * (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_nz.data) + __pyx_t_34)) )))) * __pyx_v_n_dot_u));
+
+        /* "disorder/diffuse/simulation.pyx":519
+ *                 vz = uz-2*nz[t]*n_dot_u
+ * 
+ *                 Sx[i,j,k,a,t] = vx             # <<<<<<<<<<<<<<
+ *                 Sy[i,j,k,a,t] = vy
+ *                 Sz[i,j,k,a,t] = vz
+ */
+        __pyx_t_34 = __pyx_v_i;
+        __pyx_t_33 = __pyx_v_j;
+        __pyx_t_32 = __pyx_v_k;
+        __pyx_t_35 = __pyx_v_a;
+        __pyx_t_36 = __pyx_v_t;
+        *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_34 * __pyx_v_Sx.strides[0]) ) + __pyx_t_33 * __pyx_v_Sx.strides[1]) ) + __pyx_t_32 * __pyx_v_Sx.strides[2]) ) + __pyx_t_35 * __pyx_v_Sx.strides[3]) )) + __pyx_t_36)) )) = __pyx_v_vx;
+
+        /* "disorder/diffuse/simulation.pyx":520
+ * 
+ *                 Sx[i,j,k,a,t] = vx
+ *                 Sy[i,j,k,a,t] = vy             # <<<<<<<<<<<<<<
+ *                 Sz[i,j,k,a,t] = vz
+ * 
+ */
+        __pyx_t_36 = __pyx_v_i;
+        __pyx_t_35 = __pyx_v_j;
+        __pyx_t_32 = __pyx_v_k;
+        __pyx_t_33 = __pyx_v_a;
+        __pyx_t_34 = __pyx_v_t;
+        *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_36 * __pyx_v_Sy.strides[0]) ) + __pyx_t_35 * __pyx_v_Sy.strides[1]) ) + __pyx_t_32 * __pyx_v_Sy.strides[2]) ) + __pyx_t_33 * __pyx_v_Sy.strides[3]) )) + __pyx_t_34)) )) = __pyx_v_vy;
+
+        /* "disorder/diffuse/simulation.pyx":521
+ *                 Sx[i,j,k,a,t] = vx
+ *                 Sy[i,j,k,a,t] = vy
+ *                 Sz[i,j,k,a,t] = vz             # <<<<<<<<<<<<<<
+ * 
+ *             H[t] += Ec+Eij[t]
+ */
+        __pyx_t_34 = __pyx_v_i;
+        __pyx_t_33 = __pyx_v_j;
+        __pyx_t_32 = __pyx_v_k;
+        __pyx_t_35 = __pyx_v_a;
+        __pyx_t_36 = __pyx_v_t;
+        *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_34 * __pyx_v_Sz.strides[0]) ) + __pyx_t_33 * __pyx_v_Sz.strides[1]) ) + __pyx_t_32 * __pyx_v_Sz.strides[2]) ) + __pyx_t_35 * __pyx_v_Sz.strides[3]) )) + __pyx_t_36)) )) = __pyx_v_vz;
+      }
+
+      /* "disorder/diffuse/simulation.pyx":523
+ *                 Sz[i,j,k,a,t] = vz
+ * 
+ *             H[t] += Ec+Eij[t]             # <<<<<<<<<<<<<<
+ * 
+ * cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
+ */
+      __pyx_t_36 = __pyx_v_t;
+      __pyx_t_35 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_H.data) + __pyx_t_35)) )) += (__pyx_v_Ec + (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Eij.data) + __pyx_t_36)) ))));
+
+      /* "disorder/diffuse/simulation.pyx":502
+ *             h_eff[i,j,k,a,t] = 0
+ * 
+ *         if (random() < alpha(Ec, beta[t])):             # <<<<<<<<<<<<<<
+ * 
+ *             for i_c in range(n_c[t]):
+ */
+    }
+  }
+
+  /* "disorder/diffuse/simulation.pyx":403
+ * # ---
+ * 
+ * cdef void annealing_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                             double [:,:,:,:,::1] Sy,
+ *                             double [:,:,:,:,::1] Sz,
+ */
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+}
+
+/* "disorder/diffuse/simulation.pyx":525
+ *             H[t] += Ec+Eij[t]
+ * 
+ * cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                                  double [:,:,:,:,::1] Sy,
+ *                                  double [:,:,:,:,::1] Sz,
+ */
+
+static Py_ssize_t __pyx_f_8disorder_7diffuse_10simulation_magnetic_cluster(__Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, double __pyx_v_nx, double __pyx_v_ny, double __pyx_v_nz, double __pyx_v_ux_perp, double __pyx_v_uy_perp, double __pyx_v_uz_perp, double __pyx_v_n_dot_u, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_clust_i, __Pyx_memviewslice __pyx_v_clust_j, __Pyx_memviewslice __pyx_v_clust_k, __Pyx_memviewslice __pyx_v_clust_a, __Pyx_memviewslice __pyx_v_h_eff, __Pyx_memviewslice __pyx_v_h_eff_ij, __Pyx_memviewslice __pyx_v_b, __Pyx_memviewslice __pyx_v_c, __Pyx_memviewslice __pyx_v_n_c, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_inv, __Pyx_memviewslice __pyx_v_pair_ij, __Pyx_memviewslice __pyx_v_beta, Py_ssize_t __pyx_v_i, Py_ssize_t __pyx_v_j, Py_ssize_t __pyx_v_k, Py_ssize_t __pyx_v_a, Py_ssize_t __pyx_v_t) {
+  Py_ssize_t __pyx_v_nu;
+  Py_ssize_t __pyx_v_nv;
+  Py_ssize_t __pyx_v_nw;
+  Py_ssize_t __pyx_v_n_pairs;
+  Py_ssize_t __pyx_v_m_c;
+  double __pyx_v_E;
+  Py_ssize_t __pyx_v_i_;
+  Py_ssize_t __pyx_v_j_;
+  Py_ssize_t __pyx_v_k_;
+  Py_ssize_t __pyx_v_a_;
+  Py_ssize_t __pyx_v_p;
+  Py_ssize_t __pyx_v_q;
+  Py_ssize_t __pyx_v_p_;
+  int __pyx_v_f;
+  double __pyx_v_vx;
+  double __pyx_v_vy;
+  double __pyx_v_vz;
+  double __pyx_v_vx_perp;
+  double __pyx_v_vy_perp;
+  double __pyx_v_vz_perp;
+  double __pyx_v_J_eff;
+  double __pyx_v_J_eff_ij;
+  double __pyx_v_J_eff_ji;
+  double __pyx_v_Jx_eff_ij;
+  double __pyx_v_Jy_eff_ij;
+  double __pyx_v_Jz_eff_ij;
+  double __pyx_v_Jx_eff_ji;
+  double __pyx_v_Jy_eff_ji;
+  double __pyx_v_Jz_eff_ji;
+  double __pyx_v_n_dot_v;
+  Py_ssize_t __pyx_r;
+  __Pyx_RefNannyDeclarations
+  Py_ssize_t __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  Py_ssize_t __pyx_t_5;
+  Py_ssize_t __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  int __pyx_t_9;
+  Py_ssize_t __pyx_t_10;
+  Py_ssize_t __pyx_t_11;
+  Py_ssize_t __pyx_t_12;
+  Py_ssize_t __pyx_t_13;
+  Py_ssize_t __pyx_t_14;
+  Py_ssize_t __pyx_t_15;
+  __Pyx_RefNannySetupContext("magnetic_cluster", 0);
+
+  /* "disorder/diffuse/simulation.pyx":559
+ *                                  Py_ssize_t t):
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ */
+  __pyx_v_nu = (__pyx_v_Sx.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":560
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ * 
+ */
+  __pyx_v_nv = (__pyx_v_Sx.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":561
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+ */
+  __pyx_v_nw = (__pyx_v_Sx.shape[2]);
+
+  /* "disorder/diffuse/simulation.pyx":563
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t m_c = n_c[t]
+ */
+  __pyx_v_n_pairs = (__pyx_v_atm_ind.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":565
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+ * 
+ *     cdef Py_ssize_t m_c = n_c[t]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double E
+ */
+  __pyx_t_1 = __pyx_v_t;
+  __pyx_v_m_c = (*((Py_ssize_t *) ( /* dim=0 */ ((char *) (((Py_ssize_t *) __pyx_v_n_c.data) + __pyx_t_1)) )));
+
+  /* "disorder/diffuse/simulation.pyx":583
+ *     cdef double n_dot_v
+ * 
+ *     for p in range(n_pairs):             # <<<<<<<<<<<<<<
+ * 
+ *         i_ = (i+img_ind_i[a,p]+nu)%nu
+ */
+  __pyx_t_2 = __pyx_v_n_pairs;
+  __pyx_t_3 = __pyx_t_2;
+  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
+    __pyx_v_p = __pyx_t_4;
+
+    /* "disorder/diffuse/simulation.pyx":585
+ *     for p in range(n_pairs):
+ * 
+ *         i_ = (i+img_ind_i[a,p]+nu)%nu             # <<<<<<<<<<<<<<
+ *         j_ = (j+img_ind_j[a,p]+nv)%nv
+ *         k_ = (k+img_ind_k[a,p]+nw)%nw
+ */
+    __pyx_t_1 = __pyx_v_a;
+    __pyx_t_5 = __pyx_v_p;
+    __pyx_v_i_ = (((__pyx_v_i + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_i.data + __pyx_t_1 * __pyx_v_img_ind_i.strides[0]) )) + __pyx_t_5)) )))) + __pyx_v_nu) % __pyx_v_nu);
+
+    /* "disorder/diffuse/simulation.pyx":586
+ * 
+ *         i_ = (i+img_ind_i[a,p]+nu)%nu
+ *         j_ = (j+img_ind_j[a,p]+nv)%nv             # <<<<<<<<<<<<<<
+ *         k_ = (k+img_ind_k[a,p]+nw)%nw
+ *         a_ = atm_ind[a,p]
+ */
+    __pyx_t_5 = __pyx_v_a;
+    __pyx_t_1 = __pyx_v_p;
+    __pyx_v_j_ = (((__pyx_v_j + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_j.data + __pyx_t_5 * __pyx_v_img_ind_j.strides[0]) )) + __pyx_t_1)) )))) + __pyx_v_nv) % __pyx_v_nv);
+
+    /* "disorder/diffuse/simulation.pyx":587
+ *         i_ = (i+img_ind_i[a,p]+nu)%nu
+ *         j_ = (j+img_ind_j[a,p]+nv)%nv
+ *         k_ = (k+img_ind_k[a,p]+nw)%nw             # <<<<<<<<<<<<<<
+ *         a_ = atm_ind[a,p]
+ *         p_ = pair_inv[a,p]
+ */
+    __pyx_t_1 = __pyx_v_a;
+    __pyx_t_5 = __pyx_v_p;
+    __pyx_v_k_ = (((__pyx_v_k + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_k.data + __pyx_t_1 * __pyx_v_img_ind_k.strides[0]) )) + __pyx_t_5)) )))) + __pyx_v_nw) % __pyx_v_nw);
+
+    /* "disorder/diffuse/simulation.pyx":588
+ *         j_ = (j+img_ind_j[a,p]+nv)%nv
+ *         k_ = (k+img_ind_k[a,p]+nw)%nw
+ *         a_ = atm_ind[a,p]             # <<<<<<<<<<<<<<
+ *         p_ = pair_inv[a,p]
+ * 
+ */
+    __pyx_t_5 = __pyx_v_a;
+    __pyx_t_1 = __pyx_v_p;
+    __pyx_v_a_ = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_atm_ind.data + __pyx_t_5 * __pyx_v_atm_ind.strides[0]) )) + __pyx_t_1)) )));
+
+    /* "disorder/diffuse/simulation.pyx":589
+ *         k_ = (k+img_ind_k[a,p]+nw)%nw
+ *         a_ = atm_ind[a,p]
+ *         p_ = pair_inv[a,p]             # <<<<<<<<<<<<<<
+ * 
+ *         if (b[i_,j_,k_,a_,t] == 0):
+ */
+    __pyx_t_1 = __pyx_v_a;
+    __pyx_t_5 = __pyx_v_p;
+    __pyx_v_p_ = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_inv.data + __pyx_t_1 * __pyx_v_pair_inv.strides[0]) )) + __pyx_t_5)) )));
+
+    /* "disorder/diffuse/simulation.pyx":591
+ *         p_ = pair_inv[a,p]
+ * 
+ *         if (b[i_,j_,k_,a_,t] == 0):             # <<<<<<<<<<<<<<
+ * 
+ *             vx = Sx[i_,j_,k_,a_,t]
+ */
+    __pyx_t_5 = __pyx_v_i_;
+    __pyx_t_1 = __pyx_v_j_;
+    __pyx_t_6 = __pyx_v_k_;
+    __pyx_t_7 = __pyx_v_a_;
+    __pyx_t_8 = __pyx_v_t;
+    __pyx_t_9 = (((*((int *) ( /* dim=4 */ ((char *) (((int *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_5 * __pyx_v_b.strides[0]) ) + __pyx_t_1 * __pyx_v_b.strides[1]) ) + __pyx_t_6 * __pyx_v_b.strides[2]) ) + __pyx_t_7 * __pyx_v_b.strides[3]) )) + __pyx_t_8)) ))) == 0) != 0);
+    if (__pyx_t_9) {
+
+      /* "disorder/diffuse/simulation.pyx":593
+ *         if (b[i_,j_,k_,a_,t] == 0):
+ * 
+ *             vx = Sx[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ *             vy = Sy[i_,j_,k_,a_,t]
+ *             vz = Sz[i_,j_,k_,a_,t]
+ */
+      __pyx_t_8 = __pyx_v_i_;
+      __pyx_t_7 = __pyx_v_j_;
+      __pyx_t_6 = __pyx_v_k_;
+      __pyx_t_1 = __pyx_v_a_;
+      __pyx_t_5 = __pyx_v_t;
+      __pyx_v_vx = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_8 * __pyx_v_Sx.strides[0]) ) + __pyx_t_7 * __pyx_v_Sx.strides[1]) ) + __pyx_t_6 * __pyx_v_Sx.strides[2]) ) + __pyx_t_1 * __pyx_v_Sx.strides[3]) )) + __pyx_t_5)) )));
+
+      /* "disorder/diffuse/simulation.pyx":594
+ * 
+ *             vx = Sx[i_,j_,k_,a_,t]
+ *             vy = Sy[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ *             vz = Sz[i_,j_,k_,a_,t]
+ * 
+ */
+      __pyx_t_5 = __pyx_v_i_;
+      __pyx_t_1 = __pyx_v_j_;
+      __pyx_t_6 = __pyx_v_k_;
+      __pyx_t_7 = __pyx_v_a_;
+      __pyx_t_8 = __pyx_v_t;
+      __pyx_v_vy = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_5 * __pyx_v_Sy.strides[0]) ) + __pyx_t_1 * __pyx_v_Sy.strides[1]) ) + __pyx_t_6 * __pyx_v_Sy.strides[2]) ) + __pyx_t_7 * __pyx_v_Sy.strides[3]) )) + __pyx_t_8)) )));
+
+      /* "disorder/diffuse/simulation.pyx":595
+ *             vx = Sx[i_,j_,k_,a_,t]
+ *             vy = Sy[i_,j_,k_,a_,t]
+ *             vz = Sz[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ * 
+ *             n_dot_v = vx*nx+vy*ny+vz*nz
+ */
+      __pyx_t_8 = __pyx_v_i_;
+      __pyx_t_7 = __pyx_v_j_;
+      __pyx_t_6 = __pyx_v_k_;
+      __pyx_t_1 = __pyx_v_a_;
+      __pyx_t_5 = __pyx_v_t;
+      __pyx_v_vz = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_8 * __pyx_v_Sz.strides[0]) ) + __pyx_t_7 * __pyx_v_Sz.strides[1]) ) + __pyx_t_6 * __pyx_v_Sz.strides[2]) ) + __pyx_t_1 * __pyx_v_Sz.strides[3]) )) + __pyx_t_5)) )));
+
+      /* "disorder/diffuse/simulation.pyx":597
+ *             vz = Sz[i_,j_,k_,a_,t]
+ * 
+ *             n_dot_v = vx*nx+vy*ny+vz*nz             # <<<<<<<<<<<<<<
+ * 
+ *             vx_perp = vx-nx*n_dot_v
+ */
+      __pyx_v_n_dot_v = (((__pyx_v_vx * __pyx_v_nx) + (__pyx_v_vy * __pyx_v_ny)) + (__pyx_v_vz * __pyx_v_nz));
+
+      /* "disorder/diffuse/simulation.pyx":599
+ *             n_dot_v = vx*nx+vy*ny+vz*nz
+ * 
+ *             vx_perp = vx-nx*n_dot_v             # <<<<<<<<<<<<<<
+ *             vy_perp = vy-ny*n_dot_v
+ *             vz_perp = vz-nz*n_dot_v
+ */
+      __pyx_v_vx_perp = (__pyx_v_vx - (__pyx_v_nx * __pyx_v_n_dot_v));
+
+      /* "disorder/diffuse/simulation.pyx":600
+ * 
+ *             vx_perp = vx-nx*n_dot_v
+ *             vy_perp = vy-ny*n_dot_v             # <<<<<<<<<<<<<<
+ *             vz_perp = vz-nz*n_dot_v
+ * 
+ */
+      __pyx_v_vy_perp = (__pyx_v_vy - (__pyx_v_ny * __pyx_v_n_dot_v));
+
+      /* "disorder/diffuse/simulation.pyx":601
+ *             vx_perp = vx-nx*n_dot_v
+ *             vy_perp = vy-ny*n_dot_v
+ *             vz_perp = vz-nz*n_dot_v             # <<<<<<<<<<<<<<
+ * 
+ *             q = pair_ind[a,p]
+ */
+      __pyx_v_vz_perp = (__pyx_v_vz - (__pyx_v_nz * __pyx_v_n_dot_v));
+
+      /* "disorder/diffuse/simulation.pyx":603
+ *             vz_perp = vz-nz*n_dot_v
+ * 
+ *             q = pair_ind[a,p]             # <<<<<<<<<<<<<<
+ * 
+ *             f = pair_ij[a,p]
+ */
+      __pyx_t_5 = __pyx_v_a;
+      __pyx_t_1 = __pyx_v_p;
+      __pyx_v_q = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ind.data + __pyx_t_5 * __pyx_v_pair_ind.strides[0]) )) + __pyx_t_1)) )));
+
+      /* "disorder/diffuse/simulation.pyx":605
+ *             q = pair_ind[a,p]
+ * 
+ *             f = pair_ij[a,p]             # <<<<<<<<<<<<<<
+ * 
+ *             if (f == 1):
+ */
+      __pyx_t_1 = __pyx_v_a;
+      __pyx_t_5 = __pyx_v_p;
+      __pyx_v_f = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ij.data + __pyx_t_1 * __pyx_v_pair_ij.strides[0]) )) + __pyx_t_5)) )));
+
+      /* "disorder/diffuse/simulation.pyx":607
+ *             f = pair_ij[a,p]
+ * 
+ *             if (f == 1):             # <<<<<<<<<<<<<<
+ *                 Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                 Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ */
+      __pyx_t_9 = ((__pyx_v_f == 1) != 0);
+      if (__pyx_t_9) {
+
+        /* "disorder/diffuse/simulation.pyx":608
+ * 
+ *             if (f == 1):
+ *                 Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz             # <<<<<<<<<<<<<<
+ *                 Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ *                 Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ */
+        __pyx_t_5 = __pyx_v_q;
+        __pyx_t_1 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = __pyx_v_q;
+        __pyx_t_8 = 1;
+        __pyx_t_10 = 0;
+        __pyx_t_11 = __pyx_v_q;
+        __pyx_t_12 = 2;
+        __pyx_t_13 = 0;
+        __pyx_v_Jx_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_6)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_7 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":609
+ *             if (f == 1):
+ *                 Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                 Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz             # <<<<<<<<<<<<<<
+ *                 Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ * 
+ */
+        __pyx_t_13 = __pyx_v_q;
+        __pyx_t_12 = 0;
+        __pyx_t_11 = 1;
+        __pyx_t_10 = __pyx_v_q;
+        __pyx_t_8 = 1;
+        __pyx_t_7 = 1;
+        __pyx_t_6 = __pyx_v_q;
+        __pyx_t_1 = 2;
+        __pyx_t_5 = 1;
+        __pyx_v_Jy_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_7)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_6 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":610
+ *                 Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                 Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ *                 Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz             # <<<<<<<<<<<<<<
+ * 
+ *                 Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ */
+        __pyx_t_5 = __pyx_v_q;
+        __pyx_t_1 = 0;
+        __pyx_t_6 = 2;
+        __pyx_t_7 = __pyx_v_q;
+        __pyx_t_8 = 1;
+        __pyx_t_10 = 2;
+        __pyx_t_11 = __pyx_v_q;
+        __pyx_t_12 = 2;
+        __pyx_t_13 = 2;
+        __pyx_v_Jz_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_6)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_7 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":612
+ *                 Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ * 
+ *                 Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz             # <<<<<<<<<<<<<<
+ *                 Jy_eff_ji = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+ *                 Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ */
+        __pyx_t_13 = __pyx_v_q;
+        __pyx_t_12 = 0;
+        __pyx_t_11 = 0;
+        __pyx_t_10 = __pyx_v_q;
+        __pyx_t_8 = 0;
+        __pyx_t_7 = 1;
+        __pyx_t_6 = __pyx_v_q;
+        __pyx_t_1 = 0;
+        __pyx_t_5 = 2;
+        __pyx_v_Jx_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_7)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_6 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":613
+ * 
+ *                 Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ *                 Jy_eff_ji = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz             # <<<<<<<<<<<<<<
+ *                 Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ *             else:
+ */
+        __pyx_t_5 = __pyx_v_q;
+        __pyx_t_1 = 1;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = __pyx_v_q;
+        __pyx_t_8 = 1;
+        __pyx_t_10 = 1;
+        __pyx_t_11 = __pyx_v_q;
+        __pyx_t_12 = 1;
+        __pyx_t_13 = 2;
+        __pyx_v_Jy_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_6)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_7 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":614
+ *                 Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ *                 Jy_eff_ji = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+ *                 Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz             # <<<<<<<<<<<<<<
+ *             else:
+ *                 Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ */
+        __pyx_t_13 = __pyx_v_q;
+        __pyx_t_12 = 2;
+        __pyx_t_11 = 0;
+        __pyx_t_10 = __pyx_v_q;
+        __pyx_t_8 = 2;
+        __pyx_t_7 = 1;
+        __pyx_t_6 = __pyx_v_q;
+        __pyx_t_1 = 2;
+        __pyx_t_5 = 2;
+        __pyx_v_Jz_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_7)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_6 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":607
+ *             f = pair_ij[a,p]
+ * 
+ *             if (f == 1):             # <<<<<<<<<<<<<<
+ *                 Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                 Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ */
+        goto __pyx_L6;
+      }
+
+      /* "disorder/diffuse/simulation.pyx":616
+ *                 Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ *             else:
+ *                 Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz             # <<<<<<<<<<<<<<
+ *                 Jy_eff_ij = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+ *                 Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ */
+      /*else*/ {
+        __pyx_t_5 = __pyx_v_q;
+        __pyx_t_1 = 0;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = __pyx_v_q;
+        __pyx_t_8 = 0;
+        __pyx_t_10 = 1;
+        __pyx_t_11 = __pyx_v_q;
+        __pyx_t_12 = 0;
+        __pyx_t_13 = 2;
+        __pyx_v_Jx_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_6)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_7 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":617
+ *             else:
+ *                 Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ *                 Jy_eff_ij = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz             # <<<<<<<<<<<<<<
+ *                 Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ * 
+ */
+        __pyx_t_13 = __pyx_v_q;
+        __pyx_t_12 = 1;
+        __pyx_t_11 = 0;
+        __pyx_t_10 = __pyx_v_q;
+        __pyx_t_8 = 1;
+        __pyx_t_7 = 1;
+        __pyx_t_6 = __pyx_v_q;
+        __pyx_t_1 = 1;
+        __pyx_t_5 = 2;
+        __pyx_v_Jy_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_7)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_6 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":618
+ *                 Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ *                 Jy_eff_ij = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+ *                 Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz             # <<<<<<<<<<<<<<
+ * 
+ *                 Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ */
+        __pyx_t_5 = __pyx_v_q;
+        __pyx_t_1 = 2;
+        __pyx_t_6 = 0;
+        __pyx_t_7 = __pyx_v_q;
+        __pyx_t_8 = 2;
+        __pyx_t_10 = 1;
+        __pyx_t_11 = __pyx_v_q;
+        __pyx_t_12 = 2;
+        __pyx_t_13 = 2;
+        __pyx_v_Jz_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_6)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_7 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":620
+ *                 Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ * 
+ *                 Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz             # <<<<<<<<<<<<<<
+ *                 Jy_eff_ji = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ *                 Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ */
+        __pyx_t_13 = __pyx_v_q;
+        __pyx_t_12 = 0;
+        __pyx_t_11 = 0;
+        __pyx_t_10 = __pyx_v_q;
+        __pyx_t_8 = 1;
+        __pyx_t_7 = 0;
+        __pyx_t_6 = __pyx_v_q;
+        __pyx_t_1 = 2;
+        __pyx_t_5 = 0;
+        __pyx_v_Jx_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_7)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_6 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":621
+ * 
+ *                 Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                 Jy_eff_ji = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz             # <<<<<<<<<<<<<<
+ *                 Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ * 
+ */
+        __pyx_t_5 = __pyx_v_q;
+        __pyx_t_1 = 0;
+        __pyx_t_6 = 1;
+        __pyx_t_7 = __pyx_v_q;
+        __pyx_t_8 = 1;
+        __pyx_t_10 = 1;
+        __pyx_t_11 = __pyx_v_q;
+        __pyx_t_12 = 2;
+        __pyx_t_13 = 1;
+        __pyx_v_Jy_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_6)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_7 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":622
+ *                 Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                 Jy_eff_ji = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ *                 Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz             # <<<<<<<<<<<<<<
+ * 
+ *             J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij
+ */
+        __pyx_t_13 = __pyx_v_q;
+        __pyx_t_12 = 0;
+        __pyx_t_11 = 2;
+        __pyx_t_10 = __pyx_v_q;
+        __pyx_t_8 = 1;
+        __pyx_t_7 = 2;
+        __pyx_t_6 = __pyx_v_q;
+        __pyx_t_1 = 2;
+        __pyx_t_5 = 2;
+        __pyx_v_Jz_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_12 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_8 * __pyx_v_J.strides[1]) )) + __pyx_t_7)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_6 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+      }
+      __pyx_L6:;
+
+      /* "disorder/diffuse/simulation.pyx":624
+ *                 Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ * 
+ *             J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij             # <<<<<<<<<<<<<<
+ * 
+ *             h_eff_ij[i_,j_,k_,a_,p_,t] = 2*J_eff_ij*n_dot_v
+ */
+      __pyx_v_J_eff_ij = (((__pyx_v_ux_perp * __pyx_v_Jx_eff_ij) + (__pyx_v_uy_perp * __pyx_v_Jy_eff_ij)) + (__pyx_v_uz_perp * __pyx_v_Jz_eff_ij));
+
+      /* "disorder/diffuse/simulation.pyx":626
+ *             J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij
+ * 
+ *             h_eff_ij[i_,j_,k_,a_,p_,t] = 2*J_eff_ij*n_dot_v             # <<<<<<<<<<<<<<
+ * 
+ *             J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji
+ */
+      __pyx_t_5 = __pyx_v_i_;
+      __pyx_t_1 = __pyx_v_j_;
+      __pyx_t_6 = __pyx_v_k_;
+      __pyx_t_7 = __pyx_v_a_;
+      __pyx_t_8 = __pyx_v_p_;
+      __pyx_t_10 = __pyx_v_t;
+      *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_h_eff_ij.data + __pyx_t_5 * __pyx_v_h_eff_ij.strides[0]) ) + __pyx_t_1 * __pyx_v_h_eff_ij.strides[1]) ) + __pyx_t_6 * __pyx_v_h_eff_ij.strides[2]) ) + __pyx_t_7 * __pyx_v_h_eff_ij.strides[3]) ) + __pyx_t_8 * __pyx_v_h_eff_ij.strides[4]) )) + __pyx_t_10)) )) = ((2.0 * __pyx_v_J_eff_ij) * __pyx_v_n_dot_v);
+
+      /* "disorder/diffuse/simulation.pyx":628
+ *             h_eff_ij[i_,j_,k_,a_,p_,t] = 2*J_eff_ij*n_dot_v
+ * 
+ *             J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji             # <<<<<<<<<<<<<<
+ * 
+ *             h_eff_ij[i,j,k,a,p,t] = 2*J_eff_ji*n_dot_u
+ */
+      __pyx_v_J_eff_ji = (((__pyx_v_vx_perp * __pyx_v_Jx_eff_ji) + (__pyx_v_vy_perp * __pyx_v_Jy_eff_ji)) + (__pyx_v_vz_perp * __pyx_v_Jz_eff_ji));
+
+      /* "disorder/diffuse/simulation.pyx":630
+ *             J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji
+ * 
+ *             h_eff_ij[i,j,k,a,p,t] = 2*J_eff_ji*n_dot_u             # <<<<<<<<<<<<<<
+ * 
+ *             if (c[i_,j_,k_,a_,t] == 0):
+ */
+      __pyx_t_10 = __pyx_v_i;
+      __pyx_t_8 = __pyx_v_j;
+      __pyx_t_7 = __pyx_v_k;
+      __pyx_t_6 = __pyx_v_a;
+      __pyx_t_1 = __pyx_v_p;
+      __pyx_t_5 = __pyx_v_t;
+      *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_h_eff_ij.data + __pyx_t_10 * __pyx_v_h_eff_ij.strides[0]) ) + __pyx_t_8 * __pyx_v_h_eff_ij.strides[1]) ) + __pyx_t_7 * __pyx_v_h_eff_ij.strides[2]) ) + __pyx_t_6 * __pyx_v_h_eff_ij.strides[3]) ) + __pyx_t_1 * __pyx_v_h_eff_ij.strides[4]) )) + __pyx_t_5)) )) = ((2.0 * __pyx_v_J_eff_ji) * __pyx_v_n_dot_u);
+
+      /* "disorder/diffuse/simulation.pyx":632
+ *             h_eff_ij[i,j,k,a,p,t] = 2*J_eff_ji*n_dot_u
+ * 
+ *             if (c[i_,j_,k_,a_,t] == 0):             # <<<<<<<<<<<<<<
+ * 
+ *                 J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij
+ */
+      __pyx_t_5 = __pyx_v_i_;
+      __pyx_t_1 = __pyx_v_j_;
+      __pyx_t_6 = __pyx_v_k_;
+      __pyx_t_7 = __pyx_v_a_;
+      __pyx_t_8 = __pyx_v_t;
+      __pyx_t_9 = (((*((int *) ( /* dim=4 */ ((char *) (((int *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_c.data + __pyx_t_5 * __pyx_v_c.strides[0]) ) + __pyx_t_1 * __pyx_v_c.strides[1]) ) + __pyx_t_6 * __pyx_v_c.strides[2]) ) + __pyx_t_7 * __pyx_v_c.strides[3]) )) + __pyx_t_8)) ))) == 0) != 0);
+      if (__pyx_t_9) {
+
+        /* "disorder/diffuse/simulation.pyx":634
+ *             if (c[i_,j_,k_,a_,t] == 0):
+ * 
+ *                 J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij             # <<<<<<<<<<<<<<
+ * 
+ *                 E = 2*J_eff*n_dot_u*n_dot_v
+ */
+        __pyx_v_J_eff = (((__pyx_v_nx * __pyx_v_Jx_eff_ij) + (__pyx_v_ny * __pyx_v_Jy_eff_ij)) + (__pyx_v_nz * __pyx_v_Jz_eff_ij));
+
+        /* "disorder/diffuse/simulation.pyx":636
+ *                 J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij
+ * 
+ *                 E = 2*J_eff*n_dot_u*n_dot_v             # <<<<<<<<<<<<<<
+ * 
+ *                 if (random() < 1-alpha(E, beta[t])):
+ */
+        __pyx_v_E = (((2.0 * __pyx_v_J_eff) * __pyx_v_n_dot_u) * __pyx_v_n_dot_v);
+
+        /* "disorder/diffuse/simulation.pyx":638
+ *                 E = 2*J_eff*n_dot_u*n_dot_v
+ * 
+ *                 if (random() < 1-alpha(E, beta[t])):             # <<<<<<<<<<<<<<
+ * 
+ *                     clust_i[m_c,t] = i_
+ */
+        __pyx_t_8 = __pyx_v_t;
+        __pyx_t_9 = ((__pyx_f_8disorder_7diffuse_10simulation_random() < (1.0 - __pyx_f_8disorder_7diffuse_10simulation_alpha(__pyx_v_E, (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_8)) )))))) != 0);
+        if (__pyx_t_9) {
+
+          /* "disorder/diffuse/simulation.pyx":640
+ *                 if (random() < 1-alpha(E, beta[t])):
+ * 
+ *                     clust_i[m_c,t] = i_             # <<<<<<<<<<<<<<
+ *                     clust_j[m_c,t] = j_
+ *                     clust_k[m_c,t] = k_
+ */
+          __pyx_t_8 = __pyx_v_m_c;
+          __pyx_t_7 = __pyx_v_t;
+          *((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_i.data + __pyx_t_8 * __pyx_v_clust_i.strides[0]) )) + __pyx_t_7)) )) = __pyx_v_i_;
+
+          /* "disorder/diffuse/simulation.pyx":641
+ * 
+ *                     clust_i[m_c,t] = i_
+ *                     clust_j[m_c,t] = j_             # <<<<<<<<<<<<<<
+ *                     clust_k[m_c,t] = k_
+ *                     clust_a[m_c,t] = a_
+ */
+          __pyx_t_7 = __pyx_v_m_c;
+          __pyx_t_8 = __pyx_v_t;
+          *((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_j.data + __pyx_t_7 * __pyx_v_clust_j.strides[0]) )) + __pyx_t_8)) )) = __pyx_v_j_;
+
+          /* "disorder/diffuse/simulation.pyx":642
+ *                     clust_i[m_c,t] = i_
+ *                     clust_j[m_c,t] = j_
+ *                     clust_k[m_c,t] = k_             # <<<<<<<<<<<<<<
+ *                     clust_a[m_c,t] = a_
+ * 
+ */
+          __pyx_t_8 = __pyx_v_m_c;
+          __pyx_t_7 = __pyx_v_t;
+          *((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_k.data + __pyx_t_8 * __pyx_v_clust_k.strides[0]) )) + __pyx_t_7)) )) = __pyx_v_k_;
+
+          /* "disorder/diffuse/simulation.pyx":643
+ *                     clust_j[m_c,t] = j_
+ *                     clust_k[m_c,t] = k_
+ *                     clust_a[m_c,t] = a_             # <<<<<<<<<<<<<<
+ * 
+ *                     c[i_,j_,k_,a_,t] = 1
+ */
+          __pyx_t_7 = __pyx_v_m_c;
+          __pyx_t_8 = __pyx_v_t;
+          *((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_a.data + __pyx_t_7 * __pyx_v_clust_a.strides[0]) )) + __pyx_t_8)) )) = __pyx_v_a_;
+
+          /* "disorder/diffuse/simulation.pyx":645
+ *                     clust_a[m_c,t] = a_
+ * 
+ *                     c[i_,j_,k_,a_,t] = 1             # <<<<<<<<<<<<<<
+ * 
+ *                     m_c += 1
+ */
+          __pyx_t_8 = __pyx_v_i_;
+          __pyx_t_7 = __pyx_v_j_;
+          __pyx_t_6 = __pyx_v_k_;
+          __pyx_t_1 = __pyx_v_a_;
+          __pyx_t_5 = __pyx_v_t;
+          *((int *) ( /* dim=4 */ ((char *) (((int *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_c.data + __pyx_t_8 * __pyx_v_c.strides[0]) ) + __pyx_t_7 * __pyx_v_c.strides[1]) ) + __pyx_t_6 * __pyx_v_c.strides[2]) ) + __pyx_t_1 * __pyx_v_c.strides[3]) )) + __pyx_t_5)) )) = 1;
+
+          /* "disorder/diffuse/simulation.pyx":647
+ *                     c[i_,j_,k_,a_,t] = 1
+ * 
+ *                     m_c += 1             # <<<<<<<<<<<<<<
+ * 
+ *             h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+ */
+          __pyx_v_m_c = (__pyx_v_m_c + 1);
+
+          /* "disorder/diffuse/simulation.pyx":638
+ *                 E = 2*J_eff*n_dot_u*n_dot_v
+ * 
+ *                 if (random() < 1-alpha(E, beta[t])):             # <<<<<<<<<<<<<<
+ * 
+ *                     clust_i[m_c,t] = i_
+ */
+        }
+
+        /* "disorder/diffuse/simulation.pyx":632
+ *             h_eff_ij[i,j,k,a,p,t] = 2*J_eff_ji*n_dot_u
+ * 
+ *             if (c[i_,j_,k_,a_,t] == 0):             # <<<<<<<<<<<<<<
+ * 
+ *                 J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij
+ */
+      }
+
+      /* "disorder/diffuse/simulation.pyx":649
+ *                     m_c += 1
+ * 
+ *             h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]             # <<<<<<<<<<<<<<
+ * 
+ *         elif (b[i_,j_,k_,a_,t] == 1):
+ */
+      __pyx_t_5 = __pyx_v_i;
+      __pyx_t_1 = __pyx_v_j;
+      __pyx_t_6 = __pyx_v_k;
+      __pyx_t_7 = __pyx_v_a;
+      __pyx_t_8 = __pyx_v_p;
+      __pyx_t_10 = __pyx_v_t;
+      __pyx_t_11 = __pyx_v_i;
+      __pyx_t_12 = __pyx_v_j;
+      __pyx_t_13 = __pyx_v_k;
+      __pyx_t_14 = __pyx_v_a;
+      __pyx_t_15 = __pyx_v_t;
+      *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_h_eff.data + __pyx_t_11 * __pyx_v_h_eff.strides[0]) ) + __pyx_t_12 * __pyx_v_h_eff.strides[1]) ) + __pyx_t_13 * __pyx_v_h_eff.strides[2]) ) + __pyx_t_14 * __pyx_v_h_eff.strides[3]) )) + __pyx_t_15)) )) += (*((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_h_eff_ij.data + __pyx_t_5 * __pyx_v_h_eff_ij.strides[0]) ) + __pyx_t_1 * __pyx_v_h_eff_ij.strides[1]) ) + __pyx_t_6 * __pyx_v_h_eff_ij.strides[2]) ) + __pyx_t_7 * __pyx_v_h_eff_ij.strides[3]) ) + __pyx_t_8 * __pyx_v_h_eff_ij.strides[4]) )) + __pyx_t_10)) )));
+
+      /* "disorder/diffuse/simulation.pyx":591
+ *         p_ = pair_inv[a,p]
+ * 
+ *         if (b[i_,j_,k_,a_,t] == 0):             # <<<<<<<<<<<<<<
+ * 
+ *             vx = Sx[i_,j_,k_,a_,t]
+ */
+      goto __pyx_L5;
+    }
+
+    /* "disorder/diffuse/simulation.pyx":651
+ *             h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+ * 
+ *         elif (b[i_,j_,k_,a_,t] == 1):             # <<<<<<<<<<<<<<
+ * 
+ *             h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+ */
+    __pyx_t_10 = __pyx_v_i_;
+    __pyx_t_8 = __pyx_v_j_;
+    __pyx_t_7 = __pyx_v_k_;
+    __pyx_t_6 = __pyx_v_a_;
+    __pyx_t_1 = __pyx_v_t;
+    __pyx_t_9 = (((*((int *) ( /* dim=4 */ ((char *) (((int *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_10 * __pyx_v_b.strides[0]) ) + __pyx_t_8 * __pyx_v_b.strides[1]) ) + __pyx_t_7 * __pyx_v_b.strides[2]) ) + __pyx_t_6 * __pyx_v_b.strides[3]) )) + __pyx_t_1)) ))) == 1) != 0);
+    if (__pyx_t_9) {
+
+      /* "disorder/diffuse/simulation.pyx":653
+ *         elif (b[i_,j_,k_,a_,t] == 1):
+ * 
+ *             h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]             # <<<<<<<<<<<<<<
+ * 
+ *     return m_c
+ */
+      __pyx_t_1 = __pyx_v_i;
+      __pyx_t_6 = __pyx_v_j;
+      __pyx_t_7 = __pyx_v_k;
+      __pyx_t_8 = __pyx_v_a;
+      __pyx_t_10 = __pyx_v_p;
+      __pyx_t_5 = __pyx_v_t;
+      __pyx_t_15 = __pyx_v_i;
+      __pyx_t_14 = __pyx_v_j;
+      __pyx_t_13 = __pyx_v_k;
+      __pyx_t_12 = __pyx_v_a;
+      __pyx_t_11 = __pyx_v_t;
+      *((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_h_eff.data + __pyx_t_15 * __pyx_v_h_eff.strides[0]) ) + __pyx_t_14 * __pyx_v_h_eff.strides[1]) ) + __pyx_t_13 * __pyx_v_h_eff.strides[2]) ) + __pyx_t_12 * __pyx_v_h_eff.strides[3]) )) + __pyx_t_11)) )) += (*((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_h_eff_ij.data + __pyx_t_1 * __pyx_v_h_eff_ij.strides[0]) ) + __pyx_t_6 * __pyx_v_h_eff_ij.strides[1]) ) + __pyx_t_7 * __pyx_v_h_eff_ij.strides[2]) ) + __pyx_t_8 * __pyx_v_h_eff_ij.strides[3]) ) + __pyx_t_10 * __pyx_v_h_eff_ij.strides[4]) )) + __pyx_t_5)) )));
+
+      /* "disorder/diffuse/simulation.pyx":651
+ *             h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+ * 
+ *         elif (b[i_,j_,k_,a_,t] == 1):             # <<<<<<<<<<<<<<
+ * 
+ *             h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+ */
+    }
+    __pyx_L5:;
+  }
+
+  /* "disorder/diffuse/simulation.pyx":655
+ *             h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+ * 
+ *     return m_c             # <<<<<<<<<<<<<<
+ * 
+ * cdef double boundary_energy(double [:,:,:,:,::1] Sx,
+ */
+  __pyx_r = __pyx_v_m_c;
+  goto __pyx_L0;
+
+  /* "disorder/diffuse/simulation.pyx":525
+ *             H[t] += Ec+Eij[t]
+ * 
+ * cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                                  double [:,:,:,:,::1] Sy,
+ *                                  double [:,:,:,:,::1] Sz,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/simulation.pyx":657
+ *     return m_c
+ * 
+ * cdef double boundary_energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                             double [:,:,:,:,::1] Sy,
+ *                             double [:,:,:,:,::1] Sz,
+ */
+
+static double __pyx_f_8disorder_7diffuse_10simulation_boundary_energy(__Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, double __pyx_v_nx, double __pyx_v_ny, double __pyx_v_nz, double __pyx_v_ux_perp, double __pyx_v_uy_perp, double __pyx_v_uz_perp, double __pyx_v_n_dot_u, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_clust_i, __Pyx_memviewslice __pyx_v_clust_j, __Pyx_memviewslice __pyx_v_clust_k, __Pyx_memviewslice __pyx_v_clust_a, __Pyx_memviewslice __pyx_v_c, __Pyx_memviewslice __pyx_v_n_c, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_inv, __Pyx_memviewslice __pyx_v_pair_ij, Py_ssize_t __pyx_v_t) {
+  Py_ssize_t __pyx_v_nu;
+  Py_ssize_t __pyx_v_nv;
+  Py_ssize_t __pyx_v_nw;
+  Py_ssize_t __pyx_v_n_pairs;
+  Py_ssize_t __pyx_v_i_c;
+  double __pyx_v_E;
+  Py_ssize_t __pyx_v_i;
+  Py_ssize_t __pyx_v_j;
+  Py_ssize_t __pyx_v_k;
+  Py_ssize_t __pyx_v_a;
+  Py_ssize_t __pyx_v_p;
+  Py_ssize_t __pyx_v_q;
+  Py_ssize_t __pyx_v_i_;
+  Py_ssize_t __pyx_v_j_;
+  Py_ssize_t __pyx_v_k_;
+  Py_ssize_t __pyx_v_a_;
+  CYTHON_UNUSED Py_ssize_t __pyx_v_p_;
+  int __pyx_v_f;
+  double __pyx_v_vx;
+  double __pyx_v_vy;
+  double __pyx_v_vz;
+  double __pyx_v_vx_perp;
+  double __pyx_v_vy_perp;
+  double __pyx_v_vz_perp;
+  double __pyx_v_J_eff;
+  CYTHON_UNUSED double __pyx_v_J_eff_ij;
+  CYTHON_UNUSED double __pyx_v_J_eff_ji;
+  double __pyx_v_Jx_eff_ij;
+  double __pyx_v_Jy_eff_ij;
+  double __pyx_v_Jz_eff_ij;
+  double __pyx_v_Jx_eff_ji;
+  double __pyx_v_Jy_eff_ji;
+  double __pyx_v_Jz_eff_ji;
+  double __pyx_v_n_dot_v;
+  double __pyx_r;
+  __Pyx_RefNannyDeclarations
+  Py_ssize_t __pyx_t_1;
+  Py_ssize_t __pyx_t_2;
+  Py_ssize_t __pyx_t_3;
+  Py_ssize_t __pyx_t_4;
+  Py_ssize_t __pyx_t_5;
+  Py_ssize_t __pyx_t_6;
+  Py_ssize_t __pyx_t_7;
+  Py_ssize_t __pyx_t_8;
+  Py_ssize_t __pyx_t_9;
+  Py_ssize_t __pyx_t_10;
+  Py_ssize_t __pyx_t_11;
+  int __pyx_t_12;
+  Py_ssize_t __pyx_t_13;
+  Py_ssize_t __pyx_t_14;
+  Py_ssize_t __pyx_t_15;
+  Py_ssize_t __pyx_t_16;
+  __Pyx_RefNannySetupContext("boundary_energy", 0);
+
+  /* "disorder/diffuse/simulation.pyx":683
+ *                             Py_ssize_t t):
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ */
+  __pyx_v_nu = (__pyx_v_Sx.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":684
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ * 
+ */
+  __pyx_v_nv = (__pyx_v_Sx.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":685
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+ */
+  __pyx_v_nw = (__pyx_v_Sx.shape[2]);
+
+  /* "disorder/diffuse/simulation.pyx":687
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t i_c
+ */
+  __pyx_v_n_pairs = (__pyx_v_atm_ind.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":691
+ *     cdef Py_ssize_t i_c
+ * 
+ *     cdef double E = 0             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t i, j, k, a, p, q, i_, j_, k_, a_, p_
+ */
+  __pyx_v_E = 0.0;
+
+  /* "disorder/diffuse/simulation.pyx":707
+ *     cdef double n_dot_v
+ * 
+ *     for i_c in range(n_c[t]):             # <<<<<<<<<<<<<<
+ * 
+ *         i = clust_i[i_c,t]
+ */
+  __pyx_t_1 = __pyx_v_t;
+  __pyx_t_2 = (*((Py_ssize_t *) ( /* dim=0 */ ((char *) (((Py_ssize_t *) __pyx_v_n_c.data) + __pyx_t_1)) )));
+  __pyx_t_3 = __pyx_t_2;
+  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
+    __pyx_v_i_c = __pyx_t_4;
+
+    /* "disorder/diffuse/simulation.pyx":709
+ *     for i_c in range(n_c[t]):
+ * 
+ *         i = clust_i[i_c,t]             # <<<<<<<<<<<<<<
+ *         j = clust_j[i_c,t]
+ *         k = clust_k[i_c,t]
+ */
+    __pyx_t_1 = __pyx_v_i_c;
+    __pyx_t_5 = __pyx_v_t;
+    __pyx_v_i = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_i.data + __pyx_t_1 * __pyx_v_clust_i.strides[0]) )) + __pyx_t_5)) )));
+
+    /* "disorder/diffuse/simulation.pyx":710
+ * 
+ *         i = clust_i[i_c,t]
+ *         j = clust_j[i_c,t]             # <<<<<<<<<<<<<<
+ *         k = clust_k[i_c,t]
+ *         a = clust_a[i_c,t]
+ */
+    __pyx_t_5 = __pyx_v_i_c;
+    __pyx_t_1 = __pyx_v_t;
+    __pyx_v_j = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_j.data + __pyx_t_5 * __pyx_v_clust_j.strides[0]) )) + __pyx_t_1)) )));
+
+    /* "disorder/diffuse/simulation.pyx":711
+ *         i = clust_i[i_c,t]
+ *         j = clust_j[i_c,t]
+ *         k = clust_k[i_c,t]             # <<<<<<<<<<<<<<
+ *         a = clust_a[i_c,t]
+ * 
+ */
+    __pyx_t_1 = __pyx_v_i_c;
+    __pyx_t_5 = __pyx_v_t;
+    __pyx_v_k = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_k.data + __pyx_t_1 * __pyx_v_clust_k.strides[0]) )) + __pyx_t_5)) )));
+
+    /* "disorder/diffuse/simulation.pyx":712
+ *         j = clust_j[i_c,t]
+ *         k = clust_k[i_c,t]
+ *         a = clust_a[i_c,t]             # <<<<<<<<<<<<<<
+ * 
+ *         for p in range(n_pairs):
+ */
+    __pyx_t_5 = __pyx_v_i_c;
+    __pyx_t_1 = __pyx_v_t;
+    __pyx_v_a = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_a.data + __pyx_t_5 * __pyx_v_clust_a.strides[0]) )) + __pyx_t_1)) )));
+
+    /* "disorder/diffuse/simulation.pyx":714
+ *         a = clust_a[i_c,t]
+ * 
+ *         for p in range(n_pairs):             # <<<<<<<<<<<<<<
+ * 
+ *             i_ = (i+img_ind_i[a,p]+nu)%nu
+ */
+    __pyx_t_6 = __pyx_v_n_pairs;
+    __pyx_t_7 = __pyx_t_6;
+    for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
+      __pyx_v_p = __pyx_t_8;
+
+      /* "disorder/diffuse/simulation.pyx":716
+ *         for p in range(n_pairs):
+ * 
+ *             i_ = (i+img_ind_i[a,p]+nu)%nu             # <<<<<<<<<<<<<<
+ *             j_ = (j+img_ind_j[a,p]+nv)%nv
+ *             k_ = (k+img_ind_k[a,p]+nw)%nw
+ */
+      __pyx_t_1 = __pyx_v_a;
+      __pyx_t_5 = __pyx_v_p;
+      __pyx_v_i_ = (((__pyx_v_i + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_i.data + __pyx_t_1 * __pyx_v_img_ind_i.strides[0]) )) + __pyx_t_5)) )))) + __pyx_v_nu) % __pyx_v_nu);
+
+      /* "disorder/diffuse/simulation.pyx":717
+ * 
+ *             i_ = (i+img_ind_i[a,p]+nu)%nu
+ *             j_ = (j+img_ind_j[a,p]+nv)%nv             # <<<<<<<<<<<<<<
+ *             k_ = (k+img_ind_k[a,p]+nw)%nw
+ *             a_ = atm_ind[a,p]
+ */
+      __pyx_t_5 = __pyx_v_a;
+      __pyx_t_1 = __pyx_v_p;
+      __pyx_v_j_ = (((__pyx_v_j + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_j.data + __pyx_t_5 * __pyx_v_img_ind_j.strides[0]) )) + __pyx_t_1)) )))) + __pyx_v_nv) % __pyx_v_nv);
+
+      /* "disorder/diffuse/simulation.pyx":718
+ *             i_ = (i+img_ind_i[a,p]+nu)%nu
+ *             j_ = (j+img_ind_j[a,p]+nv)%nv
+ *             k_ = (k+img_ind_k[a,p]+nw)%nw             # <<<<<<<<<<<<<<
+ *             a_ = atm_ind[a,p]
+ *             p_ = pair_inv[a,p]
+ */
+      __pyx_t_1 = __pyx_v_a;
+      __pyx_t_5 = __pyx_v_p;
+      __pyx_v_k_ = (((__pyx_v_k + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_k.data + __pyx_t_1 * __pyx_v_img_ind_k.strides[0]) )) + __pyx_t_5)) )))) + __pyx_v_nw) % __pyx_v_nw);
+
+      /* "disorder/diffuse/simulation.pyx":719
+ *             j_ = (j+img_ind_j[a,p]+nv)%nv
+ *             k_ = (k+img_ind_k[a,p]+nw)%nw
+ *             a_ = atm_ind[a,p]             # <<<<<<<<<<<<<<
+ *             p_ = pair_inv[a,p]
+ * 
+ */
+      __pyx_t_5 = __pyx_v_a;
+      __pyx_t_1 = __pyx_v_p;
+      __pyx_v_a_ = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_atm_ind.data + __pyx_t_5 * __pyx_v_atm_ind.strides[0]) )) + __pyx_t_1)) )));
+
+      /* "disorder/diffuse/simulation.pyx":720
+ *             k_ = (k+img_ind_k[a,p]+nw)%nw
+ *             a_ = atm_ind[a,p]
+ *             p_ = pair_inv[a,p]             # <<<<<<<<<<<<<<
+ * 
+ *             if (c[i_,j_,k_,a_,t] == 0):
+ */
+      __pyx_t_1 = __pyx_v_a;
+      __pyx_t_5 = __pyx_v_p;
+      __pyx_v_p_ = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_inv.data + __pyx_t_1 * __pyx_v_pair_inv.strides[0]) )) + __pyx_t_5)) )));
+
+      /* "disorder/diffuse/simulation.pyx":722
+ *             p_ = pair_inv[a,p]
+ * 
+ *             if (c[i_,j_,k_,a_,t] == 0):             # <<<<<<<<<<<<<<
+ * 
+ *                 vx = Sx[i_,j_,k_,a_,t]
+ */
+      __pyx_t_5 = __pyx_v_i_;
+      __pyx_t_1 = __pyx_v_j_;
+      __pyx_t_9 = __pyx_v_k_;
+      __pyx_t_10 = __pyx_v_a_;
+      __pyx_t_11 = __pyx_v_t;
+      __pyx_t_12 = (((*((int *) ( /* dim=4 */ ((char *) (((int *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_c.data + __pyx_t_5 * __pyx_v_c.strides[0]) ) + __pyx_t_1 * __pyx_v_c.strides[1]) ) + __pyx_t_9 * __pyx_v_c.strides[2]) ) + __pyx_t_10 * __pyx_v_c.strides[3]) )) + __pyx_t_11)) ))) == 0) != 0);
+      if (__pyx_t_12) {
+
+        /* "disorder/diffuse/simulation.pyx":724
+ *             if (c[i_,j_,k_,a_,t] == 0):
+ * 
+ *                 vx = Sx[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ *                 vy = Sy[i_,j_,k_,a_,t]
+ *                 vz = Sz[i_,j_,k_,a_,t]
+ */
+        __pyx_t_11 = __pyx_v_i_;
+        __pyx_t_10 = __pyx_v_j_;
+        __pyx_t_9 = __pyx_v_k_;
+        __pyx_t_1 = __pyx_v_a_;
+        __pyx_t_5 = __pyx_v_t;
+        __pyx_v_vx = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_11 * __pyx_v_Sx.strides[0]) ) + __pyx_t_10 * __pyx_v_Sx.strides[1]) ) + __pyx_t_9 * __pyx_v_Sx.strides[2]) ) + __pyx_t_1 * __pyx_v_Sx.strides[3]) )) + __pyx_t_5)) )));
+
+        /* "disorder/diffuse/simulation.pyx":725
+ * 
+ *                 vx = Sx[i_,j_,k_,a_,t]
+ *                 vy = Sy[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ *                 vz = Sz[i_,j_,k_,a_,t]
+ * 
+ */
+        __pyx_t_5 = __pyx_v_i_;
+        __pyx_t_1 = __pyx_v_j_;
+        __pyx_t_9 = __pyx_v_k_;
+        __pyx_t_10 = __pyx_v_a_;
+        __pyx_t_11 = __pyx_v_t;
+        __pyx_v_vy = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_5 * __pyx_v_Sy.strides[0]) ) + __pyx_t_1 * __pyx_v_Sy.strides[1]) ) + __pyx_t_9 * __pyx_v_Sy.strides[2]) ) + __pyx_t_10 * __pyx_v_Sy.strides[3]) )) + __pyx_t_11)) )));
+
+        /* "disorder/diffuse/simulation.pyx":726
+ *                 vx = Sx[i_,j_,k_,a_,t]
+ *                 vy = Sy[i_,j_,k_,a_,t]
+ *                 vz = Sz[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ * 
+ *                 n_dot_v = vx*nx+vy*ny+vz*nz
+ */
+        __pyx_t_11 = __pyx_v_i_;
+        __pyx_t_10 = __pyx_v_j_;
+        __pyx_t_9 = __pyx_v_k_;
+        __pyx_t_1 = __pyx_v_a_;
+        __pyx_t_5 = __pyx_v_t;
+        __pyx_v_vz = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_11 * __pyx_v_Sz.strides[0]) ) + __pyx_t_10 * __pyx_v_Sz.strides[1]) ) + __pyx_t_9 * __pyx_v_Sz.strides[2]) ) + __pyx_t_1 * __pyx_v_Sz.strides[3]) )) + __pyx_t_5)) )));
+
+        /* "disorder/diffuse/simulation.pyx":728
+ *                 vz = Sz[i_,j_,k_,a_,t]
+ * 
+ *                 n_dot_v = vx*nx+vy*ny+vz*nz             # <<<<<<<<<<<<<<
+ * 
+ *                 vx_perp = vx-nx*n_dot_v
+ */
+        __pyx_v_n_dot_v = (((__pyx_v_vx * __pyx_v_nx) + (__pyx_v_vy * __pyx_v_ny)) + (__pyx_v_vz * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":730
+ *                 n_dot_v = vx*nx+vy*ny+vz*nz
+ * 
+ *                 vx_perp = vx-nx*n_dot_v             # <<<<<<<<<<<<<<
+ *                 vy_perp = vy-ny*n_dot_v
+ *                 vz_perp = vz-nz*n_dot_v
+ */
+        __pyx_v_vx_perp = (__pyx_v_vx - (__pyx_v_nx * __pyx_v_n_dot_v));
+
+        /* "disorder/diffuse/simulation.pyx":731
+ * 
+ *                 vx_perp = vx-nx*n_dot_v
+ *                 vy_perp = vy-ny*n_dot_v             # <<<<<<<<<<<<<<
+ *                 vz_perp = vz-nz*n_dot_v
+ * 
+ */
+        __pyx_v_vy_perp = (__pyx_v_vy - (__pyx_v_ny * __pyx_v_n_dot_v));
+
+        /* "disorder/diffuse/simulation.pyx":732
+ *                 vx_perp = vx-nx*n_dot_v
+ *                 vy_perp = vy-ny*n_dot_v
+ *                 vz_perp = vz-nz*n_dot_v             # <<<<<<<<<<<<<<
+ * 
+ *                 q = pair_ind[a,p]
+ */
+        __pyx_v_vz_perp = (__pyx_v_vz - (__pyx_v_nz * __pyx_v_n_dot_v));
+
+        /* "disorder/diffuse/simulation.pyx":734
+ *                 vz_perp = vz-nz*n_dot_v
+ * 
+ *                 q = pair_ind[a,p]             # <<<<<<<<<<<<<<
+ * 
+ *                 f = pair_ij[a,p]
+ */
+        __pyx_t_5 = __pyx_v_a;
+        __pyx_t_1 = __pyx_v_p;
+        __pyx_v_q = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ind.data + __pyx_t_5 * __pyx_v_pair_ind.strides[0]) )) + __pyx_t_1)) )));
+
+        /* "disorder/diffuse/simulation.pyx":736
+ *                 q = pair_ind[a,p]
+ * 
+ *                 f = pair_ij[a,p]             # <<<<<<<<<<<<<<
+ * 
+ *                 if (f == 1):
+ */
+        __pyx_t_1 = __pyx_v_a;
+        __pyx_t_5 = __pyx_v_p;
+        __pyx_v_f = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ij.data + __pyx_t_1 * __pyx_v_pair_ij.strides[0]) )) + __pyx_t_5)) )));
+
+        /* "disorder/diffuse/simulation.pyx":738
+ *                 f = pair_ij[a,p]
+ * 
+ *                 if (f == 1):             # <<<<<<<<<<<<<<
+ *                     Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                     Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ */
+        __pyx_t_12 = ((__pyx_v_f == 1) != 0);
+        if (__pyx_t_12) {
+
+          /* "disorder/diffuse/simulation.pyx":739
+ * 
+ *                 if (f == 1):
+ *                     Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz             # <<<<<<<<<<<<<<
+ *                     Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ *                     Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ */
+          __pyx_t_5 = __pyx_v_q;
+          __pyx_t_1 = 0;
+          __pyx_t_9 = 0;
+          __pyx_t_10 = __pyx_v_q;
+          __pyx_t_11 = 1;
+          __pyx_t_13 = 0;
+          __pyx_t_14 = __pyx_v_q;
+          __pyx_t_15 = 2;
+          __pyx_t_16 = 0;
+          __pyx_v_Jx_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_14 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":740
+ *                 if (f == 1):
+ *                     Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                     Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz             # <<<<<<<<<<<<<<
+ *                     Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ * 
+ */
+          __pyx_t_16 = __pyx_v_q;
+          __pyx_t_15 = 0;
+          __pyx_t_14 = 1;
+          __pyx_t_13 = __pyx_v_q;
+          __pyx_t_11 = 1;
+          __pyx_t_10 = 1;
+          __pyx_t_9 = __pyx_v_q;
+          __pyx_t_1 = 2;
+          __pyx_t_5 = 1;
+          __pyx_v_Jy_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_16 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_9 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":741
+ *                     Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                     Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ *                     Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz             # <<<<<<<<<<<<<<
+ * 
+ *                     Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ */
+          __pyx_t_5 = __pyx_v_q;
+          __pyx_t_1 = 0;
+          __pyx_t_9 = 2;
+          __pyx_t_10 = __pyx_v_q;
+          __pyx_t_11 = 1;
+          __pyx_t_13 = 2;
+          __pyx_t_14 = __pyx_v_q;
+          __pyx_t_15 = 2;
+          __pyx_t_16 = 2;
+          __pyx_v_Jz_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_14 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":743
+ *                     Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ * 
+ *                     Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz             # <<<<<<<<<<<<<<
+ *                     Jy_eff_ji = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+ *                     Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ */
+          __pyx_t_16 = __pyx_v_q;
+          __pyx_t_15 = 0;
+          __pyx_t_14 = 0;
+          __pyx_t_13 = __pyx_v_q;
+          __pyx_t_11 = 0;
+          __pyx_t_10 = 1;
+          __pyx_t_9 = __pyx_v_q;
+          __pyx_t_1 = 0;
+          __pyx_t_5 = 2;
+          __pyx_v_Jx_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_16 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_9 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":744
+ * 
+ *                     Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ *                     Jy_eff_ji = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz             # <<<<<<<<<<<<<<
+ *                     Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ *                 else:
+ */
+          __pyx_t_5 = __pyx_v_q;
+          __pyx_t_1 = 1;
+          __pyx_t_9 = 0;
+          __pyx_t_10 = __pyx_v_q;
+          __pyx_t_11 = 1;
+          __pyx_t_13 = 1;
+          __pyx_t_14 = __pyx_v_q;
+          __pyx_t_15 = 1;
+          __pyx_t_16 = 2;
+          __pyx_v_Jy_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_14 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":745
+ *                     Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ *                     Jy_eff_ji = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+ *                     Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz             # <<<<<<<<<<<<<<
+ *                 else:
+ *                     Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ */
+          __pyx_t_16 = __pyx_v_q;
+          __pyx_t_15 = 2;
+          __pyx_t_14 = 0;
+          __pyx_t_13 = __pyx_v_q;
+          __pyx_t_11 = 2;
+          __pyx_t_10 = 1;
+          __pyx_t_9 = __pyx_v_q;
+          __pyx_t_1 = 2;
+          __pyx_t_5 = 2;
+          __pyx_v_Jz_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_16 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_9 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":738
+ *                 f = pair_ij[a,p]
+ * 
+ *                 if (f == 1):             # <<<<<<<<<<<<<<
+ *                     Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                     Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ */
+          goto __pyx_L8;
+        }
+
+        /* "disorder/diffuse/simulation.pyx":747
+ *                     Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ *                 else:
+ *                     Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz             # <<<<<<<<<<<<<<
+ *                     Jy_eff_ij = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+ *                     Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ */
+        /*else*/ {
+          __pyx_t_5 = __pyx_v_q;
+          __pyx_t_1 = 0;
+          __pyx_t_9 = 0;
+          __pyx_t_10 = __pyx_v_q;
+          __pyx_t_11 = 0;
+          __pyx_t_13 = 1;
+          __pyx_t_14 = __pyx_v_q;
+          __pyx_t_15 = 0;
+          __pyx_t_16 = 2;
+          __pyx_v_Jx_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_14 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":748
+ *                 else:
+ *                     Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ *                     Jy_eff_ij = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz             # <<<<<<<<<<<<<<
+ *                     Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ * 
+ */
+          __pyx_t_16 = __pyx_v_q;
+          __pyx_t_15 = 1;
+          __pyx_t_14 = 0;
+          __pyx_t_13 = __pyx_v_q;
+          __pyx_t_11 = 1;
+          __pyx_t_10 = 1;
+          __pyx_t_9 = __pyx_v_q;
+          __pyx_t_1 = 1;
+          __pyx_t_5 = 2;
+          __pyx_v_Jy_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_16 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_9 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":749
+ *                     Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
+ *                     Jy_eff_ij = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
+ *                     Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz             # <<<<<<<<<<<<<<
+ * 
+ *                     Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ */
+          __pyx_t_5 = __pyx_v_q;
+          __pyx_t_1 = 2;
+          __pyx_t_9 = 0;
+          __pyx_t_10 = __pyx_v_q;
+          __pyx_t_11 = 2;
+          __pyx_t_13 = 1;
+          __pyx_t_14 = __pyx_v_q;
+          __pyx_t_15 = 2;
+          __pyx_t_16 = 2;
+          __pyx_v_Jz_eff_ij = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_14 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":751
+ *                     Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+ * 
+ *                     Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz             # <<<<<<<<<<<<<<
+ *                     Jy_eff_ji = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ *                     Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ */
+          __pyx_t_16 = __pyx_v_q;
+          __pyx_t_15 = 0;
+          __pyx_t_14 = 0;
+          __pyx_t_13 = __pyx_v_q;
+          __pyx_t_11 = 1;
+          __pyx_t_10 = 0;
+          __pyx_t_9 = __pyx_v_q;
+          __pyx_t_1 = 2;
+          __pyx_t_5 = 0;
+          __pyx_v_Jx_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_16 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_9 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":752
+ * 
+ *                     Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                     Jy_eff_ji = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz             # <<<<<<<<<<<<<<
+ *                     Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ * 
+ */
+          __pyx_t_5 = __pyx_v_q;
+          __pyx_t_1 = 0;
+          __pyx_t_9 = 1;
+          __pyx_t_10 = __pyx_v_q;
+          __pyx_t_11 = 1;
+          __pyx_t_13 = 1;
+          __pyx_t_14 = __pyx_v_q;
+          __pyx_t_15 = 2;
+          __pyx_t_16 = 1;
+          __pyx_v_Jy_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_5 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_9)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_10 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_13)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_14 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_16)) ))) * __pyx_v_nz));
+
+          /* "disorder/diffuse/simulation.pyx":753
+ *                     Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
+ *                     Jy_eff_ji = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
+ *                     Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz             # <<<<<<<<<<<<<<
+ * 
+ *                 J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij
+ */
+          __pyx_t_16 = __pyx_v_q;
+          __pyx_t_15 = 0;
+          __pyx_t_14 = 2;
+          __pyx_t_13 = __pyx_v_q;
+          __pyx_t_11 = 1;
+          __pyx_t_10 = 2;
+          __pyx_t_9 = __pyx_v_q;
+          __pyx_t_1 = 2;
+          __pyx_t_5 = 2;
+          __pyx_v_Jz_eff_ji = ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_16 * __pyx_v_J.strides[0]) ) + __pyx_t_15 * __pyx_v_J.strides[1]) )) + __pyx_t_14)) ))) * __pyx_v_nx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_13 * __pyx_v_J.strides[0]) ) + __pyx_t_11 * __pyx_v_J.strides[1]) )) + __pyx_t_10)) ))) * __pyx_v_ny)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_9 * __pyx_v_J.strides[0]) ) + __pyx_t_1 * __pyx_v_J.strides[1]) )) + __pyx_t_5)) ))) * __pyx_v_nz));
+        }
+        __pyx_L8:;
+
+        /* "disorder/diffuse/simulation.pyx":755
+ *                     Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
+ * 
+ *                 J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij             # <<<<<<<<<<<<<<
+ * 
+ *                 J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji
+ */
+        __pyx_v_J_eff_ij = (((__pyx_v_ux_perp * __pyx_v_Jx_eff_ij) + (__pyx_v_uy_perp * __pyx_v_Jy_eff_ij)) + (__pyx_v_uz_perp * __pyx_v_Jz_eff_ij));
+
+        /* "disorder/diffuse/simulation.pyx":757
+ *                 J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij
+ * 
+ *                 J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji             # <<<<<<<<<<<<<<
+ * 
+ *                 J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij
+ */
+        __pyx_v_J_eff_ji = (((__pyx_v_vx_perp * __pyx_v_Jx_eff_ji) + (__pyx_v_vy_perp * __pyx_v_Jy_eff_ji)) + (__pyx_v_vz_perp * __pyx_v_Jz_eff_ji));
+
+        /* "disorder/diffuse/simulation.pyx":759
+ *                 J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji
+ * 
+ *                 J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij             # <<<<<<<<<<<<<<
+ * 
+ *                 E += 2*J_eff*n_dot_u*n_dot_v
+ */
+        __pyx_v_J_eff = (((__pyx_v_nx * __pyx_v_Jx_eff_ij) + (__pyx_v_ny * __pyx_v_Jy_eff_ij)) + (__pyx_v_nz * __pyx_v_Jz_eff_ij));
+
+        /* "disorder/diffuse/simulation.pyx":761
+ *                 J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij
+ * 
+ *                 E += 2*J_eff*n_dot_u*n_dot_v             # <<<<<<<<<<<<<<
+ * 
+ *     return E
+ */
+        __pyx_v_E = (__pyx_v_E + (((2.0 * __pyx_v_J_eff) * __pyx_v_n_dot_u) * __pyx_v_n_dot_v));
+
+        /* "disorder/diffuse/simulation.pyx":722
+ *             p_ = pair_inv[a,p]
+ * 
+ *             if (c[i_,j_,k_,a_,t] == 0):             # <<<<<<<<<<<<<<
+ * 
+ *                 vx = Sx[i_,j_,k_,a_,t]
+ */
+      }
+    }
+  }
+
+  /* "disorder/diffuse/simulation.pyx":763
+ *                 E += 2*J_eff*n_dot_u*n_dot_v
+ * 
+ *     return E             # <<<<<<<<<<<<<<
+ * 
+ * def heisenberg_cluster(double [:,:,:,:,::1] Sx,
+ */
+  __pyx_r = __pyx_v_E;
+  goto __pyx_L0;
+
+  /* "disorder/diffuse/simulation.pyx":657
+ *     return m_c
+ * 
+ * cdef double boundary_energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                             double [:,:,:,:,::1] Sy,
+ *                             double [:,:,:,:,::1] Sz,
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "disorder/diffuse/simulation.pyx":765
+ *     return E
+ * 
+ * def heisenberg_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                        double [:,:,:,:,::1] Sy,
+ *                        double [:,:,:,:,::1] Sz,
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_5heisenberg_cluster(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyMethodDef __pyx_mdef_8disorder_7diffuse_10simulation_5heisenberg_cluster = {"heisenberg_cluster", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_8disorder_7diffuse_10simulation_5heisenberg_cluster, METH_VARARGS|METH_KEYWORDS, 0};
+static PyObject *__pyx_pw_8disorder_7diffuse_10simulation_5heisenberg_cluster(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  __Pyx_memviewslice __pyx_v_Sx = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_Sy = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_Sz = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_J = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_A = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_g = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_B = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_atm_ind = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_img_ind_i = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_img_ind_j = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_img_ind_k = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_pair_ind = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_pair_inv = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_pair_ij = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_T_range = { 0, 0, { 0 }, { 0 }, { 0 } };
+  double __pyx_v_kB;
+  Py_ssize_t __pyx_v_N;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("heisenberg_cluster (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_Sx,&__pyx_n_s_Sy,&__pyx_n_s_Sz,&__pyx_n_s_J,&__pyx_n_s_A,&__pyx_n_s_g,&__pyx_n_s_B,&__pyx_n_s_atm_ind,&__pyx_n_s_img_ind_i,&__pyx_n_s_img_ind_j,&__pyx_n_s_img_ind_k,&__pyx_n_s_pair_ind,&__pyx_n_s_pair_inv,&__pyx_n_s_pair_ij,&__pyx_n_s_T_range,&__pyx_n_s_kB,&__pyx_n_s_N,0};
+    PyObject* values[17] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case 17: values[16] = PyTuple_GET_ITEM(__pyx_args, 16);
+        CYTHON_FALLTHROUGH;
+        case 16: values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
+        CYTHON_FALLTHROUGH;
+        case 15: values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
+        CYTHON_FALLTHROUGH;
+        case 14: values[13] = PyTuple_GET_ITEM(__pyx_args, 13);
+        CYTHON_FALLTHROUGH;
+        case 13: values[12] = PyTuple_GET_ITEM(__pyx_args, 12);
+        CYTHON_FALLTHROUGH;
+        case 12: values[11] = PyTuple_GET_ITEM(__pyx_args, 11);
+        CYTHON_FALLTHROUGH;
+        case 11: values[10] = PyTuple_GET_ITEM(__pyx_args, 10);
+        CYTHON_FALLTHROUGH;
+        case 10: values[9] = PyTuple_GET_ITEM(__pyx_args, 9);
+        CYTHON_FALLTHROUGH;
+        case  9: values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
+        CYTHON_FALLTHROUGH;
+        case  8: values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
+        CYTHON_FALLTHROUGH;
+        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+        CYTHON_FALLTHROUGH;
+        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+        CYTHON_FALLTHROUGH;
+        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+        CYTHON_FALLTHROUGH;
+        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+        CYTHON_FALLTHROUGH;
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sx)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sy)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 1); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Sz)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 2); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  3:
+        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_J)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 3); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  4:
+        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_A)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 4); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  5:
+        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_g)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 5); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  6:
+        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_B)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 6); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  7:
+        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_atm_ind)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 7); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  8:
+        if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_i)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 8); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case  9:
+        if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_j)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 9); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 10:
+        if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_img_ind_k)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 10); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 11:
+        if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pair_ind)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 11); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 12:
+        if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pair_inv)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 12); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 13:
+        if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_pair_ij)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 13); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 14:
+        if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_T_range)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 14); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 15:
+        if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_kB)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 15); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 16:
+        if (likely((values[16] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, 16); __PYX_ERR(0, 765, __pyx_L3_error)
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "heisenberg_cluster") < 0)) __PYX_ERR(0, 765, __pyx_L3_error)
+      }
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 17) {
+      goto __pyx_L5_argtuple_error;
+    } else {
+      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
+      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
+      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
+      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
+      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
+      values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
+      values[9] = PyTuple_GET_ITEM(__pyx_args, 9);
+      values[10] = PyTuple_GET_ITEM(__pyx_args, 10);
+      values[11] = PyTuple_GET_ITEM(__pyx_args, 11);
+      values[12] = PyTuple_GET_ITEM(__pyx_args, 12);
+      values[13] = PyTuple_GET_ITEM(__pyx_args, 13);
+      values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
+      values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
+      values[16] = PyTuple_GET_ITEM(__pyx_args, 16);
+    }
+    __pyx_v_Sx = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[0], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sx.memview)) __PYX_ERR(0, 765, __pyx_L3_error)
+    __pyx_v_Sy = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[1], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sy.memview)) __PYX_ERR(0, 766, __pyx_L3_error)
+    __pyx_v_Sz = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(values[2], PyBUF_WRITABLE); if (unlikely(!__pyx_v_Sz.memview)) __PYX_ERR(0, 767, __pyx_L3_error)
+    __pyx_v_J = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[3], PyBUF_WRITABLE); if (unlikely(!__pyx_v_J.memview)) __PYX_ERR(0, 768, __pyx_L3_error)
+    __pyx_v_A = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[4], PyBUF_WRITABLE); if (unlikely(!__pyx_v_A.memview)) __PYX_ERR(0, 769, __pyx_L3_error)
+    __pyx_v_g = __Pyx_PyObject_to_MemoryviewSlice_d_d_dc_double(values[5], PyBUF_WRITABLE); if (unlikely(!__pyx_v_g.memview)) __PYX_ERR(0, 770, __pyx_L3_error)
+    __pyx_v_B = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[6], PyBUF_WRITABLE); if (unlikely(!__pyx_v_B.memview)) __PYX_ERR(0, 771, __pyx_L3_error)
+    __pyx_v_atm_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[7], PyBUF_WRITABLE); if (unlikely(!__pyx_v_atm_ind.memview)) __PYX_ERR(0, 772, __pyx_L3_error)
+    __pyx_v_img_ind_i = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[8], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_i.memview)) __PYX_ERR(0, 773, __pyx_L3_error)
+    __pyx_v_img_ind_j = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[9], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_j.memview)) __PYX_ERR(0, 774, __pyx_L3_error)
+    __pyx_v_img_ind_k = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[10], PyBUF_WRITABLE); if (unlikely(!__pyx_v_img_ind_k.memview)) __PYX_ERR(0, 775, __pyx_L3_error)
+    __pyx_v_pair_ind = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[11], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ind.memview)) __PYX_ERR(0, 776, __pyx_L3_error)
+    __pyx_v_pair_inv = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[12], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_inv.memview)) __PYX_ERR(0, 777, __pyx_L3_error)
+    __pyx_v_pair_ij = __Pyx_PyObject_to_MemoryviewSlice_d_dc_long(values[13], PyBUF_WRITABLE); if (unlikely(!__pyx_v_pair_ij.memview)) __PYX_ERR(0, 778, __pyx_L3_error)
+    __pyx_v_T_range = __Pyx_PyObject_to_MemoryviewSlice_dc_double(values[14], PyBUF_WRITABLE); if (unlikely(!__pyx_v_T_range.memview)) __PYX_ERR(0, 779, __pyx_L3_error)
+    __pyx_v_kB = __pyx_PyFloat_AsDouble(values[15]); if (unlikely((__pyx_v_kB == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 780, __pyx_L3_error)
+    __pyx_v_N = __Pyx_PyIndex_AsSsize_t(values[16]); if (unlikely((__pyx_v_N == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 781, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("heisenberg_cluster", 1, 17, 17, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 765, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("disorder.diffuse.simulation.heisenberg_cluster", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_8disorder_7diffuse_10simulation_4heisenberg_cluster(__pyx_self, __pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_J, __pyx_v_A, __pyx_v_g, __pyx_v_B, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_inv, __pyx_v_pair_ij, __pyx_v_T_range, __pyx_v_kB, __pyx_v_N);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_4heisenberg_cluster(CYTHON_UNUSED PyObject *__pyx_self, __Pyx_memviewslice __pyx_v_Sx, __Pyx_memviewslice __pyx_v_Sy, __Pyx_memviewslice __pyx_v_Sz, __Pyx_memviewslice __pyx_v_J, __Pyx_memviewslice __pyx_v_A, __Pyx_memviewslice __pyx_v_g, __Pyx_memviewslice __pyx_v_B, __Pyx_memviewslice __pyx_v_atm_ind, __Pyx_memviewslice __pyx_v_img_ind_i, __Pyx_memviewslice __pyx_v_img_ind_j, __Pyx_memviewslice __pyx_v_img_ind_k, __Pyx_memviewslice __pyx_v_pair_ind, __Pyx_memviewslice __pyx_v_pair_inv, __Pyx_memviewslice __pyx_v_pair_ij, __Pyx_memviewslice __pyx_v_T_range, double __pyx_v_kB, Py_ssize_t __pyx_v_N) {
+  Py_ssize_t __pyx_v_nu;
+  Py_ssize_t __pyx_v_nv;
+  Py_ssize_t __pyx_v_nw;
+  Py_ssize_t __pyx_v_n_atm;
+  Py_ssize_t __pyx_v_n_temp;
+  Py_ssize_t __pyx_v_t;
+  Py_ssize_t __pyx_v_n;
+  Py_ssize_t __pyx_v_i;
+  Py_ssize_t __pyx_v_j;
+  Py_ssize_t __pyx_v_k;
+  Py_ssize_t __pyx_v_a;
+  Py_ssize_t __pyx_v_i_;
+  Py_ssize_t __pyx_v_j_;
+  Py_ssize_t __pyx_v_k_;
+  Py_ssize_t __pyx_v_a_;
+  Py_ssize_t __pyx_v_n_pairs;
+  __Pyx_memviewslice __pyx_v_E = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_H = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_e = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_v_p;
+  Py_ssize_t __pyx_v_i_c;
+  __Pyx_memviewslice __pyx_v_n_c = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_v_spin_shape = NULL;
+  __Pyx_memviewslice __pyx_v_b = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_c = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_v_pairs_shape = NULL;
+  __Pyx_memviewslice __pyx_v_h_eff = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_h_eff_ij = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_clust_i = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_clust_j = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_clust_k = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_clust_a = { 0, 0, { 0 }, { 0 }, { 0 } };
+  double __pyx_v_ux;
+  double __pyx_v_uy;
+  double __pyx_v_uz;
+  double __pyx_v_vx;
+  double __pyx_v_vy;
+  double __pyx_v_vz;
+  double __pyx_v_nx;
+  double __pyx_v_ny;
+  double __pyx_v_nz;
+  double __pyx_v_ux_perp;
+  double __pyx_v_uy_perp;
+  double __pyx_v_uz_perp;
+  double __pyx_v_vx_perp;
+  double __pyx_v_vy_perp;
+  double __pyx_v_vz_perp;
+  double __pyx_v_n_dot_u;
+  double __pyx_v_n_dot_v;
+  __Pyx_memviewslice __pyx_v_sx = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_sy = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_sz = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_v_beta = { 0, 0, { 0 }, { 0 }, { 0 } };
+  CYTHON_UNUSED Py_ssize_t __pyx_v__;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  PyObject *__pyx_t_2 = NULL;
+  PyObject *__pyx_t_3 = NULL;
+  PyObject *__pyx_t_4 = NULL;
+  __Pyx_memviewslice __pyx_t_5 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  PyObject *__pyx_t_8 = NULL;
+  PyObject *__pyx_t_9 = NULL;
+  PyObject *__pyx_t_10 = NULL;
+  PyObject *__pyx_t_11 = NULL;
+  PyObject *__pyx_t_12 = NULL;
+  PyObject *__pyx_t_13 = NULL;
+  PyObject *__pyx_t_14 = NULL;
+  PyObject *__pyx_t_15 = NULL;
+  PyObject *__pyx_t_16 = NULL;
+  PyObject *__pyx_t_17 = NULL;
+  int __pyx_t_18;
+  PyObject *__pyx_t_19 = NULL;
+  __Pyx_memviewslice __pyx_t_20 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  Py_ssize_t __pyx_t_21;
+  Py_ssize_t __pyx_t_22;
+  Py_ssize_t __pyx_t_23;
+  Py_ssize_t __pyx_t_24;
+  Py_ssize_t __pyx_t_25;
+  Py_ssize_t __pyx_t_26;
+  Py_ssize_t __pyx_t_27;
+  Py_ssize_t __pyx_t_28;
+  Py_ssize_t __pyx_t_29;
+  Py_ssize_t __pyx_t_30;
+  Py_ssize_t __pyx_t_31;
+  Py_ssize_t __pyx_t_32;
+  Py_ssize_t __pyx_t_33;
+  Py_ssize_t __pyx_t_34;
+  Py_ssize_t __pyx_t_35;
+  Py_ssize_t __pyx_t_36;
+  Py_ssize_t __pyx_t_37;
+  Py_ssize_t __pyx_t_38;
+  Py_ssize_t __pyx_t_39;
+  Py_ssize_t __pyx_t_40;
+  Py_ssize_t __pyx_t_41;
+  Py_ssize_t __pyx_t_42;
+  Py_ssize_t __pyx_t_43;
+  Py_ssize_t __pyx_t_44;
+  Py_ssize_t __pyx_t_45;
+  __Pyx_memviewslice __pyx_t_46 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_47 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_48 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __Pyx_memviewslice __pyx_t_49 = { 0, 0, { 0 }, { 0 }, { 0 } };
+  __pyx_ctuple_Py_ssize_t__and_Py_ssize_t__and_Py_ssize_t__and_Py_ssize_t __pyx_t_50;
+  double __pyx_t_51;
+  double __pyx_t_52;
+  double __pyx_t_53;
+  __pyx_ctuple_double__and_double__and_double __pyx_t_54;
+  int __pyx_t_55;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("heisenberg_cluster", 0);
+
+  /* "disorder/diffuse/simulation.pyx":783
+ *                        Py_ssize_t N):
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ */
+  __pyx_v_nu = (__pyx_v_Sx.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":784
+ * 
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]
+ */
+  __pyx_v_nv = (__pyx_v_Sx.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":785
+ *     cdef Py_ssize_t nu = Sx.shape[0]
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]
+ * 
+ */
+  __pyx_v_nw = (__pyx_v_Sx.shape[2]);
+
+  /* "disorder/diffuse/simulation.pyx":786
+ *     cdef Py_ssize_t nv = Sx.shape[1]
+ *     cdef Py_ssize_t nw = Sx.shape[2]
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t n_temp = T_range.shape[0]
+ */
+  __pyx_v_n_atm = (__pyx_v_Sx.shape[3]);
+
+  /* "disorder/diffuse/simulation.pyx":788
+ *     cdef Py_ssize_t n_atm = Sx.shape[3]
+ * 
+ *     cdef Py_ssize_t n_temp = T_range.shape[0]             # <<<<<<<<<<<<<<
+ * 
+ *     initialize_random(nu, nv, nw, n_atm, n_temp)
+ */
+  __pyx_v_n_temp = (__pyx_v_T_range.shape[0]);
+
+  /* "disorder/diffuse/simulation.pyx":790
+ *     cdef Py_ssize_t n_temp = T_range.shape[0]
+ * 
+ *     initialize_random(nu, nv, nw, n_atm, n_temp)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t t, n
+ */
+  __pyx_f_8disorder_7diffuse_10simulation_initialize_random(__pyx_v_nu, __pyx_v_nv, __pyx_v_nw, __pyx_v_n_atm, __pyx_v_n_temp);
+
+  /* "disorder/diffuse/simulation.pyx":796
+ *     cdef Py_ssize_t i_, j_, k_, a_
+ * 
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double [::1] E = np.zeros(n_temp)
+ */
+  __pyx_v_n_pairs = (__pyx_v_atm_ind.shape[1]);
+
+  /* "disorder/diffuse/simulation.pyx":798
+ *     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+ * 
+ *     cdef double [::1] E = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] H = np.zeros(n_temp)
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 798, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 798, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 798, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_4 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_3);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_3);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_3, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 798, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 798, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_E = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":799
+ * 
+ *     cdef double [::1] E = np.zeros(n_temp)
+ *     cdef double [::1] H = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 799, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 799, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  __pyx_t_3 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 799, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_4 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_4)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_4);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_1 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 799, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 799, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_H = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":801
+ *     cdef double [::1] H = np.zeros(n_temp)
+ * 
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,             # <<<<<<<<<<<<<<
+ *                                            img_ind_i, img_ind_j, img_ind_k,
+ *                                            pair_ind, pair_ij)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_energy); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_3 = __pyx_memoryview_fromslice(__pyx_v_Sx, 5, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_3);
+  __pyx_t_4 = __pyx_memoryview_fromslice(__pyx_v_Sy, 5, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_6 = __pyx_memoryview_fromslice(__pyx_v_Sz, 5, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = __pyx_memoryview_fromslice(__pyx_v_J, 3, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __pyx_t_8 = __pyx_memoryview_fromslice(__pyx_v_A, 3, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_8);
+  __pyx_t_9 = __pyx_memoryview_fromslice(__pyx_v_g, 3, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_9);
+  __pyx_t_10 = __pyx_memoryview_fromslice(__pyx_v_B, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_10);
+  __pyx_t_11 = __pyx_memoryview_fromslice(__pyx_v_atm_ind, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_11);
+
+  /* "disorder/diffuse/simulation.pyx":802
+ * 
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
+ *                                            img_ind_i, img_ind_j, img_ind_k,             # <<<<<<<<<<<<<<
+ *                                            pair_ind, pair_ij)
+ * 
+ */
+  __pyx_t_12 = __pyx_memoryview_fromslice(__pyx_v_img_ind_i, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 802, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_12);
+  __pyx_t_13 = __pyx_memoryview_fromslice(__pyx_v_img_ind_j, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 802, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_14 = __pyx_memoryview_fromslice(__pyx_v_img_ind_k, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 802, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+
+  /* "disorder/diffuse/simulation.pyx":803
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
+ *                                            img_ind_i, img_ind_j, img_ind_k,
+ *                                            pair_ind, pair_ij)             # <<<<<<<<<<<<<<
+ * 
+ *     for i in range(nu):
+ */
+  __pyx_t_15 = __pyx_memoryview_fromslice(__pyx_v_pair_ind, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 803, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_16 = __pyx_memoryview_fromslice(__pyx_v_pair_ij, 2, (PyObject *(*)(char *)) __pyx_memview_get_long, (int (*)(char *, PyObject *)) __pyx_memview_set_long, 0);; if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 803, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_17 = NULL;
+  __pyx_t_18 = 0;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_17 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_17)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_17);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+      __pyx_t_18 = 1;
+    }
+  }
+  #if CYTHON_FAST_PYCALL
+  if (PyFunction_Check(__pyx_t_2)) {
+    PyObject *__pyx_temp[14] = {__pyx_t_17, __pyx_t_3, __pyx_t_4, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16};
+    __pyx_t_1 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_18, 13+__pyx_t_18); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 801, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+    __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  } else
+  #endif
+  #if CYTHON_FAST_PYCCALL
+  if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
+    PyObject *__pyx_temp[14] = {__pyx_t_17, __pyx_t_3, __pyx_t_4, __pyx_t_6, __pyx_t_7, __pyx_t_8, __pyx_t_9, __pyx_t_10, __pyx_t_11, __pyx_t_12, __pyx_t_13, __pyx_t_14, __pyx_t_15, __pyx_t_16};
+    __pyx_t_1 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_18, 13+__pyx_t_18); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 801, __pyx_L1_error)
+    __Pyx_XDECREF(__pyx_t_17); __pyx_t_17 = 0;
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
+    __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
+    __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
+    __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
+    __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
+    __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
+    __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+    __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+    __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+    __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  } else
+  #endif
+  {
+    __pyx_t_19 = PyTuple_New(13+__pyx_t_18); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 801, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_19);
+    if (__pyx_t_17) {
+      __Pyx_GIVEREF(__pyx_t_17); PyTuple_SET_ITEM(__pyx_t_19, 0, __pyx_t_17); __pyx_t_17 = NULL;
+    }
+    __Pyx_GIVEREF(__pyx_t_3);
+    PyTuple_SET_ITEM(__pyx_t_19, 0+__pyx_t_18, __pyx_t_3);
+    __Pyx_GIVEREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_19, 1+__pyx_t_18, __pyx_t_4);
+    __Pyx_GIVEREF(__pyx_t_6);
+    PyTuple_SET_ITEM(__pyx_t_19, 2+__pyx_t_18, __pyx_t_6);
+    __Pyx_GIVEREF(__pyx_t_7);
+    PyTuple_SET_ITEM(__pyx_t_19, 3+__pyx_t_18, __pyx_t_7);
+    __Pyx_GIVEREF(__pyx_t_8);
+    PyTuple_SET_ITEM(__pyx_t_19, 4+__pyx_t_18, __pyx_t_8);
+    __Pyx_GIVEREF(__pyx_t_9);
+    PyTuple_SET_ITEM(__pyx_t_19, 5+__pyx_t_18, __pyx_t_9);
+    __Pyx_GIVEREF(__pyx_t_10);
+    PyTuple_SET_ITEM(__pyx_t_19, 6+__pyx_t_18, __pyx_t_10);
+    __Pyx_GIVEREF(__pyx_t_11);
+    PyTuple_SET_ITEM(__pyx_t_19, 7+__pyx_t_18, __pyx_t_11);
+    __Pyx_GIVEREF(__pyx_t_12);
+    PyTuple_SET_ITEM(__pyx_t_19, 8+__pyx_t_18, __pyx_t_12);
+    __Pyx_GIVEREF(__pyx_t_13);
+    PyTuple_SET_ITEM(__pyx_t_19, 9+__pyx_t_18, __pyx_t_13);
+    __Pyx_GIVEREF(__pyx_t_14);
+    PyTuple_SET_ITEM(__pyx_t_19, 10+__pyx_t_18, __pyx_t_14);
+    __Pyx_GIVEREF(__pyx_t_15);
+    PyTuple_SET_ITEM(__pyx_t_19, 11+__pyx_t_18, __pyx_t_15);
+    __Pyx_GIVEREF(__pyx_t_16);
+    PyTuple_SET_ITEM(__pyx_t_19, 12+__pyx_t_18, __pyx_t_16);
+    __pyx_t_3 = 0;
+    __pyx_t_4 = 0;
+    __pyx_t_6 = 0;
+    __pyx_t_7 = 0;
+    __pyx_t_8 = 0;
+    __pyx_t_9 = 0;
+    __pyx_t_10 = 0;
+    __pyx_t_11 = 0;
+    __pyx_t_12 = 0;
+    __pyx_t_13 = 0;
+    __pyx_t_14 = 0;
+    __pyx_t_15 = 0;
+    __pyx_t_16 = 0;
+    __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_19, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 801, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_1);
+    __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  }
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "disorder/diffuse/simulation.pyx":801
+ *     cdef double [::1] H = np.zeros(n_temp)
+ * 
+ *     cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,             # <<<<<<<<<<<<<<
+ *                                            img_ind_i, img_ind_j, img_ind_k,
+ *                                            pair_ind, pair_ij)
+ */
+  __pyx_t_20 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_d_dc_double(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_20.memview)) __PYX_ERR(0, 801, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_e = __pyx_t_20;
+  __pyx_t_20.memview = NULL;
+  __pyx_t_20.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":805
+ *                                            pair_ind, pair_ij)
+ * 
+ *     for i in range(nu):             # <<<<<<<<<<<<<<
+ *         for j in range(nv):
+ *             for k in range(nw):
+ */
+  __pyx_t_21 = __pyx_v_nu;
+  __pyx_t_22 = __pyx_t_21;
+  for (__pyx_t_23 = 0; __pyx_t_23 < __pyx_t_22; __pyx_t_23+=1) {
+    __pyx_v_i = __pyx_t_23;
+
+    /* "disorder/diffuse/simulation.pyx":806
+ * 
+ *     for i in range(nu):
+ *         for j in range(nv):             # <<<<<<<<<<<<<<
+ *             for k in range(nw):
+ *                 for a in range(n_atm):
+ */
+    __pyx_t_24 = __pyx_v_nv;
+    __pyx_t_25 = __pyx_t_24;
+    for (__pyx_t_26 = 0; __pyx_t_26 < __pyx_t_25; __pyx_t_26+=1) {
+      __pyx_v_j = __pyx_t_26;
+
+      /* "disorder/diffuse/simulation.pyx":807
+ *     for i in range(nu):
+ *         for j in range(nv):
+ *             for k in range(nw):             # <<<<<<<<<<<<<<
+ *                 for a in range(n_atm):
+ *                     for p in range(n_pairs):
+ */
+      __pyx_t_27 = __pyx_v_nw;
+      __pyx_t_28 = __pyx_t_27;
+      for (__pyx_t_29 = 0; __pyx_t_29 < __pyx_t_28; __pyx_t_29+=1) {
+        __pyx_v_k = __pyx_t_29;
+
+        /* "disorder/diffuse/simulation.pyx":808
+ *         for j in range(nv):
+ *             for k in range(nw):
+ *                 for a in range(n_atm):             # <<<<<<<<<<<<<<
+ *                     for p in range(n_pairs):
+ *                         for t in range(n_temp):
+ */
+        __pyx_t_30 = __pyx_v_n_atm;
+        __pyx_t_31 = __pyx_t_30;
+        for (__pyx_t_32 = 0; __pyx_t_32 < __pyx_t_31; __pyx_t_32+=1) {
+          __pyx_v_a = __pyx_t_32;
+
+          /* "disorder/diffuse/simulation.pyx":809
+ *             for k in range(nw):
+ *                 for a in range(n_atm):
+ *                     for p in range(n_pairs):             # <<<<<<<<<<<<<<
+ *                         for t in range(n_temp):
+ *                             H[t] += e[i,j,k,a,p,t]
+ */
+          __pyx_t_33 = __pyx_v_n_pairs;
+          __pyx_t_34 = __pyx_t_33;
+          for (__pyx_t_35 = 0; __pyx_t_35 < __pyx_t_34; __pyx_t_35+=1) {
+            __pyx_v_p = __pyx_t_35;
+
+            /* "disorder/diffuse/simulation.pyx":810
+ *                 for a in range(n_atm):
+ *                     for p in range(n_pairs):
+ *                         for t in range(n_temp):             # <<<<<<<<<<<<<<
+ *                             H[t] += e[i,j,k,a,p,t]
+ * 
+ */
+            __pyx_t_36 = __pyx_v_n_temp;
+            __pyx_t_37 = __pyx_t_36;
+            for (__pyx_t_38 = 0; __pyx_t_38 < __pyx_t_37; __pyx_t_38+=1) {
+              __pyx_v_t = __pyx_t_38;
+
+              /* "disorder/diffuse/simulation.pyx":811
+ *                     for p in range(n_pairs):
+ *                         for t in range(n_temp):
+ *                             H[t] += e[i,j,k,a,p,t]             # <<<<<<<<<<<<<<
+ * 
+ *     n = nu*nv*nw*n_atm
+ */
+              __pyx_t_39 = __pyx_v_i;
+              __pyx_t_40 = __pyx_v_j;
+              __pyx_t_41 = __pyx_v_k;
+              __pyx_t_42 = __pyx_v_a;
+              __pyx_t_43 = __pyx_v_p;
+              __pyx_t_44 = __pyx_v_t;
+              __pyx_t_45 = __pyx_v_t;
+              *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_H.data) + __pyx_t_45)) )) += (*((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_39 * __pyx_v_e.strides[0]) ) + __pyx_t_40 * __pyx_v_e.strides[1]) ) + __pyx_t_41 * __pyx_v_e.strides[2]) ) + __pyx_t_42 * __pyx_v_e.strides[3]) ) + __pyx_t_43 * __pyx_v_e.strides[4]) )) + __pyx_t_44)) )));
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /* "disorder/diffuse/simulation.pyx":813
+ *                             H[t] += e[i,j,k,a,p,t]
+ * 
+ *     n = nu*nv*nw*n_atm             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t i_c
+ */
+  __pyx_v_n = (((__pyx_v_nu * __pyx_v_nv) * __pyx_v_nw) * __pyx_v_n_atm);
+
+  /* "disorder/diffuse/simulation.pyx":817
+ *     cdef Py_ssize_t i_c
+ * 
+ *     cdef Py_ssize_t [::1] n_c = np.zeros(n_temp, dtype=np.intp)             # <<<<<<<<<<<<<<
+ * 
+ *     spin_shape = (nu,nv,nw,n_atm,n_temp)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_19 = PyTuple_New(1); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_19, 0, __pyx_t_1);
+  __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_GetModuleGlobalName(__pyx_t_16, __pyx_n_s_np); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_16, __pyx_n_s_intp); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  if (PyDict_SetItem(__pyx_t_1, __pyx_n_s_dtype, __pyx_t_15) < 0) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_19, __pyx_t_1); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_46 = __Pyx_PyObject_to_MemoryviewSlice_dc_Py_ssize_t(__pyx_t_15, PyBUF_WRITABLE); if (unlikely(!__pyx_t_46.memview)) __PYX_ERR(0, 817, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_n_c = __pyx_t_46;
+  __pyx_t_46.memview = NULL;
+  __pyx_t_46.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":819
+ *     cdef Py_ssize_t [::1] n_c = np.zeros(n_temp, dtype=np.intp)
+ * 
+ *     spin_shape = (nu,nv,nw,n_atm,n_temp)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef bint [:,:,:,:,::1] b = np.zeros(spin_shape, dtype=np.intc)
+ */
+  __pyx_t_15 = PyInt_FromSsize_t(__pyx_v_nu); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 819, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_nv); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 819, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_19 = PyInt_FromSsize_t(__pyx_v_nw); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 819, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 819, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_16 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 819, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_14 = PyTuple_New(5); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 819, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_GIVEREF(__pyx_t_15);
+  PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_15);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_14, 1, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_19);
+  PyTuple_SET_ITEM(__pyx_t_14, 2, __pyx_t_19);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_14, 3, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_16);
+  PyTuple_SET_ITEM(__pyx_t_14, 4, __pyx_t_16);
+  __pyx_t_15 = 0;
+  __pyx_t_1 = 0;
+  __pyx_t_19 = 0;
+  __pyx_t_2 = 0;
+  __pyx_t_16 = 0;
+  __pyx_v_spin_shape = __pyx_t_14;
+  __pyx_t_14 = 0;
+
+  /* "disorder/diffuse/simulation.pyx":821
+ *     spin_shape = (nu,nv,nw,n_atm,n_temp)
+ * 
+ *     cdef bint [:,:,:,:,::1] b = np.zeros(spin_shape, dtype=np.intc)             # <<<<<<<<<<<<<<
+ *     cdef bint [:,:,:,:,::1] c = np.zeros(spin_shape, dtype=np.intc)
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_14, __pyx_n_s_np); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 821, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_14, __pyx_n_s_zeros); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 821, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_14 = PyTuple_New(1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 821, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_INCREF(__pyx_v_spin_shape);
+  __Pyx_GIVEREF(__pyx_v_spin_shape);
+  PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_v_spin_shape);
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 821, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GetModuleGlobalName(__pyx_t_19, __pyx_n_s_np); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 821, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_19, __pyx_n_s_intc); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 821, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  if (PyDict_SetItem(__pyx_t_2, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(0, 821, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_16, __pyx_t_14, __pyx_t_2); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 821, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_47 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_int(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_47.memview)) __PYX_ERR(0, 821, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_b = __pyx_t_47;
+  __pyx_t_47.memview = NULL;
+  __pyx_t_47.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":822
+ * 
+ *     cdef bint [:,:,:,:,::1] b = np.zeros(spin_shape, dtype=np.intc)
+ *     cdef bint [:,:,:,:,::1] c = np.zeros(spin_shape, dtype=np.intc)             # <<<<<<<<<<<<<<
+ * 
+ *     pairs_shape = (nu,nv,nw,n_atm,n_pairs,n_temp)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 822, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 822, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyTuple_New(1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 822, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_INCREF(__pyx_v_spin_shape);
+  __Pyx_GIVEREF(__pyx_v_spin_shape);
+  PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_v_spin_shape);
+  __pyx_t_14 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 822, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __Pyx_GetModuleGlobalName(__pyx_t_16, __pyx_n_s_np); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 822, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_19 = __Pyx_PyObject_GetAttrStr(__pyx_t_16, __pyx_n_s_intc); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 822, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  if (PyDict_SetItem(__pyx_t_14, __pyx_n_s_dtype, __pyx_t_19) < 0) __PYX_ERR(0, 822, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  __pyx_t_19 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_1, __pyx_t_14); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 822, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
+  __pyx_t_47 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_int(__pyx_t_19, PyBUF_WRITABLE); if (unlikely(!__pyx_t_47.memview)) __PYX_ERR(0, 822, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_19); __pyx_t_19 = 0;
+  __pyx_v_c = __pyx_t_47;
+  __pyx_t_47.memview = NULL;
+  __pyx_t_47.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":824
+ *     cdef bint [:,:,:,:,::1] c = np.zeros(spin_shape, dtype=np.intc)
+ * 
+ *     pairs_shape = (nu,nv,nw,n_atm,n_pairs,n_temp)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double [:,:,:,:,::1] h_eff = np.zeros(spin_shape, dtype=float)
+ */
+  __pyx_t_19 = PyInt_FromSsize_t(__pyx_v_nu); if (unlikely(!__pyx_t_19)) __PYX_ERR(0, 824, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_19);
+  __pyx_t_14 = PyInt_FromSsize_t(__pyx_v_nv); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 824, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_14);
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_nw); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 824, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_atm); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 824, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_16 = PyInt_FromSsize_t(__pyx_v_n_pairs); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 824, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __pyx_t_15 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 824, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_13 = PyTuple_New(6); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 824, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GIVEREF(__pyx_t_19);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_19);
+  __Pyx_GIVEREF(__pyx_t_14);
+  PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_14);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_13, 2, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_13, 3, __pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_16);
+  PyTuple_SET_ITEM(__pyx_t_13, 4, __pyx_t_16);
+  __Pyx_GIVEREF(__pyx_t_15);
+  PyTuple_SET_ITEM(__pyx_t_13, 5, __pyx_t_15);
+  __pyx_t_19 = 0;
+  __pyx_t_14 = 0;
+  __pyx_t_1 = 0;
+  __pyx_t_2 = 0;
+  __pyx_t_16 = 0;
+  __pyx_t_15 = 0;
+  __pyx_v_pairs_shape = __pyx_t_13;
+  __pyx_t_13 = 0;
+
+  /* "disorder/diffuse/simulation.pyx":826
+ *     pairs_shape = (nu,nv,nw,n_atm,n_pairs,n_temp)
+ * 
+ *     cdef double [:,:,:,:,::1] h_eff = np.zeros(spin_shape, dtype=float)             # <<<<<<<<<<<<<<
+ *     cdef double [:,:,:,:,:,::1] h_eff_ij = np.zeros(pairs_shape, dtype=float)
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 826, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_zeros); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 826, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyTuple_New(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 826, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_INCREF(__pyx_v_spin_shape);
+  __Pyx_GIVEREF(__pyx_v_spin_shape);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_v_spin_shape);
+  __pyx_t_16 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 826, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  if (PyDict_SetItem(__pyx_t_16, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 826, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_15, __pyx_t_13, __pyx_t_16); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 826, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __pyx_t_48 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_48.memview)) __PYX_ERR(0, 826, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_h_eff = __pyx_t_48;
+  __pyx_t_48.memview = NULL;
+  __pyx_t_48.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":827
+ * 
+ *     cdef double [:,:,:,:,::1] h_eff = np.zeros(spin_shape, dtype=float)
+ *     cdef double [:,:,:,:,:,::1] h_eff_ij = np.zeros(pairs_shape, dtype=float)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef Py_ssize_t [:,::1] clust_i = np.zeros((n,n_temp), dtype=np.intp)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 827, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 827, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 827, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_INCREF(__pyx_v_pairs_shape);
+  __Pyx_GIVEREF(__pyx_v_pairs_shape);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_v_pairs_shape);
+  __pyx_t_13 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 827, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_dtype, ((PyObject *)(&PyFloat_Type))) < 0) __PYX_ERR(0, 827, __pyx_L1_error)
+  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_16, __pyx_t_2, __pyx_t_13); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 827, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_20 = __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_d_dc_double(__pyx_t_15, PyBUF_WRITABLE); if (unlikely(!__pyx_t_20.memview)) __PYX_ERR(0, 827, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_h_eff_ij = __pyx_t_20;
+  __pyx_t_20.memview = NULL;
+  __pyx_t_20.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":829
+ *     cdef double [:,:,:,:,:,::1] h_eff_ij = np.zeros(pairs_shape, dtype=float)
+ * 
+ *     cdef Py_ssize_t [:,::1] clust_i = np.zeros((n,n_temp), dtype=np.intp)             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t [:,::1] clust_j = np.zeros((n,n_temp), dtype=np.intp)
+ *     cdef Py_ssize_t [:,::1] clust_k = np.zeros((n,n_temp), dtype=np.intp)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_15, __pyx_n_s_np); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_15, __pyx_n_s_zeros); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_t_15 = PyInt_FromSsize_t(__pyx_v_n); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_16 = PyTuple_New(2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_GIVEREF(__pyx_t_15);
+  PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_15);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_16, 1, __pyx_t_2);
+  __pyx_t_15 = 0;
+  __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_16);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_16);
+  __pyx_t_16 = 0;
+  __pyx_t_16 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_GetModuleGlobalName(__pyx_t_15, __pyx_n_s_np); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_15, __pyx_n_s_intp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  if (PyDict_SetItem(__pyx_t_16, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_2, __pyx_t_16); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __pyx_t_49 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_Py_ssize_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_49.memview)) __PYX_ERR(0, 829, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_clust_i = __pyx_t_49;
+  __pyx_t_49.memview = NULL;
+  __pyx_t_49.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":830
+ * 
+ *     cdef Py_ssize_t [:,::1] clust_i = np.zeros((n,n_temp), dtype=np.intp)
+ *     cdef Py_ssize_t [:,::1] clust_j = np.zeros((n,n_temp), dtype=np.intp)             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t [:,::1] clust_k = np.zeros((n,n_temp), dtype=np.intp)
+ *     cdef Py_ssize_t [:,::1] clust_a = np.zeros((n,n_temp), dtype=np.intp)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_2);
+  __pyx_t_1 = 0;
+  __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_13);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_13);
+  __pyx_t_13 = 0;
+  __pyx_t_13 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_intp); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_dtype, __pyx_t_15) < 0) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_16, __pyx_t_2, __pyx_t_13); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_49 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_Py_ssize_t(__pyx_t_15, PyBUF_WRITABLE); if (unlikely(!__pyx_t_49.memview)) __PYX_ERR(0, 830, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_clust_j = __pyx_t_49;
+  __pyx_t_49.memview = NULL;
+  __pyx_t_49.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":831
+ *     cdef Py_ssize_t [:,::1] clust_i = np.zeros((n,n_temp), dtype=np.intp)
+ *     cdef Py_ssize_t [:,::1] clust_j = np.zeros((n,n_temp), dtype=np.intp)
+ *     cdef Py_ssize_t [:,::1] clust_k = np.zeros((n,n_temp), dtype=np.intp)             # <<<<<<<<<<<<<<
+ *     cdef Py_ssize_t [:,::1] clust_a = np.zeros((n,n_temp), dtype=np.intp)
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_15, __pyx_n_s_np); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_15, __pyx_n_s_zeros); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_t_15 = PyInt_FromSsize_t(__pyx_v_n); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_16 = PyTuple_New(2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_GIVEREF(__pyx_t_15);
+  PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_t_15);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_16, 1, __pyx_t_2);
+  __pyx_t_15 = 0;
+  __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_16);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_16);
+  __pyx_t_16 = 0;
+  __pyx_t_16 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_GetModuleGlobalName(__pyx_t_15, __pyx_n_s_np); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_15, __pyx_n_s_intp); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  if (PyDict_SetItem(__pyx_t_16, __pyx_n_s_dtype, __pyx_t_1) < 0) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_13, __pyx_t_2, __pyx_t_16); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __pyx_t_49 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_Py_ssize_t(__pyx_t_1, PyBUF_WRITABLE); if (unlikely(!__pyx_t_49.memview)) __PYX_ERR(0, 831, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_v_clust_k = __pyx_t_49;
+  __pyx_t_49.memview = NULL;
+  __pyx_t_49.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":832
+ *     cdef Py_ssize_t [:,::1] clust_j = np.zeros((n,n_temp), dtype=np.intp)
+ *     cdef Py_ssize_t [:,::1] clust_k = np.zeros((n,n_temp), dtype=np.intp)
+ *     cdef Py_ssize_t [:,::1] clust_a = np.zeros((n,n_temp), dtype=np.intp)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double ux, uy, uz
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_zeros); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __pyx_t_1 = PyInt_FromSsize_t(__pyx_v_n); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_13 = PyTuple_New(2); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GIVEREF(__pyx_t_1);
+  PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_1);
+  __Pyx_GIVEREF(__pyx_t_2);
+  PyTuple_SET_ITEM(__pyx_t_13, 1, __pyx_t_2);
+  __pyx_t_1 = 0;
+  __pyx_t_2 = 0;
+  __pyx_t_2 = PyTuple_New(1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_GIVEREF(__pyx_t_13);
+  PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_13);
+  __pyx_t_13 = 0;
+  __pyx_t_13 = __Pyx_PyDict_NewPresized(1); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_np); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_intp); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
+  if (PyDict_SetItem(__pyx_t_13, __pyx_n_s_dtype, __pyx_t_15) < 0) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_t_15 = __Pyx_PyObject_Call(__pyx_t_16, __pyx_t_2, __pyx_t_13); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_49 = __Pyx_PyObject_to_MemoryviewSlice_d_dc_Py_ssize_t(__pyx_t_15, PyBUF_WRITABLE); if (unlikely(!__pyx_t_49.memview)) __PYX_ERR(0, 832, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_clust_a = __pyx_t_49;
+  __pyx_t_49.memview = NULL;
+  __pyx_t_49.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":845
+ *     cdef double u, n_dot_u, n_dot_v
+ * 
+ *     cdef double [::1] sx = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] sy = np.zeros(n_temp)
+ *     cdef double [::1] sz = np.zeros(n_temp)
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 845, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 845, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 845, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_16 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_16)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_16);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_15 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_16, __pyx_t_13) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 845, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_15, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 845, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_sx = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":846
+ * 
+ *     cdef double [::1] sx = np.zeros(n_temp)
+ *     cdef double [::1] sy = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ *     cdef double [::1] sz = np.zeros(n_temp)
+ * 
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_13 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_zeros); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __pyx_t_16 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_13))) {
+    __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_13);
+    if (likely(__pyx_t_16)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_13);
+      __Pyx_INCREF(__pyx_t_16);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_13, function);
+    }
+  }
+  __pyx_t_15 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_13, __pyx_t_16, __pyx_t_2) : __Pyx_PyObject_CallOneArg(__pyx_t_13, __pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_15, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_sy = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":847
+ *     cdef double [::1] sx = np.zeros(n_temp)
+ *     cdef double [::1] sy = np.zeros(n_temp)
+ *     cdef double [::1] sz = np.zeros(n_temp)             # <<<<<<<<<<<<<<
+ * 
+ *     cdef double [::1] beta = 1/(kB*np.copy(T_range))
+ */
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_zeros); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = PyInt_FromSsize_t(__pyx_v_n_temp); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_16 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
+    __pyx_t_16 = PyMethod_GET_SELF(__pyx_t_2);
+    if (likely(__pyx_t_16)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
+      __Pyx_INCREF(__pyx_t_16);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_2, function);
+    }
+  }
+  __pyx_t_15 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_16, __pyx_t_13) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_15, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 847, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __pyx_v_sz = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":849
+ *     cdef double [::1] sz = np.zeros(n_temp)
+ * 
+ *     cdef double [::1] beta = 1/(kB*np.copy(T_range))             # <<<<<<<<<<<<<<
+ * 
+ *     for _ in range(N):
+ */
+  __pyx_t_15 = PyFloat_FromDouble(__pyx_v_kB); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_15);
+  __Pyx_GetModuleGlobalName(__pyx_t_13, __pyx_n_s_np); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_t_13, __pyx_n_s_copy); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  __pyx_t_13 = __pyx_memoryview_fromslice(__pyx_v_T_range, 1, (PyObject *(*)(char *)) __pyx_memview_get_double, (int (*)(char *, PyObject *)) __pyx_memview_set_double, 0);; if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_13);
+  __pyx_t_1 = NULL;
+  if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_16))) {
+    __pyx_t_1 = PyMethod_GET_SELF(__pyx_t_16);
+    if (likely(__pyx_t_1)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_16);
+      __Pyx_INCREF(__pyx_t_1);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_16, function);
+    }
+  }
+  __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_16, __pyx_t_1, __pyx_t_13) : __Pyx_PyObject_CallOneArg(__pyx_t_16, __pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
+  __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __pyx_t_16 = PyNumber_Multiply(__pyx_t_15, __pyx_t_2); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_16);
+  __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_t_2 = __Pyx_PyNumber_Divide(__pyx_int_1, __pyx_t_16); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
+  __pyx_t_5 = __Pyx_PyObject_to_MemoryviewSlice_dc_double(__pyx_t_2, PyBUF_WRITABLE); if (unlikely(!__pyx_t_5.memview)) __PYX_ERR(0, 849, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+  __pyx_v_beta = __pyx_t_5;
+  __pyx_t_5.memview = NULL;
+  __pyx_t_5.data = NULL;
+
+  /* "disorder/diffuse/simulation.pyx":851
+ *     cdef double [::1] beta = 1/(kB*np.copy(T_range))
+ * 
+ *     for _ in range(N):             # <<<<<<<<<<<<<<
+ * 
+ *         i, j, k, a = random_original(nu, nv, nw, n_atm)
+ */
+  __pyx_t_21 = __pyx_v_N;
+  __pyx_t_22 = __pyx_t_21;
+  for (__pyx_t_23 = 0; __pyx_t_23 < __pyx_t_22; __pyx_t_23+=1) {
+    __pyx_v__ = __pyx_t_23;
+
+    /* "disorder/diffuse/simulation.pyx":853
+ *     for _ in range(N):
+ * 
+ *         i, j, k, a = random_original(nu, nv, nw, n_atm)             # <<<<<<<<<<<<<<
+ * 
+ *         for t in range(n_temp):
+ */
+    __pyx_t_50 = __pyx_f_8disorder_7diffuse_10simulation_random_original(__pyx_v_nu, __pyx_v_nv, __pyx_v_nw, __pyx_v_n_atm);
+    __pyx_t_24 = __pyx_t_50.f0;
+    __pyx_t_25 = __pyx_t_50.f1;
+    __pyx_t_26 = __pyx_t_50.f2;
+    __pyx_t_27 = __pyx_t_50.f3;
+    __pyx_v_i = __pyx_t_24;
+    __pyx_v_j = __pyx_t_25;
+    __pyx_v_k = __pyx_t_26;
+    __pyx_v_a = __pyx_t_27;
+
+    /* "disorder/diffuse/simulation.pyx":855
+ *         i, j, k, a = random_original(nu, nv, nw, n_atm)
+ * 
+ *         for t in range(n_temp):             # <<<<<<<<<<<<<<
+ * 
+ *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+ */
+    __pyx_t_27 = __pyx_v_n_temp;
+    __pyx_t_26 = __pyx_t_27;
+    for (__pyx_t_25 = 0; __pyx_t_25 < __pyx_t_26; __pyx_t_25+=1) {
+      __pyx_v_t = __pyx_t_25;
+
+      /* "disorder/diffuse/simulation.pyx":857
+ *         for t in range(n_temp):
+ * 
+ *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]             # <<<<<<<<<<<<<<
+ * 
+ *             nx, ny, nz = random_vector_candidate()
+ */
+      __pyx_t_44 = __pyx_v_i;
+      __pyx_t_43 = __pyx_v_j;
+      __pyx_t_42 = __pyx_v_k;
+      __pyx_t_41 = __pyx_v_a;
+      __pyx_t_40 = __pyx_v_t;
+      __pyx_t_51 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_44 * __pyx_v_Sx.strides[0]) ) + __pyx_t_43 * __pyx_v_Sx.strides[1]) ) + __pyx_t_42 * __pyx_v_Sx.strides[2]) ) + __pyx_t_41 * __pyx_v_Sx.strides[3]) )) + __pyx_t_40)) )));
+      __pyx_t_40 = __pyx_v_i;
+      __pyx_t_41 = __pyx_v_j;
+      __pyx_t_42 = __pyx_v_k;
+      __pyx_t_43 = __pyx_v_a;
+      __pyx_t_44 = __pyx_v_t;
+      __pyx_t_52 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_40 * __pyx_v_Sy.strides[0]) ) + __pyx_t_41 * __pyx_v_Sy.strides[1]) ) + __pyx_t_42 * __pyx_v_Sy.strides[2]) ) + __pyx_t_43 * __pyx_v_Sy.strides[3]) )) + __pyx_t_44)) )));
+      __pyx_t_44 = __pyx_v_i;
+      __pyx_t_43 = __pyx_v_j;
+      __pyx_t_42 = __pyx_v_k;
+      __pyx_t_41 = __pyx_v_a;
+      __pyx_t_40 = __pyx_v_t;
+      __pyx_t_53 = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_44 * __pyx_v_Sz.strides[0]) ) + __pyx_t_43 * __pyx_v_Sz.strides[1]) ) + __pyx_t_42 * __pyx_v_Sz.strides[2]) ) + __pyx_t_41 * __pyx_v_Sz.strides[3]) )) + __pyx_t_40)) )));
+      __pyx_v_ux = __pyx_t_51;
+      __pyx_v_uy = __pyx_t_52;
+      __pyx_v_uz = __pyx_t_53;
+
+      /* "disorder/diffuse/simulation.pyx":859
+ *             ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+ * 
+ *             nx, ny, nz = random_vector_candidate()             # <<<<<<<<<<<<<<
+ * 
+ *             sx[t], sy[t], sz[t] = nx, ny, nz
+ */
+      __pyx_t_54 = __pyx_f_8disorder_7diffuse_10simulation_random_vector_candidate();
+      __pyx_t_53 = __pyx_t_54.f0;
+      __pyx_t_52 = __pyx_t_54.f1;
+      __pyx_t_51 = __pyx_t_54.f2;
+      __pyx_v_nx = __pyx_t_53;
+      __pyx_v_ny = __pyx_t_52;
+      __pyx_v_nz = __pyx_t_51;
+
+      /* "disorder/diffuse/simulation.pyx":861
+ *             nx, ny, nz = random_vector_candidate()
+ * 
+ *             sx[t], sy[t], sz[t] = nx, ny, nz             # <<<<<<<<<<<<<<
+ * 
+ *             n_dot_u = ux*nx+uy*ny+uz*nz
+ */
+      __pyx_t_51 = __pyx_v_nx;
+      __pyx_t_52 = __pyx_v_ny;
+      __pyx_t_53 = __pyx_v_nz;
+      __pyx_t_40 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sx.data) + __pyx_t_40)) )) = __pyx_t_51;
+      __pyx_t_40 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sy.data) + __pyx_t_40)) )) = __pyx_t_52;
+      __pyx_t_40 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_sz.data) + __pyx_t_40)) )) = __pyx_t_53;
+
+      /* "disorder/diffuse/simulation.pyx":863
+ *             sx[t], sy[t], sz[t] = nx, ny, nz
+ * 
+ *             n_dot_u = ux*nx+uy*ny+uz*nz             # <<<<<<<<<<<<<<
+ * 
+ *             ux_perp = ux-nx*n_dot_u
+ */
+      __pyx_v_n_dot_u = (((__pyx_v_ux * __pyx_v_nx) + (__pyx_v_uy * __pyx_v_ny)) + (__pyx_v_uz * __pyx_v_nz));
+
+      /* "disorder/diffuse/simulation.pyx":865
+ *             n_dot_u = ux*nx+uy*ny+uz*nz
+ * 
+ *             ux_perp = ux-nx*n_dot_u             # <<<<<<<<<<<<<<
+ *             uy_perp = uy-ny*n_dot_u
+ *             uz_perp = uz-nz*n_dot_u
+ */
+      __pyx_v_ux_perp = (__pyx_v_ux - (__pyx_v_nx * __pyx_v_n_dot_u));
+
+      /* "disorder/diffuse/simulation.pyx":866
+ * 
+ *             ux_perp = ux-nx*n_dot_u
+ *             uy_perp = uy-ny*n_dot_u             # <<<<<<<<<<<<<<
+ *             uz_perp = uz-nz*n_dot_u
+ * 
+ */
+      __pyx_v_uy_perp = (__pyx_v_uy - (__pyx_v_ny * __pyx_v_n_dot_u));
+
+      /* "disorder/diffuse/simulation.pyx":867
+ *             ux_perp = ux-nx*n_dot_u
+ *             uy_perp = uy-ny*n_dot_u
+ *             uz_perp = uz-nz*n_dot_u             # <<<<<<<<<<<<<<
+ * 
+ *             clust_i[0,t] = i
+ */
+      __pyx_v_uz_perp = (__pyx_v_uz - (__pyx_v_nz * __pyx_v_n_dot_u));
+
+      /* "disorder/diffuse/simulation.pyx":869
+ *             uz_perp = uz-nz*n_dot_u
+ * 
+ *             clust_i[0,t] = i             # <<<<<<<<<<<<<<
+ *             clust_j[0,t] = j
+ *             clust_k[0,t] = k
+ */
+      __pyx_t_40 = 0;
+      __pyx_t_41 = __pyx_v_t;
+      *((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_i.data + __pyx_t_40 * __pyx_v_clust_i.strides[0]) )) + __pyx_t_41)) )) = __pyx_v_i;
+
+      /* "disorder/diffuse/simulation.pyx":870
+ * 
+ *             clust_i[0,t] = i
+ *             clust_j[0,t] = j             # <<<<<<<<<<<<<<
+ *             clust_k[0,t] = k
+ *             clust_a[0,t] = a
+ */
+      __pyx_t_41 = 0;
+      __pyx_t_40 = __pyx_v_t;
+      *((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_j.data + __pyx_t_41 * __pyx_v_clust_j.strides[0]) )) + __pyx_t_40)) )) = __pyx_v_j;
+
+      /* "disorder/diffuse/simulation.pyx":871
+ *             clust_i[0,t] = i
+ *             clust_j[0,t] = j
+ *             clust_k[0,t] = k             # <<<<<<<<<<<<<<
+ *             clust_a[0,t] = a
+ * 
+ */
+      __pyx_t_40 = 0;
+      __pyx_t_41 = __pyx_v_t;
+      *((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_k.data + __pyx_t_40 * __pyx_v_clust_k.strides[0]) )) + __pyx_t_41)) )) = __pyx_v_k;
+
+      /* "disorder/diffuse/simulation.pyx":872
+ *             clust_j[0,t] = j
+ *             clust_k[0,t] = k
+ *             clust_a[0,t] = a             # <<<<<<<<<<<<<<
+ * 
+ *             b[i,j,k,a,t] = 1
+ */
+      __pyx_t_41 = 0;
+      __pyx_t_40 = __pyx_v_t;
+      *((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_a.data + __pyx_t_41 * __pyx_v_clust_a.strides[0]) )) + __pyx_t_40)) )) = __pyx_v_a;
+
+      /* "disorder/diffuse/simulation.pyx":874
+ *             clust_a[0,t] = a
+ * 
+ *             b[i,j,k,a,t] = 1             # <<<<<<<<<<<<<<
+ * 
+ *             n_c[t] = 1
+ */
+      __pyx_t_40 = __pyx_v_i;
+      __pyx_t_41 = __pyx_v_j;
+      __pyx_t_42 = __pyx_v_k;
+      __pyx_t_43 = __pyx_v_a;
+      __pyx_t_44 = __pyx_v_t;
+      *((int *) ( /* dim=4 */ ((char *) (((int *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_40 * __pyx_v_b.strides[0]) ) + __pyx_t_41 * __pyx_v_b.strides[1]) ) + __pyx_t_42 * __pyx_v_b.strides[2]) ) + __pyx_t_43 * __pyx_v_b.strides[3]) )) + __pyx_t_44)) )) = 1;
+
+      /* "disorder/diffuse/simulation.pyx":876
+ *             b[i,j,k,a,t] = 1
+ * 
+ *             n_c[t] = 1             # <<<<<<<<<<<<<<
+ * 
+ *             n_c[t] = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
+ */
+      __pyx_t_44 = __pyx_v_t;
+      *((Py_ssize_t *) ( /* dim=0 */ ((char *) (((Py_ssize_t *) __pyx_v_n_c.data) + __pyx_t_44)) )) = 1;
+
+      /* "disorder/diffuse/simulation.pyx":878
+ *             n_c[t] = 1
+ * 
+ *             n_c[t] = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,             # <<<<<<<<<<<<<<
+ *                                       ux_perp, uy_perp, uz_perp, n_dot_u, J,
+ *                                       clust_i, clust_j, clust_k, clust_a,
+ */
+      __pyx_t_44 = __pyx_v_t;
+      *((Py_ssize_t *) ( /* dim=0 */ ((char *) (((Py_ssize_t *) __pyx_v_n_c.data) + __pyx_t_44)) )) = __pyx_f_8disorder_7diffuse_10simulation_magnetic_cluster(__pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_nx, __pyx_v_ny, __pyx_v_nz, __pyx_v_ux_perp, __pyx_v_uy_perp, __pyx_v_uz_perp, __pyx_v_n_dot_u, __pyx_v_J, __pyx_v_clust_i, __pyx_v_clust_j, __pyx_v_clust_k, __pyx_v_clust_a, __pyx_v_h_eff, __pyx_v_h_eff_ij, __pyx_v_b, __pyx_v_c, __pyx_v_n_c, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_inv, __pyx_v_pair_ij, __pyx_v_beta, __pyx_v_i, __pyx_v_j, __pyx_v_k, __pyx_v_a, __pyx_v_t);
+
+      /* "disorder/diffuse/simulation.pyx":886
+ *                                       i, j, k, a, t)
+ * 
+ *             i_c = 1             # <<<<<<<<<<<<<<
+ * 
+ *             while i_c < n_c[t]:
+ */
+      __pyx_v_i_c = 1;
+
+      /* "disorder/diffuse/simulation.pyx":888
+ *             i_c = 1
+ * 
+ *             while i_c < n_c[t]:             # <<<<<<<<<<<<<<
+ * 
+ *                 i_ = clust_i[i_c,t]
+ */
+      while (1) {
+        __pyx_t_44 = __pyx_v_t;
+        __pyx_t_55 = ((__pyx_v_i_c < (*((Py_ssize_t *) ( /* dim=0 */ ((char *) (((Py_ssize_t *) __pyx_v_n_c.data) + __pyx_t_44)) )))) != 0);
+        if (!__pyx_t_55) break;
+
+        /* "disorder/diffuse/simulation.pyx":890
+ *             while i_c < n_c[t]:
+ * 
+ *                 i_ = clust_i[i_c,t]             # <<<<<<<<<<<<<<
+ *                 j_ = clust_j[i_c,t]
+ *                 k_ = clust_k[i_c,t]
+ */
+        __pyx_t_44 = __pyx_v_i_c;
+        __pyx_t_43 = __pyx_v_t;
+        __pyx_v_i_ = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_i.data + __pyx_t_44 * __pyx_v_clust_i.strides[0]) )) + __pyx_t_43)) )));
+
+        /* "disorder/diffuse/simulation.pyx":891
+ * 
+ *                 i_ = clust_i[i_c,t]
+ *                 j_ = clust_j[i_c,t]             # <<<<<<<<<<<<<<
+ *                 k_ = clust_k[i_c,t]
+ *                 a_ = clust_a[i_c,t]
+ */
+        __pyx_t_43 = __pyx_v_i_c;
+        __pyx_t_44 = __pyx_v_t;
+        __pyx_v_j_ = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_j.data + __pyx_t_43 * __pyx_v_clust_j.strides[0]) )) + __pyx_t_44)) )));
+
+        /* "disorder/diffuse/simulation.pyx":892
+ *                 i_ = clust_i[i_c,t]
+ *                 j_ = clust_j[i_c,t]
+ *                 k_ = clust_k[i_c,t]             # <<<<<<<<<<<<<<
+ *                 a_ = clust_a[i_c,t]
+ * 
+ */
+        __pyx_t_44 = __pyx_v_i_c;
+        __pyx_t_43 = __pyx_v_t;
+        __pyx_v_k_ = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_k.data + __pyx_t_44 * __pyx_v_clust_k.strides[0]) )) + __pyx_t_43)) )));
+
+        /* "disorder/diffuse/simulation.pyx":893
+ *                 j_ = clust_j[i_c,t]
+ *                 k_ = clust_k[i_c,t]
+ *                 a_ = clust_a[i_c,t]             # <<<<<<<<<<<<<<
+ * 
+ *                 vx = Sx[i_,j_,k_,a_,t]
+ */
+        __pyx_t_43 = __pyx_v_i_c;
+        __pyx_t_44 = __pyx_v_t;
+        __pyx_v_a_ = (*((Py_ssize_t *) ( /* dim=1 */ ((char *) (((Py_ssize_t *) ( /* dim=0 */ (__pyx_v_clust_a.data + __pyx_t_43 * __pyx_v_clust_a.strides[0]) )) + __pyx_t_44)) )));
+
+        /* "disorder/diffuse/simulation.pyx":895
+ *                 a_ = clust_a[i_c,t]
+ * 
+ *                 vx = Sx[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ *                 vy = Sy[i_,j_,k_,a_,t]
+ *                 vz = Sz[i_,j_,k_,a_,t]
+ */
+        __pyx_t_44 = __pyx_v_i_;
+        __pyx_t_43 = __pyx_v_j_;
+        __pyx_t_42 = __pyx_v_k_;
+        __pyx_t_41 = __pyx_v_a_;
+        __pyx_t_40 = __pyx_v_t;
+        __pyx_v_vx = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_44 * __pyx_v_Sx.strides[0]) ) + __pyx_t_43 * __pyx_v_Sx.strides[1]) ) + __pyx_t_42 * __pyx_v_Sx.strides[2]) ) + __pyx_t_41 * __pyx_v_Sx.strides[3]) )) + __pyx_t_40)) )));
+
+        /* "disorder/diffuse/simulation.pyx":896
+ * 
+ *                 vx = Sx[i_,j_,k_,a_,t]
+ *                 vy = Sy[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ *                 vz = Sz[i_,j_,k_,a_,t]
+ * 
+ */
+        __pyx_t_40 = __pyx_v_i_;
+        __pyx_t_41 = __pyx_v_j_;
+        __pyx_t_42 = __pyx_v_k_;
+        __pyx_t_43 = __pyx_v_a_;
+        __pyx_t_44 = __pyx_v_t;
+        __pyx_v_vy = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_40 * __pyx_v_Sy.strides[0]) ) + __pyx_t_41 * __pyx_v_Sy.strides[1]) ) + __pyx_t_42 * __pyx_v_Sy.strides[2]) ) + __pyx_t_43 * __pyx_v_Sy.strides[3]) )) + __pyx_t_44)) )));
+
+        /* "disorder/diffuse/simulation.pyx":897
+ *                 vx = Sx[i_,j_,k_,a_,t]
+ *                 vy = Sy[i_,j_,k_,a_,t]
+ *                 vz = Sz[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
+ * 
+ *                 n_dot_v = vx*nx+vy*ny+vz*nz
+ */
+        __pyx_t_44 = __pyx_v_i_;
+        __pyx_t_43 = __pyx_v_j_;
+        __pyx_t_42 = __pyx_v_k_;
+        __pyx_t_41 = __pyx_v_a_;
+        __pyx_t_40 = __pyx_v_t;
+        __pyx_v_vz = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_44 * __pyx_v_Sz.strides[0]) ) + __pyx_t_43 * __pyx_v_Sz.strides[1]) ) + __pyx_t_42 * __pyx_v_Sz.strides[2]) ) + __pyx_t_41 * __pyx_v_Sz.strides[3]) )) + __pyx_t_40)) )));
+
+        /* "disorder/diffuse/simulation.pyx":899
+ *                 vz = Sz[i_,j_,k_,a_,t]
+ * 
+ *                 n_dot_v = vx*nx+vy*ny+vz*nz             # <<<<<<<<<<<<<<
+ * 
+ *                 vx_perp = vx-nx*n_dot_v
+ */
+        __pyx_v_n_dot_v = (((__pyx_v_vx * __pyx_v_nx) + (__pyx_v_vy * __pyx_v_ny)) + (__pyx_v_vz * __pyx_v_nz));
+
+        /* "disorder/diffuse/simulation.pyx":901
+ *                 n_dot_v = vx*nx+vy*ny+vz*nz
+ * 
+ *                 vx_perp = vx-nx*n_dot_v             # <<<<<<<<<<<<<<
+ *                 vy_perp = vy-ny*n_dot_v
+ *                 vz_perp = vz-nz*n_dot_v
+ */
+        __pyx_v_vx_perp = (__pyx_v_vx - (__pyx_v_nx * __pyx_v_n_dot_v));
+
+        /* "disorder/diffuse/simulation.pyx":902
+ * 
+ *                 vx_perp = vx-nx*n_dot_v
+ *                 vy_perp = vy-ny*n_dot_v             # <<<<<<<<<<<<<<
+ *                 vz_perp = vz-nz*n_dot_v
+ * 
+ */
+        __pyx_v_vy_perp = (__pyx_v_vy - (__pyx_v_ny * __pyx_v_n_dot_v));
+
+        /* "disorder/diffuse/simulation.pyx":903
+ *                 vx_perp = vx-nx*n_dot_v
+ *                 vy_perp = vy-ny*n_dot_v
+ *                 vz_perp = vz-nz*n_dot_v             # <<<<<<<<<<<<<<
+ * 
+ *                 b[i_,j_,k_,a_,t] = 1
+ */
+        __pyx_v_vz_perp = (__pyx_v_vz - (__pyx_v_nz * __pyx_v_n_dot_v));
+
+        /* "disorder/diffuse/simulation.pyx":905
+ *                 vz_perp = vz-nz*n_dot_v
+ * 
+ *                 b[i_,j_,k_,a_,t] = 1             # <<<<<<<<<<<<<<
+ * 
+ *                 n_c[t] = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
+ */
+        __pyx_t_40 = __pyx_v_i_;
+        __pyx_t_41 = __pyx_v_j_;
+        __pyx_t_42 = __pyx_v_k_;
+        __pyx_t_43 = __pyx_v_a_;
+        __pyx_t_44 = __pyx_v_t;
+        *((int *) ( /* dim=4 */ ((char *) (((int *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_b.data + __pyx_t_40 * __pyx_v_b.strides[0]) ) + __pyx_t_41 * __pyx_v_b.strides[1]) ) + __pyx_t_42 * __pyx_v_b.strides[2]) ) + __pyx_t_43 * __pyx_v_b.strides[3]) )) + __pyx_t_44)) )) = 1;
+
+        /* "disorder/diffuse/simulation.pyx":907
+ *                 b[i_,j_,k_,a_,t] = 1
+ * 
+ *                 n_c[t] = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,             # <<<<<<<<<<<<<<
+ *                                           vx_perp, vy_perp, vz_perp,
+ *                                           n_dot_v, J,
+ */
+        __pyx_t_44 = __pyx_v_t;
+        *((Py_ssize_t *) ( /* dim=0 */ ((char *) (((Py_ssize_t *) __pyx_v_n_c.data) + __pyx_t_44)) )) = __pyx_f_8disorder_7diffuse_10simulation_magnetic_cluster(__pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_nx, __pyx_v_ny, __pyx_v_nz, __pyx_v_vx_perp, __pyx_v_vy_perp, __pyx_v_vz_perp, __pyx_v_n_dot_v, __pyx_v_J, __pyx_v_clust_i, __pyx_v_clust_j, __pyx_v_clust_k, __pyx_v_clust_a, __pyx_v_h_eff, __pyx_v_h_eff_ij, __pyx_v_b, __pyx_v_c, __pyx_v_n_c, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_inv, __pyx_v_pair_ij, __pyx_v_beta, __pyx_v_i_, __pyx_v_j_, __pyx_v_k_, __pyx_v_a_, __pyx_v_t);
+
+        /* "disorder/diffuse/simulation.pyx":916
+ *                                           i_, j_, k_, a_, t)
+ * 
+ *                 i_c += 1             # <<<<<<<<<<<<<<
+ * 
+ *             E[t] = boundary_energy(Sx, Sy, Sz, nx, ny, nz,
+ */
+        __pyx_v_i_c = (__pyx_v_i_c + 1);
+      }
+
+      /* "disorder/diffuse/simulation.pyx":918
+ *                 i_c += 1
+ * 
+ *             E[t] = boundary_energy(Sx, Sy, Sz, nx, ny, nz,             # <<<<<<<<<<<<<<
+ *                                    vx_perp, vy_perp, vz_perp, n_dot_v, J,
+ *                                    clust_i, clust_j, clust_k, clust_a, c, n_c,
+ */
+      __pyx_t_44 = __pyx_v_t;
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_E.data) + __pyx_t_44)) )) = __pyx_f_8disorder_7diffuse_10simulation_boundary_energy(__pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_nx, __pyx_v_ny, __pyx_v_nz, __pyx_v_vx_perp, __pyx_v_vy_perp, __pyx_v_vz_perp, __pyx_v_n_dot_v, __pyx_v_J, __pyx_v_clust_i, __pyx_v_clust_j, __pyx_v_clust_k, __pyx_v_clust_a, __pyx_v_c, __pyx_v_n_c, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_inv, __pyx_v_pair_ij, __pyx_v_t);
+    }
+
+    /* "disorder/diffuse/simulation.pyx":924
+ *                                    pair_ind, pair_inv, pair_ij, t)
+ * 
+ *         annealing_cluster(Sx, Sy, Sz, sx, sy, sz, J, A, g, B,             # <<<<<<<<<<<<<<
+ *                           clust_i, clust_j, clust_k, clust_a,
+ *                           h_eff, b, c, n_c,
+ */
+    __pyx_f_8disorder_7diffuse_10simulation_annealing_cluster(__pyx_v_Sx, __pyx_v_Sy, __pyx_v_Sz, __pyx_v_sx, __pyx_v_sy, __pyx_v_sz, __pyx_v_J, __pyx_v_A, __pyx_v_g, __pyx_v_B, __pyx_v_clust_i, __pyx_v_clust_j, __pyx_v_clust_k, __pyx_v_clust_a, __pyx_v_h_eff, __pyx_v_b, __pyx_v_c, __pyx_v_n_c, __pyx_v_atm_ind, __pyx_v_img_ind_i, __pyx_v_img_ind_j, __pyx_v_img_ind_k, __pyx_v_pair_ind, __pyx_v_pair_ij, __pyx_v_H, __pyx_v_E, __pyx_v_beta);
+
+    /* "disorder/diffuse/simulation.pyx":930
+ *                           pair_ind, pair_ij, H, E, beta)
+ * 
+ *         replica_exchange(H, beta)             # <<<<<<<<<<<<<<
+ */
+    __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__pyx_v_H, __pyx_v_beta);
+  }
+
+  /* "disorder/diffuse/simulation.pyx":765
+ *     return E
+ * 
+ * def heisenberg_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                        double [:,:,:,:,::1] Sy,
+ *                        double [:,:,:,:,::1] Sz,
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_XDECREF(__pyx_t_2);
+  __Pyx_XDECREF(__pyx_t_3);
+  __Pyx_XDECREF(__pyx_t_4);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_5, 1);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_XDECREF(__pyx_t_8);
+  __Pyx_XDECREF(__pyx_t_9);
+  __Pyx_XDECREF(__pyx_t_10);
+  __Pyx_XDECREF(__pyx_t_11);
+  __Pyx_XDECREF(__pyx_t_12);
+  __Pyx_XDECREF(__pyx_t_13);
+  __Pyx_XDECREF(__pyx_t_14);
+  __Pyx_XDECREF(__pyx_t_15);
+  __Pyx_XDECREF(__pyx_t_16);
+  __Pyx_XDECREF(__pyx_t_17);
+  __Pyx_XDECREF(__pyx_t_19);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_20, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_46, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_47, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_48, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_t_49, 1);
+  __Pyx_AddTraceback("disorder.diffuse.simulation.heisenberg_cluster", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __PYX_XDEC_MEMVIEW(&__pyx_v_E, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_H, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_e, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_n_c, 1);
+  __Pyx_XDECREF(__pyx_v_spin_shape);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_b, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_c, 1);
+  __Pyx_XDECREF(__pyx_v_pairs_shape);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_h_eff, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_h_eff_ij, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_clust_i, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_clust_j, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_clust_k, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_clust_a, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_sx, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_sy, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_sz, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_beta, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_Sx, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_Sy, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_Sz, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_J, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_A, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_g, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_B, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_atm_ind, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_i, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_j, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_img_ind_k, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_pair_ind, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_pair_inv, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_pair_ij, 1);
+  __PYX_XDEC_MEMVIEW(&__pyx_v_T_range, 1);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -6141,7 +10640,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":931
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":929
  *     int _import_umath() except -1
  * 
  * cdef inline void set_array_base(ndarray arr, object base):             # <<<<<<<<<<<<<<
@@ -6153,7 +10652,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("set_array_base", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":932
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":930
  * 
  * cdef inline void set_array_base(ndarray arr, object base):
  *     Py_INCREF(base) # important to do this before stealing the reference below!             # <<<<<<<<<<<<<<
@@ -6162,7 +10661,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
  */
   Py_INCREF(__pyx_v_base);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":933
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":931
  * cdef inline void set_array_base(ndarray arr, object base):
  *     Py_INCREF(base) # important to do this before stealing the reference below!
  *     PyArray_SetBaseObject(arr, base)             # <<<<<<<<<<<<<<
@@ -6171,7 +10670,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
  */
   (void)(PyArray_SetBaseObject(__pyx_v_arr, __pyx_v_base));
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":931
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":929
  *     int _import_umath() except -1
  * 
  * cdef inline void set_array_base(ndarray arr, object base):             # <<<<<<<<<<<<<<
@@ -6183,7 +10682,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
   __Pyx_RefNannyFinishContext();
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":935
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":933
  *     PyArray_SetBaseObject(arr, base)
  * 
  * cdef inline object get_array_base(ndarray arr):             # <<<<<<<<<<<<<<
@@ -6198,7 +10697,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("get_array_base", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":936
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":934
  * 
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)             # <<<<<<<<<<<<<<
@@ -6207,7 +10706,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
  */
   __pyx_v_base = PyArray_BASE(__pyx_v_arr);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":937
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":935
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)
  *     if base is NULL:             # <<<<<<<<<<<<<<
@@ -6217,7 +10716,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   __pyx_t_1 = ((__pyx_v_base == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":938
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":936
  *     base = PyArray_BASE(arr)
  *     if base is NULL:
  *         return None             # <<<<<<<<<<<<<<
@@ -6228,7 +10727,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":937
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":935
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)
  *     if base is NULL:             # <<<<<<<<<<<<<<
@@ -6237,7 +10736,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
  */
   }
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":939
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":937
  *     if base is NULL:
  *         return None
  *     return <object>base             # <<<<<<<<<<<<<<
@@ -6249,7 +10748,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   __pyx_r = ((PyObject *)__pyx_v_base);
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":935
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":933
  *     PyArray_SetBaseObject(arr, base)
  * 
  * cdef inline object get_array_base(ndarray arr):             # <<<<<<<<<<<<<<
@@ -6264,7 +10763,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":943
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":941
  * # Versions of the import_* functions which are more suitable for
  * # Cython code.
  * cdef inline int import_array() except -1:             # <<<<<<<<<<<<<<
@@ -6288,7 +10787,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_array", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":944
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -6304,16 +10803,16 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":945
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":943
  * cdef inline int import_array() except -1:
  *     try:
  *         __pyx_import_array()             # <<<<<<<<<<<<<<
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")
  */
-      __pyx_t_4 = _import_array(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 945, __pyx_L3_error)
+      __pyx_t_4 = _import_array(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 943, __pyx_L3_error)
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":944
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -6327,7 +10826,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":946
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":944
  *     try:
  *         __pyx_import_array()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -6337,28 +10836,28 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __pyx_t_4 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_4) {
       __Pyx_AddTraceback("numpy.import_array", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 946, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 944, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":947
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":945
  *         __pyx_import_array()
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef inline int import_umath() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 947, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 945, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __PYX_ERR(1, 947, __pyx_L5_except_error)
+      __PYX_ERR(1, 945, __pyx_L5_except_error)
     }
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":944
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -6373,7 +10872,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":943
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":941
  * # Versions of the import_* functions which are more suitable for
  * # Cython code.
  * cdef inline int import_array() except -1:             # <<<<<<<<<<<<<<
@@ -6396,7 +10895,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":949
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":947
  *         raise ImportError("numpy.core.multiarray failed to import")
  * 
  * cdef inline int import_umath() except -1:             # <<<<<<<<<<<<<<
@@ -6420,7 +10919,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_umath", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":950
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -6436,16 +10935,16 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":951
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":949
  * cdef inline int import_umath() except -1:
  *     try:
  *         _import_umath()             # <<<<<<<<<<<<<<
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")
  */
-      __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 951, __pyx_L3_error)
+      __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 949, __pyx_L3_error)
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":950
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -6459,7 +10958,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":952
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":950
  *     try:
  *         _import_umath()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -6469,28 +10968,28 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __pyx_t_4 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_4) {
       __Pyx_AddTraceback("numpy.import_umath", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 952, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 950, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":953
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":951
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef inline int import_ufunc() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 953, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 951, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __PYX_ERR(1, 953, __pyx_L5_except_error)
+      __PYX_ERR(1, 951, __pyx_L5_except_error)
     }
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":950
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -6505,7 +11004,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":949
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":947
  *         raise ImportError("numpy.core.multiarray failed to import")
  * 
  * cdef inline int import_umath() except -1:             # <<<<<<<<<<<<<<
@@ -6528,7 +11027,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":955
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":953
  *         raise ImportError("numpy.core.umath failed to import")
  * 
  * cdef inline int import_ufunc() except -1:             # <<<<<<<<<<<<<<
@@ -6552,7 +11051,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_ufunc", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":956
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -6568,16 +11067,16 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":957
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":955
  * cdef inline int import_ufunc() except -1:
  *     try:
  *         _import_umath()             # <<<<<<<<<<<<<<
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")
  */
-      __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 957, __pyx_L3_error)
+      __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 955, __pyx_L3_error)
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":956
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -6591,7 +11090,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":958
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":956
  *     try:
  *         _import_umath()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -6601,28 +11100,28 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __pyx_t_4 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_4) {
       __Pyx_AddTraceback("numpy.import_ufunc", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 958, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 956, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":959
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":957
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef extern from *:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 959, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 957, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __PYX_ERR(1, 959, __pyx_L5_except_error)
+      __PYX_ERR(1, 957, __pyx_L5_except_error)
     }
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":956
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -6637,7 +11136,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":955
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":953
  *         raise ImportError("numpy.core.umath failed to import")
  * 
  * cdef inline int import_ufunc() except -1:             # <<<<<<<<<<<<<<
@@ -6660,7 +11159,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":969
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":967
  * 
  * 
  * cdef inline bint is_timedelta64_object(object obj):             # <<<<<<<<<<<<<<
@@ -6673,7 +11172,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("is_timedelta64_object", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":981
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":979
  *     bool
  *     """
  *     return PyObject_TypeCheck(obj, &PyTimedeltaArrType_Type)             # <<<<<<<<<<<<<<
@@ -6683,7 +11182,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   __pyx_r = PyObject_TypeCheck(__pyx_v_obj, (&PyTimedeltaArrType_Type));
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":969
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":967
  * 
  * 
  * cdef inline bint is_timedelta64_object(object obj):             # <<<<<<<<<<<<<<
@@ -6697,7 +11196,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":984
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":982
  * 
  * 
  * cdef inline bint is_datetime64_object(object obj):             # <<<<<<<<<<<<<<
@@ -6710,7 +11209,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("is_datetime64_object", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":996
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":994
  *     bool
  *     """
  *     return PyObject_TypeCheck(obj, &PyDatetimeArrType_Type)             # <<<<<<<<<<<<<<
@@ -6720,7 +11219,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   __pyx_r = PyObject_TypeCheck(__pyx_v_obj, (&PyDatetimeArrType_Type));
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":984
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":982
  * 
  * 
  * cdef inline bint is_datetime64_object(object obj):             # <<<<<<<<<<<<<<
@@ -6734,7 +11233,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":999
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":997
  * 
  * 
  * cdef inline npy_datetime get_datetime64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -6745,7 +11244,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
 static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *__pyx_v_obj) {
   npy_datetime __pyx_r;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1006
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1004
  *     also needed.  That can be found using `get_datetime64_unit`.
  *     """
  *     return (<PyDatetimeScalarObject*>obj).obval             # <<<<<<<<<<<<<<
@@ -6755,7 +11254,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
   __pyx_r = ((PyDatetimeScalarObject *)__pyx_v_obj)->obval;
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":999
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":997
  * 
  * 
  * cdef inline npy_datetime get_datetime64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -6768,7 +11267,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1009
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1007
  * 
  * 
  * cdef inline npy_timedelta get_timedelta64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -6779,7 +11278,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
 static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject *__pyx_v_obj) {
   npy_timedelta __pyx_r;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1013
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1011
  *     returns the int64 value underlying scalar numpy timedelta64 object
  *     """
  *     return (<PyTimedeltaScalarObject*>obj).obval             # <<<<<<<<<<<<<<
@@ -6789,7 +11288,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
   __pyx_r = ((PyTimedeltaScalarObject *)__pyx_v_obj)->obval;
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1009
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1007
  * 
  * 
  * cdef inline npy_timedelta get_timedelta64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -6802,7 +11301,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1016
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -6813,7 +11312,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
 static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObject *__pyx_v_obj) {
   NPY_DATETIMEUNIT __pyx_r;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1020
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1018
  *     returns the unit part of the dtype for a numpy datetime64 object.
  *     """
  *     return <NPY_DATETIMEUNIT>(<PyDatetimeScalarObject*>obj).obmeta.base             # <<<<<<<<<<<<<<
@@ -6821,7 +11320,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   __pyx_r = ((NPY_DATETIMEUNIT)((PyDatetimeScalarObject *)__pyx_v_obj)->obmeta.base);
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1016
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -20625,11 +25124,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Cannot_create_writable_memory_vi, __pyx_k_Cannot_create_writable_memory_vi, sizeof(__pyx_k_Cannot_create_writable_memory_vi), 0, 0, 1, 0},
   {&__pyx_kp_s_Cannot_index_with_type_s, __pyx_k_Cannot_index_with_type_s, sizeof(__pyx_k_Cannot_index_with_type_s), 0, 0, 1, 0},
   {&__pyx_n_s_E, __pyx_k_E, sizeof(__pyx_k_E), 0, 0, 1, 1},
-  {&__pyx_n_s_E_np, __pyx_k_E_np, sizeof(__pyx_k_E_np), 0, 0, 1, 1},
   {&__pyx_n_s_Ellipsis, __pyx_k_Ellipsis, sizeof(__pyx_k_Ellipsis), 0, 0, 1, 1},
   {&__pyx_kp_s_Empty_shape_tuple_for_cython_arr, __pyx_k_Empty_shape_tuple_for_cython_arr, sizeof(__pyx_k_Empty_shape_tuple_for_cython_arr), 0, 0, 1, 0},
   {&__pyx_n_s_H, __pyx_k_H, sizeof(__pyx_k_H), 0, 0, 1, 1},
-  {&__pyx_n_s_H_np, __pyx_k_H_np, sizeof(__pyx_k_H_np), 0, 0, 1, 1},
   {&__pyx_n_s_ImportError, __pyx_k_ImportError, sizeof(__pyx_k_ImportError), 0, 0, 1, 1},
   {&__pyx_kp_s_Incompatible_checksums_s_vs_0xb0, __pyx_k_Incompatible_checksums_s_vs_0xb0, sizeof(__pyx_k_Incompatible_checksums_s_vs_0xb0), 0, 0, 1, 0},
   {&__pyx_n_s_IndexError, __pyx_k_IndexError, sizeof(__pyx_k_IndexError), 0, 0, 1, 1},
@@ -20652,23 +25149,29 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_Unable_to_convert_item_to_object, __pyx_k_Unable_to_convert_item_to_object, sizeof(__pyx_k_Unable_to_convert_item_to_object), 0, 0, 1, 0},
   {&__pyx_n_s_ValueError, __pyx_k_ValueError, sizeof(__pyx_k_ValueError), 0, 0, 1, 1},
   {&__pyx_n_s_View_MemoryView, __pyx_k_View_MemoryView, sizeof(__pyx_k_View_MemoryView), 0, 0, 1, 1},
-  {&__pyx_n_s__21, __pyx_k__21, sizeof(__pyx_k__21), 0, 0, 1, 1},
+  {&__pyx_n_s__23, __pyx_k__23, sizeof(__pyx_k__23), 0, 0, 1, 1},
   {&__pyx_n_s_a, __pyx_k_a, sizeof(__pyx_k_a), 0, 0, 1, 1},
   {&__pyx_n_s_a_2, __pyx_k_a_2, sizeof(__pyx_k_a_2), 0, 0, 1, 1},
   {&__pyx_n_s_allocate_buffer, __pyx_k_allocate_buffer, sizeof(__pyx_k_allocate_buffer), 0, 0, 1, 1},
   {&__pyx_n_s_atm_ind, __pyx_k_atm_ind, sizeof(__pyx_k_atm_ind), 0, 0, 1, 1},
+  {&__pyx_n_s_b, __pyx_k_b, sizeof(__pyx_k_b), 0, 0, 1, 1},
   {&__pyx_n_s_base, __pyx_k_base, sizeof(__pyx_k_base), 0, 0, 1, 1},
   {&__pyx_n_s_beta, __pyx_k_beta, sizeof(__pyx_k_beta), 0, 0, 1, 1},
   {&__pyx_n_s_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 0, 1, 1},
   {&__pyx_n_u_c, __pyx_k_c, sizeof(__pyx_k_c), 0, 1, 0, 1},
   {&__pyx_n_s_class, __pyx_k_class, sizeof(__pyx_k_class), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
+  {&__pyx_n_s_clust_a, __pyx_k_clust_a, sizeof(__pyx_k_clust_a), 0, 0, 1, 1},
+  {&__pyx_n_s_clust_i, __pyx_k_clust_i, sizeof(__pyx_k_clust_i), 0, 0, 1, 1},
+  {&__pyx_n_s_clust_j, __pyx_k_clust_j, sizeof(__pyx_k_clust_j), 0, 0, 1, 1},
+  {&__pyx_n_s_clust_k, __pyx_k_clust_k, sizeof(__pyx_k_clust_k), 0, 0, 1, 1},
   {&__pyx_kp_s_contiguous_and_direct, __pyx_k_contiguous_and_direct, sizeof(__pyx_k_contiguous_and_direct), 0, 0, 1, 0},
   {&__pyx_kp_s_contiguous_and_indirect, __pyx_k_contiguous_and_indirect, sizeof(__pyx_k_contiguous_and_indirect), 0, 0, 1, 0},
   {&__pyx_n_s_copy, __pyx_k_copy, sizeof(__pyx_k_copy), 0, 0, 1, 1},
   {&__pyx_n_s_dict, __pyx_k_dict, sizeof(__pyx_k_dict), 0, 0, 1, 1},
   {&__pyx_n_s_disorder_diffuse_simulation, __pyx_k_disorder_diffuse_simulation, sizeof(__pyx_k_disorder_diffuse_simulation), 0, 0, 1, 1},
   {&__pyx_kp_s_disorder_diffuse_simulation_pyx, __pyx_k_disorder_diffuse_simulation_pyx, sizeof(__pyx_k_disorder_diffuse_simulation_pyx), 0, 0, 1, 0},
+  {&__pyx_n_s_dtype, __pyx_k_dtype, sizeof(__pyx_k_dtype), 0, 0, 1, 1},
   {&__pyx_n_s_dtype_is_object, __pyx_k_dtype_is_object, sizeof(__pyx_k_dtype_is_object), 0, 0, 1, 1},
   {&__pyx_n_s_e, __pyx_k_e, sizeof(__pyx_k_e), 0, 0, 1, 1},
   {&__pyx_n_s_e_np, __pyx_k_e_np, sizeof(__pyx_k_e_np), 0, 0, 1, 1},
@@ -20686,14 +25189,20 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_g, __pyx_k_g, sizeof(__pyx_k_g), 0, 0, 1, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_kp_s_got_differing_extents_in_dimensi, __pyx_k_got_differing_extents_in_dimensi, sizeof(__pyx_k_got_differing_extents_in_dimensi), 0, 0, 1, 0},
+  {&__pyx_n_s_h_eff, __pyx_k_h_eff, sizeof(__pyx_k_h_eff), 0, 0, 1, 1},
+  {&__pyx_n_s_h_eff_ij, __pyx_k_h_eff_ij, sizeof(__pyx_k_h_eff_ij), 0, 0, 1, 1},
   {&__pyx_n_s_heisenberg, __pyx_k_heisenberg, sizeof(__pyx_k_heisenberg), 0, 0, 1, 1},
+  {&__pyx_n_s_heisenberg_cluster, __pyx_k_heisenberg_cluster, sizeof(__pyx_k_heisenberg_cluster), 0, 0, 1, 1},
   {&__pyx_n_s_i, __pyx_k_i, sizeof(__pyx_k_i), 0, 0, 1, 1},
   {&__pyx_n_s_i_2, __pyx_k_i_2, sizeof(__pyx_k_i_2), 0, 0, 1, 1},
+  {&__pyx_n_s_i_c, __pyx_k_i_c, sizeof(__pyx_k_i_c), 0, 0, 1, 1},
   {&__pyx_n_s_id, __pyx_k_id, sizeof(__pyx_k_id), 0, 0, 1, 1},
   {&__pyx_n_s_img_ind_i, __pyx_k_img_ind_i, sizeof(__pyx_k_img_ind_i), 0, 0, 1, 1},
   {&__pyx_n_s_img_ind_j, __pyx_k_img_ind_j, sizeof(__pyx_k_img_ind_j), 0, 0, 1, 1},
   {&__pyx_n_s_img_ind_k, __pyx_k_img_ind_k, sizeof(__pyx_k_img_ind_k), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
+  {&__pyx_n_s_intc, __pyx_k_intc, sizeof(__pyx_k_intc), 0, 0, 1, 1},
+  {&__pyx_n_s_intp, __pyx_k_intp, sizeof(__pyx_k_intp), 0, 0, 1, 1},
   {&__pyx_n_s_itemsize, __pyx_k_itemsize, sizeof(__pyx_k_itemsize), 0, 0, 1, 1},
   {&__pyx_kp_s_itemsize_0_for_cython_array, __pyx_k_itemsize_0_for_cython_array, sizeof(__pyx_k_itemsize_0_for_cython_array), 0, 0, 1, 0},
   {&__pyx_n_s_j, __pyx_k_j, sizeof(__pyx_k_j), 0, 0, 1, 1},
@@ -20704,7 +25213,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_memview, __pyx_k_memview, sizeof(__pyx_k_memview), 0, 0, 1, 1},
   {&__pyx_n_s_mode, __pyx_k_mode, sizeof(__pyx_k_mode), 0, 0, 1, 1},
+  {&__pyx_n_s_mx, __pyx_k_mx, sizeof(__pyx_k_mx), 0, 0, 1, 1},
+  {&__pyx_n_s_my, __pyx_k_my, sizeof(__pyx_k_my), 0, 0, 1, 1},
+  {&__pyx_n_s_mz, __pyx_k_mz, sizeof(__pyx_k_mz), 0, 0, 1, 1},
+  {&__pyx_n_s_n, __pyx_k_n, sizeof(__pyx_k_n), 0, 0, 1, 1},
   {&__pyx_n_s_n_atm, __pyx_k_n_atm, sizeof(__pyx_k_n_atm), 0, 0, 1, 1},
+  {&__pyx_n_s_n_c, __pyx_k_n_c, sizeof(__pyx_k_n_c), 0, 0, 1, 1},
+  {&__pyx_n_s_n_dot_u, __pyx_k_n_dot_u, sizeof(__pyx_k_n_dot_u), 0, 0, 1, 1},
+  {&__pyx_n_s_n_dot_v, __pyx_k_n_dot_v, sizeof(__pyx_k_n_dot_v), 0, 0, 1, 1},
   {&__pyx_n_s_n_pairs, __pyx_k_n_pairs, sizeof(__pyx_k_n_pairs), 0, 0, 1, 1},
   {&__pyx_n_s_n_temp, __pyx_k_n_temp, sizeof(__pyx_k_n_temp), 0, 0, 1, 1},
   {&__pyx_n_s_name, __pyx_k_name, sizeof(__pyx_k_name), 0, 0, 1, 1},
@@ -20719,11 +25235,16 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_u_numpy_core_umath_failed_to_impor, __pyx_k_numpy_core_umath_failed_to_impor, sizeof(__pyx_k_numpy_core_umath_failed_to_impor), 0, 1, 0, 0},
   {&__pyx_n_s_nv, __pyx_k_nv, sizeof(__pyx_k_nv), 0, 0, 1, 1},
   {&__pyx_n_s_nw, __pyx_k_nw, sizeof(__pyx_k_nw), 0, 0, 1, 1},
+  {&__pyx_n_s_nx, __pyx_k_nx, sizeof(__pyx_k_nx), 0, 0, 1, 1},
+  {&__pyx_n_s_ny, __pyx_k_ny, sizeof(__pyx_k_ny), 0, 0, 1, 1},
+  {&__pyx_n_s_nz, __pyx_k_nz, sizeof(__pyx_k_nz), 0, 0, 1, 1},
   {&__pyx_n_s_obj, __pyx_k_obj, sizeof(__pyx_k_obj), 0, 0, 1, 1},
   {&__pyx_n_s_p, __pyx_k_p, sizeof(__pyx_k_p), 0, 0, 1, 1},
   {&__pyx_n_s_pack, __pyx_k_pack, sizeof(__pyx_k_pack), 0, 0, 1, 1},
   {&__pyx_n_s_pair_ij, __pyx_k_pair_ij, sizeof(__pyx_k_pair_ij), 0, 0, 1, 1},
   {&__pyx_n_s_pair_ind, __pyx_k_pair_ind, sizeof(__pyx_k_pair_ind), 0, 0, 1, 1},
+  {&__pyx_n_s_pair_inv, __pyx_k_pair_inv, sizeof(__pyx_k_pair_inv), 0, 0, 1, 1},
+  {&__pyx_n_s_pairs_shape, __pyx_k_pairs_shape, sizeof(__pyx_k_pairs_shape), 0, 0, 1, 1},
   {&__pyx_n_s_pickle, __pyx_k_pickle, sizeof(__pyx_k_pickle), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_PickleError, __pyx_k_pyx_PickleError, sizeof(__pyx_k_pyx_PickleError), 0, 0, 1, 1},
   {&__pyx_n_s_pyx_checksum, __pyx_k_pyx_checksum, sizeof(__pyx_k_pyx_checksum), 0, 0, 1, 1},
@@ -20741,6 +25262,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
   {&__pyx_n_s_shape, __pyx_k_shape, sizeof(__pyx_k_shape), 0, 0, 1, 1},
   {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
+  {&__pyx_n_s_spin_shape, __pyx_k_spin_shape, sizeof(__pyx_k_spin_shape), 0, 0, 1, 1},
   {&__pyx_n_s_start, __pyx_k_start, sizeof(__pyx_k_start), 0, 0, 1, 1},
   {&__pyx_n_s_step, __pyx_k_step, sizeof(__pyx_k_step), 0, 0, 1, 1},
   {&__pyx_n_s_stop, __pyx_k_stop, sizeof(__pyx_k_stop), 0, 0, 1, 1},
@@ -20754,22 +25276,29 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_sz, __pyx_k_sz, sizeof(__pyx_k_sz), 0, 0, 1, 1},
   {&__pyx_n_s_t, __pyx_k_t, sizeof(__pyx_k_t), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
+  {&__pyx_n_s_u, __pyx_k_u, sizeof(__pyx_k_u), 0, 0, 1, 1},
   {&__pyx_kp_s_unable_to_allocate_array_data, __pyx_k_unable_to_allocate_array_data, sizeof(__pyx_k_unable_to_allocate_array_data), 0, 0, 1, 0},
   {&__pyx_kp_s_unable_to_allocate_shape_and_str, __pyx_k_unable_to_allocate_shape_and_str, sizeof(__pyx_k_unable_to_allocate_shape_and_str), 0, 0, 1, 0},
   {&__pyx_n_s_unpack, __pyx_k_unpack, sizeof(__pyx_k_unpack), 0, 0, 1, 1},
   {&__pyx_n_s_update, __pyx_k_update, sizeof(__pyx_k_update), 0, 0, 1, 1},
   {&__pyx_n_s_ux, __pyx_k_ux, sizeof(__pyx_k_ux), 0, 0, 1, 1},
+  {&__pyx_n_s_ux_perp, __pyx_k_ux_perp, sizeof(__pyx_k_ux_perp), 0, 0, 1, 1},
   {&__pyx_n_s_uy, __pyx_k_uy, sizeof(__pyx_k_uy), 0, 0, 1, 1},
+  {&__pyx_n_s_uy_perp, __pyx_k_uy_perp, sizeof(__pyx_k_uy_perp), 0, 0, 1, 1},
   {&__pyx_n_s_uz, __pyx_k_uz, sizeof(__pyx_k_uz), 0, 0, 1, 1},
+  {&__pyx_n_s_uz_perp, __pyx_k_uz_perp, sizeof(__pyx_k_uz_perp), 0, 0, 1, 1},
   {&__pyx_n_s_vx, __pyx_k_vx, sizeof(__pyx_k_vx), 0, 0, 1, 1},
+  {&__pyx_n_s_vx_perp, __pyx_k_vx_perp, sizeof(__pyx_k_vx_perp), 0, 0, 1, 1},
   {&__pyx_n_s_vy, __pyx_k_vy, sizeof(__pyx_k_vy), 0, 0, 1, 1},
+  {&__pyx_n_s_vy_perp, __pyx_k_vy_perp, sizeof(__pyx_k_vy_perp), 0, 0, 1, 1},
   {&__pyx_n_s_vz, __pyx_k_vz, sizeof(__pyx_k_vz), 0, 0, 1, 1},
+  {&__pyx_n_s_vz_perp, __pyx_k_vz_perp, sizeof(__pyx_k_vz_perp), 0, 0, 1, 1},
   {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 124, __pyx_L1_error)
-  __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 947, __pyx_L1_error)
+  __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 945, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(2, 133, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(2, 148, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(2, 151, __pyx_L1_error)
@@ -20786,25 +25315,25 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":947
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":945
  *         __pyx_import_array()
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef inline int import_umath() except -1:
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple_)) __PYX_ERR(1, 947, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple_)) __PYX_ERR(1, 945, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":953
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":951
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef inline int import_ufunc() except -1:
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(1, 953, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(1, 951, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
@@ -21000,29 +25529,41 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_GIVEREF(__pyx_tuple__20);
 
-  /* "disorder/diffuse/simulation.pyx":241
+  /* "disorder/diffuse/simulation.pyx":132
+ *                 beta[i], beta[j] = beta[i], beta[j]
+ * 
+ * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *            double [:,:,:,:,::1] Sy,
+ *            double [:,:,:,:,::1] Sz,
+ */
+  __pyx_tuple__21 = PyTuple_Pack(41, __pyx_n_s_Sx, __pyx_n_s_Sy, __pyx_n_s_Sz, __pyx_n_s_J, __pyx_n_s_A, __pyx_n_s_g, __pyx_n_s_B, __pyx_n_s_atm_ind, __pyx_n_s_img_ind_i, __pyx_n_s_img_ind_j, __pyx_n_s_img_ind_k, __pyx_n_s_pair_ind, __pyx_n_s_pair_ij, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_n_atm, __pyx_n_s_n_temp, __pyx_n_s_n_pairs, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_a, __pyx_n_s_i_2, __pyx_n_s_j_2, __pyx_n_s_k_2, __pyx_n_s_a_2, __pyx_n_s_t, __pyx_n_s_p, __pyx_n_s_f, __pyx_n_s_e_np, __pyx_n_s_e, __pyx_n_s_ux, __pyx_n_s_uy, __pyx_n_s_uz, __pyx_n_s_vx, __pyx_n_s_vy, __pyx_n_s_vz, __pyx_n_s_Bx, __pyx_n_s_By, __pyx_n_s_Bz); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__21);
+  __Pyx_GIVEREF(__pyx_tuple__21);
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(13, 0, 41, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_simulation_pyx, __pyx_n_s_energy, 132, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 132, __pyx_L1_error)
+
+  /* "disorder/diffuse/simulation.pyx":327
  *     return E
  * 
  * def heisenberg(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *                double [:,:,:,:,::1] Sy,
  *                double [:,:,:,:,::1] Sz,
  */
-  __pyx_tuple__22 = PyTuple_Pack(41, __pyx_n_s_Sx, __pyx_n_s_Sy, __pyx_n_s_Sz, __pyx_n_s_J, __pyx_n_s_A, __pyx_n_s_g, __pyx_n_s_B, __pyx_n_s_atm_ind, __pyx_n_s_img_ind_i, __pyx_n_s_img_ind_j, __pyx_n_s_img_ind_k, __pyx_n_s_pair_ind, __pyx_n_s_pair_ij, __pyx_n_s_T_range, __pyx_n_s_kB, __pyx_n_s_N, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_n_atm, __pyx_n_s_n_temp, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_a, __pyx_n_s_t, __pyx_n_s_E_np, __pyx_n_s_H_np, __pyx_n_s_E, __pyx_n_s_H, __pyx_n_s_ux, __pyx_n_s_uy, __pyx_n_s_uz, __pyx_n_s_vx, __pyx_n_s_vy, __pyx_n_s_vz, __pyx_n_s_sx, __pyx_n_s_sy, __pyx_n_s_sz, __pyx_n_s_beta, __pyx_n_s__21); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(0, 241, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__22);
-  __Pyx_GIVEREF(__pyx_tuple__22);
-  __pyx_codeobj__23 = (PyObject*)__Pyx_PyCode_New(16, 0, 41, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__22, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_simulation_pyx, __pyx_n_s_heisenberg, 241, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__23)) __PYX_ERR(0, 241, __pyx_L1_error)
-
-  /* "disorder/diffuse/simulation.pyx":303
- *         replica_exchange(H, beta)
- * 
- * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
- *            double [:,:,:,:,::1] Sy,
- *            double [:,:,:,:,::1] Sz,
- */
-  __pyx_tuple__24 = PyTuple_Pack(41, __pyx_n_s_Sx, __pyx_n_s_Sy, __pyx_n_s_Sz, __pyx_n_s_J, __pyx_n_s_A, __pyx_n_s_g, __pyx_n_s_B, __pyx_n_s_atm_ind, __pyx_n_s_img_ind_i, __pyx_n_s_img_ind_j, __pyx_n_s_img_ind_k, __pyx_n_s_pair_ind, __pyx_n_s_pair_ij, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_n_atm, __pyx_n_s_n_temp, __pyx_n_s_n_pairs, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_a, __pyx_n_s_i_2, __pyx_n_s_j_2, __pyx_n_s_k_2, __pyx_n_s_a_2, __pyx_n_s_t, __pyx_n_s_p, __pyx_n_s_f, __pyx_n_s_e_np, __pyx_n_s_e, __pyx_n_s_ux, __pyx_n_s_uy, __pyx_n_s_uz, __pyx_n_s_vx, __pyx_n_s_vy, __pyx_n_s_vz, __pyx_n_s_Bx, __pyx_n_s_By, __pyx_n_s_Bz); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(0, 303, __pyx_L1_error)
+  __pyx_tuple__24 = PyTuple_Pack(42, __pyx_n_s_Sx, __pyx_n_s_Sy, __pyx_n_s_Sz, __pyx_n_s_J, __pyx_n_s_A, __pyx_n_s_g, __pyx_n_s_B, __pyx_n_s_atm_ind, __pyx_n_s_img_ind_i, __pyx_n_s_img_ind_j, __pyx_n_s_img_ind_k, __pyx_n_s_pair_ind, __pyx_n_s_pair_ij, __pyx_n_s_T_range, __pyx_n_s_kB, __pyx_n_s_N, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_n_atm, __pyx_n_s_n_temp, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_a, __pyx_n_s_t, __pyx_n_s_p, __pyx_n_s_n_pairs, __pyx_n_s_E, __pyx_n_s_H, __pyx_n_s_e, __pyx_n_s_ux, __pyx_n_s_uy, __pyx_n_s_uz, __pyx_n_s_vx, __pyx_n_s_vy, __pyx_n_s_vz, __pyx_n_s_sx, __pyx_n_s_sy, __pyx_n_s_sz, __pyx_n_s_beta, __pyx_n_s__23); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(0, 327, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__24);
   __Pyx_GIVEREF(__pyx_tuple__24);
-  __pyx_codeobj__25 = (PyObject*)__Pyx_PyCode_New(13, 0, 41, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_simulation_pyx, __pyx_n_s_energy, 303, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__25)) __PYX_ERR(0, 303, __pyx_L1_error)
+  __pyx_codeobj__25 = (PyObject*)__Pyx_PyCode_New(16, 0, 42, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__24, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_simulation_pyx, __pyx_n_s_heisenberg, 327, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__25)) __PYX_ERR(0, 327, __pyx_L1_error)
+
+  /* "disorder/diffuse/simulation.pyx":765
+ *     return E
+ * 
+ * def heisenberg_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                        double [:,:,:,:,::1] Sy,
+ *                        double [:,:,:,:,::1] Sz,
+ */
+  __pyx_tuple__26 = PyTuple_Pack(75, __pyx_n_s_Sx, __pyx_n_s_Sy, __pyx_n_s_Sz, __pyx_n_s_J, __pyx_n_s_A, __pyx_n_s_g, __pyx_n_s_B, __pyx_n_s_atm_ind, __pyx_n_s_img_ind_i, __pyx_n_s_img_ind_j, __pyx_n_s_img_ind_k, __pyx_n_s_pair_ind, __pyx_n_s_pair_inv, __pyx_n_s_pair_ij, __pyx_n_s_T_range, __pyx_n_s_kB, __pyx_n_s_N, __pyx_n_s_nu, __pyx_n_s_nv, __pyx_n_s_nw, __pyx_n_s_n_atm, __pyx_n_s_n_temp, __pyx_n_s_t, __pyx_n_s_n, __pyx_n_s_i, __pyx_n_s_j, __pyx_n_s_k, __pyx_n_s_a, __pyx_n_s_i_2, __pyx_n_s_j_2, __pyx_n_s_k_2, __pyx_n_s_a_2, __pyx_n_s_n_pairs, __pyx_n_s_E, __pyx_n_s_H, __pyx_n_s_e, __pyx_n_s_p, __pyx_n_s_i_c, __pyx_n_s_n_c, __pyx_n_s_spin_shape, __pyx_n_s_b, __pyx_n_s_c, __pyx_n_s_pairs_shape, __pyx_n_s_h_eff, __pyx_n_s_h_eff_ij, __pyx_n_s_clust_i, __pyx_n_s_clust_j, __pyx_n_s_clust_k, __pyx_n_s_clust_a, __pyx_n_s_ux, __pyx_n_s_uy, __pyx_n_s_uz, __pyx_n_s_vx, __pyx_n_s_vy, __pyx_n_s_vz, __pyx_n_s_mx, __pyx_n_s_my, __pyx_n_s_mz, __pyx_n_s_nx, __pyx_n_s_ny, __pyx_n_s_nz, __pyx_n_s_ux_perp, __pyx_n_s_uy_perp, __pyx_n_s_uz_perp, __pyx_n_s_vx_perp, __pyx_n_s_vy_perp, __pyx_n_s_vz_perp, __pyx_n_s_u, __pyx_n_s_n_dot_u, __pyx_n_s_n_dot_v, __pyx_n_s_sx, __pyx_n_s_sy, __pyx_n_s_sz, __pyx_n_s_beta, __pyx_n_s__23); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(0, 765, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__26);
+  __Pyx_GIVEREF(__pyx_tuple__26);
+  __pyx_codeobj__27 = (PyObject*)__Pyx_PyCode_New(17, 0, 75, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__26, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_disorder_diffuse_simulation_pyx, __pyx_n_s_heisenberg_cluster, 765, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__27)) __PYX_ERR(0, 765, __pyx_L1_error)
 
   /* "View.MemoryView":286
  *         return self.name
@@ -21031,9 +25572,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(2, 286, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__26);
-  __Pyx_GIVEREF(__pyx_tuple__26);
+  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(2, 286, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__28);
+  __Pyx_GIVEREF(__pyx_tuple__28);
 
   /* "View.MemoryView":287
  * 
@@ -21042,9 +25583,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(2, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__27);
-  __Pyx_GIVEREF(__pyx_tuple__27);
+  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(2, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__29);
+  __Pyx_GIVEREF(__pyx_tuple__29);
 
   /* "View.MemoryView":288
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -21053,9 +25594,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(2, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__28);
-  __Pyx_GIVEREF(__pyx_tuple__28);
+  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(2, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__30);
+  __Pyx_GIVEREF(__pyx_tuple__30);
 
   /* "View.MemoryView":291
  * 
@@ -21064,9 +25605,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(2, 291, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__29);
-  __Pyx_GIVEREF(__pyx_tuple__29);
+  __pyx_tuple__31 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(2, 291, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__31);
+  __Pyx_GIVEREF(__pyx_tuple__31);
 
   /* "View.MemoryView":292
  * 
@@ -21075,19 +25616,19 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(2, 292, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__30);
-  __Pyx_GIVEREF(__pyx_tuple__30);
+  __pyx_tuple__32 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(2, 292, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__32);
+  __Pyx_GIVEREF(__pyx_tuple__32);
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_Enum(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__31 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(2, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__31);
-  __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __pyx_tuple__33 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__33)) __PYX_ERR(2, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__33);
+  __Pyx_GIVEREF(__pyx_tuple__33);
+  __pyx_codeobj__34 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__33, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__34)) __PYX_ERR(2, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -21528,28 +26069,40 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_8disorder_7diffuse_10simulation_MACHINE_EPSILON = __pyx_t_3;
 
-  /* "disorder/diffuse/simulation.pyx":241
+  /* "disorder/diffuse/simulation.pyx":132
+ *                 beta[i], beta[j] = beta[i], beta[j]
+ * 
+ * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *            double [:,:,:,:,::1] Sy,
+ *            double [:,:,:,:,::1] Sz,
+ */
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_10simulation_1energy, NULL, __pyx_n_s_disorder_diffuse_simulation); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_2);
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_energy, __pyx_t_2) < 0) __PYX_ERR(0, 132, __pyx_L1_error)
+  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
+
+  /* "disorder/diffuse/simulation.pyx":327
  *     return E
  * 
  * def heisenberg(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *                double [:,:,:,:,::1] Sy,
  *                double [:,:,:,:,::1] Sz,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_10simulation_1heisenberg, NULL, __pyx_n_s_disorder_diffuse_simulation); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 241, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_10simulation_3heisenberg, NULL, __pyx_n_s_disorder_diffuse_simulation); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 327, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_heisenberg, __pyx_t_2) < 0) __PYX_ERR(0, 241, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_heisenberg, __pyx_t_2) < 0) __PYX_ERR(0, 327, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "disorder/diffuse/simulation.pyx":303
- *         replica_exchange(H, beta)
+  /* "disorder/diffuse/simulation.pyx":765
+ *     return E
  * 
- * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
- *            double [:,:,:,:,::1] Sy,
- *            double [:,:,:,:,::1] Sz,
+ * def heisenberg_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
+ *                        double [:,:,:,:,::1] Sy,
+ *                        double [:,:,:,:,::1] Sz,
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_10simulation_3energy, NULL, __pyx_n_s_disorder_diffuse_simulation); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 303, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_8disorder_7diffuse_10simulation_5heisenberg_cluster, NULL, __pyx_n_s_disorder_diffuse_simulation); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 765, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_energy, __pyx_t_2) < 0) __PYX_ERR(0, 303, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_heisenberg_cluster, __pyx_t_2) < 0) __PYX_ERR(0, 765, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "disorder/diffuse/simulation.pyx":1
@@ -21582,7 +26135,7 @@ if (!__Pyx_RefNanny) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 286, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 286, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(generic);
   __Pyx_DECREF_SET(generic, __pyx_t_2);
@@ -21596,7 +26149,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 287, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 287, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(strided);
   __Pyx_DECREF_SET(strided, __pyx_t_2);
@@ -21610,7 +26163,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 288, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__30, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 288, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect);
   __Pyx_DECREF_SET(indirect, __pyx_t_2);
@@ -21624,7 +26177,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 291, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__31, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 291, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(contiguous);
   __Pyx_DECREF_SET(contiguous, __pyx_t_2);
@@ -21638,7 +26191,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__30, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 292, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__32, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(2, 292, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_XGOTREF(indirect_contiguous);
   __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_2);
@@ -24834,18 +29387,6 @@ __pyx_fail:
     return result;
 }
 
-/* MemviewDtypeToObject */
-  static CYTHON_INLINE PyObject *__pyx_memview_get_double(const char *itemp) {
-    return (PyObject *) PyFloat_FromDouble(*(double *) itemp);
-}
-static CYTHON_INLINE int __pyx_memview_set_double(const char *itemp, PyObject *obj) {
-    double value = __pyx_PyFloat_AsDouble(obj);
-    if ((value == (double)-1) && PyErr_Occurred())
-        return 0;
-    *(double *) itemp = value;
-    return 1;
-}
-
 /* ObjectToMemviewSlice */
   static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_d_dc_double(PyObject *obj, int writable_flag) {
     __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
@@ -24859,6 +29400,121 @@ static CYTHON_INLINE int __pyx_memview_set_double(const char *itemp, PyObject *o
     retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, __Pyx_IS_C_CONTIG,
                                                  (PyBUF_C_CONTIGUOUS | PyBUF_FORMAT) | writable_flag, 6,
                                                  &__Pyx_TypeInfo_double, stack,
+                                                 &result, obj);
+    if (unlikely(retcode == -1))
+        goto __pyx_fail;
+    return result;
+__pyx_fail:
+    result.memview = NULL;
+    result.data = NULL;
+    return result;
+}
+
+/* MemviewDtypeToObject */
+  static CYTHON_INLINE PyObject *__pyx_memview_get_double(const char *itemp) {
+    return (PyObject *) PyFloat_FromDouble(*(double *) itemp);
+}
+static CYTHON_INLINE int __pyx_memview_set_double(const char *itemp, PyObject *obj) {
+    double value = __pyx_PyFloat_AsDouble(obj);
+    if ((value == (double)-1) && PyErr_Occurred())
+        return 0;
+    *(double *) itemp = value;
+    return 1;
+}
+
+/* CIntFromPyVerify */
+  #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
+#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
+    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
+#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
+    {\
+        func_type value = func_value;\
+        if (sizeof(target_type) < sizeof(func_type)) {\
+            if (unlikely(value != (func_type) (target_type) value)) {\
+                func_type zero = 0;\
+                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
+                    return (target_type) -1;\
+                if (is_unsigned && unlikely(value < zero))\
+                    goto raise_neg_overflow;\
+                else\
+                    goto raise_overflow;\
+            }\
+        }\
+        return (target_type) value;\
+    }
+
+/* MemviewDtypeToObject */
+  static CYTHON_INLINE PyObject *__pyx_memview_get_long(const char *itemp) {
+    return (PyObject *) __Pyx_PyInt_From_long(*(long *) itemp);
+}
+static CYTHON_INLINE int __pyx_memview_set_long(const char *itemp, PyObject *obj) {
+    long value = __Pyx_PyInt_As_long(obj);
+    if ((value == (long)-1) && PyErr_Occurred())
+        return 0;
+    *(long *) itemp = value;
+    return 1;
+}
+
+/* ObjectToMemviewSlice */
+  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dc_Py_ssize_t(PyObject *obj, int writable_flag) {
+    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
+    __Pyx_BufFmt_StackElem stack[1];
+    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_CONTIG) };
+    int retcode;
+    if (obj == Py_None) {
+        result.memview = (struct __pyx_memoryview_obj *) Py_None;
+        return result;
+    }
+    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, __Pyx_IS_C_CONTIG,
+                                                 (PyBUF_C_CONTIGUOUS | PyBUF_FORMAT) | writable_flag, 1,
+                                                 &__Pyx_TypeInfo_Py_ssize_t, stack,
+                                                 &result, obj);
+    if (unlikely(retcode == -1))
+        goto __pyx_fail;
+    return result;
+__pyx_fail:
+    result.memview = NULL;
+    result.data = NULL;
+    return result;
+}
+
+/* ObjectToMemviewSlice */
+  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_d_d_d_dc_int(PyObject *obj, int writable_flag) {
+    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
+    __Pyx_BufFmt_StackElem stack[1];
+    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_FOLLOW), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_FOLLOW), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_FOLLOW), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_FOLLOW), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_CONTIG) };
+    int retcode;
+    if (obj == Py_None) {
+        result.memview = (struct __pyx_memoryview_obj *) Py_None;
+        return result;
+    }
+    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, __Pyx_IS_C_CONTIG,
+                                                 (PyBUF_C_CONTIGUOUS | PyBUF_FORMAT) | writable_flag, 5,
+                                                 &__Pyx_TypeInfo_int, stack,
+                                                 &result, obj);
+    if (unlikely(retcode == -1))
+        goto __pyx_fail;
+    return result;
+__pyx_fail:
+    result.memview = NULL;
+    result.data = NULL;
+    return result;
+}
+
+/* ObjectToMemviewSlice */
+  static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_d_dc_Py_ssize_t(PyObject *obj, int writable_flag) {
+    __Pyx_memviewslice result = { 0, 0, { 0 }, { 0 }, { 0 } };
+    __Pyx_BufFmt_StackElem stack[1];
+    int axes_specs[] = { (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_FOLLOW), (__Pyx_MEMVIEW_DIRECT | __Pyx_MEMVIEW_CONTIG) };
+    int retcode;
+    if (obj == Py_None) {
+        result.memview = (struct __pyx_memoryview_obj *) Py_None;
+        return result;
+    }
+    retcode = __Pyx_ValidateAndInit_memviewslice(axes_specs, __Pyx_IS_C_CONTIG,
+                                                 (PyBUF_C_CONTIGUOUS | PyBUF_FORMAT) | writable_flag, 2,
+                                                 &__Pyx_TypeInfo_Py_ssize_t, stack,
                                                  &result, obj);
     if (unlikely(retcode == -1))
         goto __pyx_fail;
@@ -25244,222 +29900,42 @@ no_fail:
     return new_mvs;
 }
 
-/* CIntFromPyVerify */
-  #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
-#define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
-    __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
-#define __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, exc)\
-    {\
-        func_type value = func_value;\
-        if (sizeof(target_type) < sizeof(func_type)) {\
-            if (unlikely(value != (func_type) (target_type) value)) {\
-                func_type zero = 0;\
-                if (exc && unlikely(value == (func_type)-1 && PyErr_Occurred()))\
-                    return (target_type) -1;\
-                if (is_unsigned && unlikely(value < zero))\
-                    goto raise_neg_overflow;\
-                else\
-                    goto raise_overflow;\
-            }\
-        }\
-        return (target_type) value;\
-    }
-
-/* CIntFromPy */
-  static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
+/* CIntToPy */
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wconversion"
 #endif
-    const int neg_one = (int) -1, const_zero = (int) 0;
+    const long neg_one = (long) -1, const_zero = (long) 0;
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
 #pragma GCC diagnostic pop
 #endif
     const int is_unsigned = neg_one > const_zero;
-#if PY_MAJOR_VERSION < 3
-    if (likely(PyInt_Check(x))) {
-        if (sizeof(int) < sizeof(long)) {
-            __PYX_VERIFY_RETURN_INT(int, long, PyInt_AS_LONG(x))
-        } else {
-            long val = PyInt_AS_LONG(x);
-            if (is_unsigned && unlikely(val < 0)) {
-                goto raise_neg_overflow;
-            }
-            return (int) val;
-        }
-    } else
-#endif
-    if (likely(PyLong_Check(x))) {
-        if (is_unsigned) {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (int) 0;
-                case  1: __PYX_VERIFY_RETURN_INT(int, digit, digits[0])
-                case 2:
-                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) >= 2 * PyLong_SHIFT) {
-                            return (int) (((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) >= 3 * PyLong_SHIFT) {
-                            return (int) (((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) >= 4 * PyLong_SHIFT) {
-                            return (int) (((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
-                        }
-                    }
-                    break;
-            }
-#endif
-#if CYTHON_COMPILING_IN_CPYTHON
-            if (unlikely(Py_SIZE(x) < 0)) {
-                goto raise_neg_overflow;
-            }
-#else
-            {
-                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
-                if (unlikely(result < 0))
-                    return (int) -1;
-                if (unlikely(result == 1))
-                    goto raise_neg_overflow;
-            }
-#endif
-            if (sizeof(int) <= sizeof(unsigned long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned long, PyLong_AsUnsignedLong(x))
+    if (is_unsigned) {
+        if (sizeof(long) < sizeof(long)) {
+            return PyInt_FromLong((long) value);
+        } else if (sizeof(long) <= sizeof(unsigned long)) {
+            return PyLong_FromUnsignedLong((unsigned long) value);
 #ifdef HAVE_LONG_LONG
-            } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
+            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
 #endif
-            }
-        } else {
-#if CYTHON_USE_PYLONG_INTERNALS
-            const digit* digits = ((PyLongObject*)x)->ob_digit;
-            switch (Py_SIZE(x)) {
-                case  0: return (int) 0;
-                case -1: __PYX_VERIFY_RETURN_INT(int, sdigit, (sdigit) (-(sdigit)digits[0]))
-                case  1: __PYX_VERIFY_RETURN_INT(int,  digit, +digits[0])
-                case -2:
-                    if (8 * sizeof(int) - 1 > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
-                            return (int) (((int)-1)*(((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case 2:
-                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
-                            return (int) ((((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case -3:
-                    if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
-                            return (int) (((int)-1)*(((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case 3:
-                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
-                            return (int) ((((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case -4:
-                    if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
-                            return (int) (((int)-1)*(((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-                case 4:
-                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
-                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
-                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
-                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
-                            return (int) ((((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
-                        }
-                    }
-                    break;
-            }
-#endif
-            if (sizeof(int) <= sizeof(long)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, long, PyLong_AsLong(x))
-#ifdef HAVE_LONG_LONG
-            } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
-                __PYX_VERIFY_RETURN_INT_EXC(int, PY_LONG_LONG, PyLong_AsLongLong(x))
-#endif
-            }
-        }
-        {
-#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
-            PyErr_SetString(PyExc_RuntimeError,
-                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
-#else
-            int val;
-            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
- #if PY_MAJOR_VERSION < 3
-            if (likely(v) && !PyLong_Check(v)) {
-                PyObject *tmp = v;
-                v = PyNumber_Long(tmp);
-                Py_DECREF(tmp);
-            }
- #endif
-            if (likely(v)) {
-                int one = 1; int is_little = (int)*(unsigned char *)&one;
-                unsigned char *bytes = (unsigned char *)&val;
-                int ret = _PyLong_AsByteArray((PyLongObject *)v,
-                                              bytes, sizeof(val),
-                                              is_little, !is_unsigned);
-                Py_DECREF(v);
-                if (likely(!ret))
-                    return val;
-            }
-#endif
-            return (int) -1;
         }
     } else {
-        int val;
-        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
-        if (!tmp) return (int) -1;
-        val = __Pyx_PyInt_As_int(tmp);
-        Py_DECREF(tmp);
-        return val;
+        if (sizeof(long) <= sizeof(long)) {
+            return PyInt_FromLong((long) value);
+#ifdef HAVE_LONG_LONG
+        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
+            return PyLong_FromLongLong((PY_LONG_LONG) value);
+#endif
+        }
     }
-raise_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "value too large to convert to int");
-    return (int) -1;
-raise_neg_overflow:
-    PyErr_SetString(PyExc_OverflowError,
-        "can't convert negative value to int");
-    return (int) -1;
+    {
+        int one = 1; int little = (int)*(unsigned char *)&one;
+        unsigned char *bytes = (unsigned char *)&value;
+        return _PyLong_FromByteArray(bytes, sizeof(long),
+                                     little, !is_unsigned);
+    }
 }
 
 /* CIntFromPy */
@@ -25658,6 +30134,202 @@ raise_neg_overflow:
     return (long) -1;
 }
 
+/* CIntFromPy */
+  static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wconversion"
+#endif
+    const int neg_one = (int) -1, const_zero = (int) 0;
+#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
+#pragma GCC diagnostic pop
+#endif
+    const int is_unsigned = neg_one > const_zero;
+#if PY_MAJOR_VERSION < 3
+    if (likely(PyInt_Check(x))) {
+        if (sizeof(int) < sizeof(long)) {
+            __PYX_VERIFY_RETURN_INT(int, long, PyInt_AS_LONG(x))
+        } else {
+            long val = PyInt_AS_LONG(x);
+            if (is_unsigned && unlikely(val < 0)) {
+                goto raise_neg_overflow;
+            }
+            return (int) val;
+        }
+    } else
+#endif
+    if (likely(PyLong_Check(x))) {
+        if (is_unsigned) {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (int) 0;
+                case  1: __PYX_VERIFY_RETURN_INT(int, digit, digits[0])
+                case 2:
+                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) >= 2 * PyLong_SHIFT) {
+                            return (int) (((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) >= 3 * PyLong_SHIFT) {
+                            return (int) (((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) >= 4 * PyLong_SHIFT) {
+                            return (int) (((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0]));
+                        }
+                    }
+                    break;
+            }
+#endif
+#if CYTHON_COMPILING_IN_CPYTHON
+            if (unlikely(Py_SIZE(x) < 0)) {
+                goto raise_neg_overflow;
+            }
+#else
+            {
+                int result = PyObject_RichCompareBool(x, Py_False, Py_LT);
+                if (unlikely(result < 0))
+                    return (int) -1;
+                if (unlikely(result == 1))
+                    goto raise_neg_overflow;
+            }
+#endif
+            if (sizeof(int) <= sizeof(unsigned long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned long, PyLong_AsUnsignedLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(int) <= sizeof(unsigned PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, unsigned PY_LONG_LONG, PyLong_AsUnsignedLongLong(x))
+#endif
+            }
+        } else {
+#if CYTHON_USE_PYLONG_INTERNALS
+            const digit* digits = ((PyLongObject*)x)->ob_digit;
+            switch (Py_SIZE(x)) {
+                case  0: return (int) 0;
+                case -1: __PYX_VERIFY_RETURN_INT(int, sdigit, (sdigit) (-(sdigit)digits[0]))
+                case  1: __PYX_VERIFY_RETURN_INT(int,  digit, +digits[0])
+                case -2:
+                    if (8 * sizeof(int) - 1 > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                            return (int) (((int)-1)*(((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case 2:
+                    if (8 * sizeof(int) > 1 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 2 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                            return (int) ((((((int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case -3:
+                    if (8 * sizeof(int) - 1 > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                            return (int) (((int)-1)*(((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case 3:
+                    if (8 * sizeof(int) > 2 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 3 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                            return (int) ((((((((int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case -4:
+                    if (8 * sizeof(int) - 1 > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, long, -(long) (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
+                            return (int) (((int)-1)*(((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+                case 4:
+                    if (8 * sizeof(int) > 3 * PyLong_SHIFT) {
+                        if (8 * sizeof(unsigned long) > 4 * PyLong_SHIFT) {
+                            __PYX_VERIFY_RETURN_INT(int, unsigned long, (((((((((unsigned long)digits[3]) << PyLong_SHIFT) | (unsigned long)digits[2]) << PyLong_SHIFT) | (unsigned long)digits[1]) << PyLong_SHIFT) | (unsigned long)digits[0])))
+                        } else if (8 * sizeof(int) - 1 > 4 * PyLong_SHIFT) {
+                            return (int) ((((((((((int)digits[3]) << PyLong_SHIFT) | (int)digits[2]) << PyLong_SHIFT) | (int)digits[1]) << PyLong_SHIFT) | (int)digits[0])));
+                        }
+                    }
+                    break;
+            }
+#endif
+            if (sizeof(int) <= sizeof(long)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, long, PyLong_AsLong(x))
+#ifdef HAVE_LONG_LONG
+            } else if (sizeof(int) <= sizeof(PY_LONG_LONG)) {
+                __PYX_VERIFY_RETURN_INT_EXC(int, PY_LONG_LONG, PyLong_AsLongLong(x))
+#endif
+            }
+        }
+        {
+#if CYTHON_COMPILING_IN_PYPY && !defined(_PyLong_AsByteArray)
+            PyErr_SetString(PyExc_RuntimeError,
+                            "_PyLong_AsByteArray() not available in PyPy, cannot convert large numbers");
+#else
+            int val;
+            PyObject *v = __Pyx_PyNumber_IntOrLong(x);
+ #if PY_MAJOR_VERSION < 3
+            if (likely(v) && !PyLong_Check(v)) {
+                PyObject *tmp = v;
+                v = PyNumber_Long(tmp);
+                Py_DECREF(tmp);
+            }
+ #endif
+            if (likely(v)) {
+                int one = 1; int is_little = (int)*(unsigned char *)&one;
+                unsigned char *bytes = (unsigned char *)&val;
+                int ret = _PyLong_AsByteArray((PyLongObject *)v,
+                                              bytes, sizeof(val),
+                                              is_little, !is_unsigned);
+                Py_DECREF(v);
+                if (likely(!ret))
+                    return val;
+            }
+#endif
+            return (int) -1;
+        }
+    } else {
+        int val;
+        PyObject *tmp = __Pyx_PyNumber_IntOrLong(x);
+        if (!tmp) return (int) -1;
+        val = __Pyx_PyInt_As_int(tmp);
+        Py_DECREF(tmp);
+        return val;
+    }
+raise_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "value too large to convert to int");
+    return (int) -1;
+raise_neg_overflow:
+    PyErr_SetString(PyExc_OverflowError,
+        "can't convert negative value to int");
+    return (int) -1;
+}
+
 /* CIntToPy */
   static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
 #ifdef __Pyx_HAS_GCC_DIAGNOSTIC
@@ -25692,44 +30364,6 @@ raise_neg_overflow:
         int one = 1; int little = (int)*(unsigned char *)&one;
         unsigned char *bytes = (unsigned char *)&value;
         return _PyLong_FromByteArray(bytes, sizeof(int),
-                                     little, !is_unsigned);
-    }
-}
-
-/* CIntToPy */
-  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wconversion"
-#endif
-    const long neg_one = (long) -1, const_zero = (long) 0;
-#ifdef __Pyx_HAS_GCC_DIAGNOSTIC
-#pragma GCC diagnostic pop
-#endif
-    const int is_unsigned = neg_one > const_zero;
-    if (is_unsigned) {
-        if (sizeof(long) < sizeof(long)) {
-            return PyInt_FromLong((long) value);
-        } else if (sizeof(long) <= sizeof(unsigned long)) {
-            return PyLong_FromUnsignedLong((unsigned long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(unsigned PY_LONG_LONG)) {
-            return PyLong_FromUnsignedLongLong((unsigned PY_LONG_LONG) value);
-#endif
-        }
-    } else {
-        if (sizeof(long) <= sizeof(long)) {
-            return PyInt_FromLong((long) value);
-#ifdef HAVE_LONG_LONG
-        } else if (sizeof(long) <= sizeof(PY_LONG_LONG)) {
-            return PyLong_FromLongLong((PY_LONG_LONG) value);
-#endif
-        }
-    }
-    {
-        int one = 1; int little = (int)*(unsigned char *)&one;
-        unsigned char *bytes = (unsigned char *)&value;
-        return _PyLong_FromByteArray(bytes, sizeof(long),
                                      little, !is_unsigned);
     }
 }
