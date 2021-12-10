@@ -151,9 +151,9 @@ def energy(double [:,:,:,:,::1] Sx,
 
     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
 
-    cdef Py_ssize_t i, j, k, a
+    cdef Py_ssize_t i, j, k, a, t, p, q
 
-    cdef Py_ssize_t i_, j_, k_, a_, t, p
+    cdef Py_ssize_t i_, j_, k_, a_
 
     cdef bint f
 
@@ -166,7 +166,7 @@ def energy(double [:,:,:,:,::1] Sx,
     cdef double Bx = B[0]
     cdef double By = B[1]
     cdef double Bz = B[2]
-
+    
     for i in range(nu):
         for j in range(nv):
             for k in range(nw):
@@ -198,20 +198,20 @@ def energy(double [:,:,:,:,::1] Sx,
                             vy = Sy[i_,j_,k_,a_,t]
                             vz = Sz[i_,j_,k_,a_,t]
 
-                            t = pair_ind[a,p]
+                            q = pair_ind[a,p]
 
                             f = pair_ij[a,p]
 
                             if (f == 1):
                                 e[i,j,k,a,p,t] = -0.5\
-                                    *(ux*(J[t,0,0]*vx+J[t,1,0]*vy+J[t,2,0]*vz)\
-                                    + uy*(J[t,0,1]*vx+J[t,1,1]*vy+J[t,2,1]*vz)\
-                                    + uz*(J[t,0,2]*vx+J[t,1,2]*vy+J[t,2,2]*vz))
+                                    *(ux*(J[q,0,0]*vx+J[q,1,0]*vy+J[q,2,0]*vz)\
+                                    + uy*(J[q,0,1]*vx+J[q,1,1]*vy+J[q,2,1]*vz)\
+                                    + uz*(J[q,0,2]*vx+J[q,1,2]*vy+J[q,2,2]*vz))
                             else:
                                 e[i,j,k,a,p,t] = -0.5\
-                                    *(ux*(J[t,0,0]*vx+J[t,0,1]*vy+J[t,0,2]*vz)\
-                                    + uy*(J[t,1,0]*vx+J[t,1,1]*vy+J[t,1,2]*vz)\
-                                    + uz*(J[t,2,0]*vx+J[t,2,1]*vy+J[t,2,2]*vz))
+                                    *(ux*(J[q,0,0]*vx+J[q,0,1]*vy+J[q,0,2]*vz)\
+                                    + uy*(J[q,1,0]*vx+J[q,1,1]*vy+J[q,1,2]*vz)\
+                                    + uz*(J[q,2,0]*vx+J[q,2,1]*vy+J[q,2,2]*vz))
 
     return e_np
 
@@ -498,7 +498,9 @@ cdef void annealing_cluster(double [:,:,:,:,::1] Sx,
             c[i,j,k,a,t] = 0
 
             h_eff[i,j,k,a,t] = 0
-
+            
+        print(Ec)
+            
         if (random() < alpha(Ec, beta[t])):
 
             for i_c in range(n_c[t]):
@@ -601,7 +603,6 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
             vz_perp = vz-nz*n_dot_v
 
             q = pair_ind[a,p]
-
             f = pair_ij[a,p]
 
             if (f == 1):
@@ -660,10 +661,6 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
                             double nx,
                             double ny,
                             double nz,
-                            double ux_perp,
-                            double uy_perp,
-                            double uz_perp,
-                            double n_dot_u,
                             double [:,:,::1] J,
                             Py_ssize_t [:,::1] clust_i,
                             Py_ssize_t [:,::1] clust_j,
@@ -690,19 +687,18 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
 
     cdef double E = 0
 
-    cdef Py_ssize_t i, j, k, a, p, q, i_, j_, k_, a_, p_
+    cdef Py_ssize_t i, j, k, a, p, q, i_, j_, k_, a_
 
     cdef bint f
 
+    cdef double ux, uy, uz
     cdef double vx, vy, vz
-    cdef double vx_perp, vy_perp, vz_perp
 
-    cdef double J_eff, J_eff_ij, J_eff_ji
+    cdef double J_eff
 
     cdef double Jx_eff_ij, Jy_eff_ij, Jz_eff_ij
-    cdef double Jx_eff_ji, Jy_eff_ji, Jz_eff_ji
 
-    cdef double n_dot_v
+    cdef double n_dot_u, n_dot_v
     
     for i_c in range(n_c[t]):
 
@@ -710,6 +706,14 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
         j = clust_j[i_c,t]
         k = clust_k[i_c,t]
         a = clust_a[i_c,t]
+        
+        ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+        
+        n_dot_u = ux*nx+uy*ny+uz*nz
+        
+        ux = ux-2*nx*n_dot_u
+        uy = uy-2*ny*n_dot_u
+        uz = uz-2*nz*n_dot_u
 
         for p in range(n_pairs):
     
@@ -717,7 +721,6 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
             j_ = (j+img_ind_j[a,p]+nv)%nv
             k_ = (k+img_ind_k[a,p]+nw)%nw
             a_ = atm_ind[a,p]
-            p_ = pair_inv[a,p]
     
             if (c[i_,j_,k_,a_,t] == 0):
     
@@ -727,38 +730,21 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
     
                 n_dot_v = vx*nx+vy*ny+vz*nz
     
-                vx_perp = vx-nx*n_dot_v
-                vy_perp = vy-ny*n_dot_v
-                vz_perp = vz-nz*n_dot_v
-    
                 q = pair_ind[a,p]
-    
                 f = pair_ij[a,p]
     
                 if (f == 1):
-                    Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
-                    Jy_eff_ij = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
-                    Jz_eff_ij = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
-    
-                    Jx_eff_ji = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
-                    Jy_eff_ji = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
-                    Jz_eff_ji = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
+                    Jx_eff_ij = J[q,0,0]*ux+J[q,1,0]*uy+J[q,2,0]*uz
+                    Jy_eff_ij = J[q,0,1]*ux+J[q,1,1]*uy+J[q,2,1]*uz
+                    Jz_eff_ij = J[q,0,2]*ux+J[q,1,2]*uy+J[q,2,2]*uz
                 else:
-                    Jx_eff_ij = J[q,0,0]*nx+J[q,0,1]*ny+J[q,0,2]*nz
-                    Jy_eff_ij = J[q,1,0]*nx+J[q,1,1]*ny+J[q,1,2]*nz
-                    Jz_eff_ij = J[q,2,0]*nx+J[q,2,1]*ny+J[q,2,2]*nz
-    
-                    Jx_eff_ji = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
-                    Jy_eff_ji = J[q,0,1]*nx+J[q,1,1]*ny+J[q,2,1]*nz
-                    Jz_eff_ji = J[q,0,2]*nx+J[q,1,2]*ny+J[q,2,2]*nz
-    
-                J_eff_ij = ux_perp*Jx_eff_ij+uy_perp*Jy_eff_ij+uz_perp*Jz_eff_ij
+                    Jx_eff_ij = J[q,0,0]*ux+J[q,0,1]*uy+J[q,0,2]*uz
+                    Jy_eff_ij = J[q,1,0]*ux+J[q,1,1]*uy+J[q,1,2]*uz
+                    Jz_eff_ij = J[q,2,0]*ux+J[q,2,1]*uy+J[q,2,2]*uz
         
-                J_eff_ji = vx_perp*Jx_eff_ji+vy_perp*Jy_eff_ji+vz_perp*Jz_eff_ji
-        
-                J_eff = nx*Jx_eff_ij+ny*Jy_eff_ij+nz*Jz_eff_ij
+                J_eff = vx*Jx_eff_ij+vy*Jy_eff_ij+vz*Jz_eff_ij
     
-                E += 2*J_eff*n_dot_u*n_dot_v
+                E -= 1*J_eff#*n_dot_u*n_dot_v
 
     return E
 
@@ -812,7 +798,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     n = nu*nv*nw*n_atm
 
-    cdef Py_ssize_t i_c
+    cdef Py_ssize_t i_c, m_c
     
     cdef Py_ssize_t [::1] n_c = np.zeros(n_temp, dtype=np.intp)
     
@@ -873,17 +859,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
             b[i,j,k,a,t] = 1
 
-            n_c[t] = 1
-
-            n_c[t] = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
-                                      ux_perp, uy_perp, uz_perp, n_dot_u, J,
-                                      clust_i, clust_j, clust_k, clust_a,
-                                      h_eff, h_eff_ij, b, c, n_c,
-                                      atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                                      pair_ind, pair_inv, pair_ij, beta,
-                                      i, j, k, a, t)
-
-            i_c = 1
+            i_c, n_c[t] = 0, 1
 
             while i_c < n_c[t]:
 
@@ -914,9 +890,32 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                           i_, j_, k_, a_, t)
 
                 i_c += 1
+                
+            m_c = 0
+            for i_c in range(n_c[t]):
+                m_c += 1
             
-            E[t] = boundary_energy(Sx, Sy, Sz, nx, ny, nz,
-                                   vx_perp, vy_perp, vz_perp, n_dot_v, J,
+            print(t,m_c)
+            
+            m_c = 0
+            for i in range(nu):
+                for j in range(nv):
+                    for k in range(nw):
+                        for a in range(n_atm):
+                            if b[i,j,k,a,t]:
+                                m_c += 1
+            print(t,m_c)
+            
+            m_c = 0
+            for i in range(nu):
+                for j in range(nv):
+                    for k in range(nw):
+                        for a in range(n_atm):
+                            if c[i,j,k,a,t]:
+                                m_c += 1
+            print(t,m_c)
+            
+            E[t] = boundary_energy(Sx, Sy, Sz, nx, ny, nz, J,
                                    clust_i, clust_j, clust_k, clust_a, c, n_c, 
                                    atm_ind, img_ind_i, img_ind_j, img_ind_k,
                                    pair_ind, pair_inv, pair_ij, t)
@@ -928,3 +927,6 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                           pair_ind, pair_ij, H, E, beta)
 
         replica_exchange(H, beta)
+
+    for t in range(n_temp):
+        print(H[t])
