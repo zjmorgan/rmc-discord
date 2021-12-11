@@ -124,8 +124,8 @@ cdef void replica_exchange(double [::1] H, double [::1] beta):
     i, j = dist_temp(gen), dist_temp(gen)
 
     if (i != j):
-        if (random() < alpha(H[i]-H[j], beta[i]-beta[j])):
-            beta[i], beta[j] = beta[i], beta[j]
+        if (random() < alpha(H[j]-H[i], beta[i]-beta[j])):
+            beta[i], beta[j] = beta[j], beta[i]
 
 def energy(double [:,:,:,:,::1] Sx,
            double [:,:,:,:,::1] Sy,
@@ -175,16 +175,6 @@ def energy(double [:,:,:,:,::1] Sx,
                         uy = Sy[i,j,k,a,t]
                         uz = Sz[i,j,k,a,t]
 
-                        e[i,j,k,a,n_pairs,t] = \
-                            -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
-                            + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
-                            + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
-
-                        e[i,j,k,a,n_pairs+1,t] = \
-                            -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
-                            + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
-                            + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
-
                         for p in range(n_pairs):
 
                             i_ = (i+img_ind_i[a,p]+nu)%nu
@@ -209,6 +199,16 @@ def energy(double [:,:,:,:,::1] Sx,
                                     *(ux*(J[q,0,0]*vx+J[q,0,1]*vy+J[q,0,2]*vz)\
                                     + uy*(J[q,1,0]*vx+J[q,1,1]*vy+J[q,1,2]*vz)\
                                     + uz*(J[q,2,0]*vx+J[q,2,1]*vy+J[q,2,2]*vz))
+
+                        e[i,j,k,a,n_pairs,t] = \
+                            -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+                            + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+                            + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
+
+                        e[i,j,k,a,n_pairs+1,t] = \
+                            -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
+                            + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
+                            + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
 
     return e_np
 
@@ -397,7 +397,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
             annealing_vector(Sx, Sy, Sz, sx, sy, sz, H, E, beta, i, j, k, a)
 
             replica_exchange(H, beta)
-
+            
 # ---
 
 cdef void annealing_cluster(double [:,:,:,:,::1] Sx,
@@ -520,7 +520,7 @@ cdef void annealing_cluster(double [:,:,:,:,::1] Sx,
                 Sy[i,j,k,a,t] = vy
                 Sz[i,j,k,a,t] = vz
 
-            H[t] += -Ec+Eij[t]
+            H[t] += Ec+Eij[t]
 
 cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
                                  double [:,:,:,:,::1] Sy,

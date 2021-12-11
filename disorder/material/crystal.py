@@ -608,8 +608,20 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
         mx = np.round(Sx[mask],4)
         my = np.round(Sy[mask],4)
         mz = np.round(Sz[mask],4)
+        
+        G = np.dot(A.T,A)
+        
+        a, b, c = np.sqrt(G[0,0]), np.sqrt(G[1,1]), np.sqrt(G[2,2])
+        
+        alpha = np.arccos(G[1,2]/(b*c))
+        beta = np.arccos(G[0,2]/(a*c))
+        gamma = np.arccos(G[0,1]/(a*b))
+        
+        C = cartesian_moment(a, b, c, alpha, beta, gamma)
 
-        mu, mv, mw = transform(mx, my, mz, A_inv)
+        C_inv = np.linalg.inv(C)
+
+        mu, mv, mw = transform(mx, my, mz, C_inv)
 
         atom = np.tile(atm, na*nb*nc)
 

@@ -3304,8 +3304,8 @@ static void __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__Pyx_memvi
  *     i, j = dist_temp(gen), dist_temp(gen)
  * 
  *     if (i != j):             # <<<<<<<<<<<<<<
- *         if (random() < alpha(H[i]-H[j], beta[i]-beta[j])):
- *             beta[i], beta[j] = beta[i], beta[j]
+ *         if (random() < alpha(H[j]-H[i], beta[i]-beta[j])):
+ *             beta[i], beta[j] = beta[j], beta[i]
  */
   __pyx_t_3 = ((__pyx_v_i != __pyx_v_j) != 0);
   if (__pyx_t_3) {
@@ -3313,12 +3313,12 @@ static void __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__Pyx_memvi
     /* "disorder/diffuse/simulation.pyx":127
  * 
  *     if (i != j):
- *         if (random() < alpha(H[i]-H[j], beta[i]-beta[j])):             # <<<<<<<<<<<<<<
- *             beta[i], beta[j] = beta[i], beta[j]
+ *         if (random() < alpha(H[j]-H[i], beta[i]-beta[j])):             # <<<<<<<<<<<<<<
+ *             beta[i], beta[j] = beta[j], beta[i]
  * 
  */
-    __pyx_t_4 = __pyx_v_i;
-    __pyx_t_5 = __pyx_v_j;
+    __pyx_t_4 = __pyx_v_j;
+    __pyx_t_5 = __pyx_v_i;
     __pyx_t_6 = __pyx_v_i;
     __pyx_t_7 = __pyx_v_j;
     __pyx_t_3 = ((__pyx_f_8disorder_7diffuse_10simulation_random() < __pyx_f_8disorder_7diffuse_10simulation_alpha(((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_H.data) + __pyx_t_4)) ))) - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_H.data) + __pyx_t_5)) )))), ((*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_6)) ))) - (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_7)) )))))) != 0);
@@ -3326,14 +3326,14 @@ static void __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__Pyx_memvi
 
       /* "disorder/diffuse/simulation.pyx":128
  *     if (i != j):
- *         if (random() < alpha(H[i]-H[j], beta[i]-beta[j])):
- *             beta[i], beta[j] = beta[i], beta[j]             # <<<<<<<<<<<<<<
+ *         if (random() < alpha(H[j]-H[i], beta[i]-beta[j])):
+ *             beta[i], beta[j] = beta[j], beta[i]             # <<<<<<<<<<<<<<
  * 
  * def energy(double [:,:,:,:,::1] Sx,
  */
-      __pyx_t_7 = __pyx_v_i;
-      __pyx_t_8 = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_7)) )));
       __pyx_t_7 = __pyx_v_j;
+      __pyx_t_8 = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_7)) )));
+      __pyx_t_7 = __pyx_v_i;
       __pyx_t_9 = (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_7)) )));
       __pyx_t_7 = __pyx_v_i;
       *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_beta.data) + __pyx_t_7)) )) = __pyx_t_8;
@@ -3343,8 +3343,8 @@ static void __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__Pyx_memvi
       /* "disorder/diffuse/simulation.pyx":127
  * 
  *     if (i != j):
- *         if (random() < alpha(H[i]-H[j], beta[i]-beta[j])):             # <<<<<<<<<<<<<<
- *             beta[i], beta[j] = beta[i], beta[j]
+ *         if (random() < alpha(H[j]-H[i], beta[i]-beta[j])):             # <<<<<<<<<<<<<<
+ *             beta[i], beta[j] = beta[j], beta[i]
  * 
  */
     }
@@ -3353,8 +3353,8 @@ static void __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__Pyx_memvi
  *     i, j = dist_temp(gen), dist_temp(gen)
  * 
  *     if (i != j):             # <<<<<<<<<<<<<<
- *         if (random() < alpha(H[i]-H[j], beta[i]-beta[j])):
- *             beta[i], beta[j] = beta[i], beta[j]
+ *         if (random() < alpha(H[j]-H[i], beta[i]-beta[j])):
+ *             beta[i], beta[j] = beta[j], beta[i]
  */
   }
 
@@ -3371,7 +3371,7 @@ static void __pyx_f_8disorder_7diffuse_10simulation_replica_exchange(__Pyx_memvi
 }
 
 /* "disorder/diffuse/simulation.pyx":130
- *             beta[i], beta[j] = beta[i], beta[j]
+ *             beta[i], beta[j] = beta[j], beta[i]
  * 
  * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *            double [:,:,:,:,::1] Sy,
@@ -3629,7 +3629,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
   Py_ssize_t __pyx_t_31;
   Py_ssize_t __pyx_t_32;
   Py_ssize_t __pyx_t_33;
-  Py_ssize_t __pyx_t_34;
+  int __pyx_t_34;
   Py_ssize_t __pyx_t_35;
   Py_ssize_t __pyx_t_36;
   Py_ssize_t __pyx_t_37;
@@ -3657,7 +3657,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
   Py_ssize_t __pyx_t_59;
   Py_ssize_t __pyx_t_60;
   Py_ssize_t __pyx_t_61;
-  int __pyx_t_62;
+  Py_ssize_t __pyx_t_62;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
@@ -3915,7 +3915,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
  *                         uy = Sy[i,j,k,a,t]
  *                         uz = Sz[i,j,k,a,t]             # <<<<<<<<<<<<<<
  * 
- *                         e[i,j,k,a,n_pairs,t] = \
+ *                         for p in range(n_pairs):
  */
             __pyx_t_11 = __pyx_v_i;
             __pyx_t_27 = __pyx_v_j;
@@ -3924,151 +3924,19 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
             __pyx_t_30 = __pyx_v_t;
             __pyx_v_uz = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_11 * __pyx_v_Sz.strides[0]) ) + __pyx_t_27 * __pyx_v_Sz.strides[1]) ) + __pyx_t_28 * __pyx_v_Sz.strides[2]) ) + __pyx_t_29 * __pyx_v_Sz.strides[3]) )) + __pyx_t_30)) )));
 
-            /* "disorder/diffuse/simulation.pyx":179
- * 
- *                         e[i,j,k,a,n_pairs,t] = \
- *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\             # <<<<<<<<<<<<<<
- *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
- *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
- */
-            __pyx_t_30 = __pyx_v_a;
-            __pyx_t_29 = 0;
-            __pyx_t_28 = 0;
-            __pyx_t_27 = __pyx_v_a;
-            __pyx_t_11 = 0;
-            __pyx_t_31 = 1;
-            __pyx_t_32 = __pyx_v_a;
-            __pyx_t_33 = 0;
-            __pyx_t_34 = 2;
-
-            /* "disorder/diffuse/simulation.pyx":180
- *                         e[i,j,k,a,n_pairs,t] = \
- *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
- *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\             # <<<<<<<<<<<<<<
- *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
- * 
- */
-            __pyx_t_35 = __pyx_v_a;
-            __pyx_t_36 = 1;
-            __pyx_t_37 = 0;
-            __pyx_t_38 = __pyx_v_a;
-            __pyx_t_39 = 1;
-            __pyx_t_40 = 1;
-            __pyx_t_41 = __pyx_v_a;
-            __pyx_t_42 = 1;
-            __pyx_t_43 = 2;
-
-            /* "disorder/diffuse/simulation.pyx":181
- *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
- *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
- *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))             # <<<<<<<<<<<<<<
- * 
- *                         e[i,j,k,a,n_pairs+1,t] = \
- */
-            __pyx_t_44 = __pyx_v_a;
-            __pyx_t_45 = 2;
-            __pyx_t_46 = 0;
-            __pyx_t_47 = __pyx_v_a;
-            __pyx_t_48 = 2;
-            __pyx_t_49 = 1;
-            __pyx_t_50 = __pyx_v_a;
-            __pyx_t_51 = 2;
-            __pyx_t_52 = 2;
-
             /* "disorder/diffuse/simulation.pyx":178
  *                         uz = Sz[i,j,k,a,t]
- * 
- *                         e[i,j,k,a,n_pairs,t] = \             # <<<<<<<<<<<<<<
- *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
- *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
- */
-            __pyx_t_53 = __pyx_v_i;
-            __pyx_t_54 = __pyx_v_j;
-            __pyx_t_55 = __pyx_v_k;
-            __pyx_t_56 = __pyx_v_a;
-            __pyx_t_57 = __pyx_v_n_pairs;
-            __pyx_t_58 = __pyx_v_t;
-            *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_53 * __pyx_v_e.strides[0]) ) + __pyx_t_54 * __pyx_v_e.strides[1]) ) + __pyx_t_55 * __pyx_v_e.strides[2]) ) + __pyx_t_56 * __pyx_v_e.strides[3]) ) + __pyx_t_57 * __pyx_v_e.strides[4]) )) + __pyx_t_58)) )) = (-(((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_30 * __pyx_v_A.strides[0]) ) + __pyx_t_29 * __pyx_v_A.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_27 * __pyx_v_A.strides[0]) ) + __pyx_t_11 * __pyx_v_A.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_32 * __pyx_v_A.strides[0]) ) + __pyx_t_33 * __pyx_v_A.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_uz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_35 * __pyx_v_A.strides[0]) ) + __pyx_t_36 * __pyx_v_A.strides[1]) )) + __pyx_t_37)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_38 * __pyx_v_A.strides[0]) ) + __pyx_t_39 * __pyx_v_A.strides[1]) )) + __pyx_t_40)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_41 * __pyx_v_A.strides[0]) ) + __pyx_t_42 * __pyx_v_A.strides[1]) )) + __pyx_t_43)) ))) * __pyx_v_uz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_44 * __pyx_v_A.strides[0]) ) + __pyx_t_45 * __pyx_v_A.strides[1]) )) + __pyx_t_46)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_47 * __pyx_v_A.strides[0]) ) + __pyx_t_48 * __pyx_v_A.strides[1]) )) + __pyx_t_49)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_50 * __pyx_v_A.strides[0]) ) + __pyx_t_51 * __pyx_v_A.strides[1]) )) + __pyx_t_52)) ))) * __pyx_v_uz)))));
-
-            /* "disorder/diffuse/simulation.pyx":184
- * 
- *                         e[i,j,k,a,n_pairs+1,t] = \
- *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\             # <<<<<<<<<<<<<<
- *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
- *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
- */
-            __pyx_t_52 = __pyx_v_a;
-            __pyx_t_51 = 0;
-            __pyx_t_50 = 0;
-            __pyx_t_49 = __pyx_v_a;
-            __pyx_t_48 = 0;
-            __pyx_t_47 = 1;
-            __pyx_t_46 = __pyx_v_a;
-            __pyx_t_45 = 0;
-            __pyx_t_44 = 2;
-
-            /* "disorder/diffuse/simulation.pyx":185
- *                         e[i,j,k,a,n_pairs+1,t] = \
- *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
- *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\             # <<<<<<<<<<<<<<
- *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
- * 
- */
-            __pyx_t_43 = __pyx_v_a;
-            __pyx_t_42 = 1;
-            __pyx_t_41 = 0;
-            __pyx_t_40 = __pyx_v_a;
-            __pyx_t_39 = 1;
-            __pyx_t_38 = 1;
-            __pyx_t_37 = __pyx_v_a;
-            __pyx_t_36 = 1;
-            __pyx_t_35 = 2;
-
-            /* "disorder/diffuse/simulation.pyx":186
- *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
- *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
- *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))             # <<<<<<<<<<<<<<
- * 
- *                         for p in range(n_pairs):
- */
-            __pyx_t_34 = __pyx_v_a;
-            __pyx_t_33 = 2;
-            __pyx_t_32 = 0;
-            __pyx_t_31 = __pyx_v_a;
-            __pyx_t_11 = 2;
-            __pyx_t_27 = 1;
-            __pyx_t_28 = __pyx_v_a;
-            __pyx_t_29 = 2;
-            __pyx_t_30 = 2;
-
-            /* "disorder/diffuse/simulation.pyx":183
- *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
- * 
- *                         e[i,j,k,a,n_pairs+1,t] = \             # <<<<<<<<<<<<<<
- *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
- *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
- */
-            __pyx_t_58 = __pyx_v_i;
-            __pyx_t_57 = __pyx_v_j;
-            __pyx_t_56 = __pyx_v_k;
-            __pyx_t_55 = __pyx_v_a;
-            __pyx_t_54 = (__pyx_v_n_pairs + 1);
-            __pyx_t_53 = __pyx_v_t;
-            *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_58 * __pyx_v_e.strides[0]) ) + __pyx_t_57 * __pyx_v_e.strides[1]) ) + __pyx_t_56 * __pyx_v_e.strides[2]) ) + __pyx_t_55 * __pyx_v_e.strides[3]) ) + __pyx_t_54 * __pyx_v_e.strides[4]) )) + __pyx_t_53)) )) = (-(((__pyx_v_Bx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_52 * __pyx_v_g.strides[0]) ) + __pyx_t_51 * __pyx_v_g.strides[1]) )) + __pyx_t_50)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_49 * __pyx_v_g.strides[0]) ) + __pyx_t_48 * __pyx_v_g.strides[1]) )) + __pyx_t_47)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_46 * __pyx_v_g.strides[0]) ) + __pyx_t_45 * __pyx_v_g.strides[1]) )) + __pyx_t_44)) ))) * __pyx_v_uz))) + (__pyx_v_By * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_43 * __pyx_v_g.strides[0]) ) + __pyx_t_42 * __pyx_v_g.strides[1]) )) + __pyx_t_41)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_40 * __pyx_v_g.strides[0]) ) + __pyx_t_39 * __pyx_v_g.strides[1]) )) + __pyx_t_38)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_37 * __pyx_v_g.strides[0]) ) + __pyx_t_36 * __pyx_v_g.strides[1]) )) + __pyx_t_35)) ))) * __pyx_v_uz)))) + (__pyx_v_Bz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_34 * __pyx_v_g.strides[0]) ) + __pyx_t_33 * __pyx_v_g.strides[1]) )) + __pyx_t_32)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_31 * __pyx_v_g.strides[0]) ) + __pyx_t_11 * __pyx_v_g.strides[1]) )) + __pyx_t_27)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_28 * __pyx_v_g.strides[0]) ) + __pyx_t_29 * __pyx_v_g.strides[1]) )) + __pyx_t_30)) ))) * __pyx_v_uz)))));
-
-            /* "disorder/diffuse/simulation.pyx":188
- *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
  * 
  *                         for p in range(n_pairs):             # <<<<<<<<<<<<<<
  * 
  *                             i_ = (i+img_ind_i[a,p]+nu)%nu
  */
-            __pyx_t_59 = __pyx_v_n_pairs;
-            __pyx_t_60 = __pyx_t_59;
-            for (__pyx_t_61 = 0; __pyx_t_61 < __pyx_t_60; __pyx_t_61+=1) {
-              __pyx_v_p = __pyx_t_61;
+            __pyx_t_31 = __pyx_v_n_pairs;
+            __pyx_t_32 = __pyx_t_31;
+            for (__pyx_t_33 = 0; __pyx_t_33 < __pyx_t_32; __pyx_t_33+=1) {
+              __pyx_v_p = __pyx_t_33;
 
-              /* "disorder/diffuse/simulation.pyx":190
+              /* "disorder/diffuse/simulation.pyx":180
  *                         for p in range(n_pairs):
  * 
  *                             i_ = (i+img_ind_i[a,p]+nu)%nu             # <<<<<<<<<<<<<<
@@ -4079,7 +3947,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
               __pyx_t_29 = __pyx_v_p;
               __pyx_v_i_ = (((__pyx_v_i + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_i.data + __pyx_t_30 * __pyx_v_img_ind_i.strides[0]) )) + __pyx_t_29)) )))) + __pyx_v_nu) % __pyx_v_nu);
 
-              /* "disorder/diffuse/simulation.pyx":191
+              /* "disorder/diffuse/simulation.pyx":181
  * 
  *                             i_ = (i+img_ind_i[a,p]+nu)%nu
  *                             j_ = (j+img_ind_j[a,p]+nv)%nv             # <<<<<<<<<<<<<<
@@ -4090,7 +3958,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
               __pyx_t_30 = __pyx_v_p;
               __pyx_v_j_ = (((__pyx_v_j + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_j.data + __pyx_t_29 * __pyx_v_img_ind_j.strides[0]) )) + __pyx_t_30)) )))) + __pyx_v_nv) % __pyx_v_nv);
 
-              /* "disorder/diffuse/simulation.pyx":192
+              /* "disorder/diffuse/simulation.pyx":182
  *                             i_ = (i+img_ind_i[a,p]+nu)%nu
  *                             j_ = (j+img_ind_j[a,p]+nv)%nv
  *                             k_ = (k+img_ind_k[a,p]+nw)%nw             # <<<<<<<<<<<<<<
@@ -4101,7 +3969,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
               __pyx_t_29 = __pyx_v_p;
               __pyx_v_k_ = (((__pyx_v_k + (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_img_ind_k.data + __pyx_t_30 * __pyx_v_img_ind_k.strides[0]) )) + __pyx_t_29)) )))) + __pyx_v_nw) % __pyx_v_nw);
 
-              /* "disorder/diffuse/simulation.pyx":193
+              /* "disorder/diffuse/simulation.pyx":183
  *                             j_ = (j+img_ind_j[a,p]+nv)%nv
  *                             k_ = (k+img_ind_k[a,p]+nw)%nw
  *                             a_ = atm_ind[a,p]             # <<<<<<<<<<<<<<
@@ -4112,7 +3980,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
               __pyx_t_30 = __pyx_v_p;
               __pyx_v_a_ = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_atm_ind.data + __pyx_t_29 * __pyx_v_atm_ind.strides[0]) )) + __pyx_t_30)) )));
 
-              /* "disorder/diffuse/simulation.pyx":195
+              /* "disorder/diffuse/simulation.pyx":185
  *                             a_ = atm_ind[a,p]
  * 
  *                             vx = Sx[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
@@ -4126,7 +3994,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
               __pyx_t_11 = __pyx_v_t;
               __pyx_v_vx = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sx.data + __pyx_t_30 * __pyx_v_Sx.strides[0]) ) + __pyx_t_29 * __pyx_v_Sx.strides[1]) ) + __pyx_t_28 * __pyx_v_Sx.strides[2]) ) + __pyx_t_27 * __pyx_v_Sx.strides[3]) )) + __pyx_t_11)) )));
 
-              /* "disorder/diffuse/simulation.pyx":196
+              /* "disorder/diffuse/simulation.pyx":186
  * 
  *                             vx = Sx[i_,j_,k_,a_,t]
  *                             vy = Sy[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
@@ -4140,7 +4008,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
               __pyx_t_30 = __pyx_v_t;
               __pyx_v_vy = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sy.data + __pyx_t_11 * __pyx_v_Sy.strides[0]) ) + __pyx_t_27 * __pyx_v_Sy.strides[1]) ) + __pyx_t_28 * __pyx_v_Sy.strides[2]) ) + __pyx_t_29 * __pyx_v_Sy.strides[3]) )) + __pyx_t_30)) )));
 
-              /* "disorder/diffuse/simulation.pyx":197
+              /* "disorder/diffuse/simulation.pyx":187
  *                             vx = Sx[i_,j_,k_,a_,t]
  *                             vy = Sy[i_,j_,k_,a_,t]
  *                             vz = Sz[i_,j_,k_,a_,t]             # <<<<<<<<<<<<<<
@@ -4154,7 +4022,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
               __pyx_t_11 = __pyx_v_t;
               __pyx_v_vz = (*((double *) ( /* dim=4 */ ((char *) (((double *) ( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_Sz.data + __pyx_t_30 * __pyx_v_Sz.strides[0]) ) + __pyx_t_29 * __pyx_v_Sz.strides[1]) ) + __pyx_t_28 * __pyx_v_Sz.strides[2]) ) + __pyx_t_27 * __pyx_v_Sz.strides[3]) )) + __pyx_t_11)) )));
 
-              /* "disorder/diffuse/simulation.pyx":199
+              /* "disorder/diffuse/simulation.pyx":189
  *                             vz = Sz[i_,j_,k_,a_,t]
  * 
  *                             q = pair_ind[a,p]             # <<<<<<<<<<<<<<
@@ -4165,7 +4033,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
               __pyx_t_27 = __pyx_v_p;
               __pyx_v_q = (*((long *) ( /* dim=1 */ ((char *) (((long *) ( /* dim=0 */ (__pyx_v_pair_ind.data + __pyx_t_11 * __pyx_v_pair_ind.strides[0]) )) + __pyx_t_27)) )));
 
-              /* "disorder/diffuse/simulation.pyx":200
+              /* "disorder/diffuse/simulation.pyx":190
  * 
  *                             q = pair_ind[a,p]
  *                             f = pair_ij[a,p]             # <<<<<<<<<<<<<<
@@ -4176,17 +4044,17 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
               __pyx_t_11 = __pyx_v_p;
               __pyx_v_f = (*((int *) ( /* dim=1 */ ((char *) (((int *) ( /* dim=0 */ (__pyx_v_pair_ij.data + __pyx_t_27 * __pyx_v_pair_ij.strides[0]) )) + __pyx_t_11)) )));
 
-              /* "disorder/diffuse/simulation.pyx":202
+              /* "disorder/diffuse/simulation.pyx":192
  *                             f = pair_ij[a,p]
  * 
  *                             if (f == 1):             # <<<<<<<<<<<<<<
  *                                 e[i,j,k,a,p,t] = -0.5\
  *                                     *(ux*(J[q,0,0]*vx+J[q,1,0]*vy+J[q,2,0]*vz)\
  */
-              __pyx_t_62 = ((__pyx_v_f == 1) != 0);
-              if (__pyx_t_62) {
+              __pyx_t_34 = ((__pyx_v_f == 1) != 0);
+              if (__pyx_t_34) {
 
-                /* "disorder/diffuse/simulation.pyx":204
+                /* "disorder/diffuse/simulation.pyx":194
  *                             if (f == 1):
  *                                 e[i,j,k,a,p,t] = -0.5\
  *                                     *(ux*(J[q,0,0]*vx+J[q,1,0]*vy+J[q,2,0]*vz)\             # <<<<<<<<<<<<<<
@@ -4198,61 +4066,61 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
                 __pyx_t_28 = 0;
                 __pyx_t_29 = __pyx_v_q;
                 __pyx_t_30 = 1;
-                __pyx_t_31 = 0;
-                __pyx_t_32 = __pyx_v_q;
-                __pyx_t_33 = 2;
-                __pyx_t_34 = 0;
+                __pyx_t_35 = 0;
+                __pyx_t_36 = __pyx_v_q;
+                __pyx_t_37 = 2;
+                __pyx_t_38 = 0;
 
-                /* "disorder/diffuse/simulation.pyx":205
+                /* "disorder/diffuse/simulation.pyx":195
  *                                 e[i,j,k,a,p,t] = -0.5\
  *                                     *(ux*(J[q,0,0]*vx+J[q,1,0]*vy+J[q,2,0]*vz)\
  *                                     + uy*(J[q,0,1]*vx+J[q,1,1]*vy+J[q,2,1]*vz)\             # <<<<<<<<<<<<<<
  *                                     + uz*(J[q,0,2]*vx+J[q,1,2]*vy+J[q,2,2]*vz))
  *                             else:
  */
-                __pyx_t_35 = __pyx_v_q;
-                __pyx_t_36 = 0;
-                __pyx_t_37 = 1;
-                __pyx_t_38 = __pyx_v_q;
-                __pyx_t_39 = 1;
-                __pyx_t_40 = 1;
-                __pyx_t_41 = __pyx_v_q;
-                __pyx_t_42 = 2;
+                __pyx_t_39 = __pyx_v_q;
+                __pyx_t_40 = 0;
+                __pyx_t_41 = 1;
+                __pyx_t_42 = __pyx_v_q;
                 __pyx_t_43 = 1;
+                __pyx_t_44 = 1;
+                __pyx_t_45 = __pyx_v_q;
+                __pyx_t_46 = 2;
+                __pyx_t_47 = 1;
 
-                /* "disorder/diffuse/simulation.pyx":206
+                /* "disorder/diffuse/simulation.pyx":196
  *                                     *(ux*(J[q,0,0]*vx+J[q,1,0]*vy+J[q,2,0]*vz)\
  *                                     + uy*(J[q,0,1]*vx+J[q,1,1]*vy+J[q,2,1]*vz)\
  *                                     + uz*(J[q,0,2]*vx+J[q,1,2]*vy+J[q,2,2]*vz))             # <<<<<<<<<<<<<<
  *                             else:
  *                                 e[i,j,k,a,p,t] = -0.5\
  */
-                __pyx_t_44 = __pyx_v_q;
-                __pyx_t_45 = 0;
-                __pyx_t_46 = 2;
-                __pyx_t_47 = __pyx_v_q;
-                __pyx_t_48 = 1;
-                __pyx_t_49 = 2;
-                __pyx_t_50 = __pyx_v_q;
-                __pyx_t_51 = 2;
-                __pyx_t_52 = 2;
+                __pyx_t_48 = __pyx_v_q;
+                __pyx_t_49 = 0;
+                __pyx_t_50 = 2;
+                __pyx_t_51 = __pyx_v_q;
+                __pyx_t_52 = 1;
+                __pyx_t_53 = 2;
+                __pyx_t_54 = __pyx_v_q;
+                __pyx_t_55 = 2;
+                __pyx_t_56 = 2;
 
-                /* "disorder/diffuse/simulation.pyx":203
+                /* "disorder/diffuse/simulation.pyx":193
  * 
  *                             if (f == 1):
  *                                 e[i,j,k,a,p,t] = -0.5\             # <<<<<<<<<<<<<<
  *                                     *(ux*(J[q,0,0]*vx+J[q,1,0]*vy+J[q,2,0]*vz)\
  *                                     + uy*(J[q,0,1]*vx+J[q,1,1]*vy+J[q,2,1]*vz)\
  */
-                __pyx_t_53 = __pyx_v_i;
-                __pyx_t_54 = __pyx_v_j;
-                __pyx_t_55 = __pyx_v_k;
-                __pyx_t_56 = __pyx_v_a;
-                __pyx_t_57 = __pyx_v_p;
-                __pyx_t_58 = __pyx_v_t;
-                *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_53 * __pyx_v_e.strides[0]) ) + __pyx_t_54 * __pyx_v_e.strides[1]) ) + __pyx_t_55 * __pyx_v_e.strides[2]) ) + __pyx_t_56 * __pyx_v_e.strides[3]) ) + __pyx_t_57 * __pyx_v_e.strides[4]) )) + __pyx_t_58)) )) = (-0.5 * (((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_27 * __pyx_v_J.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_29 * __pyx_v_J.strides[0]) ) + __pyx_t_30 * __pyx_v_J.strides[1]) )) + __pyx_t_31)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_32 * __pyx_v_J.strides[0]) ) + __pyx_t_33 * __pyx_v_J.strides[1]) )) + __pyx_t_34)) ))) * __pyx_v_vz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_35 * __pyx_v_J.strides[0]) ) + __pyx_t_36 * __pyx_v_J.strides[1]) )) + __pyx_t_37)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_38 * __pyx_v_J.strides[0]) ) + __pyx_t_39 * __pyx_v_J.strides[1]) )) + __pyx_t_40)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_41 * __pyx_v_J.strides[0]) ) + __pyx_t_42 * __pyx_v_J.strides[1]) )) + __pyx_t_43)) ))) * __pyx_v_vz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_44 * __pyx_v_J.strides[0]) ) + __pyx_t_45 * __pyx_v_J.strides[1]) )) + __pyx_t_46)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_47 * __pyx_v_J.strides[0]) ) + __pyx_t_48 * __pyx_v_J.strides[1]) )) + __pyx_t_49)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_50 * __pyx_v_J.strides[0]) ) + __pyx_t_51 * __pyx_v_J.strides[1]) )) + __pyx_t_52)) ))) * __pyx_v_vz)))));
+                __pyx_t_57 = __pyx_v_i;
+                __pyx_t_58 = __pyx_v_j;
+                __pyx_t_59 = __pyx_v_k;
+                __pyx_t_60 = __pyx_v_a;
+                __pyx_t_61 = __pyx_v_p;
+                __pyx_t_62 = __pyx_v_t;
+                *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_57 * __pyx_v_e.strides[0]) ) + __pyx_t_58 * __pyx_v_e.strides[1]) ) + __pyx_t_59 * __pyx_v_e.strides[2]) ) + __pyx_t_60 * __pyx_v_e.strides[3]) ) + __pyx_t_61 * __pyx_v_e.strides[4]) )) + __pyx_t_62)) )) = (-0.5 * (((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_11 * __pyx_v_J.strides[0]) ) + __pyx_t_27 * __pyx_v_J.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_29 * __pyx_v_J.strides[0]) ) + __pyx_t_30 * __pyx_v_J.strides[1]) )) + __pyx_t_35)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_36 * __pyx_v_J.strides[0]) ) + __pyx_t_37 * __pyx_v_J.strides[1]) )) + __pyx_t_38)) ))) * __pyx_v_vz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_39 * __pyx_v_J.strides[0]) ) + __pyx_t_40 * __pyx_v_J.strides[1]) )) + __pyx_t_41)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_42 * __pyx_v_J.strides[0]) ) + __pyx_t_43 * __pyx_v_J.strides[1]) )) + __pyx_t_44)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_45 * __pyx_v_J.strides[0]) ) + __pyx_t_46 * __pyx_v_J.strides[1]) )) + __pyx_t_47)) ))) * __pyx_v_vz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_48 * __pyx_v_J.strides[0]) ) + __pyx_t_49 * __pyx_v_J.strides[1]) )) + __pyx_t_50)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_51 * __pyx_v_J.strides[0]) ) + __pyx_t_52 * __pyx_v_J.strides[1]) )) + __pyx_t_53)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_54 * __pyx_v_J.strides[0]) ) + __pyx_t_55 * __pyx_v_J.strides[1]) )) + __pyx_t_56)) ))) * __pyx_v_vz)))));
 
-                /* "disorder/diffuse/simulation.pyx":202
+                /* "disorder/diffuse/simulation.pyx":192
  *                             f = pair_ij[a,p]
  * 
  *                             if (f == 1):             # <<<<<<<<<<<<<<
@@ -4262,7 +4130,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
                 goto __pyx_L15;
               }
 
-              /* "disorder/diffuse/simulation.pyx":209
+              /* "disorder/diffuse/simulation.pyx":199
  *                             else:
  *                                 e[i,j,k,a,p,t] = -0.5\
  *                                     *(ux*(J[q,0,0]*vx+J[q,0,1]*vy+J[q,0,2]*vz)\             # <<<<<<<<<<<<<<
@@ -4270,67 +4138,199 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
  *                                     + uz*(J[q,2,0]*vx+J[q,2,1]*vy+J[q,2,2]*vz))
  */
               /*else*/ {
-                __pyx_t_52 = __pyx_v_q;
-                __pyx_t_51 = 0;
-                __pyx_t_50 = 0;
-                __pyx_t_49 = __pyx_v_q;
-                __pyx_t_48 = 0;
-                __pyx_t_47 = 1;
-                __pyx_t_46 = __pyx_v_q;
-                __pyx_t_45 = 0;
-                __pyx_t_44 = 2;
+                __pyx_t_56 = __pyx_v_q;
+                __pyx_t_55 = 0;
+                __pyx_t_54 = 0;
+                __pyx_t_53 = __pyx_v_q;
+                __pyx_t_52 = 0;
+                __pyx_t_51 = 1;
+                __pyx_t_50 = __pyx_v_q;
+                __pyx_t_49 = 0;
+                __pyx_t_48 = 2;
 
-                /* "disorder/diffuse/simulation.pyx":210
+                /* "disorder/diffuse/simulation.pyx":200
  *                                 e[i,j,k,a,p,t] = -0.5\
  *                                     *(ux*(J[q,0,0]*vx+J[q,0,1]*vy+J[q,0,2]*vz)\
  *                                     + uy*(J[q,1,0]*vx+J[q,1,1]*vy+J[q,1,2]*vz)\             # <<<<<<<<<<<<<<
  *                                     + uz*(J[q,2,0]*vx+J[q,2,1]*vy+J[q,2,2]*vz))
  * 
  */
-                __pyx_t_43 = __pyx_v_q;
+                __pyx_t_47 = __pyx_v_q;
+                __pyx_t_46 = 1;
+                __pyx_t_45 = 0;
+                __pyx_t_44 = __pyx_v_q;
+                __pyx_t_43 = 1;
                 __pyx_t_42 = 1;
-                __pyx_t_41 = 0;
-                __pyx_t_40 = __pyx_v_q;
-                __pyx_t_39 = 1;
-                __pyx_t_38 = 1;
-                __pyx_t_37 = __pyx_v_q;
-                __pyx_t_36 = 1;
-                __pyx_t_35 = 2;
+                __pyx_t_41 = __pyx_v_q;
+                __pyx_t_40 = 1;
+                __pyx_t_39 = 2;
 
-                /* "disorder/diffuse/simulation.pyx":211
+                /* "disorder/diffuse/simulation.pyx":201
  *                                     *(ux*(J[q,0,0]*vx+J[q,0,1]*vy+J[q,0,2]*vz)\
  *                                     + uy*(J[q,1,0]*vx+J[q,1,1]*vy+J[q,1,2]*vz)\
  *                                     + uz*(J[q,2,0]*vx+J[q,2,1]*vy+J[q,2,2]*vz))             # <<<<<<<<<<<<<<
  * 
- *     return e_np
+ *                         e[i,j,k,a,n_pairs,t] = \
  */
-                __pyx_t_34 = __pyx_v_q;
-                __pyx_t_33 = 2;
-                __pyx_t_32 = 0;
-                __pyx_t_31 = __pyx_v_q;
+                __pyx_t_38 = __pyx_v_q;
+                __pyx_t_37 = 2;
+                __pyx_t_36 = 0;
+                __pyx_t_35 = __pyx_v_q;
                 __pyx_t_30 = 2;
                 __pyx_t_29 = 1;
                 __pyx_t_28 = __pyx_v_q;
                 __pyx_t_27 = 2;
                 __pyx_t_11 = 2;
 
-                /* "disorder/diffuse/simulation.pyx":208
+                /* "disorder/diffuse/simulation.pyx":198
  *                                     + uz*(J[q,0,2]*vx+J[q,1,2]*vy+J[q,2,2]*vz))
  *                             else:
  *                                 e[i,j,k,a,p,t] = -0.5\             # <<<<<<<<<<<<<<
  *                                     *(ux*(J[q,0,0]*vx+J[q,0,1]*vy+J[q,0,2]*vz)\
  *                                     + uy*(J[q,1,0]*vx+J[q,1,1]*vy+J[q,1,2]*vz)\
  */
-                __pyx_t_58 = __pyx_v_i;
-                __pyx_t_57 = __pyx_v_j;
-                __pyx_t_56 = __pyx_v_k;
-                __pyx_t_55 = __pyx_v_a;
-                __pyx_t_54 = __pyx_v_p;
-                __pyx_t_53 = __pyx_v_t;
-                *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_58 * __pyx_v_e.strides[0]) ) + __pyx_t_57 * __pyx_v_e.strides[1]) ) + __pyx_t_56 * __pyx_v_e.strides[2]) ) + __pyx_t_55 * __pyx_v_e.strides[3]) ) + __pyx_t_54 * __pyx_v_e.strides[4]) )) + __pyx_t_53)) )) = (-0.5 * (((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_52 * __pyx_v_J.strides[0]) ) + __pyx_t_51 * __pyx_v_J.strides[1]) )) + __pyx_t_50)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_49 * __pyx_v_J.strides[0]) ) + __pyx_t_48 * __pyx_v_J.strides[1]) )) + __pyx_t_47)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_46 * __pyx_v_J.strides[0]) ) + __pyx_t_45 * __pyx_v_J.strides[1]) )) + __pyx_t_44)) ))) * __pyx_v_vz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_43 * __pyx_v_J.strides[0]) ) + __pyx_t_42 * __pyx_v_J.strides[1]) )) + __pyx_t_41)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_40 * __pyx_v_J.strides[0]) ) + __pyx_t_39 * __pyx_v_J.strides[1]) )) + __pyx_t_38)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_37 * __pyx_v_J.strides[0]) ) + __pyx_t_36 * __pyx_v_J.strides[1]) )) + __pyx_t_35)) ))) * __pyx_v_vz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_34 * __pyx_v_J.strides[0]) ) + __pyx_t_33 * __pyx_v_J.strides[1]) )) + __pyx_t_32)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_31 * __pyx_v_J.strides[0]) ) + __pyx_t_30 * __pyx_v_J.strides[1]) )) + __pyx_t_29)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_28 * __pyx_v_J.strides[0]) ) + __pyx_t_27 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_vz)))));
+                __pyx_t_62 = __pyx_v_i;
+                __pyx_t_61 = __pyx_v_j;
+                __pyx_t_60 = __pyx_v_k;
+                __pyx_t_59 = __pyx_v_a;
+                __pyx_t_58 = __pyx_v_p;
+                __pyx_t_57 = __pyx_v_t;
+                *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_62 * __pyx_v_e.strides[0]) ) + __pyx_t_61 * __pyx_v_e.strides[1]) ) + __pyx_t_60 * __pyx_v_e.strides[2]) ) + __pyx_t_59 * __pyx_v_e.strides[3]) ) + __pyx_t_58 * __pyx_v_e.strides[4]) )) + __pyx_t_57)) )) = (-0.5 * (((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_56 * __pyx_v_J.strides[0]) ) + __pyx_t_55 * __pyx_v_J.strides[1]) )) + __pyx_t_54)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_53 * __pyx_v_J.strides[0]) ) + __pyx_t_52 * __pyx_v_J.strides[1]) )) + __pyx_t_51)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_50 * __pyx_v_J.strides[0]) ) + __pyx_t_49 * __pyx_v_J.strides[1]) )) + __pyx_t_48)) ))) * __pyx_v_vz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_47 * __pyx_v_J.strides[0]) ) + __pyx_t_46 * __pyx_v_J.strides[1]) )) + __pyx_t_45)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_44 * __pyx_v_J.strides[0]) ) + __pyx_t_43 * __pyx_v_J.strides[1]) )) + __pyx_t_42)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_41 * __pyx_v_J.strides[0]) ) + __pyx_t_40 * __pyx_v_J.strides[1]) )) + __pyx_t_39)) ))) * __pyx_v_vz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_38 * __pyx_v_J.strides[0]) ) + __pyx_t_37 * __pyx_v_J.strides[1]) )) + __pyx_t_36)) ))) * __pyx_v_vx) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_35 * __pyx_v_J.strides[0]) ) + __pyx_t_30 * __pyx_v_J.strides[1]) )) + __pyx_t_29)) ))) * __pyx_v_vy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_J.data + __pyx_t_28 * __pyx_v_J.strides[0]) ) + __pyx_t_27 * __pyx_v_J.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_vz)))));
               }
               __pyx_L15:;
             }
+
+            /* "disorder/diffuse/simulation.pyx":204
+ * 
+ *                         e[i,j,k,a,n_pairs,t] = \
+ *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\             # <<<<<<<<<<<<<<
+ *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+ *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
+ */
+            __pyx_t_11 = __pyx_v_a;
+            __pyx_t_27 = 0;
+            __pyx_t_28 = 0;
+            __pyx_t_29 = __pyx_v_a;
+            __pyx_t_30 = 0;
+            __pyx_t_35 = 1;
+            __pyx_t_36 = __pyx_v_a;
+            __pyx_t_37 = 0;
+            __pyx_t_38 = 2;
+
+            /* "disorder/diffuse/simulation.pyx":205
+ *                         e[i,j,k,a,n_pairs,t] = \
+ *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+ *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\             # <<<<<<<<<<<<<<
+ *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
+ * 
+ */
+            __pyx_t_39 = __pyx_v_a;
+            __pyx_t_40 = 1;
+            __pyx_t_41 = 0;
+            __pyx_t_42 = __pyx_v_a;
+            __pyx_t_43 = 1;
+            __pyx_t_44 = 1;
+            __pyx_t_45 = __pyx_v_a;
+            __pyx_t_46 = 1;
+            __pyx_t_47 = 2;
+
+            /* "disorder/diffuse/simulation.pyx":206
+ *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+ *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+ *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))             # <<<<<<<<<<<<<<
+ * 
+ *                         e[i,j,k,a,n_pairs+1,t] = \
+ */
+            __pyx_t_48 = __pyx_v_a;
+            __pyx_t_49 = 2;
+            __pyx_t_50 = 0;
+            __pyx_t_51 = __pyx_v_a;
+            __pyx_t_52 = 2;
+            __pyx_t_53 = 1;
+            __pyx_t_54 = __pyx_v_a;
+            __pyx_t_55 = 2;
+            __pyx_t_56 = 2;
+
+            /* "disorder/diffuse/simulation.pyx":203
+ *                                     + uz*(J[q,2,0]*vx+J[q,2,1]*vy+J[q,2,2]*vz))
+ * 
+ *                         e[i,j,k,a,n_pairs,t] = \             # <<<<<<<<<<<<<<
+ *                             -(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+ *                             + uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+ */
+            __pyx_t_57 = __pyx_v_i;
+            __pyx_t_58 = __pyx_v_j;
+            __pyx_t_59 = __pyx_v_k;
+            __pyx_t_60 = __pyx_v_a;
+            __pyx_t_61 = __pyx_v_n_pairs;
+            __pyx_t_62 = __pyx_v_t;
+            *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_57 * __pyx_v_e.strides[0]) ) + __pyx_t_58 * __pyx_v_e.strides[1]) ) + __pyx_t_59 * __pyx_v_e.strides[2]) ) + __pyx_t_60 * __pyx_v_e.strides[3]) ) + __pyx_t_61 * __pyx_v_e.strides[4]) )) + __pyx_t_62)) )) = (-(((__pyx_v_ux * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_11 * __pyx_v_A.strides[0]) ) + __pyx_t_27 * __pyx_v_A.strides[1]) )) + __pyx_t_28)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_29 * __pyx_v_A.strides[0]) ) + __pyx_t_30 * __pyx_v_A.strides[1]) )) + __pyx_t_35)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_36 * __pyx_v_A.strides[0]) ) + __pyx_t_37 * __pyx_v_A.strides[1]) )) + __pyx_t_38)) ))) * __pyx_v_uz))) + (__pyx_v_uy * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_39 * __pyx_v_A.strides[0]) ) + __pyx_t_40 * __pyx_v_A.strides[1]) )) + __pyx_t_41)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_42 * __pyx_v_A.strides[0]) ) + __pyx_t_43 * __pyx_v_A.strides[1]) )) + __pyx_t_44)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_45 * __pyx_v_A.strides[0]) ) + __pyx_t_46 * __pyx_v_A.strides[1]) )) + __pyx_t_47)) ))) * __pyx_v_uz)))) + (__pyx_v_uz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_48 * __pyx_v_A.strides[0]) ) + __pyx_t_49 * __pyx_v_A.strides[1]) )) + __pyx_t_50)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_51 * __pyx_v_A.strides[0]) ) + __pyx_t_52 * __pyx_v_A.strides[1]) )) + __pyx_t_53)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_A.data + __pyx_t_54 * __pyx_v_A.strides[0]) ) + __pyx_t_55 * __pyx_v_A.strides[1]) )) + __pyx_t_56)) ))) * __pyx_v_uz)))));
+
+            /* "disorder/diffuse/simulation.pyx":209
+ * 
+ *                         e[i,j,k,a,n_pairs+1,t] = \
+ *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\             # <<<<<<<<<<<<<<
+ *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
+ *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
+ */
+            __pyx_t_56 = __pyx_v_a;
+            __pyx_t_55 = 0;
+            __pyx_t_54 = 0;
+            __pyx_t_53 = __pyx_v_a;
+            __pyx_t_52 = 0;
+            __pyx_t_51 = 1;
+            __pyx_t_50 = __pyx_v_a;
+            __pyx_t_49 = 0;
+            __pyx_t_48 = 2;
+
+            /* "disorder/diffuse/simulation.pyx":210
+ *                         e[i,j,k,a,n_pairs+1,t] = \
+ *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
+ *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\             # <<<<<<<<<<<<<<
+ *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
+ * 
+ */
+            __pyx_t_47 = __pyx_v_a;
+            __pyx_t_46 = 1;
+            __pyx_t_45 = 0;
+            __pyx_t_44 = __pyx_v_a;
+            __pyx_t_43 = 1;
+            __pyx_t_42 = 1;
+            __pyx_t_41 = __pyx_v_a;
+            __pyx_t_40 = 1;
+            __pyx_t_39 = 2;
+
+            /* "disorder/diffuse/simulation.pyx":211
+ *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
+ *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
+ *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))             # <<<<<<<<<<<<<<
+ * 
+ *     return e_np
+ */
+            __pyx_t_38 = __pyx_v_a;
+            __pyx_t_37 = 2;
+            __pyx_t_36 = 0;
+            __pyx_t_35 = __pyx_v_a;
+            __pyx_t_30 = 2;
+            __pyx_t_29 = 1;
+            __pyx_t_28 = __pyx_v_a;
+            __pyx_t_27 = 2;
+            __pyx_t_11 = 2;
+
+            /* "disorder/diffuse/simulation.pyx":208
+ *                             + uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
+ * 
+ *                         e[i,j,k,a,n_pairs+1,t] = \             # <<<<<<<<<<<<<<
+ *                             -(Bx*(g[a,0,0]*ux+g[a,0,1]*uy+g[a,0,2]*uz)\
+ *                             + By*(g[a,1,0]*ux+g[a,1,1]*uy+g[a,1,2]*uz)\
+ */
+            __pyx_t_62 = __pyx_v_i;
+            __pyx_t_61 = __pyx_v_j;
+            __pyx_t_60 = __pyx_v_k;
+            __pyx_t_59 = __pyx_v_a;
+            __pyx_t_58 = (__pyx_v_n_pairs + 1);
+            __pyx_t_57 = __pyx_v_t;
+            *((double *) ( /* dim=5 */ ((char *) (((double *) ( /* dim=4 */ (( /* dim=3 */ (( /* dim=2 */ (( /* dim=1 */ (( /* dim=0 */ (__pyx_v_e.data + __pyx_t_62 * __pyx_v_e.strides[0]) ) + __pyx_t_61 * __pyx_v_e.strides[1]) ) + __pyx_t_60 * __pyx_v_e.strides[2]) ) + __pyx_t_59 * __pyx_v_e.strides[3]) ) + __pyx_t_58 * __pyx_v_e.strides[4]) )) + __pyx_t_57)) )) = (-(((__pyx_v_Bx * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_56 * __pyx_v_g.strides[0]) ) + __pyx_t_55 * __pyx_v_g.strides[1]) )) + __pyx_t_54)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_53 * __pyx_v_g.strides[0]) ) + __pyx_t_52 * __pyx_v_g.strides[1]) )) + __pyx_t_51)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_50 * __pyx_v_g.strides[0]) ) + __pyx_t_49 * __pyx_v_g.strides[1]) )) + __pyx_t_48)) ))) * __pyx_v_uz))) + (__pyx_v_By * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_47 * __pyx_v_g.strides[0]) ) + __pyx_t_46 * __pyx_v_g.strides[1]) )) + __pyx_t_45)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_44 * __pyx_v_g.strides[0]) ) + __pyx_t_43 * __pyx_v_g.strides[1]) )) + __pyx_t_42)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_41 * __pyx_v_g.strides[0]) ) + __pyx_t_40 * __pyx_v_g.strides[1]) )) + __pyx_t_39)) ))) * __pyx_v_uz)))) + (__pyx_v_Bz * ((((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_38 * __pyx_v_g.strides[0]) ) + __pyx_t_37 * __pyx_v_g.strides[1]) )) + __pyx_t_36)) ))) * __pyx_v_ux) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_35 * __pyx_v_g.strides[0]) ) + __pyx_t_30 * __pyx_v_g.strides[1]) )) + __pyx_t_29)) ))) * __pyx_v_uy)) + ((*((double *) ( /* dim=2 */ ((char *) (((double *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_g.data + __pyx_t_28 * __pyx_v_g.strides[0]) ) + __pyx_t_27 * __pyx_v_g.strides[1]) )) + __pyx_t_11)) ))) * __pyx_v_uz)))));
           }
         }
       }
@@ -4338,7 +4338,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
   }
 
   /* "disorder/diffuse/simulation.pyx":213
- *                                     + uz*(J[q,2,0]*vx+J[q,2,1]*vy+J[q,2,2]*vz))
+ *                             + Bz*(g[a,2,0]*ux+g[a,2,1]*uy+g[a,2,2]*uz))
  * 
  *     return e_np             # <<<<<<<<<<<<<<
  * 
@@ -4350,7 +4350,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10simulation_energy(CYTHON_UNUSED P
   goto __pyx_L0;
 
   /* "disorder/diffuse/simulation.pyx":130
- *             beta[i], beta[j] = beta[i], beta[j]
+ *             beta[i], beta[j] = beta[j], beta[i]
  * 
  * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *            double [:,:,:,:,::1] Sy,
@@ -6969,7 +6969,7 @@ static void __pyx_f_8disorder_7diffuse_10simulation_annealing_cluster(__Pyx_memv
  *                 Sy[i,j,k,a,t] = vy
  *                 Sz[i,j,k,a,t] = vz             # <<<<<<<<<<<<<<
  * 
- *             H[t] += -Ec+Eij[t]
+ *             H[t] += Ec+Eij[t]
  */
         __pyx_t_34 = __pyx_v_i;
         __pyx_t_33 = __pyx_v_j;
@@ -6982,13 +6982,13 @@ static void __pyx_f_8disorder_7diffuse_10simulation_annealing_cluster(__Pyx_memv
       /* "disorder/diffuse/simulation.pyx":523
  *                 Sz[i,j,k,a,t] = vz
  * 
- *             H[t] += -Ec+Eij[t]             # <<<<<<<<<<<<<<
+ *             H[t] += Ec+Eij[t]             # <<<<<<<<<<<<<<
  * 
  * cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
  */
       __pyx_t_36 = __pyx_v_t;
       __pyx_t_35 = __pyx_v_t;
-      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_H.data) + __pyx_t_35)) )) += ((-__pyx_v_Ec) + (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Eij.data) + __pyx_t_36)) ))));
+      *((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_H.data) + __pyx_t_35)) )) += (__pyx_v_Ec + (*((double *) ( /* dim=0 */ ((char *) (((double *) __pyx_v_Eij.data) + __pyx_t_36)) ))));
 
       /* "disorder/diffuse/simulation.pyx":502
  *             h_eff[i,j,k,a,t] = 0
@@ -7013,7 +7013,7 @@ static void __pyx_f_8disorder_7diffuse_10simulation_annealing_cluster(__Pyx_memv
 }
 
 /* "disorder/diffuse/simulation.pyx":525
- *             H[t] += -Ec+Eij[t]
+ *             H[t] += Ec+Eij[t]
  * 
  * cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *                                  double [:,:,:,:,::1] Sy,
@@ -7801,7 +7801,7 @@ static Py_ssize_t __pyx_f_8disorder_7diffuse_10simulation_magnetic_cluster(__Pyx
   goto __pyx_L0;
 
   /* "disorder/diffuse/simulation.pyx":525
- *             H[t] += -Ec+Eij[t]
+ *             H[t] += Ec+Eij[t]
  * 
  * cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *                                  double [:,:,:,:,::1] Sy,
@@ -10537,7 +10537,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_PyDataType_SHAPE(PyArray_Descr *__
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":931
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":929
  *     int _import_umath() except -1
  * 
  * cdef inline void set_array_base(ndarray arr, object base):             # <<<<<<<<<<<<<<
@@ -10549,7 +10549,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("set_array_base", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":932
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":930
  * 
  * cdef inline void set_array_base(ndarray arr, object base):
  *     Py_INCREF(base) # important to do this before stealing the reference below!             # <<<<<<<<<<<<<<
@@ -10558,7 +10558,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
  */
   Py_INCREF(__pyx_v_base);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":933
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":931
  * cdef inline void set_array_base(ndarray arr, object base):
  *     Py_INCREF(base) # important to do this before stealing the reference below!
  *     PyArray_SetBaseObject(arr, base)             # <<<<<<<<<<<<<<
@@ -10567,7 +10567,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
  */
   (void)(PyArray_SetBaseObject(__pyx_v_arr, __pyx_v_base));
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":931
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":929
  *     int _import_umath() except -1
  * 
  * cdef inline void set_array_base(ndarray arr, object base):             # <<<<<<<<<<<<<<
@@ -10579,7 +10579,7 @@ static CYTHON_INLINE void __pyx_f_5numpy_set_array_base(PyArrayObject *__pyx_v_a
   __Pyx_RefNannyFinishContext();
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":935
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":933
  *     PyArray_SetBaseObject(arr, base)
  * 
  * cdef inline object get_array_base(ndarray arr):             # <<<<<<<<<<<<<<
@@ -10594,7 +10594,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("get_array_base", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":936
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":934
  * 
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)             # <<<<<<<<<<<<<<
@@ -10603,7 +10603,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
  */
   __pyx_v_base = PyArray_BASE(__pyx_v_arr);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":937
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":935
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)
  *     if base is NULL:             # <<<<<<<<<<<<<<
@@ -10613,7 +10613,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   __pyx_t_1 = ((__pyx_v_base == NULL) != 0);
   if (__pyx_t_1) {
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":938
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":936
  *     base = PyArray_BASE(arr)
  *     if base is NULL:
  *         return None             # <<<<<<<<<<<<<<
@@ -10624,7 +10624,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
     __pyx_r = Py_None; __Pyx_INCREF(Py_None);
     goto __pyx_L0;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":937
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":935
  * cdef inline object get_array_base(ndarray arr):
  *     base = PyArray_BASE(arr)
  *     if base is NULL:             # <<<<<<<<<<<<<<
@@ -10633,7 +10633,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
  */
   }
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":939
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":937
  *     if base is NULL:
  *         return None
  *     return <object>base             # <<<<<<<<<<<<<<
@@ -10645,7 +10645,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   __pyx_r = ((PyObject *)__pyx_v_base);
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":935
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":933
  *     PyArray_SetBaseObject(arr, base)
  * 
  * cdef inline object get_array_base(ndarray arr):             # <<<<<<<<<<<<<<
@@ -10660,7 +10660,7 @@ static CYTHON_INLINE PyObject *__pyx_f_5numpy_get_array_base(PyArrayObject *__py
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":943
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":941
  * # Versions of the import_* functions which are more suitable for
  * # Cython code.
  * cdef inline int import_array() except -1:             # <<<<<<<<<<<<<<
@@ -10684,7 +10684,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_array", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":944
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -10700,16 +10700,16 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":945
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":943
  * cdef inline int import_array() except -1:
  *     try:
  *         __pyx_import_array()             # <<<<<<<<<<<<<<
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")
  */
-      __pyx_t_4 = _import_array(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 945, __pyx_L3_error)
+      __pyx_t_4 = _import_array(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 943, __pyx_L3_error)
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":944
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -10723,7 +10723,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":946
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":944
  *     try:
  *         __pyx_import_array()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -10733,28 +10733,28 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __pyx_t_4 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_4) {
       __Pyx_AddTraceback("numpy.import_array", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 946, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 944, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":947
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":945
  *         __pyx_import_array()
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef inline int import_umath() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 947, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple_, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 945, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __PYX_ERR(1, 947, __pyx_L5_except_error)
+      __PYX_ERR(1, 945, __pyx_L5_except_error)
     }
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":944
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":942
  * # Cython code.
  * cdef inline int import_array() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -10769,7 +10769,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":943
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":941
  * # Versions of the import_* functions which are more suitable for
  * # Cython code.
  * cdef inline int import_array() except -1:             # <<<<<<<<<<<<<<
@@ -10792,7 +10792,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":949
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":947
  *         raise ImportError("numpy.core.multiarray failed to import")
  * 
  * cdef inline int import_umath() except -1:             # <<<<<<<<<<<<<<
@@ -10816,7 +10816,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_umath", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":950
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -10832,16 +10832,16 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":951
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":949
  * cdef inline int import_umath() except -1:
  *     try:
  *         _import_umath()             # <<<<<<<<<<<<<<
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")
  */
-      __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 951, __pyx_L3_error)
+      __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 949, __pyx_L3_error)
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":950
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -10855,7 +10855,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":952
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":950
  *     try:
  *         _import_umath()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -10865,28 +10865,28 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __pyx_t_4 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_4) {
       __Pyx_AddTraceback("numpy.import_umath", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 952, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 950, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":953
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":951
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef inline int import_ufunc() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 953, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 951, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __PYX_ERR(1, 953, __pyx_L5_except_error)
+      __PYX_ERR(1, 951, __pyx_L5_except_error)
     }
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":950
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":948
  * 
  * cdef inline int import_umath() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -10901,7 +10901,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":949
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":947
  *         raise ImportError("numpy.core.multiarray failed to import")
  * 
  * cdef inline int import_umath() except -1:             # <<<<<<<<<<<<<<
@@ -10924,7 +10924,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":955
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":953
  *         raise ImportError("numpy.core.umath failed to import")
  * 
  * cdef inline int import_ufunc() except -1:             # <<<<<<<<<<<<<<
@@ -10948,7 +10948,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("import_ufunc", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":956
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -10964,16 +10964,16 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":957
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":955
  * cdef inline int import_ufunc() except -1:
  *     try:
  *         _import_umath()             # <<<<<<<<<<<<<<
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")
  */
-      __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 957, __pyx_L3_error)
+      __pyx_t_4 = _import_umath(); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(1, 955, __pyx_L3_error)
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":956
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -10987,7 +10987,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     goto __pyx_L8_try_end;
     __pyx_L3_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":958
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":956
  *     try:
  *         _import_umath()
  *     except Exception:             # <<<<<<<<<<<<<<
@@ -10997,28 +10997,28 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __pyx_t_4 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_4) {
       __Pyx_AddTraceback("numpy.import_ufunc", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 958, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_5, &__pyx_t_6, &__pyx_t_7) < 0) __PYX_ERR(1, 956, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_7);
 
-      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":959
+      /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":957
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef extern from *:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 959, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__2, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(1, 957, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __PYX_ERR(1, 959, __pyx_L5_except_error)
+      __PYX_ERR(1, 957, __pyx_L5_except_error)
     }
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":956
+    /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":954
  * 
  * cdef inline int import_ufunc() except -1:
  *     try:             # <<<<<<<<<<<<<<
@@ -11033,7 +11033,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
     __pyx_L8_try_end:;
   }
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":955
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":953
  *         raise ImportError("numpy.core.umath failed to import")
  * 
  * cdef inline int import_ufunc() except -1:             # <<<<<<<<<<<<<<
@@ -11056,7 +11056,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":969
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":967
  * 
  * 
  * cdef inline bint is_timedelta64_object(object obj):             # <<<<<<<<<<<<<<
@@ -11069,7 +11069,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("is_timedelta64_object", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":981
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":979
  *     bool
  *     """
  *     return PyObject_TypeCheck(obj, &PyTimedeltaArrType_Type)             # <<<<<<<<<<<<<<
@@ -11079,7 +11079,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   __pyx_r = PyObject_TypeCheck(__pyx_v_obj, (&PyTimedeltaArrType_Type));
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":969
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":967
  * 
  * 
  * cdef inline bint is_timedelta64_object(object obj):             # <<<<<<<<<<<<<<
@@ -11093,7 +11093,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_timedelta64_object(PyObject *__pyx_v_
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":984
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":982
  * 
  * 
  * cdef inline bint is_datetime64_object(object obj):             # <<<<<<<<<<<<<<
@@ -11106,7 +11106,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("is_datetime64_object", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":996
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":994
  *     bool
  *     """
  *     return PyObject_TypeCheck(obj, &PyDatetimeArrType_Type)             # <<<<<<<<<<<<<<
@@ -11116,7 +11116,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   __pyx_r = PyObject_TypeCheck(__pyx_v_obj, (&PyDatetimeArrType_Type));
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":984
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":982
  * 
  * 
  * cdef inline bint is_datetime64_object(object obj):             # <<<<<<<<<<<<<<
@@ -11130,7 +11130,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":999
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":997
  * 
  * 
  * cdef inline npy_datetime get_datetime64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -11141,7 +11141,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_is_datetime64_object(PyObject *__pyx_v_o
 static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *__pyx_v_obj) {
   npy_datetime __pyx_r;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1006
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1004
  *     also needed.  That can be found using `get_datetime64_unit`.
  *     """
  *     return (<PyDatetimeScalarObject*>obj).obval             # <<<<<<<<<<<<<<
@@ -11151,7 +11151,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
   __pyx_r = ((PyDatetimeScalarObject *)__pyx_v_obj)->obval;
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":999
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":997
  * 
  * 
  * cdef inline npy_datetime get_datetime64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -11164,7 +11164,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1009
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1007
  * 
  * 
  * cdef inline npy_timedelta get_timedelta64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -11175,7 +11175,7 @@ static CYTHON_INLINE npy_datetime __pyx_f_5numpy_get_datetime64_value(PyObject *
 static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject *__pyx_v_obj) {
   npy_timedelta __pyx_r;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1013
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1011
  *     returns the int64 value underlying scalar numpy timedelta64 object
  *     """
  *     return (<PyTimedeltaScalarObject*>obj).obval             # <<<<<<<<<<<<<<
@@ -11185,7 +11185,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
   __pyx_r = ((PyTimedeltaScalarObject *)__pyx_v_obj)->obval;
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1009
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1007
  * 
  * 
  * cdef inline npy_timedelta get_timedelta64_value(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -11198,7 +11198,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
   return __pyx_r;
 }
 
-/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1016
+/* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -11209,7 +11209,7 @@ static CYTHON_INLINE npy_timedelta __pyx_f_5numpy_get_timedelta64_value(PyObject
 static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObject *__pyx_v_obj) {
   NPY_DATETIMEUNIT __pyx_r;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1020
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1018
  *     returns the unit part of the dtype for a numpy datetime64 object.
  *     """
  *     return <NPY_DATETIMEUNIT>(<PyDatetimeScalarObject*>obj).obmeta.base             # <<<<<<<<<<<<<<
@@ -11217,7 +11217,7 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   __pyx_r = ((NPY_DATETIMEUNIT)((PyDatetimeScalarObject *)__pyx_v_obj)->obmeta.base);
   goto __pyx_L0;
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1016
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":1014
  * 
  * 
  * cdef inline NPY_DATETIMEUNIT get_datetime64_unit(object obj) nogil:             # <<<<<<<<<<<<<<
@@ -25197,7 +25197,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 168, __pyx_L1_error)
-  __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 947, __pyx_L1_error)
+  __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 945, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(2, 133, __pyx_L1_error)
   __pyx_builtin_MemoryError = __Pyx_GetBuiltinName(__pyx_n_s_MemoryError); if (!__pyx_builtin_MemoryError) __PYX_ERR(2, 148, __pyx_L1_error)
   __pyx_builtin_enumerate = __Pyx_GetBuiltinName(__pyx_n_s_enumerate); if (!__pyx_builtin_enumerate) __PYX_ERR(2, 151, __pyx_L1_error)
@@ -25214,25 +25214,25 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":947
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":945
  *         __pyx_import_array()
  *     except Exception:
  *         raise ImportError("numpy.core.multiarray failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef inline int import_umath() except -1:
  */
-  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple_)) __PYX_ERR(1, 947, __pyx_L1_error)
+  __pyx_tuple_ = PyTuple_Pack(1, __pyx_kp_u_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple_)) __PYX_ERR(1, 945, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple_);
   __Pyx_GIVEREF(__pyx_tuple_);
 
-  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":953
+  /* "../../Miniconda3/lib/site-packages/numpy/__init__.pxd":951
  *         _import_umath()
  *     except Exception:
  *         raise ImportError("numpy.core.umath failed to import")             # <<<<<<<<<<<<<<
  * 
  * cdef inline int import_ufunc() except -1:
  */
-  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(1, 953, __pyx_L1_error)
+  __pyx_tuple__2 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__2)) __PYX_ERR(1, 951, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__2);
   __Pyx_GIVEREF(__pyx_tuple__2);
 
@@ -25429,7 +25429,7 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__20);
 
   /* "disorder/diffuse/simulation.pyx":130
- *             beta[i], beta[j] = beta[i], beta[j]
+ *             beta[i], beta[j] = beta[j], beta[i]
  * 
  * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *            double [:,:,:,:,::1] Sy,
@@ -25969,7 +25969,7 @@ if (!__Pyx_RefNanny) {
   __pyx_v_8disorder_7diffuse_10simulation_MACHINE_EPSILON = __pyx_t_3;
 
   /* "disorder/diffuse/simulation.pyx":130
- *             beta[i], beta[j] = beta[i], beta[j]
+ *             beta[i], beta[j] = beta[j], beta[i]
  * 
  * def energy(double [:,:,:,:,::1] Sx,             # <<<<<<<<<<<<<<
  *            double [:,:,:,:,::1] Sy,
