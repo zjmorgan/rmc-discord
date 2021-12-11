@@ -293,7 +293,6 @@ cdef double magnetic(double [:,:,:,:,::1] Sx,
         a_ = atm_ind[a,p]
 
         q = pair_ind[a,p]
-
         f = pair_ij[a,p]
 
         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
@@ -362,7 +361,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
         for j in range(nv):
             for k in range(nw):
                 for a in range(n_atm):
-                    for p in range(n_pairs):
+                    for p in range(n_pairs+2):
                         for t in range(n_temp):
                             H[t] += e[i,j,k,a,p,t]
                             
@@ -521,7 +520,7 @@ cdef void annealing_cluster(double [:,:,:,:,::1] Sx,
                 Sy[i,j,k,a,t] = vy
                 Sz[i,j,k,a,t] = vz
 
-            H[t] += Ec+Eij[t]
+            H[t] += -Ec+Eij[t]
 
 cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
                                  double [:,:,:,:,::1] Sy,
@@ -787,7 +786,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
         for j in range(nv):
             for k in range(nw):
                 for a in range(n_atm):
-                    for p in range(n_pairs):
+                    for p in range(n_pairs+2):
                         for t in range(n_temp):
                             H[t] += e[i,j,k,a,p,t]
 
