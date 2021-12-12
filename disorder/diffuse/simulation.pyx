@@ -566,7 +566,7 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double E
 
-    cdef Py_ssize_t i_, j_, k_, a_, p, q, p_
+    cdef Py_ssize_t i_, j_, k_, a_, p_, p, q
 
     cdef bint f
 
@@ -858,7 +858,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                 i_c, m_c, n_c[t] = 0, 1, 1
     
                 while i_c < m_c:
-    
+                        
                     i_ = clust_i[i_c,t]
                     j_ = clust_j[i_c,t]
                     k_ = clust_k[i_c,t]
@@ -888,7 +888,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                     n_c[t] = m_c
                     
                     i_c += 1
-                    
+                                        
                 E[t] = boundary_energy(Sx, Sy, Sz, nx, ny, nz, J,
                                        clust_i, clust_j, clust_k, 
                                        clust_a, c, n_c, atm_ind, 
@@ -901,3 +901,6 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                               pair_ind, pair_ij, H, E, beta)
 
             replica_exchange(H, beta)
+            
+    for t in range(n_temp):
+        print(H[t])
