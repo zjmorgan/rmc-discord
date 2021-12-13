@@ -3,7 +3,7 @@
 import unittest
 import numpy as np
 
-from disorder.material import crystal, symmetry, structure
+from disorder.material import crystal, symmetry
 from disorder.diffuse import space, scattering, monocrystal
 from disorder.diffuse import magnetic, occupational, displacive
 

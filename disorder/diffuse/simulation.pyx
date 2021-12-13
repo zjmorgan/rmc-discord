@@ -163,7 +163,9 @@ cdef (double, double, double) gaussian_vector_candidate(double ux,
 
     return wx*inv_w, wy*inv_w, wz*inv_w
 
-cdef void replica_exchange(double [::1] H, double [::1] beta):
+cdef void replica_exchange(double [::1] H,
+                           double [::1] beta,
+                           double [::1] sigma):
 
     cdef Py_ssize_t n_temp = H.shape[0]
 
@@ -174,6 +176,7 @@ cdef void replica_exchange(double [::1] H, double [::1] beta):
     if (i != j):
         if (random_uniform() < alpha(H[j]-H[i], beta[i]-beta[j])):
             beta[i], beta[j] = beta[j], beta[i]
+            sigma[i], sigma[j] = sigma[j], sigma[i]
 
 def energy(double [:,:,:,:,::1] Sx,
            double [:,:,:,:,::1] Sy,
@@ -453,8 +456,10 @@ def heisenberg(double [:,:,:,:,::1] Sx,
                 if (rate < 1.0):
                     factor = 0.5/(1.0-rate)
                     sigma[t] *= factor
+                    # if (sigma[t] > 60):
+                    #     sigma[t] = 60
 
-            replica_exchange(H, beta)
+            replica_exchange(H, beta, sigma)
 
     return 1/(kB*np.copy(beta))
 
@@ -970,7 +975,9 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                 if (rate < 1.0):
                     factor = 0.5/(1.0-rate)
                     sigma[t] *= factor
+                    # if (sigma[t] > 60):
+                    #     sigma[t] = 60
 
-            replica_exchange(H, beta)
+            replica_exchange(H, beta, sigma)
 
     return 1/(kB*np.copy(beta))
