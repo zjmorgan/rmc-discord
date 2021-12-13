@@ -98,7 +98,7 @@ class test_simulation(unittest.TestCase):
                     if (np.allclose(d_xyz[:,i,p],inv_d_xyz[:,atm_ind[i,p],q])):
                         pair_inv[i,p] = q
 
-        pair_ij = np.zeros((n_atm,n_pair), dtype=np.int_)
+        pair_ij = np.zeros((n_atm,n_pair), dtype=np.intc)
 
         J = np.zeros((n_pair,3,3))
         K = np.zeros((n_atm,3,3))
