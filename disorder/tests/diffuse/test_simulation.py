@@ -68,7 +68,8 @@ class test_simulation(unittest.TestCase):
 
         _, inv_ind = np.unique(dist, return_inverse=True)
 
-        pair_ind = np.arange(n_pair+1)[inv_ind].reshape(n_atm,n_pair)
+        pair_ind = np.arange(n_pair+1,
+                             dtype=np.int32)[inv_ind].reshape(n_atm,n_pair)
 
         mask = d < 0.99*np.sqrt(2*a**2)
 
