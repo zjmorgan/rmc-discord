@@ -47,10 +47,10 @@ class test_simulation(unittest.TestCase):
                 img_ind_k.append(ind_k)
                 atm_ind.append(atm_a)
 
-        img_ind_i = np.array(img_ind_i, dtype=np.int32)
-        img_ind_j = np.array(img_ind_j, dtype=np.int32)
-        img_ind_k = np.array(img_ind_k, dtype=np.int32)
-        atm_ind = np.array(atm_ind, dtype=np.int32)
+        img_ind_i = np.array(img_ind_i, dtype=np.int_)
+        img_ind_j = np.array(img_ind_j, dtype=np.int_)
+        img_ind_k = np.array(img_ind_k, dtype=np.int_)
+        atm_ind = np.array(atm_ind, dtype=np.int_)
 
         du, dv, dw = np.array(du), np.array(dv), np.array(dw)
 
@@ -69,7 +69,7 @@ class test_simulation(unittest.TestCase):
         _, inv_ind = np.unique(dist, return_inverse=True)
 
         pair_ind = np.arange(n_pair+1,
-                             dtype=np.int32)[inv_ind].reshape(n_atm,n_pair)
+                             dtype=np.int_)[inv_ind].reshape(n_atm,n_pair)
 
         mask = d < 0.99*np.sqrt(2*a**2)
 
@@ -90,7 +90,7 @@ class test_simulation(unittest.TestCase):
 
         inv_d_xyz = -d_xyz
 
-        pair_inv = np.zeros((n_atm,n_pair), dtype=np.int32)
+        pair_inv = np.zeros((n_atm,n_pair), dtype=np.int_)
 
         for i in range(n_atm):
             for p in range(n_pair):
@@ -98,7 +98,7 @@ class test_simulation(unittest.TestCase):
                     if (np.allclose(d_xyz[:,i,p],inv_d_xyz[:,atm_ind[i,p],q])):
                         pair_inv[i,p] = q
 
-        pair_ij = np.zeros((n_atm,n_pair), dtype=np.int32)
+        pair_ij = np.zeros((n_atm,n_pair), dtype=np.int_)
 
         J = np.zeros((n_pair,3,3))
         K = np.zeros((n_atm,3,3))
