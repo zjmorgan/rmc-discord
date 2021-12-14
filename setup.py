@@ -151,6 +151,7 @@ setuptools.setup(
                      'diffuse/*.pyx',
                      'material/*.pxd',
                      'material/*.pyx',
+                     'tests/diffuse/*.pyx',
                      'tests/data/*'],
     },
     zip_safe=False
