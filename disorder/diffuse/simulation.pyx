@@ -132,7 +132,6 @@ cdef double random_gaussian():
 cdef (double, double, double) random_gaussian_3d():
 
     cdef double x0, x1, w
-    cdef double x2, x3, v
 
     w = 2.0
     while (w >= 1.0):
@@ -425,7 +424,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
     cdef double ux, uy, uz
     cdef double vx, vy, vz
 
-    cdef double [::1] sigma = np.full(n_temp, 60.)
+    cdef double [::1] sigma = np.full(n_temp, 5.)
 
     cdef double [::1] count = np.zeros(n_temp)
     cdef double [::1] total = np.zeros(n_temp)
@@ -436,7 +435,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
 
     for _ in range(N):
 
-        for _ in range(n):
+        for _ in range(1):
 
             i, j, k, a = random_original(nu, nv, nw, n_atm)
 
@@ -453,11 +452,11 @@ def heisenberg(double [:,:,:,:,::1] Sx,
                 rate = annealing_vector(Sx, Sy, Sz, vx, vy, vz, H, E, beta,
                                         count, total, i, j, k, a, t)
 
-                if (rate < 1.0):
-                    factor = 0.5/(1.0-rate)
+                if (rate < 1.0 and rate > 0.0):
+                    factor = rate/(1.0-rate)
                     sigma[t] *= factor
-                    # if (sigma[t] > 60):
-                    #     sigma[t] = 60
+                    if (sigma[t] > 20):
+                        sigma[t] = 20
 
             replica_exchange(H, beta, sigma)
 
@@ -891,7 +890,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double u, n_dot_u, n_dot_v
 
-    cdef double [::1] sigma = np.full(n_temp, 60.)
+    cdef double [::1] sigma = np.full(n_temp, 5.)
 
     cdef double [::1] count = np.zeros(n_temp)
     cdef double [::1] total = np.zeros(n_temp)
@@ -972,11 +971,11 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                          pair_ind, pair_ij, H, E, beta,
                                          count, total, t)
 
-                if (rate < 1.0):
-                    factor = 0.5/(1.0-rate)
+                if (rate < 1.0 and rate > 0.0):
+                    factor = rate/(1.0-rate)
                     sigma[t] *= factor
-                    # if (sigma[t] > 60):
-                    #     sigma[t] = 60
+                    if (sigma[t] > 20):
+                        sigma[t] = 20
 
             replica_exchange(H, beta, sigma)
 
