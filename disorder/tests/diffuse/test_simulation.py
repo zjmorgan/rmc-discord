@@ -6,6 +6,12 @@ import numpy as np
 from disorder.diffuse import space, simulation
 from disorder.material import crystal
 
+import pyximport
+
+pyximport.install(setup_args={ 'script_args': ['--force'] }, language_level=3)
+
+from disorder.tests.diffuse.test_c_simulation import test_c_simulation
+
 class test_simulation(unittest.TestCase):
 
     def test_energy(self):

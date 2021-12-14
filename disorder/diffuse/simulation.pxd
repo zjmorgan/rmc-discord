@@ -3,6 +3,12 @@
 
 cimport cython
 
+cdef void initialize_random(Py_ssize_t nu,
+                            Py_ssize_t nv,
+                            Py_ssize_t nw,
+                            Py_ssize_t n_atm,
+                            Py_ssize_t n_temp)
+
 cdef bint iszero(double a) nogil
 
 cdef double random_uniform()
