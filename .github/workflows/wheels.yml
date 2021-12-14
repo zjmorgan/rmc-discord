@@ -27,7 +27,7 @@ jobs:
            CIBW_SKIP: pp*
            CIBW_BEFORE_ALL_MACOS: brew install llvm libomp
            CIBW_ENVIRONMENT: "QT_QPA_PLATFORM=offscreen"
-           CIBW_TEST_REQUIRES: pytest ipython pyximport
+           CIBW_TEST_REQUIRES: pytest ipython cython
            CIBW_TEST_COMMAND: python -m pytest --pyargs disorder
            CIBW_MANYLINUX_X86_64_IMAGE: manylinux2014
            CIBW_MANYLINUX_I686_IMAGE: manylinux2014
