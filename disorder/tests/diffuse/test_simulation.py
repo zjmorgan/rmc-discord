@@ -103,54 +103,50 @@ class test_simulation(unittest.TestCase):
         J = np.zeros((n_pair,3,3))
         K = np.zeros((n_atm,3,3))
         g = np.zeros((n_atm,3,3))
+        B = np.zeros(3)
 
-        Jx = -1
-        Jz = -1.
+        Jx, Jy, Jz = -3, -2, -1
+        Kx, Ky, Kz = -1, -3, -2
+        gx, gy, gz = 2, 3, 4
+        Bx, By, Bz = 1, 2, 3
 
-        J[:n_pair,:,:] = np.array([[Jx, 0, 0],\
-                                   [0, Jx, 0],\
-                                   [0, 0, Jz]])
+        J[:n_pair,:,:] = np.array([[Jx, 0, 0],
+                                   [0, Jy, 0],
+                                   [0, 0, Jz]], dtype=float)
 
-        K[:n_atm,:,:] = np.array([[0, 0, 0],\
-                                  [0, 0, 0],\
-                                  [0, 0, 0.]])
+        K[:n_atm,:,:] = np.array([[Kx, 0, 0],
+                                  [0, Ky, 0],
+                                  [0, 0, Kz]], dtype=float)
 
-        g[:n_atm,:,:] = np.array([[2, 0, 0],\
-                                  [0, 2, 0],\
-                                  [0, 0, 2.]])
+        g[:n_atm,:,:] = np.array([[gx, 0, 0],
+                                  [0, gy, 0],
+                                  [0, 0, gz]], dtype=float)
 
-        B = np.array([0,0,0.])
+        B[:] = Bx, By, Bz
 
         ix, iy, iz = space.cell(nu, nv, nw, A)
 
         rx, ry, rz, ion = space.real(ux, uy, uz, ix, iy, iz, atm)
-        
-        np.random.seed(13)
-        
-        M = 1
-        
-        theta = 2*np.pi*np.random.rand(nu,nv,nw,n_atm,M)
-        phi = np.arccos(1-2*np.random.rand(nu,nv,nw,n_atm,M))
-        
-        Sx = np.sin(phi)*np.cos(theta)
-        Sy = np.sin(phi)*np.sin(theta)
-        Sz = np.cos(phi)
-        
-        E = simulation.energy(Sx, 
-                              Sy, 
-                              Sz, 
-                              J, 
-                              K, 
-                              g,
-                              B,
-                              atm_ind,
-                              img_ind_i,
-                              img_ind_j,
-                              img_ind_k,
-                              pair_ind,
-                              pair_ij)
 
-        print(E)
+        n = nu*nv*nw*n_atm
+
+        M = 3
+
+        Sx = np.zeros((nu,nv,nw,n_atm,M))
+        Sy = np.zeros((nu,nv,nw,n_atm,M))
+        Sz = np.zeros((nu,nv,nw,n_atm,M))
+
+        Sx[...,0], Sy[...,0], Sz[...,0] = 1, 0, 0
+        Sx[...,1], Sy[...,1], Sz[...,1] = 0, 1, 0
+        Sx[...,2], Sy[...,2], Sz[...,2] = 0, 0, 1
+
+        E = simulation.energy(Sx, Sy, Sz, J, K, g, B, atm_ind,
+                              img_ind_i, img_ind_j, img_ind_k,
+                              pair_ind, pair_ij)
+
+        self.assertAlmostEqual(E[...,0].sum(), -(0.5*Jx*n_pair+Kx+Bx*gx)*n)
+        self.assertAlmostEqual(E[...,1].sum(), -(0.5*Jy*n_pair+Ky+By*gy)*n)
+        self.assertAlmostEqual(E[...,2].sum(), -(0.5*Jz*n_pair+Kz+Bz*gz)*n)
 
 if __name__ == '__main__':
     unittest.main()
