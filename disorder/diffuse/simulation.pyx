@@ -459,7 +459,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
     cdef double ux, uy, uz
     cdef double vx, vy, vz
 
-    cdef double [::1] sigma = np.full(n_temp, 10.)
+    cdef double [::1] sigma = np.full(n_temp, 1.)
 
     cdef double [::1] count = np.zeros(n_temp)
     cdef double [::1] total = np.zeros(n_temp)
@@ -491,9 +491,10 @@ def heisenberg(double [:,:,:,:,::1] Sx,
                     factor = rate/(1.0-rate)
                     sigma[t] *= factor
 
-                if (sigma[t] < 0.001): sigma[t] = 0.001
-                if (sigma[t] > 100): sigma[t] = 100
-                print(sigma[t],rate,factor)
+                    if (sigma[t] < 0.01): sigma[t] = 0.01
+                    if (sigma[t] > 10): sigma[t] = 10
+
+                print(sigma[t],rate,factor) 
 
             replica_exchange(H, beta, sigma)
 
@@ -927,7 +928,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double u, n_dot_u, n_dot_v
 
-    cdef double [::1] sigma = np.full(n_temp, 10.)
+    cdef double [::1] sigma = np.full(n_temp, 0.)
 
     cdef double [::1] count = np.zeros(n_temp)
     cdef double [::1] total = np.zeros(n_temp)
@@ -946,7 +947,8 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
                 ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
 
-                nx, ny, nz = gaussian_vector_candidate(ux, uy, uz, sigma[t])
+                #nx, ny, nz = gaussian_vector_candidate(ux, uy, uz, sigma[t])
+                nx, ny, nz = ux, uy, uz
 
                 n_dot_u = ux*nx+uy*ny+uz*nz
 
@@ -1007,14 +1009,15 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                          img_ind_i, img_ind_j, img_ind_k,
                                          pair_ind, pair_ij, H, E, beta,
                                          count, total, t)
-                
+
                 if (rate > 0.0 and rate < 1.0):
                     factor = rate/(1.0-rate)
                     sigma[t] *= factor
 
-                if (sigma[t] < 0.001): sigma[t] = 0.001
-                if (sigma[t] > 100): sigma[t] = 100
-                print(sigma[t],rate,factor)
+                    # if (sigma[t] < 0.0001): sigma[t] = 0.0001
+                    # if (sigma[t] > 1000): sigma[t] = 1000
+
+                # print(sigma[t],rate,factor,count[t],total[t],H[t]) 
 
             replica_exchange(H, beta, sigma)
 
