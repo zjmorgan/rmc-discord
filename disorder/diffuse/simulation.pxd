@@ -40,6 +40,11 @@ cdef (double, double, double) gaussian_vector_candidate(double ux,
                                                         double uz,
                                                         double sigma)
 
+cdef (double, double, double) interpolated_vector_candidate(double ux,
+                                                            double uy,
+                                                            double uz,
+                                                            double sigma)
+
 cdef void replica_exchange(double [::1] H,
                            double [::1] beta,
                            double [::1] sigma)

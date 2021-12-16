@@ -112,9 +112,13 @@ class test_c_simulation(unittest.TestCase):
         self.assertAlmostEqual(ux, vx)
         self.assertAlmostEqual(uy, vy)
         self.assertAlmostEqual(uz, vz)
+
+    def test_interpolated_vector_candidate(self):
         
-        for i in range(10):
-            vx, vy, vz = simulation.gaussian_vector_candidate(ux, uy, uz, 10)
-            t = np.arccos(vz)
-            p = np.arctan2(vx,vy)
-            print(t,p)
+        ux, uy, uz = simulation.random_vector_candidate()
+        
+        vx, vy, vz = simulation.interpolated_vector_candidate(ux, uy, uz, 0)
+        
+        self.assertAlmostEqual(ux, vx)
+        self.assertAlmostEqual(uy, vy)
+        self.assertAlmostEqual(uz, vz)

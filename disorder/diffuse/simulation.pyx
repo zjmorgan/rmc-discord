@@ -162,6 +162,41 @@ cdef (double, double, double) gaussian_vector_candidate(double ux,
 
     return wx*inv_w, wy*inv_w, wz*inv_w
 
+cdef (double, double, double) interpolated_vector_candidate(double ux,
+                                                            double uy,
+                                                            double uz,
+                                                            double sigma):
+
+    cdef double vx, vy, vz
+    cdef double wx, wy, wz
+        
+    cdef double u_dot_v, theta, cos_theta, sin_theta
+    
+    vx, vy, vz = random_vector_candidate()
+
+    u_dot_v = ux*vx+uy*vy+uz*vz
+    
+    if iszero(u_dot_v-1):
+        
+        return ux, uy, uz
+    
+    elif iszero(u_dot_v+1):
+        
+        return -ux, -uy, -uz
+    
+    else:
+        
+        theta = acos(u_dot_v)*sigma
+        
+        cos_theta = cos(theta)
+        sin_theta = sin(theta)
+        
+        wx = ux*cos_theta+(vx-u_dot_v*ux)*sin_theta
+        wy = uy*cos_theta+(vy-u_dot_v*uy)*sin_theta
+        wz = uz*cos_theta+(vz-u_dot_v*uz)*sin_theta
+        
+        return wx, wy, wz
+        
 cdef void replica_exchange(double [::1] H,
                            double [::1] beta,
                            double [::1] sigma):
@@ -424,7 +459,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
     cdef double ux, uy, uz
     cdef double vx, vy, vz
 
-    cdef double [::1] sigma = np.full(n_temp, 5.)
+    cdef double [::1] sigma = np.full(n_temp, 10.)
 
     cdef double [::1] count = np.zeros(n_temp)
     cdef double [::1] total = np.zeros(n_temp)
@@ -452,11 +487,13 @@ def heisenberg(double [:,:,:,:,::1] Sx,
                 rate = annealing_vector(Sx, Sy, Sz, vx, vy, vz, H, E, beta,
                                         count, total, i, j, k, a, t)
 
-                if (rate < 1.0 and rate > 0.0):
+                if (rate > 0.0 and rate < 1.0):
                     factor = rate/(1.0-rate)
                     sigma[t] *= factor
-                    if (sigma[t] > 20):
-                        sigma[t] = 20
+
+                if (sigma[t] < 0.001): sigma[t] = 0.001
+                if (sigma[t] > 100): sigma[t] = 100
+                print(sigma[t],rate,factor)
 
             replica_exchange(H, beta, sigma)
 
@@ -890,7 +927,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double u, n_dot_u, n_dot_v
 
-    cdef double [::1] sigma = np.full(n_temp, 5.)
+    cdef double [::1] sigma = np.full(n_temp, 10.)
 
     cdef double [::1] count = np.zeros(n_temp)
     cdef double [::1] total = np.zeros(n_temp)
@@ -970,12 +1007,14 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                          img_ind_i, img_ind_j, img_ind_k,
                                          pair_ind, pair_ij, H, E, beta,
                                          count, total, t)
-
-                if (rate < 1.0 and rate > 0.0):
+                
+                if (rate > 0.0 and rate < 1.0):
                     factor = rate/(1.0-rate)
                     sigma[t] *= factor
-                    if (sigma[t] > 20):
-                        sigma[t] = 20
+
+                if (sigma[t] < 0.001): sigma[t] = 0.001
+                if (sigma[t] > 100): sigma[t] = 100
+                print(sigma[t],rate,factor)
 
             replica_exchange(H, beta, sigma)
 
