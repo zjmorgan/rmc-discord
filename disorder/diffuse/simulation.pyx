@@ -613,9 +613,13 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
 
             n_dot_u = nx*ux+ny*uy+nz*uz
 
-            vx = ux-2*nx*n_dot_u
-            vy = uy-2*ny*n_dot_u
-            vz = uz-2*nz*n_dot_u
+            # vx = ux-2*nx*n_dot_u
+            # vy = uy-2*ny*n_dot_u
+            # vz = uz-2*nz*n_dot_u
+
+            vx = -ux
+            vy = -uy
+            vz = -uz
 
             Sx[i,j,k,a,t] = vx
             Sy[i,j,k,a,t] = vy
@@ -948,19 +952,25 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                 ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
 
                 #nx, ny, nz = gaussian_vector_candidate(ux, uy, uz, sigma[t])
-                nx, ny, nz = ux, uy, uz
+                
+                u = sqrt(ux*ux+uy*uy+uz*uz)
+                
+                nx, ny, nz = -ux/u, -uy/u, -uz/u
+                
+                # print(nx,ny,nz)
 
-                n_dot_u = ux*nx+uy*ny+uz*nz
+                # n_dot_u = ux*nx+uy*ny+uz*nz
 
-                ux_perp = ux-nx*n_dot_u
-                uy_perp = uy-ny*n_dot_u
-                uz_perp = uz-nz*n_dot_u
+                # ux_perp = ux-nx*n_dot_u
+                # uy_perp = uy-ny*n_dot_u
+                # uz_perp = uz-nz*n_dot_u
 
                 clust_i[0,t] = i
                 clust_j[0,t] = j
                 clust_k[0,t] = k
                 clust_a[0,t] = a
 
+                b[i,j,k,a,t] = 1
                 c[i,j,k,a,t] = 1
 
                 i_c, m_c, n_c[t] = 0, 1, 1
@@ -981,6 +991,8 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                     vx_perp = vx-nx*n_dot_v
                     vy_perp = vy-ny*n_dot_v
                     vz_perp = vz-nz*n_dot_v
+                    
+                    b[i_,j_,k_,a_,t] = 1
 
                     m_c = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
                                            vx_perp, vy_perp, vz_perp,
@@ -991,11 +1003,11 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                            pair_ind, pair_inv, pair_ij, beta,
                                            i_, j_, k_, a_, t)
 
-                    b[i_,j_,k_,a_,t] = 1
-
                     n_c[t] = m_c
 
                     i_c += 1
+                    
+                print(m_c,n_c[t],t)
 
                 E[t] = boundary_energy(Sx, Sy, Sz, nx, ny, nz, J,
                                        clust_i, clust_j, clust_k,
@@ -1010,9 +1022,9 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                          pair_ind, pair_ij, H, E, beta,
                                          count, total, t)
 
-                if (rate > 0.0 and rate < 1.0):
-                    factor = rate/(1.0-rate)
-                    sigma[t] *= factor
+                # if (rate > 0.0 and rate < 1.0):
+                #     factor = rate/(1.0-rate)
+                #     sigma[t] *= factor
 
                     # if (sigma[t] < 0.0001): sigma[t] = 0.0001
                     # if (sigma[t] > 1000): sigma[t] = 1000
@@ -1020,5 +1032,8 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                 # print(sigma[t],rate,factor,count[t],total[t],H[t]) 
 
             replica_exchange(H, beta, sigma)
+            
+    for t in range(n_temp):
+        print(H[t])
 
     return 1/(kB*np.copy(beta))
