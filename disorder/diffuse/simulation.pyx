@@ -12,7 +12,7 @@ from libc.math cimport M_PI, fabs, log, exp, sqrt
 from libc.math cimport sin, cos, tan
 from libc.math cimport acos, atan, atan2
 
-cdef extern from "<random>" namespace "std":
+cdef extern from '<random>' namespace 'std' nogil:
     cdef cppclass mt19937:
         mt19937()
         mt19937(unsigned int seed)
@@ -62,11 +62,11 @@ cdef bint iszero(double a) nogil:
 
     return fabs(a) <= atol
 
-cdef double random_uniform():
+cdef double random_uniform() nogil:
 
     return dist(gen)
 
-cdef double alpha(double E, double beta):
+cdef double alpha(double E, double beta) nogil:
 
     return exp(-beta*E)
 
@@ -76,7 +76,7 @@ cdef (Py_ssize_t,
       Py_ssize_t) random_original(Py_ssize_t nu,
                                   Py_ssize_t nv,
                                   Py_ssize_t nw,
-                                  Py_ssize_t n_atm):
+                                  Py_ssize_t n_atm) nogil:
 
     cdef Py_ssize_t i = dist_u(gen)
     cdef Py_ssize_t j = dist_v(gen)
@@ -85,7 +85,7 @@ cdef (Py_ssize_t,
 
     return i, j, k, a
 
-cdef (double, double, double) random_vector_candidate():
+cdef (double, double, double) random_vector_candidate() nogil:
 
     cdef double theta = 2*M_PI*random_uniform()
     cdef double phi = acos(1-2*random_uniform())
@@ -96,7 +96,7 @@ cdef (double, double, double) random_vector_candidate():
 
     return sx, sy, sz
 
-cdef (double, double, double) random_vector_length_candidate():
+cdef (double, double, double) random_vector_length_candidate() nogil:
 
     cdef double theta = 2*M_PI*random_uniform()
     cdef double phi = acos(1-2*random_uniform())
@@ -111,11 +111,11 @@ cdef (double, double, double) random_vector_length_candidate():
 
 cdef (double, double, double) ising_vector_candidate(double ux,
                                                      double uy,
-                                                     double uz):
+                                                     double uz) nogil:
 
     return -ux, -uy, -uz
 
-cdef double random_gaussian():
+cdef double random_gaussian() nogil:
 
     cdef double x0, x1, w
 
@@ -129,7 +129,7 @@ cdef double random_gaussian():
 
     return x1*w
 
-cdef (double, double, double) random_gaussian_3d():
+cdef (double, double, double) random_gaussian_3d() nogil:
 
     cdef double x0, x1, w
 
@@ -146,7 +146,7 @@ cdef (double, double, double) random_gaussian_3d():
 cdef (double, double, double) gaussian_vector_candidate(double ux,
                                                         double uy,
                                                         double uz,
-                                                        double sigma):
+                                                        double sigma) nogil:
 
     cdef double vx, vy, vz
     cdef double wx, wy, wz, w, inv_w
@@ -162,10 +162,12 @@ cdef (double, double, double) gaussian_vector_candidate(double ux,
 
     return wx*inv_w, wy*inv_w, wz*inv_w
 
-cdef (double, double, double) interpolated_vector_candidate(double ux,
-                                                            double uy,
-                                                            double uz,
-                                                            double sigma):
+cdef (double,\
+      double,\
+      double) interpolated_vector_candidate(double ux,
+                                            double uy,
+                                            double uz,
+                                            double sigma) nogil:
 
     cdef double vx, vy, vz
     cdef double wx, wy, wz
@@ -199,7 +201,7 @@ cdef (double, double, double) interpolated_vector_candidate(double ux,
         
 cdef void replica_exchange(double [::1] H,
                            double [::1] beta,
-                           double [::1] sigma):
+                           double [::1] sigma) nogil:
 
     cdef Py_ssize_t n_temp = H.shape[0]
 
@@ -561,8 +563,10 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
     cdef double Bx = B[0]
     cdef double By = B[1]
     cdef double Bz = B[2]
+    
+    cdef Py_ssize_t m_c = n_c[t]
 
-    for i_c in range(n_c[t]):
+    for i_c in prange(m_c, nogil=True):
 
         i = clust_i[i_c,t]
         j = clust_j[i_c,t]
@@ -576,24 +580,21 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
         vx = ux-2*nx*n_dot_u
         vy = uy-2*ny*n_dot_u
         vz = uz-2*nz*n_dot_u
-
-        Ec -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
-           +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
-           +  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)
-
-        Ec += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
-           +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
-           +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)
-
+        
         dx = vx-ux
         dy = vy-uy
         dz = vz-uz
 
-        Ec -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
-           +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
-           +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
-
-        Ec += h_eff[i,j,k,a,t]
+        Ec += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
+           +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
+           +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)\
+           -  vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
+           -  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
+           -  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)\
+           -  Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
+           -  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
+           -  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)\
+           +  h_eff[i,j,k,a,t]
 
         b[i,j,k,a,t] = 0
         c[i,j,k,a,t] = 0
@@ -601,8 +602,8 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
         h_eff[i,j,k,a,t] = 0
 
     if (random_uniform() < alpha(Ec, beta[t])):
-
-        for i_c in range(n_c[t]):
+        
+        for i_c in prange(m_c, nogil=True):
 
             i = clust_i[i_c,t]
             j = clust_j[i_c,t]
@@ -819,7 +820,7 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
 
         n_dot_u = ux*nx+uy*ny+uz*nz
 
-        for p in range(n_pairs):
+        for p in prange(n_pairs, nogil=True):
 
             i_ = (i+img_ind_i[a,p]+nu)%nu
             j_ = (j+img_ind_j[a,p]+nv)%nv
@@ -1007,7 +1008,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
                     i_c += 1
                     
-                print(m_c,n_c[t],t)
+                # print(m_c,n_c[t],t)
 
                 E[t] = boundary_energy(Sx, Sy, Sz, nx, ny, nz, J,
                                        clust_i, clust_j, clust_k,
@@ -1033,7 +1034,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
             replica_exchange(H, beta, sigma)
             
-    for t in range(n_temp):
-        print(H[t])
+    # for t in range(n_temp):
+    #     print(H[t])
 
     return 1/(kB*np.copy(beta))

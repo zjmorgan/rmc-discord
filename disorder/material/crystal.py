@@ -1045,17 +1045,17 @@ def pairs(u, v, w, ion, A, extend=False):
     dv = v[j]-v[i]
     dw = w[j]-w[i]
 
-    u_img = -1*(du > 0.5)+(du <= -0.5)
-    v_img = -1*(dv > 0.5)+(dv <= -0.5)
-    w_img = -1*(dw > 0.5)+(dw <= -0.5)
+    u_img = -1*(du > 0.5)+(du < -0.5)
+    v_img = -1*(dv > 0.5)+(dv < -0.5)
+    w_img = -1*(dw > 0.5)+(dw < -0.5)
 
+    du[du < -0.5] += 1
+    dv[dv < -0.5] += 1
+    dw[dw < -0.5] += 1
+    
     du[du > 0.5] -= 1
     dv[dv > 0.5] -= 1
     dw[dw > 0.5] -= 1
-
-    du[du <= -0.5] += 1
-    dv[dv <= -0.5] += 1
-    dw[dw <= -0.5] += 1
     
     if extend:
 
