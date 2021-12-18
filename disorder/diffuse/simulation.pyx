@@ -171,34 +171,34 @@ cdef (double,\
 
     cdef double vx, vy, vz
     cdef double wx, wy, wz
-        
+
     cdef double u_dot_v, theta, cos_theta, sin_theta
-    
+
     vx, vy, vz = random_vector_candidate()
 
     u_dot_v = ux*vx+uy*vy+uz*vz
-    
+
     if iszero(u_dot_v-1):
-        
+
         return ux, uy, uz
-    
+
     elif iszero(u_dot_v+1):
-        
+
         return -ux, -uy, -uz
-    
+
     else:
-        
+
         theta = acos(u_dot_v)*sigma
-        
+
         cos_theta = cos(theta)
         sin_theta = sin(theta)
-        
+
         wx = ux*cos_theta+(vx-u_dot_v*ux)*sin_theta
         wy = uy*cos_theta+(vy-u_dot_v*uy)*sin_theta
         wz = uz*cos_theta+(vz-u_dot_v*uz)*sin_theta
-        
+
         return wx, wy, wz
-        
+
 cdef void replica_exchange(double [::1] H,
                            double [::1] beta,
                            double [::1] sigma) nogil:
@@ -364,7 +364,7 @@ cdef double magnetic(double [:,:,:,:,::1] Sx,
 
     cdef bint f
 
-    cdef double E = 0
+    cdef double Ej, E = 0
 
     cdef double wx, wy, wz
 
@@ -376,7 +376,7 @@ cdef double magnetic(double [:,:,:,:,::1] Sx,
     cdef double By = B[1]
     cdef double Bz = B[2]
 
-    for p in range(n_pairs):
+    for p in prange(n_pairs, nogil=True):
 
         i_ = (i+img_ind_i[a,p]+nu)%nu
         j_ = (j+img_ind_j[a,p]+nv)%nv
@@ -389,13 +389,15 @@ cdef double magnetic(double [:,:,:,:,::1] Sx,
         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
 
         if (f == 1):
-            E -= dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
-              +  dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
-              +  dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz)
+            Ej = -(dx*(J[q,0,0]*wx+J[q,1,0]*wy+J[q,2,0]*wz)\
+                 + dy*(J[q,0,1]*wx+J[q,1,1]*wy+J[q,2,1]*wz)\
+                 + dz*(J[q,0,2]*wx+J[q,1,2]*wy+J[q,2,2]*wz))
         else:
-            E -= dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
-              +  dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
-              +  dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz)
+            Ej = -(dx*(J[q,0,0]*wx+J[q,0,1]*wy+J[q,0,2]*wz)\
+                 + dy*(J[q,1,0]*wx+J[q,1,1]*wy+J[q,1,2]*wz)\
+                 + dz*(J[q,2,0]*wx+J[q,2,1]*wy+J[q,2,2]*wz))
+
+        E += Ej
 
     E -= vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
       +  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
@@ -472,7 +474,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
 
     for _ in range(N):
 
-        for _ in range(1):
+        for _ in range(n):
 
             i, j, k, a = random_original(nu, nv, nw, n_atm)
 
@@ -496,7 +498,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
                     if (sigma[t] < 0.01): sigma[t] = 0.01
                     if (sigma[t] > 10): sigma[t] = 10
 
-                print(sigma[t],rate,factor) 
+                # print(sigma[t],rate,factor)
 
             replica_exchange(H, beta, sigma)
 
@@ -545,6 +547,7 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
 
     cdef double Ec = 0
+    cdef double Ek, Eb
 
     cdef Py_ssize_t p, i_c
 
@@ -563,7 +566,7 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
     cdef double Bx = B[0]
     cdef double By = B[1]
     cdef double Bz = B[2]
-    
+
     cdef Py_ssize_t m_c = n_c[t]
 
     for i_c in prange(m_c, nogil=True):
@@ -580,21 +583,23 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
         vx = ux-2*nx*n_dot_u
         vy = uy-2*ny*n_dot_u
         vz = uz-2*nz*n_dot_u
-        
+
         dx = vx-ux
         dy = vy-uy
         dz = vz-uz
 
-        Ec += ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)\
-           +  uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)\
-           +  uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz)\
-           -  vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)\
-           -  vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)\
-           -  vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz)\
-           -  Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
-           -  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
-           -  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)\
-           +  h_eff[i,j,k,a,t]
+        Ek = -(vx*(A[a,0,0]*vx+A[a,0,1]*vy+A[a,0,2]*vz)+\
+               vy*(A[a,1,0]*vx+A[a,1,1]*vy+A[a,1,2]*vz)+\
+               vz*(A[a,2,0]*vx+A[a,2,1]*vy+A[a,2,2]*vz))\
+             +(ux*(A[a,0,0]*ux+A[a,0,1]*uy+A[a,0,2]*uz)+\
+               uy*(A[a,1,0]*ux+A[a,1,1]*uy+A[a,1,2]*uz)+\
+               uz*(A[a,2,0]*ux+A[a,2,1]*uy+A[a,2,2]*uz))
+
+        Eb = -(Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)+\
+               By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)+\
+               Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz))
+
+        Ec += Ek+Eb+h_eff[i,j,k,a,t]
 
         b[i,j,k,a,t] = 0
         c[i,j,k,a,t] = 0
@@ -602,7 +607,7 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
         h_eff[i,j,k,a,t] = 0
 
     if (random_uniform() < alpha(Ec, beta[t])):
-        
+
         for i_c in prange(m_c, nogil=True):
 
             i = clust_i[i_c,t]
@@ -614,13 +619,13 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
 
             n_dot_u = nx*ux+ny*uy+nz*uz
 
-            # vx = ux-2*nx*n_dot_u
-            # vy = uy-2*ny*n_dot_u
-            # vz = uz-2*nz*n_dot_u
+            vx = ux-2*nx*n_dot_u
+            vy = uy-2*ny*n_dot_u
+            vz = uz-2*nz*n_dot_u
 
-            vx = -ux
-            vy = -uy
-            vz = -uz
+            # vx = -ux
+            # vy = -uy
+            # vz = -uz
 
             Sx[i,j,k,a,t] = vx
             Sy[i,j,k,a,t] = vy
@@ -648,6 +653,11 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
                                  Py_ssize_t [:,::1] clust_j,
                                  Py_ssize_t [:,::1] clust_k,
                                  Py_ssize_t [:,::1] clust_a,
+                                 Py_ssize_t [::1] pairs_i,
+                                 Py_ssize_t [::1] pairs_j,
+                                 Py_ssize_t [::1] pairs_k,
+                                 Py_ssize_t [::1] pairs_a,
+                                 bint [::1] activated,
                                  double [:,:,:,:,::1] h_eff,
                                  double [:,:,:,:,:,::1] h_eff_ij,
                                  bint [:,:,:,:,::1] b,
@@ -675,7 +685,7 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
     cdef Py_ssize_t m_c = n_c[t]
 
-    cdef double E
+    cdef double E, Eh = 0
 
     cdef Py_ssize_t i_, j_, k_, a_, p_, p, q
 
@@ -691,13 +701,15 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double n_dot_v
 
-    for p in range(n_pairs):
+    for p in prange(n_pairs, nogil=True):
 
         i_ = (i+img_ind_i[a,p]+nu)%nu
         j_ = (j+img_ind_j[a,p]+nv)%nv
         k_ = (k+img_ind_k[a,p]+nw)%nw
         a_ = atm_ind[a,p]
         p_ = pair_inv[a,p]
+
+        activated[p] = 0
 
         if (b[i_,j_,k_,a_,t] == 0):
 
@@ -747,20 +759,27 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
                 if (random_uniform() < 1-alpha(E, beta[t])):
 
-                    clust_i[m_c,t] = i_
-                    clust_j[m_c,t] = j_
-                    clust_k[m_c,t] = k_
-                    clust_a[m_c,t] = a_
+                    pairs_i[p] = i_
+                    pairs_j[p] = j_
+                    pairs_k[p] = k_
+                    pairs_a[p] = a_
 
                     c[i_,j_,k_,a_,t] = 1
 
-                    m_c += 1
+                    activated[p] = 1
 
-            h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+    for p in range(n_pairs):
 
-        elif (b[i_,j_,k_,a_,t] == 1):
+        h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
 
-            h_eff[i,j,k,a,t] += h_eff_ij[i,j,k,a,p,t]
+        if (activated[p] == 1):
+
+            clust_i[m_c,t] = pairs_i[p]
+            clust_j[m_c,t] = pairs_j[p]
+            clust_k[m_c,t] = pairs_k[p]
+            clust_a[m_c,t] = pairs_a[p]
+
+            m_c += 1
 
     return m_c
 
@@ -922,6 +941,13 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
     cdef Py_ssize_t [:,::1] clust_k = np.zeros((n,n_temp), dtype=np.intp)
     cdef Py_ssize_t [:,::1] clust_a = np.zeros((n,n_temp), dtype=np.intp)
 
+    cdef Py_ssize_t [::1] pairs_i = np.zeros(n_pairs, dtype=np.intp)
+    cdef Py_ssize_t [::1] pairs_j = np.zeros(n_pairs, dtype=np.intp)
+    cdef Py_ssize_t [::1] pairs_k = np.zeros(n_pairs, dtype=np.intp)
+    cdef Py_ssize_t [::1] pairs_a = np.zeros(n_pairs, dtype=np.intp)
+
+    cdef bint [::1] activated = np.zeros(n_pairs, dtype=np.intc)
+
     cdef double ux, uy, uz
     cdef double vx, vy, vz
 
@@ -933,7 +959,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double u, n_dot_u, n_dot_v
 
-    cdef double [::1] sigma = np.full(n_temp, 0.)
+    cdef double [::1] sigma = np.full(n_temp, 1.)
 
     cdef double [::1] count = np.zeros(n_temp)
     cdef double [::1] total = np.zeros(n_temp)
@@ -952,13 +978,11 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
                 ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
 
-                #nx, ny, nz = gaussian_vector_candidate(ux, uy, uz, sigma[t])
-                
-                u = sqrt(ux*ux+uy*uy+uz*uz)
-                
-                nx, ny, nz = -ux/u, -uy/u, -uz/u
-                
-                # print(nx,ny,nz)
+                nx, ny, nz = gaussian_vector_candidate(ux, uy, uz, sigma[t])
+
+                # u = sqrt(ux*ux+uy*uy+uz*uz)
+
+                # nx, ny, nz = -ux/u, -uy/u, -uz/u
 
                 # n_dot_u = ux*nx+uy*ny+uz*nz
 
@@ -992,14 +1016,16 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                     vx_perp = vx-nx*n_dot_v
                     vy_perp = vy-ny*n_dot_v
                     vz_perp = vz-nz*n_dot_v
-                    
+
                     b[i_,j_,k_,a_,t] = 1
 
                     m_c = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
                                            vx_perp, vy_perp, vz_perp,
                                            n_dot_v, J,
                                            clust_i, clust_j, clust_k, clust_a,
-                                           h_eff, h_eff_ij, b, c, n_c, atm_ind,
+                                           pairs_i, pairs_j, pairs_k, pairs_a,
+                                           activated, h_eff, h_eff_ij,
+                                           b, c, n_c, atm_ind,
                                            img_ind_i, img_ind_j, img_ind_k,
                                            pair_ind, pair_inv, pair_ij, beta,
                                            i_, j_, k_, a_, t)
@@ -1007,8 +1033,6 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                     n_c[t] = m_c
 
                     i_c += 1
-                    
-                # print(m_c,n_c[t],t)
 
                 E[t] = boundary_energy(Sx, Sy, Sz, nx, ny, nz, J,
                                        clust_i, clust_j, clust_k,
@@ -1023,18 +1047,18 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                          pair_ind, pair_ij, H, E, beta,
                                          count, total, t)
 
-                # if (rate > 0.0 and rate < 1.0):
-                #     factor = rate/(1.0-rate)
-                #     sigma[t] *= factor
+                if (rate > 0.0 and rate < 1.0):
+                    factor = rate/(1.0-rate)
+                    sigma[t] *= factor
 
-                    # if (sigma[t] < 0.0001): sigma[t] = 0.0001
-                    # if (sigma[t] > 1000): sigma[t] = 1000
+                    if (sigma[t] < 0.0001): sigma[t] = 0.0001
+                    if (sigma[t] > 1000): sigma[t] = 1000
 
-                # print(sigma[t],rate,factor,count[t],total[t],H[t]) 
+                # print(sigma[t],rate,factor)
 
             replica_exchange(H, beta, sigma)
-            
-    # for t in range(n_temp):
-    #     print(H[t])
+
+    for t in range(n_temp):
+        print(H[t])
 
     return 1/(kB*np.copy(beta))
