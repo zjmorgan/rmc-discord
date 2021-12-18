@@ -66,8 +66,8 @@ class test_c_simulation(unittest.TestCase):
         for i in range(N):
             u[i] = simulation.random_gaussian()
             
-        self.assertAlmostEqual(u.mean(), 0.0, 2)
-        self.assertAlmostEqual(u.std(), 1.0, 2)
+        self.assertAlmostEqual(u.mean(), 0.0, 1)
+        self.assertAlmostEqual(u.std(), 1.0, 1)
         
     def test_random_vector_length_candidate(self):
 
@@ -96,12 +96,12 @@ class test_c_simulation(unittest.TestCase):
         for i in range(N):
             u[i], v[i], w[i] = simulation.random_gaussian_3d()
             
-        self.assertAlmostEqual(u.mean(), 0.0, 2)
-        self.assertAlmostEqual(v.mean(), 0.0, 2)
-        self.assertAlmostEqual(w.mean(), 0.0, 2)
-        self.assertAlmostEqual(u.std(), 1.0, 2)
-        self.assertAlmostEqual(v.std(), 1.0, 2)
-        self.assertAlmostEqual(w.std(), 1.0, 2)
+        self.assertAlmostEqual(u.mean(), 0.0, 1)
+        self.assertAlmostEqual(v.mean(), 0.0, 1)
+        self.assertAlmostEqual(w.mean(), 0.0, 1)
+        self.assertAlmostEqual(u.std(), 1.0, 1)
+        self.assertAlmostEqual(v.std(), 1.0, 1)
+        self.assertAlmostEqual(w.std(), 1.0, 1)
         
     def test_gaussian_vector_candidate(self):
         

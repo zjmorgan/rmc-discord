@@ -162,8 +162,8 @@ cdef (double, double, double) gaussian_vector_candidate(double ux,
 
     return wx*inv_w, wy*inv_w, wz*inv_w
 
-cdef (double,\
-      double,\
+cdef (double,
+      double,
       double) interpolated_vector_candidate(double ux,
                                             double uy,
                                             double uz,
@@ -502,7 +502,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
 
             replica_exchange(H, beta, sigma)
 
-    return 1/(kB*np.copy(beta))
+    return np.copy(H), 1/(kB*np.copy(beta))
 
 # ---
 
@@ -680,12 +680,15 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
     cdef Py_ssize_t nu = Sx.shape[0]
     cdef Py_ssize_t nv = Sx.shape[1]
     cdef Py_ssize_t nw = Sx.shape[2]
-
+    cdef Py_ssize_t n_atm = Sx.shape[3]
+    
     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
 
     cdef Py_ssize_t m_c = n_c[t]
-
-    cdef double E, Eh = 0
+    
+    cdef Py_ssize_t n = nu*nv*nw*n_atm
+    
+    cdef double E
 
     cdef Py_ssize_t i_, j_, k_, a_, p_, p, q
 
@@ -708,6 +711,11 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
         k_ = (k+img_ind_k[a,p]+nw)%nw
         a_ = atm_ind[a,p]
         p_ = pair_inv[a,p]
+
+        pairs_i[p] = i_
+        pairs_j[p] = j_
+        pairs_k[p] = k_
+        pairs_a[p] = a_
 
         activated[p] = 0
 
@@ -759,11 +767,6 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
                 if (random_uniform() < 1-alpha(E, beta[t])):
 
-                    pairs_i[p] = i_
-                    pairs_j[p] = j_
-                    pairs_k[p] = k_
-                    pairs_a[p] = a_
-
                     c[i_,j_,k_,a_,t] = 1
 
                     activated[p] = 1
@@ -774,12 +777,14 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
         if (activated[p] == 1):
 
-            clust_i[m_c,t] = pairs_i[p]
-            clust_j[m_c,t] = pairs_j[p]
-            clust_k[m_c,t] = pairs_k[p]
-            clust_a[m_c,t] = pairs_a[p]
+            if (m_c < n):
 
-            m_c += 1
+                clust_i[m_c,t] = pairs_i[p]
+                clust_j[m_c,t] = pairs_j[p]
+                clust_k[m_c,t] = pairs_k[p]
+                clust_a[m_c,t] = pairs_a[p]
+
+                m_c += 1
 
     return m_c
 
@@ -995,12 +1000,11 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                 clust_k[0,t] = k
                 clust_a[0,t] = a
 
-                b[i,j,k,a,t] = 1
-                c[i,j,k,a,t] = 1
+                i_c, m_c = 0, 1
 
-                i_c, m_c, n_c[t] = 0, 1, 1
+                n_c[t] = m_c
 
-                while i_c < m_c:
+                while (i_c < m_c):
 
                     i_ = clust_i[i_c,t]
                     j_ = clust_j[i_c,t]
@@ -1016,7 +1020,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                     vx_perp = vx-nx*n_dot_v
                     vy_perp = vy-ny*n_dot_v
                     vz_perp = vz-nz*n_dot_v
-
+                    
                     b[i_,j_,k_,a_,t] = 1
 
                     m_c = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
@@ -1058,7 +1062,4 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
             replica_exchange(H, beta, sigma)
 
-    for t in range(n_temp):
-        print(H[t])
-
-    return 1/(kB*np.copy(beta))
+    return np.copy(H), 1/(kB*np.copy(beta))

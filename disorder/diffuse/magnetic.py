@@ -2,10 +2,8 @@
 
 import numpy as np
 
-from scipy import constants, spatial
+from scipy import constants
 from disorder.material import tables
-
-from disorder.diffuse.powder import magnetic
 
 c = (0.5*constants.value('classical electron radius')*
       constants.value('neutron mag. mom. to nuclear magneton ratio')*
@@ -125,7 +123,7 @@ def form(Q, ions, g=2):
         Has the same shape as the input wavevector
 
     """
-    
+
     k = 2/g-1
 
     n_hkl = Q.shape[0]
@@ -141,9 +139,9 @@ def form(Q, ions, g=2):
         else:
             A0, a0, B0, b0, C0, c0, D0 = tables.j0.get(ion)
             A2, a2, B2, b2, C2, c2, D2 = tables.j2.get(ion)
-            
+
         if (np.size(k) > 1):
-            K = k[i] 
+            K = k[i]
         else:
             K = k
 
@@ -185,27 +183,27 @@ def spin(nu, nv, nw, n_atm, value=1, fixed=True):
             V = np.full(n_atm, value)
         elif (len(np.shape(value)) == 1):
             V = value
-        
+
         theta = 2*np.pi*np.random.rand(nu,nv,nw,n_atm)
         phi = np.arccos(1-2*np.random.rand(nu,nv,nw,n_atm))
-    
+
         Sx = V*np.sin(phi)*np.cos(theta)
         Sy = V*np.sin(phi)*np.sin(theta)
-        Sz = V*np.cos(phi)     
-        
+        Sz = V*np.cos(phi)
+
     else:
-        
+
         sign = 2*(np.random.rand(nu,nv,nw,n_atm) < 0.5)-1
-        
+
         Sx, Sy, Sz = sign*value[0], sign*value[1], sign*value[2]
-        
+
     if not fixed:
-        
+
         U = np.random.rand(nu,nv,nw,n_atm)
-        
+
         Sx *= U
         Sy *= U
-        Sz *= U       
+        Sz *= U
 
     return Sx.flatten(), Sy.flatten(), Sz.flatten()
 
@@ -248,7 +246,7 @@ def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
         Each array has a flattened shape of size ``nu*nw*nv*n_atm``
     i_dft : ndarray, int
         Array has a flattened shape of size ``nu*nw*nv*n_atm``
-        
+
     """
 
     Sx_k = np.fft.ifftn(Sx.reshape(nu,nv,nw,n_atm), axes=(0,1,2))*nu*nv*nw
@@ -258,7 +256,7 @@ def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
     Ku = np.mod(H, nu).astype(int)
     Kv = np.mod(K, nv).astype(int)
     Kw = np.mod(L, nw).astype(int)
-    
+
     i_dft = Kw+nw*(Kv+nv*Ku)
 
     return Sx_k.flatten(), Sy_k.flatten(), Sz_k.flatten(), i_dft
@@ -294,11 +292,11 @@ def intensity(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     """
 
     n_peaks = i_dft.shape[0]
-    
+
     n_atm = factors.shape[0] // n_peaks
-        
+
     factors = factors.reshape(n_peaks,n_atm)
-    
+
     n_uvw = Sx_k.shape[0] // n_atm
 
     Sx_k = Sx_k.reshape(n_uvw,n_atm)
@@ -358,11 +356,11 @@ def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     """
 
     n_peaks = i_dft.shape[0]
-    
+
     n_atm = factors.shape[0] // n_peaks
-        
+
     factors = factors.reshape(n_peaks,n_atm)
-    
+
     n_uvw = Sx_k.shape[0] // n_atm
 
     Sx_k = Sx_k.reshape(n_uvw,n_atm)
@@ -380,23 +378,23 @@ def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     return Fx, Fy, Fz, prod_x.flatten(), prod_y.flatten(), prod_z.flatten()
 
 def magnitude(mu1, mu2, mu3, C):
-    
+
     M = np.array([mu1,mu2,mu3])
     n = np.size(mu1)
-    
+
     M = M.reshape(3,n)
 
     mu = []
     for i in range(n):
         mu.append(np.linalg.norm(np.dot(C, M[:,i])))
-    
+
     return np.array(mu)
 
 def cartesian(mu1, mu2, mu3, C):
-    
+
     M = np.array([mu1,mu2,mu3])
     n = np.size(mu1)
-    
+
     M = M.reshape(3,n)
 
     mux, muy, muz = [], [], []
@@ -405,5 +403,5 @@ def cartesian(mu1, mu2, mu3, C):
         mux.append(Mp[0])
         muy.append(Mp[1])
         muz.append(Mp[2])
-    
+
     return np.array(mux), np.array(muy), np.array(muz)
