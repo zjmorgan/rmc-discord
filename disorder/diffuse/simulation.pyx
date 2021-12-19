@@ -11,6 +11,7 @@ cimport cython
 from libc.math cimport M_PI, fabs, log, exp, sqrt
 from libc.math cimport sin, cos, tan
 from libc.math cimport acos, atan, atan2
+from libcpp.vector cimport vector
 
 cdef extern from '<random>' namespace 'std' nogil:
     
@@ -30,6 +31,8 @@ cdef extern from '<random>' namespace 'std' nogil:
 
 cdef mt19937 gen
 
+cdef vector[vector[vector[vector[mt19937]]]] gen_ind
+
 cdef uniform_real_distribution[double] dist
 cdef uniform_int_distribution[Py_ssize_t] dist_u
 cdef uniform_int_distribution[Py_ssize_t] dist_v
@@ -45,15 +48,36 @@ cdef void initialize_random(Py_ssize_t nu,
                             Py_ssize_t n_atm,
                             Py_ssize_t n_temp):
     
-    cdef Py_ssize_t i, j, k, a
-
-    global gen, dist, dist_u, dist_v, dist_w, dist_atm, dist_temp, dist_ind
-
-    gen = mt19937(21)
-
-    dist = uniform_real_distribution[double](0.0,1.0)
+    cdef Py_ssize_t i, j, k, a, ind, seed
     
-    gen = mt19937(20)
+    seed = 20
+
+    global gen, gen_ind, dist, dist_u, dist_v, dist_w, dist_atm, dist_temp
+    
+    cdef vector[vector[vector[vector[mt19937]]]] u
+    cdef vector[vector[vector[mt19937]]] v
+    cdef vector[vector[mt19937]] w
+    cdef vector[mt19937] atm
+
+    u.clear()
+    for i in range(nu):
+        v.clear()
+        for j in range(nv):
+            w.clear()
+            for k in range(nw):
+                atm.clear()
+                for a in range(n_atm):
+                    ind = 1+seed+a+n_atm*(k+nw*(j+nv*i))
+                    atm.push_back(mt19937(ind))
+                w.push_back(atm)
+            v.push_back(w)
+        u.push_back(v)
+    
+    gen_ind = u
+                                        
+    gen = mt19937(seed)
+    
+    dist = uniform_real_distribution[double](0.0,1.0)
     
     dist_u = uniform_int_distribution[Py_ssize_t](0,nu-1)
     dist_v = uniform_int_distribution[Py_ssize_t](0,nv-1)
@@ -70,6 +94,13 @@ cdef bint iszero(double a) nogil:
 cdef double random_uniform() nogil:
 
     return dist(gen)
+
+cdef double random_uniform_parallel(Py_ssize_t i,
+                                    Py_ssize_t j, 
+                                    Py_ssize_t k,
+                                    Py_ssize_t a) nogil:
+
+    return dist(gen_ind[i][j][k][a])
 
 cdef double alpha(double E, double beta) nogil:
 
@@ -770,7 +801,7 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
                 E = 2*J_eff*n_dot_u*n_dot_v
 
-                if (random_uniform() < 1-alpha(E, beta[t])):
+                if (random_uniform_parallel(i_,j_,k_,a_) >= alpha(E, beta[t])):
 
                     c[i_,j_,k_,a_,t] = 1
 
