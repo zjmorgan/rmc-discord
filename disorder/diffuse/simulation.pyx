@@ -13,6 +13,7 @@ from libc.math cimport sin, cos, tan
 from libc.math cimport acos, atan, atan2
 
 cdef extern from '<random>' namespace 'std' nogil:
+    
     cdef cppclass mt19937:
         mt19937()
         mt19937(unsigned int seed)
@@ -43,13 +44,17 @@ cdef void initialize_random(Py_ssize_t nu,
                             Py_ssize_t nw,
                             Py_ssize_t n_atm,
                             Py_ssize_t n_temp):
+    
+    cdef Py_ssize_t i, j, k, a
 
-    global gen, dist, dist_u, dist_v, dist_w, dist_atm, dist_temp
+    global gen, dist, dist_u, dist_v, dist_w, dist_atm, dist_temp, dist_ind
 
-    gen = mt19937(20)
+    gen = mt19937(21)
 
     dist = uniform_real_distribution[double](0.0,1.0)
-
+    
+    gen = mt19937(20)
+    
     dist_u = uniform_int_distribution[Py_ssize_t](0,nu-1)
     dist_v = uniform_int_distribution[Py_ssize_t](0,nv-1)
     dist_w = uniform_int_distribution[Py_ssize_t](0,nw-1)
