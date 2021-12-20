@@ -14,7 +14,7 @@ from libc.math cimport acos, atan, atan2
 from libcpp.vector cimport vector
 
 cdef extern from '<random>' namespace 'std' nogil:
-    
+
     cdef cppclass mt19937:
         mt19937()
         mt19937(unsigned int seed)
@@ -47,13 +47,13 @@ cdef void initialize_random(Py_ssize_t nu,
                             Py_ssize_t nw,
                             Py_ssize_t n_atm,
                             Py_ssize_t n_temp):
-    
+
     cdef Py_ssize_t i, j, k, a, ind, seed
-    
+
     seed = 20
 
     global gen, gen_ind, dist, dist_u, dist_v, dist_w, dist_atm, dist_temp
-    
+
     cdef vector[vector[vector[vector[mt19937]]]] u
     cdef vector[vector[vector[mt19937]]] v
     cdef vector[vector[mt19937]] w
@@ -72,13 +72,13 @@ cdef void initialize_random(Py_ssize_t nu,
                 w.push_back(atm)
             v.push_back(w)
         u.push_back(v)
-    
+
     gen_ind = u
-                                        
+
     gen = mt19937(seed)
-    
+
     dist = uniform_real_distribution[double](0.0,1.0)
-    
+
     dist_u = uniform_int_distribution[Py_ssize_t](0,nu-1)
     dist_v = uniform_int_distribution[Py_ssize_t](0,nv-1)
     dist_w = uniform_int_distribution[Py_ssize_t](0,nw-1)
@@ -96,7 +96,7 @@ cdef double random_uniform() nogil:
     return dist(gen)
 
 cdef double random_uniform_parallel(Py_ssize_t i,
-                                    Py_ssize_t j, 
+                                    Py_ssize_t j,
                                     Py_ssize_t k,
                                     Py_ssize_t a) nogil:
 
@@ -717,13 +717,13 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
     cdef Py_ssize_t nv = Sx.shape[1]
     cdef Py_ssize_t nw = Sx.shape[2]
     cdef Py_ssize_t n_atm = Sx.shape[3]
-    
+
     cdef Py_ssize_t n_pairs = atm_ind.shape[1]
 
     cdef Py_ssize_t m_c = n_c[t]
-    
+
     cdef Py_ssize_t n = nu*nv*nw*n_atm
-    
+
     cdef double E
 
     cdef Py_ssize_t i_, j_, k_, a_, p_, p, q
@@ -1000,7 +1000,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double u, n_dot_u, n_dot_v
 
-    cdef double [::1] sigma = np.full(n_temp, 1.)
+    cdef double [::1] sigma = np.full(n_temp, 10.)
 
     cdef double [::1] count = np.zeros(n_temp)
     cdef double [::1] total = np.zeros(n_temp)
@@ -1056,7 +1056,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                     vx_perp = vx-nx*n_dot_v
                     vy_perp = vy-ny*n_dot_v
                     vz_perp = vz-nz*n_dot_v
-                    
+
                     b[i_,j_,k_,a_,t] = 1
 
                     m_c = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
@@ -1091,8 +1091,8 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                     factor = rate/(1.0-rate)
                     sigma[t] *= factor
 
-                    if (sigma[t] < 0.0001): sigma[t] = 0.0001
-                    if (sigma[t] > 1000): sigma[t] = 1000
+                    if (sigma[t] < 0.1): sigma[t] = 0.1
+                    if (sigma[t] > 10): sigma[t] = 10
 
                 # print(sigma[t],rate,factor)
 
