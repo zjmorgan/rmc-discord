@@ -303,11 +303,11 @@ class HeatMap(Plot):
         dx = 0 if size_x <= 1 else range_x/(size_x-1)
         dy = 0 if size_y <= 1 else range_y/(size_y-1)
 
-        min_x = extents[0]+dx/2
-        max_x = extents[1]-dx/2
+        min_x = extents[0]-dx/2
+        max_x = extents[1]+dx/2
 
-        min_y = extents[2]+dy/2
-        max_y = extents[3]-dy/2
+        min_y = extents[2]-dy/2
+        max_y = extents[3]+dy/2
 
         return [min_x, max_x, min_y, max_y]
 

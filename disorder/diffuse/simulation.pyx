@@ -1036,6 +1036,8 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                 clust_k[0,t] = k
                 clust_a[0,t] = a
 
+                c[i,j,k,a,t] = 1
+
                 i_c, m_c = 0, 1
 
                 n_c[t] = m_c
