@@ -96,7 +96,7 @@ class test_plots(unittest.TestCase):
 
         line_plot.plot_data(x, y, yerr=yerr, marker='o', label=r'y')
         line_plot.set_normalization('symlog')
-        line_plot.set_limts(-1, 1)
+        line_plot.set_limits(-1, 1)
         line_plot.draw_horizontal()
 
         z = 0.5*(y+1)
@@ -104,7 +104,7 @@ class test_plots(unittest.TestCase):
 
         line_plot.plot_data(x, z, yerr=zerr, marker='s', label=r'z', twin=True)
         line_plot.set_normalization('symlog', twin=True)
-        line_plot.set_limts(0, 1, twin=True)
+        line_plot.set_limits(0, 1, twin=True)
 
         line_plot.show_legend()
         line_plot.set_labels(r'$y=f(x)$', r'$x$', r'$y$', r'$z=(y+1)/2$')

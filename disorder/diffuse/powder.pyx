@@ -139,10 +139,6 @@ def magnetic(double [::1] Sx,
     k_np = np.mod(i_np[:,0], n_atm)
     l_np = np.mod(j_np[:,0], n_atm)
 
-    cdef double [::1] S_i_dot_S_i = Sx_np[m_np]*Sx_np[m_np]\
-                                  + Sy_np[m_np]*Sy_np[m_np]\
-                                  + Sz_np[m_np]*Sz_np[m_np]
-
     Ss_i_dot_Ss_j_np = Sx_np[is_np]*Sx_np[js_np]\
                      + Sy_np[is_np]*Sy_np[js_np]\
                      + Sz_np[is_np]*Sz_np[js_np]
@@ -465,7 +461,7 @@ def magnetic(double [::1] Sx,
             f_n_real = f_n.real
             f_n_imag = f_n.imag
 
-            value += (f_n_real*f_n_real+f_n_imag*f_n_imag)*S_i_dot_S_i[p]
+            value += 2.0*(f_n_real*f_n_real+f_n_imag*f_n_imag)/3.0
 
         auto[q] = value
 

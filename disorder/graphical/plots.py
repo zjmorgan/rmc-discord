@@ -12,6 +12,7 @@ import matplotlib.transforms as mtransforms
 
 from matplotlib import ticker
 from matplotlib.ticker import Locator
+from matplotlib.patches import Polygon
 
 from itertools import cycle
 
@@ -92,7 +93,7 @@ class Plot():
 
     def save_figure(self, filename):
 
-        self.fig.savefig(filename)
+        self.fig.savefig(filename, transparent=False)
 
     def clear_canvas(self):
 
@@ -200,7 +201,7 @@ class Line(Plot):
             ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
             ax.yaxis.set_minor_locator(MinorSymLogLocator(0.1))
 
-    def set_limts(self, vmin=None, vmax=None, twin=False):
+    def set_limits(self, vmin=None, vmax=None, twin=False):
 
         xmin, xmax, ymin, ymax = self.ax.axis()
 
@@ -447,6 +448,12 @@ class HeatMap(Plot):
         if self.im.colorbar is not None:
 
             self.im.colorbar.remove()
+            
+    def set_colorbar_label(self, label):
+
+        if self.im.colorbar is not None:
+
+            self.im.colorbar.set_label(label)
 
     def reset_color_limits(self):
 
@@ -502,6 +509,19 @@ class HeatMap(Plot):
 
         self.ax.set_xlim(ext_min[0]+offset,ext_max[0]+offset)
         self.ax.set_ylim(ext_min[1],ext_max[1])
+        
+        for p in reversed(self.ax.patches):
+            p.remove()
+        
+        x = [extents[1],ext_max[0]+offset,ext_max[0]+offset]
+        y = [ext_min[1],ext_min[1],ext_max[1]]
+        p = Polygon(np.column_stack((x,y)), fc='w', ec='w')
+        self.ax.add_patch(p)
+        
+        x = [extents[0],extents[0],extents[0]+offset*2]
+        y = [ext_min[1],ext_max[1],ext_max[1]]
+        p = Polygon(np.column_stack((x,y)), fc='w', ec='w')
+        self.ax.add_patch(p)
 
 class Scatter(Plot):
 
