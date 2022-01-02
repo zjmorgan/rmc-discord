@@ -42,15 +42,21 @@ cdef uniform_int_distribution[Py_ssize_t] dist_temp
 
 cdef double MACHINE_EPSILON = np.finfo(float).eps
 
+cdef Py_ssize_t seed = 20
+
+cpdef void set_seed(Py_ssize_t s):
+    
+    global seed
+    
+    seed = s
+
 cdef void initialize_random(Py_ssize_t nu,
                             Py_ssize_t nv,
                             Py_ssize_t nw,
                             Py_ssize_t n_atm,
                             Py_ssize_t n_temp):
 
-    cdef Py_ssize_t i, j, k, a, ind, seed
-
-    seed = 20
+    cdef Py_ssize_t i, j, k, a, ind
 
     global gen, gen_ind, dist, dist_u, dist_v, dist_w, dist_atm, dist_temp
 
@@ -930,14 +936,14 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                        double [::1] T_range,
                        double kB,
                        Py_ssize_t N):
-
+    
     cdef Py_ssize_t nu = Sx.shape[0]
     cdef Py_ssize_t nv = Sx.shape[1]
     cdef Py_ssize_t nw = Sx.shape[2]
     cdef Py_ssize_t n_atm = Sx.shape[3]
 
     cdef Py_ssize_t n_temp = T_range.shape[0]
-
+    
     initialize_random(nu, nv, nw, n_atm, n_temp)
 
     cdef Py_ssize_t t, n
@@ -1000,7 +1006,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double u, n_dot_u, n_dot_v
 
-    cdef double [::1] sigma = np.full(n_temp, 10.)
+    cdef double [::1] sigma = np.full(n_temp, 0.)
 
     cdef double [::1] count = np.zeros(n_temp)
     cdef double [::1] total = np.zeros(n_temp)

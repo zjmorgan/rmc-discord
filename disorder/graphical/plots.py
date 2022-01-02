@@ -93,7 +93,7 @@ class Plot():
 
     def save_figure(self, filename):
 
-        self.fig.savefig(filename, transparent=False)
+        self.fig.savefig(filename, bbox_inches='tight', transparent=False)
 
     def clear_canvas(self):
 
@@ -438,7 +438,7 @@ class HeatMap(Plot):
 
         pad = 0.05 if orientation.lower() == 'vertical' else 0.2
 
-        self.cb = self.fig.colorbar(self.im, ax=self.ax,
+        self.cb = self.fig.colorbar(self.im, ax=self.ax, shrink=0.72, aspect=20*0.72,
                                     orientation=orientation, pad=pad)
 
         self.cb.ax.minorticks_on()
@@ -493,6 +493,9 @@ class HeatMap(Plot):
 
         min_y = extents[2]
         offset = self.__offset(transformation, min_y)
+        
+        self.transformation = transformation
+        self.offset = offset
 
         trans = mtransforms.Affine2D()
 
@@ -522,6 +525,17 @@ class HeatMap(Plot):
         y = [ext_min[1],ext_max[1],ext_max[1]]
         p = Polygon(np.column_stack((x,y)), fc='w', ec='w')
         self.ax.add_patch(p)
+        
+    def draw_line(self, xlim=None, ylim=None):
+                        
+        if xlim is None: xlim = self.ax.get_xlim()
+        if ylim is None: ylim = self.ax.get_ylim()
+        
+        self.ax.plot(xlim, ylim, color='w')
+        
+    def add_text(self, x, y, s, color='w'):
+        
+        self.ax.text(x, y, s, color=color, ha='center', va='center')
 
 class Scatter(Plot):
 
@@ -564,7 +578,7 @@ class Scatter(Plot):
 
             if (norm.lower() == 'symlog'):
                 self.cb.locator = ticker.SymmetricalLogLocator(linthresh=0.1,
-                                                                base=10)
+                                                               base=10)
                 self.cb.update_ticks()
 
     def update_normalization(self, norm='linear'):
