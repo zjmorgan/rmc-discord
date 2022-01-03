@@ -90,6 +90,19 @@ class Plot():
         self.fig = canvas.figure
         self.ax = canvas.figure.add_subplot(111)
         self.ax.minorticks_on()
+        
+    def get_aspect(self):
+        
+        width, height = self.ax.get_figure().get_size_inches()
+        _, _, w, h = self.ax.get_position().bounds
+        
+        xmin, xmax = self.ax.get_xlim()
+        ymin, ymax = self.ax.get_ylim()
+    
+        disp_ratio = (height*h)/(width*w)
+        data_ratio = (ymax-ymin)/(xmax-xmin)
+            
+        return disp_ratio/data_ratio
 
     def save_figure(self, filename):
 
@@ -437,8 +450,8 @@ class HeatMap(Plot):
         self.remove_colorbar()
 
         pad = 0.05 if orientation.lower() == 'vertical' else 0.2
-
-        self.cb = self.fig.colorbar(self.im, ax=self.ax, shrink=0.72, aspect=20*0.72,
+        
+        self.cb = self.fig.colorbar(self.im, ax=self.ax,
                                     orientation=orientation, pad=pad)
 
         self.cb.ax.minorticks_on()
