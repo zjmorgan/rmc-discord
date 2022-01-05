@@ -30,7 +30,7 @@ class test_functions(unittest.TestCase):
         
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
         
-        data = functions.pairs1d(rx, ry, rz, atms, nu, nv, nw, fract=1.0)
+        data = functions.pairs1d(rx, ry, rz, atms, nu, nv, nw, A, fract=1.0)
         distance, atm_pair, counts, search, coordinate, N = data
        
         mu = (nu+1) // 2
@@ -65,6 +65,18 @@ class test_functions(unittest.TestCase):
         Dx = (rx[j]-rx[i])[search[:-1]]
         Dy = (ry[j]-ry[i])[search[:-1]]
         Dz = (rz[j]-rz[i])[search[:-1]]
+        
+        Du, Dv, Dw = crystal.transform(Dx, Dy, Dz, np.linalg.inv(A))
+        
+        Du[Du < -mu] += nu
+        Dv[Dv < -mv] += nv
+        Dw[Dw < -mw] += nw
+    
+        Du[Du > mu] -= nu
+        Dv[Dv > mv] -= nv
+        Dw[Dw > mw] -= nw
+    
+        Dx, Dy, Dz = crystal.transform(Du, Dv, Dw, A)
 
         Distance = np.sqrt(Dx**2+Dy**2+Dz**2)
 
@@ -77,11 +89,17 @@ class test_functions(unittest.TestCase):
         
         np.testing.assert_array_equal(atm_pair_ij, unique_pairs)
         
-        data = functions.pairs1d(rx, ry, rz, atms, nu, nv, nw, fract=0.5)
+        dx_c, dy_c, dz_c = crystal.transform(mu, mv, mw, A)
+        
+        dc = np.sqrt(dx_c**2+dy_c**2+dz_c**2)
+                
+        np.testing.assert_array_equal(distance <= dc, True)
+        
+        data = functions.pairs1d(rx, ry, rz, atms, nu, nv, nw, A, fract=0.25)
         distance, atm_pair, counts, search, coordinate, N = data
                 
-        np.testing.assert_array_equal(distance <= Distance.max()*0.5, True)
-
+        np.testing.assert_array_equal(distance <= Distance.max()*0.25, True)
+        
     def test_pairs3d(self):
     
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
@@ -103,7 +121,7 @@ class test_functions(unittest.TestCase):
         
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
         
-        data = functions.pairs3d(rx, ry, rz, atms, nu, nv, nw, fract=1.0)
+        data = functions.pairs3d(rx, ry, rz, atms, nu, nv, nw, A, fract=1.0)
         dx, dy, dz, atm_pair, counts, search, coordinate, N = data
         
         mu = (nu+1) // 2
@@ -139,6 +157,18 @@ class test_functions(unittest.TestCase):
         Dy = (ry[j]-ry[i])[search[:-1]]
         Dz = (rz[j]-rz[i])[search[:-1]]
         
+        Du, Dv, Dw = crystal.transform(Dx, Dy, Dz, np.linalg.inv(A))
+        
+        Du[Du < -mu] += nu
+        Dv[Dv < -mv] += nv
+        Dw[Dw < -mw] += nw
+    
+        Du[Du > mu] -= nu
+        Dv[Dv > mv] -= nv
+        Dw[Dw > mw] -= nw
+        
+        Dx, Dy, Dz = crystal.transform(Du, Dv, Dw, A)
+        
         Distance = np.sqrt(Dx**2+Dy**2+Dz**2)
 
         np.testing.assert_array_almost_equal(Dx, dx[:-1])
@@ -152,12 +182,18 @@ class test_functions(unittest.TestCase):
         
         np.testing.assert_array_equal(atm_pair_ij, unique_pairs)
         
-        data = functions.pairs3d(rx, ry, rz, atms, nu, nv, nw, fract=0.5)
+        du, dv, dw = crystal.transform(dx, dy, dz, np.linalg.inv(A))
+        
+        np.testing.assert_array_equal(du <= mu, True)
+        np.testing.assert_array_equal(dv <= mv, True)
+        np.testing.assert_array_equal(dw <= mw, True)
+        
+        data = functions.pairs3d(rx, ry, rz, atms, nu, nv, nw, A, fract=0.25)
         dx, dy, dz, atm_pair, counts, search, coordinate, N = data
                 
-        np.testing.assert_array_equal(dx <= Distance.max()*0.5, True)
-        np.testing.assert_array_equal(dy <= Distance.max()*0.5, True)
-        np.testing.assert_array_equal(dz <= Distance.max()*0.5, True)
+        np.testing.assert_array_equal(dx <= Distance.max()*0.25, True)
+        np.testing.assert_array_equal(dy <= Distance.max()*0.25, True)
+        np.testing.assert_array_equal(dz <= Distance.max()*0.25, True)
         
     def test_vector1d(self):
     
@@ -202,7 +238,7 @@ class test_functions(unittest.TestCase):
         
         Sx, Sy, Sz = Sx.flatten(), Sy.flatten(), Sz.flatten()
         
-        args = [Sx, Sy, Sz, rx, ry, rz, atms, nu, nv, nw, 0.5]
+        args = [Sx, Sy, Sz, rx, ry, rz, atms, nu, nv, nw, A, 0.5]
         data = functions.vector1d(*args)
         S_corr, S_coll, S_corr_, S_coll_, distance, atm_pair = data
         
@@ -262,7 +298,7 @@ class test_functions(unittest.TestCase):
         
         Sx, Sy, Sz = Sx.flatten(), Sy.flatten(), Sz.flatten()
         
-        args = [Sx, Sy, Sz, rx, ry, rz, atms, nu, nv, nw, 0.5]
+        args = [Sx, Sy, Sz, rx, ry, rz, atms, nu, nv, nw, A, 0.5]
         data = functions.vector3d(*args)
         S_corr, S_coll, S_corr_, S_coll_, dx, dy, dz, atm_pair = data
         
@@ -309,7 +345,7 @@ class test_functions(unittest.TestCase):
 
         A_r = A_r.flatten()
         
-        args = [A_r, rx, ry, rz, atms, nu, nv, nw, 0.5]
+        args = [A_r, rx, ry, rz, atms, nu, nv, nw, A, 0.5]
         data = functions.scalar1d(*args)
         S_corr, S_corr_, distance, atm_pair = data
                 
@@ -348,7 +384,7 @@ class test_functions(unittest.TestCase):
 
         A_r = A_r.flatten()
         
-        args = [A_r, rx, ry, rz, atms, nu, nv, nw, 0.5]
+        args = [A_r, rx, ry, rz, atms, nu, nv, nw, A, 0.5]
         data = functions.scalar3d(*args)
         S_corr, S_corr_, dx, dy, dz, atm_pair = data
         
@@ -380,7 +416,7 @@ class test_functions(unittest.TestCase):
         
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
                 
-        data = functions.pairs3d(rx, ry, rz, atms, nu, nv, nw, fract=1.0)
+        data = functions.pairs3d(rx, ry, rz, atms, nu, nv, nw, A, fract=1.0)
         dx, dy, dz, atm_pair, counts, search, coordinate, N = data
         
         arr = np.random.random(atm_pair.shape)

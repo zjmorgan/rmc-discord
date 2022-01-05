@@ -9,7 +9,7 @@ cimport cython
 
 from libc.math cimport sqrt, fabs
 
-from disorder.material import symmetry
+from disorder.material import crystal, symmetry
 
 cdef double iszero(double a) nogil:
 
@@ -304,7 +304,7 @@ def scalar_vector_correlation(double [::1] delta,
 
     return S_corr_np
 
-def pairs1d(rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
+def pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
     n_atm = ion.shape[0] // (nu*nv*nw)
 
@@ -361,6 +361,18 @@ def pairs1d(rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
     dx = rx[j]-rx[i]
     dy = ry[j]-ry[i]
     dz = rz[j]-rz[i]
+
+    du, dv, dw = crystal.transform(dx, dy, dz, np.linalg.inv(A))
+
+    du[du < -mu] += nu
+    dv[dv < -mv] += nv
+    dw[dw < -mw] += nw
+
+    du[du > mu] -= nu
+    dv[dv > mv] -= nv
+    dw[dw > mw] -= nw
+    
+    dx, dy, dz = crystal.transform(du, dv, dw, A)
 
     distance = np.sqrt(dx**2+dy**2+dz**2)
 
@@ -411,7 +423,7 @@ def pairs1d(rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
 
     return distance, ion_pair, counts, search, coordinate, unique.shape[0]+1
 
-def pairs3d(rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
+def pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
     n_atm = ion.shape[0] // (nu*nv*nw)
 
@@ -468,6 +480,18 @@ def pairs3d(rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
     dx = rx[j]-rx[i]
     dy = ry[j]-ry[i]
     dz = rz[j]-rz[i]
+
+    du, dv, dw = crystal.transform(dx, dy, dz, np.linalg.inv(A))
+
+    du[du < -mu] += nu
+    dv[dv < -mv] += nv
+    dw[dw < -mw] += nw
+
+    du[du > mu] -= nu
+    dv[dv > mv] -= nv
+    dw[dw > mw] -= nw
+
+    dx, dy, dz = crystal.transform(du, dv, dw, A)
 
     distance = np.sqrt(dx**2+dy**2+dz**2)
 
@@ -522,9 +546,9 @@ def pairs3d(rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
 
     return dx, dy, dz, ion_pair, counts, search, coordinate, unique.shape[0]+1
 
-def vector1d(Sx, Sy, Sz, rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
+def vector1d(Sx, Sy, Sz, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
-    data = pairs1d(rx, ry, rz, ion, nu, nv, nw, fract, tol)
+    data = pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
     distance, ion_pair, counts, search, coordinate, N = data
 
@@ -536,9 +560,9 @@ def vector1d(Sx, Sy, Sz, rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
 
     return S_corr, S_coll, S_corr_, S_coll_, distance, ion_pair
 
-def vector3d(Sx, Sy, Sz, rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
+def vector3d(Sx, Sy, Sz, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
-    data = pairs3d(rx, ry, rz, ion, nu, nv, nw, fract, tol)
+    data = pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
     dx, dy, dz, ion_pair, counts, search, coordinate, N = data
 
@@ -561,9 +585,9 @@ def vector3d(Sx, Sy, Sz, rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
 
     return S_corr, S_coll, S_corr_, S_coll_, dx, dy, dz, ion_pair
 
-def scalar1d(A_r, rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
+def scalar1d(A_r, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
-    data = pairs1d(rx, ry, rz, ion, nu, nv, nw, fract, tol)
+    data = pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
     distance, ion_pair, counts, search, coordinate, N = data
 
@@ -572,9 +596,9 @@ def scalar1d(A_r, rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
 
     return S_corr, S_corr_, distance, ion_pair
 
-def scalar3d(A_r, rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
+def scalar3d(A_r, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
-    data = pairs3d(rx, ry, rz, ion, nu, nv, nw, fract, tol)
+    data = pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
     dx, dy, dz, ion_pair, counts, search, coordinate, N = data
 
@@ -593,9 +617,9 @@ def scalar3d(A_r, rx, ry, rz, ion, nu, nv, nw, fract=0.25, tol=1e-4):
     return S_corr, S_corr_, dx, dy, dz, ion_pair
 
 def combination1d(delta, Sx, Sy, Sz, rx, ry, rz, ion, \
-                  nu, nv, nw, fract=0.25, tol=1e-4):
+                  nu, nv, nw, A, fract=0.25, tol=1e-4):
 
-    data = pairs1d(rx, ry, rz, ion, nu, nv, nw, fract, tol)
+    data = pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
     distance, ion_pair, counts, search, coordinate, N = data
 
@@ -605,9 +629,9 @@ def combination1d(delta, Sx, Sy, Sz, rx, ry, rz, ion, \
     return S_corr, distance, ion_pair
 
 def combination3d(delta, Sx, Sy, Sz, rx, ry, rz, \
-                  ion, nu, nv, nw, fract=0.25, tol=1e-4):
+                  ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
-    data = pairs3d(rx, ry, rz, ion, nu, nv, nw, fract, tol)
+    data = pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
     dx, dy, dz, ion_pair, counts, search, coordinate, N = data
 
