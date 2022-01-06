@@ -13,7 +13,7 @@ from scipy.special import factorial
 
 from libc.math cimport M_PI, cos, sin, exp, sqrt
 
-from disorder.material import tables
+from disorder.material import crystal, tables
 
 import os
 
@@ -32,6 +32,7 @@ def magnetic(double [::1] Sx,
              double [::1] rz,
              ions,
              double [::1] Q,
+             double [:,:] A,
              double [:,:] D,
              Py_ssize_t nu,
              Py_ssize_t nv,
@@ -116,6 +117,8 @@ def magnetic(double [::1] Sx,
 
     cdef double [::1] mult_s = mult_s_np
     cdef double [::1] mult = np.full(n_uvw, m_uvw, dtype=float)
+    
+    A_inv = np.linalg.inv(A)
 
     rx_np = np.copy(rx, order='C')
     ry_np = np.copy(ry, order='C')
@@ -125,12 +128,40 @@ def magnetic(double [::1] Sx,
     ry_s_ij_np = ry_np[js_np]-ry_np[is_np]
     rz_s_ij_np = rz_np[js_np]-rz_np[is_np]
 
+    u_s_ij, v_s_ij, w_s_ij = crystal.transform(rx_s_ij_np, 
+                                               ry_s_ij_np, 
+                                               rz_s_ij_np, A_inv)
+
+    u_s_ij[u_s_ij <= -mu] += nu
+    v_s_ij[v_s_ij <= -mv] += nv
+    w_s_ij[w_s_ij <= -mw] += nw
+
+    u_s_ij[u_s_ij >= mu] -= nu
+    v_s_ij[v_s_ij >= mv] -= nv
+    w_s_ij[w_s_ij >= mw] -= nw
+
+    rx_s_ij_np, ry_s_ij_np, rz_s_ij_np = crystal.transform(u_s_ij,
+                                                           v_s_ij,
+                                                           w_s_ij, A)
+
     rs_ij_np = np.sqrt(rx_s_ij_np**2+ry_s_ij_np**2+rz_s_ij_np**2)
 
     rx_ij_np = rx_np[j_np]-rx_np[i_np]
     ry_ij_np = ry_np[j_np]-ry_np[i_np]
     rz_ij_np = rz_np[j_np]-rz_np[i_np]
+    
+    u_ij, v_ij, w_ij = crystal.transform(rx_ij_np, ry_ij_np, rz_ij_np, A_inv)
 
+    u_ij[u_ij <= -mu] += nu
+    v_ij[v_ij <= -mv] += nv
+    w_ij[w_ij <= -mw] += nw
+
+    u_ij[u_ij >= mu] -= nu
+    v_ij[v_ij >= mv] -= nv
+    w_ij[w_ij >= mw] -= nw
+    
+    rx_ij_np, ry_ij_np, rz_ij_np = crystal.transform(u_ij, v_ij, w_ij, A)
+    
     r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
 
     ks_np = np.mod(is_np[:,0], n_atm)
@@ -484,6 +515,7 @@ def occupational(double [::1] A_r,
                  double [::1] rz,
                  atms,
                  double [::1] Q,
+                 double [:,:] A,
                  double [:,:] D,
                  Py_ssize_t nu,
                  Py_ssize_t nv,
@@ -568,6 +600,8 @@ def occupational(double [::1] A_r,
 
     cdef double [::1] mult_s = mult_s_np
     cdef double [::1] mult = np.full(n_uvw, m_uvw, dtype=float)
+    
+    A_inv = np.linalg.inv(A)
 
     rx_np = np.copy(rx, order='C')
     ry_np = np.copy(ry, order='C')
@@ -577,11 +611,39 @@ def occupational(double [::1] A_r,
     ry_s_ij_np = ry_np[js_np]-ry_np[is_np]
     rz_s_ij_np = rz_np[js_np]-rz_np[is_np]
 
+    u_s_ij, v_s_ij, w_s_ij = crystal.transform(rx_s_ij_np, 
+                                               ry_s_ij_np, 
+                                               rz_s_ij_np, A_inv)
+
+    u_s_ij[u_s_ij <= -mu] += nu
+    v_s_ij[v_s_ij <= -mv] += nv
+    w_s_ij[w_s_ij <= -mw] += nw
+
+    u_s_ij[u_s_ij >= mu] -= nu
+    v_s_ij[v_s_ij >= mv] -= nv
+    w_s_ij[w_s_ij >= mw] -= nw
+
+    rx_s_ij_np, ry_s_ij_np, rz_s_ij_np = crystal.transform(u_s_ij,
+                                                           v_s_ij,
+                                                           w_s_ij, A)
+
     rs_ij_np = np.sqrt(rx_s_ij_np**2+ry_s_ij_np**2+rz_s_ij_np**2)
 
     rx_ij_np = rx_np[j_np]-rx_np[i_np]
     ry_ij_np = ry_np[j_np]-ry_np[i_np]
     rz_ij_np = rz_np[j_np]-rz_np[i_np]
+    
+    u_ij, v_ij, w_ij = crystal.transform(rx_ij_np, ry_ij_np, rz_ij_np, A_inv)
+
+    u_ij[u_ij <= -mu] += nu
+    v_ij[v_ij <= -mv] += nv
+    w_ij[w_ij <= -mw] += nw
+
+    u_ij[u_ij >= mu] -= nu
+    v_ij[v_ij >= mv] -= nv
+    w_ij[w_ij >= mw] -= nw
+    
+    rx_ij_np, ry_ij_np, rz_ij_np = crystal.transform(u_ij, v_ij, w_ij, A)
 
     r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
 
@@ -857,6 +919,7 @@ def displacive(double [::1] Ux,
                double [::1] rz,
                atms,
                double [::1] Q,
+               double [:,:] A,
                double [:,:] D,
                Py_ssize_t nu,
                Py_ssize_t nv,
@@ -947,6 +1010,8 @@ def displacive(double [::1] Ux,
     cdef double [::1] mult_s = mult_s_np
     cdef double [::1] mult = np.full(n_uvw, m_uvw, dtype=float)
 
+    A_inv = np.linalg.inv(A)
+
     ks_np = np.mod(is_np[:,0], n_atm)
     ls_np = np.mod(js_np[:,0], n_atm)
 
@@ -961,11 +1026,39 @@ def displacive(double [::1] Ux,
     ry_s_ij_np = ry_np[js_np]-ry_np[is_np]
     rz_s_ij_np = rz_np[js_np]-rz_np[is_np]
 
+    u_s_ij, v_s_ij, w_s_ij = crystal.transform(rx_s_ij_np, 
+                                               ry_s_ij_np, 
+                                               rz_s_ij_np, A_inv)
+
+    u_s_ij[u_s_ij <= -mu] += nu
+    v_s_ij[v_s_ij <= -mv] += nv
+    w_s_ij[w_s_ij <= -mw] += nw
+
+    u_s_ij[u_s_ij >= mu] -= nu
+    v_s_ij[v_s_ij >= mv] -= nv
+    w_s_ij[w_s_ij >= mw] -= nw
+
+    rx_s_ij_np, ry_s_ij_np, rz_s_ij_np = crystal.transform(u_s_ij,
+                                                           v_s_ij,
+                                                           w_s_ij, A)
+
     rs_ij_np = np.sqrt(rx_s_ij_np**2+ry_s_ij_np**2+rz_s_ij_np**2)
 
     rx_ij_np = rx_np[j_np]-rx_np[i_np]
     ry_ij_np = ry_np[j_np]-ry_np[i_np]
     rz_ij_np = rz_np[j_np]-rz_np[i_np]
+    
+    u_ij, v_ij, w_ij = crystal.transform(rx_ij_np, ry_ij_np, rz_ij_np, A_inv)
+
+    u_ij[u_ij <= -mu] += nu
+    v_ij[v_ij <= -mv] += nv
+    w_ij[w_ij <= -mw] += nw
+
+    u_ij[u_ij >= mu] -= nu
+    v_ij[v_ij >= mv] -= nv
+    w_ij[w_ij >= mw] -= nw
+    
+    rx_ij_np, ry_ij_np, rz_ij_np = crystal.transform(u_ij, v_ij, w_ij, A)
 
     r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
 
@@ -1324,6 +1417,7 @@ def structural(double [::1] occupancy,
                double [::1] rz,
                atms,
                double [::1] Q,
+               double [:,:] A,
                double [:,:] D,
                Py_ssize_t nu,
                Py_ssize_t nv,
@@ -1406,6 +1500,8 @@ def structural(double [::1] occupancy,
 
     cdef double [::1] mult_s = mult_s_np
     cdef double [::1] mult = np.full(n_uvw, m_uvw, dtype=float)
+    
+    A_inv = np.linalg.inv(A)
 
     rx_np = np.copy(rx, order='C')
     ry_np = np.copy(ry, order='C')
@@ -1414,12 +1510,40 @@ def structural(double [::1] occupancy,
     rx_s_ij_np = rx_np[js_np]-rx_np[is_np]
     ry_s_ij_np = ry_np[js_np]-ry_np[is_np]
     rz_s_ij_np = rz_np[js_np]-rz_np[is_np]
+    
+    u_s_ij, v_s_ij, w_s_ij = crystal.transform(rx_s_ij_np, 
+                                               ry_s_ij_np, 
+                                               rz_s_ij_np, A_inv)
+
+    u_s_ij[u_s_ij <= -mu] += nu
+    v_s_ij[v_s_ij <= -mv] += nv
+    w_s_ij[w_s_ij <= -mw] += nw
+
+    u_s_ij[u_s_ij >= mu] -= nu
+    v_s_ij[v_s_ij >= mv] -= nv
+    w_s_ij[w_s_ij >= mw] -= nw
+
+    rx_s_ij_np, ry_s_ij_np, rz_s_ij_np = crystal.transform(u_s_ij,
+                                                           v_s_ij,
+                                                           w_s_ij, A)
 
     rs_ij_np = np.sqrt(rx_s_ij_np**2+ry_s_ij_np**2+rz_s_ij_np**2)
 
     rx_ij_np = rx_np[j_np]-rx_np[i_np]
     ry_ij_np = ry_np[j_np]-ry_np[i_np]
     rz_ij_np = rz_np[j_np]-rz_np[i_np]
+    
+    u_ij, v_ij, w_ij = crystal.transform(rx_ij_np, ry_ij_np, rz_ij_np, A_inv)
+
+    u_ij[u_ij <= -mu] += nu
+    v_ij[v_ij <= -mv] += nv
+    w_ij[w_ij <= -mw] += nw
+
+    u_ij[u_ij >= mu] -= nu
+    v_ij[v_ij >= mv] -= nv
+    w_ij[w_ij >= mw] -= nw
+    
+    rx_ij_np, ry_ij_np, rz_ij_np = crystal.transform(u_ij, v_ij, w_ij, A)
 
     r_ij_np = np.sqrt(rx_ij_np**2+ry_ij_np**2+rz_ij_np**2)
 

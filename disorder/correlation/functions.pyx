@@ -371,7 +371,7 @@ def pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
     du[du > mu] -= nu
     dv[dv > mv] -= nv
     dw[dw > mw] -= nw
-    
+
     dx, dy, dz = crystal.transform(du, dv, dw, A)
 
     distance = np.sqrt(dx**2+dy**2+dz**2)
