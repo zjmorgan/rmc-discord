@@ -88,9 +88,6 @@ def atom_pairs_distance(rx, ry, rz, nu, nv, nw, n_atm, A, tol=1e-3):
 
     i_atm, j_atm = np.triu_indices(n_atm, k=1)
 
-    i_atms = np.concatenate((i_atm,j_atm))
-    j_atms = np.concatenate((j_atm,i_atm))
-
     ux = rx.reshape(nu,nv,nw,n_atm)[0,0,0,:]
     uy = ry.reshape(nu,nv,nw,n_atm)[0,0,0,:]
     uz = rz.reshape(nu,nv,nw,n_atm)[0,0,0,:]
@@ -114,13 +111,16 @@ def atom_pairs_distance(rx, ry, rz, nu, nv, nw, n_atm, A, tol=1e-3):
     _, ind, inv = np.unique(metric, return_index=True,
                             return_inverse=True, axis=0)
 
+    i_atm, j_atm = i_atm[ind], j_atm[ind]
+
+    i_atms = np.concatenate((i_atm,j_atm))
+    j_atms = np.concatenate((j_atm,i_atm))
+
     i_atms = np.concatenate((i_atms,np.arange(n_atm)))
     j_atms = np.concatenate((j_atms,np.arange(n_atm)))
 
     i = np.ravel_multi_index((i_lat,i_atms[:,None]), (n_uvw,n_atm)).flatten()
     j = np.ravel_multi_index((j_lat,j_atms[:,None]), (n_uvw,n_atm)).flatten()
-
-    i_atm, j_atm = i_atm[ind], j_atm[ind]
 
     ic = np.ravel_multi_index((0,i_atm[:,None]), (n_uvw,n_atm)).flatten()
     jc = np.ravel_multi_index((0,j_atm[:,None]), (n_uvw,n_atm)).flatten()
@@ -162,16 +162,14 @@ def atom_pairs_distance(rx, ry, rz, nu, nv, nw, n_atm, A, tol=1e-3):
 
     i, j = np.concatenate((ic,i)), np.concatenate((jc,j))
 
-    inv = (np.arange(n_uvw)*0+inv[:,None]).flatten()
+    l, m = ind.size, index.size
 
-    l = 1*ind.size
+    k = np.concatenate((inv,l+inv,2*l+np.arange(n_atm)))
 
-    # print(inverse.max(),inverse.shape)
+    p = (np.arange(n_uvw)*0+inv[:,None]).flatten()
+    q = l+(inverse+m*k[:,None]).flatten()
 
-    inverse = l+(inverse+index.size*np.arange(n_atm**2)[:,None]).flatten()
-    inverse = np.concatenate((inv,inverse))
-
-    # print(dx.shape,inverse.max(),inv.max(),inv.shape,inverse.shape,i.shape)
+    inverse = np.concatenate((p,q))
 
     return dx, dy, dz, i, j, inverse
 
@@ -201,7 +199,8 @@ def charge_charge_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     Qij = np.zeros((n,n))
 
-    dx, dy, dz, i, j, inverse = atom_pairs_distance(rx, ry, rz, nu, nv, nw,
+    dx, dy, dz, i, j, inverse = atom_pairs_distance(rx, ry, rz,
+                                                    nu, nv, nw,
                                                     n_atm, A, tol=tol)
 
     d = np.sqrt(dx**2+dy**2+dz**2)
@@ -225,9 +224,9 @@ def charge_charge_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
     cos_d_dot_G = np.cos(np.kron(dx,Gx)+np.kron(dy,Gy)+np.kron(dz,Gz))
     cos_d_dot_G = cos_d_dot_G.reshape(d.size, G_sq.size)
 
-    factors = np.exp(-G_sq/(4*alpha**2))/G_sq
+    factors = 4*np.pi/V*np.exp(-G_sq/(4*alpha**2))/G_sq
 
-    Qij[i,j] += 4*np.pi/V*(factors*cos_d_dot_G).sum(axis=1)[inverse]
+    Qij[i,j] += (factors*cos_d_dot_G).sum(axis=1)[inverse]
 
     Qij[j,i] = Qij[i,j]
 
@@ -239,7 +238,8 @@ def charge_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     Qijk = np.zeros((n,n,3))
 
-    dx, dy, dz, i, j, inverse = atom_pairs_distance(rx, ry, rz, nu, nv, nw,
+    dx, dy, dz, i, j, inverse = atom_pairs_distance(rx, ry, rz,
+                                                    nu, nv, nw,
                                                     n_atm, A, tol=tol)
 
     d = np.sqrt(dx**2+dy**2+dz**2)
@@ -265,9 +265,9 @@ def charge_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
     sin_d_dot_G = np.sin(np.kron(dx,Gx)+np.kron(dy,Gy)+np.kron(dz,Gz))
     sin_d_dot_G = sin_d_dot_G.reshape(d.size, G_sq.size)
 
-    factors = np.exp(-G_sq/(4*alpha**2))/G_sq
+    factors = 4*np.pi/V*np.exp(-G_sq/(4*alpha**2))/G_sq
 
-    g = 4*np.pi/V*factors*sin_d_dot_G
+    g = factors*sin_d_dot_G
 
     Qijk[i,j,0] += np.sum(g*Gx, axis=1)[inverse]
     Qijk[i,j,1] += np.sum(g*Gy, axis=1)[inverse]
@@ -285,7 +285,8 @@ def dipole_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     Qijkl = np.zeros((n,n,3,3))
 
-    dx, dy, dz, i, j, inverse = atom_pairs_distance(rx, ry, rz, nu, nv, nw,
+    dx, dy, dz, i, j, inverse = atom_pairs_distance(rx, ry, rz,
+                                                    nu, nv, nw,
                                                     n_atm, A, tol=tol)
 
     d = np.sqrt(dx**2+dy**2+dz**2)
@@ -319,9 +320,9 @@ def dipole_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
     cos_d_dot_G = np.cos(np.kron(dx,Gx)+np.kron(dy,Gy)+np.kron(dz,Gz))
     cos_d_dot_G = cos_d_dot_G.reshape(d.size, G_sq.size)
 
-    factors = np.exp(-G_sq/(4*alpha**2))/G_sq
+    factors = 4*np.pi/V*np.exp(-G_sq/(4*alpha**2))/G_sq
 
-    g = 4*np.pi/V*factors*cos_d_dot_G
+    g = factors*cos_d_dot_G
 
     Qijkl[i,j,0,0] += np.sum(g*Gx*Gx, axis=1)[inverse]
     Qijkl[i,j,1,1] += np.sum(g*Gy*Gy, axis=1)[inverse]
