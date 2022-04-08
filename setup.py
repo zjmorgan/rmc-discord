@@ -53,20 +53,6 @@ ext_modules = [
         include_dirs=np_include_dir
     ),
     Extension(
-        'disorder.diffuse.original',
-        ['disorder/diffuse/original'+ext],
-        extra_compile_args=compile_openmp,
-        extra_link_args=link_openmp,
-        include_dirs=np_include_dir
-    ),
-    Extension(
-        'disorder.diffuse.candidate',
-        ['disorder/diffuse/candidate'+ext],
-        extra_compile_args=compile_openmp,
-        extra_link_args=link_openmp,
-        include_dirs=np_include_dir
-    ),
-    Extension(
         'disorder.diffuse.powder',
         ['disorder/diffuse/powder'+ext],
         extra_compile_args=compile_openmp,

@@ -14,8 +14,6 @@ cimport openmp
 from libc.stdlib cimport rand, RAND_MAX
 from libc.math cimport M_PI, cos, sin, exp, sqrt, acos, fabs, log
 
-from disorder.diffuse cimport original
-from disorder.diffuse cimport candidate
 from disorder.diffuse cimport filters
 
 def parallelism(app=True):
@@ -60,9 +58,214 @@ def threads():
     for i_thread in range(num_threads):
         print('id:', buf[i_thread])
 
+cpdef (double, Py_ssize_t) original_scalar(double [::1] A) nogil:
+
+    cdef Py_ssize_t n = A.shape[0]
+    cdef Py_ssize_t i = rand() % n
+
+    return A[i], i
+
+cpdef (double, \
+       double, \
+       double,\
+       Py_ssize_t) original_vector(double [::1] A,
+                                   double [::1] B,
+                                   double [::1] C) nogil:
+
+    cdef Py_ssize_t n = A.shape[0]
+    cdef Py_ssize_t i = rand() % n
+
+    return A[i], B[i], C[i], i
+
+cpdef Py_ssize_t original_scalars(double [::1] B,
+                                  long [::1] i,
+                                  double [::1] A,
+                                  long [:,::1] structure) nogil:
+
+    cdef Py_ssize_t m = structure.shape[0]
+    cdef Py_ssize_t n = structure.shape[1]
+
+    cdef Py_ssize_t k = rand() % m
+
+    i = structure[k,:]
+
+    cdef Py_ssize_t j
+
+    for j in range(n):
+        B[j] = A[i[j]]
+
+    return k
+
+cpdef Py_ssize_t original_vectors(double [::1] D,
+                                  double [::1] E,
+                                  double [::1] F,
+                                  long [::1] i,
+                                  double [::1] A,
+                                  double [::1] B,
+                                  double [::1] C,
+                                  long [:,::1] structure) nogil:
+
+    cdef Py_ssize_t m = structure.shape[0]
+    cdef Py_ssize_t n = structure.shape[1]
+
+    cdef Py_ssize_t k = rand() % m
+
+    i = structure[k,:]
+
+    cdef Py_ssize_t j
+
+    for j in range(n):
+        D[j] = A[i[j]]
+        E[j] = B[i[j]]
+        F[j] = C[i[j]]
+
+    return k
+
+cdef double M_EPS = np.finfo(float).eps
+
+cdef double random_uniform_nonzero() nogil:
+
+    cdef double u = 0
+
+    while (u == 0):
+        u = float(rand())/RAND_MAX
+
+    return u
+
 cdef double random_uniform() nogil:
 
     return float(rand())/RAND_MAX
+
+cdef double random_gaussian() nogil:
+
+    cdef double x0, x1, w
+
+    w = 2.0
+    while (w >= 1.0):
+        x0 = 2.0*random_uniform()-1.0
+        x1 = 2.0*random_uniform()-1.0
+        w = x0*x0+x1*x1
+
+    w = sqrt(-2.0*log(w)/w)
+
+    return x1*w
+
+cdef (double, double, double) random_gaussian_3d() nogil:
+
+    cdef double x0, x1, w
+    cdef double x2, x3, v
+
+    w = 2.0
+    while (w >= 1.0):
+        x0 = 2.0*random_uniform()-1.0
+        x1 = 2.0*random_uniform()-1.0
+        w = x0*x0+x1*x1
+
+    w = sqrt(-2.0*log(w)/w)
+
+    return x0*w, x1*w, random_gaussian()
+
+cdef bint iszero(double a) nogil:
+
+    return fabs(a) <= M_EPS
+
+cpdef double candidate_composition(double A, double value, bint fixed) nogil:
+
+    cdef double V = value if fixed else value*random_uniform_nonzero()
+
+    return 1/V-2-A
+
+cpdef (double, double, double) candidate_moment(double A,
+                                                double B,
+                                                double C,
+                                                double value,
+                                                bint fixed,
+                                                bint rotate) nogil:
+
+    cdef double theta, phi
+
+    cdef double u, v, w, n
+
+    cdef double V
+
+    if rotate:
+
+        V = value if fixed else value*random_uniform_nonzero()
+
+        theta = 2.0*M_PI*random_uniform()
+        phi = acos(1.0-2.0*random_uniform())
+
+        u = V*sin(phi)*cos(theta)
+        v = V*sin(phi)*sin(theta)
+        w = V*cos(phi)
+
+    else:
+
+        if fixed:
+
+            u, v, w = -A, -B, -C
+
+        else:
+
+            n = sqrt(A*A+B*B+C*C)
+
+            if iszero(n):
+
+                u, v, w = -A, -B, -C
+
+            else:
+
+                V = value if fixed else value*random_uniform_nonzero()
+
+                u, v, w = -V*A/n, -V*B/n, -V*C/n
+
+    return u, v, w
+
+cpdef (double, double, double) candidate_displacement(double A,
+                                                      double B,
+                                                      double C,
+                                                      double D,
+                                                      double E,
+                                                      double F,
+                                                      bint fixed,
+                                                      bint isotropic) nogil:
+
+    cdef double theta, phi
+
+    cdef double u, v, w, l, m, n
+
+    if fixed:
+
+        theta = 2.0*M_PI*random_uniform()
+        phi = acos(1.0-2.0*random_uniform())
+
+        l = sin(phi)*cos(theta)
+        m = sin(phi)*sin(theta)
+        n = cos(phi)
+
+        if isotropic:
+
+            u, v, w = A*l, B*m, C*n
+
+        else:
+
+            u = sqrt(A*(A*l+F*m+E*n))*l
+            v = sqrt(B*(F*l+B*m+D*n))*m
+            w = sqrt(C*(E*l+D*m+C*n))*n
+
+    else:
+
+        l, m, n = random_gaussian_3d()
+
+        if isotropic:
+
+            u, v, w = A*l, B*m, C*n
+
+        else:
+
+            u, v, w = A*l, F*l+B*m, E*l+D*m+C*n
+
+    return u, v, w
 
 cdef double complex cexp(double complex z) nogil:
 
@@ -1513,13 +1716,13 @@ cpdef void magnetic(double [::1] Sx,
 
             inv_temp = 1/temp
 
-            Sx_orig, Sy_orig, Sz_orig, i = original.vector(Sx, Sy, Sz)
+            Sx_orig, Sy_orig, Sz_orig, i = original_vector(Sx, Sy, Sz)
 
             j = i % n_atm
 
             mu = moment[j]
 
-            Sx_cand, Sy_cand, Sz_cand = candidate.moment(Sx_orig,
+            Sx_cand, Sy_cand, Sz_cand = candidate_moment(Sx_orig,
                                                          Sy_orig,
                                                          Sz_orig,
                                                          mu,
@@ -1761,13 +1964,13 @@ cpdef void occupational(double [::1] A_r,
 
             inv_temp = 1/temp
 
-            A_r_orig, i = original.scalar(A_r)
+            A_r_orig, i = original_scalar(A_r)
 
             j = i % n_atm
 
             occ = occupancy[j]
 
-            A_r_cand = candidate.composition(A_r_orig, occ, fixed)
+            A_r_cand = candidate_composition(A_r_orig, occ, fixed)
 
             copy_complex(F_orig, F)
 
@@ -1778,15 +1981,15 @@ cpdef void occupational(double [::1] A_r,
             A_r[i] = A_r_cand
 
             update_composition(A_k_cand,
-                                   A_r_cand,
-                                   A_k_orig,
-                                   A_r_orig,
-                                   space_factor,
-                                   i,
-                                   nu,
-                                   nv,
-                                   nw,
-                                   n_atm)
+                               A_r_cand,
+                               A_k_orig,
+                               A_r_orig,
+                               space_factor,
+                               i,
+                               nu,
+                               nv,
+                               nw,
+                               n_atm)
 
             insert_complex(A_k, A_k_cand, j, n_atm)
 
@@ -1993,14 +2196,14 @@ cpdef void displacive(double [::1] Ux,
 
             inv_temp = 1/temp
 
-            Ux_orig, Uy_orig, Uz_orig, i = original.vector(Ux, Uy, Uz)
+            Ux_orig, Uy_orig, Uz_orig, i = original_vector(Ux, Uy, Uz)
 
             j = i % n_atm
 
             lxx, lyy, lzz = Lxx[j], Lyy[j], Lzz[j]
             lyz, lxz, lxy = Lyz[j], Lxz[j], Lxy[j]
 
-            Ux_cand, Uy_cand, Uz_cand = candidate.displacement(lxx,
+            Ux_cand, Uy_cand, Uz_cand = candidate_displacement(lxx,
                                                                lyy,
                                                                lzz,
                                                                lyz,
