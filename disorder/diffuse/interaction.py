@@ -197,11 +197,16 @@ def charge_charge_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     n = nu*nv*nw*n_atm
 
-    Qij = np.zeros((n,n))
+    Qij = np.zeros(n*(n+1)//2)
 
     dx, dy, dz, i, j, inverse = atom_pairs_distance(rx, ry, rz,
                                                     nu, nv, nw,
                                                     n_atm, A, tol=tol)
+
+    k = j+n*i-(i+1)*i//2
+
+    l = np.arange(n)
+    l = l+n*l-(l+1)*l//2
 
     d = np.sqrt(dx**2+dy**2+dz**2)
 
@@ -217,9 +222,9 @@ def charge_charge_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
                                     nv/np.linalg.norm(v)**2,
                                     nw/np.linalg.norm(w)**2]))
 
-    Qij[i,j] = (erfc(alpha*d)/d)[inverse]
+    Qij[k] = (erfc(alpha*d)/d)[inverse]
 
-    Qij[np.arange(n),np.arange(n)] = -2*alpha/np.sqrt(np.pi)
+    Qij[l] = -2*alpha/np.sqrt(np.pi)
 
     cos_d_dot_G = np.cos(np.kron(dx,Gx)+
                          np.kron(dy,Gy)+
@@ -229,9 +234,7 @@ def charge_charge_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     factors = 4*np.pi/V*np.exp(-np.pi**2*G_sq/alpha**2)/G_sq
 
-    Qij[i,j] += (factors*cos_d_dot_G).sum(axis=1)[inverse]
-
-    Qij[j,i] = Qij[i,j]
+    Qij[k] += (factors*cos_d_dot_G).sum(axis=1)[inverse]
 
     return Qij
 
@@ -239,11 +242,13 @@ def charge_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     n = nu*nv*nw*n_atm
 
-    Qijk = np.zeros((n,n,3))
+    Qijk = np.zeros((n*(n+1)//2,3))
 
     dx, dy, dz, i, j, inverse = atom_pairs_distance(rx, ry, rz,
                                                     nu, nv, nw,
                                                     n_atm, A, tol=tol)
+
+    k = j+n*i-(i+1)*i//2
 
     d = np.sqrt(dx**2+dy**2+dz**2)
 
@@ -261,9 +266,9 @@ def charge_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     a = __A(alpha, d)
 
-    Qijk[i,j,0] = (a*dx)[inverse]
-    Qijk[i,j,1] = (a*dy)[inverse]
-    Qijk[i,j,2] = (a*dz)[inverse]
+    Qijk[k,0] = (a*dx)[inverse]
+    Qijk[k,1] = (a*dy)[inverse]
+    Qijk[k,2] = (a*dz)[inverse]
 
     sin_d_dot_G = np.sin(np.kron(dx,Gx)+
                          np.kron(dy,Gy)+
@@ -275,13 +280,9 @@ def charge_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     g = factors*sin_d_dot_G
 
-    Qijk[i,j,0] += np.sum(g*Gx, axis=1)[inverse]
-    Qijk[i,j,1] += np.sum(g*Gy, axis=1)[inverse]
-    Qijk[i,j,2] += np.sum(g*Gz, axis=1)[inverse]
-
-    Qijk[j,i,0] = Qijk[i,j,0]
-    Qijk[j,i,1] = Qijk[i,j,1]
-    Qijk[j,i,2] = Qijk[i,j,2]
+    Qijk[k,0] += np.sum(g*Gx, axis=1)[inverse]
+    Qijk[k,1] += np.sum(g*Gy, axis=1)[inverse]
+    Qijk[k,2] += np.sum(g*Gz, axis=1)[inverse]
 
     return Qijk
 
@@ -289,11 +290,16 @@ def dipole_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     n = nu*nv*nw*n_atm
 
-    Qijkl = np.zeros((n,n,3,3))
+    Qijkl = np.zeros((n*(n+1)//2,6))
 
     dx, dy, dz, i, j, inverse = atom_pairs_distance(rx, ry, rz,
                                                     nu, nv, nw,
                                                     n_atm, A, tol=tol)
+
+    k = j+n*i-(i+1)*i//2
+
+    l = np.arange(n)
+    l = l+n*l-(l+1)*l//2
 
     d = np.sqrt(dx**2+dy**2+dz**2)
 
@@ -311,17 +317,15 @@ def dipole_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
 
     b, c = __B(alpha, d), __C(alpha, d)
 
-    Qijkl[i,j,0,0] = (b-dx*dx*c)[inverse]
-    Qijkl[i,j,1,1] = (b-dy*dy*c)[inverse]
-    Qijkl[i,j,2,2] = (b-dz*dz*c)[inverse]
+    Qijkl[k,0] = (b-dx*dx*c)[inverse]
+    Qijkl[k,1] = (b-dy*dy*c)[inverse]
+    Qijkl[k,2] = (b-dz*dz*c)[inverse]
 
-    Qijkl[i,j,0,2] = Qijkl[i,j,2,0] = (-dx*dz*c)[inverse]
-    Qijkl[i,j,1,2] = Qijkl[i,j,2,1] = (-dy*dz*c)[inverse]
-    Qijkl[i,j,0,1] = Qijkl[i,j,1,0] = (-dx*dy*c)[inverse]
+    Qijkl[k,3] = (-dy*dz*c)[inverse]
+    Qijkl[k,4] = (-dx*dz*c)[inverse]
+    Qijkl[k,5] = (-dx*dy*c)[inverse]
 
-    Qijkl[np.arange(n),np.arange(n),0,0] = -4*alpha**3/(3*np.sqrt(np.pi))
-    Qijkl[np.arange(n),np.arange(n),1,1] = -4*alpha**3/(3*np.sqrt(np.pi))
-    Qijkl[np.arange(n),np.arange(n),2,2] = -4*alpha**3/(3*np.sqrt(np.pi))
+    Qijkl[l,0] = Qijkl[l,1] = Qijkl[l,2] = -4*alpha**3/(3*np.sqrt(np.pi))
 
     cos_d_dot_G = np.cos(np.kron(dx,Gx)+
                          np.kron(dy,Gy)+
@@ -336,32 +340,12 @@ def dipole_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
     Gxx, Gyy, Gzz = Gx*Gx, Gy*Gy, Gz*Gz
     Gxz, Gyz, Gxy = Gx*Gz, Gy*Gz, Gx*Gy
 
-    Qijkl[i,j,0,0] += np.sum(g*Gxx, axis=1)[inverse]
-    Qijkl[i,j,1,1] += np.sum(g*Gyy, axis=1)[inverse]
-    Qijkl[i,j,2,2] += np.sum(g*Gzz, axis=1)[inverse]
+    Qijkl[k,0] += np.sum(g*Gxx, axis=1)[inverse]
+    Qijkl[k,1] += np.sum(g*Gyy, axis=1)[inverse]
+    Qijkl[k,2] += np.sum(g*Gzz, axis=1)[inverse]
 
-    fxz = np.sum(g*Gxz, axis=1)[inverse]
-    fyz = np.sum(g*Gyz, axis=1)[inverse]
-    fxy = np.sum(g*Gxy, axis=1)[inverse]
-
-    Qijkl[i,j,0,2] += fxz
-    Qijkl[i,j,1,2] += fyz
-    Qijkl[i,j,0,1] += fxy
-
-    Qijkl[i,j,2,0] += fxz
-    Qijkl[i,j,2,1] += fyz
-    Qijkl[i,j,1,0] += fxy
-
-    Qijkl[j,i,0,0] = Qijkl[i,j,0,0]
-    Qijkl[j,i,0,1] = Qijkl[i,j,0,1]
-    Qijkl[j,i,0,2] = Qijkl[i,j,0,2]
-
-    Qijkl[j,i,1,0] = Qijkl[i,j,1,0]
-    Qijkl[j,i,1,1] = Qijkl[i,j,1,1]
-    Qijkl[j,i,1,2] = Qijkl[i,j,1,2]
-
-    Qijkl[j,i,2,0] = Qijkl[i,j,2,0]
-    Qijkl[j,i,2,1] = Qijkl[i,j,2,1]
-    Qijkl[j,i,2,2] = Qijkl[i,j,2,2]
+    Qijkl[k,3] += np.sum(g*Gyz, axis=1)[inverse]
+    Qijkl[k,4] += np.sum(g*Gxz, axis=1)[inverse]
+    Qijkl[k,5] += np.sum(g*Gxy, axis=1)[inverse]
 
     return Qijkl

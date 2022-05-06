@@ -3,7 +3,7 @@
 import unittest
 import numpy as np
 
-from disorder.diffuse import space, simulation
+from disorder.diffuse import space, simulation, interaction
 from disorder.material import crystal
 
 import pyximport
@@ -13,12 +13,71 @@ pyximport.install(setup_args={ 'script_args': ['--force'] }, language_level=3)
 from disorder.tests.diffuse.test_c_simulation import test_c_simulation
 
 class test_simulation(unittest.TestCase):
-    
+
     def test_c(self):
-        
+
         self.assertEqual(test_c_simulation.__bases__[0], unittest.TestCase)
 
-    def test_energy(self):
+    def test_dipolar_interaction_energy(self):
+
+        nu, nv, nw, n_atm = 3, 4, 5, 2
+
+        n = nu*nv*nw*n_atm
+
+        M = 3
+
+        Sx = np.random.random((nu,nv,nw,n_atm,M))
+        Sy = np.random.random((nu,nv,nw,n_atm,M))
+        Sz = np.random.random((nu,nv,nw,n_atm,M))
+
+        u = np.array([0.2,0.3])
+        v = np.array([0.5,0.4])
+        w = np.array([0.7,0.2])
+
+        atm = np.array(['',''])
+
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/2, 2*np.pi/3
+
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(*crystal.reciprocal(a, b, c, alpha, beta, gamma))
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+
+        Rx, Ry, Rz = space.cell(nu, nv, nw, A)
+
+        ux, uy, uz = crystal.transform(u, v, w, A)
+
+        rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
+
+        i, j = np.triu_indices(n)
+
+        Qijm = np.zeros((n,n,6))
+        Qijkl = np.zeros((n,n,3,3))
+
+        Q = interaction.dipole_dipole_matrix(rx, ry, rz,
+                                             nu, nv, nw,
+                                             n_atm, A, B, R)
+
+        Qijm[i,j,:] = Q
+
+        Qijm[j,i,:] = Qijm[i,j,:]
+
+        Qijkl[:,:,0,0] = Qijm[:,:,0]
+        Qijkl[:,:,1,1] = Qijm[:,:,1]
+        Qijkl[:,:,2,2] = Qijm[:,:,2]
+        Qijkl[:,:,1,2] = Qijkl[:,:,2,1] = Qijm[:,:,3]
+        Qijkl[:,:,0,2] = Qijkl[:,:,2,0] = Qijm[:,:,4]
+        Qijkl[:,:,0,1] = Qijkl[:,:,1,0] = Qijm[:,:,5]
+
+        E = simulation.dipolar_interaction_energy(Sx, Sy, Sz, Q)
+
+        Sx, Sy, Sz = Sx.reshape(n,M), Sy.reshape(n,M), Sz.reshape(n,M)
+
+        S = np.column_stack((Sx,Sy,Sz)).reshape(-1,M,3)
+        E0 = np.einsum('ijk,ijk->k',np.einsum('ijkl,jlm->ikm',Qijkl,S),S)
+
+        np.testing.assert_array_almost_equal(E, E0)
+
+    def test_magnetic_energy(self):
 
         nu, nv, nw = 3, 4, 5
 
@@ -150,9 +209,9 @@ class test_simulation(unittest.TestCase):
         Sx[...,1], Sy[...,1], Sz[...,1] = 0, 1, 0
         Sx[...,2], Sy[...,2], Sz[...,2] = 0, 0, 1
 
-        E = simulation.energy(Sx, Sy, Sz, J, K, g, B, atm_ind,
-                              img_ind_i, img_ind_j, img_ind_k,
-                              pair_ind, pair_ij)
+        E = simulation.magnetic_energy(Sx, Sy, Sz, J, K, g, B, atm_ind,
+                                       img_ind_i, img_ind_j, img_ind_k,
+                                       pair_ind, pair_ij)
 
         self.assertAlmostEqual(E[...,0].sum(), -(0.5*Jx*n_pair+Kx+Bx*gx)*n)
         self.assertAlmostEqual(E[...,1].sum(), -(0.5*Jy*n_pair+Ky+By*gy)*n)
@@ -279,11 +338,11 @@ class test_simulation(unittest.TestCase):
         rx, ry, rz, ion = space.real(ux, uy, uz, ix, iy, iz, atm)
 
         M, N = 3, 5
-        
+
         T0, T1 = 0.01, 5
 
         T_range = np.logspace(np.log2(T0), np.log2(T1), M, base=2)
-        
+
         kB = 0.08617
 
         theta = 2*np.pi*np.random.rand(nu,nv,nw,n_atm,M)
@@ -292,16 +351,16 @@ class test_simulation(unittest.TestCase):
         Sx = np.sin(phi)*np.cos(theta)
         Sy = np.sin(phi)*np.sin(theta)
         Sz = np.cos(phi)
-        
+
         E, T_range = simulation.heisenberg(Sx, Sy, Sz, J, K, g, B, atm_ind,
                                            img_ind_i, img_ind_j, img_ind_k,
-                                           pair_ind, pair_ij, T_range, kB, N)    
+                                           pair_ind, pair_ij, T_range, kB, N)
 
-        E_ref = simulation.energy(Sx, Sy, Sz, J, K, g, B, atm_ind,
-                                  img_ind_i, img_ind_j, img_ind_k,
-                                  pair_ind, pair_ij)
-        
+        E_ref = simulation.magnetic_energy(Sx, Sy, Sz, J, K, g, B, atm_ind,
+                                           img_ind_i, img_ind_j, img_ind_k,
+                                           pair_ind, pair_ij)
+
         np.testing.assert_array_almost_equal(E, E_ref.sum(axis=(0,1,2,3,4)))
-        
+
 if __name__ == '__main__':
     unittest.main()

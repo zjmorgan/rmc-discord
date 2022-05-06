@@ -1254,7 +1254,7 @@ struct __pyx_ctuple_double__and_Py_ssize_t {
  * 
  * cpdef (double, \             # <<<<<<<<<<<<<<
  *        double, \
- *        double,\
+ *        double, \
  */
 struct __pyx_ctuple_double__and_double__and_double__and_Py_ssize_t {
   double f0;
@@ -3898,7 +3898,7 @@ static PyObject *__pyx_pf_8disorder_7diffuse_10refinement_4original_scalar(CYTHO
  * 
  * cpdef (double, \             # <<<<<<<<<<<<<<
  *        double, \
- *        double,\
+ *        double, \
  */
 
 static PyObject *__pyx_pw_8disorder_7diffuse_10refinement_7original_vector(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
@@ -3954,7 +3954,7 @@ static __pyx_ctuple_double__and_double__and_double__and_Py_ssize_t __pyx_f_8diso
  * 
  * cpdef (double, \             # <<<<<<<<<<<<<<
  *        double, \
- *        double,\
+ *        double, \
  */
 
   /* function exit code */

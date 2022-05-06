@@ -45,9 +45,9 @@ cdef double MACHINE_EPSILON = np.finfo(float).eps
 cdef Py_ssize_t seed = 20
 
 cpdef void set_seed(Py_ssize_t s):
-    
+
     global seed
-    
+
     seed = s
 
 cdef void initialize_random(Py_ssize_t nu,
@@ -249,6 +249,7 @@ cdef void replica_exchange(double [::1] H,
 
     cdef Py_ssize_t i, j
 
+
     i, j = dist_temp(gen), dist_temp(gen)
 
     if (i != j):
@@ -256,19 +257,88 @@ cdef void replica_exchange(double [::1] H,
             beta[i], beta[j] = beta[j], beta[i]
             sigma[i], sigma[j] = sigma[j], sigma[i]
 
-def energy(double [:,:,:,:,::1] Sx,
-           double [:,:,:,:,::1] Sy,
-           double [:,:,:,:,::1] Sz,
-           double [:,:,::1] J,
-           double [:,:,::1] A,
-           double [:,:,::1] g,
-           double [::1] B,
-           long [:,::1] atm_ind,
-           long [:,::1] img_ind_i,
-           long [:,::1] img_ind_j,
-           long [:,::1] img_ind_k,
-           long [:,::1] pair_ind,
-           bint [:,::1] pair_ij):
+def dipolar_interaction_energy(double [:,:,:,:,::1] Sx,
+                               double [:,:,:,:,::1] Sy,
+                               double [:,:,:,:,::1] Sz,
+                               double [:,::1] Q):
+
+    cdef Py_ssize_t nu = Sx.shape[0]
+    cdef Py_ssize_t nv = Sx.shape[1]
+    cdef Py_ssize_t nw = Sx.shape[2]
+    cdef Py_ssize_t n_atm = Sx.shape[3]
+    cdef Py_ssize_t n_temp = Sx.shape[4]
+
+    cdef Py_ssize_t n = nu*nv*nw*n_atm
+
+    cdef Py_ssize_t i, j, k, t
+
+    cdef Py_ssize_t iu, ju, ku, au
+    cdef Py_ssize_t iv, jv, kv, av
+
+    cdef double ux, uy, uz
+    cdef double vx, vy, vz
+
+    cdef double E = 0
+
+    e_np = np.zeros(n_temp)
+
+    cdef double [::1] e = e_np
+    
+    for t in range(n_temp):
+
+        k = 0
+
+        for i in range(n):
+
+            au = i % n_atm
+            ku = i // n_atm % nw
+            ju = i // n_atm // nw % nv
+            iu = i // n_atm // nw // nv % nu
+
+            ux = Sx[iu,ju,ku,au,t]
+            uy = Sy[iu,ju,ku,au,t]
+            uz = Sz[iu,ju,ku,au,t]
+
+            for j in range(i,n):
+
+                av = j % n_atm
+                kv = j // n_atm % nw
+                jv = j // n_atm // nw % nv
+                iv = j // n_atm // nw // nv % nu
+
+                vx = Sx[iv,jv,kv,av,t]
+                vy = Sy[iv,jv,kv,av,t]
+                vz = Sz[iv,jv,kv,av,t]
+
+                k = j+n*i-(i+1)*i // 2
+
+                E = Q[k,0]*ux*vx\
+                  + Q[k,1]*uy*vy\
+                  + Q[k,2]*uz*vz\
+                  + Q[k,3]*(uy*vz+uz*vy)\
+                  + Q[k,4]*(ux*vz+uz*vx)\
+                  + Q[k,5]*(ux*vy+uy*vx)
+
+                if i != j:
+                    e[t] += 2*E
+                else:
+                    e[t] += E
+
+    return e_np
+
+def magnetic_energy(double [:,:,:,:,::1] Sx,
+                    double [:,:,:,:,::1] Sy,
+                    double [:,:,:,:,::1] Sz,
+                    double [:,:,::1] J,
+                    double [:,:,::1] A,
+                    double [:,:,::1] g,
+                    double [::1] B,
+                    long [:,::1] atm_ind,
+                    long [:,::1] img_ind_i,
+                    long [:,::1] img_ind_j,
+                    long [:,::1] img_ind_k,
+                    long [:,::1] pair_ind,
+                    bint [:,::1] pair_ij):
 
     cdef Py_ssize_t nu = Sx.shape[0]
     cdef Py_ssize_t nv = Sx.shape[1]
@@ -488,9 +558,10 @@ def heisenberg(double [:,:,:,:,::1] Sx,
     cdef double [::1] E = np.zeros(n_temp)
     cdef double [::1] H = np.zeros(n_temp)
 
-    cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
-                                           img_ind_i, img_ind_j, img_ind_k,
-                                           pair_ind, pair_ij)
+    cdef double [:,:,:,:,:,::1] e = magnetic_energy(Sx, Sy, Sz, J, A, g, B,
+                                                    atm_ind, img_ind_i,
+                                                    img_ind_j, img_ind_k,
+                                                    pair_ind, pair_ij)
 
     for i in range(nu):
         for j in range(nv):
@@ -936,14 +1007,14 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                        double [::1] T_range,
                        double kB,
                        Py_ssize_t N):
-    
+
     cdef Py_ssize_t nu = Sx.shape[0]
     cdef Py_ssize_t nv = Sx.shape[1]
     cdef Py_ssize_t nw = Sx.shape[2]
     cdef Py_ssize_t n_atm = Sx.shape[3]
 
     cdef Py_ssize_t n_temp = T_range.shape[0]
-    
+
     initialize_random(nu, nv, nw, n_atm, n_temp)
 
     cdef Py_ssize_t t, n
@@ -955,9 +1026,10 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
     cdef double [::1] E = np.zeros(n_temp)
     cdef double [::1] H = np.zeros(n_temp)
 
-    cdef double [:,:,:,:,:,::1] e = energy(Sx, Sy, Sz, J, A, g, B, atm_ind,
-                                           img_ind_i, img_ind_j, img_ind_k,
-                                           pair_ind, pair_ij)
+    cdef double [:,:,:,:,:,::1] e = magnetic_energy(Sx, Sy, Sz, J, A, g, B,
+                                                    atm_ind, img_ind_i,
+                                                    img_ind_j, img_ind_k,
+                                                    pair_ind, pair_ij)
 
     for i in range(nu):
         for j in range(nv):

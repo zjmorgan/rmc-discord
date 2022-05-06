@@ -67,7 +67,7 @@ cpdef (double, Py_ssize_t) original_scalar(double [::1] A) nogil:
 
 cpdef (double, \
        double, \
-       double,\
+       double, \
        Py_ssize_t) original_vector(double [::1] A,
                                    double [::1] B,
                                    double [::1] C) nogil:

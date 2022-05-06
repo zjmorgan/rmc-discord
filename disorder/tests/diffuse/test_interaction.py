@@ -23,6 +23,8 @@ class test_interaction(unittest.TestCase):
 
         nu, nv, nw, n_atm = 6, 6, 6, 2
 
+        n = nu*nv*nw*n_atm
+
         atm = np.array(['Cs','Cl'])
 
         u = np.array([0.0,0.5])
@@ -35,10 +37,17 @@ class test_interaction(unittest.TestCase):
 
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
 
-        z = np.zeros(nu*nv*nw*n_atm)
+        z = np.zeros(n)
 
-        Qij = interaction.charge_charge_matrix(rx, ry, rz, nu, nv, nw,
-                                               n_atm, A, B, R)
+        i, j = np.triu_indices(n)
+
+        Qij = np.zeros((n,n))
+
+        Qij[i,j] = interaction.charge_charge_matrix(rx, ry, rz,
+                                                    nu, nv, nw,
+                                                    n_atm, A, B, R)
+
+        Qij[j,i] = Qij[i,j]
 
         z[atms == 'Cs'] = +1
         z[atms == 'Cl'] = -1
@@ -61,6 +70,8 @@ class test_interaction(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
         nu, nv, nw, n_atm = 4, 4, 4, 8
+        
+        n = nu*nv*nw*n_atm
 
         atm = np.array(['Na','Na','Na','Na','Cl','Cl','Cl','Cl'])
 
@@ -74,15 +85,20 @@ class test_interaction(unittest.TestCase):
 
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
 
-        z = np.zeros(nu*nv*nw*n_atm)
+        z = np.zeros(n)
 
-        Qij = interaction.charge_charge_matrix(rx, ry, rz, nu, nv, nw,
-                                               n_atm, A, B, R)
+        i, j = np.triu_indices(n)
+
+        Qij = np.zeros((n,n))
+
+        Qij[i,j] = interaction.charge_charge_matrix(rx, ry, rz,
+                                                    nu, nv, nw,
+                                                    n_atm, A, B, R)
+
+        Qij[j,i] = Qij[i,j]
 
         z[atms == 'Na'] = +1
         z[atms == 'Cl'] = -1
-
-        np.testing.assert_array_almost_equal(Qij, Qij.T)
 
         phi = np.dot(Qij,z)*a/2
         np.testing.assert_array_almost_equal(phi[atms == 'Na'], -1.747565, 2)
@@ -102,6 +118,8 @@ class test_interaction(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
         nu, nv, nw, n_atm = 6, 6, 6, 4
+        
+        n = nu*nv*nw*n_atm
 
         atm = np.array(['Zn','Zn','S','S'])
 
@@ -115,19 +133,24 @@ class test_interaction(unittest.TestCase):
 
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
 
-        z = np.zeros(nu*nv*nw*n_atm)
+        z = np.zeros(n)
 
-        Qij = interaction.charge_charge_matrix(rx, ry, rz, nu, nv, nw,
-                                               n_atm, A, B, R)
+        i, j = np.triu_indices(n)
+
+        Qij = np.zeros((n,n))
+
+        Qij[i,j] = interaction.charge_charge_matrix(rx, ry, rz,
+                                                    nu, nv, nw,
+                                                    n_atm, A, B, R)
+
+        Qij[j,i] = Qij[i,j]
 
         z[atms == 'Zn'] = +2
         z[atms == 'S'] = -2
 
-        np.testing.assert_array_almost_equal(Qij, Qij.T)
-
         phi = np.dot(Qij,z)*c*0.375
-        # np.testing.assert_array_almost_equal(phi[atms == 'Zn'], -3.28146, 2)
-        # np.testing.assert_array_almost_equal(phi[atms == 'S'], +3.28146, 2)
+        np.testing.assert_array_almost_equal(phi[atms == 'Zn'], -3.28146, 2)
+        np.testing.assert_array_almost_equal(phi[atms == 'S'], +3.28146, 2)
 
         a = b = c = 5.52
         alpha = beta = gamma = np.pi/2
@@ -141,6 +164,8 @@ class test_interaction(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
         nu, nv, nw, n_atm = 8, 8, 8, 12
+        
+        n = nu*nv*nw*n_atm
 
         atm = np.array(['Ca','Ca','Ca','Ca','F','F','F','F','F','F','F','F'])
 
@@ -154,15 +179,20 @@ class test_interaction(unittest.TestCase):
 
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
 
-        z = np.zeros(nu*nv*nw*n_atm)
+        z = np.zeros(n)
 
-        Qij = interaction.charge_charge_matrix(rx, ry, rz, nu, nv, nw,
-                                               n_atm, A, B, R)
+        i, j = np.triu_indices(n)
+
+        Qij = np.zeros((n,n))
+
+        Qij[i,j] = interaction.charge_charge_matrix(rx, ry, rz,
+                                                    nu, nv, nw,
+                                                    n_atm, A, B, R)
+
+        Qij[j,i] = Qij[i,j]
 
         z[atms == 'Ca'] = +2
         z[atms == 'F'] = -1
-
-        np.testing.assert_array_almost_equal(Qij ,Qij.T)
 
         phi = np.dot(Qij,z)*a*0.25*np.sqrt(3)
         np.testing.assert_array_almost_equal(phi[atms == 'Ca'], -3.276110, 2)
@@ -183,6 +213,8 @@ class test_interaction(unittest.TestCase):
 
         nu, nv, nw, n_atm = 8, 8, 8, 12
 
+        n = nu*nv*nw*n_atm
+
         atm = np.array(['S','S','S','S','S','S','S','S','Fe','Fe','Fe','Fe'])
 
         x = 0.385
@@ -197,14 +229,21 @@ class test_interaction(unittest.TestCase):
 
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
 
-        z = np.zeros(nu*nv*nw*n_atm)
+        z = np.zeros(n)
 
-        px = np.zeros(nu*nv*nw*n_atm)
-        py = np.zeros(nu*nv*nw*n_atm)
-        pz = np.zeros(nu*nv*nw*n_atm)
+        px = np.zeros(n)
+        py = np.zeros(n)
+        pz = np.zeros(n)
+        
+        i, j = np.triu_indices(n)
 
-        Qijk = interaction.charge_dipole_matrix(rx, ry, rz, nu, nv, nw,
-                                                n_atm, A, B, R)
+        Qijk = np.zeros((n,n,3))
+
+        Qijk[i,j,:] = interaction.charge_dipole_matrix(rx, ry, rz,
+                                                       nu, nv, nw,
+                                                       n_atm, A, B, R)
+
+        Qijk[j,i,:] = Qijk[i,j,:]
 
         z[atms == 'S'] = -1
         z[atms == 'Fe'] = +2
@@ -225,21 +264,36 @@ class test_interaction(unittest.TestCase):
         bm = 2.632
         bd = -2.561
 
-        n = nu*nv*nw*n_atm
-
         np.testing.assert_array_almost_equal(Qijk, np.swapaxes(Qijk,0,1))
 
         E = -np.einsum('i,i->...',z,np.einsum('ijk,jk->i',Qijk,p))/n
         self.assertAlmostEqual(E, -2*(bm/a**2+bd/a**3)/a, places=1)
 
-        Qij = interaction.charge_charge_matrix(rx, ry, rz, nu, nv, nw,
-                                               n_atm, A, B, R)
+        Qij = np.zeros((n,n))
+
+        Qij[i,j] = interaction.charge_charge_matrix(rx, ry, rz, nu, nv, nw,
+                                                    n_atm, A, B, R)
+
+        Qij[j,i] = Qij[i,j]
 
         E = np.dot(z,np.dot(Qij,z))/n
         self.assertAlmostEqual(E, (2*am[0]+am[1])/a*2/3, places=2)
 
-        Qijkl = interaction.dipole_dipole_matrix(rx, ry, rz, nu, nv, nw,
-                                                 n_atm, A, B, R)
+        Qijm = np.zeros((n,n,6))
+        Qijkl = np.zeros((n,n,3,3))
+
+        Qijm[i,j,:] = interaction.dipole_dipole_matrix(rx, ry, rz, 
+                                                       nu, nv, nw,
+                                                       n_atm, A, B, R)
+
+        Qijm[j,i,:] = Qijm[i,j,:]
+
+        Qijkl[:,:,0,0] = Qijm[:,:,0]
+        Qijkl[:,:,1,1] = Qijm[:,:,1]
+        Qijkl[:,:,2,2] = Qijm[:,:,2]
+        Qijkl[:,:,1,2] = Qijkl[:,:,2,1] = Qijm[:,:,3]
+        Qijkl[:,:,0,2] = Qijkl[:,:,2,0] = Qijm[:,:,4]
+        Qijkl[:,:,0,1] = Qijkl[:,:,1,0] = Qijm[:,:,5]
 
         E = np.einsum('ik,ik->...',p,np.einsum('ijkl,jl->ik',Qijkl,p))/n
         self.assertAlmostEqual(E, -(2*ad[0]+ad[1])/a**3*2/3, places=2)
@@ -258,6 +312,8 @@ class test_interaction(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
         nu, nv, nw, n_atm = 8, 8, 16, 1
+        
+        n = nu*nv*nw*n_atm
 
         atm = np.array(['Ti'])
 
@@ -271,12 +327,27 @@ class test_interaction(unittest.TestCase):
 
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
 
-        px = np.zeros(nu*nv*nw*n_atm)
-        py = np.zeros(nu*nv*nw*n_atm)
-        pz = np.zeros(nu*nv*nw*n_atm)
+        px = np.zeros(n)
+        py = np.zeros(n)
+        pz = np.zeros(n)
 
-        Qijkl = interaction.dipole_dipole_matrix(rx, ry, rz, nu, nv, nw,
-                                                 n_atm, A, B, R)
+        i, j = np.triu_indices(n)
+
+        Qijm = np.zeros((n,n,6))
+        Qijkl = np.zeros((n,n,3,3))
+
+        Qijm[i,j,:] = interaction.dipole_dipole_matrix(rx, ry, rz, 
+                                                        nu, nv, nw,
+                                                        n_atm, A, B, R)
+        
+        Qijm[j,i,:] = Qijm[i,j,:]
+
+        Qijkl[:,:,0,0] = Qijm[:,:,0]
+        Qijkl[:,:,1,1] = Qijm[:,:,1]
+        Qijkl[:,:,2,2] = Qijm[:,:,2]
+        Qijkl[:,:,1,2] = Qijkl[:,:,2,1] = Qijm[:,:,3]
+        Qijkl[:,:,0,2] = Qijkl[:,:,2,0] = Qijm[:,:,4]
+        Qijkl[:,:,0,1] = Qijkl[:,:,1,0] = Qijm[:,:,5]
 
         np.testing.assert_array_almost_equal(Qijkl, np.swapaxes(Qijkl,0,1))
         np.testing.assert_array_almost_equal(Qijkl, np.swapaxes(Qijkl,2,3))
@@ -368,6 +439,8 @@ class test_interaction(unittest.TestCase):
 
         nu, nv, nw, n_atm = 8, 8, 8, 2
 
+        n = nu*nv*nw*n_atm
+
         atm = np.array(['Ti','Ti'])
 
         u = np.array([0.0,0.5])
@@ -380,12 +453,27 @@ class test_interaction(unittest.TestCase):
 
         rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
 
-        px = np.zeros(nu*nv*nw*n_atm)
-        py = np.zeros(nu*nv*nw*n_atm)
-        pz = np.zeros(nu*nv*nw*n_atm)
+        px = np.zeros(n)
+        py = np.zeros(n)
+        pz = np.zeros(n)
 
-        Qijkl = interaction.dipole_dipole_matrix(rx, ry, rz, nu, nv, nw,
-                                                 n_atm, A, B, R)
+        i, j = np.triu_indices(n)
+
+        Qijm = np.zeros((n,n,6))
+        Qijkl = np.zeros((n,n,3,3))
+
+        Qijm[i,j,:] = interaction.dipole_dipole_matrix(rx, ry, rz, 
+                                                       nu, nv, nw,
+                                                       n_atm, A, B, R)
+
+        Qijm[j,i,:] = Qijm[i,j,:]
+
+        Qijkl[:,:,0,0] = Qijm[:,:,0]
+        Qijkl[:,:,1,1] = Qijm[:,:,1]
+        Qijkl[:,:,2,2] = Qijm[:,:,2]
+        Qijkl[:,:,1,2] = Qijkl[:,:,2,1] = Qijm[:,:,3]
+        Qijkl[:,:,0,2] = Qijkl[:,:,2,0] = Qijm[:,:,4]
+        Qijkl[:,:,0,1] = Qijkl[:,:,1,0] = Qijm[:,:,5]
 
         px.reshape(nu,nv,nw,n_atm)[0::2,:,0::2,:] = -np.sqrt(2)/2
         px.reshape(nu,nv,nw,n_atm)[1::2,:,1::2,:] = -np.sqrt(2)/2
