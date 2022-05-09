@@ -24,7 +24,7 @@ class test_simulation(unittest.TestCase):
 
         n = nu*nv*nw*n_atm
 
-        M = 3
+        M = 2
 
         Sx = np.random.random((nu,nv,nw,n_atm,M))
         Sy = np.random.random((nu,nv,nw,n_atm,M))
@@ -68,14 +68,19 @@ class test_simulation(unittest.TestCase):
         Qijkl[:,:,0,2] = Qijkl[:,:,2,0] = Qijm[:,:,4]
         Qijkl[:,:,0,1] = Qijkl[:,:,1,0] = Qijm[:,:,5]
 
-        E = simulation.dipolar_interaction_energy(Sx, Sy, Sz, Q)
+        p0 = simulation.dipolar_interaction_energy(Sx, Sy, Sz, Q)
 
         Sx, Sy, Sz = Sx.reshape(n,M), Sy.reshape(n,M), Sz.reshape(n,M)
 
-        S = np.column_stack((Sx,Sy,Sz)).reshape(-1,M,3)
-        E0 = np.einsum('ijk,ijk->k',np.einsum('ijkl,jlm->ikm',Qijkl,S),S)
+        S = np.column_stack((Sx,Sy,Sz)).reshape(-1,3,M)
 
-        np.testing.assert_array_almost_equal(E, E0)
+        p = np.einsum('ijklm,jlm->iklm',np.einsum('ijkl,jkm->jiklm',Qijkl,S),S)
+
+        np.testing.assert_array_almost_equal(p, p0)
+
+        E = np.einsum('ijk,ijk->...',np.einsum('ijkl,jkm->ilm',Qijkl,S),S)
+
+        np.testing.assert_array_almost_equal(E, p0.sum())
 
     def test_magnetic_energy(self):
 

@@ -97,6 +97,18 @@ cdef bint iszero(double a) nogil:
 
     return fabs(a) <= atol
 
+cdef Py_ssize_t sqrt_babylonian(Py_ssize_t n) nogil:
+
+    cdef Py_ssize_t x = n
+    cdef Py_ssize_t y = 1
+
+    while (x > y):
+
+        x = (x+y) // 2
+        y = n // x
+
+    return x
+
 cdef double random_uniform() nogil:
 
     return dist(gen)
@@ -249,13 +261,117 @@ cdef void replica_exchange(double [::1] H,
 
     cdef Py_ssize_t i, j
 
-
     i, j = dist_temp(gen), dist_temp(gen)
 
     if (i != j):
         if (random_uniform() < alpha(H[j]-H[i], beta[i]-beta[j])):
             beta[i], beta[j] = beta[j], beta[i]
             sigma[i], sigma[j] = sigma[j], sigma[i]
+
+cdef double energy_single_dipole(double [:,:,:,::1] p,
+                                 double [:,::1] Q,
+                                 double vx,
+                                 double vy,
+                                 double vz,
+                                 double ux,
+                                 double uy,
+                                 double uz,
+                                 Py_ssize_t i,
+                                 Py_ssize_t t) nogil:
+
+    cdef Py_ssize_t n = p.shape[0]
+
+    cdef double dx = vx-ux
+    cdef double dy = vy-uy
+    cdef double dz = vz-uz
+
+    cdef double px = p[i,0,0,t]+p[i,0,1,t]+p[i,0,2,t]
+    cdef double py = p[i,1,0,t]+p[i,1,1,t]+p[i,1,2,t]
+    cdef double pz = p[i,2,0,t]+p[i,2,1,t]+p[i,2,2,t]
+
+    cdef Py_ssize_t k = i+n*i-(i+1)*i // 2
+
+    cdef double E = 2*px*dx/ux+Q[k,0]*dx*dx+2*Q[k,3]*dy*dz\
+                  + 2*py*dy/uy+Q[k,1]*dy*dy+2*Q[k,4]*dx*dz\
+                  + 2*pz*dz/uz+Q[k,2]*dz*dz+2*Q[k,5]*dx*dy
+
+    return E
+
+cdef void update_single_dipole(double [:,:,:,:,::1] Sx,
+                               double [:,:,:,:,::1] Sy,
+                               double [:,:,:,:,::1] Sz,
+                               double [:,:,:,::1] p,
+                               double [:,::1] Q,
+                               double vx,
+                               double vy,
+                               double vz,
+                               double ux,
+                               double uy,
+                               double uz,
+                               Py_ssize_t i,
+                               Py_ssize_t t) nogil:
+
+    cdef Py_ssize_t nu = Sx.shape[0]
+    cdef Py_ssize_t nv = Sx.shape[1]
+    cdef Py_ssize_t nw = Sx.shape[2]
+    cdef Py_ssize_t n_atm = Sx.shape[3]
+    cdef Py_ssize_t n_temp = Sx.shape[4]
+
+    cdef Py_ssize_t n = p.shape[0]
+
+    cdef double dx = vx-ux
+    cdef double dy = vy-uy
+    cdef double dz = vz-uz
+
+    cdef Py_ssize_t iw, jw, kw, aw
+
+    cdef Py_ssize_t j, k
+
+    cdef double wx, wy, wz
+
+    p[i,0,0,t] *= vx/ux
+    p[i,0,1,t] *= vx/ux
+    p[i,0,2,t] *= vx/ux
+
+    p[i,1,0,t] *= vy/uy
+    p[i,1,1,t] *= vy/uy
+    p[i,1,2,t] *= vy/uy
+
+    p[i,2,0,t] *= vz/uz
+    p[i,2,1,t] *= vz/uz
+    p[i,2,2,t] *= vz/uz
+
+    for j in range(n):
+            
+        if j < i:
+            k = i+n*j-(j+1)*j // 2
+        else:
+            k = j+n*i-(i+1)*i // 2
+
+        if i != j:
+            aw = j % n_atm
+            kw = j // n_atm % nw
+            jw = j // n_atm // nw % nv
+            iw = j // n_atm // nw // nv % nu
+
+            wx = Sx[iw,jw,kw,aw,t]
+            wy = Sy[iw,jw,kw,aw,t]
+            wz = Sz[iw,jw,kw,aw,t]
+        else:
+            wx, wy, wz = vx, vy, vz
+
+        p[j,0,0,t] += Q[k,0]*wx*dx
+        p[j,1,1,t] += Q[k,1]*wy*dy
+        p[j,2,2,t] += Q[k,2]*wz*dz
+
+        p[j,1,2,t] += Q[k,3]*wy*dz
+        p[j,2,1,t] += Q[k,3]*wz*dy
+
+        p[j,0,2,t] += Q[k,4]*wx*dz
+        p[j,2,0,t] += Q[k,4]*wz*dx
+
+        p[j,0,1,t] += Q[k,5]*wx*dy
+        p[j,1,0,t] += Q[k,5]*wy*dx
 
 def dipolar_interaction_energy(double [:,:,:,:,::1] Sx,
                                double [:,:,:,:,::1] Sy,
@@ -278,12 +394,10 @@ def dipolar_interaction_energy(double [:,:,:,:,::1] Sx,
     cdef double ux, uy, uz
     cdef double vx, vy, vz
 
-    cdef double E = 0
+    e_np = np.zeros((n,3,3,n_temp))
 
-    e_np = np.zeros(n_temp)
+    cdef double [:,:,:,::1] e = e_np
 
-    cdef double [::1] e = e_np
-    
     for t in range(n_temp):
 
         k = 0
@@ -312,17 +426,42 @@ def dipolar_interaction_energy(double [:,:,:,:,::1] Sx,
 
                 k = j+n*i-(i+1)*i // 2
 
-                E = Q[k,0]*ux*vx\
-                  + Q[k,1]*uy*vy\
-                  + Q[k,2]*uz*vz\
-                  + Q[k,3]*(uy*vz+uz*vy)\
-                  + Q[k,4]*(ux*vz+uz*vx)\
-                  + Q[k,5]*(ux*vy+uy*vx)
-
                 if i != j:
-                    e[t] += 2*E
+                    e[i,0,0,t] += Q[k,0]*ux*vx
+                    e[i,0,1,t] += Q[k,5]*ux*vy
+                    e[i,0,2,t] += Q[k,4]*ux*vz
+
+                    e[i,1,0,t] += Q[k,5]*uy*vx
+                    e[i,1,1,t] += Q[k,1]*uy*vy
+                    e[i,1,2,t] += Q[k,3]*uy*vz
+
+                    e[i,2,0,t] += Q[k,4]*uz*vx
+                    e[i,2,1,t] += Q[k,3]*uz*vy
+                    e[i,2,2,t] += Q[k,2]*uz*vz
+
+                    e[j,0,0,t] += Q[k,0]*vx*ux
+                    e[j,0,1,t] += Q[k,5]*vx*uy
+                    e[j,0,2,t] += Q[k,4]*vx*uz
+
+                    e[j,1,0,t] += Q[k,5]*vy*ux
+                    e[j,1,1,t] += Q[k,1]*vy*uy
+                    e[j,1,2,t] += Q[k,3]*vy*uz
+
+                    e[j,2,0,t] += Q[k,4]*vz*ux
+                    e[j,2,1,t] += Q[k,3]*vz*uy
+                    e[j,2,2,t] += Q[k,2]*vz*uz
                 else:
-                    e[t] += E
+                    e[i,0,0,t] += Q[k,0]*ux*vx
+                    e[i,0,1,t] += Q[k,5]*ux*vy
+                    e[i,0,2,t] += Q[k,4]*ux*vz
+
+                    e[i,1,0,t] += Q[k,5]*uy*vx
+                    e[i,1,1,t] += Q[k,1]*uy*vy
+                    e[i,1,2,t] += Q[k,3]*uy*vz
+
+                    e[i,2,0,t] += Q[k,4]*uz*vx
+                    e[i,2,1,t] += Q[k,3]*uz*vy
+                    e[i,2,2,t] += Q[k,2]*uz*vz
 
     return e_np
 
@@ -611,8 +750,6 @@ def heisenberg(double [:,:,:,:,::1] Sx,
                     if (sigma[t] < 0.01): sigma[t] = 0.01
                     if (sigma[t] > 10): sigma[t] = 10
 
-                # print(sigma[t],rate,factor)
-
             replica_exchange(H, beta, sigma)
 
     return np.copy(H), 1/(kB*np.copy(beta))
@@ -735,10 +872,6 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
             vx = ux-2*nx*n_dot_u
             vy = uy-2*ny*n_dot_u
             vz = uz-2*nz*n_dot_u
-
-            # vx = -ux
-            # vy = -uy
-            # vz = -uz
 
             Sx[i,j,k,a,t] = vx
             Sy[i,j,k,a,t] = vy

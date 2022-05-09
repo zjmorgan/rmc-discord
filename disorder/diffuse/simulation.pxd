@@ -11,6 +11,8 @@ cdef void initialize_random(Py_ssize_t nu,
 
 cdef bint iszero(double a) nogil
 
+cdef Py_ssize_t sqrt_babylonian(Py_ssize_t n) nogil
+
 cdef double random_uniform() nogil
 
 cdef double alpha(double E, double beta) nogil
@@ -48,3 +50,28 @@ cdef (double, double, double) interpolated_vector_candidate(double ux,
 cdef void replica_exchange(double [::1] H,
                            double [::1] beta,
                            double [::1] sigma) nogil
+
+cdef double energy_single_dipole(double [:,:,:,::1] p,
+                                 double [:,::1] Q,
+                                 double vx,
+                                 double vy,
+                                 double vz,
+                                 double ux,
+                                 double uy,
+                                 double uz,
+                                 Py_ssize_t i,
+                                 Py_ssize_t t) nogil
+
+cdef void update_single_dipole(double [:,:,:,:,::1] Sx,
+                               double [:,:,:,:,::1] Sy,
+                               double [:,:,:,:,::1] Sz,
+                               double [:,:,:,::1] p,
+                               double [:,::1] Q,
+                               double vx,
+                               double vy,
+                               double vz,
+                               double ux,
+                               double uy,
+                               double uz,
+                               Py_ssize_t i,
+                               Py_ssize_t t) nogil

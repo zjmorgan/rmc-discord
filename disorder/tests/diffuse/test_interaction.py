@@ -70,7 +70,7 @@ class test_interaction(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
         nu, nv, nw, n_atm = 4, 4, 4, 8
-        
+
         n = nu*nv*nw*n_atm
 
         atm = np.array(['Na','Na','Na','Na','Cl','Cl','Cl','Cl'])
@@ -118,7 +118,7 @@ class test_interaction(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
         nu, nv, nw, n_atm = 6, 6, 6, 4
-        
+
         n = nu*nv*nw*n_atm
 
         atm = np.array(['Zn','Zn','S','S'])
@@ -164,7 +164,7 @@ class test_interaction(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
         nu, nv, nw, n_atm = 8, 8, 8, 12
-        
+
         n = nu*nv*nw*n_atm
 
         atm = np.array(['Ca','Ca','Ca','Ca','F','F','F','F','F','F','F','F'])
@@ -234,7 +234,7 @@ class test_interaction(unittest.TestCase):
         px = np.zeros(n)
         py = np.zeros(n)
         pz = np.zeros(n)
-        
+
         i, j = np.triu_indices(n)
 
         Qijk = np.zeros((n,n,3))
@@ -282,7 +282,7 @@ class test_interaction(unittest.TestCase):
         Qijm = np.zeros((n,n,6))
         Qijkl = np.zeros((n,n,3,3))
 
-        Qijm[i,j,:] = interaction.dipole_dipole_matrix(rx, ry, rz, 
+        Qijm[i,j,:] = interaction.dipole_dipole_matrix(rx, ry, rz,
                                                        nu, nv, nw,
                                                        n_atm, A, B, R)
 
@@ -312,7 +312,7 @@ class test_interaction(unittest.TestCase):
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
         nu, nv, nw, n_atm = 8, 8, 16, 1
-        
+
         n = nu*nv*nw*n_atm
 
         atm = np.array(['Ti'])
@@ -336,10 +336,10 @@ class test_interaction(unittest.TestCase):
         Qijm = np.zeros((n,n,6))
         Qijkl = np.zeros((n,n,3,3))
 
-        Qijm[i,j,:] = interaction.dipole_dipole_matrix(rx, ry, rz, 
-                                                        nu, nv, nw,
-                                                        n_atm, A, B, R)
-        
+        Qijm[i,j,:] = interaction.dipole_dipole_matrix(rx, ry, rz,
+                                                       nu, nv, nw,
+                                                       n_atm, A, B, R)
+
         Qijm[j,i,:] = Qijm[i,j,:]
 
         Qijkl[:,:,0,0] = Qijm[:,:,0]
@@ -462,7 +462,7 @@ class test_interaction(unittest.TestCase):
         Qijm = np.zeros((n,n,6))
         Qijkl = np.zeros((n,n,3,3))
 
-        Qijm[i,j,:] = interaction.dipole_dipole_matrix(rx, ry, rz, 
+        Qijm[i,j,:] = interaction.dipole_dipole_matrix(rx, ry, rz,
                                                        nu, nv, nw,
                                                        n_atm, A, B, R)
 
