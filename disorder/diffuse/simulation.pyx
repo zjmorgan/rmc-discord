@@ -268,16 +268,16 @@ cdef void replica_exchange(double [::1] H,
             beta[i], beta[j] = beta[j], beta[i]
             sigma[i], sigma[j] = sigma[j], sigma[i]
 
-cdef double energy_single_dipole(double [:,:,:,::1] p,
-                                 double [:,::1] Q,
-                                 double vx,
-                                 double vy,
-                                 double vz,
-                                 double ux,
-                                 double uy,
-                                 double uz,
-                                 Py_ssize_t i,
-                                 Py_ssize_t t) nogil:
+cdef double energy_moment(double [:,:,:,::1] p,
+                          double [:,::1] Q,
+                          double vx,
+                          double vy,
+                          double vz,
+                          double ux,
+                          double uy,
+                          double uz,
+                          Py_ssize_t i,
+                          Py_ssize_t t) nogil:
 
     cdef Py_ssize_t n = p.shape[0]
 
@@ -297,19 +297,19 @@ cdef double energy_single_dipole(double [:,:,:,::1] p,
 
     return E
 
-cdef void update_single_dipole(double [:,:,:,:,::1] Sx,
-                               double [:,:,:,:,::1] Sy,
-                               double [:,:,:,:,::1] Sz,
-                               double [:,:,:,::1] p,
-                               double [:,::1] Q,
-                               double vx,
-                               double vy,
-                               double vz,
-                               double ux,
-                               double uy,
-                               double uz,
-                               Py_ssize_t i,
-                               Py_ssize_t t) nogil:
+cdef void update_moment(double [:,:,:,:,::1] Sx,
+                        double [:,:,:,:,::1] Sy,
+                        double [:,:,:,:,::1] Sz,
+                        double [:,:,:,::1] p,
+                        double [:,::1] Q,
+                        double vx,
+                        double vy,
+                        double vz,
+                        double ux,
+                        double uy,
+                        double uz,
+                        Py_ssize_t i,
+                        Py_ssize_t t) nogil:
 
     cdef Py_ssize_t nu = Sx.shape[0]
     cdef Py_ssize_t nv = Sx.shape[1]
@@ -323,60 +323,339 @@ cdef void update_single_dipole(double [:,:,:,:,::1] Sx,
     cdef double dy = vy-uy
     cdef double dz = vz-uz
 
-    cdef Py_ssize_t iw, jw, kw, aw
+    cdef Py_ssize_t iv, jv, kv, av
 
     cdef Py_ssize_t j, k
 
-    cdef double wx, wy, wz
+    cdef double rx, ry, rz
+    cdef double sx, sy, sz
 
-    p[i,0,0,t] *= vx/ux
-    p[i,0,1,t] *= vx/ux
-    p[i,0,2,t] *= vx/ux
+    rx = vx/ux
+    ry = vy/uy
+    rz = vz/uz
 
-    p[i,1,0,t] *= vy/uy
-    p[i,1,1,t] *= vy/uy
-    p[i,1,2,t] *= vy/uy
+    p[i,0,0,t] *= rx
+    p[i,0,1,t] *= rx
+    p[i,0,2,t] *= rx
 
-    p[i,2,0,t] *= vz/uz
-    p[i,2,1,t] *= vz/uz
-    p[i,2,2,t] *= vz/uz
+    p[i,1,0,t] *= ry
+    p[i,1,1,t] *= ry
+    p[i,1,2,t] *= ry
+
+    p[i,2,0,t] *= rz
+    p[i,2,1,t] *= rz
+    p[i,2,2,t] *= rz
 
     for j in range(n):
-            
+
         if j < i:
             k = i+n*j-(j+1)*j // 2
         else:
             k = j+n*i-(i+1)*i // 2
 
-        if i != j:
-            aw = j % n_atm
-            kw = j // n_atm % nw
-            jw = j // n_atm // nw % nv
-            iw = j // n_atm // nw // nv % nu
+        av = j % n_atm
+        kv = j // n_atm % nw
+        jv = j // n_atm // nw % nv
+        iv = j // n_atm // nw // nv % nu
 
-            wx = Sx[iw,jw,kw,aw,t]
-            wy = Sy[iw,jw,kw,aw,t]
-            wz = Sz[iw,jw,kw,aw,t]
-        else:
-            wx, wy, wz = vx, vy, vz
+        sx = Sx[iv,jv,kv,av,t]
+        sy = Sy[iv,jv,kv,av,t]
+        sz = Sz[iv,jv,kv,av,t]
 
-        p[j,0,0,t] += Q[k,0]*wx*dx
-        p[j,1,1,t] += Q[k,1]*wy*dy
-        p[j,2,2,t] += Q[k,2]*wz*dz
+        p[j,0,0,t] += Q[k,0]*sx*dx
+        p[j,1,1,t] += Q[k,1]*sy*dy
+        p[j,2,2,t] += Q[k,2]*sz*dz
 
-        p[j,1,2,t] += Q[k,3]*wy*dz
-        p[j,2,1,t] += Q[k,3]*wz*dy
+        p[j,1,2,t] += Q[k,3]*sy*dz
+        p[j,2,1,t] += Q[k,3]*sz*dy
 
-        p[j,0,2,t] += Q[k,4]*wx*dz
-        p[j,2,0,t] += Q[k,4]*wz*dx
+        p[j,0,2,t] += Q[k,4]*sx*dz
+        p[j,2,0,t] += Q[k,4]*sz*dx
 
-        p[j,0,1,t] += Q[k,5]*wx*dy
-        p[j,1,0,t] += Q[k,5]*wy*dx
+        p[j,0,1,t] += Q[k,5]*sx*dy
+        p[j,1,0,t] += Q[k,5]*sy*dx
 
-def dipolar_interaction_energy(double [:,:,:,:,::1] Sx,
-                               double [:,:,:,:,::1] Sy,
-                               double [:,:,:,:,::1] Sz,
-                               double [:,::1] Q):
+    k = i+n*i-(i+1)*i // 2
+
+    p[i,0,0,t] += Q[k,0]*dx*dx
+    p[i,1,1,t] += Q[k,1]*dy*dy
+    p[i,2,2,t] += Q[k,2]*dz*dz
+
+    p[i,1,2,t] += Q[k,3]*dy*dz
+    p[i,2,1,t] += Q[k,3]*dz*dy
+
+    p[i,0,2,t] += Q[k,4]*dx*dz
+    p[i,2,0,t] += Q[k,4]*dz*dx
+
+    p[i,0,1,t] += Q[k,5]*dx*dy
+    p[i,1,0,t] += Q[k,5]*dy*dx
+
+cdef double energy_moment_cluster(double [:,:,:,::1] p,
+                                  double [:,::1] Q,
+                                  double [::1] clust_vx,
+                                  double [::1] clust_vy,
+                                  double [::1] clust_vz,
+                                  double [::1] clust_ux,
+                                  double [::1] clust_uy,
+                                  double [::1] clust_uz,
+                                  Py_ssize_t [::1] clust_ind,
+                                  Py_ssize_t [::1] n_c,
+                                  Py_ssize_t t) nogil:
+
+    cdef Py_ssize_t n = p.shape[0]
+
+    cdef double ux, uy, uz
+    cdef double vx, vy, vz
+
+    cdef double dux, duy, duz
+    cdef double dvx, dvy, dvz
+
+    cdef double px, py, pz
+
+    cdef Py_ssize_t i_c, j_c
+
+    cdef Py_ssize_t i, j, k
+
+    cdef Py_ssize_t iu, ju, ku, au
+    cdef Py_ssize_t iv, jv, kv, av
+
+    cdef double E = 0
+
+    cdef Py_ssize_t m_c = n_c[t]
+
+    for i_c in range(m_c):
+
+        i = clust_ind[i_c]
+
+        ux = clust_ux[i]
+        uy = clust_uy[i]
+        uz = clust_uz[i]
+
+        vx = clust_vx[i]
+        vy = clust_vy[i]
+        vz = clust_vz[i]
+
+        dux = vx-ux
+        duy = vy-uy
+        duz = vz-uz
+
+        px = p[i,0,0,t]+p[i,0,1,t]+p[i,0,2,t]
+        py = p[i,1,0,t]+p[i,1,1,t]+p[i,1,2,t]
+        pz = p[i,2,0,t]+p[i,2,1,t]+p[i,2,2,t]
+
+        E += 2*(px*dux/ux+py*duy/uy+pz*duz/uz)
+
+        for j_c in range(i_c,m_c):
+
+            j = clust_ind[j_c]
+
+            ux = clust_ux[j]
+            uy = clust_uy[j]
+            uz = clust_uz[j]
+
+            vx = clust_vx[j]
+            vy = clust_vy[j]
+            vz = clust_vz[j]
+
+            dvx = vx-ux
+            dvy = vy-uy
+            dvz = vz-uz
+
+            if j < i:
+                k = i+n*j-(j+1)*j // 2
+            else:
+                k = j+n*i-(i+1)*i // 2
+
+            if i_c == j_c:
+                E += Q[k,0]*dux*dvx+Q[k,5]*dux*dvy+Q[k,4]*dux*dvz\
+                   + Q[k,5]*duy*dvx+Q[k,1]*duy*dvy+Q[k,3]*duy*dvz\
+                   + Q[k,4]*duz*dvx+Q[k,3]*duz*dvy+Q[k,2]*duz*dvz
+            else:
+                E += 2*(Q[k,0]*dux*dvx+Q[k,5]*dux*dvy+Q[k,4]*dux*dvz\
+                      + Q[k,5]*duy*dvx+Q[k,1]*duy*dvy+Q[k,3]*duy*dvz\
+                      + Q[k,4]*duz*dvx+Q[k,3]*duz*dvy+Q[k,2]*duz*dvz)
+
+    return E
+
+cdef void update_moment_cluster(double [:,:,:,:,::1] Sx,
+                                double [:,:,:,:,::1] Sy,
+                                double [:,:,:,:,::1] Sz,
+                                double [:,:,:,::1] p,
+                                double [:,::1] Q,
+                                double [::1] clust_vx,
+                                double [::1] clust_vy,
+                                double [::1] clust_vz,
+                                double [::1] clust_ux,
+                                double [::1] clust_uy,
+                                double [::1] clust_uz,
+                                Py_ssize_t [::1] clust_ind,
+                                Py_ssize_t [::1] n_c,
+                                Py_ssize_t t) nogil:
+
+    cdef Py_ssize_t nu = Sx.shape[0]
+    cdef Py_ssize_t nv = Sx.shape[1]
+    cdef Py_ssize_t nw = Sx.shape[2]
+    cdef Py_ssize_t n_atm = Sx.shape[3]
+    cdef Py_ssize_t n_temp = Sx.shape[4]
+
+    cdef Py_ssize_t n = p.shape[0]
+
+    cdef double dux, duy, duz
+    cdef double dvx, dvy, dvz
+
+    cdef Py_ssize_t iv, jv, kv, av
+
+    cdef Py_ssize_t i, j, k
+
+    cdef double ux, uy, uz
+    cdef double vx, vy, vz
+
+    cdef double rx, ry, rz
+    cdef double sx, sy, sz
+
+    cdef Py_ssize_t i_c, j_c
+
+    cdef Py_ssize_t m_c = n_c[t]
+
+    for i_c in range(m_c):
+
+        i = clust_ind[i_c]
+
+        ux = clust_ux[i]
+        uy = clust_uy[i]
+        uz = clust_uz[i]
+
+        vx = clust_vx[i]
+        vy = clust_vy[i]
+        vz = clust_vz[i]
+
+        rx = vx/ux
+        ry = vy/uy
+        rz = vz/uz
+
+        p[i,0,0,t] *= rx
+        p[i,0,1,t] *= rx
+        p[i,0,2,t] *= rx
+
+        p[i,1,0,t] *= ry
+        p[i,1,1,t] *= ry
+        p[i,1,2,t] *= ry
+
+        p[i,2,0,t] *= rz
+        p[i,2,1,t] *= rz
+        p[i,2,2,t] *= rz
+
+    for i_c in range(m_c):
+
+        i = clust_ind[i_c]
+
+        ux = clust_ux[i]
+        uy = clust_uy[i]
+        uz = clust_uz[i]
+
+        vx = clust_vx[i]
+        vy = clust_vy[i]
+        vz = clust_vz[i]
+
+        dux = vx-ux
+        duy = vy-uy
+        duz = vz-uz
+
+        for j in range(n):
+
+            if j < i:
+                k = i+n*j-(j+1)*j // 2
+            else:
+                k = j+n*i-(i+1)*i // 2
+
+            av = j % n_atm
+            kv = j // n_atm % nw
+            jv = j // n_atm // nw % nv
+            iv = j // n_atm // nw // nv % nu
+
+            sx = Sx[iv,jv,kv,av,t]
+            sy = Sy[iv,jv,kv,av,t]
+            sz = Sz[iv,jv,kv,av,t]
+
+            p[j,0,0,t] += Q[k,0]*sx*dux
+            p[j,1,1,t] += Q[k,1]*sy*duy
+            p[j,2,2,t] += Q[k,2]*sz*duz
+
+            p[j,1,2,t] += Q[k,3]*sy*duz
+            p[j,2,1,t] += Q[k,3]*sz*duy
+
+            p[j,0,2,t] += Q[k,4]*sx*duz
+            p[j,2,0,t] += Q[k,4]*sz*dux
+
+            p[j,0,1,t] += Q[k,5]*sx*duy
+            p[j,1,0,t] += Q[k,5]*sy*dux
+
+        k = i+n*i-(i+1)*i // 2
+
+        p[i,0,0,t] += Q[k,0]*dux*dux
+        p[i,1,1,t] += Q[k,1]*duy*duy
+        p[i,2,2,t] += Q[k,2]*duz*duz
+
+        p[i,1,2,t] += Q[k,3]*duy*duz
+        p[i,2,1,t] += Q[k,3]*duz*duy
+
+        p[i,0,2,t] += Q[k,4]*dux*duz
+        p[i,2,0,t] += Q[k,4]*duz*dux
+
+        p[i,0,1,t] += Q[k,5]*dux*duy
+        p[i,1,0,t] += Q[k,5]*duy*dux
+
+        for j_c in range(i_c+1,m_c):
+
+            j = clust_ind[j_c]
+
+            ux = clust_ux[j]
+            uy = clust_uy[j]
+            uz = clust_uz[j]
+
+            vx = clust_vx[j]
+            vy = clust_vy[j]
+            vz = clust_vz[j]
+
+            dvx = vx-ux
+            dvy = vy-uy
+            dvz = vz-uz
+
+            if j < i:
+                k = i+n*j-(j+1)*j // 2
+            else:
+                k = j+n*i-(i+1)*i // 2
+
+            p[i,0,0,t] += Q[k,0]*dux*dvx
+            p[i,1,1,t] += Q[k,1]*duy*dvy
+            p[i,2,2,t] += Q[k,2]*duz*dvz
+
+            p[i,1,2,t] += Q[k,3]*duy*dvz
+            p[i,2,1,t] += Q[k,3]*duz*dvy
+
+            p[i,0,2,t] += Q[k,4]*dux*dvz
+            p[i,2,0,t] += Q[k,4]*duz*dvx
+
+            p[i,0,1,t] += Q[k,5]*dux*dvy
+            p[i,1,0,t] += Q[k,5]*duy*dvx
+
+            p[j,0,0,t] += Q[k,0]*dux*dvx
+            p[j,1,1,t] += Q[k,1]*duy*dvy
+            p[j,2,2,t] += Q[k,2]*duz*dvz
+
+            p[j,1,2,t] += Q[k,3]*duy*dvz
+            p[j,2,1,t] += Q[k,3]*duz*dvy
+
+            p[j,0,2,t] += Q[k,4]*dux*dvz
+            p[j,2,0,t] += Q[k,4]*duz*dvx
+
+            p[j,0,1,t] += Q[k,5]*dux*dvy
+            p[j,1,0,t] += Q[k,5]*duy*dvx
+
+def dipole_dipole_interaction_energy(double [:,:,:,:,::1] Sx,
+                                     double [:,:,:,:,::1] Sy,
+                                     double [:,:,:,:,::1] Sz,
+                                     double [:,::1] Q):
 
     cdef Py_ssize_t nu = Sx.shape[0]
     cdef Py_ssize_t nv = Sx.shape[1]
@@ -759,17 +1038,17 @@ def heisenberg(double [:,:,:,:,::1] Sx,
 cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
                               double [:,:,:,:,::1] Sy,
                               double [:,:,:,:,::1] Sz,
-                              double nx,
-                              double ny,
-                              double nz,
+                              double [::1] clust_sx,
+                              double [::1] clust_sy,
+                              double [::1] clust_sz,
                               double [:,:,::1] J,
                               double [:,::,::1] A,
                               double [:,::,::1] g,
                               double [::1] B,
-                              Py_ssize_t [:,::1] clust_i,
-                              Py_ssize_t [:,::1] clust_j,
-                              Py_ssize_t [:,::1] clust_k,
-                              Py_ssize_t [:,::1] clust_a,
+                              Py_ssize_t [::1] clust_i,
+                              Py_ssize_t [::1] clust_j,
+                              Py_ssize_t [::1] clust_k,
+                              Py_ssize_t [::1] clust_a,
                               double [:,:,:,:,::1] h_eff,
                               bint [:,:,:,:,::1] b,
                               bint [:,:,:,:,::1] c,
@@ -799,7 +1078,7 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
     cdef double Ec = 0
     cdef double Ek, Eb
 
-    cdef Py_ssize_t p, i_c
+    cdef Py_ssize_t p, i_c, i_ind
 
     cdef bint f
 
@@ -811,8 +1090,6 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double dx, dy, dz
 
-    cdef double n_dot_u
-
     cdef double Bx = B[0]
     cdef double By = B[1]
     cdef double Bz = B[2]
@@ -821,18 +1098,16 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
 
     for i_c in prange(m_c, nogil=True):
 
-        i = clust_i[i_c,t]
-        j = clust_j[i_c,t]
-        k = clust_k[i_c,t]
-        a = clust_a[i_c,t]
+        i = clust_i[i_c]
+        j = clust_j[i_c]
+        k = clust_k[i_c]
+        a = clust_a[i_c]
 
         ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
 
-        n_dot_u = nx*ux+ny*uy+nz*uz
-
-        vx = ux-2*nx*n_dot_u
-        vy = uy-2*ny*n_dot_u
-        vz = uz-2*nz*n_dot_u
+        vx = clust_sx[i_c]
+        vy = clust_sy[i_c]
+        vz = clust_sz[i_c]
 
         dx = vx-ux
         dy = vy-uy
@@ -860,18 +1135,14 @@ cdef double annealing_cluster(double [:,:,:,:,::1] Sx,
 
         for i_c in prange(m_c, nogil=True):
 
-            i = clust_i[i_c,t]
-            j = clust_j[i_c,t]
-            k = clust_k[i_c,t]
-            a = clust_a[i_c,t]
+            i = clust_i[i_c]
+            j = clust_j[i_c]
+            k = clust_k[i_c]
+            a = clust_a[i_c]
 
-            ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
-
-            n_dot_u = nx*ux+ny*uy+nz*uz
-
-            vx = ux-2*nx*n_dot_u
-            vy = uy-2*ny*n_dot_u
-            vz = uz-2*nz*n_dot_u
+            vx = clust_sx[i_c]
+            vy = clust_sy[i_c]
+            vz = clust_sz[i_c]
 
             Sx[i,j,k,a,t] = vx
             Sy[i,j,k,a,t] = vy
@@ -895,10 +1166,10 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
                                  double uz_perp,
                                  double n_dot_u,
                                  double [:,:,::1] J,
-                                 Py_ssize_t [:,::1] clust_i,
-                                 Py_ssize_t [:,::1] clust_j,
-                                 Py_ssize_t [:,::1] clust_k,
-                                 Py_ssize_t [:,::1] clust_a,
+                                 Py_ssize_t [::1] clust_i,
+                                 Py_ssize_t [::1] clust_j,
+                                 Py_ssize_t [::1] clust_k,
+                                 Py_ssize_t [::1] clust_a,
                                  Py_ssize_t [::1] pairs_i,
                                  Py_ssize_t [::1] pairs_j,
                                  Py_ssize_t [::1] pairs_k,
@@ -1025,10 +1296,10 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
             if (m_c < n):
 
-                clust_i[m_c,t] = pairs_i[p]
-                clust_j[m_c,t] = pairs_j[p]
-                clust_k[m_c,t] = pairs_k[p]
-                clust_a[m_c,t] = pairs_a[p]
+                clust_i[m_c] = pairs_i[p]
+                clust_j[m_c] = pairs_j[p]
+                clust_k[m_c] = pairs_k[p]
+                clust_a[m_c] = pairs_a[p]
 
                 m_c += 1
 
@@ -1041,10 +1312,10 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
                             double ny,
                             double nz,
                             double [:,:,::1] J,
-                            Py_ssize_t [:,::1] clust_i,
-                            Py_ssize_t [:,::1] clust_j,
-                            Py_ssize_t [:,::1] clust_k,
-                            Py_ssize_t [:,::1] clust_a,
+                            Py_ssize_t [::1] clust_i,
+                            Py_ssize_t [::1] clust_j,
+                            Py_ssize_t [::1] clust_k,
+                            Py_ssize_t [::1] clust_a,
                             bint [:,:,:,:,::1] c,
                             Py_ssize_t [::1] n_c,
                             long [:,::1] atm_ind,
@@ -1081,10 +1352,10 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
 
     for i_c in range(n_c[t]):
 
-        i = clust_i[i_c,t]
-        j = clust_j[i_c,t]
-        k = clust_k[i_c,t]
-        a = clust_a[i_c,t]
+        i = clust_i[i_c]
+        j = clust_j[i_c]
+        k = clust_k[i_c]
+        a = clust_a[i_c]
 
         ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
 
@@ -1124,22 +1395,22 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
     return E
 
 def heisenberg_cluster(double [:,:,:,:,::1] Sx,
-                       double [:,:,:,:,::1] Sy,
-                       double [:,:,:,:,::1] Sz,
-                       double [:,:,::1] J,
-                       double [:,::,::1] A,
-                       double [:,::,::1] g,
-                       double [::1] B,
-                       long [:,::1] atm_ind,
-                       long [:,::1] img_ind_i,
-                       long [:,::1] img_ind_j,
-                       long [:,::1] img_ind_k,
-                       long [:,::1] pair_ind,
-                       long [:,::1] pair_inv,
-                       bint [:,::1] pair_ij,
-                       double [::1] T_range,
-                       double kB,
-                       Py_ssize_t N):
+                        double [:,:,:,:,::1] Sy,
+                        double [:,:,:,:,::1] Sz,
+                        double [:,:,::1] J,
+                        double [:,::,::1] A,
+                        double [:,::,::1] g,
+                        double [::1] B,
+                        long [:,::1] atm_ind,
+                        long [:,::1] img_ind_i,
+                        long [:,::1] img_ind_j,
+                        long [:,::1] img_ind_k,
+                        long [:,::1] pair_ind,
+                        long [:,::1] pair_inv,
+                        bint [:,::1] pair_ij,
+                        double [::1] T_range,
+                        double kB,
+                        Py_ssize_t N):
 
     cdef Py_ssize_t nu = Sx.shape[0]
     cdef Py_ssize_t nv = Sx.shape[1]
@@ -1188,20 +1459,32 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
     cdef double [:,:,:,:,::1] h_eff = np.zeros(spin_shape, dtype=float)
     cdef double [:,:,:,:,:,::1] h_eff_ij = np.zeros(pairs_shape, dtype=float)
 
-    cdef Py_ssize_t [:,::1] clust_i = np.zeros((n,n_temp), dtype=np.intp)
-    cdef Py_ssize_t [:,::1] clust_j = np.zeros((n,n_temp), dtype=np.intp)
-    cdef Py_ssize_t [:,::1] clust_k = np.zeros((n,n_temp), dtype=np.intp)
-    cdef Py_ssize_t [:,::1] clust_a = np.zeros((n,n_temp), dtype=np.intp)
+    cdef Py_ssize_t [::1] clust_i = np.zeros(n, dtype=np.intp)
+    cdef Py_ssize_t [::1] clust_j = np.zeros(n, dtype=np.intp)
+    cdef Py_ssize_t [::1] clust_k = np.zeros(n, dtype=np.intp)
+    cdef Py_ssize_t [::1] clust_a = np.zeros(n, dtype=np.intp)
+
+    cdef Py_ssize_t [::1] clust_ind = np.zeros(n, dtype=np.intp)
 
     cdef Py_ssize_t [::1] pairs_i = np.zeros(n_pairs, dtype=np.intp)
     cdef Py_ssize_t [::1] pairs_j = np.zeros(n_pairs, dtype=np.intp)
     cdef Py_ssize_t [::1] pairs_k = np.zeros(n_pairs, dtype=np.intp)
     cdef Py_ssize_t [::1] pairs_a = np.zeros(n_pairs, dtype=np.intp)
 
+    cdef Py_ssize_t [::1] pairs_ind = np.zeros(n_pairs, dtype=np.intp)
+
     cdef bint [::1] activated = np.zeros(n_pairs, dtype=np.intc)
 
     cdef double ux, uy, uz
     cdef double vx, vy, vz
+
+    cdef double [::1] clust_ux = np.zeros(n)
+    cdef double [::1] clust_uy = np.zeros(n)
+    cdef double [::1] clust_uz = np.zeros(n)
+
+    cdef double [::1] clust_vx = np.zeros(n)
+    cdef double [::1] clust_vy = np.zeros(n)
+    cdef double [::1] clust_vz = np.zeros(n)
 
     cdef double mx, my, mz
     cdef double nx, ny, nz
@@ -1232,20 +1515,10 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
                 nx, ny, nz = gaussian_vector_candidate(ux, uy, uz, sigma[t])
 
-                # u = sqrt(ux*ux+uy*uy+uz*uz)
-
-                # nx, ny, nz = -ux/u, -uy/u, -uz/u
-
-                # n_dot_u = ux*nx+uy*ny+uz*nz
-
-                # ux_perp = ux-nx*n_dot_u
-                # uy_perp = uy-ny*n_dot_u
-                # uz_perp = uz-nz*n_dot_u
-
-                clust_i[0,t] = i
-                clust_j[0,t] = j
-                clust_k[0,t] = k
-                clust_a[0,t] = a
+                clust_i[0] = i
+                clust_j[0] = j
+                clust_k[0] = k
+                clust_a[0] = a
 
                 c[i,j,k,a,t] = 1
 
@@ -1255,10 +1528,10 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
                 while (i_c < m_c):
 
-                    i_ = clust_i[i_c,t]
-                    j_ = clust_j[i_c,t]
-                    k_ = clust_k[i_c,t]
-                    a_ = clust_a[i_c,t]
+                    i_ = clust_i[i_c]
+                    j_ = clust_j[i_c]
+                    k_ = clust_k[i_c]
+                    a_ = clust_a[i_c]
 
                     vx = Sx[i_,j_,k_,a_,t]
                     vy = Sy[i_,j_,k_,a_,t]
@@ -1271,6 +1544,16 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                     vz_perp = vz-nz*n_dot_v
 
                     b[i_,j_,k_,a_,t] = 1
+
+                    clust_ind[i_c] = a_+n_atm*(k_+nw*(j_+nv*i_))
+
+                    # clust_ux[i_c] = vx
+                    # clust_uy[i_c] = vy
+                    # clust_uz[i_c] = vz
+
+                    clust_vx[i_c] = vx_perp-nx*n_dot_v
+                    clust_vy[i_c] = vy_perp-ny*n_dot_v
+                    clust_vz[i_c] = vz_perp-nz*n_dot_v
 
                     m_c = magnetic_cluster(Sx, Sy, Sz, nx, ny, nz,
                                            vx_perp, vy_perp, vz_perp,
@@ -1293,7 +1576,9 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                        img_ind_i, img_ind_j, img_ind_k,
                                        pair_ind, pair_inv, pair_ij, t)
 
-                rate = annealing_cluster(Sx, Sy, Sz, nx, ny, nz, J, A, g, B,
+                rate = annealing_cluster(Sx, Sy, Sz,
+                                         clust_vx, clust_vy, clust_vz,
+                                         J, A, g, B, 
                                          clust_i, clust_j, clust_k, clust_a,
                                          h_eff, b, c, n_c, atm_ind,
                                          img_ind_i, img_ind_j, img_ind_k,

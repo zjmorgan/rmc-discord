@@ -21,7 +21,7 @@ class test_interaction(unittest.TestCase):
         R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
-        nu, nv, nw, n_atm = 6, 6, 6, 2
+        nu, nv, nw, n_atm = 4, 4, 4, 2
 
         n = nu*nv*nw*n_atm
 
@@ -163,7 +163,7 @@ class test_interaction(unittest.TestCase):
         R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
-        nu, nv, nw, n_atm = 8, 8, 8, 12
+        nu, nv, nw, n_atm = 5, 5, 5, 12
 
         n = nu*nv*nw*n_atm
 
@@ -211,7 +211,7 @@ class test_interaction(unittest.TestCase):
         R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
 
-        nu, nv, nw, n_atm = 8, 8, 8, 12
+        nu, nv, nw, n_atm = 5, 5, 5, 12
 
         n = nu*nv*nw*n_atm
 
