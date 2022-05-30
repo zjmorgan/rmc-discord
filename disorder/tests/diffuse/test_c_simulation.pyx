@@ -153,7 +153,7 @@ class test_c_simulation(unittest.TestCase):
         Q[:,:,0,1] = Q[:,:,1,0] = 0.5*(X5+X5.T)
 
         u = np.column_stack((ux,uy,uz)).reshape(-1,3,m)
-        p = np.einsum('ijklm,jlm->iklm',np.einsum('ijkl,jkm->jiklm',Q,u),u)
+        p = np.einsum('ijkl,jlm->ijklm',Q,u).sum(axis=1)
 
         i, t = np.random.randint(n), np.random.randint(m)
 
@@ -202,7 +202,7 @@ class test_c_simulation(unittest.TestCase):
         Q[:,:,0,1] = Q[:,:,1,0] = 0.5*(X5+X5.T)
 
         u = np.column_stack((ux,uy,uz)).reshape(-1,3,m)
-        p = np.einsum('ijklm,jlm->iklm',np.einsum('ijkl,jkm->jiklm',Q,u),u)
+        p = np.einsum('ijkl,jlm->ijklm',Q,u).sum(axis=1)
 
         i, t = np.random.randint(n), np.random.randint(m)
 
@@ -216,15 +216,13 @@ class test_c_simulation(unittest.TestCase):
         ux[i,t], uy[i,t], uz[i,t] = cx, cy, cz
 
         u = np.column_stack((ux,uy,uz)).reshape(-1,3,m)
-        q = np.einsum('ijklm,jlm->iklm',np.einsum('ijkl,jkm->jiklm',Q,u),u)
+        q = np.einsum('ijkl,jlm->ijklm',Q,u).sum(axis=1)
 
         k, l = np.array([0,1,2,1,0,0]), np.array([0,1,2,2,2,1])
 
         Q = np.ascontiguousarray(Q[np.triu_indices(n)][:,k,l])
 
-        simulation.update_moment(Sx, Sy, Sz, p, Q, 
-                                 cx, cy, cz,
-                                 ox, oy, oz, i, t)
+        simulation.update_moment(p, Q, cx, cy, cz, ox, oy, oz, i, t)
 
         np.testing.assert_array_almost_equal(p, q)
 
@@ -255,7 +253,7 @@ class test_c_simulation(unittest.TestCase):
         Q[:,:,0,1] = Q[:,:,1,0] = 0.5*(X5+X5.T)
 
         u = np.column_stack((ux,uy,uz)).reshape(-1,3,m)
-        p = np.einsum('ijklm,jlm->iklm',np.einsum('ijkl,jkm->jiklm',Q,u),u)
+        p = np.einsum('ijkl,jlm->ijklm',Q,u).sum(axis=1)
 
         n_c = np.random.randint(1, n)
 
@@ -285,7 +283,7 @@ class test_c_simulation(unittest.TestCase):
 
         cx, cy, cz = np.zeros(n), np.zeros(n), np.zeros(n)
         cx[i], cy[i], cz[i] = ux[i,t].copy(), uy[i,t].copy(), uz[i,t].copy()
-    
+
         j = np.zeros(n).astype(np.intp)
         j[:n_c] = i.copy()
 
@@ -305,7 +303,7 @@ class test_c_simulation(unittest.TestCase):
         self.assertAlmostEqual(E, E1-E0)
 
     def test_update_moment_cluster(self):
-        
+
         np.random.seed(13)
 
         nu, nv, nw, n_atm = 2, 3, 4, 3
@@ -333,7 +331,7 @@ class test_c_simulation(unittest.TestCase):
         Q[:,:,0,1] = Q[:,:,1,0] = 0.5*(X5+X5.T)
 
         u = np.column_stack((ux,uy,uz)).reshape(-1,3,m)
-        p = np.einsum('ijklm,jlm->iklm',np.einsum('ijkl,jkm->jiklm',Q,u),u)
+        p = np.einsum('ijkl,jlm->ijklm',Q,u).sum(axis=1)
 
         n_c = np.random.randint(1, n)
 
@@ -373,14 +371,13 @@ class test_c_simulation(unittest.TestCase):
         m_c[t] = n_c
 
         u = np.column_stack((ux,uy,uz)).reshape(-1,3,m)
-        q = np.einsum('ijklm,jlm->iklm',np.einsum('ijkl,jkm->jiklm',Q,u),u)
+        q = np.einsum('ijkl,jlm->ijklm',Q,u).sum(axis=1)
 
         k, l = np.array([0,1,2,1,0,0]), np.array([0,1,2,2,2,1])
 
         Q = np.ascontiguousarray(Q[np.triu_indices(n)][:,k,l])
 
-        simulation.update_moment_cluster(Sx, Sy, Sz, p, Q, 
-                                         cx, cy, cz,
+        simulation.update_moment_cluster(p, Q, cx, cy, cz,
                                          ox, oy, oz, j, m_c, t)
 
         np.testing.assert_array_almost_equal(p, q)

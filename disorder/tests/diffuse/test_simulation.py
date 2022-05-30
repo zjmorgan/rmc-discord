@@ -68,19 +68,79 @@ class test_simulation(unittest.TestCase):
         Qijkl[:,:,0,2] = Qijkl[:,:,2,0] = Qijm[:,:,4]
         Qijkl[:,:,0,1] = Qijkl[:,:,1,0] = Qijm[:,:,5]
 
-        p0 = simulation.dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
+        e0 = simulation.dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
 
         Sx, Sy, Sz = Sx.reshape(n,M), Sy.reshape(n,M), Sz.reshape(n,M)
 
         S = np.column_stack((Sx,Sy,Sz)).reshape(-1,3,M)
 
-        p = np.einsum('ijklm,jlm->iklm',np.einsum('ijkl,jkm->jiklm',Qijkl,S),S)
+        e = np.einsum('ijklm,jlm->iklm',np.einsum('ijkl,jkm->jiklm',Qijkl,S),S)
 
-        np.testing.assert_array_almost_equal(p, p0)
+        np.testing.assert_array_almost_equal(e, e0)
 
         E = np.einsum('ijk,ijk->...',np.einsum('ijkl,jkm->ilm',Qijkl,S),S)
 
-        np.testing.assert_array_almost_equal(E, p0.sum())
+        np.testing.assert_array_almost_equal(E, e0.sum())
+
+    def test_dipole_dipole_interaction_potential(self):
+
+        nu, nv, nw, n_atm = 3, 4, 5, 2
+
+        n = nu*nv*nw*n_atm
+
+        M = 2
+
+        Sx = np.random.random((nu,nv,nw,n_atm,M))
+        Sy = np.random.random((nu,nv,nw,n_atm,M))
+        Sz = np.random.random((nu,nv,nw,n_atm,M))
+
+        u = np.array([0.2,0.3])
+        v = np.array([0.5,0.4])
+        w = np.array([0.7,0.2])
+
+        atm = np.array(['',''])
+
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/2, 2*np.pi/3
+
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(*crystal.reciprocal(a, b, c, alpha, beta, gamma))
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+
+        Rx, Ry, Rz = space.cell(nu, nv, nw, A)
+
+        ux, uy, uz = crystal.transform(u, v, w, A)
+
+        rx, ry, rz, atms = space.real(ux, uy, uz, Rx, Ry, Rz, atm)
+
+        i, j = np.triu_indices(n)
+
+        Qijm = np.zeros((n,n,6))
+        Qijkl = np.zeros((n,n,3,3))
+
+        Q = interaction.dipole_dipole_matrix(rx, ry, rz,
+                                             nu, nv, nw,
+                                             n_atm, A, B, R)
+
+        Qijm[i,j,:] = Q
+
+        Qijm[j,i,:] = Qijm[i,j,:]
+
+        Qijkl[:,:,0,0] = Qijm[:,:,0]
+        Qijkl[:,:,1,1] = Qijm[:,:,1]
+        Qijkl[:,:,2,2] = Qijm[:,:,2]
+        Qijkl[:,:,1,2] = Qijkl[:,:,2,1] = Qijm[:,:,3]
+        Qijkl[:,:,0,2] = Qijkl[:,:,2,0] = Qijm[:,:,4]
+        Qijkl[:,:,0,1] = Qijkl[:,:,1,0] = Qijm[:,:,5]
+
+        p0 = simulation.dipole_dipole_interaction_potential(Sx, Sy, Sz, Q)
+
+        Sx, Sy, Sz = Sx.reshape(n,M), Sy.reshape(n,M), Sz.reshape(n,M)
+
+        S = np.column_stack((Sx,Sy,Sz)).reshape(-1,3,M)
+
+        p = np.einsum('ijkl,jlm->ijklm',Qijkl,S).sum(axis=1)
+
+        np.testing.assert_array_almost_equal(p, p0)
 
     def test_magnetic_energy(self):
 
@@ -338,11 +398,13 @@ class test_simulation(unittest.TestCase):
 
         B[:] = Bx, By, Bz
 
+        Q = np.random.random((nu*nv*nw*n_atm,6))
+
         ix, iy, iz = space.cell(nu, nv, nw, A)
 
         rx, ry, rz, ion = space.real(ux, uy, uz, ix, iy, iz, atm)
 
-        M, N = 3, 5
+        M, N = 6, 5
 
         T0, T1 = 0.01, 5
 
@@ -357,7 +419,7 @@ class test_simulation(unittest.TestCase):
         Sy = np.sin(phi)*np.sin(theta)
         Sz = np.cos(phi)
 
-        E, T_range = simulation.heisenberg(Sx, Sy, Sz, J, K, g, B, atm_ind,
+        E, T_range = simulation.heisenberg(Sx, Sy, Sz, J, K, g, B, Q, atm_ind,
                                            img_ind_i, img_ind_j, img_ind_k,
                                            pair_ind, pair_ij, T_range, kB, N)
 
@@ -365,7 +427,11 @@ class test_simulation(unittest.TestCase):
                                            img_ind_i, img_ind_j, img_ind_k,
                                            pair_ind, pair_ij)
 
-        np.testing.assert_array_almost_equal(E, E_ref.sum(axis=(0,1,2,3,4)))
+        V_ref = simulation.dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
+
+        E0 = E_ref.sum(axis=(0,1,2,3,4))+V_ref.sum(axis=(0,1,2,3))
+
+        np.testing.assert_array_almost_equal(E, E0)
 
     def test_heisenberg_cluster(self):
 
@@ -483,11 +549,13 @@ class test_simulation(unittest.TestCase):
 
         B[:] = Bx, By, Bz
 
+        Q = np.random.random((nu*nv*nw*n_atm,6))
+
         ix, iy, iz = space.cell(nu, nv, nw, A)
 
         rx, ry, rz, ion = space.real(ux, uy, uz, ix, iy, iz, atm)
 
-        M, N = 3, 1
+        M, N = 6, 5
 
         T0, T1 = 0.01, 5
 
@@ -502,7 +570,7 @@ class test_simulation(unittest.TestCase):
         Sy = np.sin(phi)*np.sin(theta)
         Sz = np.cos(phi)
 
-        E, T_range = simulation.heisenberg_cluster(Sx, Sy, Sz, J, K, g, B, 
+        E, T_range = simulation.heisenberg_cluster(Sx, Sy, Sz, J, K, g, B, Q,
                                                    atm_ind, img_ind_i,
                                                    img_ind_j, img_ind_k,
                                                    pair_ind, pair_inv, pair_ij,
@@ -512,7 +580,11 @@ class test_simulation(unittest.TestCase):
                                            img_ind_i, img_ind_j, img_ind_k,
                                            pair_ind, pair_ij)
 
-        np.testing.assert_array_almost_equal(E, E_ref.sum(axis=(0,1,2,3,4)))
+        V_ref = simulation.dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
+
+        E0 = E_ref.sum(axis=(0,1,2,3,4))+V_ref.sum(axis=(0,1,2,3))
+
+        np.testing.assert_array_almost_equal(E, E0)
 
 if __name__ == '__main__':
     unittest.main()

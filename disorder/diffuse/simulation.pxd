@@ -62,10 +62,7 @@ cdef double energy_moment(double [:,:,:,::1] p,
                           Py_ssize_t i,
                           Py_ssize_t t) nogil
 
-cdef void update_moment(double [:,:,:,:,::1] Sx,
-                        double [:,:,:,:,::1] Sy,
-                        double [:,:,:,:,::1] Sz,
-                        double [:,:,:,::1] p,
+cdef void update_moment(double [:,:,:,::1] p,
                         double [:,::1] Q,
                         double vx,
                         double vy,
@@ -88,10 +85,7 @@ cdef double energy_moment_cluster(double [:,:,:,::1] p,
                                   Py_ssize_t [::1] n_c,
                                   Py_ssize_t t) nogil
 
-cdef void update_moment_cluster(double [:,:,:,:,::1] Sx,
-                                double [:,:,:,:,::1] Sy,
-                                double [:,:,:,:,::1] Sz,
-                                double [:,:,:,::1] p,
+cdef void update_moment_cluster(double [:,:,:,::1] p,
                                 double [:,::1] Q,
                                 double [::1] clust_vx,
                                 double [::1] clust_vy,
