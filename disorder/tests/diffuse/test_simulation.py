@@ -435,7 +435,7 @@ class test_simulation(unittest.TestCase):
 
     def test_heisenberg_cluster(self):
 
-        nu, nv, nw = 3, 4, 5
+        nu, nv, nw = 3, 2, 4
 
         n_atm = 2
 
@@ -555,7 +555,7 @@ class test_simulation(unittest.TestCase):
 
         rx, ry, rz, ion = space.real(ux, uy, uz, ix, iy, iz, atm)
 
-        M, N = 6, 5
+        M, N = 2, 5
 
         T0, T1 = 0.01, 5
 
