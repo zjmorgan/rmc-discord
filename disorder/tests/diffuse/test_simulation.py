@@ -8,7 +8,7 @@ from disorder.material import crystal
 
 import pyximport
 
-pyximport.install(setup_args={ 'script_args': ['--force'] }, language_level=3)
+pyximport.install(setup_args={ 'script_args': ['--force']}, language_level=3)
 
 from disorder.tests.diffuse.test_c_simulation import test_c_simulation
 
@@ -283,6 +283,8 @@ class test_simulation(unittest.TestCase):
         self.assertAlmostEqual(E[...,2].sum(), -(0.5*Jz*n_pair+Kz+Bz*gz)*n)
 
     def test_heisenberg(self):
+        
+        np.random.seed(13)
 
         nu, nv, nw = 3, 4, 5
 
@@ -385,8 +387,8 @@ class test_simulation(unittest.TestCase):
         Bx, By, Bz = 1, 2, 3
 
         J[:n_pair,:,:] = np.array([[Jx, 0, 0],
-                                   [0, Jy, 0],
-                                   [0, 0, Jz]], dtype=float)
+                                    [0, Jy, 0],
+                                    [0, 0, Jz]], dtype=float)
 
         K[:n_atm,:,:] = np.array([[Kx, 0, 0],
                                   [0, Ky, 0],
@@ -398,7 +400,9 @@ class test_simulation(unittest.TestCase):
 
         B[:] = Bx, By, Bz
 
-        Q = np.random.random((nu*nv*nw*n_atm,6))
+        n = nu*nv*nw*n_atm
+
+        Q = np.random.random((n*(n+1)//2,6))*0
 
         ix, iy, iz = space.cell(nu, nv, nw, A)
 
@@ -434,6 +438,8 @@ class test_simulation(unittest.TestCase):
         np.testing.assert_array_almost_equal(E, E0)
 
     def test_heisenberg_cluster(self):
+
+        np.random.seed(13)
 
         nu, nv, nw = 3, 2, 4
 
@@ -549,13 +555,15 @@ class test_simulation(unittest.TestCase):
 
         B[:] = Bx, By, Bz
 
-        Q = np.random.random((nu*nv*nw*n_atm,6))
+        n = nu*nv*nw*n_atm
+
+        Q = np.random.random((n*(n+1)//2,6))*0
 
         ix, iy, iz = space.cell(nu, nv, nw, A)
 
         rx, ry, rz, ion = space.real(ux, uy, uz, ix, iy, iz, atm)
 
-        M, N = 2, 5
+        M, N = 2, 1
 
         T0, T1 = 0.01, 5
 

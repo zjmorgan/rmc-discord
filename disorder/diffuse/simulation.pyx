@@ -1,5 +1,5 @@
 #cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
-#cython: language_level=3, linetrace=True
+#cython: language_level=3
 
 import numpy as np
 cimport numpy as np
@@ -919,8 +919,9 @@ def heisenberg(double [:,:,:,:,::1] Sx,
 
     cdef double [:,:,:,::1] V = dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
 
-    cdef double [:,:,:,::1] U = dipole_dipole_interaction_potential(Sx, Sy, Sz,
-                                                                    Q)
+    cdef double [:,:,:,::1] U = dipole_dipole_interaction_potential(Sx,
+                                                                    Sy,
+                                                                    Sz, Q)
 
     n = nu*nv*nw*n_atm
 
@@ -929,7 +930,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
             for t in range(n_temp):
                 H[t] += V[i_ind,0,0,t]+V[i_ind,0,1,t]+V[i_ind,0,2,t]\
                       + V[i_ind,1,0,t]+V[i_ind,1,1,t]+V[i_ind,1,2,t]\
-                      + V[i_ind,2,0,t]+V[i_ind,1,1,t]+V[i_ind,2,2,t]
+                      + V[i_ind,2,0,t]+V[i_ind,2,1,t]+V[i_ind,2,2,t]
 
     cdef double ux, uy, uz
     cdef double vx, vy, vz
@@ -1407,8 +1408,9 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double [:,:,:,::1] V = dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
 
-    cdef double [:,:,:,::1] U = dipole_dipole_interaction_potential(Sx, Sy, Sz,
-                                                                    Q)
+    cdef double [:,:,:,::1] U = dipole_dipole_interaction_potential(Sx,
+                                                                    Sy,
+                                                                    Sz, Q)
 
     n = nu*nv*nw*n_atm
 
@@ -1417,7 +1419,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
             for t in range(n_temp):
                 H[t] += V[i_ind,0,0,t]+V[i_ind,0,1,t]+V[i_ind,0,2,t]\
                       + V[i_ind,1,0,t]+V[i_ind,1,1,t]+V[i_ind,1,2,t]\
-                      + V[i_ind,2,0,t]+V[i_ind,1,1,t]+V[i_ind,2,2,t]
+                      + V[i_ind,2,0,t]+V[i_ind,2,1,t]+V[i_ind,2,2,t]
 
     cdef Py_ssize_t i_c, m_c
 
@@ -1479,7 +1481,7 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     for _ in range(N):
 
-        for _ in range(n):
+        for _ in range(1):
 
             i, j, k, a = random_original(nu, nv, nw, n_atm)
 
@@ -1563,9 +1565,10 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                                clust_vx, clust_vy, clust_vz,
                                                J, A, g, B,
                                                clust_i, clust_j, clust_k,
-                                               clust_a, h_eff, b, c, n_c,
-                                               atm_ind, img_ind_i, img_ind_j,
-                                               img_ind_k, pair_ind, pair_ij,
+                                               clust_a, h_eff,
+                                               b, c, n_c, atm_ind, 
+                                               img_ind_i, img_ind_j, img_ind_k, 
+                                               pair_ind, pair_ij,
                                                H, E, beta, count, total, t)
 
                 if long_range and flip:

@@ -1,5 +1,5 @@
 [run]
-plugins = Cython.Coverage
+plugins = cython_coverage
 
 [report]
 show_missing = true
