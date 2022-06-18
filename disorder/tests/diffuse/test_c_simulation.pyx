@@ -287,9 +287,6 @@ class test_c_simulation(unittest.TestCase):
         j = np.zeros(n).astype(np.intp)
         j[:n_c] = i.copy()
 
-        m_c = np.zeros(m).astype(np.intp)
-        m_c[t] = n_c
-
         u = np.column_stack((ux,uy,uz)).reshape(-1,3,m)
         E1 = np.einsum('ijk,ijk->...',np.einsum('ijkl,jkm->ilm',Q,u),u)
 
@@ -298,7 +295,7 @@ class test_c_simulation(unittest.TestCase):
         Q = np.ascontiguousarray(Q[np.triu_indices(n)][:,k,l])
 
         E = simulation.energy_moment_cluster(p, Q, cx, cy, cz,
-                                             ox, oy, oz, j, m_c, t)
+                                             ox, oy, oz, j, n_c, t)
 
         self.assertAlmostEqual(E, E1-E0)
 
@@ -367,9 +364,6 @@ class test_c_simulation(unittest.TestCase):
         j = np.zeros(n).astype(np.intp)
         j[:n_c] = i.copy()
 
-        m_c = np.zeros(m).astype(np.intp)
-        m_c[t] = n_c
-
         u = np.column_stack((ux,uy,uz)).reshape(-1,3,m)
         q = np.einsum('ijkl,jlm->ijklm',Q,u).sum(axis=1)
 
@@ -378,6 +372,6 @@ class test_c_simulation(unittest.TestCase):
         Q = np.ascontiguousarray(Q[np.triu_indices(n)][:,k,l])
 
         simulation.update_moment_cluster(p, Q, cx, cy, cz,
-                                         ox, oy, oz, j, m_c, t)
+                                         ox, oy, oz, j, n_c, t)
 
         np.testing.assert_array_almost_equal(p, q)
