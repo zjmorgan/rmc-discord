@@ -1600,7 +1600,6 @@ cpdef void nonmagnetic_structure_factor_mol(double complex [::1] F_cand,
                               - prod_nuc_orig[i_ind+n_ind*i_nuc]\
                               + F_nuc_cand[i_nuc]
 
-
 cpdef void magnetic(double [::1] Sx,
                     double [::1] Sy,
                     double [::1] Sz,

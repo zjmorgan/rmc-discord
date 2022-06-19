@@ -961,7 +961,7 @@ def heisenberg(double [:,:,:,:,::1] Sx,
 
                     i_ind = a+n_atm*(k+nw*(j+nv*i))
 
-                    E += energy_moment(U, Q, vx, vy, vz, 
+                    E += energy_moment(U, Q, vx, vy, vz,
                                        ux, uy, uz, i_ind, t)
 
                 rate, flip = annealing_vector(Sx, Sy, Sz, vx, vy, vz, H, E,
@@ -1246,14 +1246,14 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
             if (n_c < n):
 
-                clust_i[m_c] = pairs_i[p]
-                clust_j[m_c] = pairs_j[p]
-                clust_k[m_c] = pairs_k[p]
-                clust_a[m_c] = pairs_a[p]
+                clust_i[n_c] = pairs_i[p]
+                clust_j[n_c] = pairs_j[p]
+                clust_k[n_c] = pairs_k[p]
+                clust_a[n_c] = pairs_a[p]
 
-                m_c += 1
+                n_c += 1
 
-    return m_c
+    return n_c
 
 cdef double boundary_energy(double [:,:,:,:,::1] Sx,
                             double [:,:,:,:,::1] Sy,
@@ -1469,9 +1469,9 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
     cdef double [::1] beta = 1/(kB*np.copy(T_range))
 
-    for _ in range(1):
+    for _ in range(N):
 
-        for _ in range(1):
+        for _ in range(n):
 
             i, j, k, a = random_original(nu, nv, nw, n_atm)
 
@@ -1546,9 +1546,9 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                     i_ind = a+n_atm*(k+nw*(j+nv*i))
 
                     E += energy_moment_cluster(U, Q,
-                                                  clust_vx, clust_vy, clust_vz,
-                                                  clust_ux, clust_uy, clust_uz,
-                                                  clust_ind, n_c, t)
+                                               clust_vx, clust_vy, clust_vz,
+                                               clust_ux, clust_uy, clust_uz,
+                                               clust_ind, n_c, t)
 
                 rate, flip = annealing_cluster(Sx, Sy, Sz,
                                                clust_vx, clust_vy, clust_vz,

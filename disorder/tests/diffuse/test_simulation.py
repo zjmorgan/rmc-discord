@@ -14,9 +14,9 @@ from disorder.tests.diffuse.test_c_simulation import test_c_simulation
 
 class test_simulation(unittest.TestCase):
 
-    # def test_c(self):
+    def test_c(self):
 
-    #     self.assertEqual(test_c_simulation.__bases__[0], unittest.TestCase)
+        self.assertEqual(test_c_simulation.__bases__[0], unittest.TestCase)
 
     def test_dipole_dipole_interaction_energy(self):
 
@@ -402,7 +402,7 @@ class test_simulation(unittest.TestCase):
 
         n = nu*nv*nw*n_atm
 
-        Q = np.random.random((n*(n+1)//2,6))*0
+        Q = np.random.random((n*(n+1)//2,6))
 
         ix, iy, iz = space.cell(nu, nv, nw, A)
 
@@ -433,7 +433,7 @@ class test_simulation(unittest.TestCase):
 
         V_ref = simulation.dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
 
-        E0 = E_ref.sum(axis=(0,1,2,3,4))+V_ref.sum(axis=(0,1,2,3))
+        E0 = E_ref.sum(axis=(0,1,2,3,4))+V_ref.sum(axis=(0,1,2))
 
         np.testing.assert_array_almost_equal(E, E0)
 
@@ -441,7 +441,7 @@ class test_simulation(unittest.TestCase):
 
         np.random.seed(13)
 
-        nu, nv, nw = 3, 4, 4
+        nu, nv, nw = 3, 4, 5
 
         n_atm = 2
 
@@ -563,7 +563,7 @@ class test_simulation(unittest.TestCase):
 
         rx, ry, rz, ion = space.real(ux, uy, uz, ix, iy, iz, atm)
 
-        M, N = 1, 25
+        M, N = 2, 10
 
         T0, T1 = 0.01, 5
 
@@ -578,10 +578,6 @@ class test_simulation(unittest.TestCase):
         Sy = np.sin(phi)*np.sin(theta)
         Sz = np.cos(phi)
 
-        E_ref = simulation.magnetic_energy(Sx, Sy, Sz, J, K, g, B, atm_ind,
-                                           img_ind_i, img_ind_j, img_ind_k,
-                                           pair_ind, pair_ij)
-        
         E, T_range = simulation.heisenberg_cluster(Sx, Sy, Sz, J, K, g, B, Q,
                                                    atm_ind, img_ind_i,
                                                    img_ind_j, img_ind_k,
@@ -594,7 +590,7 @@ class test_simulation(unittest.TestCase):
 
         V_ref = simulation.dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
 
-        E0 = E_ref.sum(axis=(0,1,2,3,4))+V_ref.sum(axis=(0,1,2,3))
+        E0 = E_ref.sum(axis=(0,1,2,3,4))+V_ref.sum(axis=(0,1,2))
 
         np.testing.assert_array_almost_equal(E, E0)
 
