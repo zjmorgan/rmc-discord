@@ -1,5 +1,5 @@
 #cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
-#cython: language_level=3, linetrace=True
+#cython: language_level=3
 
 cimport cython
 
