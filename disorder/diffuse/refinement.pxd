@@ -12,3 +12,7 @@ cdef double random_gaussian() nogil
 cdef (double, double, double) random_gaussian_3d() nogil
 
 cdef bint iszero(double a) nogil
+
+cdef double complex cexp(double complex z) nogil
+
+cdef double complex iexp(double y) nogil

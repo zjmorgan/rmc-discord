@@ -169,55 +169,25 @@ cdef bint iszero(double a) nogil:
 
     return fabs(a) <= M_EPS
 
-cpdef double candidate_composition(double A, double value, bint fixed) nogil:
+cpdef double candidate_composition(double A, double value) nogil:
 
-    cdef double V = value if fixed else value*random_uniform_nonzero()
-
-    return 1/V-2-A
+    return 1/value-2-A
 
 cpdef (double, double, double) candidate_moment(double A,
                                                 double B,
                                                 double C,
-                                                double value,
-                                                bint fixed,
-                                                bint rotate) nogil:
+                                                double value) nogil:
 
     cdef double theta, phi
 
     cdef double u, v, w, n
 
-    cdef double V
+    theta = 2.0*M_PI*random_uniform()
+    phi = acos(1.0-2.0*random_uniform())
 
-    if rotate:
-
-        V = value if fixed else value*random_uniform_nonzero()
-
-        theta = 2.0*M_PI*random_uniform()
-        phi = acos(1.0-2.0*random_uniform())
-
-        u = V*sin(phi)*cos(theta)
-        v = V*sin(phi)*sin(theta)
-        w = V*cos(phi)
-
-    else:
-
-        if fixed:
-
-            u, v, w = -A, -B, -C
-
-        else:
-
-            n = sqrt(A*A+B*B+C*C)
-
-            if iszero(n):
-
-                u, v, w = -A, -B, -C
-
-            else:
-
-                V = value if fixed else value*random_uniform_nonzero()
-
-                u, v, w = -V*A/n, -V*B/n, -V*C/n
+    u = value*sin(phi)*cos(theta)
+    v = value*sin(phi)*sin(theta)
+    w = value*cos(phi)
 
     return u, v, w
 
@@ -226,44 +196,15 @@ cpdef (double, double, double) candidate_displacement(double A,
                                                       double C,
                                                       double D,
                                                       double E,
-                                                      double F,
-                                                      bint fixed,
-                                                      bint isotropic) nogil:
+                                                      double F) nogil:
 
     cdef double theta, phi
 
     cdef double u, v, w, l, m, n
 
-    if fixed:
+    l, m, n = random_gaussian_3d()
 
-        theta = 2.0*M_PI*random_uniform()
-        phi = acos(1.0-2.0*random_uniform())
-
-        l = sin(phi)*cos(theta)
-        m = sin(phi)*sin(theta)
-        n = cos(phi)
-
-        if isotropic:
-
-            u, v, w = A*l, B*m, C*n
-
-        else:
-
-            u = sqrt(A*(A*l+F*m+E*n))*l
-            v = sqrt(B*(F*l+B*m+D*n))*m
-            w = sqrt(C*(E*l+D*m+C*n))*n
-
-    else:
-
-        l, m, n = random_gaussian_3d()
-
-        if isotropic:
-
-            u, v, w = A*l, B*m, C*n
-
-        else:
-
-            u, v, w = A*l, F*l+B*m, E*l+D*m+C*n
+    u, v, w = A*l, F*l+B*m, E*l+D*m+C*n
 
     return u, v, w
 
@@ -1724,9 +1665,7 @@ cpdef void magnetic(double [::1] Sx,
             Sx_cand, Sy_cand, Sz_cand = candidate_moment(Sx_orig,
                                                          Sy_orig,
                                                          Sz_orig,
-                                                         mu,
-                                                         fixed,
-                                                         heisenberg)
+                                                         mu)
 
             copy_complex(Fx_orig, Fx)
             copy_complex(Fy_orig, Fy)
@@ -1969,7 +1908,7 @@ cpdef void occupational(double [::1] A_r,
 
             occ = occupancy[j]
 
-            A_r_cand = candidate_composition(A_r_orig, occ, fixed)
+            A_r_cand = candidate_composition(A_r_orig, occ)
 
             copy_complex(F_orig, F)
 
@@ -2207,9 +2146,7 @@ cpdef void displacive(double [::1] Ux,
                                                                lzz,
                                                                lyz,
                                                                lxz,
-                                                               lxy,
-                                                               fixed,
-                                                               isotropic)
+                                                               lxy)
 
             copy_complex(F_orig, F)
             copy_complex(F_nuc_orig, F_nuc)

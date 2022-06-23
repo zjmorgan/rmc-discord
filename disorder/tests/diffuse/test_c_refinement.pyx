@@ -33,7 +33,7 @@ class test_c_refinement(unittest.TestCase):
         self.assertAlmostEqual(u.mean(), 0.5, 2)
         self.assertGreaterEqual(u.min(), 0)
         self.assertLessEqual(u.mean(), 1)
-        
+
     def test_random_gaussian(self):
 
         N = 100000
@@ -45,7 +45,7 @@ class test_c_refinement(unittest.TestCase):
 
         self.assertAlmostEqual(u.mean(), 0.0, 1)
         self.assertAlmostEqual(u.std(), 1.0, 1)
-        
+
     def test_random_gaussian_3d(self):
 
         N = 100000
@@ -66,3 +66,15 @@ class test_c_refinement(unittest.TestCase):
 
         self.assertTrue(refinement.iszero(1e-31))
         self.assertFalse(refinement.iszero(1e-15))
+
+    def test_cexp(self):
+
+        z = np.random.random()+1j*np.random.random()
+
+        self.assertAlmostEqual(refinement.cexp(z), np.exp(z))
+
+    def test_iexp(self):
+
+        z = np.random.random()
+
+        self.assertAlmostEqual(refinement.iexp(z), np.exp(1j*z))

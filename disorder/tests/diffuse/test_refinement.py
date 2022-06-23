@@ -1,4 +1,4 @@
-#!/usr/bin/env python3U
+ #!/usr/bin/env python3U
 
 import io
 import os
@@ -68,6 +68,81 @@ class test_refinement(unittest.TestCase):
         self.assertAlmostEqual(A_orig, A[i])
         self.assertAlmostEqual(B_orig, B[i])
         self.assertAlmostEqual(C_orig, C[i])
+
+    def test_candidate_composition(self):
+
+        A_orig = -1
+
+        c = 0.5
+
+        A_cand = refinement.candidate_composition(A_orig, c)
+        A_orig = refinement.candidate_composition(A_cand, c)
+
+        self.assertAlmostEqual(A_orig, -1)
+
+        self.assertAlmostEqual((A_orig+1)*c, 0)
+        self.assertAlmostEqual((A_cand+1)*c, 1)
+
+        c = 0.85
+
+        A_cand = refinement.candidate_composition(A_orig, c)
+        A_orig = refinement.candidate_composition(A_cand, c)
+
+        self.assertAlmostEqual(A_orig, -1)
+
+        self.assertAlmostEqual((A_orig+1)*c, 0)
+        self.assertAlmostEqual((A_cand+1)*c, 1)
+
+    def test_candidate_moment(self):
+
+        theta = 2*np.pi*np.random.random()
+        phi = np.arccos(1-2*np.random.random())
+        S = np.random.random()
+
+        Sx_orig = S*np.sin(phi)*np.cos(theta)
+        Sy_orig = S*np.sin(phi)*np.sin(theta)
+        Sz_orig = S*np.cos(phi)
+
+        Sx_cand, Sy_cand, Sz_cand = refinement.candidate_moment(Sx_orig,
+                                                                Sy_orig,
+                                                                Sz_orig, S)
+
+        self.assertAlmostEqual(Sx_orig**2+Sy_orig**2+Sz_orig**2, S**2)
+        self.assertAlmostEqual(Sx_cand**2+Sy_cand**2+Sz_cand**2, S**2)
+
+    def test_candidate_displacement(self):
+
+        Uxx, Uyy, Uzz = 1.2, 2.3, 1.75
+        Uyz, Uxz, Uxy = 0.1, -0.25, 0.15
+
+        U = np.array([[Uxx,Uxy,Uxz],
+                      [Uxy,Uyy,Uyz],
+                      [Uxz,Uyz,Uzz]])
+
+        U_eq = np.trace(U)/3
+
+        L = np.linalg.cholesky(U)
+
+        Lxx, Lyy, Lzz = L[0,0], L[1,1], L[2,2]
+        Lyz, Lxz, Lxy = L[2,1], L[2,0], L[1,0]
+
+        N = 100000
+
+        Ux, Uy, Uz = np.zeros(N), np.zeros(N), np.zeros(N)
+
+        for i in range(N):
+
+            Ux_cand, Uy_cand, Uz_cand = refinement.candidate_displacement(Lxx,
+                                                                          Lyy,
+                                                                          Lzz,
+                                                                          Lyz,
+                                                                          Lxz,
+                                                                          Lxy)
+
+
+            Ux[i], Uy[i], Uz[i] = Ux_cand, Uy_cand, Uz_cand
+
+        self.assertAlmostEqual(np.mean(Ux**2+Uy**2+Uz**2)/3, U_eq, 2)
 
     def test_extract_complex(self):
 
