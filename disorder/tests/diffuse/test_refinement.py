@@ -7,6 +7,8 @@ import sys
 import unittest
 import numpy as np
 
+import itertools
+
 from disorder.diffuse import refinement
 
 import pyximport
@@ -142,7 +144,7 @@ class test_refinement(unittest.TestCase):
 
             Ux[i], Uy[i], Uz[i] = Ux_cand, Uy_cand, Uz_cand
 
-        self.assertAlmostEqual(np.mean(Ux**2+Uy**2+Uz**2)/3, U_eq, 2)
+        self.assertAlmostEqual(np.mean(Ux**2+Uy**2+Uz**2)/3, U_eq, 1)
 
     def test_extract_complex(self):
 
@@ -348,6 +350,56 @@ class test_refinement(unittest.TestCase):
         self.assertAlmostEqual(scale, 2, 2)
 
         self.assertAlmostEqual(chi_sq, np.sum((2*y_fit-y_obs)**2/e**2), 4)
+
+    def test_products(self):
+
+        Vx, Vy, Vz = 1.2, 2.3, 1.75
+
+        p = 3
+        V = np.zeros((p+1)*(p+2)*(p+3)//6)
+
+        refinement.products(V, Vx, Vy, Vz, p)
+
+        exponents = np.array(list(itertools.product(np.arange(p+1), repeat=3)))
+        exponents = exponents[np.sum(exponents, axis=1) <= p]
+
+        V0 = np.product(np.power([Vx,Vy,Vz], exponents), axis=1)
+
+        np.testing.assert_array_almost_equal(np.sort(V), np.sort(V0))
+        
+        p = 4
+        V = np.zeros((p+1)*(p+2)*(p+3)//6)
+
+        refinement.products(V, Vx, Vy, Vz, p)
+
+        exponents = np.array(list(itertools.product(np.arange(p+1), repeat=3)))
+        exponents = exponents[np.sum(exponents, axis=1) <= p]
+
+        V0 = np.product(np.power([Vx,Vy,Vz], exponents), axis=1)
+
+        np.testing.assert_array_almost_equal(np.sort(V), np.sort(V0))
+        
+    def test_products_mol(self):
+
+        Vx = np.array([1.2, 1.6])
+        Vy = np.array([2.3, 4.5])
+        Vz = np.array([1.75, 2.25])
+
+        p = 3
+        V = np.zeros(((p+1)*(p+2)*(p+3)//6,2))
+
+        refinement.products_mol(V, Vx, Vy, Vz, p)
+
+        exponents = np.array(list(itertools.product(np.arange(p+1), repeat=3)))
+        exponents = exponents[np.sum(exponents, axis=1) <= p]
+
+        V0 = np.zeros(((p+1)*(p+2)*(p+3)//6,2))
+        for i in range(2):
+            V0[:,i] = np.product(np.power([Vx[i],Vy[i],Vz[i]],
+                                          exponents), axis=1)
+
+        np.testing.assert_array_almost_equal(np.sort(V.flatten()),
+                                             np.sort(V0.flatten()))
 
     def test_magnetic_intensity(self):
 
