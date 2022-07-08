@@ -95,10 +95,10 @@ class test_structure(unittest.TestCase):
         U11, U22, U33, U23, U13, U12 = disp.T
 
         h, k, l, d, F, mult = structure.factor(u, v, w, atm, occ,
-                                                U11, U22, U33, U23, U13, U12,
-                                                a, b, c, alpha, beta, gamma,
-                                                symops, dmin=0.7,
-                                                source='neutron')
+                                               U11, U22, U33, U23, U13, U12,
+                                               a, b, c, alpha, beta, gamma,
+                                               symops, dmin=0.7,
+                                               source='neutron')
 
         data = np.loadtxt(os.path.join(folder, 'CaTiOSiO4.csv'),
                           dtype={'names': names, 'formats': formats},

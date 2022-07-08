@@ -180,9 +180,11 @@ def transform(U_r, H, K, L, nu, nv, nw, n_atm):
 
     """
 
-    n_prod = U_r.shape[0] // (nu*nv*nw*n_atm)
+    n_uvw = nu*nv*nw
 
-    U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))*nu*nv*nw
+    n_prod = U_r.shape[0] // (n_uvw*n_atm)
+
+    U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))*n_uvw
 
     Ku = np.mod(H, nu).astype(int)
     Kv = np.mod(K, nv).astype(int)
@@ -238,15 +240,11 @@ def intensity(U_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
     U_k = U_k.reshape(n_prod,n_uvw,n_atm)
     Q_k = Q_k.reshape(n_prod,n_hkl)
 
-    V_k = np.zeros(factors.shape, dtype=complex)
-    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=complex)
-
     even, odd = indices(p)
 
-    for j in range(n_atm):
-        V_k[:,j] = coeffs.dot(U_k[:,i_dft,j]*Q_k[:,:])
-        V_k_nuc[:,j] = coeffs[even].dot(U_k[:,i_dft,j][even,:][:,cond]\
-                                                  *Q_k[even,:][:,cond])
+    V_k = np.einsum('ijk,kj->ji', coeffs*U_k[:,i_dft,:].T, Q_k)
+    V_k_nuc = np.einsum('ijk,kj->ji', (coeffs[even]*U_k[:,i_dft,:][even,:].T),
+                        Q_k[even,:])[cond]
 
     prod = factors*V_k
     prod_nuc = factors[cond,:]*V_k_nuc
@@ -325,15 +323,11 @@ def structure(U_k, Q_k, coeffs, cond, p, i_dft, factors):
     U_k = U_k.reshape(n_prod,n_uvw,n_atm)
     Q_k = Q_k.reshape(n_prod,n_hkl)
 
-    V_k = np.zeros(factors.shape, dtype=complex)
-    V_k_nuc = np.zeros((cond.sum(),n_atm), dtype=complex)
-
     even, odd = indices(p)
 
-    for j in range(n_atm):
-        V_k[:,j] = coeffs.dot(U_k[:,i_dft,j]*Q_k[:,:])
-        V_k_nuc[:,j] = coeffs[even].dot(U_k[:,i_dft,j][even,:][:,cond]\
-                                                  *Q_k[even,:][:,cond])
+    V_k = np.einsum('ijk,kj->ji', coeffs*U_k[:,i_dft,:].T, Q_k)
+    V_k_nuc = np.einsum('ijk,kj->ji', (coeffs[even]*U_k[:,i_dft,:][even,:].T),
+                        Q_k[even,:])[cond]
 
     prod = factors*V_k
     prod_nuc = factors[cond,:]*V_k_nuc

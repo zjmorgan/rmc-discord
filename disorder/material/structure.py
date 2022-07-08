@@ -156,7 +156,6 @@ class UnitCell:
         self.__U13 = np.zeros(n_atm)
         self.__U12 = np.zeros(n_atm)
 
-
         if (displacement.shape[1] == 1):
             self.set_isotropic_displacement_parameter(displacement.flatten())
         else:

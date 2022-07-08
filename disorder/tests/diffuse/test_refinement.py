@@ -1,4 +1,4 @@
- #!/usr/bin/env python3U
+ #!/usr/bin/env python3
 
 import io
 import os
@@ -349,7 +349,7 @@ class test_refinement(unittest.TestCase):
 
         self.assertAlmostEqual(scale, 2, 2)
 
-        self.assertAlmostEqual(chi_sq, np.sum((2*y_fit-y_obs)**2/e**2), 4)
+        self.assertAlmostEqual(chi_sq, np.sum((2*y_fit-y_obs)**2/e**2), 3)
 
     def test_products(self):
 
@@ -366,7 +366,7 @@ class test_refinement(unittest.TestCase):
         V0 = np.product(np.power([Vx,Vy,Vz], exponents), axis=1)
 
         np.testing.assert_array_almost_equal(np.sort(V), np.sort(V0))
-        
+
         p = 4
         V = np.zeros((p+1)*(p+2)*(p+3)//6)
 
@@ -378,7 +378,7 @@ class test_refinement(unittest.TestCase):
         V0 = np.product(np.power([Vx,Vy,Vz], exponents), axis=1)
 
         np.testing.assert_array_almost_equal(np.sort(V), np.sort(V0))
-        
+
     def test_products_mol(self):
 
         Vx = np.array([1.2, 1.6])
@@ -472,6 +472,395 @@ class test_refinement(unittest.TestCase):
 
         np.testing.assert_array_almost_equal(I, I0)
         np.testing.assert_array_almost_equal(F, F0)
+
+    def test_update_spin(self):
+
+        nu, nv, nw, n_atm = 2, 3, 4, 3
+
+        n_uvw = nu*nv*nw
+        n = n_uvw*n_atm
+
+        ku, kv, kw = np.fft.fftfreq(nu), np.fft.fftfreq(nv), np.fft.fftfreq(nw)
+        ru, rv, rw = np.arange(nu), np.arange(nv), np.arange(nw)
+
+        k_dot_r = np.kron(ku,ru)[:,np.newaxis,np.newaxis]+\
+                  np.kron(kv,rv)[:,np.newaxis]+\
+                  np.kron(kw,rw)
+
+        space_factor = np.exp(2j*np.pi*k_dot_r).flatten()
+
+        Sx = np.random.random((nu,nv,nw,n_atm)).flatten()
+        Sy = np.random.random((nu,nv,nw,n_atm)).flatten()
+        Sz = np.random.random((nu,nv,nw,n_atm)).flatten()
+
+        Sx_k = np.fft.ifftn(Sx.reshape(nu,nv,nw,n_atm), axes=(0,1,2)).flatten()
+        Sy_k = np.fft.ifftn(Sy.reshape(nu,nv,nw,n_atm), axes=(0,1,2)).flatten()
+        Sz_k = np.fft.ifftn(Sz.reshape(nu,nv,nw,n_atm), axes=(0,1,2)).flatten()
+
+        i = np.random.randint(n)
+        j = i % n_atm
+
+        Sx_orig, Sy_orig, Sz_orig = Sx[i].copy(), Sy[i].copy(), Sz[i].copy()
+
+        Sx_k_orig = Sx_k[j::n_atm]*n_uvw
+        Sy_k_orig = Sy_k[j::n_atm]*n_uvw
+        Sz_k_orig = Sz_k[j::n_atm]*n_uvw
+
+        Sx_cand = np.random.random()
+        Sy_cand = np.random.random()
+        Sz_cand = np.random.random()
+
+        Sx_k_cand = Sx_k[j::n_atm]*n_uvw
+        Sy_k_cand = Sy_k[j::n_atm]*n_uvw
+        Sz_k_cand = Sz_k[j::n_atm]*n_uvw
+
+        refinement.update_spin(Sx_k_cand, Sy_k_cand, Sz_k_cand,
+                               Sx_cand, Sy_cand, Sz_cand,
+                               Sx_k_orig, Sy_k_orig, Sz_k_orig,
+                               Sx_orig, Sy_orig, Sz_orig,
+                               space_factor, i, nu, nv, nw, n_atm)
+
+        Sx[i], Sy[i], Sz[i] = Sx_cand, Sy_cand, Sz_cand
+
+        Sx_k = np.fft.ifftn(Sx.reshape(nu,nv,nw,n_atm), axes=(0,1,2)).flatten()
+        Sy_k = np.fft.ifftn(Sy.reshape(nu,nv,nw,n_atm), axes=(0,1,2)).flatten()
+        Sz_k = np.fft.ifftn(Sz.reshape(nu,nv,nw,n_atm), axes=(0,1,2)).flatten()
+
+        np.testing.assert_array_almost_equal(Sx_k_cand, Sx_k[j::n_atm]*n_uvw)
+        np.testing.assert_array_almost_equal(Sy_k_cand, Sy_k[j::n_atm]*n_uvw)
+        np.testing.assert_array_almost_equal(Sz_k_cand, Sz_k[j::n_atm]*n_uvw)
+
+    def test_update_composition(self):
+
+        nu, nv, nw, n_atm = 2, 3, 4, 3
+
+        n_uvw = nu*nv*nw
+        n = n_uvw*n_atm
+
+        ku, kv, kw = np.fft.fftfreq(nu), np.fft.fftfreq(nv), np.fft.fftfreq(nw)
+        ru, rv, rw = np.arange(nu), np.arange(nv), np.arange(nw)
+
+        k_dot_r = np.kron(ku,ru)[:,np.newaxis,np.newaxis]+\
+                  np.kron(kv,rv)[:,np.newaxis]+\
+                  np.kron(kw,rw)
+
+        space_factor = np.exp(2j*np.pi*k_dot_r).flatten()
+
+        A_r = np.random.random((nu,nv,nw,n_atm)).flatten()
+
+        A_k = np.fft.ifftn(A_r.reshape(nu,nv,nw,n_atm), axes=(0,1,2)).flatten()
+
+        i = np.random.randint(n)
+        j = i % n_atm
+
+        A_r_orig = A_r[i].copy()
+
+        A_k_orig = A_k[j::n_atm]*n_uvw
+
+        A_r_cand = np.random.random()
+
+        A_k_cand = A_k[j::n_atm]*n_uvw
+
+        refinement.update_composition(A_k_cand, A_r_cand, A_k_orig, A_r_orig,
+                                      space_factor, i, nu, nv, nw, n_atm)
+
+        A_r[i] = A_r_cand
+
+        A_k = np.fft.ifftn(A_r.reshape(nu,nv,nw,n_atm), axes=(0,1,2)).flatten()
+
+        np.testing.assert_array_almost_equal(A_k_cand, A_k[j::n_atm]*n_uvw)
+
+    def test_update_expansion(self):
+
+        nu, nv, nw, n_atm = 2, 3, 4, 3
+
+        n_uvw = nu*nv*nw
+        n = n_uvw*n_atm
+
+        n_prod = 6
+
+        ku, kv, kw = np.fft.fftfreq(nu), np.fft.fftfreq(nv), np.fft.fftfreq(nw)
+        ru, rv, rw = np.arange(nu), np.arange(nv), np.arange(nw)
+
+        k_dot_r = np.kron(ku,ru)[:,np.newaxis,np.newaxis]+\
+                  np.kron(kv,rv)[:,np.newaxis]+\
+                  np.kron(kw,rw)
+
+        space_factor = np.exp(2j*np.pi*k_dot_r).flatten()
+
+        U_r = np.random.random((n_prod,nu,nv,nw,n_atm)).flatten()
+
+        U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))
+        U_k = U_k.flatten()
+
+        i = np.random.randint(n)
+        j = i % n_atm
+
+        U_r_orig = U_r[i+n*np.arange(n_prod)].copy()
+
+        U_k_orig = U_k[j::n_atm]*n_uvw
+
+        U_r_cand = np.random.random(n_prod)
+
+        U_k_cand = U_k[j::n_atm]*n_uvw
+
+        refinement.update_expansion(U_k_cand, U_r_cand, U_k_orig, U_r_orig,
+                                    space_factor, i, nu, nv, nw, n_atm)
+
+        U_r[i+n*np.arange(n_prod)] = U_r_cand
+
+        U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))
+        U_k = U_k.flatten()
+
+        np.testing.assert_array_almost_equal(U_k_cand, U_k[j::n_atm]*n_uvw)
+
+    def test_magnetic_structure_factor(self):
+
+        n_hkl = 101
+
+        nu, nv, nw, n_atm = 2, 3, 4, 3
+
+        n_uvw = nu*nv*nw
+        n = n_uvw*n_atm
+
+        factors =    np.random.random((n_hkl,n_atm))\
+                + 1j*np.random.random((n_hkl,n_atm))
+
+        i_dft = np.random.randint(n_uvw, size=n_hkl)
+
+        Sx = np.random.random((nu,nv,nw,n_atm)).flatten()
+        Sy = np.random.random((nu,nv,nw,n_atm)).flatten()
+        Sz = np.random.random((nu,nv,nw,n_atm)).flatten()
+
+        Sx_k = np.fft.ifftn(Sx.reshape(nu,nv,nw,n_atm), axes=(0,1,2))
+        Sy_k = np.fft.ifftn(Sy.reshape(nu,nv,nw,n_atm), axes=(0,1,2))
+        Sz_k = np.fft.ifftn(Sz.reshape(nu,nv,nw,n_atm), axes=(0,1,2))
+
+        Sx_k = Sx_k.reshape(n_uvw,n_atm)
+        Sy_k = Sy_k.reshape(n_uvw,n_atm)
+        Sz_k = Sz_k.reshape(n_uvw,n_atm)
+
+        i = np.random.randint(n)
+        j = i % n_atm
+
+        Sx_k_orig = Sx_k[:,j].copy()
+        Sy_k_orig = Sy_k[:,j].copy()
+        Sz_k_orig = Sz_k[:,j].copy()
+
+        p_x_orig = factors[:,j]*Sx_k_orig[i_dft]
+        p_y_orig = factors[:,j]*Sy_k_orig[i_dft]
+        p_z_orig = factors[:,j]*Sz_k_orig[i_dft]
+
+        Fx_orig = np.sum(factors*Sx_k[i_dft,:], axis=1)
+        Fy_orig = np.sum(factors*Sy_k[i_dft,:], axis=1)
+        Fz_orig = np.sum(factors*Sz_k[i_dft,:], axis=1)
+
+        Sx_cand = np.random.random()
+        Sy_cand = np.random.random()
+        Sz_cand = np.random.random()
+
+        Sx[i], Sy[i], Sz[i] = Sx_cand, Sy_cand, Sz_cand
+
+        Sx_k = np.fft.ifftn(Sx.reshape(nu,nv,nw,n_atm), axes=(0,1,2))
+        Sy_k = np.fft.ifftn(Sy.reshape(nu,nv,nw,n_atm), axes=(0,1,2))
+        Sz_k = np.fft.ifftn(Sz.reshape(nu,nv,nw,n_atm), axes=(0,1,2))
+
+        Sx_k = Sx_k.reshape(n_uvw,n_atm)
+        Sy_k = Sy_k.reshape(n_uvw,n_atm)
+        Sz_k = Sz_k.reshape(n_uvw,n_atm)
+
+        Sx_k_cand = Sx_k[:,j].copy()
+        Sy_k_cand = Sy_k[:,j].copy()
+        Sz_k_cand = Sz_k[:,j].copy()
+
+        p_x_cand = factors[:,j]*Sx_k_cand[i_dft]
+        p_y_cand = factors[:,j]*Sy_k_cand[i_dft]
+        p_z_cand = factors[:,j]*Sz_k_cand[i_dft]
+
+        Fx_cand = np.sum(factors*Sx_k[i_dft,:], axis=1)
+        Fy_cand = np.sum(factors*Sy_k[i_dft,:], axis=1)
+        Fz_cand = np.sum(factors*Sz_k[i_dft,:], axis=1)
+
+        Fx = Fx_cand.copy()
+        Fy = Fy_cand.copy()
+        Fz = Fz_cand.copy()
+
+        Fx_cand[:] = 0
+        Fy_cand[:] = 0
+        Fz_cand[:] = 0
+
+        factors = factors.flatten()
+
+        refinement.magnetic_structure_factor(Fx_cand, Fy_cand, Fz_cand,
+                                             p_x_cand, p_y_cand, p_z_cand,
+                                             Sx_k_cand, Sy_k_cand, Sz_k_cand,
+                                             Fx_orig, Fy_orig, Fz_orig,
+                                             p_x_orig, p_y_orig, p_z_orig,
+                                             factors, j, i_dft, n_atm)
+
+        np.testing.assert_array_almost_equal(Fx_cand, Fx)
+        np.testing.assert_array_almost_equal(Fy_cand, Fy)
+        np.testing.assert_array_almost_equal(Fz_cand, Fz)
+
+    def test_occupational_structure_factor(self):
+
+        n_hkl = 101
+
+        nu, nv, nw, n_atm = 2, 3, 4, 3
+
+        n_uvw = nu*nv*nw
+        n = n_uvw*n_atm
+
+        factors =    np.random.random((n_hkl,n_atm))\
+                + 1j*np.random.random((n_hkl,n_atm))
+
+        i_dft = np.random.randint(n_uvw, size=n_hkl)
+
+        A_r = np.random.random((nu,nv,nw,n_atm)).flatten()
+
+        A_k = np.fft.ifftn(A_r.reshape(nu,nv,nw,n_atm), axes=(0,1,2))
+
+        A_k = A_k.reshape(n_uvw,n_atm)
+
+        i = np.random.randint(n)
+        j = i % n_atm
+
+        A_k_orig = A_k[:,j].copy()
+
+        p_orig = factors[:,j]*A_k_orig[i_dft]
+
+        F_orig = np.sum(factors*A_k[i_dft,:], axis=1)
+
+        A_r_cand = np.random.random()
+
+        A_r[i] = A_r_cand
+
+        A_k = np.fft.ifftn(A_r.reshape(nu,nv,nw,n_atm), axes=(0,1,2))
+
+        A_k = A_k.reshape(n_uvw,n_atm)
+
+        A_k_cand = A_k[:,j].copy()
+
+        p_cand = factors[:,j]*A_k_cand[i_dft]
+
+        F_cand = np.sum(factors*A_k[i_dft,:], axis=1)
+
+        F = F_cand.copy()
+
+        F_cand[:] = 0
+
+        factors = factors.flatten()
+
+        refinement.occupational_structure_factor(F_cand, p_cand, A_k_cand,
+                                                 F_orig, p_orig,
+                                                 factors, j, i_dft, n_atm)
+
+        np.testing.assert_array_almost_equal(F_cand, F)
+
+    def test_displacive_structure_factor(self):
+
+        n_hkl = 101
+
+        nu, nv, nw, n_atm = 2, 3, 4, 3
+
+        n_uvw = nu*nv*nw
+        n = n_uvw*n_atm
+
+        p = 2
+        n_prod = 10
+
+        even = np.array([0, 4, 5, 6, 7, 8, 9])
+
+        factors =    np.random.random((n_hkl,n_atm))\
+                + 1j*np.random.random((n_hkl,n_atm))
+
+        i_dft = np.random.randint(n_uvw, size=n_hkl)
+
+        Q_k = np.random.random((n_prod,n_hkl))
+
+        coeffs = np.random.random(n_prod)+1j*np.random.random(n_prod)
+
+        cond = np.random.random(n_hkl) < 00
+        bragg = np.arange(n_hkl)[cond]
+
+        U_r = np.random.random((n_prod,nu,nv,nw,n_atm)).flatten()
+
+        U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))
+
+        U_k = U_k.reshape(n_prod,n_uvw,n_atm)
+
+        i = np.random.randint(n)
+        j = i % n_atm
+
+        U_k_orig = U_k[...,j].copy()
+
+        V_k_orig = np.einsum('jk,kj->j', coeffs*U_k_orig[:,i_dft].T, Q_k)
+        V_k_nuc_orig = np.einsum('jk,kj->j',
+                                 coeffs[even]*U_k_orig[:,i_dft][even,:].T,
+                                 Q_k[even,:])[cond]
+
+        p_orig = factors[:,j]*V_k_orig
+        p_nuc_orig = factors[cond,j]*V_k_nuc_orig
+
+        V_k = np.einsum('ijk,kj->ji', coeffs*U_k[:,i_dft,:].T, Q_k)
+        V_k_nuc = np.einsum('ijk,kj->ji',
+                            (coeffs[even]*U_k[:,i_dft,:][even,:].T),
+                            Q_k[even,:])[cond]
+    
+        F_orig = np.sum(factors*V_k, axis=1)
+        F_nuc_orig = np.sum(factors[cond,:]*V_k_nuc, axis=1)
+
+        U_r_cand = np.random.random(n_prod)
+
+        U_r[i::n] = U_r_cand
+
+        U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))
+
+        U_k = U_k.reshape(n_prod,n_uvw,n_atm)
+
+        U_k_cand = U_k[...,j].copy()
+
+        V_k_cand = np.einsum('jk,kj->j', coeffs*U_k_cand[:,i_dft].T, Q_k)
+        V_k_nuc_cand = np.einsum('jk,kj->j',
+                                 coeffs[even]*U_k_cand[:,i_dft][even,:].T,
+                                 Q_k[even,:])[cond]
+
+        p_cand = factors[:,j]*V_k_cand
+        p_nuc_cand = factors[cond,j]*V_k_nuc_cand
+        
+        V_k = np.einsum('ijk,kj->ji', coeffs*U_k[:,i_dft,:].T, Q_k)
+        V_k_nuc = np.einsum('ijk,kj->ji',
+                            (coeffs[even]*U_k[:,i_dft,:][even,:].T),
+                            Q_k[even,:])[cond]
+    
+        F_cand = np.sum(factors*V_k, axis=1)
+        F_nuc_cand = np.sum(factors[cond,:]*V_k_nuc, axis=1)
+
+        F = F_cand.copy()
+        F_nuc = F_nuc_cand.copy()
+
+        F_cand[:] = 0
+        F_nuc_cand[:] = 0
+
+        U_k_orig = U_k_orig.flatten()
+        U_k_cand = U_k_cand.flatten()
+        Q_k = Q_k.flatten()
+
+        factors = factors.flatten()
+
+        refinement.displacive_structure_factor(F_cand, F_nuc_cand,
+                                               p_cand, p_nuc_cand,
+                                               V_k_cand, V_k_nuc_cand,
+                                               U_k_cand,
+                                               F_orig, F_nuc_orig,
+                                               p_orig, p_nuc_orig,
+                                               V_k_orig, V_k_nuc_orig,
+                                               U_k_orig, Q_k, factors,
+                                               coeffs, even, bragg, i_dft,
+                                               p, j, n_atm)
+
+        np.testing.assert_array_almost_equal(F_cand, F)
+        np.testing.assert_array_almost_equal(F_nuc_cand, F_nuc)
 
 if __name__ == '__main__':
     unittest.main()
