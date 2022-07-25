@@ -227,9 +227,9 @@ def rotation_operator(val, col=0):
         sign = '-'
 
     val = abs(val)
-    
+
     q, r = int(val // 1), val % 1
-    
+
     if (r == 0):
         num, den = q, ''
     else:
@@ -538,7 +538,7 @@ def reverse(symops):
     W_0 = evaluate_code(code, [1,0,0])
     W_1 = evaluate_code(code, [0,1,0])
     W_2 = evaluate_code(code, [0,0,1])
-    
+
     W = np.hstack((W_0,W_1,W_2)).T.reshape(3,3,n).T
 
     W_inv = np.linalg.inv(W).round()
@@ -571,7 +571,7 @@ def reverse(symops):
 def inverse(symops):
 
     n = len(symops)
-    
+
     code = evaluate_op(symops, translate=False)
 
     W_0 = evaluate_code(code, [1,0,0])
@@ -708,7 +708,7 @@ def classification(symops):
     W_tr = np.trace(W, axis1=1, axis2=2)
 
     w = evaluate(symops, [0,0,0], translate=True)
-    
+
     w_symop_ord = np.zeros((n,3))
 
     rotations, ks = [], []
@@ -740,7 +740,7 @@ def classification(symops):
 
         rotations.append(rotation)
         ks.append(k)
-        
+
         W0, w0 = W[i,:,:].copy(), w[i,:].copy()
         W1, w1 = W[i,:,:].copy(), w[i,:].copy()
 
@@ -749,7 +749,7 @@ def classification(symops):
             w1 = np.dot(W0,w1)+w0
 
         w_symop_ord[i,:] = w1
-    
+
     k_inv = 1/np.array(ks)
 
     wgs = k_inv[:,np.newaxis]*w_symop_ord
@@ -804,13 +804,13 @@ def site(symops, coordinates, A, tol=1e-1):
     U = U.flatten()
     V = V.flatten()
     W = W.flatten()
-    
+
     Ws, ws = [], []
 
     for symop in symops:
 
         xyz = evaluate([symop], coordinates, translate=True)
-        
+
         x, y, z = np.array(xyz).flatten()
 
         du, dv, dw = x-u, y-v, z-w
@@ -874,7 +874,7 @@ def site(symops, coordinates, A, tol=1e-1):
 
             operators += [','.join(trans_symop)]
             metric.append(d)
-            
+
             Ws.append(W1)
             ws.append(w2)
 
@@ -887,7 +887,7 @@ def site(symops, coordinates, A, tol=1e-1):
     for i in range(1,len(operators)):
 
         op_0 = operators[i]
-        
+
         code0 = evaluate_op([op_0], translate=False)
 
         W0_0 = evaluate_code(code0, [1,0,0])
@@ -900,7 +900,7 @@ def site(symops, coordinates, A, tol=1e-1):
 
         Gc = G.copy()
         G.add(op_0)
-        
+
         for op_1 in Gc:
             if (op_0 != op_1):
 
@@ -919,7 +919,7 @@ def site(symops, coordinates, A, tol=1e-1):
 
                 if (np.allclose(W, np.eye(3)) and np.linalg.norm(w) > 0):
                     G.discard(op_0)
-    
+
     n = 1
 
     T = np.zeros((n,3,3))
@@ -1081,10 +1081,10 @@ def laue_id(symops):
     symop_id = [11,1]
 
     for c, sym in enumerate(list(laue_sym.keys())):
-        
-        all_symops = np.all([symops[p] in laue_sym.get(sym) for p in range(n)]) 
+
+        all_symops = np.all([symops[p] in laue_sym.get(sym) for p in range(n)])
         len_symops = len(laue_sym.get(sym))
-        
+
         if (all_symops and len_symops == n):
 
             symop_id = [c,len_symops]

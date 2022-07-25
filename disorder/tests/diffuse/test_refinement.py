@@ -806,7 +806,7 @@ class test_refinement(unittest.TestCase):
         V_k_nuc = np.einsum('ijk,kj->ji',
                             (coeffs[even]*U_k[:,i_dft,:][even,:].T),
                             Q_k[even,:])[cond]
-    
+
         F_orig = np.sum(factors*V_k, axis=1)
         F_nuc_orig = np.sum(factors[cond,:]*V_k_nuc, axis=1)
 
@@ -827,12 +827,12 @@ class test_refinement(unittest.TestCase):
 
         p_cand = factors[:,j]*V_k_cand
         p_nuc_cand = factors[cond,j]*V_k_nuc_cand
-        
+
         V_k = np.einsum('ijk,kj->ji', coeffs*U_k[:,i_dft,:].T, Q_k)
         V_k_nuc = np.einsum('ijk,kj->ji',
                             (coeffs[even]*U_k[:,i_dft,:][even,:].T),
                             Q_k[even,:])[cond]
-    
+
         F_cand = np.sum(factors*V_k, axis=1)
         F_nuc_cand = np.sum(factors[cond,:]*V_k_nuc, axis=1)
 
@@ -861,6 +861,111 @@ class test_refinement(unittest.TestCase):
 
         np.testing.assert_array_almost_equal(F_cand, F)
         np.testing.assert_array_almost_equal(F_nuc_cand, F_nuc)
+        
+    # def test_nonmagnetic_structure_factor(self):
 
+    #     n_hkl = 101
+
+    #     nu, nv, nw, n_atm = 2, 3, 4, 3
+
+    #     n_uvw = nu*nv*nw
+    #     n = n_uvw*n_atm
+
+    #     p = 2
+    #     n_prod = 10
+
+    #     even = np.array([0, 4, 5, 6, 7, 8, 9])
+
+    #     factors =    np.random.random((n_hkl,n_atm))\
+    #             + 1j*np.random.random((n_hkl,n_atm))
+
+    #     i_dft = np.random.randint(n_uvw, size=n_hkl)
+
+    #     Q_k = np.random.random((n_prod,n_hkl))
+
+    #     coeffs = np.random.random(n_prod)+1j*np.random.random(n_prod)
+
+    #     cond = np.random.random(n_hkl) < 00
+    #     bragg = np.arange(n_hkl)[cond]
+
+    #     U_r = np.random.random((n_prod,nu,nv,nw,n_atm)).flatten()
+
+    #     U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))
+
+    #     U_k = U_k.reshape(n_prod,n_uvw,n_atm)
+
+    #     i = np.random.randint(n)
+    #     j = i % n_atm
+
+    #     U_k_orig = U_k[...,j].copy()
+
+    #     V_k_orig = np.einsum('jk,kj->j', coeffs*U_k_orig[:,i_dft].T, Q_k)
+    #     V_k_nuc_orig = np.einsum('jk,kj->j',
+    #                              coeffs[even]*U_k_orig[:,i_dft][even,:].T,
+    #                              Q_k[even,:])[cond]
+
+    #     p_orig = factors[:,j]*V_k_orig
+    #     p_nuc_orig = factors[cond,j]*V_k_nuc_orig
+
+    #     V_k = np.einsum('ijk,kj->ji', coeffs*U_k[:,i_dft,:].T, Q_k)
+    #     V_k_nuc = np.einsum('ijk,kj->ji',
+    #                         (coeffs[even]*U_k[:,i_dft,:][even,:].T),
+    #                         Q_k[even,:])[cond]
+
+    #     F_orig = np.sum(factors*V_k, axis=1)
+    #     F_nuc_orig = np.sum(factors[cond,:]*V_k_nuc, axis=1)
+
+    #     U_r_cand = np.random.random(n_prod)
+
+    #     U_r[i::n] = U_r_cand
+
+    #     U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))
+
+    #     U_k = U_k.reshape(n_prod,n_uvw,n_atm)
+
+    #     U_k_cand = U_k[...,j].copy()
+
+    #     V_k_cand = np.einsum('jk,kj->j', coeffs*U_k_cand[:,i_dft].T, Q_k)
+    #     V_k_nuc_cand = np.einsum('jk,kj->j',
+    #                              coeffs[even]*U_k_cand[:,i_dft][even,:].T,
+    #                              Q_k[even,:])[cond]
+
+    #     p_cand = factors[:,j]*V_k_cand
+    #     p_nuc_cand = factors[cond,j]*V_k_nuc_cand
+
+    #     V_k = np.einsum('ijk,kj->ji', coeffs*U_k[:,i_dft,:].T, Q_k)
+    #     V_k_nuc = np.einsum('ijk,kj->ji',
+    #                         (coeffs[even]*U_k[:,i_dft,:][even,:].T),
+    #                         Q_k[even,:])[cond]
+
+    #     F_cand = np.sum(factors*V_k, axis=1)
+    #     F_nuc_cand = np.sum(factors[cond,:]*V_k_nuc, axis=1)
+
+    #     F = F_cand.copy()
+    #     F_nuc = F_nuc_cand.copy()
+
+    #     F_cand[:] = 0
+    #     F_nuc_cand[:] = 0
+
+    #     U_k_orig = U_k_orig.flatten()
+    #     U_k_cand = U_k_cand.flatten()
+    #     Q_k = Q_k.flatten()
+
+    #     factors = factors.flatten()
+
+    #     refinement.nonmagnetic_structure_factor(F_cand, F_nuc_cand,
+    #                                             p_cand, p_nuc_cand,
+    #                                             V_k_cand, V_k_nuc_cand,
+    #                                             U_k_cand,
+    #                                             F_orig, F_nuc_orig,
+    #                                             p_orig, p_nuc_orig,
+    #                                             V_k_orig, V_k_nuc_orig,
+    #                                             U_k_orig, Q_k, factors,
+    #                                             coeffs, even, bragg, i_dft,
+    #                                             p, j, n_atm)
+
+    #     np.testing.assert_array_almost_equal(F_cand, F)
+    #     np.testing.assert_array_almost_equal(F_nuc_cand, F_nuc)
+        
 if __name__ == '__main__':
     unittest.main()

@@ -82,16 +82,14 @@ def j2(Q, A, a, B, b, C, c, D):
 
 def f(Q, j0, j2=0, K2=0):
     """
-    Magnetic form factor :math:`f`
+    Magnetic form factor :math:`f(Q)`
 
     Parameters
     ----------
     Q : ndarray
         Magnitude of wavevector
-    j0 : ndarray
-        :math:`j_0` constant with same shape as wavevector
-    j2 : ndarray, optional
-        :math:`j_2` constant with same shape as wavevector
+    j0, j2 : ndarray
+        :math:`j_0` and :math:`j_2` constant with same shape as wavevector
     K2 : ndarray, optional
         Coupling constant, defualt ``K2=0``
 
@@ -106,7 +104,7 @@ def f(Q, j0, j2=0, K2=0):
 
 def form(Q, ions, g=2):
     """
-    Magnetic form factor :math:`f`
+    Magnetic form factor :math:`f(Q)`
 
     Parameters
     ----------
@@ -158,15 +156,9 @@ def spin(nu, nv, nw, n_atm, value=1, fixed=True):
 
     Parameters
     ----------
-    nu : int
-        :math:`N_1` number of grid points along the :math:`a`-axis of the \
-        supercell
-    nv : int
-        :math:`N_2` number of grid points along the :math:`b`-axis of the \
-        supercell
-    nw : int
-        :math:`N_3` number of grid points along the :math:`c`-axis of the \
-        supercell
+    nu, nv, nw : int
+        :math:`N_1`, :math:`N_2`, :math:`N_3` number of grid points along the \
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
     n_atm : int
         Number of atoms in the unit cell
 
@@ -213,30 +205,16 @@ def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
 
     Parameters
     ----------
-    Sx : ndarray
-        Spin vector component :math:`S_x` in Cartesian components along the \
-        `x`-direction
-    Sy : ndarray
-        Spin vector component :math:`S_y` in Cartesian components along the \
-        `y`-direction
-    Sz : ndarray
-        Spin vector component :math:`S_z` in Cartesian components along the \
-        `z`-direction
-    H : ndarray, int
-        Supercell index along the :math:`a^*`-axis in reciprocal space
-    K : ndarray, int
-        Supercell index along the :math:`b^*`-axis in reciprocal space
-    L : ndarray, int
-        Supercell index along the :math:`c^*`-axis in reciprocal space
-    nu : int
-        :math:`N_1` number of grid points along the :math:`a`-axis of the \
-        supercell
-    nv : int
-        :math:`N_2` number of grid points along the :math:`b`-axis of the \
-        supercell
-    nw : int
-        :math:`N_3` number of grid points along the :math:`c`-axis of the \
-        supercell
+    Sx, Sy, Sz : 1d array
+        Spin vector component :math:`S_x`, :math:`S_y`, and :math:`S_z` in \
+        Cartesian components along the :math:`x`, :math:`y`, and \
+        :math:`z`-direction
+    H, K, L : 1d array, int
+        Supercell index along the :math:`a^*`, :math:`b^*`, and \
+        :math:`c^*`-axis in reciprocal space
+    nu, nv, nw : int
+        :math:`N_1`, :math:`N_2`, :math:`N_3` number of grid points along the \
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
     n_atm : int
         Number of atoms in the unit cell
 

@@ -50,7 +50,7 @@ Crystal tab
 ### **Intensity tab**
 
 Preprocess intensity obtained from forward Monte Carlo.
-* Download the [`pyrochlore-occupational.nxs`](http://dl.dropboxusercontent.com/s/udhtc19avvjvb0o/pyrochlore-occupational.nxs?dl=0) file.
+* Download the [`pyrochlore-occupational.nxs`](http://dl.dropboxusercontent.com/s/52traze0e663un3/pyrochlore-occupational.nxs?dl=0) file
 * Click on *Load NeXus file* and locate the `pyrochlore-occupational.nxs` file.
 * Under the *Rebin* tab, change the step size to *0.2* in each $$h$$-, $$k$$-, and $$l$$-direction.
 * Under the *Crop* tab, change the $$h$$-, $$k$$-, and $$l$$-range from *0* to *6*.

@@ -749,7 +749,7 @@ def symmetrize(arrays, dx, dy, dz, ion, A, laue, tol=1e-4):
 
     return output
 
-def average1d(arrays, d, tol=1e-4):
+def average1d(arrays, d, pairs, tol=1e-4):
 
     arrays = np.hstack(list((arrays,)))
 
@@ -766,6 +766,7 @@ def average1d(arrays, d, tol=1e-4):
     metric = metric[sort]
     d = d[sort]
     arrays = arrays[:,sort]
+    pairs = pairs[sort]
 
     unique, indices, counts = np.unique(metric,
                                         axis=0,
@@ -784,15 +785,16 @@ def average1d(arrays, d, tol=1e-4):
                 arrays_ave[i,r] += arrays[i][s]/counts[r]
 
     d_ave = d[indices]
+    pairs_ave = pairs[indices]
 
     arrays_ave = arrays_ave.flatten()
 
     output = tuple(np.split(arrays_ave, M))
-    output = (*output, d_ave)
+    output = (*output, d_ave, pairs_ave)
 
     return output
 
-def average3d(arrays, dx, dy, dz, tol=1e-4):
+def average3d(arrays, dx, dy, dz, pairs, tol=1e-4):
 
     arrays = np.hstack(list((arrays,)))
 
@@ -813,6 +815,7 @@ def average3d(arrays, dx, dy, dz, tol=1e-4):
     dy = dy[sort]
     dz = dz[sort]
     arrays = arrays[:,sort]
+    pairs = pairs[sort]
 
     unique, indices, counts = np.unique(metric,
                                         axis=0,
@@ -833,10 +836,11 @@ def average3d(arrays, dx, dy, dz, tol=1e-4):
     dx_ave = dx[indices].astype(float)
     dy_ave = dy[indices].astype(float)
     dz_ave = dz[indices].astype(float)
+    pairs_ave = pairs[indices]
 
     arrays_ave = arrays_ave.flatten()
 
     output = tuple(np.split(arrays_ave, M))
-    output = (*output, dx_ave, dy_ave, dz_ave)
+    output = (*output, dx_ave, dy_ave, dz_ave, pairs_ave)
 
     return output
