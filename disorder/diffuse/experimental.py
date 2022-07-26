@@ -305,9 +305,12 @@ def correlations(fname, data, label):
 
     blocks.save(fname, binary=False)
 
-def intensity(fname, Q1, Q2, Q3, intensity):
+def intensity(fname, h, k, l, intensity, B=np.eye(3)):
 
-    grid = pv.StructuredGrid(Q1, Q2, Q3)
-    grid.cell_arrays['intensity'] = intensity.flatten(order='F')
+    T = np.eye(4)
+    T[:3,:3] = B
 
-    grid.save(fname, binary=False)
+    grid = pv.StructuredGrid(h, k, l)
+    grid.point_arrays['intensity'] = intensity.flatten(order='F')
+    grid.transform(T)
+    grid.save(fname, binary=True)

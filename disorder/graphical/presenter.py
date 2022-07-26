@@ -141,6 +141,9 @@ class Presenter:
         self.view.button_clicked_save_CSV(self.save_correlations_CSV)
         self.view.button_clicked_save_VTK(self.save_correlations_VTK)
 
+        self.view.button_clicked_save_recalc_CSV(self.save_intens_CSV)
+        self.view.button_clicked_save_recalc_VTK(self.save_intens_VTK)
+
         # ---
 
         self.folder = '.'
@@ -594,7 +597,60 @@ class Presenter:
                         label = 'scalar'
 
                 self.model.save_correlations_3d(filename, data, label)
+                
+    def save_intens_CSV(self):
+    
+        if (self.view.get_atom_site_recalculation_1d_row_count() > 0):
+            
+            filename = self.view.save_intens_CSV(self.folder)
 
+            if filename:  
+                
+                if (not filename.endswith('.csv')): filename += '.csv'
+
+                dQ, nQ, min_Q, max_Q = self.view.get_recalculation_1d_binning()
+
+                Q = np.linspace(min_Q, max_Q, nQ)
+                
+                total = self.ds_total_intensity
+                bragg = self.ds_bragg_intensity
+                diffuse = self.ds_diffuse_intensity
+                
+                intensity = (total, bragg, diffuse)
+            
+                self.model.save_intensity_1d(filename, Q, intensity)      
+                
+    def save_intens_VTK(self):
+    
+        if (self.view.get_atom_site_recalculation_3d_row_count() > 0):
+            
+            filename = self.view.save_intens_VTK(self.folder)
+
+            if filename:  
+
+                if (not filename.endswith('.vts')): filename += '.vts'
+                
+                binning_h = self.view.get_recalculation_3d_binning_h()
+                binning_k = self.view.get_recalculation_3d_binning_k()
+                binning_l = self.view.get_recalculation_3d_binning_l()
+                
+                nh, min_h, max_h = binning_h[1:]
+                nk, min_k, max_k = binning_k[1:]
+                nl, min_l, max_l = binning_l[1:]
+                
+                h = np.linspace(min_h, max_h, nh)
+                k = np.linspace(min_k, max_k, nk)
+                l = np.linspace(min_l, max_l, nl)
+        
+                h, k, l = np.meshgrid(h,k,l)
+        
+                intensity = self.intensity
+                B, T = self.B, self.T
+                
+                Bp = np.dot(B,T)
+                
+                self.model.save_intensity_3d(filename, h, k, l, intensity, Bp)
+            
     def exit_application(self):
 
         if self.view.close_application():
@@ -4004,6 +4060,8 @@ class Presenter:
                 T = np.array([[1, -1,  0],
                               [1,  1,  0],
                               [0,  0,  1]])*1.
+                
+            self.T = T
 
             laue = self.view.get_laue()
 

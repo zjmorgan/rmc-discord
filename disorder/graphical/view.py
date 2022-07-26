@@ -3244,14 +3244,25 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
                                                         options=options)
         return filename
     
-    def save_VTK(self, folder='.'):
+    def save_intens_CSV(self, folder='.'):
         options = QtWidgets.QFileDialog.Option()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
                       
         filename, \
         filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
                                                         folder,
-                                                        'VTK files *.vtm',
+                                                        'CSV files *.csv',
+                                                        options=options)
+        return filename
+    
+    def save_intens_VTK(self, folder='.'):
+        options = QtWidgets.QFileDialog.Option()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+                      
+        filename, \
+        filters = QtWidgets.QFileDialog.getSaveFileName(self, 'Save file', 
+                                                        folder,
+                                                        'VTK files *.vts',
                                                         options=options)
         return filename        
     
@@ -3266,6 +3277,9 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def button_clicked_save_VTK(self, slot):
         self.pushButton_save_VTK_correlations.clicked.connect(slot)
+      
+    def button_clicked_save_recalc_CSV(self, slot):
+        self.pushButton_save_intens_CSV.clicked.connect(slot) 
         
     def button_clicked_save_recalc_VTK(self, slot):
-        self.pushButton_save_VTK.clicked.connect(slot)
+        self.pushButton_save_intens_VTK.clicked.connect(slot)

@@ -3382,7 +3382,7 @@
         <item row="1" column="7">
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>1</number>
           </property>
           <widget class="QWidget" name="recalc_1d">
            <attribute name="title">
@@ -3524,7 +3524,7 @@
                  </spacer>
                 </item>
                 <item row="0" column="1">
-                 <widget class="QPushButton" name="pushButton_save_csv">
+                 <widget class="QPushButton" name="pushButton_save_intens_CSV">
                   <property name="text">
                    <string>Save CSV</string>
                   </property>
@@ -4108,7 +4108,7 @@
               <item row="9" column="0">
                <layout class="QGridLayout" name="gridLayout_97">
                 <item row="0" column="1">
-                 <widget class="QPushButton" name="pushButton_save_vtk">
+                 <widget class="QPushButton" name="pushButton_save_intens_VTK">
                   <property name="text">
                    <string>Save VTK file</string>
                   </property>
@@ -4258,7 +4258,7 @@
      <x>0</x>
      <y>0</y>
      <width>1212</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

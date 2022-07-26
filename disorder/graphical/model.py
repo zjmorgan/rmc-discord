@@ -846,6 +846,14 @@ class Model:
     def save_correlations_3d(self, fname, data, label):
 
         experimental.correlations(fname, data, label)
+        
+    def save_intensity_1d(self, fname, Q, data):
+
+        np.savetxt(fname, np.column_stack((Q, *data)), delimiter=',', fmt='%s')
+
+    def save_intensity_3d(self, fname, h, k, l, data, B):
+
+        experimental.intensity(fname, h, k, l, data, B)
 
     def magnetic_intensity_1d(self, fname, run, occupancy,
                               U11, U22, U33, U23, U13, U12, rx, ry, rz, atm,
