@@ -1,6 +1,6 @@
 # **Installation**
 
-The basic requirement is to have a Python environment with version >= 3.6. [Miniconda](https://docs.conda.io/en/latest/miniconda.html) is a good choice if one is not available.
+The basic requirement is to have a Python environment with version >= 3.6. It is best to use a dedicated Python environment to install required dependencies. [Miniconda](https://docs.conda.io/en/latest/miniconda.html) is a good choice if one is not available.
 
 Current supported operating systems:
 - Ubuntu 20.04
@@ -34,6 +34,24 @@ Download a copy of the source directory from the [repository](https://github.com
 git clone https://github.com/zjmorgan/rmc-discord.git
 ```
 
+Create a conda environment for rmc-discord.
+
+```bash
+ conda create --name rmc-discord
+```
+
+Activate the rmc-discord environment.
+
+```bash
+conda activate rmc-discord
+```
+
+Next, install all dependencies by navigating to the cloned rmc-discord repository and updating with `environment.yml`.
+
+```bash
+conda env update --file environment.yml --name rmc-discord
+```
+
 After installing all dependencies, the repository is built with `setup.py`.
 
 ```bash
@@ -44,22 +62,6 @@ The package can then be installed into the Python environment.
 
 ```bash
 pip install -e .
-```
-
-The required dependencies are listed below:
-
-- [Matplotlib](https://matplotlib.org/)
-- [NumPy](https://www.numpy.org/)
-- [SciPy](https://www.scipy.org/)
-- [Cython](https://cython.org/)
-- [PyCifRW](https://www.iucr.org/resources/cif/software/pycifrw)
-- [nexusformat](https://github.com/nexpy/nexusformat)
-- [PyVista](https://www.pyvista.org/)
-
-The tests can also be optionally run.
-
-```bash
-python -m unittest
 ```
 
 ## **Running the program**
@@ -73,3 +75,11 @@ rmc-discord 4
 ```
 
 Specifying too many threads may lead to unexpected slowdowns.
+
+## **Running the tests**
+
+The tests can also be optionally run using `pytest`.
+
+```bash
+python -m pytest --pyargs disorder
+```
