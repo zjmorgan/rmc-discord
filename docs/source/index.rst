@@ -1,13 +1,17 @@
 .. rmc-discord documentation master file
 
+===========
 rmc-discord
 ===========
 
 .. toctree::
-   :maxdepth: 2
+   :glob:
+   :maxdepth: 4
    :caption: Contents:
 
-   magnetic
-   occupational
-   displacive
-   nonmagnetic
+   modules/index
+
+Disorder
+========
+
+The `disorder` package contains all of the tools and utilities for rmc-discord.
