@@ -11,7 +11,7 @@ c = (0.5*constants.value('classical electron radius')*
 
 def j0(Q, A, a, B, b, C, c, D):
     """
-    Appoximation of the spherical Bessesl function :math:`j_0`.
+    Appoximation of the spherical Bessesl function :math:`j_0(Q)`.
 
     Parameters
     ----------
@@ -45,7 +45,7 @@ def j0(Q, A, a, B, b, C, c, D):
 
 def j2(Q, A, a, B, b, C, c, D):
     """
-    Appoximation of the spherical Bessesl function :math:`j_2`.
+    Appoximation of the spherical Bessesl function :math:`j_2(Q)`.
 
     Parameters
     ----------
@@ -108,10 +108,10 @@ def form(Q, ions, g=2):
 
     Parameters
     ----------
-    Q : ndarray
+    Q : 1d array
         Magnitude of wavevector
-    ions : ndarray
-        :math:`j_0` constant with same shape as wavevector
+    ions : 1d array
+        Magnetic ions
     g : float, ndarray, optional
        :math:`g` factor of the spins, defualt ``g=2``
 
@@ -157,7 +157,7 @@ def spin(nu, nv, nw, n_atm, value=1, fixed=True):
     Parameters
     ----------
     nu, nv, nw : int
-        :math:`N_1`, :math:`N_2`, :math:`N_3` number of grid points along the \
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
         :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
     n_atm : int
         Number of atoms in the unit cell
@@ -213,7 +213,7 @@ def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
         Supercell index along the :math:`a^*`, :math:`b^*`, and \
         :math:`c^*`-axis in reciprocal space
     nu, nv, nw : int
-        :math:`N_1`, :math:`N_2`, :math:`N_3` number of grid points along the \
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
         :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
     n_atm : int
         Number of atoms in the unit cell
@@ -245,26 +245,20 @@ def intensity(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
 
     Parameters
     ----------
-    Qx_norm : ndarray
-        :math:`\hat{Q}_x` component of normalized wavevector
-    Qy_norm : ndarray
-        :math:`\hat{Q}_y` component of normalized wavevector
-    Qz_norm : ndarray
-        :math:`\hat{Q}_z` component of normalized wavevector
-    Sx_k : ndarray
-        Fourier transform of :math:`S_x` component of the spin vector
-    Sy_k : ndarray
-        Fourier transform of :math:`S_y` component of the spin vector
-    Sz_k : ndarray
-        Fourier transform of :math:`S_z` component of the spin vector
-    i_dft: ndarray, int
+    Qx_norm, Qy_norm, Qz_norm : 1d array
+        Normalized wavevector component :math:`\hat{Q}_x`, :math:`\hat{Q}_y`, \
+        and :math:`\hat{Q}_z` 
+    Sx_k, Sy_k, Sz_k : 1d array
+        Fourier transform of the spin vector component :math:`S_x`, \
+        :math:`S_y`, and :math:`S_z` component 
+    i_dft: 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space
     factors: ndarray
         Prefactors of form factors and phase factors
 
     Returns
     -------
-    I : ndarray
+    I : 1d array
         Array has a flattened shape of size ``i_dft.shape[0]``
 
     """
@@ -307,18 +301,12 @@ def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
 
     Parameters
     ----------
-    Qx_norm : ndarray
-        :math:`\hat{Q}_x` component of normalized wavevector
-    Qy_norm : ndarray
-        :math:`\hat{Q}_y` component of normalized wavevector
-    Qz_norm : ndarray
-        :math:`\hat{Q}_z` component of normalized wavevector
-    Sx_k : ndarray
-        Fourier transform of :math:`S_x` component of the spin vector
-    Sy_k : ndarray
-        Fourier transform of :math:`S_y` component of the spin vector
-    Sz_k : ndarray
-        Fourier transform of :math:`S_z` component of the spin vector
+    Qx_norm, Qy_norm, Qz_norm : 1d array
+        Normalized wavevector component :math:`\hat{Q}_x`, :math:`\hat{Q}_y`, \
+        and :math:`\hat{Q}_z` 
+    Sx_k, Sy_k, Sz_k : 1d array
+        Fourier transform of the spin vector component :math:`S_x`, \
+        :math:`S_y`, and :math:`S_z` component
     i_dft: ndarray, int
         Array indices of Fourier transform corresponding to reciprocal space
     factors: ndarray

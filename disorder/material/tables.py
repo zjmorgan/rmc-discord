@@ -7,6 +7,15 @@ import numpy as np
 directory = os.path.abspath(os.path.dirname(__file__))
 
 def magnetic_form_factor_coefficients_j0():
+    """
+    Table of magnetic form factors :math:`j_0` coefficients.
+
+    Returns
+    -------
+    j0 : dict
+        Dictionary of magnetic form factors :math:`j_0` coefficients
+
+    """
     
     filename = directory+'/j0.csv'
     names = ('Ion', 'A', 'a', 'B', 'b', 'C', 'c', 'D')
@@ -26,7 +35,16 @@ def magnetic_form_factor_coefficients_j0():
     return dict(zip(ion, zip(*vals)))
 
 def magnetic_form_factor_coefficients_j2():
-    
+    """
+    Table of magnetic form factors :math:`j_2` coefficients.
+
+    Returns
+    -------
+    j2 : dict
+        Dictionary of magnetic form factors :math:`j_2` coefficients
+
+    """
+
     filename = directory+'/j2.csv'
     names = ('Ion', 'A', 'a', 'B', 'b', 'C', 'c', 'D')
     formats = ('U15', float, float, float, float, float, float, float)
@@ -45,6 +63,15 @@ def magnetic_form_factor_coefficients_j2():
     return dict(zip(ion, zip(*vals)))
 
 def neutron_scattering_length_b():
+    """
+    Table of neutron scattering lengths.
+
+    Returns
+    -------
+    b : dict
+        Dictionary of neutron scattering lengths isotope keys
+
+    """
     
     filename = directory+'/b.csv'
     names = ('Isotope', 'b')

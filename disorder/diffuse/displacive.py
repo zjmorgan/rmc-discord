@@ -8,23 +8,17 @@ def expansion(nu, nv, nw, n_atm, value=1, fixed=True):
 
     Parameters
     ----------
-    nu : int
-        :math:`N_1` number of grid points along the :math:`a`-axis of the \
-        supercell
-    nv : int
-        :math:`N_2` number of grid points along the :math:`b`-axis of the \
-        supercell
-    nw : int
-        :math:`N_3` number of grid points along the :math:`c`-axis of the \
-        supercell
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
     n_atm : int
         Number of atoms in the unit cell
-    value : ndarray, optional
+    value : 1d array, optional
         Magnitude of displacement vector, default ``value=1``
 
     Returns
     -------
-    Ux, Uy, Uz : ndarray
+    Ux, Uy, Uz : 1d array
         Each array has a flattened shape of size ``nu*nv*nw*n_atm``
 
     """
@@ -151,31 +145,22 @@ def transform(U_r, H, K, L, nu, nv, nw, n_atm):
 
     Parameters
     ----------
-    U_r : ndarray
+    U_r : 1d array
           Displacement parameter :math:`U` (in Cartesian coordinates)
-    H : ndarray, int
-        Supercell index along the :math:`a^*`-axis in reciprocal space
-    K : ndarray, int
-        Supercell index along the :math:`b^*`-axis in reciprocal space
-    L : ndarray, int
-        Supercell index along the :math:`c^*`-axis in reciprocal space
-    nu : int
-        :math:`N_1` number of grid points along the :math:`a`-axis of the \
-        supercell
-    nv : int
-        :math:`N_2` number of grid points along the :math:`b`-axis of the \
-        supercell
-    nw : int
-        :math:`N_3` number of grid points along the :math:`c`-axis of the \
-        supercell
+    H, K, L : 1d array, int
+        Supercell index along the :math:`a^*`, :math:`b^*`, and \
+        :math:`c^*`-axis in reciprocal space
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
     n_atm : int
         Number of atoms in the unit cell
 
     Returns
     -------
-    U_k : ndarray
+    U_k : 1d array
         Array has a flattened shape of size ``nu*nw*nv*n_atm``
-    i_dft : ndarray, int
+    i_dft : 1d array, int
         Array has a flattened shape of size ``nu*nw*nv*n_atm``
 
     """
@@ -200,19 +185,19 @@ def intensity(U_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
 
     Parameters
     ----------
-    U_k : ndarray
+    U_k : 1d array
         Fourier transform of Taylor expansion displacement products
-    Q_k : ndarray
+    Q_k : 1d array
         Fourier transform of Taylor expansion wavevector products
-    coeffs : ndarray
+    coeffs : 1d array
         Taylor expansion coefficients
-    cond : ndarray
+    cond : 1d array
         Array indices corresponding to nuclear Bragg peaks
     p : int
         Order of Taylor expansion
-    i_dft : ndarray, int
+    i_dft : 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space
-    factors : ndarray
+    factors : 1d array
         Prefactors of form factors, phase factors, and composition factors
     subtract : boolean, optional
        Optionally subtract the Bragg intensity or return the Bragg structure \
@@ -220,9 +205,9 @@ def intensity(U_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
 
     Returns
     -------
-    I : ndarray
+    I : 1d array
         Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``
-    F_bragg : ndarray
+    F_bragg : 1d array
         Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``
 
     """
@@ -270,42 +255,42 @@ def structure(U_k, Q_k, coeffs, cond, p, i_dft, factors):
 
     Parameters
     ----------
-    U_k : ndarray
+    U_k : 1d array
         Fourier transform of Taylor expansion displacement products
-    Q_k : ndarray
+    Q_k : 1d array
         Fourier transform of Taylor expansion wavevector products
-    coeffs : ndarray
+    coeffs : 1d array
         Taylor expansion coefficients
-    cond : ndarray
+    cond : 1d array
         Array indices corresponding to nuclear Bragg peaks
     p : int
         Order of Taylor expansion
-    i_dft : ndarray, int
+    i_dft : 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space
-    factors : ndarray
+    factors : 1d array
         Prefactors of scattering lengths, phase factors, and occupancies
 
     Returns
     -------
-    F : ndarray
+    F : 1d array
         Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``
-    F_nuc : ndarray
+    F_nuc : 1d array
         Array has a flattened shape of size ``cond.sum()*i_dft.shape[0]``
-    prod : ndarray
+    prod : 1d array
         Array has a flattened shape of size
         ``coeffs.shape[0]*i_dft.shape[0]*n_atm``
-    prod_nuc : ndarray
+    prod_nuc : 1d array
         Array has a flattened shape of size
         ``coeffs.sum()*i_dft.shape[0]*n_atm``
-    V_k : ndarray
+    V_k : 1d array
         Array has a flattened shape of size
         ``coeffs.shape[0]*i_dft.shape[0]*n_atm``
-    V_k_nuc : ndarray
+    V_k_nuc : 1d array
         Array has a flattened shape of size
         ``coeffs.sum()*i_dft.shape[0]*n_atm``
-    even : ndarray, int
+    even : 1d array, int
         Array indices of the even Taylor expandion coefficients
-    bragg : ndarray, int
+    bragg : 1d array, int
         Array has a flattened shape of size ``coeffs.sum()``
 
     """

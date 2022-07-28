@@ -4,8 +4,9 @@
 rmc-discord
 ===========
 
+Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals.
+
 .. toctree::
-   :glob:
    :maxdepth: 4
    :caption: Contents:
 

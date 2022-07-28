@@ -2,31 +2,23 @@
 
 import numpy as np
 
-from scipy import spatial
-
 def composition(nu, nv, nw, n_atm, value=0.5):
     """
     Generate random relative site occupancies.
     
     Parameters
     ----------
-    nu : int
-        :math:`N_1` number of grid points along the :math:`a`-axis of the \
-        supercell
-    nv : int
-        :math:`N_2` number of grid points along the :math:`b`-axis of the \
-        supercell
-    nw : int
-        :math:`N_3` number of grid points along the :math:`c`-axis of the \
-        supercell
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
     n_atm : int
         Number of atoms in the unit cell
-    value : float, ndarray, optional
+    value : float, 1d array, optional
         Average of site occupancies, defualt ``value=0.5``
     
     Returns
     -------
-    A : ndarray
+    A : 1d array
         Array has a flattened shape of size ``nu*nw*nv*n_atm``
         
     """
@@ -41,31 +33,22 @@ def transform(A_r, H, K, L, nu, nv, nw, n_atm):
 
     Parameters
     ----------
-    A_r : ndarray
+    A_r : 1d array
           Relative occupancy parameter :math:`A` 
-    H : ndarray, int
-        Supercell index along the :math:`a^*`-axis in reciprocal space
-    K : ndarray, int
-        Supercell index along the :math:`b^*`-axis in reciprocal space
-    L : ndarray, int
-        Supercell index along the :math:`c^*`-axis in reciprocal space
-    nu : int
-        :math:`N_1` number of grid points along the :math:`a`-axis of the \
-        supercell
-    nv : int
-        :math:`N_2` number of grid points along the :math:`b`-axis of the \
-        supercell
-    nw : int
-        :math:`N_3` number of grid points along the :math:`c`-axis of the \
-        supercell
+    H, K, L : 1d array, int
+        Supercell index along the :math:`a^*`, :math:`b^*`, and \
+        :math:`c^*`-axis in reciprocal space
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
     n_atm : int
         Number of atoms in the unit cell
 
     Returns
     -------
-    A_k : ndarray
+    A_k : 1d array
         Array has a flattened shape of size ``nu*nw*nv*n_atm``
-    i_dft : ndarray, int
+    i_dft : 1d array, int
         Array has a flattened shape of size ``nu*nw*nv*n_atm``
         
     """
@@ -86,16 +69,16 @@ def intensity(A_k, i_dft, factors):
 
     Parameters
     ----------
-    A_k : ndarray
+    A_k : 1d array
         Fourier transform of relative site occupancies
-    i_dft: ndarray, int
+    i_dft: 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space
-    factors: ndarray
+    factors: 1d array
         Prefactors of form factors, phase factors, and composition factors
 
     Returns
     -------
-    I : ndarray
+    I : 1d array
         Array has a flattened shape of size ``i_dft.shape[0]``
 
     """
@@ -124,18 +107,18 @@ def structure(A_k, i_dft, factors):
 
     Parameters
     ----------
-    A_k : ndarray
+    A_k : 1d array
         Fourier transform of relative site occupancies
-    i_dft: ndarray, int
+    i_dft: 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space
-    factors: ndarray
+    factors: 1d array
         Prefactors of form factors, phase factors, and composition factors
 
     Returns
     -------
-    F : ndarray
+    F : 1d array
         Array has a flattened shape of size ``i_dft.shape[0]``
-    prod : ndarray
+    prod : 1d array
         Array has a flattened shape of size 
         ``i_dft.shape[0]*n_atm``
 
