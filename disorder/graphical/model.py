@@ -1203,7 +1203,7 @@ class Model:
     def scalar_symmetrizes_3d(self, corr3d, sigma_sq_corr3d, dx, dy, dz,
                               atm_pair3d, A, laue, tol):
 
-        arrays = (corr3d, sigma_sq_corr3d, atm_pair3d)
+        arrays = (corr3d, sigma_sq_corr3d)
 
         return correlations.symmetrize(arrays, dx, dy, dz,
                                        atm_pair3d, A, laue, tol)

@@ -197,8 +197,8 @@ def punch(data, radius_h, radius_k, radius_l, h_range, k_range, l_range,
                         mask = (x/box[0])**2+(y/box[1])**2+(z/box[2])**2 > 1
                         values[mask] = np.nan
 
-                    Q3 = np.nanpercentile(values,75)
-                    Q1 = np.nanpercentile(values,25)
+                    Q3 = np.nanpercentile(values.data,75)
+                    Q1 = np.nanpercentile(values.data,25)
 
                     interquartile = Q3-Q1
 

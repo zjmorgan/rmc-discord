@@ -569,7 +569,7 @@ class Presenter:
 
         if (self.view.get_pairs_3d_table_row_count() > 0):
 
-            filename = self.view.save_VTK(self.folder)
+            filename = self.view.save_correlations_VTK(self.folder)
 
             if filename:
 
@@ -579,7 +579,7 @@ class Presenter:
                 average = self.view.average_3d_checked()
 
                 if (disorder != 'Occupancy'):
-                    if average:
+                    if not average:
                         data = self.dx, self.dy, self.dz, \
                                self.corr3d, self.coll3d
                         label = 'vector-pair'
@@ -588,7 +588,7 @@ class Presenter:
                                self.corr3d, self.coll3d, self.atm_pair3d
                         label = 'vector'
                 else:
-                    if average:
+                    if not average:
                         data = self.dx, self.dy, self.dz, self.corr3d
                         label = 'scalar-pair'
                     else:
