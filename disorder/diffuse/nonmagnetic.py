@@ -15,21 +15,12 @@ def transform(U_r, A_r, H, K, L, nu, nv, nw, n_atm):
           Displacement parameter :math:`U` (in Cartesian coordinates)
     A_r : 1d array
           Relative occupancy parameter :math:`A`
-    H : 1d array, int
-        Supercell index along the :math:`a^*`-axis in reciprocal space
-    K : 1d array, int
-        Supercell index along the :math:`b^*`-axis in reciprocal space
-    L : 1d array, int
-        Supercell index along the :math:`c^*`-axis in reciprocal space
-    nu : int
-        :math:`N_1` number of grid points along the :math:`a`-axis of the \
-        supercell
-    nv : int
-        :math:`N_2` number of grid points along the :math:`b`-axis of the \
-        supercell
-    nw : int
-        :math:`N_3` number of grid points along the :math:`c`-axis of the \
-        supercell
+    H, K, L : 1d array, int
+        Supercell index along the :math:`a^*`, :math:`b^*`, and \
+        :math:`c^*`-axis in reciprocal space
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
     n_atm : int
         Number of atoms in the unit cell
 
