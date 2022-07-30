@@ -151,3 +151,6 @@ dmypy.json
 
 # Jekyll site
 _site/
+
+# Sphinx docs
+make.bat

@@ -301,7 +301,7 @@ def correlations(fname, data, label):
     else:
         for t, array in zip(form, datasets):
             blocks[t] = pv.PolyData(points)
-            blocks[t].point_arrays[t] = array
+            blocks[t].point_data[t] = array
 
     blocks.save(fname, binary=False)
 
@@ -311,6 +311,6 @@ def intensity(fname, h, k, l, intensity, B=np.eye(3)):
     T[:3,:3] = B
 
     grid = pv.StructuredGrid(h, k, l)
-    grid.point_arrays['intensity'] = intensity.flatten(order='F')
+    grid.point_data['intensity'] = intensity.flatten(order='F')
     grid.transform(T)
     grid.save(fname, binary=True)
