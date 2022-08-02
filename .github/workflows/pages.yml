@@ -44,6 +44,10 @@ jobs:
         run: |
           conda install -c conda-forge pydata-sphinx-theme
           conda install -c conda-forge numpydoc
+          conda env update --file environment.yml --name base
+      - name: Build package
+        run: |
+          python setup.py install
       - name: Build Sphinx
         run: |
           cd docs
