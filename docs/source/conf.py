@@ -21,7 +21,6 @@ project = 'rmc-discord'
 copyright = 'Zachary Morgan'
 author = 'Zachary Morgan'
 
-
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
@@ -30,12 +29,11 @@ author = 'Zachary Morgan'
 extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.autodoc',
-    'sphinx.ext.autodoc',
+    'sphinx.ext.linkcode',
     'sphinx.ext.extlinks',
     'sphinx.ext.intersphinx',
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
-    'sphinx.ext.viewcode',
     'numpydoc',
 ]
 # Add any paths that contain templates here, relative to this directory.
@@ -93,3 +91,11 @@ html_theme_options = {
 # -- Extension configuration -------------------------------------------------
 
 add_module_names = False
+
+def linkcode_resolve(domain, info):
+    if domain != 'py':
+        return None
+    if not info['module']:
+        return None
+    filename = info['module'].replace('.', '/')
+    return "https://github.com/zjmorgan/rmc-discord/blob/master/%s.py" % filename

@@ -9,7 +9,22 @@ from disorder.material import crystal, symmetry
 
 def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
            a, b, c, alpha, beta, gamma, symops, dmin=0.3, source='neutron'):
+    """
+    Structure factor.
 
+    Returns
+    -------
+    h, k, l : 1d array, int
+        Miller indices
+    d : 1d array
+        d-spacing distance between planes of atoms
+    F : 1d array, complex
+        Structure factor
+    mult : 1d array, int
+        Multiplicity
+
+    """
+    
     n_atm = atms.shape[0]
 
     inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
@@ -97,7 +112,24 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
     return h, k, l, d, F, mult
 
 class UnitCell:
+    """
+    Unit cell.
 
+    Parameters
+    ----------
+    filename : str
+        Name of CIF file
+    tol : float, optional
+        Tolerance of unique atom coordinates
+
+    Methods
+    -------
+    get_filepath()
+        Path of CIF file
+    get_filename()
+        Name of CIF file
+
+    """
     def __init__(self, filename, tol=1e-2):
 
         filename = os.path.abspath(filename)
@@ -203,11 +235,29 @@ class UnitCell:
         return constants
 
     def get_filepath(self):
+        """
+        Path of CIF file.
+
+        Returns
+        -------
+        str
+            Name of path excluding filename
+
+        """
 
         return self.__folder
 
     def get_filename(self):
+        """
+        Name of CIF file.
 
+        Returns
+        -------
+        str
+            Name of filename excluding path
+
+        """
+        
         return self.__filename
 
     def get_sites(self):

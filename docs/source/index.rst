@@ -11,6 +11,7 @@ Reverse Monte Carlo refinement of diffuse scattering and correlated disorder fro
    :caption: Contents:
 
    modules/index
+   classes/index
 
 Disorder
 ========

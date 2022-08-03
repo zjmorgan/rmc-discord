@@ -15,7 +15,7 @@ def j0(Q, A, a, B, b, C, c, D):
 
     Parameters
     ----------
-    Q : ndarray
+    Q : 1d array
         Magnitude of wavevector :math:`Q`
     A : float
         :math:`A_0` constant
@@ -34,7 +34,7 @@ def j0(Q, A, a, B, b, C, c, D):
 
     Returns
     -------
-    j0 : ndarray
+    j0 : 1d array
         Has the same shape as the input wavevector
 
     """
@@ -49,7 +49,7 @@ def j2(Q, A, a, B, b, C, c, D):
 
     Parameters
     ----------
-    Q : ndarray
+    Q : 1d array
         Magnitude of wavevector :math:`Q`
     A : float
         :math:`A_2` constant
@@ -68,7 +68,7 @@ def j2(Q, A, a, B, b, C, c, D):
 
     Returns
     -------
-    j2 : ndarray
+    j2 : 1d array
         Has the same shape as the input wavevector
 
     """
@@ -82,20 +82,20 @@ def j2(Q, A, a, B, b, C, c, D):
 
 def f(Q, j0, j2=0, K2=0):
     """
-    Magnetic form factor :math:`f(Q)`
+    Magnetic form factor :math:`f(Q)`.
 
     Parameters
     ----------
-    Q : ndarray
+    Q : 1d array
         Magnitude of wavevector
-    j0, j2 : ndarray
+    j0, j2 : 1d array
         :math:`j_0` and :math:`j_2` constant with same shape as wavevector
-    K2 : ndarray, optional
+    K2 : 1d array, optional
         Coupling constant, defualt ``K2=0``
 
     Returns
     -------
-    f : ndarray
+    f : 1d array
         Has the same shape as the input wavevector
 
     """
@@ -104,7 +104,7 @@ def f(Q, j0, j2=0, K2=0):
 
 def form(Q, ions, g=2):
     """
-    Magnetic form factor :math:`f(Q)`
+    Magnetic form factor :math:`f(Q)`.
 
     Parameters
     ----------
@@ -112,12 +112,12 @@ def form(Q, ions, g=2):
         Magnitude of wavevector
     ions : 1d array
         Magnetic ions
-    g : float, ndarray, optional
+    g : float, 1d array, optional
        :math:`g` factor of the spins, defualt ``g=2``
 
     Returns
     -------
-    f : ndarray
+    f : 1d array
         Has the same shape as the input wavevector
 
     """
@@ -164,7 +164,7 @@ def spin(nu, nv, nw, n_atm, value=1, fixed=True):
 
     Returns
     -------
-    Sx, Sy, Sz : ndarray
+    Sx, Sy, Sz : 1d array
         Each array has a flattened shape of size ``nu*nw*nv*n_atm``
 
     """
@@ -220,9 +220,9 @@ def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
 
     Returns
     -------
-    Sx_k, Sy_k, Sz_k : ndarray
+    Sx_k, Sy_k, Sz_k : 1d array
         Each array has a flattened shape of size ``nu*nw*nv*n_atm``
-    i_dft : ndarray, int
+    i_dft : 1d array, int
         Array has a flattened shape of size ``nu*nw*nv*n_atm``
 
     """
@@ -253,7 +253,7 @@ def intensity(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
         :math:`S_y`, and :math:`S_z` component 
     i_dft: 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space
-    factors: ndarray
+    factors: 1d array
         Prefactors of form factors and phase factors
 
     Returns
@@ -307,16 +307,16 @@ def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     Sx_k, Sy_k, Sz_k : 1d array
         Fourier transform of the spin vector component :math:`S_x`, \
         :math:`S_y`, and :math:`S_z` component
-    i_dft: ndarray, int
+    i_dft: 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space
-    factors: ndarray
+    factors: 1d array
         Prefactors of form factors and phase factors
 
     Returns
     -------
-    Fx, Fy, Fz : ndarray
+    Fx, Fy, Fz : 1d array
         Each array has a flattened shape of size ``i_dft.shape[0]``
-    prod_x, prod_y, prod_z : ndarray
+    prod_x, prod_y, prod_z : 1d array
         Each array has a flattened shape of size ``i_dft.shape[0]*n_atm``
 
     """
