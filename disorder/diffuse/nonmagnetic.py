@@ -12,26 +12,26 @@ def transform(U_r, A_r, H, K, L, nu, nv, nw, n_atm):
     Parameters
     ----------
     U_r : 1d array
-          Displacement parameter :math:`U` (in Cartesian coordinates)
+          Displacement parameter :math:`U` (in Cartesian coordinates).
     A_r : 1d array
-          Relative occupancy parameter :math:`A`
+          Relative occupancy parameter :math:`A`.
     H, K, L : 1d array, int
         Supercell index along the :math:`a^*`, :math:`b^*`, and \
-        :math:`c^*`-axis in reciprocal space
+        :math:`c^*`-axis in reciprocal space.
     nu, nv, nw : int
         Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
-        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
-        Number of atoms in the unit cell
+        Number of atoms in the unit cell.
 
     Returns
     -------
     U_k : 1d array
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``
+        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
     A_k : 1d array
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``
+        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
     i_dft : 1d array, int
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``
+        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
 
     """
 
@@ -60,26 +60,26 @@ def intensity(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
     Parameters
     ----------
     U_k : 1d array
-        Fourier transform of Taylor expansion displacement products
+        Fourier transform of Taylor expansion displacement products.
     A_k : 1d array
-        Fourier transform of relative site occupancies
+        Fourier transform of relative site occupancies.
     Q_k : 1d array
-        Fourier transform of Taylor expansion wavevector products
+        Fourier transform of Taylor expansion wavevector products.
     coeffs : 1d array
-        Taylor expansion coefficients
+        Taylor expansion coefficients.
     cond : 1d array
-        Array indices corresponding to nuclear Bragg peaks
+        Array indices corresponding to nuclear Bragg peaks.
     p : int
-        Order of Taylor expansion
+        Order of Taylor expansion.
     i_dft: 1d array, int
-        Array indices of Fourier transform corresponding to reciprocal space
+        Array indices of Fourier transform corresponding to reciprocal space.
     factors: 1d array
-        Prefactors of form factors, phase factors, and composition factors
+        Prefactors of form factors, phase factors, and composition factors.
 
     Returns
     -------
     I : 1d array
-        Array has a flattened shape of size ``i_dft.shape[0]``
+        Array has a flattened shape of size ``i_dft.shape[0]``.
 
     """
 
@@ -139,45 +139,45 @@ def structure(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors):
     Parameters
     ----------
     U_k : 1d array
-        Fourier transform of Taylor expansion displacement products
+        Fourier transform of Taylor expansion displacement products.
     A_k : 1d array
         Fourier transform of relative site occupancies times Taylor expansion
-        displacement products
+        displacement products.
     Q_k : 1d array
-        Fourier transform of Taylor expansion wavevector products
+        Fourier transform of Taylor expansion wavevector products.
     coeffs : 1d array
-        Taylor expansion coefficients
+        Taylor expansion coefficients.
     cond : 1d array
-        Array indices corresponding to nuclear Bragg peaks
+        Array indices corresponding to nuclear Bragg peaks.
     p : int
-        Order of Taylor expansion
+        Order of Taylor expansion.
     i_dft: 1d array, int
-        Array indices of Fourier transform corresponding to reciprocal space
+        Array indices of Fourier transform corresponding to reciprocal space.
     factors: 1d array
-        Prefactors of scattering lengths, phase factors, and occupancies
+        Prefactors of scattering lengths, phase factors, and occupancies.
 
     Returns
     -------
     F : 1d array
-        Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``
+        Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``.
     F_nuc : 1d array
-        Array has a flattened shape of size ``cond.sum()*i_dft.shape[0]``
+        Array has a flattened shape of size ``cond.sum()*i_dft.shape[0]``.
     prod : 1d array
         Array has a flattened shape of size
-        ``coeffs.shape[0]*i_dft.shape[0]*n_atm``
+        ``coeffs.shape[0]*i_dft.shape[0]*n_atm``.
     prod_nuc : 1d array
         Array has a flattened shape of size
-        ``coeffs.sum()*i_dft.shape[0]*n_atm``
+        ``coeffs.sum()*i_dft.shape[0]*n_atm``.
     V_k : 1d array
         Array has a flattened shape of size
-        ``coeffs.shape[0]*i_dft.shape[0]*n_atm``
+        ``coeffs.shape[0]*i_dft.shape[0]*n_atm``.
     V_k_nuc : 1d array
         Array has a flattened shape of size
-        ``coeffs.sum()*i_dft.shape[0]*n_atm``
+        ``coeffs.sum()*i_dft.shape[0]*n_atm``.
     even : 1d array, int
-        Array indices of the even Taylor expandion coefficients
+        Array indices of the even Taylor expandion coefficients.
     bragg : 1d array, int
-        Array has a flattened shape of size ``coeffs.sum()``
+        Array has a flattened shape of size ``coeffs.sum()``.
 
     """
 

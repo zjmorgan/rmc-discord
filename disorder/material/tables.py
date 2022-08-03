@@ -8,12 +8,13 @@ directory = os.path.abspath(os.path.dirname(__file__))
 
 def magnetic_form_factor_coefficients_j0():
     """
-    Table of magnetic form factors :math:`j_0` coefficients.
+    Table of magnetic form factors zeroth-order :math:`j_0` coefficients.
 
     Returns
     -------
     j0 : dict
-        Dictionary of magnetic form factors :math:`j_0` coefficients
+        Dictionary of magnetic form factors coefficients with magnetic ion \
+        keys.
 
     """
     
@@ -36,12 +37,13 @@ def magnetic_form_factor_coefficients_j0():
 
 def magnetic_form_factor_coefficients_j2():
     """
-    Table of magnetic form factors :math:`j_2` coefficients.
+    Table of magnetic form factors second-order :math:`j_2` coefficients.
 
     Returns
     -------
     j2 : dict
-        Dictionary of magnetic form factors :math:`j_2` coefficients
+        Dictionary of magnetic form factors coefficients with magnetic ion \
+        keys.
 
     """
 
@@ -64,12 +66,12 @@ def magnetic_form_factor_coefficients_j2():
 
 def neutron_scattering_length_b():
     """
-    Table of neutron scattering lengths.
+    Table of neutron scattering lengths :math:`b`.
 
     Returns
     -------
     b : dict
-        Dictionary of neutron scattering lengths isotope keys
+        Dictionary of neutron scattering lengths with nuclear isotope keys.
 
     """
     
@@ -88,7 +90,16 @@ def neutron_scattering_length_b():
     return dict(zip(isotope, b))
 
 def xray_form_factor_coefficients():
-    
+    """
+    Table of X-ray form factor :math:`f` coefficients.
+
+    Returns
+    -------
+    X : dict
+        Dictionary of X-ray form factor coefficients with ion keys.
+
+    """
+
     filename = directory+'/x.csv'
     names = ('Ion', 'a1', 'b1', 'a2,', 'b2', 'a3', 'b3', 'a4', 'b4', 'c')
     formats = ('U15', float, float, float, float, 
@@ -109,7 +120,16 @@ def xray_form_factor_coefficients():
     return dict(zip(ion, zip(*vals)))
 
 def electron_form_factor_coefficients():
-    
+    """
+    Table of electron form factor :math:`f` coefficients.
+
+    Returns
+    -------
+    E : dict
+        Dictionary of electron form factor coefficients with ion keys.
+
+    """
+
     filename = directory+'/e.csv'
     names = ('Ion', 'a1', 'b1', 'a2,', 'b2', 
              'a3', 'b3', 'a4', 'b4', 'a5', 'b5')
@@ -131,7 +151,16 @@ def electron_form_factor_coefficients():
     return dict(zip(ion, zip(*vals)))
 
 def atomic_numbers():
-     
+    """
+    Table of atomic numbers.
+
+    Returns
+    -------
+    Z : dict
+        Dictionary of atomic numbers with atomic symbol keys.
+
+    """
+
     filename = directory+'/z.csv'
     names = ('Ion', 'Z')
     formats = ('U15', int)
@@ -149,6 +178,15 @@ def atomic_numbers():
     return dict(zip(ion, zip(*vals)))
 
 def space_groups():
+    """
+    Table of space group numbers.
+
+    Returns
+    -------
+    Z : dict
+        Dictionary of space group numbers with space group symbol keys.
+
+    """
     
     filename = directory+'/groups.csv'
     names = ('Number', 'Name')
@@ -167,7 +205,16 @@ def space_groups():
     return dict(zip(sg_name, sg_number))
 
 def element_radii():
-    
+    """
+    Table of atomic, ionic and van der Waals radii.
+
+    Returns
+    -------
+    Z : dict
+        Dictionary of radii with atomic symbol keys.
+
+    """
+
     filename = directory+'/radii.csv'
     names = ('Element', 'Atomic', 'Ionic', 'van der Waals')
     formats = ('U15', float, float, float)
@@ -186,7 +233,16 @@ def element_radii():
     return dict(zip(element, zip(*vals)))
 
 def element_colors():
-    
+    """
+    Table of element colors in red, green, and blue.
+
+    Returns
+    -------
+    Z : dict
+        Dictionary of element colors with atomic symbol keys.
+
+    """
+
     filename = directory+'/colors.csv'
     names = ('Element', 'Red', 'Green', 'Blue')
     formats = ('U15', float, float, float)

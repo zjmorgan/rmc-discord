@@ -10,18 +10,39 @@ from disorder.material import crystal, symmetry
 def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
            a, b, c, alpha, beta, gamma, symops, dmin=0.3, source='neutron'):
     """
-    Structure factor.
+    Structure factor :math:`F(h,k,l)`.
 
+    Parameters
+    ----------
+    u, v, w : 1d array
+        Fractional coordinates for each atom site.
+    atms : 1d array, str
+        Ion or isotope for each atom site.
+    occupancy : 1d array
+        Site occupancies for each atom site.
+    U11, U22, U33, U23, U13, U12 : 1d array
+        Atomic displacement parameters in crystal axis system.
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants :math:`a`, :math:`b`, :math:`c`, :math:`\\alpha`, \
+        :math:`\\beta`, and :math:`\\gamma`. Angles are in radians.
+    symops : 1d array, str
+        Space group symmetry operations.
+    dmin : float, optional
+        Minimum d-spacing. Default ``0.3``
+    source : str, optional
+        Radiation source ``'neutron'``, ``'x-ray'``, or ``'electron'``.
+        Default ``'neutron'``.
+    
     Returns
     -------
     h, k, l : 1d array, int
-        Miller indices
+        Miller indices.
     d : 1d array
-        d-spacing distance between planes of atoms
+        d-spacing distance between planes of atoms.
     F : 1d array, complex
-        Structure factor
+        Structure factor.
     mult : 1d array, int
-        Multiplicity
+        Multiplicity.
 
     """
     
@@ -118,16 +139,110 @@ class UnitCell:
     Parameters
     ----------
     filename : str
-        Name of CIF file
+        Name of CIF file.
     tol : float, optional
-        Tolerance of unique atom coordinates
+        Tolerance of unique atom coordinates.
 
     Methods
     -------
     get_filepath()
-        Path of CIF file
+        Path of CIF file.
     get_filename()
-        Name of CIF file
+        Name of CIF file.
+    get_sites()
+        All atom sites in the unit cell. 
+    get_active_sites()
+        All active atom sites in the unit cell. 
+    set_active_sites()
+        Update active atom sites in the unit cell. 
+    get_number_atoms_per_unit_cell()
+        Total number of atoms in the unit cell.
+    get_fractional_coordinates()
+        All fractional coordiantes of active atom sites.
+    set_fractional_coordinates()
+        Update fractional coordiantes of active atom sites.
+    get_unit_cell_cartesian_atomic_coordinates()
+        Cartesian coordiantes of active atom sites.
+    get_unit_cell_atoms()
+        All atom symbols of active atom sites.
+    set_unit_cell_atoms()
+        Update atom symbols of active atom sites.
+    get_occupancies()
+        All occupancies of active atom sites.
+    set_occupancies()
+        Update occupancies of active atom sites.
+    get_anisotropic_displacement_parameters()
+        All anisotropic displacement parameters in crystal coordinates of \
+        active atom sites.
+    set_anisotropic_displacement_parameters()
+        Update anisotropic displacement parameters in crystal coordinates of \
+        active atom sites.
+    get_isotropic_displacement_parameter()
+        All isotropic displacement parameters of active atom sites.
+    set_isotropic_displacement_parameter()
+        Update isotropic displacement parameters of active atom sites.
+    get_principal_displacement_parameters()
+        All principal displacement parameters in Cartesian coordinates of \
+        active atom sites.
+    get_cartesian_anistropic_displacement_parameters()
+        All anisotropic displacement parameters in Cartesian coordinates of \
+        active atom sites.
+    get_crystal_axis_magnetic_moments()
+        All magnetic moments in crystal coordinates of active atom sites.
+    set_crystal_axis_magnetic_moments()
+        Update magnetic moments in crystal coordinates of active atom sites.
+    get_magnetic_moment_magnitude()
+        All magnitude of magnetic moments of active atom sites.
+    get_cartesian_magnetic_moments()
+        All magnetic moments in Cartesian coordinates of active atom sites.
+    get_g_factors()
+        All g factors of active atom sites.
+    set_g_factors()
+        Update g factors of active atom sites.
+    get_lattice_constants()
+        All lattice parameters.
+    set_lattice_constants()
+        Update lattice parameters.
+    get_reciprocal_lattice_constants()
+        All reciprocal lattice parameters.
+    get_symmetry_operators()
+        All symmetry operators.
+    get_magnetic_symmetry_operators()
+        All magnetic symmetry operators of all active atom sites.
+    get_lattice_system()
+        Lattice system of unit cell.
+    get_lattice_volume()
+        Lattice volume of unit cell.
+    get_reciprocal_lattice_volume()
+        Reciprocal lattice volume of reciprocal cell.
+    get_metric_tensor()
+        Unit cell metric tensor.
+    get_reciprocal_metric_tensor()
+        Reciprocal cell metric tensor.
+    get_fractional_cartesian_transform()
+        Trasform matrix from fractional to Cartesian coordinates.
+    get_miller_cartesian_transform()
+        Trasform matrix from Miller to Cartesian coordinates.
+    get_cartesian_rotation()
+        Transform matrix between Cartesian axes of real and reciprocal lattice.
+    get_moment_cartesian_transform()
+        Transform matrix between crystal and Cartesial coordinates for \
+        magnetic moments.
+    get_atomic_displacement_cartesian_transform()
+        Transform matrix between crystal and Cartesial coordinates for \
+        atomic displacement parameters.
+    get_space_group_symbol()
+        Space group symbol.
+    get_space_group_number()
+        Space group number.
+    get_laue()
+        Laue class.
+    get_site_symmetries()
+        All site symmetry operators.
+    get_wyckoff_special_positions()
+        All wyckoff special positions for active atom sites.
+    get_site_multiplicities()
+        All site multiplicites for active atom sites.
 
     """
     def __init__(self, filename, tol=1e-2):
@@ -241,7 +356,7 @@ class UnitCell:
         Returns
         -------
         str
-            Name of path excluding filename
+            Name of path excluding filename.
 
         """
 
@@ -254,22 +369,49 @@ class UnitCell:
         Returns
         -------
         str
-            Name of filename excluding path
+            Name of filename excluding path.
 
         """
         
         return self.__filename
 
     def get_sites(self):
+        """
+        All atom sites in the unit cell. 
+
+        Returns
+        -------
+        1d array, int
+            All site numbers.
+
+        """
 
         return self.__site
 
     def get_active_sites(self):
+        """
+        All active atom sites in the unit cell. 
 
+        Returns
+        -------
+        1d array, int
+            All active site numbers.
+
+        """
+        
         return self.__act
 
     def set_active_sites(self, act):
+        """
+        Update active atom sites in the unit cell. 
 
+        Parameters
+        ---------
+        act : 1d array, int
+            All active site numbers.
+
+        """
+        
         self.__act = act
 
         self.__mask = self.__ind[self.__act]
@@ -378,6 +520,15 @@ class UnitCell:
         self.__U13[ind] = U13p
         self.__U12[ind] = U12p
 
+    def get_isotropic_displacement_parameter(self):
+
+        D = self.get_atomic_displacement_cartesian_transform()
+        adps = self.get_anisotropic_displacement_parameters()
+
+        U11, U22, U33, U23, U13, U12 = adps
+
+        return displacive.isotropic(U11, U22, U33, U23, U13, U12, D)
+
     def set_isotropic_displacement_parameter(self, Uiso):
 
         ind = self.__index
@@ -396,15 +547,6 @@ class UnitCell:
         self.__U23[ind] = U23[inv]
         self.__U13[ind] = U13[inv]
         self.__U12[ind] = U12[inv]
-
-    def get_isotropic_displacement_parameter(self):
-
-        D = self.get_atomic_displacement_cartesian_transform()
-        adps = self.get_anisotropic_displacement_parameters()
-
-        U11, U22, U33, U23, U13, U12 = adps
-
-        return displacive.isotropic(U11, U22, U33, U23, U13, U12, D)
 
     def get_principal_displacement_parameters(self):
 

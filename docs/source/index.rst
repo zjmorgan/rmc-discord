@@ -17,3 +17,4 @@ Disorder
 ========
 
 The `disorder` package contains all of the tools and utilities for rmc-discord.
+It is split into various modules each with functions and classes required to perform a reverse Monte Carlo refinement.

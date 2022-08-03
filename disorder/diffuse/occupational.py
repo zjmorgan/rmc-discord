@@ -10,16 +10,16 @@ def composition(nu, nv, nw, n_atm, value=0.5):
     ----------
     nu, nv, nw : int
         Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
-        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
         Number of atoms in the unit cell
     value : float, 1d array, optional
-        Average of site occupancies, defualt ``value=0.5``
+        Average of site occupancies, defualt ``value=0.5``.
     
     Returns
     -------
     A : 1d array
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``
+        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
         
     """
                     
@@ -34,22 +34,22 @@ def transform(A_r, H, K, L, nu, nv, nw, n_atm):
     Parameters
     ----------
     A_r : 1d array
-          Relative occupancy parameter :math:`A` 
+          Relative occupancy parameter :math:`A`.
     H, K, L : 1d array, int
         Supercell index along the :math:`a^*`, :math:`b^*`, and \
-        :math:`c^*`-axis in reciprocal space
+        :math:`c^*`-axis in reciprocal space.
     nu, nv, nw : int
         Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
-        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
-        Number of atoms in the unit cell
+        Number of atoms in the unit cell.
 
     Returns
     -------
     A_k : 1d array
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``
+        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
     i_dft : 1d array, int
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``
+        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
         
     """
     
@@ -70,16 +70,16 @@ def intensity(A_k, i_dft, factors):
     Parameters
     ----------
     A_k : 1d array
-        Fourier transform of relative site occupancies
+        Fourier transform of relative site occupancies.
     i_dft: 1d array, int
-        Array indices of Fourier transform corresponding to reciprocal space
+        Array indices of Fourier transform corresponding to reciprocal space.
     factors: 1d array
-        Prefactors of form factors, phase factors, and composition factors
+        Prefactors of form factors, phase factors, and composition factors.
 
     Returns
     -------
     I : 1d array
-        Array has a flattened shape of size ``i_dft.shape[0]``
+        Array has a flattened shape of size ``i_dft.shape[0]``.
 
     """
     
@@ -108,11 +108,11 @@ def structure(A_k, i_dft, factors):
     Parameters
     ----------
     A_k : 1d array
-        Fourier transform of relative site occupancies
+        Fourier transform of relative site occupancies.
     i_dft: 1d array, int
-        Array indices of Fourier transform corresponding to reciprocal space
+        Array indices of Fourier transform corresponding to reciprocal space.
     factors: 1d array
-        Prefactors of form factors, phase factors, and composition factors
+        Prefactors of form factors, phase factors, and composition factors.
 
     Returns
     -------
@@ -120,7 +120,7 @@ def structure(A_k, i_dft, factors):
         Array has a flattened shape of size ``i_dft.shape[0]``
     prod : 1d array
         Array has a flattened shape of size 
-        ``i_dft.shape[0]*n_atm``
+        ``i_dft.shape[0]*n_atm``.
 
     """
     

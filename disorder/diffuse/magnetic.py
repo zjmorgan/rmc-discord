@@ -2,40 +2,35 @@
 
 import numpy as np
 
-from scipy import constants
 from disorder.material import tables
-
-c = (0.5*constants.value('classical electron radius')*
-      constants.value('neutron mag. mom. to nuclear magneton ratio')*
-  0.1/constants.femto)**2
 
 def j0(Q, A, a, B, b, C, c, D):
     """
-    Appoximation of the spherical Bessesl function :math:`j_0(Q)`.
+    Appoximation of the zeroth-order spherical Bessesl function :math:`j_0(Q)`.
 
     Parameters
     ----------
     Q : 1d array
-        Magnitude of wavevector :math:`Q`
+        Magnitude of wavevector :math:`Q`.
     A : float
-        :math:`A_0` constant
+        :math:`A_0` constant.
     a : float
-        :math:`a_0` constant
+        :math:`a_0` constant.
     B : float
-        :math:`B_0` constant
+        :math:`B_0` constant.
     b : float
-        :math:`b_0` constant
+        :math:`b_0` constant.
     C : float
-        :math:`C_0` constant
+        :math:`C_0` constant.
     c : float
-        :math:`c_0` constant
+        :math:`c_0` constant.
     D : float
-        :math:`D_0` constant
+        :math:`D_0` constant.
 
     Returns
     -------
     j0 : 1d array
-        Has the same shape as the input wavevector
+        Has the same shape as the input wavevector.
 
     """
 
@@ -45,31 +40,31 @@ def j0(Q, A, a, B, b, C, c, D):
 
 def j2(Q, A, a, B, b, C, c, D):
     """
-    Appoximation of the spherical Bessesl function :math:`j_2(Q)`.
+    Appoximation of the second-order spherical Bessesl function :math:`j_2(Q)`.
 
     Parameters
     ----------
     Q : 1d array
-        Magnitude of wavevector :math:`Q`
+        Magnitude of wavevector :math:`Q`.
     A : float
-        :math:`A_2` constant
+        :math:`A_2` constant.
     a : float
-        :math:`a_2` constant
+        :math:`a_2` constant.
     B : float
-        :math:`B_2` constant
+        :math:`B_2` constant.
     b : float
-        :math:`b_2` constant
+        :math:`b_2` constant.
     C : float
-        :math:`C_2` constant
+        :math:`C_2` constant.
     c : float
-        :math:`c_2` constant
+        :math:`c_2` constant.
     D : float
-        :math:`D_2` constant
+        :math:`D_2` constant.
 
     Returns
     -------
     j2 : 1d array
-        Has the same shape as the input wavevector
+        Has the same shape as the input wavevector.
 
     """
 
@@ -86,17 +81,17 @@ def f(Q, j0, j2=0, K2=0):
 
     Parameters
     ----------
-    Q : 1d array
-        Magnitude of wavevector
+    Q : 1d array.
+        Magnitude of wavevector.
     j0, j2 : 1d array
-        :math:`j_0` and :math:`j_2` constant with same shape as wavevector
+        :math:`j_0` and :math:`j_2` constant with same shape as wavevector.
     K2 : 1d array, optional
-        Coupling constant, defualt ``K2=0``
+        Coupling constant, defualt ``K2=0``.
 
     Returns
     -------
     f : 1d array
-        Has the same shape as the input wavevector
+        Has the same shape as the input wavevector.
 
     """
 
@@ -109,16 +104,16 @@ def form(Q, ions, g=2):
     Parameters
     ----------
     Q : 1d array
-        Magnitude of wavevector
+        Magnitude of wavevector.
     ions : 1d array
-        Magnetic ions
+        Magnetic ions.
     g : float, 1d array, optional
-       :math:`g` factor of the spins, defualt ``g=2``
+       :math:`g` factor of the spins, defualt ``g=2``.
 
     Returns
     -------
     f : 1d array
-        Has the same shape as the input wavevector
+        Has the same shape as the input wavevector.
 
     """
 
@@ -158,14 +153,14 @@ def spin(nu, nv, nw, n_atm, value=1, fixed=True):
     ----------
     nu, nv, nw : int
         Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
-        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
-        Number of atoms in the unit cell
+        Number of atoms in the unit cell.
 
     Returns
     -------
     Sx, Sy, Sz : 1d array
-        Each array has a flattened shape of size ``nu*nw*nv*n_atm``
+        Each array has a flattened shape of size ``nu*nw*nv*n_atm``.
 
     """
 
@@ -208,22 +203,22 @@ def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
     Sx, Sy, Sz : 1d array
         Spin vector component :math:`S_x`, :math:`S_y`, and :math:`S_z` in \
         Cartesian components along the :math:`x`, :math:`y`, and \
-        :math:`z`-direction
+        :math:`z`-direction.
     H, K, L : 1d array, int
         Supercell index along the :math:`a^*`, :math:`b^*`, and \
-        :math:`c^*`-axis in reciprocal space
+        :math:`c^*`-axis in reciprocal space.
     nu, nv, nw : int
         Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
-        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
-        Number of atoms in the unit cell
+        Number of atoms in the unit cell.
 
     Returns
     -------
     Sx_k, Sy_k, Sz_k : 1d array
-        Each array has a flattened shape of size ``nu*nw*nv*n_atm``
+        Each array has a flattened shape of size ``nu*nw*nv*n_atm``.
     i_dft : 1d array, int
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``
+        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
 
     """
 
@@ -247,19 +242,19 @@ def intensity(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     ----------
     Qx_norm, Qy_norm, Qz_norm : 1d array
         Normalized wavevector component :math:`\hat{Q}_x`, :math:`\hat{Q}_y`, \
-        and :math:`\hat{Q}_z` 
+        and :math:`\hat{Q}_z`.
     Sx_k, Sy_k, Sz_k : 1d array
         Fourier transform of the spin vector component :math:`S_x`, \
-        :math:`S_y`, and :math:`S_z` component 
+        :math:`S_y`, and :math:`S_z` component.
     i_dft: 1d array, int
-        Array indices of Fourier transform corresponding to reciprocal space
+        Array indices of Fourier transform corresponding to reciprocal space.
     factors: 1d array
-        Prefactors of form factors and phase factors
+        Prefactors of form factors and phase factors.
 
     Returns
     -------
     I : 1d array
-        Array has a flattened shape of size ``i_dft.shape[0]``
+        Array has a flattened shape of size ``i_dft.shape[0]``.
 
     """
 
@@ -303,21 +298,21 @@ def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     ----------
     Qx_norm, Qy_norm, Qz_norm : 1d array
         Normalized wavevector component :math:`\hat{Q}_x`, :math:`\hat{Q}_y`, \
-        and :math:`\hat{Q}_z` 
+        and :math:`\hat{Q}_z`.
     Sx_k, Sy_k, Sz_k : 1d array
         Fourier transform of the spin vector component :math:`S_x`, \
-        :math:`S_y`, and :math:`S_z` component
+        :math:`S_y`, and :math:`S_z` component.
     i_dft: 1d array, int
-        Array indices of Fourier transform corresponding to reciprocal space
+        Array indices of Fourier transform corresponding to reciprocal space.
     factors: 1d array
-        Prefactors of form factors and phase factors
+        Prefactors of form factors and phase factors.
 
     Returns
     -------
     Fx, Fy, Fz : 1d array
-        Each array has a flattened shape of size ``i_dft.shape[0]``
+        Each array has a flattened shape of size ``i_dft.shape[0]``.
     prod_x, prod_y, prod_z : 1d array
-        Each array has a flattened shape of size ``i_dft.shape[0]*n_atm``
+        Each array has a flattened shape of size ``i_dft.shape[0]*n_atm``.
 
     """
 
@@ -344,7 +339,24 @@ def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     return Fx, Fy, Fz, prod_x.flatten(), prod_y.flatten(), prod_z.flatten()
 
 def magnitude(mu1, mu2, mu3, C):
+    """
+    Magnitude of magnetic moment :math:`\mu`.
 
+    Parameters
+    ----------
+    mu1, mu2, mu3 : 1d array
+        Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`, \
+        and :math:`\mu_3`.
+    C: 2d array
+        Transform matrix from crystal axis to Cartesian coordiante system.
+
+    Returns
+    -------
+    mu : 1d array
+        Has same size as input magnetic moment components.
+
+    """
+    
     M = np.array([mu1,mu2,mu3])
     n = np.size(mu1)
 
@@ -357,17 +369,35 @@ def magnitude(mu1, mu2, mu3, C):
     return np.array(mu)
 
 def cartesian(mu1, mu2, mu3, C):
+    """
+    Components of magnetic moment in Cartesian coordiantes :math:`\mu_x`, \
+    :math:`\mu_x`, and :math:`\mu_x`.
+
+    Parameters
+    ----------
+    mu1, mu2, mu3 : float or 1d array
+        Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`, \
+        and :math:`\mu_3`.
+    C: 2d array
+        Transform matrix from crystal axis to Cartesian coordiante system.
+
+    Returns
+    -------
+    mu_x, mu_y, mu_z : 1d array
+        Has same size as input magnetic moment components.
+
+    """
 
     M = np.array([mu1,mu2,mu3])
     n = np.size(mu1)
 
     M = M.reshape(3,n)
 
-    mux, muy, muz = [], [], []
+    mu_x, mu_y, mu_z = [], [], []
     for i in range(n):
         Mp = np.dot(C, M[:,i])
-        mux.append(Mp[0])
-        muy.append(Mp[1])
-        muz.append(Mp[2])
+        mu_x.append(Mp[0])
+        mu_y.append(Mp[1])
+        mu_z.append(Mp[2])
 
-    return np.array(mux), np.array(muy), np.array(muz)
+    return np.array(mu_x), np.array(mu_y), np.array(mu_z)

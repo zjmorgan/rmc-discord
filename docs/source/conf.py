@@ -63,7 +63,6 @@ html_theme_options = {
     'logo': {
         'image_light': 'logo-light.svg',
         'image_dark': 'logo-dark.svg',
-        'link': 'https://zjmorgan.github.io/rmc-discord/',
     },
     'icon_links': [
         {
