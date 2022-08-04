@@ -1,15 +1,5 @@
-import setuptools
-setuptools.dist.Distribution().fetch_build_eggs(['Cython>=0.15.1',
-                                                 'numpy>=1.10'])
-
-from distutils.extension import Extension
-
-try:
-    from Cython.Distutils import build_ext
-except ImportError:
-    USE_CYTHON = False
-else:
-    USE_CYTHON = True
+from setuptools import Extension, setup
+from Cython.Build import cythonize
 
 import numpy as np
 
@@ -35,54 +25,52 @@ with open('README.md', 'r') as fh:
 ver = open('disorder/version.py', "rt").read()
 version = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]", ver, re.M).group(1)
 
-ext = '.pyx' if USE_CYTHON else '.c'
-
-ext_modules = [
+extensions = [
     Extension(
         'disorder.diffuse.refinement',
-        ['disorder/diffuse/refinement'+ext],
+        ['disorder/diffuse/refinement.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
         include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.filters',
-        ['disorder/diffuse/filters'+ext],
+        ['disorder/diffuse/filters.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
         include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.powder',
-        ['disorder/diffuse/powder'+ext],
+        ['disorder/diffuse/powder.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
         include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.refinement',
-        ['disorder/diffuse/refinement'+ext],
+        ['disorder/diffuse/refinement.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
         include_dirs=np_include_dir
     ),
     Extension(
         'disorder.correlation.functions',
-        ['disorder/correlation/functions'+ext],
+        ['disorder/correlation/functions.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
         include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.monocrystal',
-        ['disorder/diffuse/monocrystal'+ext],
+        ['disorder/diffuse/monocrystal.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
         include_dirs=np_include_dir
     ),
     Extension(
         'disorder.diffuse.simulation',
-        ['disorder/diffuse/simulation'+ext],
+        ['disorder/diffuse/simulation.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
         include_dirs=np_include_dir,
@@ -90,12 +78,7 @@ ext_modules = [
     )
 ]
 
-if (USE_CYTHON):
-    cmdclass = {'build_ext': build_ext}
-else:
-    cmdclass = { }
-
-setuptools.setup(
+setup(
     name='rmc-discord',
     version=version,
     author='Zachary Morgan',
@@ -105,7 +88,6 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     url='https://github.com/zjmorgan/rmc-discord',
-    packages=setuptools.find_packages(),
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: GNU General Public License (GPL)',
@@ -120,10 +102,10 @@ setuptools.setup(
         'nexusformat',
         'pyvista',
         'pyqt5',
-        'ipython'
+        'ipython',
+        'cython'
     ],
-    cmdclass=cmdclass,
-    ext_modules=ext_modules,
+    ext_modules=cythonize(extensions),
     entry_points={
         'console_scripts': [
             'rmc-discord=disorder.application:run',
