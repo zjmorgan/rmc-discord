@@ -105,10 +105,6 @@ setup(
         'pyqt5',
         'ipython',
     ],
-    setup_requires=[
-        'numpy',
-        'cython'
-    ],
     ext_modules=cythonize(extensions),
     entry_points={
         'console_scripts': [
