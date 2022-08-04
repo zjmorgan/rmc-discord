@@ -158,57 +158,57 @@ class UnitCell:
     get_number_atoms_per_unit_cell()
         Total number of atoms in the unit cell.
     get_fractional_coordinates()
-        All fractional coordiantes of active atom sites.
+        Fractional coordiantes of active atoms.
     set_fractional_coordinates()
-        Update fractional coordiantes of active atom sites.
+        Update fractional coordiantes of active atoms.
     get_unit_cell_cartesian_atomic_coordinates()
-        Cartesian coordiantes of active atom sites.
+        Cartesian coordiantes of active atoms.
     get_unit_cell_atoms()
-        All atom symbols of active atom sites.
+        Atom symbols of active atoms.
     set_unit_cell_atoms()
-        Update atom symbols of active atom sites.
+        Update atom symbols of active atoms.
     get_occupancies()
-        All occupancies of active atom sites.
+        Occupancies of active atoms.
     set_occupancies()
-        Update occupancies of active atom sites.
+        Update occupancies of active atoms.
     get_anisotropic_displacement_parameters()
-        All anisotropic displacement parameters in crystal coordinates of \
-        active atom sites.
+        Anisotropic displacement parameters in crystal coordinates of \
+        active atoms.
     set_anisotropic_displacement_parameters()
         Update anisotropic displacement parameters in crystal coordinates of \
-        active atom sites.
+        active atoms.
     get_isotropic_displacement_parameter()
-        All isotropic displacement parameters of active atom sites.
+        Isotropic displacement parameters of active atoms.
     set_isotropic_displacement_parameter()
-        Update isotropic displacement parameters of active atom sites.
+        Update isotropic displacement parameters of active atoms.
     get_principal_displacement_parameters()
-        All principal displacement parameters in Cartesian coordinates of \
-        active atom sites.
+        Principal displacement parameters in Cartesian coordinates of \
+        active atoms.
     get_cartesian_anistropic_displacement_parameters()
-        All anisotropic displacement parameters in Cartesian coordinates of \
-        active atom sites.
+        Anisotropic displacement parameters in Cartesian coordinates of \
+        active atoms.
     get_crystal_axis_magnetic_moments()
-        All magnetic moments in crystal coordinates of active atom sites.
+        Magnetic moments in crystal coordinates of active atoms.
     set_crystal_axis_magnetic_moments()
-        Update magnetic moments in crystal coordinates of active atom sites.
+        Update magnetic moments in crystal coordinates of active atoms.
     get_magnetic_moment_magnitude()
-        All magnitude of magnetic moments of active atom sites.
+        Magnitude of magnetic moments of active atoms.
     get_cartesian_magnetic_moments()
-        All magnetic moments in Cartesian coordinates of active atom sites.
+        Magnetic moments in Cartesian coordinates of active atoms.
     get_g_factors()
-        All g factors of active atom sites.
+        g-factors of active atoms.
     set_g_factors()
-        Update g factors of active atom sites.
+        Update g-factors of active atoms.
     get_lattice_constants()
-        All lattice parameters.
+        Lattice parameters.
     set_lattice_constants()
         Update lattice parameters.
     get_reciprocal_lattice_constants()
-        All reciprocal lattice parameters.
+        Reciprocal lattice parameters.
     get_symmetry_operators()
-        All symmetry operators.
+        Symmetry operators for all active atoms.
     get_magnetic_symmetry_operators()
-        All magnetic symmetry operators of all active atom sites.
+        Magnetic symmetry operators for all active atoms.
     get_lattice_system()
         Lattice system of unit cell.
     get_lattice_volume()
@@ -226,10 +226,10 @@ class UnitCell:
     get_cartesian_rotation()
         Transform matrix between Cartesian axes of real and reciprocal lattice.
     get_moment_cartesian_transform()
-        Transform matrix between crystal and Cartesial coordinates for \
+        Transform matrix between crystal and Cartesian coordinates for \
         magnetic moments.
     get_atomic_displacement_cartesian_transform()
-        Transform matrix between crystal and Cartesial coordinates for \
+        Transform matrix between crystal and Cartesian coordinates for \
         atomic displacement parameters.
     get_space_group_symbol()
         Space group symbol.
@@ -238,11 +238,11 @@ class UnitCell:
     get_laue()
         Laue class.
     get_site_symmetries()
-        All site symmetry operators.
+        Site symmetry operators.
     get_wyckoff_special_positions()
-        All wyckoff special positions for active atom sites.
+        Wyckoff special positions for active atoms.
     get_site_multiplicities()
-        All site multiplicites for active atom sites.
+        Site multiplicites for active atoms.
 
     """
     
@@ -434,7 +434,7 @@ class UnitCell:
 
     def get_fractional_coordinates(self):
         """
-        All fractional coordiantes of active atom sites.
+        Fractional coordiantes of active atoms.
         """
         
         mask = self.__mask
@@ -443,7 +443,7 @@ class UnitCell:
 
     def set_fractional_coordinates(self, u, v, w):
         """
-        Update fractional coordiantes of active atom sites.
+        Update fractional coordiantes of active atoms.
         """
         
         mask = self.__mask
@@ -463,7 +463,7 @@ class UnitCell:
 
     def get_unit_cell_cartesian_atomic_coordinates(self):
         """
-        Cartesian coordiantes of active atom sites.
+        Cartesian coordiantes of active atoms.
         """
         
         A = self.get_fractional_cartesian_transform()
@@ -473,7 +473,7 @@ class UnitCell:
 
     def get_unit_cell_atoms(self):
         """
-        All atom symbols of active atom sites.
+        Atom symbols of active atoms.
         """
         
         mask = self.__mask
@@ -482,7 +482,7 @@ class UnitCell:
 
     def set_unit_cell_atoms(self, atm):
         """
-        Update atom symbols of active atom sites.
+        Update atom symbols of active atoms.
         """
         
         ind = self.__index
@@ -492,7 +492,7 @@ class UnitCell:
 
     def get_occupancies(self):
         """
-        All occupancies of active atom sites.
+        Occupancies of active atoms.
         """
         
         mask = self.__mask
@@ -501,7 +501,7 @@ class UnitCell:
 
     def set_occupancies(self, occ):
         """
-        Update occupancies of active atom sites.
+        Update occupancies of active atoms.
         """
         
         ind = self.__index
@@ -511,8 +511,8 @@ class UnitCell:
 
     def get_anisotropic_displacement_parameters(self):
         """
-        All anisotropic displacement parameters in crystal coordinates of \
-        active atom sites.
+        Anisotropic displacement parameters in crystal coordinates of active \
+        atoms.
         """
         
         mask = self.__mask
@@ -530,7 +530,7 @@ class UnitCell:
                                                       U23, U13, U12):
         """
         Update anisotropic displacement parameters in crystal coordinates of \
-        active atom sites.
+        active atoms.
         """
         
         mask = self.__mask
@@ -561,7 +561,7 @@ class UnitCell:
 
     def get_isotropic_displacement_parameter(self):
         """
-        All isotropic displacement parameters of active atom sites.
+        Isotropic displacement parameters of active atoms.
         """
         
         D = self.get_atomic_displacement_cartesian_transform()
@@ -573,7 +573,7 @@ class UnitCell:
 
     def set_isotropic_displacement_parameter(self, Uiso):
         """
-        Update isotropic displacement parameters of active atom sites.
+        Update isotropic displacement parameters of active atoms.
         """
         
         ind = self.__index
@@ -595,8 +595,8 @@ class UnitCell:
 
     def get_principal_displacement_parameters(self):
         """
-        All principal displacement parameters in Cartesian coordinates of \
-        active atom sites.
+        Principal displacement parameters in Cartesian coordinates of \
+        active atoms.
         """
         
         D = self.get_atomic_displacement_cartesian_transform()
@@ -608,8 +608,8 @@ class UnitCell:
 
     def get_cartesian_anistropic_displacement_parameters(self):
         """
-        All anisotropic displacement parameters in Cartesian coordinates of \
-        active atom sites.
+        Anisotropic displacement parameters in Cartesian coordinates of \
+        active atoms.
         """
         
         D = self.get_atomic_displacement_cartesian_transform()
@@ -621,7 +621,7 @@ class UnitCell:
 
     def get_crystal_axis_magnetic_moments(self):
         """
-        All magnetic moments in crystal coordinates of active atom sites.
+        Magnetic moments in crystal coordinates of active atoms.
         """
         
         mask = self.__mask
@@ -634,7 +634,7 @@ class UnitCell:
 
     def set_crystal_axis_magnetic_moments(self, mu1, mu2, mu3):
         """
-        Update magnetic moments in crystal coordinates of active atom sites.
+        Update magnetic moments in crystal coordinates of active atoms.
         """
         
         mask = self.__mask
@@ -660,7 +660,7 @@ class UnitCell:
 
     def get_magnetic_moment_magnitude(self):
         """
-        All magnitude of magnetic moments of active atom sites.
+        Magnitude of magnetic moments of active atoms.
         """
         
         C = self.get_moment_cartesian_transform()
@@ -670,7 +670,7 @@ class UnitCell:
 
     def get_cartesian_magnetic_moments(self):
         """
-        All magnetic moments in Cartesian coordinates of active atom sites.
+        Magnetic moments in Cartesian coordinates of active atoms.
         """
         
         C = self.get_moment_cartesian_transform()
@@ -680,7 +680,7 @@ class UnitCell:
 
     def get_g_factors(self):
         """
-        All g factors of active atom sites.
+        g-factors of active atoms.
         """
         
         mask = self.__mask
@@ -689,7 +689,7 @@ class UnitCell:
 
     def set_g_factors(self, g):
         """
-        Update g factors of active atom sites.
+        Update g-factors of active atoms.
         """
         
         ind = self.__index
@@ -699,7 +699,7 @@ class UnitCell:
 
     def get_lattice_constants(self):
         """
-        All lattice parameters.
+        Lattice parameters.
         """
         
         lat = self.get_lattice_system()
@@ -773,7 +773,7 @@ class UnitCell:
 
     def get_reciprocal_lattice_constants(self):
         """
-        All reciprocal lattice parameters.
+        Reciprocal lattice parameters.
         """
         
         constants = self.__get_all_lattice_constants()
@@ -782,7 +782,7 @@ class UnitCell:
 
     def get_symmetry_operators(self):
         """
-        All symmetry operators.
+        Symmetry operators of active atoms.
         """
         
         mask = self.__mask
@@ -791,7 +791,7 @@ class UnitCell:
 
     def get_magnetic_symmetry_operators(self):
         """
-        All magnetic symmetry operators of all active atom sites.
+        Magnetic symmetry operators of active atoms.
         """
         
         mask = self.__mask
@@ -870,7 +870,7 @@ class UnitCell:
 
     def get_moment_cartesian_transform(self):
         """
-        Transform matrix between crystal and Cartesial coordinates for \
+        Transform matrix between crystal and Cartesian coordinates for \
         magnetic moments.
         """
         
@@ -880,7 +880,7 @@ class UnitCell:
 
     def get_atomic_displacement_cartesian_transform(self):
         """
-        Transform matrix between crystal and Cartesial coordinates for atomic \
+        Transform matrix between crystal and Cartesian coordinates for atomic \
         displacement parameters.
         """
         
@@ -920,7 +920,7 @@ class UnitCell:
 
     def get_wyckoff_special_positions(self):
         """
-        All Wyckoff special positions for active atom sites.
+        Wyckoff special positions of active atoms.
         """
 
         mask = self.__mask
@@ -929,7 +929,7 @@ class UnitCell:
 
     def get_site_multiplicities(self):
         """
-        All site multiplicites for active atom sites.
+        site multiplicites of active atoms.
 
         Returns
         -------

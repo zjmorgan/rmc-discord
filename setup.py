@@ -96,7 +96,7 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         'numpy',
-        'cython'
+        'cython',
         'scipy',
         'matplotlib',
         'pycifrw',
