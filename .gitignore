@@ -154,3 +154,7 @@ _site/
 
 # Sphinx docs
 make.bat
+
+# Cython
+*.c
+*.cpp

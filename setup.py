@@ -96,6 +96,7 @@ setup(
     python_requires='>=3.6',
     install_requires=[
         'numpy',
+        'cython'
         'scipy',
         'matplotlib',
         'pycifrw',
@@ -103,6 +104,9 @@ setup(
         'pyvista',
         'pyqt5',
         'ipython',
+    ],
+    setup_requires=[
+        'numpy',
         'cython'
     ],
     ext_modules=cythonize(extensions),
