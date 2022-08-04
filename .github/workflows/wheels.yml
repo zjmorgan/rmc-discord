@@ -29,7 +29,7 @@ jobs:
            CIBW_MANYLINUX_PYPY_X86_64_IMAGE: manylinux2014
            CIBW_MANYLINUX_PYPY_I686_IMAGE: manylinux2014
         with:
-           package-dir: .
+           package-dir: rmc-discord
            output-dir: wheelhouse
 
       - uses: actions/upload-artifact@v3
@@ -43,9 +43,7 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Install dependencies
-        run: |
-           pipx install numpy
-           pipx install cython
+        run: pip install numpy cython
 
       - name: Build sdist
         run: pipx run build --sdist
