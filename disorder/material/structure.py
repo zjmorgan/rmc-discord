@@ -245,6 +245,7 @@ class UnitCell:
         All site multiplicites for active atom sites.
 
     """
+    
     def __init__(self, filename, tol=1e-2):
 
         filename = os.path.abspath(filename)
@@ -406,7 +407,7 @@ class UnitCell:
         Update active atom sites in the unit cell. 
 
         Parameters
-        ---------
+        ----------
         act : 1d array, int
             All active site numbers.
 
@@ -419,17 +420,32 @@ class UnitCell:
         self.__inverse = np.arange(self.__act.size)[self.__site][self.__index]
 
     def get_number_atoms_per_unit_cell(self):
-
+        """
+        Total number of atoms in the unit cell.
+        
+        Returns
+        -------
+        int
+            All active atoms.
+            
+        """
+        
         return self.__act[self.__site].sum()
 
     def get_fractional_coordinates(self):
-
+        """
+        All fractional coordiantes of active atom sites.
+        """
+        
         mask = self.__mask
 
         return self.__u[mask], self.__v[mask], self.__w[mask]
 
     def set_fractional_coordinates(self, u, v, w):
-
+        """
+        Update fractional coordiantes of active atom sites.
+        """
+        
         mask = self.__mask
 
         ind = self.__index
@@ -446,40 +462,59 @@ class UnitCell:
         self.__u[ind], self.__v[ind], self.__w[ind] = up, vp, wp
 
     def get_unit_cell_cartesian_atomic_coordinates(self):
-
+        """
+        Cartesian coordiantes of active atom sites.
+        """
+        
         A = self.get_fractional_cartesian_transform()
         u, v, w = self.get_fractional_coordinates()
 
         return crystal.transform(u, v, w, A)
 
     def get_unit_cell_atoms(self):
-
+        """
+        All atom symbols of active atom sites.
+        """
+        
         mask = self.__mask
 
         return self.__atm[mask]
 
     def set_unit_cell_atoms(self, atm):
-
+        """
+        Update atom symbols of active atom sites.
+        """
+        
         ind = self.__index
         inv = self.__inverse
 
         self.__atm[ind] = atm[inv]
 
     def get_occupancies(self):
-
+        """
+        All occupancies of active atom sites.
+        """
+        
         mask = self.__mask
 
         return self.__occ[mask]
 
     def set_occupancies(self, occ):
-
+        """
+        Update occupancies of active atom sites.
+        """
+        
         ind = self.__index
         inv = self.__inverse
 
         self.__occ[ind] = occ[inv]
 
     def get_anisotropic_displacement_parameters(self):
-
+        """
+        All anisotropic displacement parameters in crystal coordinates of \
+        active atom sites.
+        """
+        
         mask = self.__mask
 
         U11 = self.__U11[mask]
@@ -493,7 +528,11 @@ class UnitCell:
 
     def set_anisotropic_displacement_parameters(self, U11, U22, U33,
                                                       U23, U13, U12):
-
+        """
+        Update anisotropic displacement parameters in crystal coordinates of \
+        active atom sites.
+        """
+        
         mask = self.__mask
 
         ind = self.__index
@@ -521,7 +560,10 @@ class UnitCell:
         self.__U12[ind] = U12p
 
     def get_isotropic_displacement_parameter(self):
-
+        """
+        All isotropic displacement parameters of active atom sites.
+        """
+        
         D = self.get_atomic_displacement_cartesian_transform()
         adps = self.get_anisotropic_displacement_parameters()
 
@@ -530,7 +572,10 @@ class UnitCell:
         return displacive.isotropic(U11, U22, U33, U23, U13, U12, D)
 
     def set_isotropic_displacement_parameter(self, Uiso):
-
+        """
+        Update isotropic displacement parameters of active atom sites.
+        """
+        
         ind = self.__index
         inv = self.__inverse
 
@@ -549,7 +594,11 @@ class UnitCell:
         self.__U12[ind] = U12[inv]
 
     def get_principal_displacement_parameters(self):
-
+        """
+        All principal displacement parameters in Cartesian coordinates of \
+        active atom sites.
+        """
+        
         D = self.get_atomic_displacement_cartesian_transform()
         adps = self.get_anisotropic_displacement_parameters()
 
@@ -558,7 +607,11 @@ class UnitCell:
         return displacive.principal(U11, U22, U33, U23, U13, U12, D)
 
     def get_cartesian_anistropic_displacement_parameters(self):
-
+        """
+        All anisotropic displacement parameters in Cartesian coordinates of \
+        active atom sites.
+        """
+        
         D = self.get_atomic_displacement_cartesian_transform()
         adps = self.get_anisotropic_displacement_parameters()
 
@@ -567,7 +620,10 @@ class UnitCell:
         return displacive.cartesian(U11, U22, U33, U23, U13, U12, D)
 
     def get_crystal_axis_magnetic_moments(self):
-
+        """
+        All magnetic moments in crystal coordinates of active atom sites.
+        """
+        
         mask = self.__mask
 
         mu1 = self.__mu1[mask]
@@ -577,7 +633,10 @@ class UnitCell:
         return mu1, mu2, mu3
 
     def set_crystal_axis_magnetic_moments(self, mu1, mu2, mu3):
-
+        """
+        Update magnetic moments in crystal coordinates of active atom sites.
+        """
+        
         mask = self.__mask
 
         ind = self.__index
@@ -600,34 +659,49 @@ class UnitCell:
         self.__mu3[ind] = mu3p
 
     def get_magnetic_moment_magnitude(self):
-
+        """
+        All magnitude of magnetic moments of active atom sites.
+        """
+        
         C = self.get_moment_cartesian_transform()
         mu1, mu2, mu3 = self.get_crystal_axis_magnetic_moments()
 
         return magnetic.magnitude(mu1, mu2, mu3, C)
 
     def get_cartesian_magnetic_moments(self):
-
+        """
+        All magnetic moments in Cartesian coordinates of active atom sites.
+        """
+        
         C = self.get_moment_cartesian_transform()
         mu1, mu2, mu3 = self.get_crystal_axis_magnetic_moments()
 
         return magnetic.cartesian(mu1, mu2, mu3, C)
 
     def get_g_factors(self):
-
+        """
+        All g factors of active atom sites.
+        """
+        
         mask = self.__mask
 
         return self.__g[mask]
 
     def set_g_factors(self, g):
-
+        """
+        Update g factors of active atom sites.
+        """
+        
         ind = self.__index
         inv = self.__inverse
 
         self.__g[ind] = g[inv]
 
     def get_lattice_constants(self):
-
+        """
+        All lattice parameters.
+        """
+        
         lat = self.get_lattice_system()
 
         a = self.__a
@@ -656,7 +730,10 @@ class UnitCell:
         return constants
 
     def set_lattice_constants(self, *constants):
-
+        """
+        Update lattice parameters.
+        """
+        
         lat = self.get_lattice_system()
 
         a = self.__a
@@ -695,106 +772,171 @@ class UnitCell:
         self.__gamma = gamma
 
     def get_reciprocal_lattice_constants(self):
-
+        """
+        All reciprocal lattice parameters.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.reciprocal(*constants)
 
     def get_symmetry_operators(self):
-
+        """
+        All symmetry operators.
+        """
+        
         mask = self.__mask
 
         return self.__op[mask]
 
     def get_magnetic_symmetry_operators(self):
-
+        """
+        All magnetic symmetry operators of all active atom sites.
+        """
+        
         mask = self.__mask
 
         return self.__mag_op[mask]
 
     def get_lattice_system(self):
-
+        """
+        Lattice system of unit cell.
+        """
+        
         return self.__lat
 
     def get_lattice_volume(self):
-
+        """
+        Lattice volume of unit cell.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.volume(*constants)
 
     def get_reciprocal_lattice_volume(self):
-
+        """
+        Reciprocal lattice volume of reciprocal cell.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.volume(*constants)
 
     def get_metric_tensor(self):
-
+        """
+        Unit cell metric tensor.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.metric(*constants)
 
     def get_reciprocal_metric_tensor(self):
-
+        """
+        Reciprocal cell metric tensor.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.metric(*constants)
 
     def get_fractional_cartesian_transform(self):
-
+        """
+        Trasform matrix from fractional to Cartesian coordinates.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian(*constants)
 
     def get_miller_cartesian_transform(self):
-
+        """
+        Trasform matrix from Miller to Cartesian coordinates.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian(*constants)
 
     def get_cartesian_rotation(self):
-
+        """
+        Transform matrix between Cartesian axes of real and reciprocal lattice.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian_rotation(*constants)
 
     def get_moment_cartesian_transform(self):
-
+        """
+        Transform matrix between crystal and Cartesial coordinates for \
+        magnetic moments.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian_moment(*constants)
 
     def get_atomic_displacement_cartesian_transform(self):
-
+        """
+        Transform matrix between crystal and Cartesial coordinates for atomic \
+        displacement parameters.
+        """
+        
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian_displacement(*constants)
 
     def get_space_group_symbol(self):
-
+        """
+        Space group symbol.
+        """
+        
         return self.__hm
 
     def get_space_group_number(self):
-
+        """
+        Space group number.
+        """
+        
         return self.__sg
 
     def get_laue(self):
-
+        """
+        Laue class.
+        """
+        
         return self.__laue
 
     def get_site_symmetries(self):
-
+        """
+        All site symmetry operators.
+        """
+        
         mask = self.__mask
 
         return self.__pg[mask]
 
     def get_wyckoff_special_positions(self):
+        """
+        All Wyckoff special positions for active atom sites.
+        """
 
         mask = self.__mask
 
         return self.__sp_pos[mask]
 
     def get_site_multiplicities(self):
+        """
+        All site multiplicites for active atom sites.
+
+        Returns
+        -------
+        1d array
+            Multiplicities
+
+        """
 
         mask = self.__mask
 
