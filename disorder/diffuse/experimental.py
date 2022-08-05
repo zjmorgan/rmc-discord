@@ -297,7 +297,7 @@ def correlations(fname, data, label):
             for label in labels:
                 mask = pairs == label
                 blocks[t+'-'+label] = pv.PolyData(points[mask])
-                blocks[t+'-'+label].point_arrays[t] = array[mask]
+                blocks[t+'-'+label].point_data[t] = array[mask]
     else:
         for t, array in zip(form, datasets):
             blocks[t] = pv.PolyData(points)

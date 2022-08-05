@@ -579,22 +579,22 @@ class Presenter:
                 average = self.view.average_3d_checked()
 
                 if (disorder != 'Occupancy'):
-                    if not average:
+                    if average:
                         data = self.dx, self.dy, self.dz, \
                                self.corr3d, self.coll3d
-                        label = 'vector-pair'
+                        label = 'vector'
                     else:
                         data = self.dx, self.dy, self.dz, \
                                self.corr3d, self.coll3d, self.atm_pair3d
-                        label = 'vector'
+                        label = 'vector-pair'
                 else:
-                    if not average:
+                    if average:
                         data = self.dx, self.dy, self.dz, self.corr3d
-                        label = 'scalar-pair'
+                        label = 'scalar'
                     else:
                         data = self.dx, self.dy, self.dz, \
                                self.corr3d, self.atm_pair3d
-                        label = 'scalar'
+                        label = 'scalar-pair'
 
                 self.model.save_correlations_3d(filename, data, label)
                 
@@ -3301,7 +3301,7 @@ class Presenter:
                         mask = atm_pair1d == '0'
                         label = atom
                     else:
-                        mask = atm_pair1d == '{}-{}'.format(atom,pair)
+                        mask = atm_pair1d == '{}_{}'.format(atom,pair)
 
                         atm_l = re.sub(r'[^a-zA-Z]', '', atom)
                         atm_r = re.sub(r'[^a-zA-Z]', '', pair)
