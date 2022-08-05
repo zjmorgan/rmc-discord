@@ -23,7 +23,7 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
     U11, U22, U33, U23, U13, U12 : 1d array
         Atomic displacement parameters in crystal axis system.
     a, b, c, alpha, beta, gamma : float
-        Lattice constants :math:`a`, :math:`b`, :math:`c`, :math:`\\alpha`, \
+        Lattice constants :math:`a`, :math:`b`, :math:`c`, :math:`\\alpha`, 
         :math:`\\beta`, and :math:`\\gamma`. Angles are in radians.
     symops : 1d array, str
         Space group symmetry operations.
@@ -216,17 +216,16 @@ class UnitCell:
     get_reciprocal_metric_tensor()
         Reciprocal cell metric tensor.
     get_fractional_cartesian_transform()
-        Trasform matrix from fractional to Cartesian coordinates.
+        Fractional to Cartesian coordinates transform matrix.
     get_miller_cartesian_transform()
-        Trasform matrix from Miller to Cartesian coordinates.
+        Miller to Cartesian coordinates transform matrix.
     get_cartesian_rotation()
         Transform matrix between Cartesian axes of real and reciprocal lattice.
     get_moment_cartesian_transform()
-        Transform matrix between crystal and Cartesian coordinates for \
-        magnetic moments.
+        Magnetic moment components crystal to Cartesian transfomrmation matrix.
     get_atomic_displacement_cartesian_transform()
-        Transform matrix between crystal and Cartesian coordinates for \
-        atomic displacement parameters.
+        Atomic displacement parameters crystal to Cartesian transfomrmation
+        matrix.
     get_space_group_symbol()
         Space group symbol.
     get_space_group_number()
@@ -507,7 +506,7 @@ class UnitCell:
 
     def get_anisotropic_displacement_parameters(self):
         """
-        Anisotropic displacement parameters in crystal coordinates of active \
+        Anisotropic displacement parameters in crystal coordinates of active
         atoms.
         """
         
@@ -525,7 +524,7 @@ class UnitCell:
     def set_anisotropic_displacement_parameters(self, U11, U22, U33,
                                                       U23, U13, U12):
         """
-        Update anisotropic displacement parameters in crystal coordinates of \
+        Update anisotropic displacement parameters in crystal coordinates of
         active atoms.
         """
         
@@ -591,8 +590,8 @@ class UnitCell:
 
     def get_principal_displacement_parameters(self):
         """
-        Principal displacement parameters in Cartesian coordinates of \
-        active atoms.
+        Principal displacement parameters in Cartesian coordinates of active
+        atoms.
         """
         
         D = self.get_atomic_displacement_cartesian_transform()
@@ -604,8 +603,8 @@ class UnitCell:
 
     def get_cartesian_anistropic_displacement_parameters(self):
         """
-        Anisotropic displacement parameters in Cartesian coordinates of \
-        active atoms.
+        Anisotropic displacement parameters in Cartesian coordinates of active
+        atoms.
         """
         
         D = self.get_atomic_displacement_cartesian_transform()

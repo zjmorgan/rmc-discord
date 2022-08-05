@@ -152,7 +152,7 @@ def spin(nu, nv, nw, n_atm, value=1, fixed=True):
     Parameters
     ----------
     nu, nv, nw : int
-        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
         :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
         Number of atoms in the unit cell.
@@ -201,14 +201,14 @@ def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
     Parameters
     ----------
     Sx, Sy, Sz : 1d array
-        Spin vector component :math:`S_x`, :math:`S_y`, and :math:`S_z` in \
-        Cartesian components along the :math:`x`, :math:`y`, and \
+        Spin vector component :math:`S_x`, :math:`S_y`, and :math:`S_z` in
+        Cartesian components along the :math:`x`, :math:`y`, and
         :math:`z`-direction.
     H, K, L : 1d array, int
-        Supercell index along the :math:`a^*`, :math:`b^*`, and \
+        Supercell index along the :math:`a^*`, :math:`b^*`, and 
         :math:`c^*`-axis in reciprocal space.
     nu, nv, nw : int
-        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
         :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
         Number of atoms in the unit cell.
@@ -241,10 +241,10 @@ def intensity(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     Parameters
     ----------
     Qx_norm, Qy_norm, Qz_norm : 1d array
-        Normalized wavevector component :math:`\hat{Q}_x`, :math:`\hat{Q}_y`, \
+        Normalized wavevector component :math:`\hat{Q}_x`, :math:`\hat{Q}_y`,
         and :math:`\hat{Q}_z`.
     Sx_k, Sy_k, Sz_k : 1d array
-        Fourier transform of the spin vector component :math:`S_x`, \
+        Fourier transform of the spin vector component :math:`S_x`,
         :math:`S_y`, and :math:`S_z` component.
     i_dft: 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space.
@@ -297,10 +297,10 @@ def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     Parameters
     ----------
     Qx_norm, Qy_norm, Qz_norm : 1d array
-        Normalized wavevector component :math:`\hat{Q}_x`, :math:`\hat{Q}_y`, \
+        Normalized wavevector component :math:`\hat{Q}_x`, :math:`\hat{Q}_y`,
         and :math:`\hat{Q}_z`.
     Sx_k, Sy_k, Sz_k : 1d array
-        Fourier transform of the spin vector component :math:`S_x`, \
+        Fourier transform of the spin vector component :math:`S_x`,
         :math:`S_y`, and :math:`S_z` component.
     i_dft: 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space.
@@ -345,9 +345,9 @@ def magnitude(mu1, mu2, mu3, C):
     Parameters
     ----------
     mu1, mu2, mu3 : 1d array
-        Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`, \
+        Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`,
         and :math:`\mu_3`.
-    C: 2d array
+    C: 2d array, 3x3 
         Transform matrix from crystal axis to Cartesian coordiante system.
 
     Returns
@@ -370,15 +370,15 @@ def magnitude(mu1, mu2, mu3, C):
 
 def cartesian(mu1, mu2, mu3, C):
     """
-    Components of magnetic moment in Cartesian coordiantes :math:`\mu_x`, \
+    Components of magnetic moment in Cartesian coordiantes :math:`\mu_x`,
     :math:`\mu_x`, and :math:`\mu_x`.
 
     Parameters
     ----------
     mu1, mu2, mu3 : float or 1d array
-        Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`, \
+        Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`,
         and :math:`\mu_3`.
-    C: 2d array
+    C: 2d array, 3x3 
         Transform matrix from crystal axis to Cartesian coordiante system.
 
     Returns

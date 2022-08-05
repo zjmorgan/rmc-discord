@@ -13,7 +13,7 @@ def magnetic_form_factor_coefficients_j0():
     Returns
     -------
     j0 : dict
-        Dictionary of magnetic form factors coefficients with magnetic ion \
+        Dictionary of magnetic form factors coefficients with magnetic ion 
         keys.
 
     """
@@ -42,7 +42,7 @@ def magnetic_form_factor_coefficients_j2():
     Returns
     -------
     j2 : dict
-        Dictionary of magnetic form factors coefficients with magnetic ion \
+        Dictionary of magnetic form factors coefficients with magnetic ion
         keys.
 
     """

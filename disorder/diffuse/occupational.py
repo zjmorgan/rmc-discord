@@ -9,7 +9,7 @@ def composition(nu, nv, nw, n_atm, value=0.5):
     Parameters
     ----------
     nu, nv, nw : int
-        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
         :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
         Number of atoms in the unit cell
@@ -36,10 +36,10 @@ def transform(A_r, H, K, L, nu, nv, nw, n_atm):
     A_r : 1d array
           Relative occupancy parameter :math:`A`.
     H, K, L : 1d array, int
-        Supercell index along the :math:`a^*`, :math:`b^*`, and \
+        Supercell index along the :math:`a^*`, :math:`b^*`, and
         :math:`c^*`-axis in reciprocal space.
     nu, nv, nw : int
-        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the \
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
         :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
         Number of atoms in the unit cell.
