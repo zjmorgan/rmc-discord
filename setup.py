@@ -1,7 +1,10 @@
-from setuptools import setup, find_packages, Extension
-from distutils.command.build import build as build_orig
+from setuptools import setup, dist, find_packages, Extension
+dist.Distribution().fetch_build_eggs(['Cython>=0.15.1', 'numpy>=1.10'])
 
 import sys, re
+
+import numpy as np 
+from Cython.Build import cythonize
 
 if (sys.platform == 'win32'):
     compile_openmp = ['/openmp']
@@ -15,20 +18,6 @@ else:
     compile_openmp = ['-fopenmp']
     link_openmp = ['-fopenmp']
 
-class build(build_orig):
-
-    def finalize_options(self):
-        super().finalize_options()
-        __builtins__.__NUMPY_SETUP__ = False
-        import numpy
-        for extension in self.distribution.ext_modules:
-            extension.include_dirs.append(numpy.get_include())
-        from Cython.Build import cythonize
-        self.distribution.ext_modules = cythonize(
-                                            self.distribution.ext_modules,
-                                            language_level=3
-                                        )
-
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
@@ -41,49 +30,49 @@ extensions = [
         sources=['disorder/diffuse/refinement.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
-        include_dirs=[]
+        include_dirs=[np.get_include()]
     ),
     Extension(
         name='disorder.diffuse.filters',
         sources=['disorder/diffuse/filters.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
-        include_dirs=[]
+        include_dirs=[np.get_include()]
     ),
     Extension(
         name='disorder.diffuse.powder',
         sources=['disorder/diffuse/powder.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
-        include_dirs=[]
+        include_dirs=[np.get_include()]
     ),
     Extension(
         'disorder.diffuse.refinement',
         sources=['disorder/diffuse/refinement.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
-        include_dirs=[]
+        include_dirs=[np.get_include()]
     ),
     Extension(
         name='disorder.correlation.functions',
         sources=['disorder/correlation/functions.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
-        include_dirs=[]
+        include_dirs=[np.get_include()]
     ),
     Extension(
         name='disorder.diffuse.monocrystal',
         sources=['disorder/diffuse/monocrystal.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
-        include_dirs=[]
+        include_dirs=[np.get_include()]
     ),
     Extension(
         name='disorder.diffuse.simulation',
         sources=['disorder/diffuse/simulation.pyx'],
         extra_compile_args=compile_openmp,
         extra_link_args=link_openmp,
-        include_dirs=[],
+        include_dirs=[np.get_include()],
         language='c++'
     )
 ]
@@ -120,7 +109,7 @@ setup(
         'pyqt5',
         'ipython',
     ],
-    ext_modules=extensions,
+    ext_modules=cythonize(extensions),
     entry_points={
         'console_scripts': [
             'rmc-discord=disorder.application:run',
@@ -137,6 +126,5 @@ setup(
                      'tests/diffuse/*.pyx',
                      'tests/data/*'],
     },
-    cmdclass={"build": build},
     zip_safe=False
 )
