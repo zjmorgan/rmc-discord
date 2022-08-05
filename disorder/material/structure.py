@@ -150,55 +150,51 @@ class UnitCell:
     get_filename()
         Name of CIF file.
     get_sites()
-        All atom sites in the unit cell. 
+        Atom sites in the unit cell. 
     get_active_sites()
-        All active atom sites in the unit cell. 
+        Active atom sites in the unit cell. 
     set_active_sites()
         Update active atom sites in the unit cell. 
     get_number_atoms_per_unit_cell()
         Total number of atoms in the unit cell.
     get_fractional_coordinates()
-        Fractional coordiantes of active atoms.
+        Fractional coordiantes.
     set_fractional_coordinates()
         Update fractional coordiantes of active atoms.
     get_unit_cell_cartesian_atomic_coordinates()
-        Cartesian coordiantes of active atoms.
+        Cartesian coordiantes.
     get_unit_cell_atoms()
         Atom symbols of active atoms.
     set_unit_cell_atoms()
-        Update atom symbols of active atoms.
+        Update atom symbols.
     get_occupancies()
-        Occupancies of active atoms.
+        Occupancies.
     set_occupancies()
-        Update occupancies of active atoms.
+        Update occupancies.
     get_anisotropic_displacement_parameters()
-        Anisotropic displacement parameters in crystal coordinates of \
-        active atoms.
+        Anisotropic displacement parameters in crystal coordinates.
     set_anisotropic_displacement_parameters()
-        Update anisotropic displacement parameters in crystal coordinates of \
-        active atoms.
+        Update anisotropic displacement parameters in crystal coordinates.
     get_isotropic_displacement_parameter()
-        Isotropic displacement parameters of active atoms.
+        Isotropic displacement parameters.
     set_isotropic_displacement_parameter()
-        Update isotropic displacement parameters of active atoms.
+        Update isotropic displacement parameters.
     get_principal_displacement_parameters()
-        Principal displacement parameters in Cartesian coordinates of \
-        active atoms.
+        Principal displacement parameters in Cartesian coordinates.
     get_cartesian_anistropic_displacement_parameters()
-        Anisotropic displacement parameters in Cartesian coordinates of \
-        active atoms.
+        Anisotropic displacement parameters in Cartesian coordinates.
     get_crystal_axis_magnetic_moments()
-        Magnetic moments in crystal coordinates of active atoms.
+        Magnetic moments in crystal coordinates.
     set_crystal_axis_magnetic_moments()
-        Update magnetic moments in crystal coordinates of active atoms.
+        Update magnetic moments in crystal coordinates.
     get_magnetic_moment_magnitude()
-        Magnitude of magnetic moments of active atoms.
+        Magnitude of magnetic moments.
     get_cartesian_magnetic_moments()
-        Magnetic moments in Cartesian coordinates of active atoms.
+        Magnetic moments in Cartesian coordinates.
     get_g_factors()
-        g-factors of active atoms.
+        g-factors.
     set_g_factors()
-        Update g-factors of active atoms.
+        Update g-factors.
     get_lattice_constants()
         Lattice parameters.
     set_lattice_constants()
@@ -206,9 +202,9 @@ class UnitCell:
     get_reciprocal_lattice_constants()
         Reciprocal lattice parameters.
     get_symmetry_operators()
-        Symmetry operators for all active atoms.
+        Symmetry operators.
     get_magnetic_symmetry_operators()
-        Magnetic symmetry operators for all active atoms.
+        Magnetic symmetry operators.
     get_lattice_system()
         Lattice system of unit cell.
     get_lattice_volume()
@@ -240,9 +236,9 @@ class UnitCell:
     get_site_symmetries()
         Site symmetry operators.
     get_wyckoff_special_positions()
-        Wyckoff special positions for active atoms.
+        Wyckoff special positions.
     get_site_multiplicities()
-        Site multiplicites for active atoms.
+        Site multiplicites.
 
     """
     
@@ -378,7 +374,7 @@ class UnitCell:
 
     def get_sites(self):
         """
-        All atom sites in the unit cell. 
+        Atom sites in the unit cell. 
 
         Returns
         -------
@@ -391,7 +387,7 @@ class UnitCell:
 
     def get_active_sites(self):
         """
-        All active atom sites in the unit cell. 
+        Active atom sites in the unit cell. 
 
         Returns
         -------
@@ -911,7 +907,7 @@ class UnitCell:
 
     def get_site_symmetries(self):
         """
-        All site symmetry operators.
+        Site symmetry operators.
         """
         
         mask = self.__mask
@@ -929,7 +925,7 @@ class UnitCell:
 
     def get_site_multiplicities(self):
         """
-        site multiplicites of active atoms.
+        Site multiplicites of active atoms.
 
         Returns
         -------
