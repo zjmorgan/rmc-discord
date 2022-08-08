@@ -17,7 +17,7 @@ def unitcell(folder, filename, tol=1e-2):
     folder : str,
         Name of path excluding filename.
     filename : str
-        Name of filename excluding path..
+        Name of filename excluding path.
     tol : float, optional
         Tolerance of unique atom coordinates.
 
@@ -343,352 +343,389 @@ def unitcell(folder, filename, tol=1e-2):
     return unit_cell
 
 def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
-              name, folder=None, filename=None):
+              name, folder, filename):
+    """
+    Write average supercell information to a CIF file.
 
-    if (filename != None):
+    Parameters
+    ----------
+    atm : 1d array
+        Atoms, ions, or isotopes.
+    occ : 1d array
+        Site occupancies.
+    disp : 1d array
+        Atomic displacements.
+    mom : 1d array
+        Magnetic moments.
+    u, v, w : 1d array
+        Fractional coordinates.
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
+    folder : str,
+        Name of path excluding filename of reference CIF file.
+    filename : str
+        Name of filename excluding path of reference CIF file.
+    tol : float, optional
+        Tolerance of unique atom coordinates.
 
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf[[key for key in cf.keys() \
-                 if cf[key].get('_cell_length_a') is not None][0]]
+    """
 
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
+    cf = CifFile.ReadCif(os.path.join(folder, filename))
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
 
-        loop_ops = ['_space_group_symop_operation_xyz',
-                    '_symmetry_equiv_pos_as_xyz',
-                    '_space_group_symop_magn_operation_xyz']
+    cif_dict = dict(cb.items())
+    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
 
-        ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                        if loop_key in cif_dict), None)
+    loop_ops = ['_space_group_symop_operation_xyz',
+                '_symmetry_equiv_pos_as_xyz',
+                '_space_group_symop_magn_operation_xyz']
 
-        symops = cif_dict[loop_ops[ind_ops]]
+    ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
+                    if loop_key in cif_dict), None)
 
-        if (ind_ops == 2):
-            add_symops = cif_dict['_space_group_symop_magn_centering_xyz']
-            combine = []
-            for symop in symops:
-                for add_symop in add_symops:
-                    left_op = ','.join(symop.split(',')[:3])
-                    right_op = ','.join(add_symop.split(',')[:3])
-                    combine_op = symmetry.binary([left_op],[right_op])
-                    combine += combine_op
-            symops = combine
+    symops = cif_dict[loop_ops[ind_ops]]
 
-        symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]
-
+    if (ind_ops == 2):
+        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']
+        combine = []
         for symop in symops:
-            cb.RemoveLoopItem(symop)
+            for add_symop in add_symops:
+                left_op = ','.join(symop.split(',')[:3])
+                right_op = ','.join(add_symop.split(',')[:3])
+                combine_op = symmetry.binary([left_op],[right_op])
+                combine += combine_op
+        symops = combine
 
-        symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]
+    symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]
 
-        atomic_sites = cb.GetLoopNames('_atom_site_label')
+    for symop in symops:
+        cb.RemoveLoopItem(symop)
 
-        for asite in atomic_sites:
-            cb.RemoveLoopItem(asite)
+    symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]
 
-        #n_atm = atm.shape[0]
+    atomic_sites = cb.GetLoopNames('_atom_site_label')
 
-        a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
-        b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
-        c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
+    for asite in atomic_sites:
+        cb.RemoveLoopItem(asite)
 
-        cb['_cell_length_a'] = str(a*nu)
-        cb['_cell_length_b'] = str(b*nv)
-        cb['_cell_length_c'] = str(c*nw)
+    #n_atm = atm.shape[0]
 
-        alpha = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_alpha']))
-        beta = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_beta']))
-        gamma = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_gamma']))
+    a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
+    b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
+    c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
 
-        V = volume(a,
-                   b,
-                   c,
-                   np.deg2rad(alpha),
-                   np.deg2rad(beta),
-                   np.deg2rad(gamma))
+    cb['_cell_length_a'] = str(a*nu)
+    cb['_cell_length_b'] = str(b*nv)
+    cb['_cell_length_c'] = str(c*nw)
 
-        cb['_cell_volume'] = str(V)
+    alpha = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_alpha']))
+    beta = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_beta']))
+    gamma = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_angle_gamma']))
 
-        i, j, k = np.meshgrid(np.arange(nu),
-                              np.arange(nv),
-                              np.arange(nw), indexing='ij')
+    V = volume(a,
+               b,
+               c,
+               np.deg2rad(alpha),
+               np.deg2rad(beta),
+               np.deg2rad(gamma))
 
-        i = i.flatten()
-        j = j.flatten()
-        k = k.flatten()
+    cb['_cell_volume'] = str(V)
 
-        U = (i[:,np.newaxis]+u).flatten()
-        V = (j[:,np.newaxis]+v).flatten()
-        W = (k[:,np.newaxis]+w).flatten()
+    i, j, k = np.meshgrid(np.arange(nu),
+                          np.arange(nv),
+                          np.arange(nw), indexing='ij')
 
-        n_uvw = nu*nv*nw
+    i = i.flatten()
+    j = j.flatten()
+    k = k.flatten()
 
-        atom = np.tile(atm, n_uvw)
-        occupancy = np.tile(occ, n_uvw)
+    U = (i[:,np.newaxis]+u).flatten()
+    V = (j[:,np.newaxis]+v).flatten()
+    W = (k[:,np.newaxis]+w).flatten()
 
-        if (np.shape(disp)[1] == 1):
+    n_uvw = nu*nv*nw
 
-            D = cartesian_displacement(a,
-                                       b,
-                                       c,
-                                       np.deg2rad(alpha),
-                                       np.deg2rad(beta),
-                                       np.deg2rad(gamma))
+    atom = np.tile(atm, n_uvw)
+    occupancy = np.tile(occ, n_uvw)
 
-            uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
-            u11, u22, u33 = uiso[0,0], uiso[1,1], uiso[2,2]
-            u23, u13, u12 = uiso[1,2], uiso[0,2], uiso[0,1]
+    if (np.shape(disp)[1] == 1):
 
-            ani_disp = []
-            for i in range(len(disp)):
-                const = disp[i,0]
-                ani_disp.append([const*u11, const*u22, const*u33,
-                                 const*u23, const*u13, const*u12])
-            disp = np.array(ani_disp)
+        D = cartesian_displacement(a,
+                                   b,
+                                   c,
+                                   np.deg2rad(alpha),
+                                   np.deg2rad(beta),
+                                   np.deg2rad(gamma))
 
-        U11 = np.tile(disp[:,0], n_uvw)
-        U22 = np.tile(disp[:,1], n_uvw)
-        U33 = np.tile(disp[:,2], n_uvw)
-        U23 = np.tile(disp[:,3], n_uvw)
-        U13 = np.tile(disp[:,4], n_uvw)
-        U12 = np.tile(disp[:,5], n_uvw)
+        uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
+        u11, u22, u33 = uiso[0,0], uiso[1,1], uiso[2,2]
+        u23, u13, u12 = uiso[1,2], uiso[0,2], uiso[0,1]
 
-        MU = np.tile(mom[:,0], n_uvw)
-        MV = np.tile(mom[:,1], n_uvw)
-        MW = np.tile(mom[:,2], n_uvw)
+        ani_disp = []
+        for i in range(len(disp)):
+            const = disp[i,0]
+            ani_disp.append([const*u11, const*u22, const*u33,
+                             const*u23, const*u13, const*u12])
+        disp = np.array(ani_disp)
 
-        if ('_atom_site_aniso_label' in cif_dict):
-            cb.RemoveLoopItem('_atom_site_aniso_label')
+    U11 = np.tile(disp[:,0], n_uvw)
+    U22 = np.tile(disp[:,1], n_uvw)
+    U33 = np.tile(disp[:,2], n_uvw)
+    U23 = np.tile(disp[:,3], n_uvw)
+    U13 = np.tile(disp[:,4], n_uvw)
+    U12 = np.tile(disp[:,5], n_uvw)
 
-        if ('_atom_site_moment_label' in cif_dict):
-            cb.RemoveLoopItem('_atom_site_moment_label')
-            cb.RemoveLoopItem('_atom_site_moment.label')
-            cb.RemoveLoopItem('_space_group_symop.magn_id')
-            cb.RemoveLoopItem('_space_group_symop_magn_id')
-            cb.RemoveLoopItem('_space_group_symop.magn_operation_xyz')
-            cb.RemoveLoopItem('_space_group_symop_magn_operation_xyz')
-            cb.RemoveLoopItem('_space_group_symop.magn_operation_mxmymz')
-            cb.RemoveLoopItem('_space_group_symop_magn_operation_mxmymz')
-            cb.RemoveLoopItem('_space_group_symop.magn_centering_id')
-            cb.RemoveLoopItem('_space_group_symop_magn_centering_id')
-            cb.RemoveLoopItem('_space_group_symop.magn_centering_xyz')
-            cb.RemoveLoopItem('_space_group_symop_magn_centering_xyz')
-            cb.RemoveLoopItem('_space_group_symop.magn_centering_mxmymz')
-            cb.RemoveLoopItem('_space_group_symop_magn_centering_mxmymz')
+    MU = np.tile(mom[:,0], n_uvw)
+    MV = np.tile(mom[:,1], n_uvw)
+    MW = np.tile(mom[:,2], n_uvw)
 
-        site, aniso, magn = [], [], []
+    if ('_atom_site_aniso_label' in cif_dict):
+        cb.RemoveLoopItem('_atom_site_aniso_label')
 
-        for i in range(atom.shape[0]):
+    if ('_atom_site_moment_label' in cif_dict):
+        cb.RemoveLoopItem('_atom_site_moment_label')
+        cb.RemoveLoopItem('_atom_site_moment.label')
+        cb.RemoveLoopItem('_space_group_symop.magn_id')
+        cb.RemoveLoopItem('_space_group_symop_magn_id')
+        cb.RemoveLoopItem('_space_group_symop.magn_operation_xyz')
+        cb.RemoveLoopItem('_space_group_symop_magn_operation_xyz')
+        cb.RemoveLoopItem('_space_group_symop.magn_operation_mxmymz')
+        cb.RemoveLoopItem('_space_group_symop_magn_operation_mxmymz')
+        cb.RemoveLoopItem('_space_group_symop.magn_centering_id')
+        cb.RemoveLoopItem('_space_group_symop_magn_centering_id')
+        cb.RemoveLoopItem('_space_group_symop.magn_centering_xyz')
+        cb.RemoveLoopItem('_space_group_symop_magn_centering_xyz')
+        cb.RemoveLoopItem('_space_group_symop.magn_centering_mxmymz')
+        cb.RemoveLoopItem('_space_group_symop_magn_centering_mxmymz')
 
-            site.append([atom[i]+str(i),
-                         U[i]/nu,
-                         V[i]/nv,
-                         W[i]/nw,
-                         atom[i],
-                         occupancy[i]])
+    site, aniso, magn = [], [], []
 
-            aniso.append([atom[i]+str(i),
-                          U11[i],
-                          U22[i],
-                          U33[i],
-                          U12[i],
-                          U13[i],
-                          U23[i]])
+    for i in range(atom.shape[0]):
 
-            magn.append([atom[i]+str(i),
-                         MU[i],
-                         MV[i],
-                         MW[i],
-                         'mx,my,mz'])
+        site.append([atom[i]+str(i),
+                     U[i]/nu,
+                     V[i]/nv,
+                     W[i]/nw,
+                     atom[i],
+                     occupancy[i]])
 
-        cb.AddLoopItem((['_space_group_symop_operation_xyz'], ['']))
+        aniso.append([atom[i]+str(i),
+                      U11[i],
+                      U22[i],
+                      U33[i],
+                      U12[i],
+                      U13[i],
+                      U23[i]])
 
-        cb['_space_group_symop_operation_xyz'] = ['x, y, z']
+        magn.append([atom[i]+str(i),
+                     MU[i],
+                     MV[i],
+                     MW[i],
+                     'mx,my,mz'])
 
-        cb.AddLoopItem((['_atom_site_label',
-                         '_atom_site_fract_x',
-                         '_atom_site_fract_y',
-                         '_atom_site_fract_z',
-                         '_atom_site_type_symbol',
-                         '_atom_site_occupancy'],
-                         map(list, zip(*site))))
+    cb.AddLoopItem((['_space_group_symop_operation_xyz'], ['']))
 
-        cb.AddLoopItem((['_atom_site_aniso_label',
-                         '_atom_site_aniso_U_11',
-                         '_atom_site_aniso_U_22',
-                         '_atom_site_aniso_U_33',
-                         '_atom_site_aniso_U_12',
-                         '_atom_site_aniso_U_13',
-                         '_atom_site_aniso_U_23'],
-                         map(list, zip(*aniso))))
+    cb['_space_group_symop_operation_xyz'] = ['x, y, z']
 
-        if (not np.allclose((MU,MV,MW), 0)):
-            cb.AddLoopItem((['_atom_site_moment_label',
-                             '_atom_site_moment_crystalaxis_x',
-                             '_atom_site_moment_crystalaxis_y',
-                             '_atom_site_moment_crystalaxis_z',
-                             '_atom_site_moment_symmform'],
-                             map(list, zip(*magn))))
+    cb.AddLoopItem((['_atom_site_label',
+                     '_atom_site_fract_x',
+                     '_atom_site_fract_y',
+                     '_atom_site_fract_z',
+                     '_atom_site_type_symbol',
+                     '_atom_site_occupancy'],
+                     map(list, zip(*site))))
 
-            if (name.split('.')[-1] == 'cif'):
-                name = name.replace('cif', 'mcif')
+    cb.AddLoopItem((['_atom_site_aniso_label',
+                     '_atom_site_aniso_U_11',
+                     '_atom_site_aniso_U_22',
+                     '_atom_site_aniso_U_33',
+                     '_atom_site_aniso_U_12',
+                     '_atom_site_aniso_U_13',
+                     '_atom_site_aniso_U_23'],
+                     map(list, zip(*aniso))))
 
-        outfile = open(name, mode='w')
+    if (not np.allclose((MU,MV,MW), 0)):
+        cb.AddLoopItem((['_atom_site_moment_label',
+                         '_atom_site_moment_crystalaxis_x',
+                         '_atom_site_moment_crystalaxis_y',
+                         '_atom_site_moment_crystalaxis_z',
+                         '_atom_site_moment_symmform'],
+                         map(list, zip(*magn))))
 
-        # supress cf.WriteOut() output
-        sys.stdout = io.StringIO()
-        sys.stderr = io.StringIO()
+        if (name.split('.')[-1] == 'cif'):
+            name = name.replace('cif', 'mcif')
 
-        outfile.write(cf.WriteOut())
+    outfile = open(name, mode='w')
 
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
+    # supress cf.WriteOut() output
+    sys.stdout = io.StringIO()
+    sys.stderr = io.StringIO()
 
-        outfile.close()
+    outfile.write(cf.WriteOut())
+
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
+
+    outfile.close()
 
 def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
-               nu, nv, nw, atm, A, name, folder=None, filename=None,
-               ulim=[0,1], vlim=[0,1], wlim=[0,1]):
+               nu, nv, nw, atm, A, name, folder, filename):
+    """
+    Write disordered supercell information to a CIF file.
 
-    if (filename != None):
+    Parameters
+    ----------
+    delta : 1d array
+        Relative occupancies.
+    Ux, Uy, Uz : 1d array
+        Atomic displacementsr in Cartesian coordinates.
+    Sx, Sy, Sz : 1d array
+        Magnetic momentsr in Cartesian coordinates.
+    rx, ry, rz : 1d array
+        Spatial vector in Cartesian coordinates.
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
+    atm : 1d array
+        Atoms, ions, or isotopes.
+    A : 2d array
+        Transformation matrix from crystal to Cartesian coordinates.
+    folder : str,
+        Name of path excluding filename of reference CIF file.
+    filename : str
+        Name of filename excluding path of reference CIF file.
 
-        cf = CifFile.ReadCif(os.path.join(folder, filename))
-        cb = cf[[key for key in cf.keys() \
-                 if cf[key].get('_cell_length_a') is not None][0]]
+    """
 
-        cif_dict = dict(cb.items())
-        cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
+    cf = CifFile.ReadCif(os.path.join(folder, filename))
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
 
-        loop_ops = ['_space_group_symop_operation_xyz',
-                    '_symmetry_equiv_pos_as_xyz',
-                    '_space_group_symop_magn_operation_xyz']
+    cif_dict = dict(cb.items())
+    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
 
-        ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
-                        if loop_key in cif_dict), None)
+    loop_ops = ['_space_group_symop_operation_xyz',
+                '_symmetry_equiv_pos_as_xyz',
+                '_space_group_symop_magn_operation_xyz']
 
-        symops = cif_dict[loop_ops[ind_ops]]
+    ind_ops = next((i for i, loop_key in enumerate(loop_ops) \
+                    if loop_key in cif_dict), None)
 
-        if (ind_ops == 2):
-            add_symops = cif_dict['_space_group_symop_magn_centering_xyz']
-            combine = []
-            for symop in symops:
-                for add_symop in add_symops:
-                    left_op = ','.join(symop.split(',')[:3])
-                    right_op = ','.join(add_symop.split(',')[:3])
-                    combine_op = symmetry.binary([left_op],[right_op])
-                    combine += combine_op
-            symops = combine
+    symops = cif_dict[loop_ops[ind_ops]]
 
+    if (ind_ops == 2):
+        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']
+        combine = []
         for symop in symops:
-            cb.RemoveLoopItem(symop)
+            for add_symop in add_symops:
+                left_op = ','.join(symop.split(',')[:3])
+                right_op = ','.join(add_symop.split(',')[:3])
+                combine_op = symmetry.binary([left_op],[right_op])
+                combine += combine_op
+        symops = combine
 
-        atomic_sites = cb.GetLoopNames('_atom_site_label')
+    for symop in symops:
+        cb.RemoveLoopItem(symop)
 
-        for asite in atomic_sites:
-            cb.RemoveLoopItem(asite)
+    atomic_sites = cb.GetLoopNames('_atom_site_label')
 
-        if ('_atom_site_aniso_label' in cif_dict):
-            atomic_disp = cb.GetLoopNames('_atom_site_aniso_label')
-            for adisp in atomic_disp:
-                cb.RemoveLoopItem(adisp)
+    for asite in atomic_sites:
+        cb.RemoveLoopItem(asite)
 
-        n_atm = atm.shape[0]
+    if ('_atom_site_aniso_label' in cif_dict):
+        atomic_disp = cb.GetLoopNames('_atom_site_aniso_label')
+        for adisp in atomic_disp:
+            cb.RemoveLoopItem(adisp)
 
-        i0, i1 = ulim[0], ulim[1]
-        j0, j1 = vlim[0], vlim[1]
-        k0, k1 = wlim[0], wlim[1]
+    n_atm = atm.shape[0]
 
-        na, nb, nc = i1-i0, j1-j0, k1-k0
+    a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
+    b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
+    c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
 
-        a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
-        b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
-        c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
+    cb['_cell_length_a'] = str(a*nu)
+    cb['_cell_length_b'] = str(b*nv)
+    cb['_cell_length_c'] = str(c*nw)
 
-        cb['_cell_length_a'] = str(a*na)
-        cb['_cell_length_b'] = str(b*nb)
-        cb['_cell_length_c'] = str(c*nc)
+    ux = rx+Ux
+    uy = ry+Uy
+    uz = rz+Uz
 
-        mask = np.full((nu,nv,nw,n_atm), fill_value=False)
-        mask[i0:i1,j0:j1,k0:k1,:] = True
-        mask = mask.flatten()
+    A_inv = np.linalg.inv(A)
 
-        ux = rx[mask]+Ux[mask]
-        uy = ry[mask]+Uy[mask]
-        uz = rz[mask]+Uz[mask]
+    u, v, w = transform(ux, uy, uz, A_inv)
 
-        A_inv = np.linalg.inv(A)
+    mx = np.round(Sx,4)
+    my = np.round(Sy,4)
+    mz = np.round(Sz,4)
 
-        u, v, w = transform(ux, uy, uz, A_inv)
+    G = np.dot(A.T,A)
 
-        mx = np.round(Sx[mask],4)
-        my = np.round(Sy[mask],4)
-        mz = np.round(Sz[mask],4)
+    a, b, c = np.sqrt(G[0,0]), np.sqrt(G[1,1]), np.sqrt(G[2,2])
 
-        G = np.dot(A.T,A)
+    alpha = np.arccos(G[1,2]/(b*c))
+    beta = np.arccos(G[0,2]/(a*c))
+    gamma = np.arccos(G[0,1]/(a*b))
 
-        a, b, c = np.sqrt(G[0,0]), np.sqrt(G[1,1]), np.sqrt(G[2,2])
+    C = cartesian_moment(a, b, c, alpha, beta, gamma)
 
-        alpha = np.arccos(G[1,2]/(b*c))
-        beta = np.arccos(G[0,2]/(a*c))
-        gamma = np.arccos(G[0,1]/(a*b))
+    C_inv = np.linalg.inv(C)
 
-        C = cartesian_moment(a, b, c, alpha, beta, gamma)
+    mu, mv, mw = transform(mx, my, mz, C_inv)
 
-        C_inv = np.linalg.inv(C)
+    atom = np.tile(atm, nu*nv*nw)
 
-        mu, mv, mw = transform(mx, my, mz, C_inv)
+    site = []
+    moment = []
+    for i in range(atom.shape[0]):
 
-        atom = np.tile(atm, na*nb*nc)
+       site.append([atom[i]+str(i),
+                    u[i]/nu,
+                    v[i]/nv,
+                    w[i]/nw,
+                    atom[i],
+                    delta[i]])
 
-        site = []
-        moment = []
-        for i in range(atom.shape[0]):
+       moment.append([atom[i]+str(i), mu[i], mv[i], mw[i], 'mx, my, mz'])
 
-           site.append([atom[i]+str(i),
-                        u[i]/na,
-                        v[i]/nb,
-                        w[i]/nc,
-                        atom[i],
-                        delta[i]])
+    cb.AddLoopItem((['_space_group_symop_operation_xyz'],['']))
 
-           moment.append([atom[i]+str(i), mu[i], mv[i], mw[i], 'mx, my, mz'])
+    cb['_space_group_symop_operation_xyz'] = ['x, y, z']
 
-        cb.AddLoopItem((['_space_group_symop_operation_xyz'],['']))
+    cb.AddLoopItem((['_atom_site_label',
+                     '_atom_site_fract_x',
+                     '_atom_site_fract_y',
+                     '_atom_site_fract_z',
+                     '_atom_site_type_symbol',
+                     '_atom_site_occupancy'],
+                     map(list, zip(*site))))
 
-        cb['_space_group_symop_operation_xyz'] = ['x, y, z']
+    if (not np.allclose((mx,my,mz), 0)):
 
-        cb.AddLoopItem((['_atom_site_label',
-                         '_atom_site_fract_x',
-                         '_atom_site_fract_y',
-                         '_atom_site_fract_z',
-                         '_atom_site_type_symbol',
-                         '_atom_site_occupancy'],
-                         map(list, zip(*site))))
+        cb.AddLoopItem((['_atom_site_moment_label',
+                         '_atom_site_moment_crystalaxis_x',
+                         '_atom_site_moment_crystalaxis_y',
+                         '_atom_site_moment_crystalaxis_z',
+                         '_atom_site_moment_symmform'],
+                         map(list, zip(*moment))))
 
-        if (not np.allclose((mx,my,mz), 0)):
+        if (name.split('.')[-1] == 'cif'):
+            name = name.replace('cif', 'mcif')
 
-            cb.AddLoopItem((['_atom_site_moment_label',
-                             '_atom_site_moment_crystalaxis_x',
-                             '_atom_site_moment_crystalaxis_y',
-                             '_atom_site_moment_crystalaxis_z',
-                             '_atom_site_moment_symmform'],
-                             map(list, zip(*moment))))
+    outfile = open(name, mode='w')
 
-            if (name.split('.')[-1] == 'cif'):
-                name = name.replace('cif', 'mcif')
+    # supress cf.WriteOut() output
+    sys.stdout = io.StringIO()
+    sys.stderr = io.StringIO()
 
-        outfile = open(name, mode='w')
+    outfile.write(cf.WriteOut())
 
-        # supress cf.WriteOut() output
-        sys.stdout = io.StringIO()
-        sys.stderr = io.StringIO()
+    sys.stdout = sys.__stdout__
+    sys.stderr = sys.__stderr__
 
-        outfile.write(cf.WriteOut())
-
-        sys.stdout = sys.__stdout__
-        sys.stderr = sys.__stderr__
-
-        outfile.close()
+    outfile.close()
 
 def laue(folder, filename):
     """
@@ -699,7 +736,7 @@ def laue(folder, filename):
     folder : str,
         Name of path excluding filename.
     filename : str
-        Name of filename excluding path..
+        Name of filename excluding path.
 
     Returns
     -------
@@ -752,6 +789,24 @@ def laue(folder, filename):
             return symm
 
 def twins(folder, filename):
+    """
+    Reads twin matrices from a CIF file.
+
+    Parameters
+    ----------
+    folder : str,
+        Name of path excluding filename.
+    filename : str
+        Name of filename excluding path.
+
+    Returns
+    -------
+    T : 3d array
+        Twin matrices with individual components along last two axes.
+    weights : 1d array
+        Twin mass fraction.
+
+    """
 
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \
@@ -804,13 +859,29 @@ def twins(folder, filename):
 
     weight = np.array(twin_mf)
 
-    U = np.stack((T11s,T12s,T13s,
+    T = np.stack((T11s,T12s,T13s,
                   T21s,T22s,T23s,
                   T31s,T32s,T33s)).T.reshape(n_var,3,3)
 
-    return U, weight
+    return T, weight
 
 def parameters(folder=None, filename=None):
+    """
+    Reads lattice parameters from a CIF file.
+
+    Parameters
+    ----------
+    folder : str,
+        Name of path excluding filename.
+    filename : str
+        Name of filename excluding path.
+
+    Returns
+    -------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+
+    """
 
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \
@@ -828,7 +899,25 @@ def parameters(folder=None, filename=None):
 
     return a, b, c, np.deg2rad(alpha), np.deg2rad(beta), np.deg2rad(gamma)
 
-def group(folder=None, filename=None):
+def group(folder, filename):
+    """
+    Reads space group information from a CIF file.
+
+    Parameters
+    ----------
+    folder : str,
+        Name of path excluding filename.
+    filename : str
+        Name of filename excluding path.
+
+    Returns
+    -------
+    group : int
+        Space group number.
+    hm : str
+        Space group symbol in Hermann–Mauguin notation.
+
+    """    
 
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \
@@ -870,6 +959,22 @@ def group(folder=None, filename=None):
     return group, hm
 
 def operators(folder, filename):
+    """
+    Reads symmetry operators from a CIF file.
+
+    Parameters
+    ----------
+    folder : str,
+        Name of path excluding filename.
+    filename : str
+        Name of filename excluding path.
+
+    Returns
+    -------
+    symops : 1d array
+        Symmetry operators in Jones-faithful notation.
+
+    """    
 
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \

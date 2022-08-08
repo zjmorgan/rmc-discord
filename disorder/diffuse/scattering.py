@@ -48,8 +48,8 @@ def form(ions, Q, source='x-ray'):
     Q : 1d array
         Magnitude of wavevector.
     source : str, optional
-       Radiation source. Either ``x-ray`` or ``electron``.
-       Defualt is ``source=x-ray``.
+       Radiation source. Either ``'x-ray'`` or ``'electron'``.
+       Defualt is ``source='x-ray'``.
 
     Returns
     -------

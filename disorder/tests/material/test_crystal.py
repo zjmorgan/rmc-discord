@@ -331,8 +331,7 @@ class test_crystal(unittest.TestCase):
         crystal.disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
                            nu, nv, nw, atm, A,
                            folder+'/disordered_CaTiOSiO4.cif',
-                           folder=folder, filename='CaTiOSiO4.cif',
-                           ulim=[0,nu], vlim=[0,nv], wlim=[0,nw])
+                           folder=folder, filename='CaTiOSiO4.cif')
 
         UC_dict = crystal.unitcell(folder=folder,
                                    filename='disordered_CaTiOSiO4.cif',
@@ -384,8 +383,7 @@ class test_crystal(unittest.TestCase):
         crystal.disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
                            nu, nv, nw, atm, A,
                            folder+'/disordered_CuMnO2.mcif',
-                           folder=folder, filename='CuMnO2.mcif',
-                           ulim=[0,nu], vlim=[0,nv], wlim=[0,nw])
+                           folder=folder, filename='CuMnO2.mcif')
 
         UC_dict = crystal.unitcell(folder=folder,
                                    filename='disordered_CuMnO2.mcif',

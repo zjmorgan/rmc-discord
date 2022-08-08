@@ -1206,7 +1206,7 @@ class UnitCell:
 
         Returns
         -------
-        sg_sym : str
+        hm : str
            Symbol in Hermann–Mauguin notation.
 
         """
@@ -1219,7 +1219,7 @@ class UnitCell:
 
         Returns
         -------
-        sg_num : int
+        group : int
            Number between 1 and 230.
 
         """
