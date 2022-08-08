@@ -1,7 +1,7 @@
 # Created by the Bilbao Crystallographic Server
 # http://www.cryst.ehu.es
 
-# Kagome 
+# Kagome
 
 data_Wq3BKef7
 _audit_creation_method             "Bilbao Crystallographic Server"

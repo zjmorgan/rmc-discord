@@ -16,41 +16,41 @@ from IPython.core.ultratb import ColorTB
 __root = os.path.abspath(os.path.dirname(__file__))
 
 class FractionalDelegate(QtWidgets.QItemDelegate):
-    
+
     def createEditor(self, parent, option, index):
         lineEdit = QtWidgets.QLineEdit(parent)
         validator = QtGui.QDoubleValidator(0, 1, 4, lineEdit)
         lineEdit.setValidator(validator)
-        
+
         return lineEdit
-    
+
 class StandardDoubleDelegate(QtWidgets.QItemDelegate):
-    
+
     def createEditor(self, parent, option, index):
         lineEdit = QtWidgets.QLineEdit(parent)
         validator = QtGui.QDoubleValidator(-999999, 999999, 4, lineEdit)
         lineEdit.setValidator(validator)
-        
+
         return lineEdit
-    
+
 class PositiveDoubleDelegate(QtWidgets.QItemDelegate):
-    
+
     def createEditor(self, parent, option, index):
         lineEdit = QtWidgets.QLineEdit(parent)
         validator = QtGui.QDoubleValidator(0, 999999, 4, lineEdit)
         lineEdit.setValidator(validator)
-        
+
         return lineEdit
-    
+
 class SizeIntDelegate(QtWidgets.QItemDelegate):
-    
+
     def createEditor(self, parent, option, index):
         lineEdit = QtWidgets.QLineEdit(parent)
         validator = QtGui.QIntValidator(1, 999, lineEdit)
         lineEdit.setValidator(validator)
-        
+
         return lineEdit
-    
+
 class WorkerSignals(QtCore.QObject):
 
     finished = QtCore.pyqtSignal()
@@ -66,15 +66,15 @@ class Worker(QtCore.QRunnable):
         self.fn = fn
         self.args = args
         self.kwargs = kwargs
-        self.signals = WorkerSignals()    
+        self.signals = WorkerSignals()
 
-        self.kwargs['callback'] = self.signals.progress   
-        
+        self.kwargs['callback'] = self.signals.progress
+
         self.stop = False
 
     @QtCore.pyqtSlot()
     def run(self):
-  
+
         try:
             result = self.fn(*self.args, **self.kwargs)
         except:
@@ -85,17 +85,17 @@ class Worker(QtCore.QRunnable):
             self.signals.result.emit(result)
         finally:
             self.signals.finished.emit()
-            
+
     def abort(self):
         self.stop = True
-        
+
     def proceed(self):
         return not self.stop
-    
+
 def save_gui(ui, settings):
-    
+
     for name, obj in inspect.getmembers(ui):
-        
+
         if isinstance(obj, QtWidgets.QComboBox):
             name = obj.objectName()
             index = obj.currentIndex()
@@ -106,7 +106,7 @@ def save_gui(ui, settings):
             name = obj.objectName()
             value = obj.text()
             settings.setValue(name, value)
-            
+
         if isinstance(obj, QtWidgets.QProgressBar):
             name = obj.objectName()
             value = obj.value()
@@ -115,13 +115,13 @@ def save_gui(ui, settings):
         if isinstance(obj, QtWidgets.QCheckBox):
             name = obj.objectName()
             state = obj.isChecked()
-            settings.setValue(name, state)     
-            
+            settings.setValue(name, state)
+
         if isinstance(obj, QtWidgets.QTabWidget):
-            name = obj.objectName()            
+            name = obj.objectName()
             index = obj.currentIndex()
-            settings.setValue(name, index) 
-            
+            settings.setValue(name, index)
+
         if isinstance(obj, QtWidgets.QTableWidget):
             name = obj.objectName()
             data = QtCore.QByteArray()
@@ -156,11 +156,11 @@ def save_gui(ui, settings):
 def load_gui(ui, settings):
 
     for name, obj in inspect.getmembers(ui):
-                
+
         if isinstance(obj, QtWidgets.QComboBox):
             index = obj.currentIndex()
             name = obj.objectName()
-            value = str(settings.value(name))  
+            value = str(settings.value(name))
             if (value == ''):
                 continue
             index = obj.findText(value)
@@ -169,28 +169,28 @@ def load_gui(ui, settings):
                 index = obj.findText(value)
                 obj.setCurrentIndex(index)
             else:
-                obj.setCurrentIndex(index)    
+                obj.setCurrentIndex(index)
 
         if isinstance(obj, QtWidgets.QLineEdit):
             name = obj.objectName()
             value = str(settings.value(name))
             obj.setText(value)
-            
+
         if isinstance(obj, QtWidgets.QProgressBar):
             name = obj.objectName()
             value = int(settings.value(name))
             obj.setValue(value)
-            
+
         if isinstance(obj, QtWidgets.QCheckBox):
             name = obj.objectName()
             value = bool(strtobool(str(settings.value(name))))
             obj.setChecked(value)
-                
+
         if isinstance(obj, QtWidgets.QTabWidget):
-            name = obj.objectName()          
+            name = obj.objectName()
             index = int(settings.value(name))
-            obj.setCurrentIndex(index) 
- 
+            obj.setCurrentIndex(index)
+
         if isinstance(obj, QtWidgets.QTableWidget):
             name = obj.objectName()
             data = settings.value('{}/data'.format(name))
@@ -206,25 +206,25 @@ def load_gui(ui, settings):
                 if cellText:
                     item = QtWidgets.QTableWidgetItem(cellText)
                     obj.setVerticalHeaderItem(row, item)
-                    
+
             for col in range(columnCount):
                 cellText = str(stream.readQString())
                 if cellText:
                     item = QtWidgets.QTableWidgetItem(cellText)
                     obj.setHorizontalHeaderItem(col, item)
-                    
+
             for row in range(rowCount):
                 for col in range(columnCount):
                     cellText = str(stream.readQString())
                     if ('comboBox' in cellText):
                         combo = QtWidgets.QComboBox()
-                        combo.setObjectName(cellText)         
+                        combo.setObjectName(cellText)
                         obj.setCellWidget(row, col, combo)
                         combo.addItem(str(settings.value(cellText)))
                     elif ('checkBox' in cellText):
                         check = QtWidgets.QCheckBox()
                         check.setObjectName(cellText)
-                        obj.setCellWidget(row, col, check)  
+                        obj.setCellWidget(row, col, check)
                         value = bool(strtobool(str(settings.value(cellText))))
                         check.setChecked(value)
                     else:

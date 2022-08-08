@@ -221,7 +221,7 @@ def transform(U_r, H, K, L, nu, nv, nw, n_atm):
         Supercell index along the :math:`a^*`, :math:`b^*`, and
         :math:`c^*`-axis in reciprocal space.
     nu, nv, nw : int
-        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the 
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
         :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
     n_atm : int
         Number of atoms in the unit cell.
@@ -270,7 +270,7 @@ def intensity(U_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
     factors : 1d array
         Prefactors of form factors, phase factors, and composition factors.
     subtract : boolean, optional
-       Optionally subtract the Bragg intensity or return the Bragg structure 
+       Optionally subtract the Bragg intensity or return the Bragg structure
        factor.
 
     Returns
@@ -440,7 +440,7 @@ def equivalent(Uiso, D):
     ----------
     Uiso : 1d array
         Isotropic atomic displacement parameters :math:`U_\mathrm{iso}`.
-    D : 2d array, 3x3 
+    D : 2d array, 3x3
         Transform matrix from crystal axis to Cartesian coordiante system.
 
     Returns
@@ -464,10 +464,10 @@ def isotropic(U11, U22, U33, U23, U13, U12, D):
     Parameters
     ----------
     U11, U22, U33, U23, U13, U12 : float or 1d array
-        Components of atomic displacement parameters :math:`U_{11}`, 
-        :math:`U_{22}`, :math:`U_{33}`, :math:`U_{23}`, :math:`U_{13}`, 
+        Components of atomic displacement parameters :math:`U_{11}`,
+        :math:`U_{22}`, :math:`U_{33}`, :math:`U_{23}`, :math:`U_{13}`,
         and :math:`U_{12}`.
-    D : 2d array, 3x3 
+    D : 2d array, 3x3
         Transform matrix from crystal axis to Cartesian coordiante system.
 
     Returns
@@ -491,16 +491,16 @@ def isotropic(U11, U22, U33, U23, U13, U12, D):
 
 def principal(U11, U22, U33, U23, U13, U12, D):
     """
-    Principal atmoic displacement parameters :math:`U_\mathrm{1}, 
+    Principal atmoic displacement parameters :math:`U_\mathrm{1},
     :math:`U_\mathrm{2}`, and :math:`U_\mathrm{3}`.
 
     Parameters
     ----------
     U11, U22, U33, U23, U13, U12 : float or 1d array
-        Components of atomic displacement parameters :math:`U_{11}`, 
-        :math:`U_{22}`, :math:`U_{33}`, :math:`U_{23}`, :math:`U_{13}`, 
+        Components of atomic displacement parameters :math:`U_{11}`,
+        :math:`U_{22}`, :math:`U_{33}`, :math:`U_{23}`, :math:`U_{13}`,
         and :math:`U_{12}`.
-    D : 2d array, 3x3 
+    D : 2d array, 3x3
         Transform matrix from crystal axis to Cartesian coordiante system.
 
     Returns
@@ -534,8 +534,8 @@ def cartesian(U11, U22, U33, U23, U13, U12, D):
     Parameters
     ----------
     U11, U22, U33, U23, U13, U12 : float or 1d array
-        Components of atomic displacement parameters :math:`U_{11}`, 
-        :math:`U_{22}`, :math:`U_{33}`, :math:`U_{23}`, :math:`U_{13}`, 
+        Components of atomic displacement parameters :math:`U_{11}`,
+        :math:`U_{22}`, :math:`U_{33}`, :math:`U_{23}`, :math:`U_{13}`,
         and :math:`U_{12}`.
     D : 2d array, 3x3
         Transform matrix from crystal axis to Cartesian coordiante system.

@@ -5,7 +5,7 @@ import numpy as np
 def composition(nu, nv, nw, n_atm, value=0.5):
     """
     Generate random relative site occupancies.
-    
+
     Parameters
     ----------
     nu, nv, nw : int
@@ -15,16 +15,16 @@ def composition(nu, nv, nw, n_atm, value=0.5):
         Number of atoms in the unit cell
     value : float, 1d array, optional
         Average of site occupancies, defualt ``value=0.5``.
-    
+
     Returns
     -------
     A : 1d array
         Array has a flattened shape of size ``nu*nw*nv*n_atm``.
-        
+
     """
-                    
+
     A_r = (np.random.random((nu,nv,nw,n_atm))<=value)/value-1
-                        
+
     return A_r.flatten()
 
 def transform(A_r, H, K, L, nu, nv, nw, n_atm):
@@ -50,17 +50,17 @@ def transform(A_r, H, K, L, nu, nv, nw, n_atm):
         Array has a flattened shape of size ``nu*nw*nv*n_atm``.
     i_dft : 1d array, int
         Array has a flattened shape of size ``nu*nw*nv*n_atm``.
-        
+
     """
-    
+
     A_k = np.fft.ifftn(A_r.reshape(nu,nv,nw,n_atm), axes=(0,1,2))*nu*nv*nw
 
     Ku = np.mod(H, nu).astype(int)
     Kv = np.mod(K, nv).astype(int)
     Kw = np.mod(L, nw).astype(int)
-    
+
     i_dft = Kw+nw*(Kv+nv*Ku)
-         
+
     return A_k.flatten(), i_dft
 
 def intensity(A_k, i_dft, factors):
@@ -82,23 +82,23 @@ def intensity(A_k, i_dft, factors):
         Array has a flattened shape of size ``i_dft.shape[0]``.
 
     """
-    
+
     n_peaks = i_dft.shape[0]
-    
+
     n_atm = factors.shape[0] // n_peaks
-        
+
     factors = factors.reshape(n_peaks,n_atm)
-    
+
     n_uvw = A_k.shape[0] // n_atm
-            
+
     A_k = A_k.reshape(n_uvw,n_atm)
-    
+
     prod = factors*A_k[i_dft,:]
 
     F = np.sum(prod, axis=1)
-                  
+
     I = np.real(F)**2+np.imag(F)**2
-     
+
     return I/(n_uvw*n_atm)
 
 def structure(A_k, i_dft, factors):
@@ -119,23 +119,23 @@ def structure(A_k, i_dft, factors):
     F : 1d array
         Array has a flattened shape of size ``i_dft.shape[0]``
     prod : 1d array
-        Array has a flattened shape of size 
+        Array has a flattened shape of size
         ``i_dft.shape[0]*n_atm``.
 
     """
-    
+
     n_peaks = i_dft.shape[0]
-    
+
     n_atm = factors.shape[0] // n_peaks
-        
+
     factors = factors.reshape(n_peaks,n_atm)
-    
+
     n_uvw = A_k.shape[0] // n_atm
-    
+
     A_k = A_k.reshape(n_uvw,n_atm)
-    
+
     prod = factors*A_k[i_dft,:]
 
     F = np.sum(prod, axis=1)
-     
+
     return F, prod.flatten()

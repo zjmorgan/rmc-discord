@@ -90,18 +90,18 @@ class Plot():
         self.fig = canvas.figure
         self.ax = canvas.figure.add_subplot(111)
         self.ax.minorticks_on()
-        
+
     def get_aspect(self):
-        
+
         width, height = self.ax.get_figure().get_size_inches()
         _, _, w, h = self.ax.get_position().bounds
-        
+
         xmin, xmax = self.ax.get_xlim()
         ymin, ymax = self.ax.get_ylim()
-    
+
         disp_ratio = (height*h)/(width*w)
         data_ratio = (ymax-ymin)/(xmax-xmin)
-            
+
         return disp_ratio/data_ratio
 
     def save_figure(self, filename):
@@ -450,7 +450,7 @@ class HeatMap(Plot):
         self.remove_colorbar()
 
         pad = 0.05 if orientation.lower() == 'vertical' else 0.2
-        
+
         self.cb = self.fig.colorbar(self.im, ax=self.ax,
                                     orientation=orientation, pad=pad)
 
@@ -461,7 +461,7 @@ class HeatMap(Plot):
         if self.im.colorbar is not None:
 
             self.im.colorbar.remove()
-            
+
     def set_colorbar_label(self, label):
 
         if self.im.colorbar is not None:
@@ -506,7 +506,7 @@ class HeatMap(Plot):
 
         min_y = extents[2]
         offset = self.__offset(transformation, min_y)
-        
+
         self.transformation = transformation
         self.offset = offset
 
@@ -525,29 +525,29 @@ class HeatMap(Plot):
 
         self.ax.set_xlim(ext_min[0]+offset,ext_max[0]+offset)
         self.ax.set_ylim(ext_min[1],ext_max[1])
-        
+
         for p in reversed(self.ax.patches):
             p.remove()
-        
+
         x = [extents[1],ext_max[0]+offset,ext_max[0]+offset]
         y = [ext_min[1],ext_min[1],ext_max[1]]
         p = Polygon(np.column_stack((x,y)), fc='w', ec='w')
         self.ax.add_patch(p)
-        
+
         x = [extents[0],extents[0],extents[0]+offset*2]
         y = [ext_min[1],ext_max[1],ext_max[1]]
         p = Polygon(np.column_stack((x,y)), fc='w', ec='w')
         self.ax.add_patch(p)
-        
+
     def draw_line(self, xlim=None, ylim=None):
-                        
+
         if xlim is None: xlim = self.ax.get_xlim()
         if ylim is None: ylim = self.ax.get_ylim()
-        
+
         self.ax.plot(xlim, ylim, color='w')
-        
+
     def add_text(self, x, y, s, color='w'):
-        
+
         self.ax.text(x, y, s, color=color, ha='center', va='center')
 
 class Scatter(Plot):

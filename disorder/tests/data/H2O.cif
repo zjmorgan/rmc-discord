@@ -5,7 +5,7 @@ _publ_author_name
 'Peterson S'
 'Levy H'
 _journal_name_full 'Acta Crystallographica'
-_journal_volume 10 
+_journal_volume 10
 _journal_year 1957
 _journal_page_first 70
 _journal_page_last 76
@@ -71,4 +71,3 @@ _atom_site_aniso_U_23
 O1 1.84952 1.84952 6.54988 0.92863 0.00000 0.00000
 D1 2.49957 2.49957 8.13939 1.25365 0.00000 0.00000
 D2 2.55374 2.16681 8.35864 1.08340 0.34951 0.69902
-

@@ -92,9 +92,11 @@ html_theme_options = {
 add_module_names = False
 
 def linkcode_resolve(domain, info):
+    basurl = 'https://github.com/zjmorgan/rmc-discord/blob/master/{}.py'
     if domain != 'py':
         return None
     if not info['module']:
         return None
     filename = info['module'].replace('.', '/')
-    return "https://github.com/zjmorgan/rmc-discord/blob/master/%s.py" % filename
+    url = basurl.format(filename)
+    return url

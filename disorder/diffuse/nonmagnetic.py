@@ -220,11 +220,5 @@ def structure(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors):
 
     bragg = np.arange(n_peaks)[cond]
 
-    return F, \
-           F_nuc, \
-           prod.flatten(), \
-           prod_nuc.flatten(), \
-           V_k.flatten(), \
-           V_k_nuc.flatten(), \
-           even, \
-           bragg
+    return F, F_nuc, prod.flatten(), prod_nuc.flatten(), \
+           V_k.flatten(), V_k_nuc.flatten(), even, bragg

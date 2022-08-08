@@ -19,13 +19,13 @@ class Window:
 
   def show(self):
       self.view.show()
-     
-def run(): 
+
+def run():
     app = QtWidgets.QApplication(sys.argv)
     parallelism()
     view = View()
     adder = Presenter(Model(), view)
     window = Window(view, adder)
-    window.show()    
+    window.show()
     sys.excepthook = report_exception
     sys.exit(app.exec_())

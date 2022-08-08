@@ -256,6 +256,6 @@ class test_occupational(unittest.TestCase):
 
         np.testing.assert_array_almost_equal(F, F_ref)
         np.testing.assert_array_almost_equal(prod, prod_ref)
-        
+
 if __name__ == '__main__':
     unittest.main()

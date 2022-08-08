@@ -861,7 +861,7 @@ class test_refinement(unittest.TestCase):
 
         np.testing.assert_array_almost_equal(F_cand, F)
         np.testing.assert_array_almost_equal(F_nuc_cand, F_nuc)
-        
+
     def test_nonmagnetic_structure_factor(self):
 
         n_hkl = 101
@@ -890,7 +890,7 @@ class test_refinement(unittest.TestCase):
 
         U_r = np.random.random((n_prod,nu,nv,nw,n_atm)).flatten()
         A_r = np.random.random((nu,nv,nw,n_atm)).flatten()
-        
+
         A_r = np.tile(A_r, n_prod)
 
         U_k = np.fft.ifftn(U_r.reshape(n_prod,nu,nv,nw,n_atm), axes=(1,2,3))
@@ -903,7 +903,7 @@ class test_refinement(unittest.TestCase):
         j = i % n_atm
 
         U_k_orig = U_k[...,j].copy()
-        A_k_orig = A_k[...,j].copy()    
+        A_k_orig = A_k[...,j].copy()
 
         V_k_orig = np.einsum('jk,kj->j', coeffs*(U_k_orig[:,i_dft]+
                                                  A_k_orig[:,i_dft]).T, Q_k)
@@ -924,7 +924,7 @@ class test_refinement(unittest.TestCase):
 
         F_orig = np.sum(factors*V_k, axis=1)
         F_nuc_orig = np.sum(factors[cond,:]*V_k_nuc, axis=1)
-        
+
         U_r_orig = U_r.reshape(n_prod,n_uvw*n_atm)[:,i]
 
         U_r_cand = np.random.random(n_prod)
@@ -983,13 +983,13 @@ class test_refinement(unittest.TestCase):
                                                 F_orig, F_nuc_orig,
                                                 p_orig, p_nuc_orig,
                                                 V_k_orig, V_k_nuc_orig,
-                                                U_k_orig, A_k_orig, 
+                                                U_k_orig, A_k_orig,
                                                 Q_k, factors,
                                                 coeffs, even, bragg, i_dft,
                                                 p, j, n_atm)
 
         np.testing.assert_array_almost_equal(F_cand, F)
         np.testing.assert_array_almost_equal(F_nuc_cand, F_nuc)
-        
+
 if __name__ == '__main__':
     unittest.main()

@@ -430,7 +430,7 @@ class Model:
                                  nu, nv, nw, mask):
 
         nh, nk, nl = mask.shape
-        
+
         output = space.mapping(h_range, k_range, l_range,
                                nh, nk, nl, nu, nv, nw)
 
@@ -846,7 +846,7 @@ class Model:
     def save_correlations_3d(self, fname, data, label):
 
         experimental.correlations(fname, data, label)
-        
+
     def save_intensity_1d(self, fname, Q, data):
 
         np.savetxt(fname, np.column_stack((Q, *data)), delimiter=',', fmt='%s')

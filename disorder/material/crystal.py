@@ -8,10 +8,25 @@ import sys, os, io, re
 from disorder.material import symmetry
 from disorder.material import tables
 
-directory = os.path.dirname(os.path.abspath(__file__))
-folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+def unitcell(folder, filename, tol=1e-2):
+    """
+    Reads atom site information from a CIF file.
 
-def unitcell(folder=folder, filename='copper.cif', tol=1e-2):
+    Parameters
+    ----------
+    folder : str,
+        Name of path excluding filename.
+    filename : str
+        Name of filename excluding path..
+    tol : float, optional
+        Tolerance of unique atom coordinates.
+
+    Returns
+    -------
+    unit_cell : dict
+        Dictionary of unit cell information.
+
+    """
 
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \
@@ -237,7 +252,7 @@ def unitcell(folder=folder, filename='copper.cif', tol=1e-2):
         for symop, mag_symop in zip(symops, mag_symops):
 
             transformed = symmetry.evaluate([symop], [x,y,z]).flatten()
-            
+
             mom = symmetry.evaluate_mag([mag_symop], [Mx,My,Mz]).flatten()
 
             if (adp_type == 'ani'):
@@ -271,7 +286,7 @@ def unitcell(folder=folder, filename='copper.cif', tol=1e-2):
     metric = np.round(np.round(total/tol, 1)).astype(int)
 
     _, labels = np.unique(types, return_inverse=True)
-    
+
     metric = np.column_stack((metric, labels))
 
     symmetries, indices = np.unique(metric, axis=0, return_index=True)
@@ -311,21 +326,21 @@ def unitcell(folder=folder, filename='copper.cif', tol=1e-2):
 
     atm = atm[sort]
 
-    unit_cell_dict = {}
+    unit_cell = {}
 
-    unit_cell_dict['u'] = u
-    unit_cell_dict['v'] = v
-    unit_cell_dict['w'] = w
-    unit_cell_dict['occupancy'] = c
-    unit_cell_dict['displacement'] = d
-    unit_cell_dict['moment'] = m
-    unit_cell_dict['site'] = s
-    unit_cell_dict['operator'] = ops
-    unit_cell_dict['magnetic_operator'] = mag_ops
-    unit_cell_dict['atom'] = atm
-    unit_cell_dict['n_atom'] = n_atm
+    unit_cell['u'] = u
+    unit_cell['v'] = v
+    unit_cell['w'] = w
+    unit_cell['occupancy'] = c
+    unit_cell['displacement'] = d
+    unit_cell['moment'] = m
+    unit_cell['site'] = s
+    unit_cell['operator'] = ops
+    unit_cell['magnetic_operator'] = mag_ops
+    unit_cell['atom'] = atm
+    unit_cell['n_atom'] = n_atm
 
-    return unit_cell_dict
+    return unit_cell
 
 def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
               name, folder=None, filename=None):
@@ -608,15 +623,15 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
         mx = np.round(Sx[mask],4)
         my = np.round(Sy[mask],4)
         mz = np.round(Sz[mask],4)
-        
+
         G = np.dot(A.T,A)
-        
+
         a, b, c = np.sqrt(G[0,0]), np.sqrt(G[1,1]), np.sqrt(G[2,2])
-        
+
         alpha = np.arccos(G[1,2]/(b*c))
         beta = np.arccos(G[0,2]/(a*c))
         gamma = np.arccos(G[0,1]/(a*b))
-        
+
         C = cartesian_moment(a, b, c, alpha, beta, gamma)
 
         C_inv = np.linalg.inv(C)
@@ -676,6 +691,24 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
         outfile.close()
 
 def laue(folder, filename):
+    """
+    Determines Laue class from a CIF file.
+
+    Parameters
+    ----------
+    folder : str,
+        Name of path excluding filename.
+    filename : str
+        Name of filename excluding path..
+
+    Returns
+    -------
+    laue : str
+        One of ``'-1'``, ``'2/m'``, ``'mmm'``, ``'4/m'``,
+        ``'4/mmm'``, ``'-3'``, ``'-3m'``, ``'6/m'``, ``'6/mmm'``, ``'m-3'``, or
+        ``'m-3m'``.
+
+    """
 
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \
@@ -836,7 +869,7 @@ def group(folder=None, filename=None):
 
     return group, hm
 
-def operators(folder=folder, filename='copper.cif'):
+def operators(folder, filename):
 
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \
@@ -859,6 +892,22 @@ def operators(folder=folder, filename='copper.cif'):
     return symops
 
 def lattice(a, b, c, alpha, beta, gamma):
+    """
+    Lattice system of unit cell based on lattice parameters.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+
+    Returns
+    -------
+    system : str
+       One of ``'Cubic'``, ``'Hexagonal'``, ``'Rhombohedral'``,
+       ``'Tetragonal'``, ``'Orthorhombic'``, ``'Monoclinic'``, or
+       ``'Triclinic'``.
+
+    """
 
     if (np.allclose([a, b], c) and np.allclose([alpha, beta, gamma], np.pi/2)):
         return 'Cubic'
@@ -879,6 +928,20 @@ def lattice(a, b, c, alpha, beta, gamma):
         return 'Triclinic'
 
 def volume(a, b, c, alpha, beta, gamma):
+    """
+    Volume of unit cell.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+
+    Returns
+    -------
+    V : float
+        Unit cell volume.
+
+    """
 
     V = a*b*c*np.sqrt(1-np.cos(alpha)**2\
                        -np.cos(beta)**2\
@@ -888,6 +951,20 @@ def volume(a, b, c, alpha, beta, gamma):
     return V
 
 def reciprocal(a, b, c, alpha, beta, gamma):
+    """
+    Reciprocal lattice parameters.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+
+    Returns
+    -------
+    a_, b_, c_, alpha_, beta_, gamma_ : float
+        Reciprocal lattice constants and angles. Angles in radians.
+
+    """
 
     V = volume(a, b, c, alpha, beta, gamma)
 
@@ -905,6 +982,20 @@ def reciprocal(a, b, c, alpha, beta, gamma):
     return a_, b_, c_, alpha_, beta_, gamma_
 
 def metric(a, b, c, alpha, beta, gamma):
+    """
+    Metric tensor.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+
+    Returns
+    -------
+    G : 2d array
+       Components of the :math:`G` metric tensor.
+
+    """
 
     G = np.array([[a**2, a*b*np.cos(gamma), a*c*np.cos(beta)],
                   [b*a*np.cos(gamma), b**2, b*c*np.cos(alpha)],
@@ -1027,6 +1118,22 @@ def vector(h, k, l, B):
     return Qh, Qk, Ql
 
 def transform(p, q, r, U):
+    """
+    Transform the components of a vector.
+
+    Parameters
+    ----------
+    p, q, r : 1d array
+        Components of a vector.
+    U : 2d array
+        Transformation matrix.
+
+    Returns
+    -------
+    x, y, z : 1d array
+        Transformed components of a vector.
+
+    """
 
     x = U[0,0]*p+U[0,1]*q+U[0,2]*r
     y = U[1,0]*p+U[1,1]*q+U[1,2]*r
@@ -1052,11 +1159,11 @@ def pairs(u, v, w, ion, A, extend=False):
     du[du < -0.5] += 1
     dv[dv < -0.5] += 1
     dw[dw < -0.5] += 1
-    
+
     du[du > 0.5] -= 1
     dv[dv > 0.5] -= 1
     dw[dw > 0.5] -= 1
-    
+
     if extend:
 
         U, V, W = np.meshgrid(np.arange(-1,2),
@@ -1090,7 +1197,7 @@ def pairs(u, v, w, ion, A, extend=False):
 
         i = np.concatenate((i,np.tile(np.arange(n_atm), 26)))
         j = np.concatenate((j,np.tile(np.arange(n_atm), 26)))
-        
+
     dx, dy, dz = transform(du, dv, dw, A)
 
     d = np.sqrt(dx**2+dy**2+dz**2)

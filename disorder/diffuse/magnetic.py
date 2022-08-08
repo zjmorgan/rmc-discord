@@ -105,7 +105,7 @@ def form(Q, ions, g=2):
     ----------
     Q : 1d array
         Magnitude of wavevector.
-    ions : 1d array
+    ions : 1d array, str
         Magnetic ions.
     g : float, 1d array, optional
        :math:`g` factor of the spins, defualt ``g=2``.
@@ -205,7 +205,7 @@ def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
         Cartesian components along the :math:`x`, :math:`y`, and
         :math:`z`-direction.
     H, K, L : 1d array, int
-        Supercell index along the :math:`a^*`, :math:`b^*`, and 
+        Supercell index along the :math:`a^*`, :math:`b^*`, and
         :math:`c^*`-axis in reciprocal space.
     nu, nv, nw : int
         Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
@@ -347,7 +347,7 @@ def magnitude(mu1, mu2, mu3, C):
     mu1, mu2, mu3 : 1d array
         Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`,
         and :math:`\mu_3`.
-    C: 2d array, 3x3 
+    C: 2d array, 3x3
         Transform matrix from crystal axis to Cartesian coordiante system.
 
     Returns
@@ -356,7 +356,7 @@ def magnitude(mu1, mu2, mu3, C):
         Has same size as input magnetic moment components.
 
     """
-    
+
     M = np.array([mu1,mu2,mu3])
     n = np.size(mu1)
 
@@ -378,7 +378,7 @@ def cartesian(mu1, mu2, mu3, C):
     mu1, mu2, mu3 : float or 1d array
         Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`,
         and :math:`\mu_3`.
-    C: 2d array, 3x3 
+    C: 2d array, 3x3
         Transform matrix from crystal axis to Cartesian coordiante system.
 
     Returns

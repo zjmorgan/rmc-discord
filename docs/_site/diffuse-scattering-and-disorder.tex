@@ -8,262 +8,262 @@
 
 
 \begin{document}
-	
+
 	\tdplotsetmaincoords{80}{105}
-		
+
 	\begin{tikzpicture}[scale=1,tdplot_main_coords]
-	
+
 	\begin{scope}[xshift=-4.25cm, yshift=1cm, local bounding box=A,scale=2]
 
 	\coordinate (a) at (0.125,0.125,0.625); %0
 	\coordinate (b) at (0.125,0.375,0.875); %1
 	\coordinate (c) at (0.125,0.625,0.125); %2
 	\coordinate (d) at (0.125,0.875,0.375); %3
-	
+
 	\coordinate (e) at (0.375,0.125,0.875); %4
 	\coordinate (f) at (0.375,0.375,0.625); %5
 	\coordinate (g) at (0.375,0.625,0.375); %6
 	\coordinate (h) at (0.375,0.875,0.125); %7
-	
+
 	\coordinate (i) at (0.625,0.125,0.125); %8
 	\coordinate (j) at (0.625,0.375,0.375); %9
 	\coordinate (k) at (0.625,0.625,0.625); %10
 	\coordinate (l) at (0.625,0.875,0.875); %11
-	
+
 	\coordinate (m) at (0.875,0.125,0.375); %12
 	\coordinate (n) at (0.875,0.375,0.125); %13
 	\coordinate (o) at (0.875,0.625,0.875); %14
 	\coordinate (p) at (0.875,0.875,0.625); %15
-	
+
 	\pgfmathsetmacro{\u}{0.115}
 	\pgfmathsetmacro{\v}{0.115}
-	\pgfmathsetmacro{\w}{0.115}	
-	
+	\pgfmathsetmacro{\w}{0.115}
+
 	\draw[very thick,Matisse,->] ($(a)-(\u,\v,\w)$) -- ($(a)+(\u,\v,\w)$);
 	\draw[very thick,Matisse,->] ($(b)-(\u,-\v,-\w)$) -- ($(b)+(\u,-\v,-\w)$);
 	\draw[very thick,Matisse,->] ($(c)-(-\u,-\v,-\w)$) -- ($(c)+(-\u,-\v,-\w)$);
 	\draw[very thick,Matisse,->] ($(d)-(\u,-\v,-\w)$) -- ($(d)+(\u,-\v,-\w)$);
-	
+
 	\draw[very thick,Matisse,->] ($(e)-(\u,-\v,\w)$) -- ($(e)+(\u,-\v,\w)$);
 	\draw[very thick,Matisse,->] ($(f)-(\u,\v,-\w)$) -- ($(f)+(\u,\v,-\w)$);
 	\draw[very thick,Matisse,->] ($(g)-(\u,-\v,\w)$) -- ($(g)+(\u,-\v,\w)$);
 	\draw[very thick,Matisse,->] ($(h)-(-\u,-\v,\w)$) -- ($(h)+(-\u,-\v,\w)$);
-	
+
 	\draw[very thick,Matisse,->] ($(i)-(\u,\v,\w)$) -- ($(i)+(\u,\v,\w)$);
 	\draw[very thick,Matisse,->] ($(j)-(\u,-\v,-\w)$) -- ($(j)+(\u,-\v,-\w)$);
 	\draw[very thick,Matisse,->] ($(k)-(\u,\v,\w)$) -- ($(k)+(\u,\v,\w)$);
 	\draw[very thick,Matisse,->] ($(l)-(-\u,\v,\w)$) -- ($(l)+(-\u,\v,\w)$);
-	
+
 	\draw[very thick,Matisse,->] ($(m)-(\u,-\v,\w)$) -- ($(m)+(\u,-\v,\w)$);
 	\draw[very thick,Matisse,->] ($(n)-(\u,\v,-\w)$) -- ($(n)+(\u,\v,-\w)$);
 	\draw[very thick,Matisse,->] ($(o)-(-\u,\v,-\w)$) -- ($(o)+(-\u,\v,-\w)$);
 	\draw[very thick,Matisse,->] ($(p)-(\u,\v,-\w)$) -- ($(p)+(\u,\v,-\w)$);
-	
+
 	\draw[semithick] (j) -- (k) -- (f) -- (j) -- (g) -- (k);
-	
+
 	\draw[semithick] (m) -- (n) -- (i) -- (m) -- (j) -- (n);
-	
+
 	\draw[semithick] (e) -- (f) -- (a) -- (e) -- (b) -- (f);
-	
+
 	\draw[semithick] (g) -- (h) -- (c) -- (g) -- (d) -- (h);
-	
+
 	\draw[semithick] (o) -- (p) -- (k) -- (o) -- (l) -- (p);
-	
+
 	\pgfmathsetmacro{\a}{1}
 	\pgfmathsetmacro{\r}{2}
-	
+
 	\path (a) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (b) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (c) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (d) node[circle, fill=Spindle, inner sep=\r]{};
-	
+
 	\path (e) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (f) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (g) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (h) node[circle, fill=Spindle, inner sep=\r]{};
-	
+
 	\path (i) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (j) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (k) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (l) node[circle, fill=Spindle, inner sep=\r]{};
-	
+
 	\path (m) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (n) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (o) node[circle, fill=Spindle, inner sep=\r]{};
 	\path (p) node[circle, fill=Spindle, inner sep=\r]{};
-	
+
 	\end{scope}
 
 	\begin{scope}[xshift=-0.75cm, yshift=1cm, local bounding box=B, scale=2]
-	
+
 	\coordinate (a) at (0.125,0.125,0.625); %0
 	\coordinate (b) at (0.125,0.375,0.875); %1
 	\coordinate (c) at (0.125,0.625,0.125); %2
 	\coordinate (d) at (0.125,0.875,0.375); %3
-	
+
 	\coordinate (e) at (0.375,0.125,0.875); %4
 	\coordinate (f) at (0.375,0.375,0.625); %5
 	\coordinate (g) at (0.375,0.625,0.375); %6
 	\coordinate (h) at (0.375,0.875,0.125); %7
-	
+
 	\coordinate (i) at (0.625,0.125,0.125); %8
 	\coordinate (j) at (0.625,0.375,0.375); %9
 	\coordinate (k) at (0.625,0.625,0.625); %10
 	\coordinate (l) at (0.625,0.875,0.875); %11
-	
+
 	\coordinate (m) at (0.875,0.125,0.375); %12
 	\coordinate (n) at (0.875,0.375,0.125); %13
 	\coordinate (o) at (0.875,0.625,0.875); %14
 	\coordinate (p) at (0.875,0.875,0.625); %15
-	
+
 	\draw[semithick] (j) -- (k) -- (f) -- (j) -- (g) -- (k);
-	
+
 	\draw[semithick] (m) -- (n) -- (i) -- (m) -- (j) -- (n);
-	
+
 	\draw[semithick] (e) -- (f) -- (a) -- (e) -- (b) -- (f);
-	
+
 	\draw[semithick] (g) -- (h) -- (c) -- (g) -- (d) -- (h);
-	
+
 	\draw[semithick] (o) -- (p) -- (k) -- (o) -- (l) -- (p);
-	
+
 	\pgfmathsetmacro{\a}{1}
 	\pgfmathsetmacro{\r}{2}
-	
+
 	\pgfmathsetmacro{\u}{-0.025}
 	\pgfmathsetmacro{\v}{-0.025}
-	\pgfmathsetmacro{\w}{-0.025}	
-	
+	\pgfmathsetmacro{\w}{-0.025}
+
 	%\coordinate (a) at ($(a)+(\u,\v,\w)$);
 	%\coordinate (b) at ($(b)+(\u,-\v,-\w)$);
 	\coordinate (c) at ($(c)-(-\u,-\v,-\w)$);
 	%\coordinate (d) at ($(d)+(\u,-\v,-\w)$);
-	
+
 	\coordinate (e) at ($(e)+(\u,-\v,\w)$);
 	\coordinate (f) at ($(f)+(\u,\v,-\w)$);
 	\coordinate (g) at ($(g)+(\u,-\v,\w)$);
 	%\coordinate (h) at ($(h)+(-\u,-\v,\w)$);
-	
+
 	%\coordinate (i) at ($(i)+(\u,\v,\w)$);
 	\coordinate (j) at ($(j)+(\u,-\v,-\w)$);
 	\coordinate (k) at ($(k)+(\u,\v,\w)$);
 	\coordinate (l) at ($(l)+(-\u,\v,\w)$);
-	
+
 	\coordinate (m) at ($(m)+(\u,-\v,\w)$);
 	\coordinate (n) at ($(n)+(\u,\v,-\w)$);
 	%\coordinate (o) at ($(o)+(-\u,\v,-\w)$);
 	\coordinate (p) at ($(p)+(\u,\v,-\w)$);
-	
+
 	\path (a) node[circle, preaction={very thick,draw=Flamenco,fill=white,densely dotted}, inner sep=\r]{};
 	\path (b) node[circle, preaction={very thick,draw=Flamenco,fill=white,densely dotted}, inner sep=\r]{};
 	\path (c) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
 	\path (d) node[circle, preaction={very thick,draw=Flamenco,fill=white,densely dotted}, inner sep=\r]{};
-	
+
 	\path (e) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
 	\path (f) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
 	\path (g) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
 	\path (h) node[circle, preaction={very thick,draw=Flamenco,fill=white,densely dotted}, inner sep=\r]{};
-	
+
 	\path (i) node[circle, preaction={very thick,draw=Flamenco,fill=white,densely dotted}, inner sep=\r]{};
 	\path (j) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
 	\path (k) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
 	\path (l) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
-	
+
 	\path (m) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
 	\path (n) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
 	\path (o) node[circle, preaction={very thick,draw=Flamenco,fill=white,densely dotted}, inner sep=\r]{};
 	\path (p) node[circle, fill=MacaroniAndCheese, inner sep=\r]{};
-	
+
 	\end{scope}
-	
+
 	\begin{scope}[xshift=2.75cm, yshift=1cm, local bounding box=C, scale=2]
-	
+
 	\coordinate (a) at (0.125,0.125,0.625); %0
 	\coordinate (b) at (0.125,0.375,0.875); %1
 	\coordinate (c) at (0.125,0.625,0.125); %2
 	\coordinate (d) at (0.125,0.875,0.375); %3
-	
+
 	\coordinate (e) at (0.375,0.125,0.875); %4
 	\coordinate (f) at (0.375,0.375,0.625); %5
 	\coordinate (g) at (0.375,0.625,0.375); %6
 	\coordinate (h) at (0.375,0.875,0.125); %7
-	
+
 	\coordinate (i) at (0.625,0.125,0.125); %8
 	\coordinate (j) at (0.625,0.375,0.375); %9
 	\coordinate (k) at (0.625,0.625,0.625); %10
 	\coordinate (l) at (0.625,0.875,0.875); %11
-	
+
 	\coordinate (m) at (0.875,0.125,0.375); %12
 	\coordinate (n) at (0.875,0.375,0.125); %13
 	\coordinate (o) at (0.875,0.625,0.875); %14
 	\coordinate (p) at (0.875,0.875,0.625); %15
-	
+
 	\draw[very thick,ForestGreen,densely dotted] (j) -- (k) -- (f) -- (j) -- (g) -- (k);
-	
+
 	\draw[very thick,ForestGreen,densely dotted] (m) -- (n) -- (i) -- (m) -- (j) -- (n);
-	
+
 	\draw[very thick,ForestGreen,densely dotted] (e) -- (f) -- (a) -- (e) -- (b) -- (f);
-	
+
 	\draw[very thick,ForestGreen,densely dotted] (g) -- (h) -- (c) -- (g) -- (d) -- (h);
-	
+
 	\draw[very thick,ForestGreen,densely dotted] (o) -- (p) -- (k) -- (o) -- (l) -- (p);
-	
+
 	\pgfmathsetmacro{\u}{0.025}
 	\pgfmathsetmacro{\v}{0.025}
-	\pgfmathsetmacro{\w}{0.025}	
-	
+	\pgfmathsetmacro{\w}{0.025}
+
 	\coordinate (a) at ($(a)+(\u,\v,\w)$);
 	\coordinate (b) at ($(b)+(\u,-\v,-\w)$);
 	\coordinate (c) at ($(c)+(-\u,-\v,-\w)$);
 	\coordinate (d) at ($(d)+(\u,-\v,-\w)$);
-	
+
 	\coordinate (e) at ($(e)+(\u,-\v,\w)$);
 	\coordinate (f) at ($(f)+(\u,\v,-\w)$);
 	\coordinate (g) at ($(g)+(\u,-\v,\w)$);
 	\coordinate (h) at ($(h)+(-\u,-\v,\w)$);
-	
+
 	\coordinate (i) at ($(i)+(\u,\v,\w)$);
 	\coordinate (j) at ($(j)+(\u,-\v,-\w)$);
 	\coordinate (k) at ($(k)+(\u,\v,\w)$);
 	\coordinate (l) at ($(l)+(-\u,\v,\w)$);
-	
+
 	\coordinate (m) at ($(m)+(\u,-\v,\w)$);
 	\coordinate (n) at ($(n)+(\u,\v,-\w)$);
 	\coordinate (o) at ($(o)+(-\u,\v,-\w)$);
 	\coordinate (p) at ($(p)+(\u,\v,-\w)$);
-	
+
 	\draw[semithick] (j) -- (k) -- (f) -- (j) -- (g) -- (k);
-	
+
 	\draw[semithick] (m) -- (n) -- (i) -- (m) -- (j) -- (n);
-	
+
 	\draw[semithick] (e) -- (f) -- (a) -- (e) -- (b) -- (f);
-	
+
 	\draw[semithick] (g) -- (h) -- (c) -- (g) -- (d) -- (h);
-	
+
 	\draw[semithick] (o) -- (p) -- (k) -- (o) -- (l) -- (p);
-	
+
 	\pgfmathsetmacro{\a}{1}
 	\pgfmathsetmacro{\r}{2}
-	
+
 	\path (a) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (b) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (c) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (d) node[circle, fill=Feijoa, inner sep=\r]{};
-	
+
 	\path (e) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (f) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (g) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (h) node[circle, fill=Feijoa, inner sep=\r]{};
-	
+
 	\path (i) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (j) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (k) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (l) node[circle, fill=Feijoa, inner sep=\r]{};
-	
+
 	\path (m) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (n) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (o) node[circle, fill=Feijoa, inner sep=\r]{};
 	\path (p) node[circle, fill=Feijoa, inner sep=\r]{};
-	
+
 	\end{scope}
 
 	% ---
@@ -271,7 +271,7 @@
 	\begin{scope}[xshift=-3.5cm,yshift=-1cm,local bounding box=M]
 	\node[inner sep=0pt,font=\small] at (0,0) {\includegraphics[width=2.5cm]{ice.magnetic.alt-img0.png}};
 	\end{scope}
-	
+
 	\begin{scope}[xshift=0cm,yshift=-1cm,local bounding box=O]
 	\node[inner sep=0pt,font=\small] at (0,0) {\includegraphics[width=2.5cm]{ice.chemical.alt-img0.png}};
 	\end{scope}
@@ -279,17 +279,17 @@
 	\begin{scope}[xshift=3.5cm,yshift=-1cm,local bounding box=D]
 	\node[inner sep=0pt,font=\small] at (0,0) {\includegraphics[width=2.5cm]{ice.displacement.alt-img0.png}};
 	\end{scope}
-	
+
 	% ---
-	
+
 %	\begin{scope}[xshift=1.75cm,yshift=-3cm,local bounding box=F]
 %	\node[font=\footnotesize] at (0,0) {$F(\vb*{Q})=\sum_jb_j\highlight[MacaroniAndCheese]{c_j(1+a_j)}e^{i\vb*{Q}\vdot\highlight[Feijoa]{(\vb*{r}_j+\vb*{u}_j)}}$};
 %	\end{scope}
-%	
+%
 %	\begin{scope}[xshift=0cm,yshift=-1.75cm,local bounding box=Fo]
 %	\node[font=\footnotesize] at (0,0) {$F(\vb*{Q})=\sum_jb_j\highlight[MacaroniAndCheese]{c_j(1+a_j)}e^{i\vb*{Q}\vdot\vb*{r}_j}$};
 %	\end{scope}
-%	
+%
 %	\begin{scope}[xshift=3.5cm,yshift=-1cm,local bounding box=Fd]
 %	\node[font=\footnotesize] at (0,0) {$F(\vb*{Q})=\sum_jb_je^{i\vb*{Q}\vdot\highlight[Feijoa]{(\vb*{r}_j+\vb*{u}_j)}}$};
 %	\end{scope}
@@ -298,11 +298,11 @@
 %	I]
 %	\node[font=\footnotesize] at (0,0) {$I(\vb*{Q})=\frac{1}{N} \big\langle \abs{F(\vb*{Q})-\langle F(\vb*{Q})\rangle}^2 \big\rangle$};
 %	\end{scope}
-%	
+%
 %	\begin{scope}[xshift=-3.5cm,yshift=-3cm,local bounding box=Fm]
 %	\node[font=\footnotesize] at (0,0) {$\vb*{F}(\vb*{Q})=\sum_j \highlight[Spindle]{f_j(Q)T_j(\vb*{Q})\vb*{M}_j}e^{i\vb*{Q}\vdot\vb*{r}_j}$};
 %	\end{scope}
-%	
+%
 %	\begin{scope}[xshift=-3.5cm,yshift=-4cm,local bounding box=
 %	Im]
 %	\node[font=\footnotesize] at (0,0) {$I(\vb*{Q})=\frac{C}{N} \big\langle \abs{\vb*{F}_\perp(\vb*{Q})}^2 \big\rangle$};
@@ -311,14 +311,14 @@
 %
 %	\draw[-,thick] (F.south) -- (I.north);
 %	\draw[-,thick] (Fm.south) -- (Im.north);
-%	
+%
 %	\draw[-,thick] (Fo.south) -- (F.north);
 %	\draw[-,thick] (Fd.south) -- (F.north);
-			
+
 	\node[below] at (M.south) {Magnetic};
 	\node[below] at (O.south) {Occupational};
 	\node[below] at (D.south) {Displacive};
-	
+
 	\end{tikzpicture}
-	
+
 \end{document}

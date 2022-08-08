@@ -1059,8 +1059,8 @@ def site(symops, coordinates, A, tol=1e-1):
     sp_poss = []
     for i in range(n):
         sp_pos = [u''.join(T[i,0,:])+t[i,0],
-                 u''.join(T[i,1,:])+t[i,1],
-                 u''.join(T[i,2,:])+t[i,2]]
+                  u''.join(T[i,1,:])+t[i,1],
+                  u''.join(T[i,2,:])+t[i,2]]
 
         sp_pos = [op.lstrip('+') for op in sp_pos]
         sp_pos = [op.rstrip('0') for op in sp_pos]
@@ -1070,7 +1070,7 @@ def site(symops, coordinates, A, tol=1e-1):
         sp_pos = ','.join(sp_pos)
         sp_poss.append(sp_pos)
 
-    return pg, mult, sp_pos
+    return pg, mult, sp_poss
 
 def laue_id(symops):
 

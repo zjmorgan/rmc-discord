@@ -1,6 +1,6 @@
- 
+
 data_exp_natrolite_300K
- 
+
 _audit_creation_method            'SHELXL-2016/6'
 _shelx_SHELXL_version_number      '2016/6'
 _chemical_name_systematic         ?
@@ -8,7 +8,7 @@ _chemical_name_common             ?
 _chemical_melting_point           ?
 _chemical_formula_moiety          ?
 _chemical_formula_sum
- 'Al2.29 H4.57 Na2.29 O13.71 Si3.43' 
+ 'Al2.29 H4.57 Na2.29 O13.71 Si3.43'
 _chemical_formula_weight          434.56
 
 loop_
@@ -27,12 +27,12 @@ loop_
  'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
  'H'  'H'   0.0000   0.0000
  'International Tables Vol C Tables 4.2.6.8 and 6.1.1.4'
- 
+
 _space_group_crystal_system       orthorhombic
 _space_group_IT_number            43
 _space_group_name_H-M_alt         'F d d 2'
 _space_group_name_Hall            'F 2 -2d'
- 
+
 _shelx_space_group_comment
 ;
 The symmetry employed for this shelxl refinement is uniquely defined
@@ -40,7 +40,7 @@ by the following loop, which should always be used as a source of
 symmetry information in preference to the above space-group names.
 They are only intended as comments.
 ;
- 
+
 loop_
  _space_group_symop_operation_xyz
  'x, y, z'
@@ -59,7 +59,7 @@ loop_
  '-x+1/2, -y+1/2, z'
  'x+3/4, -y+3/4, z+1/4'
  '-x+3/4, y+3/4, z+1/4'
- 
+
 _cell_length_a                    18.6550(10)
 _cell_length_b                    18.3016(10)
 _cell_length_c                    6.5919(4)
@@ -72,12 +72,12 @@ _cell_measurement_temperature     293(2)
 _cell_measurement_reflns_used     ?
 _cell_measurement_theta_min       ?
 _cell_measurement_theta_max       ?
- 
+
 _exptl_crystal_description        ?
 _exptl_crystal_colour             ?
 _exptl_crystal_density_meas       ?
 _exptl_crystal_density_method     ?
-_exptl_crystal_density_diffrn     2.244          
+_exptl_crystal_density_diffrn     2.244
 _exptl_crystal_F_000              1520
 _exptl_transmission_factor_min    ?
 _exptl_transmission_factor_max    ?
@@ -123,18 +123,18 @@ _reflns_threshold_expression      'I > 2\s(I)'
 _reflns_Friedel_coverage          0.750
 _reflns_Friedel_fraction_max      0.801
 _reflns_Friedel_fraction_full     0.994
- 
+
 _reflns_special_details
 ;
  Reflections were merged by SHELXL according to the crystal
  class for the calculation of statistics and refinement.
- 
+
  _reflns_Friedel_fraction is defined as the number of unique
  Friedel pairs measured divided by the number that would be
  possible theoretically, ignoring centric projections and
  systematic absences.
 ;
- 
+
 _computing_data_collection        ?
 _computing_cell_refinement        ?
 _computing_data_reduction         ?
@@ -172,7 +172,7 @@ _refine_ls_goodness_of_fit_ref    1.137
 _refine_ls_restrained_S_all       1.137
 _refine_ls_shift/su_max           0.000
 _refine_ls_shift/su_mean          0.000
- 
+
 loop_
  _atom_site_label
  _atom_site_type_symbol
@@ -182,7 +182,7 @@ loop_
  _atom_site_U_iso_or_equiv
  _atom_site_adp_type
  _atom_site_occupancy
- _atom_site_site_symmetry_order  
+ _atom_site_site_symmetry_order
  _atom_site_calc_flag
  _atom_site_refinement_flags_posn
  _atom_site_refinement_flags_adp
@@ -201,7 +201,7 @@ O5 O 0.03498(7) 0.09844(7) 0.6584(3) 0.0126(3) Uani 1 1 d . . . . .
 O6 O -0.09727(8) 0.04377(7) 0.6345(3) 0.0120(3) Uani 1 1 d . . . . .
 H1 H 0.098(2) 0.304(2) 0.463(6) 0.034(10) Uiso 1 1 d . . . . .
 H2 H 0.0586(19) 0.346(2) 0.561(6) 0.032(10) Uiso 1 1 d . . . . .
- 
+
 loop_
  _atom_site_aniso_label
  _atom_site_aniso_U_11
@@ -220,7 +220,7 @@ O3 0.0203(7) 0.0122(6) 0.0098(7) -0.0029(6) 0.0018(6) 0.0020(5)
 O4 0.0067(5) 0.0060(5) 0.0112(6) 0.0001(6) 0.0003(5) 0.0011(4)
 O5 0.0098(6) 0.0107(6) 0.0172(7) 0.0002(6) -0.0051(6) 0.0021(5)
 O6 0.0112(6) 0.0093(6) 0.0157(7) 0.0048(6) 0.0006(5) -0.0014(5)
- 
+
 _geom_special_details
 ;
  All esds (except the esd in the dihedral angle between two l.s. planes)
@@ -230,7 +230,7 @@ _geom_special_details
  used when they are defined by crystal symmetry.  An approximate (isotropic)
  treatment of cell esds is used for estimating esds involving l.s. planes.
 ;
- 
+
 loop_
  _geom_bond_atom_site_label_1
  _geom_bond_atom_site_label_2
@@ -260,7 +260,7 @@ Na1 O4 2.5149(17) 6 ?
 Na1 O4 2.6170(17) . ?
 Na1 Na1 3.6501(7) 6 ?
 Na1 Na1 3.6502(7) 6_554 ?
- 
+
 loop_
  _geom_angle_atom_site_label_1
  _geom_angle_atom_site_label_2
@@ -370,7 +370,7 @@ Si2 O5 Na1 119.07(9) 3 . ?
 Al1 O6 Si2 135.04(9) . 16_445 ?
 Al1 O6 Na1 125.70(9) . 11_454 ?
 Si2 O6 Na1 95.61(6) 16_445 11_454 ?
- 
+
 _refine_diff_density_max    0.258
 _refine_diff_density_min   -0.505
 _refine_diff_density_rms    0.077
@@ -450,4 +450,3 @@ Q19   1   0.0858 -0.0652 -0.0618  11.00000  0.05    0.18
 Q20   1  -0.0592  0.0952  0.1702  11.00000  0.05    0.18
 ;
 _shelx_res_checksum   41279
-

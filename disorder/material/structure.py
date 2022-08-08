@@ -23,7 +23,7 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
     U11, U22, U33, U23, U13, U12 : 1d array
         Atomic displacement parameters in crystal axis system.
     a, b, c, alpha, beta, gamma : float
-        Lattice constants :math:`a`, :math:`b`, :math:`c`, :math:`\\alpha`, 
+        Lattice constants :math:`a`, :math:`b`, :math:`c`, :math:`\\alpha`,
         :math:`\\beta`, and :math:`\\gamma`. Angles are in radians.
     symops : 1d array, str
         Space group symmetry operations.
@@ -32,7 +32,7 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
     source : str, optional
         Radiation source ``'neutron'``, ``'x-ray'``, or ``'electron'``.
         Default ``'neutron'``.
-    
+
     Returns
     -------
     h, k, l : 1d array, int
@@ -45,7 +45,7 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
         Multiplicity.
 
     """
-    
+
     n_atm = atms.shape[0]
 
     inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
@@ -150,11 +150,11 @@ class UnitCell:
     get_filename()
         Name of CIF file.
     get_sites()
-        Atom sites in the unit cell. 
+        Atom sites in the unit cell.
     get_active_sites()
-        Active atom sites in the unit cell. 
+        Active atom sites in the unit cell.
     set_active_sites()
-        Update active atom sites in the unit cell. 
+        Update active atom sites in the unit cell.
     get_number_atoms_per_unit_cell()
         Total number of atoms in the unit cell.
     get_fractional_coordinates()
@@ -240,7 +240,7 @@ class UnitCell:
         Site multiplicites.
 
     """
-    
+
     def __init__(self, filename, tol=1e-2):
 
         filename = os.path.abspath(filename)
@@ -351,7 +351,7 @@ class UnitCell:
 
         Returns
         -------
-        str
+        filepath : str
             Name of path excluding filename.
 
         """
@@ -364,20 +364,20 @@ class UnitCell:
 
         Returns
         -------
-        str
+        filename : str
             Name of filename excluding path.
 
         """
-        
+
         return self.__filename
 
     def get_sites(self):
         """
-        Atom sites in the unit cell. 
+        Atom sites in the unit cell.
 
         Returns
         -------
-        1d array, int
+        sites : 1d array, int
             All site numbers.
 
         """
@@ -386,20 +386,20 @@ class UnitCell:
 
     def get_active_sites(self):
         """
-        Active atom sites in the unit cell. 
+        Active atom sites in the unit cell.
 
         Returns
         -------
-        1d array, int
+        sites : 1d array, int
             All active site numbers.
 
         """
-        
+
         return self.__act
 
     def set_active_sites(self, act):
         """
-        Update active atom sites in the unit cell. 
+        Update active atom sites in the unit cell.
 
         Parameters
         ----------
@@ -407,7 +407,7 @@ class UnitCell:
             All active site numbers.
 
         """
-        
+
         self.__act = act
 
         self.__mask = self.__ind[self.__act]
@@ -417,21 +417,27 @@ class UnitCell:
     def get_number_atoms_per_unit_cell(self):
         """
         Total number of atoms in the unit cell.
-        
+
         Returns
         -------
-        int
+        n_atm : int
             All active atoms.
-            
+
         """
-        
+
         return self.__act[self.__site].sum()
 
     def get_fractional_coordinates(self):
         """
-        Fractional coordiantes of active atoms.
+        Fractional coordiantes of active atoms
+
+        Returns
+        -------
+        u, v, w : 1d array
+           Fractional coordiantes :math:`u`, :math:`v`, and :math:`w`.
+
         """
-        
+
         mask = self.__mask
 
         return self.__u[mask], self.__v[mask], self.__w[mask]
@@ -439,8 +445,14 @@ class UnitCell:
     def set_fractional_coordinates(self, u, v, w):
         """
         Update fractional coordiantes of active atoms.
+
+        Parameters
+        ----------
+        u, v, w : 1d array
+           Fractional coordiantes :math:`u`, :math:`v`, and :math:`w`.
+
         """
-        
+
         mask = self.__mask
 
         ind = self.__index
@@ -459,8 +471,14 @@ class UnitCell:
     def get_unit_cell_cartesian_atomic_coordinates(self):
         """
         Cartesian coordiantes of active atoms.
+
+        Returns
+        -------
+        rx, ry, rz : 1d array
+           Cartesian coordiantes :math:`r_x`, :math:`r_y`, and :math:`r_z`.
+
         """
-        
+
         A = self.get_fractional_cartesian_transform()
         u, v, w = self.get_fractional_coordinates()
 
@@ -469,8 +487,14 @@ class UnitCell:
     def get_unit_cell_atoms(self):
         """
         Atom symbols of active atoms.
+
+        Returns
+        -------
+        atm : 1d array
+            Atom symbols.
+
         """
-        
+
         mask = self.__mask
 
         return self.__atm[mask]
@@ -478,8 +502,14 @@ class UnitCell:
     def set_unit_cell_atoms(self, atm):
         """
         Update atom symbols of active atoms.
+
+        Parameters
+        ----------
+        atm : 1d array
+            Atom symbols.
+
         """
-        
+
         ind = self.__index
         inv = self.__inverse
 
@@ -488,8 +518,14 @@ class UnitCell:
     def get_occupancies(self):
         """
         Occupancies of active atoms.
+
+        Returns
+        -------
+        occ : 1d array
+            Site occupancies.
+
         """
-        
+
         mask = self.__mask
 
         return self.__occ[mask]
@@ -497,8 +533,14 @@ class UnitCell:
     def set_occupancies(self, occ):
         """
         Update occupancies of active atoms.
+
+        Parameters
+        ----------
+        occ : 1d array
+            Site occupancies.
+
         """
-        
+
         ind = self.__index
         inv = self.__inverse
 
@@ -508,8 +550,15 @@ class UnitCell:
         """
         Anisotropic displacement parameters in crystal coordinates of active
         atoms.
+
+        Returns
+        -------
+        U11, U22, U33, U23, U13, U12 : 1d array
+            Atomic displacement parameters :math:`U_{11}`, :math:`U_{22}`,
+            :math:`U_{33}`, :math:`U_{23}`, :math:`U_{13}`, and :math:`U_{12}`.
+
         """
-        
+
         mask = self.__mask
 
         U11 = self.__U11[mask]
@@ -526,8 +575,15 @@ class UnitCell:
         """
         Update anisotropic displacement parameters in crystal coordinates of
         active atoms.
+
+        Parameters
+        ----------
+        U11, U22, U33, U23, U13, U12 : 1d array
+            Atomic displacement parameters :math:`U_{11}`, :math:`U_{22}`,
+            :math:`U_{33}`, :math:`U_{23}`, :math:`U_{13}`, and :math:`U_{12}`.
+
         """
-        
+
         mask = self.__mask
 
         ind = self.__index
@@ -557,8 +613,14 @@ class UnitCell:
     def get_isotropic_displacement_parameter(self):
         """
         Isotropic displacement parameters of active atoms.
+
+        Returns
+        -------
+        Uiso : 1d array
+            Isotropic atomic displacement parameters :math:`U_\mathrm{iso}`.
+
         """
-        
+
         D = self.get_atomic_displacement_cartesian_transform()
         adps = self.get_anisotropic_displacement_parameters()
 
@@ -569,8 +631,14 @@ class UnitCell:
     def set_isotropic_displacement_parameter(self, Uiso):
         """
         Update isotropic displacement parameters of active atoms.
+
+        Parameters
+        ----------
+        Uiso : 1d array
+            Isotropic atomic displacement parameters :math:`U_\mathrm{iso}`.
+
         """
-        
+
         ind = self.__index
         inv = self.__inverse
 
@@ -592,8 +660,15 @@ class UnitCell:
         """
         Principal displacement parameters in Cartesian coordinates of active
         atoms.
+
+        Returns
+        -------
+        U1, U2, U3 : 1d array
+            Atomic displacement parameters :math:`U_1`, :math:`U_2`, and
+            :math:`U_3`.
+
         """
-        
+
         D = self.get_atomic_displacement_cartesian_transform()
         adps = self.get_anisotropic_displacement_parameters()
 
@@ -605,8 +680,15 @@ class UnitCell:
         """
         Anisotropic displacement parameters in Cartesian coordinates of active
         atoms.
+
+        Returns
+        -------
+        Uxx, Uyy, Uzz, Uyz, Uxz, Uxy : 1d array
+            Atomic displacement parameters :math:`U_{xx}`, :math:`U_{yy}`,
+            :math:`U_{zz}`, :math:`U_{yz}`, :math:`U_{xz}`, and :math:`U_{xy}`.
+
         """
-        
+
         D = self.get_atomic_displacement_cartesian_transform()
         adps = self.get_anisotropic_displacement_parameters()
 
@@ -617,8 +699,14 @@ class UnitCell:
     def get_crystal_axis_magnetic_moments(self):
         """
         Magnetic moments in crystal coordinates of active atoms.
+
+        Returns
+        -------
+        mu1, mu2, mu3 : 1d array
+            Magnetic moments :math:`\mu_1`, :math:`\mu_2`, and :math:`\mu_3`.
+
         """
-        
+
         mask = self.__mask
 
         mu1 = self.__mu1[mask]
@@ -630,8 +718,14 @@ class UnitCell:
     def set_crystal_axis_magnetic_moments(self, mu1, mu2, mu3):
         """
         Update magnetic moments in crystal coordinates of active atoms.
+
+        Parameters
+        ----------
+        mu1, mu2, mu3 : 1d array
+            Magnetic moments :math:`\mu_1`, :math:`\mu_2`, and :math:`\mu_3`.
+
         """
-        
+
         mask = self.__mask
 
         ind = self.__index
@@ -656,8 +750,14 @@ class UnitCell:
     def get_magnetic_moment_magnitude(self):
         """
         Magnitude of magnetic moments of active atoms.
+
+        Returns
+        -------
+        mu : 1d array
+            Moment of magnetic moments :math:`\mu`.
+
         """
-        
+
         C = self.get_moment_cartesian_transform()
         mu1, mu2, mu3 = self.get_crystal_axis_magnetic_moments()
 
@@ -666,8 +766,14 @@ class UnitCell:
     def get_cartesian_magnetic_moments(self):
         """
         Magnetic moments in Cartesian coordinates of active atoms.
+
+        Returns
+        -------
+        mu_x, mu_y, mu_z : 1d array
+            Magnetic moments :math:`\mu_x`, :math:`\mu_y`, and :math:`\mu_z`.
+
         """
-        
+
         C = self.get_moment_cartesian_transform()
         mu1, mu2, mu3 = self.get_crystal_axis_magnetic_moments()
 
@@ -675,18 +781,30 @@ class UnitCell:
 
     def get_g_factors(self):
         """
-        g-factors of active atoms.
+        g-factors of active ions.
+
+        Returns
+        -------
+        g : 1d array
+           Magnetic :math:`g`-factors.
+
         """
-        
+
         mask = self.__mask
 
         return self.__g[mask]
 
     def set_g_factors(self, g):
         """
-        Update g-factors of active atoms.
+        Update g-factors of active ions.
+
+        Paramters
+        ---------
+        g : 1d array
+           Magnetic :math:`g`-factors.
+
         """
-        
+
         ind = self.__index
         inv = self.__inverse
 
@@ -695,8 +813,26 @@ class UnitCell:
     def get_lattice_constants(self):
         """
         Lattice parameters.
+
+        ============ =============================
+        Cell         Parameters
+        ============ =============================
+        Cubic        a
+        Hexagonal    a, c
+        Rhombohedral a, alpha
+        Tetragonal   a, c
+        Orthorhombic a, b, c
+        Monoclinic   a, b, c, alpha, beta or gamma
+        Triclinic    a, b, c, alpha, beta, gamma
+        ============ =============================
+
+        Returns
+        -------
+        constants : tuple
+            Non-constrained lattice constants and angles. Angles in radians.
+
         """
-        
+
         lat = self.get_lattice_system()
 
         a = self.__a
@@ -707,7 +843,7 @@ class UnitCell:
         gamma = self.__gamma
 
         if (lat == 'Cubic'):
-            constants = a
+            constants = a,
         elif (lat == 'Hexagonal' or lat == 'Tetragonal'):
             constants = a, c
         elif (lat == 'Rhobmohedral'):
@@ -727,8 +863,26 @@ class UnitCell:
     def set_lattice_constants(self, *constants):
         """
         Update lattice parameters.
+
+        ============ =============================
+        Cell         Parameters
+        ============ =============================
+        Cubic        a
+        Hexagonal    a, c
+        Rhombohedral a, alpha
+        Tetragonal   a, c
+        Orthorhombic a, b, c
+        Monoclinic   a, b, c, alpha, beta or gamma
+        Triclinic    a, b, c, alpha, beta, gamma
+        ============ =============================
+
+        Parameters
+        ----------
+        constants : tuple
+            Non-constrained lattice constants and angles. Angles in radians.
+
         """
-        
+
         lat = self.get_lattice_system()
 
         a = self.__a
@@ -769,8 +923,16 @@ class UnitCell:
     def get_reciprocal_lattice_constants(self):
         """
         Reciprocal lattice parameters.
+
+        Returns
+        -------
+        a_, b_, c_, alpha_, beta_, gamma_ : float
+            Reciprocal lattice constants and angles :math:`a^*`, :math:`b^*`,
+            :math:`c^*`, :math:`\\alpha^*`, :math:`\\beta^*` and
+            :math:`\\gamma^*`. Angles in radians.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.reciprocal(*constants)
@@ -778,8 +940,14 @@ class UnitCell:
     def get_symmetry_operators(self):
         """
         Symmetry operators of active atoms.
+
+        Returns
+        -------
+        op : 1d array, str
+            Symmetry operator of each site.
+
         """
-        
+
         mask = self.__mask
 
         return self.__op[mask]
@@ -787,8 +955,14 @@ class UnitCell:
     def get_magnetic_symmetry_operators(self):
         """
         Magnetic symmetry operators of active atoms.
+
+        Returns
+        -------
+        mag_op : 1d array, str
+            Magnetic symmetry operator of each site.
+
         """
-        
+
         mask = self.__mask
 
         return self.__mag_op[mask]
@@ -796,15 +970,32 @@ class UnitCell:
     def get_lattice_system(self):
         """
         Lattice system of unit cell.
+
+        Returns
+        -------
+        system : str
+           One of ``'Cubic'``, ``'Hexagonal'``, ``'Rhombohedral'``,
+           ``'Tetragonal'``, ``'Orthorhombic'``, ``'Monoclinic'``, or
+           ``'Triclinic'``.
+
         """
-        
+
         return self.__lat
 
     def get_lattice_volume(self):
         """
         Lattice volume of unit cell.
+
+        .. math:: V = abc\sqrt{1-\cos^2{\\alpha}-\cos^2{\\beta}-\cos^2{\\gamma}
+                               +2\cos{\\alpha}\cos{\\beta}\cos{\\gamma}}
+
+        Returns
+        -------
+        V : float
+           Unit cell volume :math:`V`.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.volume(*constants)
@@ -812,8 +1003,18 @@ class UnitCell:
     def get_reciprocal_lattice_volume(self):
         """
         Reciprocal lattice volume of reciprocal cell.
+
+        .. math:: V^* = a^*b^*c^*\sqrt{1-\cos^2{\\alpha^*}-\cos^2{\\beta^*}
+                                        -\cos^2{\\gamma^*}+2\cos{\\alpha^*}
+                                         \cos{\\beta^*}\cos{\\gamma^*}}
+
+        Returns
+        -------
+        V_ : float
+           Reciprocal unit cell volume :math:`V^*`.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.volume(*constants)
@@ -821,8 +1022,20 @@ class UnitCell:
     def get_metric_tensor(self):
         """
         Unit cell metric tensor.
+
+        .. math:: G = \\begin{bmatrix}
+            a^2 & ab\cos{\\gamma} & ac\cos{\\beta}  \\\\
+            ba\cos{\\gamma} & b^2 & bc\cos{\\alpha} \\\\
+            ca\cos{\\beta} & cb\cos{\\alpha} & c^2
+            \\end{bmatrix}
+
+        Returns
+        -------
+        G : 2d array
+           Components of the :math:`G` metric tensor.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.metric(*constants)
@@ -830,8 +1043,20 @@ class UnitCell:
     def get_reciprocal_metric_tensor(self):
         """
         Reciprocal cell metric tensor.
+
+        .. math:: G^* = \\begin{bmatrix}
+            (a^*)^2 & a^*b^*\cos{\\gamma} & a^*c^*\cos{\\beta} \\\\
+            b^*a^*\cos{\\gamma} & (b^*)^2 & b^*c^*\cos{\\alpha} \\\\
+            c^*a^*\cos{\\beta} & c^*b^*\cos{\\alpha} & (c^*)^2
+            \\end{bmatrix}
+
+        Returns
+        -------
+        G_ : 2d array
+           Components of the :math:`G^*` metric tensor.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.metric(*constants)
@@ -839,8 +1064,21 @@ class UnitCell:
     def get_fractional_cartesian_transform(self):
         """
         Trasform matrix from fractional to Cartesian coordinates.
+
+        .. math:: \\begin{bmatrix} r_x \\\\ r_y \\\\ r_z \\end{bmatrix} =
+            \\begin{bmatrix}
+            A_{11} & A_{12} & A_{13} \\\\
+            0      & A_{22} & A_{23} \\\\
+            0      & 0      & A_{33}
+            \\end{bmatrix} \\begin{bmatrix} u \\\\ v \\\\ w \\end{bmatrix}
+
+        Returns
+        -------
+        A : 2d array
+           Components of the :math:`A` matrix.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian(*constants)
@@ -848,8 +1086,26 @@ class UnitCell:
     def get_miller_cartesian_transform(self):
         """
         Trasform matrix from Miller to Cartesian coordinates.
+
+        .. math:: \\begin{bmatrix} Q_x \\\\ Q_y \\\\ Q_z \\end{bmatrix} = 2\\pi
+            \\begin{bmatrix}
+            R_{11} & R_{12} & R_{13} \\\\
+            R_{21} & R_{22} & R_{23} \\\\
+            R_{31} & R_{32} & R_{33}
+            \\end{bmatrix}
+            \\begin{bmatrix}
+            B_{11} & B_{12} & B_{13} \\\\
+            0      & B_{22} & B_{23} \\\\
+            0      & 0      & B_{33}
+            \\end{bmatrix} \\begin{bmatrix} h \\\\ k \\\\ l \\end{bmatrix}
+
+        Returns
+        -------
+        B : 2d array
+           Components of the :math:`B` matrix.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian(*constants)
@@ -857,28 +1113,89 @@ class UnitCell:
     def get_cartesian_rotation(self):
         """
         Transform matrix between Cartesian axes of real and reciprocal lattice.
+
+        .. math:: \\begin{bmatrix} Q_x \\\\ Q_y \\\\ Q_z \\end{bmatrix} = 2\\pi
+            \\begin{bmatrix}
+            R_{11} & R_{12} & R_{13} \\\\
+            R_{21} & R_{22} & R_{23} \\\\
+            R_{31} & R_{32} & R_{33}
+            \\end{bmatrix}
+            \\begin{bmatrix}
+            B_{11} & B_{12} & B_{13} \\\\
+            0      & B_{22} & B_{23} \\\\
+            0      & 0      & B_{33}
+            \\end{bmatrix} \\begin{bmatrix} h \\\\ k \\\\ l \\end{bmatrix}
+
+        Returns
+        -------
+        R : 2d array
+           Components of the :math:`R` matrix.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian_rotation(*constants)
 
     def get_moment_cartesian_transform(self):
         """
-        Transform matrix between crystal and Cartesian coordinates for \
-        magnetic moments.
+        Transform matrix between crystal and Cartesian coordinates for magnetic
+        moments.
+
+        .. math::
+            \\begin{bmatrix} \\mu_x \\\\ \\mu_y \\\\ \\mu_z \\end{bmatrix} =
+            \\begin{bmatrix}
+            C_{11} & C_{12} & C_{13} \\\\
+            C_{21} & C_{22} & C_{23} \\\\
+            C_{31} & C_{32} & C_{33}
+            \\end{bmatrix}
+            \\begin{bmatrix} \\mu_1 \\\\ \\mu_2 \\\\ \\mu_3 \\end{bmatrix}
+
+        Returns
+        -------
+        C : 2d array
+           Components of the :math:`C` matrix.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian_moment(*constants)
 
     def get_atomic_displacement_cartesian_transform(self):
         """
-        Transform matrix between crystal and Cartesian coordinates for atomic \
+        Transform matrix between crystal and Cartesian coordinates for atomic
         displacement parameters.
+
+        .. math::
+            \\begin{bmatrix}
+            U_{xx} & U_{xy} & U_{xz} \\\\
+            U_{yx} & U_{yy} & U_{yz} \\\\
+            U_{zx} & U_{zy} & U_{zz}
+            \\end{bmatrix} =
+            \\begin{bmatrix}
+            D_{11} & D_{12} & D_{13} \\\\
+            D_{21} & D_{22} & D_{23} \\\\
+            D_{31} & D_{32} & D_{33}
+            \\end{bmatrix}
+            \\begin{bmatrix}
+            U_{11} & U_{12} & U_{13} \\\\
+            U_{21} & U_{22} & U_{23} \\\\
+            U_{31} & U_{32} & U_{33}
+            \\end{bmatrix}
+            \\begin{bmatrix}
+            D_{11} & D_{21} & D_{31} \\\\
+            D_{12} & D_{22} & D_{32} \\\\
+            D_{13} & D_{23} & D_{33}
+            \\end{bmatrix}
+
+        Returns
+        -------
+        D : 2d array
+           Components of the :math:`D` matrix.
+
         """
-        
+
         constants = self.__get_all_lattice_constants()
 
         return crystal.cartesian_displacement(*constants)
@@ -886,29 +1203,55 @@ class UnitCell:
     def get_space_group_symbol(self):
         """
         Space group symbol.
+
+        Returns
+        -------
+        sg_sym : str
+           Symbol in Hermann–Mauguin notation.
+
         """
-        
+
         return self.__hm
 
     def get_space_group_number(self):
         """
         Space group number.
+
+        Returns
+        -------
+        sg_num : int
+           Number between 1 and 230.
+
         """
-        
+
         return self.__sg
 
     def get_laue(self):
         """
         Laue class.
+
+        Returns
+        -------
+        laue : str
+           One of ``'-1'``, ``'2/m'``, ``'mmm'``, ``'4/m'``, ``'4/mmm'``,
+           ``'-3'``, ``'-3m'``, ``'6/m'``, ``'6/mmm'``, ``'m-3'``, or
+           ``'m-3m'``.
+
         """
-        
+
         return self.__laue
 
     def get_site_symmetries(self):
         """
         Site symmetry operators.
+
+        Returns
+        -------
+        pg : 1d array, str
+            Point group symmetry of each site.
+
         """
-        
+
         mask = self.__mask
 
         return self.__pg[mask]
@@ -916,6 +1259,12 @@ class UnitCell:
     def get_wyckoff_special_positions(self):
         """
         Wyckoff special positions of active atoms.
+
+        Returns
+        -------
+        sp_pos : 1d array, str
+            Special position of eac site
+
         """
 
         mask = self.__mask
@@ -928,8 +1277,8 @@ class UnitCell:
 
         Returns
         -------
-        1d array
-            Multiplicities
+        mult : 1d array, int
+            Multiplicity of each site.
 
         """
 

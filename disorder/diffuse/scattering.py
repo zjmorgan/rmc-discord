@@ -7,7 +7,22 @@ import numpy as np
 from disorder.material import tables
 
 def length(atms, n_hkl):
+    """
+    Scattering length :math:`b` of neutrons.
 
+    Parameters
+    ----------
+    atms : 1d array, str
+        Atoms or isotopes.
+    Q : 1d array
+        Magnitude of wavevector.
+
+    Returns
+    -------
+    b : 1d array
+        Has the same shape as the input wavevector.
+
+    """
     n_atm = len(atms)
 
     b = np.zeros(n_hkl*n_atm, dtype=complex)
@@ -23,6 +38,25 @@ def length(atms, n_hkl):
     return b
 
 def form(ions, Q, source='x-ray'):
+    """
+    Scattering form factor :math:`f(Q)`.
+
+    Parameters
+    ----------
+    ions : 1d array, str
+        Ions.
+    Q : 1d array
+        Magnitude of wavevector.
+    source : str, optional
+       Radiation source. Either ``x-ray`` or ``electron``.
+       Defualt is ``source=x-ray``.
+
+    Returns
+    -------
+    f : 1d array
+        Has the same shape as the input wavevector.
+
+    """
 
     n_hkl = Q.shape[0]
     n_atm = len(ions)
@@ -66,6 +100,23 @@ def form(ions, Q, source='x-ray'):
     return factor
 
 def phase(Qx, Qy, Qz, rx, ry, rz):
+    """
+    Phase factor :math:`e^{i\\boldsymbol{Q}\cdot\\boldsymbol{r}}`.
+
+    Parameters
+    ----------
+    rx, ry, rz : 1d array
+        Components of spatial vector in Cartesian coordinates.
+    Qx, Qy, Qz : 1d array
+        Components of wavevector in Cartesian coordinates.
+
+    Returns
+    -------
+    factor : 1d array
+        Has the same shape as the input wavevector and spatial vector
+        components.
+
+    """
 
     Q_dot_r = Qx[:,np.newaxis]*rx+Qy[:,np.newaxis]*ry+Qz[:,np.newaxis]*rz
 

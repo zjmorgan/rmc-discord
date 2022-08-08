@@ -597,60 +597,60 @@ class Presenter:
                         label = 'scalar-pair'
 
                 self.model.save_correlations_3d(filename, data, label)
-                
+
     def save_intens_CSV(self):
-    
+
         if (self.view.get_atom_site_recalculation_1d_row_count() > 0):
-            
+
             filename = self.view.save_intens_CSV(self.folder)
 
-            if filename:  
-                
+            if filename:
+
                 if (not filename.endswith('.csv')): filename += '.csv'
 
                 dQ, nQ, min_Q, max_Q = self.view.get_recalculation_1d_binning()
 
                 Q = np.linspace(min_Q, max_Q, nQ)
-                
+
                 total = self.ds_total_intensity
                 bragg = self.ds_bragg_intensity
                 diffuse = self.ds_diffuse_intensity
-                
+
                 intensity = (total, bragg, diffuse)
-            
-                self.model.save_intensity_1d(filename, Q, intensity)      
-                
+
+                self.model.save_intensity_1d(filename, Q, intensity)
+
     def save_intens_VTK(self):
-    
+
         if (self.view.get_atom_site_recalculation_3d_row_count() > 0):
-            
+
             filename = self.view.save_intens_VTK(self.folder)
 
-            if filename:  
+            if filename:
 
                 if (not filename.endswith('.vts')): filename += '.vts'
-                
+
                 binning_h = self.view.get_recalculation_3d_binning_h()
                 binning_k = self.view.get_recalculation_3d_binning_k()
                 binning_l = self.view.get_recalculation_3d_binning_l()
-                
+
                 nh, min_h, max_h = binning_h[1:]
                 nk, min_k, max_k = binning_k[1:]
                 nl, min_l, max_l = binning_l[1:]
-                
+
                 h = np.linspace(min_h, max_h, nh)
                 k = np.linspace(min_k, max_k, nk)
                 l = np.linspace(min_l, max_l, nl)
-        
+
                 h, k, l = np.meshgrid(h,k,l)
-        
+
                 intensity = self.intensity
                 B, T = self.B, self.T
-                
+
                 Bp = np.dot(B,T)
-                
+
                 self.model.save_intensity_3d(filename, h, k, l, intensity, Bp)
-            
+
     def exit_application(self):
 
         if self.view.close_application():
@@ -3204,7 +3204,7 @@ class Presenter:
                 args = [A_r, rx, ry, rz, atms, nu, nv, nw, A, fract, tol]
 
                 data = self.model.scalar_correlations_1d(*args)
-               
+
                 corr1d, d, atm_pair1d = data
 
                 corr1d_arrs.append(corr1d)
@@ -3213,7 +3213,7 @@ class Presenter:
 
                 Ux, Uy, Uz = self.model.load_displacive(self.fname, run)
 
-                args = [Ux, Uy, Uz, rx, ry, rz, 
+                args = [Ux, Uy, Uz, rx, ry, rz,
                         atms, nu, nv, nw, A, fract, tol]
 
                 data = self.model.vector_correlations_1d(*args)
@@ -3315,7 +3315,7 @@ class Presenter:
                         label = r'$^{{{}}}${}$^{{{}}}$'.format(*left)+'-'+\
                                 r'$^{{{}}}${}$^{{{}}}$'.format(*right)
 
-                    correlations_1d.plot_data(d[mask], data[mask], 
+                    correlations_1d.plot_data(d[mask], data[mask],
                                               yerr=error[mask],
                                               marker='o', label=label)
                 correlations_1d.show_legend()
@@ -3752,7 +3752,7 @@ class Presenter:
             #filename = os.path.basename(fname_cif)
 
             fname = self.fname
-        
+
             A = self.A
             D = self.D
 
@@ -4060,7 +4060,7 @@ class Presenter:
                 T = np.array([[1, -1,  0],
                               [1,  1,  0],
                               [0,  0,  1]])*1.
-                
+
             self.T = T
 
             laue = self.view.get_laue()

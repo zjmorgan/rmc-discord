@@ -6,7 +6,7 @@ import numpy as np
 from disorder.material import symmetry, crystal
 
 class test_symmetry(unittest.TestCase):
-    
+
     def test_translation_operator(self):
 
         self.assertEqual(symmetry.translation_operator(0.0), '+0')
@@ -70,71 +70,71 @@ class test_symmetry(unittest.TestCase):
         self.assertEqual(symmetry.translation_operator(2/5), '+2/5')
         self.assertEqual(symmetry.translation_operator(3/5), '+3/5')
         self.assertEqual(symmetry.translation_operator(4/5), '+4/5')
-        
+
     def test_rotation_operator(self):
-        
+
         self.assertEqual(symmetry.rotation_operator(0.0, col=0), '')
         self.assertEqual(symmetry.rotation_operator(1.0, col=1), '+y')
         self.assertEqual(symmetry.rotation_operator(-1.0, col=2), '-z')
-        
+
         self.assertEqual(symmetry.rotation_operator(3/4, col=0), '3*x/4')
         self.assertEqual(symmetry.rotation_operator(-3/4, col=0), '-3*x/4')
-        
+
         self.assertEqual(symmetry.rotation_operator(2/3, col=0), '2*x/3')
         self.assertEqual(symmetry.rotation_operator(-2/3, col=0), '-2*x/3')
-        
+
         self.assertEqual(symmetry.rotation_operator(1/2, col=0), 'x/2')
         self.assertEqual(symmetry.rotation_operator(-1/2, col=0), '-x/2')
-    
+
         self.assertEqual(symmetry.rotation_operator(1/3, col=0), 'x/3')
         self.assertEqual(symmetry.rotation_operator(-1/3, col=0), '-x/3')
-        
+
         self.assertEqual(symmetry.rotation_operator(1/4, col=0), 'x/4')
         self.assertEqual(symmetry.rotation_operator(-1/4, col=0), '-x/4')
-        
+
         self.assertEqual(symmetry.rotation_operator(3/2, col=0), '3*x/2')
         self.assertEqual(symmetry.rotation_operator(-3/2, col=0), '-3*x/2')
-        
+
         self.assertEqual(symmetry.rotation_operator(0.999, col=0), 'x')
         self.assertEqual(symmetry.rotation_operator(0.499, col=0), 'x/2')
-        
+
         self.assertEqual(symmetry.rotation_operator(1.333, col=0), '4*x/3')
         self.assertEqual(symmetry.rotation_operator(1.666, col=0), '5*x/3')
-        
+
         self.assertEqual(symmetry.rotation_operator(1.234, col=0), '11*x/9')
-        
+
         self.assertEqual(symmetry.rotation_operator(1/10, col=0), 'x/10')
         self.assertEqual(symmetry.rotation_operator(3/10, col=0), '3*x/10')
         self.assertEqual(symmetry.rotation_operator(7/10, col=0), '7*x/10')
         self.assertEqual(symmetry.rotation_operator(9/10, col=0), '9*x/10')
-        
+
         self.assertEqual(symmetry.rotation_operator(1/9, col=0), 'x/9')
         self.assertEqual(symmetry.rotation_operator(2/9, col=0), '2*x/9')
         self.assertEqual(symmetry.rotation_operator(4/9, col=0), '4*x/9')
         self.assertEqual(symmetry.rotation_operator(5/9, col=0), '5*x/9')
         self.assertEqual(symmetry.rotation_operator(7/9, col=0), '7*x/9')
         self.assertEqual(symmetry.rotation_operator(8/9, col=0), '8*x/9')
-        
+
         self.assertEqual(symmetry.rotation_operator(1/8, col=0), 'x/8')
         self.assertEqual(symmetry.rotation_operator(3/8, col=0), '3*x/8')
         self.assertEqual(symmetry.rotation_operator(5/8, col=0), '5*x/8')
         self.assertEqual(symmetry.rotation_operator(7/8, col=0), '7*x/8')
-        
+
         self.assertEqual(symmetry.rotation_operator(1/6, col=0), 'x/6')
         self.assertEqual(symmetry.rotation_operator(5/6, col=0), '5*x/6')
-        
+
         self.assertEqual(symmetry.rotation_operator(1/7, col=0), 'x/7')
         self.assertEqual(symmetry.rotation_operator(2/7, col=0), '2*x/7')
         self.assertEqual(symmetry.rotation_operator(3/7, col=0), '3*x/7')
         self.assertEqual(symmetry.rotation_operator(4/7, col=0), '4*x/7')
         self.assertEqual(symmetry.rotation_operator(5/7, col=0), '5*x/7')
         self.assertEqual(symmetry.rotation_operator(6/7, col=0), '6*x/7')
-        
+
         self.assertEqual(symmetry.rotation_operator(1/5, col=0), 'x/5')
         self.assertEqual(symmetry.rotation_operator(2/5, col=0), '2*x/5')
         self.assertEqual(symmetry.rotation_operator(3/5, col=0), '3*x/5')
         self.assertEqual(symmetry.rotation_operator(4/5, col=0), '4*x/5')
-        
+
     def test_unique(self):
 
         data = np.array([[2,0,1],
@@ -322,25 +322,25 @@ class test_symmetry(unittest.TestCase):
         pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '1')
         self.assertEqual(mult, 6)
-        self.assertEqual(sp_pos, 'x,y,z')
+        self.assertEqual(sp_pos[0], 'x,y,z')
 
         coordinates = [0.5,0.0,0.1234]
         pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '2')
         self.assertEqual(mult, 3)
-        self.assertEqual(sp_pos, '1/2,0,z')
-        
+        self.assertEqual(sp_pos[0], '1/2,0,z')
+
         coordinates = [0.3333,0.6667,0.1234]
         pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '3')
         self.assertEqual(mult, 2)
-        self.assertEqual(sp_pos, '1/3,2/3,z')
+        self.assertEqual(sp_pos[0], '1/3,2/3,z')
 
         coordinates = [0.0,0.0,0.1234]
         pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '6')
         self.assertEqual(mult, 1)
-        self.assertEqual(sp_pos, '0,0,z')
+        self.assertEqual(sp_pos[0], '0,0,z')
 
         gamma = np.pi/2
 
@@ -355,7 +355,7 @@ class test_symmetry(unittest.TestCase):
         pg, mult, sp_pos = symmetry.site(operators, coordinates, A, tol=1e-1)
         self.assertEqual(pg, '2')
         self.assertEqual(mult, 4)
-        self.assertEqual(sp_pos, 'x/2+y/2,x/2+y/2,1/2')
+        self.assertEqual(sp_pos[0], 'x/2+y/2,x/2+y/2,1/2')
 
 if __name__ == '__main__':
     unittest.main()

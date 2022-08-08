@@ -218,7 +218,7 @@ cdef (double, double, double) transform(double x,
     else:
 
         return x,y,z
-    
+
 cdef double round2even(double x) nogil:
     x -= remainder(x, 1.0)
     return x

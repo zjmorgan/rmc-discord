@@ -3,7 +3,7 @@ dist.Distribution().fetch_build_eggs(['Cython>=0.15.1', 'numpy>=1.10'])
 
 import sys, re
 
-import numpy as np 
+import numpy as np
 from Cython.Build import cythonize
 
 if (sys.platform == 'win32'):
