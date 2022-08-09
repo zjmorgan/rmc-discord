@@ -1287,30 +1287,97 @@ class UnitCell:
         return self.__mult[mask]
 
 class SuperCell(UnitCell):
+    """
+    Supercell.
+
+    Parameters
+    ----------
+    filename : str
+        Name of CIF file.
+    nu, nv, nw : int
+        Extents :math:`N_1`, :math:`N_2`, :math:`N_3` along the :math:`a`,
+        :math:`b`, and :math:`c`-axis of the supercell.
+    tol : float, optional
+        Tolerance of unique atom coordinates.
+
+    Methods
+    -------
+    get_super_cell_extents()
+        Number of cells along each dimension.
+    set_super_cell_extents()
+        Update number of cells along each dimension.
+    get_super_cell_size()
+        Total number of cells.
+    get_number_atoms_per_super_cell()
+        Total number of atoms.
+    get_cartesian_lattice_points()
+        Position of lattice points in Cartesian coordinates,
+    get_super_cell_cartesian_atomic_coordinates()
+        Atom positions in Cartesian coordinates.
+
+    """
 
     def __init__(self, filename, nu=1, nv=1, nw=1, tol=1e-2):
 
         super(SuperCell, self).__init__(filename, tol)
 
-        self.set_super_cell_dimensions(nu, nv, nw)
+        self.set_super_cell_extents(nu, nv, nw)
 
-    def get_super_cell_dimensions(self):
+    def get_super_cell_extents(self):
+        """
+        Number of cells along each dimension.
+
+        Returns
+        -------
+        nu, nv, nw : int
+            Extents :math:`N_1`, :math:`N_2`, :math:`N_3` along the :math:`a`,
+            :math:`b`, and :math:`c`-axis of the supercell.
+
+        """
 
         return self.__nu, self.__nv, self.__nw
 
-    def set_super_cell_dimensions(self, nu, nv, nw):
+    def set_super_cell_extents(self, nu, nv, nw):
+        """
+        Update number of cells along each dimension.
+
+        Parameters
+        ----------
+        nu, nv, nw : int
+            Extents :math:`N_1`, :math:`N_2`, :math:`N_3` along the :math:`a`,
+            :math:`b`, and :math:`c`-axis of the supercell.
+
+        """
 
         self.__nu = nu
         self.__nv = nv
         self.__nw = nw
 
     def get_super_cell_size(self):
+        """
+        Total number of cells.
+
+        Returns
+        -------
+        n_uvw : int
+            Supercell size :math:`N_1N_2N_3`.
+
+        """
 
         nu, nv, nw = self.get_super_cell_dimensions()
 
         return nu*nv*nw
 
     def get_number_atoms_per_super_cell(self):
+        """
+        Total number of atoms.
+
+        Returns
+        -------
+        n : int
+            Number of atoms :math:`n` in the supercell.
+
+        """
 
         n_uvw = self.get_super_cell_size()
         n_atm = self.get_number_atoms_per_unit_cell()
@@ -1318,6 +1385,15 @@ class SuperCell(UnitCell):
         return n_uvw*n_atm
 
     def get_cartesian_lattice_points(self):
+        """
+        Position of lattice points in Cartesian coordinates,
+
+        Returns
+        -------
+        Rx, Ry, Rz : 1d array
+            Lattice vectors :math:`R_x`, :math:`R_y`, and :math:`R_z`.
+
+        """
 
         A = self.get_fractional_cartesian_transform()
         nu, nv, nw = self.get_super_cell_dimensions()
@@ -1325,6 +1401,17 @@ class SuperCell(UnitCell):
         return space.cell(nu, nv, nw, A)
 
     def get_super_cell_cartesian_atomic_coordinates(self):
+        """
+        Atom positions in Cartesian coordinates.
+
+        Returns
+        -------
+        rx, ry, rz : 1d array
+            Spatial vectors  :math:`r_x`, :math:`r_y`, and :math:`r_z`
+        atms : 1d array, str
+            Atoms, ions, or isotopes.
+
+        """
 
         ux, uy, uz = self.get_unit_cell_cartesian_atomic_coordinates()
         ix, iy, iz = self.get_cartesian_lattice_points()

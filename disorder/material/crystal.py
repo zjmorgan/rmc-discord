@@ -639,8 +639,6 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
         for adisp in atomic_disp:
             cb.RemoveLoopItem(adisp)
 
-    n_atm = atm.shape[0]
-
     a = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_a']))
     b = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_b']))
     c = float(re.sub(r'\([^()]*\)', '', cif_dict['_cell_length_c']))
@@ -917,7 +915,7 @@ def group(folder, filename):
     hm : str
         Space group symbol in Hermann–Mauguin notation.
 
-    """    
+    """
 
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \
@@ -974,7 +972,7 @@ def operators(folder, filename):
     symops : 1d array
         Symmetry operators in Jones-faithful notation.
 
-    """    
+    """
 
     cf = CifFile.ReadCif(os.path.join(folder, filename))
     cb = cf[[key for key in cf.keys() \
@@ -1109,6 +1107,22 @@ def metric(a, b, c, alpha, beta, gamma):
     return G
 
 def d(a, b, c, alpha, beta, gamma, h, k, l):
+    """
+    Interplanar d-spacing.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+    h, k, l : 1d array
+        Miller indices
+
+    Returns
+    -------
+    d : 1d array
+        d-spacings.
+
+    """
 
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
 
@@ -1132,6 +1146,22 @@ def d(a, b, c, alpha, beta, gamma, h, k, l):
     return d_spacing
 
 def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
+    """
+    Interplanar angle.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+    h, k, l : 1d array
+        Miller indices
+
+    Returns
+    -------
+    angle : 1d array
+        Interplanar angles in radians.
+
+    """
 
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
 
@@ -1175,14 +1205,42 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
     return interplanar_angle
 
 def cartesian(a, b, c, alpha, beta, gamma):
+    """
+    Transformation matrix from crystal to Cartesian coodinates.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+
+    Returns
+    -------
+    A : 2d array
+        Transformation matrix.
+
+    """
 
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
 
-    return np.array([[a, b*np.cos(gamma),  c*np.cos(beta)],
+    return np.array([[a, b*np.cos(gamma),  c*np.cos(beta)               ],
                      [0, b*np.sin(gamma), -c*np.sin(beta)*np.cos(alpha_)],
-                     [0, 0,                1/c_]])
+                     [0, 0,                1/c_                         ]])
 
 def cartesian_rotation(a, b, c, alpha, beta, gamma):
+    """
+    Rotation matrix between reciprocal and real Cartesian coodinates.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+
+    Returns
+    -------
+    R : 2d array
+        Rotation matrix.
+
+    """
 
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
 
@@ -1195,6 +1253,21 @@ def cartesian_rotation(a, b, c, alpha, beta, gamma):
     return R
 
 def cartesian_moment(a, b, c, alpha, beta, gamma):
+    """
+    Transformation matrix from crystal to Cartesian coodinates for magnetic
+    moments.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+
+    Returns
+    -------
+    C : 2d array
+        Transformation matrix.
+
+    """
 
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
 
@@ -1205,6 +1278,21 @@ def cartesian_moment(a, b, c, alpha, beta, gamma):
     return np.dot(A, np.linalg.inv(L))
 
 def cartesian_displacement(a, b, c, alpha, beta, gamma):
+    """
+    Transformation matrix from crystal to Cartesian coodinates for atomic
+    displacement parameters.
+
+    Parameters
+    ----------
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants and angles. Angles in radians.
+
+    Returns
+    -------
+    D : 2d array
+        Transformation matrix.
+
+    """
 
     a_, b_, c_, alpha_, beta_, gamma_ = reciprocal(a, b, c, alpha, beta, gamma)
 
@@ -1215,6 +1303,23 @@ def cartesian_displacement(a, b, c, alpha, beta, gamma):
     return np.dot(A, L_)
 
 def vector(h, k, l, B):
+    """
+    Recirprocal lattice vector in Cartesian coodinates.
+
+    Parameters
+    ----------
+    h, k, l : 1d array
+        Miller indices.
+    B : 2d array
+        Transformation matrix from crystal to Cartesian coodinates in
+        reciprocal space.
+
+    Returns
+    -------
+    Qx, Qy, Qz : 1d array
+        Recirprocal lattice vector in Cartesian coodinates.
+
+    """
 
     qh, qk, ql = transform(h, k, l, B)
 
