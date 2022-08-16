@@ -1407,7 +1407,7 @@ class SuperCell(UnitCell):
         Returns
         -------
         rx, ry, rz : 1d array
-            Spatial vectors  :math:`r_x`, :math:`r_y`, and :math:`r_z`
+            Spatial vectors :math:`r_x`, :math:`r_y`, and :math:`r_z`.
         atms : 1d array, str
             Atoms, ions, or isotopes.
 

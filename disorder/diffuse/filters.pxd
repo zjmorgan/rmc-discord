@@ -1,4 +1,6 @@
+#cython: boundscheck=False, wraparound=True, nonecheck=False, cdivision=True
 #cython: language_level=3
+#cython: linetrace=True
 
 cimport cython
 
@@ -24,7 +26,6 @@ cdef void blur2(double [::1] target,
                 Py_ssize_t nl) nogil
 
 cdef void weight(double [::1] w, double [::1] u, double [::1] v) nogil
-
 
 cpdef void gauss(double [::1] v,
                  double [::1] u,

@@ -3664,7 +3664,7 @@ class Presenter:
             correlations_3d.set_normalization(vmin, 1, norm=norm)
             correlations_3d.set_aspect(cor_aspect)
 
-            if (norm == 'SymLog'): correlations_3d.reformat_colorbar()
+            # if (norm == 'SymLog'): correlations_3d.reformat_colorbar()
 
             correlations_3d.set_colorbar_label(label)
             correlations_3d.set_labels(xlabel=xlabel, ylabel=ylabel)

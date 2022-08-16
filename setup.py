@@ -8,7 +8,7 @@ from Cython.Build import cythonize
 
 if (sys.platform == 'win32'):
     compile_openmp = ['/openmp']
-    link_openmp = ['/openmp']
+    link_openmp = []
 elif (sys.platform == 'darwin'):
     compile_openmp = ['-Xpreprocessor','-fopenmp','-lomp,',
                      '-I"$(brew --prefix libomp)/include"',
@@ -106,6 +106,7 @@ setup(
         'pycifrw',
         'nexusformat',
         'pyvista',
+        'mayavi',
         'pyqt5',
         'ipython',
     ],

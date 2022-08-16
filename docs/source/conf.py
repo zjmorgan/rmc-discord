@@ -14,6 +14,8 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../../disorder/'))
 
+import inspect
+import importlib
 
 # -- Project information -----------------------------------------------------
 
@@ -92,11 +94,19 @@ html_theme_options = {
 add_module_names = False
 
 def linkcode_resolve(domain, info):
-    basurl = 'https://github.com/zjmorgan/rmc-discord/blob/master/{}.py'
+    baseurl = 'https://github.com/zjmorgan/rmc-discord/blob/master/{}.py'
     if domain != 'py':
         return None
     if not info['module']:
         return None
     filename = info['module'].replace('.', '/')
-    url = basurl.format(filename)
-    return url
+    url = baseurl.format(filename)
+    mod = importlib.import_module(info['module'])
+    objname, *attrname = info['fullname'].split('.')
+    obj = getattr(mod, objname)
+    if attrname:
+        for attr in attrname:
+            obj = getattr(obj, attr)
+    lines = inspect.getsourcelines(obj)
+    start, stop = lines[1], lines[1]+len(lines[0])-1
+    return '{}#L{}-L{}'.format(url,start,stop)

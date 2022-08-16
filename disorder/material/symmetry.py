@@ -4,208 +4,238 @@ import re
 
 import numpy as np
 
-def bragg(x, y, z, sym, op):
+def miller(h, k, l, sym, op):
+    """
+    Transform Miller indices according to Laue symmetry operators.
+
+    ===== ===== =========
+    Index Laue  Operators
+    ===== ===== =========
+    0     m-3m  48
+    1     m-3   24
+    2     6/mmm 24
+    3     6/m   12
+    4     -3m   12
+    5     -3    6
+    6     4/mmm 16
+    7     4/m   8
+    8     mmm   8
+    9     2/m   4
+    10    -1    2
+    11    None  1
+    ===== ===== =========
+
+    Parameters
+    ----------
+    h, k, l : 1d array
+        Miller indices.
+    sym : int
+        Index corresponding to Laue symmetry class.
+    op : int
+        Index corresponding to Laue symmetry operator.
+
+    """
 
     if (sym == 0):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x,-y,z
-        elif (op == 2): return -x,y,-z
-        elif (op == 3): return x,-y,-z
-        elif (op == 4): return z,x,y
-        elif (op == 5): return z,-x,-y
-        elif (op == 6): return -z,-x,y
-        elif (op == 7): return -z,x,-y
-        elif (op == 8): return y,z,x
-        elif (op == 9): return -y,z,-x
-        elif (op == 10): return y,-z,-x
-        elif (op == 11): return -y,-z,x
-        elif (op == 12): return y,x,-z
-        elif (op == 13): return -y,-x,-z
-        elif (op == 14): return y,-x,z
-        elif (op == 15): return -y,x,z
-        elif (op == 16): return x,z,-y
-        elif (op == 17): return -x,z,y
-        elif (op == 18): return -x,-z,-y
-        elif (op == 19): return x,-z,y
-        elif (op == 20): return z,y,-x
-        elif (op == 21): return z,-y,x
-        elif (op == 22): return -z,y,x
-        elif (op == 23): return -z,-y,-x
-        elif (op == 24): return -x,-y,-z
-        elif (op == 25): return x,y,-z
-        elif (op == 26): return x,-y,z
-        elif (op == 27): return -x,y,z
-        elif (op == 28): return -z,-x,-y
-        elif (op == 29): return -z,x,y
-        elif (op == 30): return z,x,-y
-        elif (op == 31): return z,-x,y
-        elif (op == 32): return -y,-z,-x
-        elif (op == 33): return y,-z,x
-        elif (op == 34): return -y,z,x
-        elif (op == 35): return y,z,-x
-        elif (op == 36): return -y,-x,z
-        elif (op == 37): return y,x,z
-        elif (op == 38): return -y,x,-z
-        elif (op == 39): return y,-x,-z
-        elif (op == 40): return -x,-z,y
-        elif (op == 41): return x,-z,-y
-        elif (op == 42): return x,z,y
-        elif (op == 43): return -x,z,-y
-        elif (op == 44): return -z,-y,x
-        elif (op == 45): return -z,y,-x
-        elif (op == 46): return z,-y,-x
-        else: return z,y,x
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h,-k,l
+        elif (op == 2): return -h,k,-l
+        elif (op == 3): return h,-k,-l
+        elif (op == 4): return l,h,k
+        elif (op == 5): return l,-h,-k
+        elif (op == 6): return -l,-h,k
+        elif (op == 7): return -l,h,-k
+        elif (op == 8): return k,l,h
+        elif (op == 9): return -k,l,-h
+        elif (op == 10): return k,-l,-h
+        elif (op == 11): return -k,-l,h
+        elif (op == 12): return k,h,-l
+        elif (op == 13): return -k,-h,-l
+        elif (op == 14): return k,-h,l
+        elif (op == 15): return -k,h,l
+        elif (op == 16): return h,l,-k
+        elif (op == 17): return -h,l,k
+        elif (op == 18): return -h,-l,-k
+        elif (op == 19): return h,-l,k
+        elif (op == 20): return l,k,-h
+        elif (op == 21): return l,-k,h
+        elif (op == 22): return -l,k,h
+        elif (op == 23): return -l,-k,-h
+        elif (op == 24): return -h,-k,-l
+        elif (op == 25): return h,k,-l
+        elif (op == 26): return h,-k,l
+        elif (op == 27): return -h,k,l
+        elif (op == 28): return -l,-h,-k
+        elif (op == 29): return -l,h,k
+        elif (op == 30): return l,h,-k
+        elif (op == 31): return l,-h,k
+        elif (op == 32): return -k,-l,-h
+        elif (op == 33): return k,-l,h
+        elif (op == 34): return -k,l,h
+        elif (op == 35): return k,l,-h
+        elif (op == 36): return -k,-h,l
+        elif (op == 37): return k,h,l
+        elif (op == 38): return -k,h,-l
+        elif (op == 39): return k,-h,-l
+        elif (op == 40): return -h,-l,k
+        elif (op == 41): return h,-l,-k
+        elif (op == 42): return h,l,k
+        elif (op == 43): return -h,l,-k
+        elif (op == 44): return -l,-k,h
+        elif (op == 45): return -l,k,-h
+        elif (op == 46): return l,-k,-h
+        else: return l,k,h
 
     elif (sym == 1):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x,-y,z
-        elif (op == 2): return -x,y,-z
-        elif (op == 3): return x,-y,-z
-        elif (op == 4): return z,x,y
-        elif (op == 5): return z,-x,-y
-        elif (op == 6): return -z,-x,y
-        elif (op == 7): return -z,x,-y
-        elif (op == 8): return y,z,x
-        elif (op == 9): return -y,z,-x
-        elif (op == 10): return y,-z,-x
-        elif (op == 11): return -y,-z,x
-        elif (op == 12): return -x,-y,-z
-        elif (op == 13): return x,y,-z
-        elif (op == 14): return x,-y,z
-        elif (op == 15): return -x,y,z
-        elif (op == 16): return -z,-x,-y
-        elif (op == 17): return -z,x,y
-        elif (op == 18): return z,x,-y
-        elif (op == 19): return z,-x,y
-        elif (op == 20): return -y,-z,-x
-        elif (op == 21): return y,-z,x
-        elif (op == 22): return -y,z,x
-        else: return y,z,-x
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h,-k,l
+        elif (op == 2): return -h,k,-l
+        elif (op == 3): return h,-k,-l
+        elif (op == 4): return l,h,k
+        elif (op == 5): return l,-h,-k
+        elif (op == 6): return -l,-h,k
+        elif (op == 7): return -l,h,-k
+        elif (op == 8): return k,l,h
+        elif (op == 9): return -k,l,-h
+        elif (op == 10): return k,-l,-h
+        elif (op == 11): return -k,-l,h
+        elif (op == 12): return -h,-k,-l
+        elif (op == 13): return h,k,-l
+        elif (op == 14): return h,-k,l
+        elif (op == 15): return -h,k,l
+        elif (op == 16): return -l,-h,-k
+        elif (op == 17): return -l,h,k
+        elif (op == 18): return l,h,-k
+        elif (op == 19): return l,-h,k
+        elif (op == 20): return -k,-l,-h
+        elif (op == 21): return k,-l,h
+        elif (op == 22): return -k,l,h
+        else: return k,l,-h
 
     elif (sym == 2):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x-y,x,z
-        elif (op == 2): return y,-x-y,z
-        elif (op == 3): return -x,-y,z
-        elif (op == 4): return x+y,-x,z
-        elif (op == 5): return -y,x+y,z
-        elif (op == 6): return y,x,-z
-        elif (op == 7): return x,-x-y,-z
-        elif (op == 8): return -x-y,y,-z
-        elif (op == 9): return -y,-x,-z
-        elif (op == 10): return -x,x+y,-z
-        elif (op == 11): return x+y,-y,-z
-        elif (op == 12): return -x,-y,-z
-        elif (op == 13): return x+y,-x,-z
-        elif (op == 14): return -y,x+y,-z
-        elif (op == 15): return x,y,-z
-        elif (op == 16): return -x-y,x,-z
-        elif (op == 17): return y,-x-y,-z
-        elif (op == 18): return -y,-x,z
-        elif (op == 19): return -x,x+y,z
-        elif (op == 20): return x+y,-y,z
-        elif (op == 21): return y,x,z
-        elif (op == 22): return x,-x-y,z
-        else: return -x-y,y,z
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h-k,h,l
+        elif (op == 2): return k,-h-k,l
+        elif (op == 3): return -h,-k,l
+        elif (op == 4): return h+k,-h,l
+        elif (op == 5): return -k,h+k,l
+        elif (op == 6): return k,h,-l
+        elif (op == 7): return h,-h-k,-l
+        elif (op == 8): return -h-k,k,-l
+        elif (op == 9): return -k,-h,-l
+        elif (op == 10): return -h,h+k,-l
+        elif (op == 11): return h+k,-k,-l
+        elif (op == 12): return -h,-k,-l
+        elif (op == 13): return h+k,-h,-l
+        elif (op == 14): return -k,h+k,-l
+        elif (op == 15): return h,k,-l
+        elif (op == 16): return -h-k,h,-l
+        elif (op == 17): return k,-h-k,-l
+        elif (op == 18): return -k,-h,l
+        elif (op == 19): return -h,h+k,l
+        elif (op == 20): return h+k,-k,l
+        elif (op == 21): return k,h,l
+        elif (op == 22): return h,-h-k,l
+        else: return -h-k,k,l
 
     elif (sym == 3):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x-y,x,z
-        elif (op == 2): return y,-x-y,z
-        elif (op == 3): return -x,-y,z
-        elif (op == 4): return x+y,-x,z
-        elif (op == 5): return -y,x+y,z
-        elif (op == 6): return -x,-y,-z
-        elif (op == 7): return x+y,-x,-z
-        elif (op == 8): return -y,x+y,-z
-        elif (op == 9): return x,y,-z
-        elif (op == 10): return -x-y,x,-z
-        else: return y,-x-y,-z
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h-k,h,l
+        elif (op == 2): return k,-h-k,l
+        elif (op == 3): return -h,-k,l
+        elif (op == 4): return h+k,-h,l
+        elif (op == 5): return -k,h+k,l
+        elif (op == 6): return -h,-k,-l
+        elif (op == 7): return h+k,-h,-l
+        elif (op == 8): return -k,h+k,-l
+        elif (op == 9): return h,k,-l
+        elif (op == 10): return -h-k,h,-l
+        else: return k,-h-k,-l
 
     elif (sym == 4):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x-y,x,z
-        elif (op == 2): return y,-x-y,z
-        elif (op == 3): return -y,-x,-z
-        elif (op == 4): return -x,x+y,-z
-        elif (op == 5): return x+y,-y,-z
-        elif (op == 6): return -x,-y,-z
-        elif (op == 7): return x+y,-x,-z
-        elif (op == 8): return -y,x+y,-z
-        elif (op == 9): return y,x,z
-        elif (op == 10): return x,-x-y,z
-        else: return -x-y,y,z
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h-k,h,l
+        elif (op == 2): return k,-h-k,l
+        elif (op == 3): return -k,-h,-l
+        elif (op == 4): return -h,h+k,-l
+        elif (op == 5): return h+k,-k,-l
+        elif (op == 6): return -h,-k,-l
+        elif (op == 7): return h+k,-h,-l
+        elif (op == 8): return -k,h+k,-l
+        elif (op == 9): return k,h,l
+        elif (op == 10): return h,-h-k,l
+        else: return -h-k,k,l
 
     elif (sym == 5):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x-y,x,z
-        elif (op == 2): return y,-x-y,z
-        elif (op == 3): return -x,-y,-z
-        elif (op == 4): return x+y,-x,-z
-        else: return -y,x+y,-z
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h-k,h,l
+        elif (op == 2): return k,-h-k,l
+        elif (op == 3): return -h,-k,-l
+        elif (op == 4): return h+k,-h,-l
+        else: return -k,h+k,-l
 
     elif (sym == 6):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x,-y,z
-        elif (op == 2): return -y,x,z
-        elif (op == 3): return y,-x,z
-        elif (op == 4): return -x,y,-z
-        elif (op == 5): return x,-y,-z
-        elif (op == 6): return y,x,-z
-        elif (op == 7): return -y,-x,-z
-        elif (op == 8): return -x,-y,-z
-        elif (op == 9): return x,y,-z
-        elif (op == 10): return y,-x,-z
-        elif (op == 11): return -y,x,-z
-        elif (op == 12): return x,-y,z
-        elif (op == 13): return -x,y,z
-        elif (op == 14): return -y,-x,z
-        else: return y,x,z
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h,-k,l
+        elif (op == 2): return -k,h,l
+        elif (op == 3): return k,-h,l
+        elif (op == 4): return -h,k,-l
+        elif (op == 5): return h,-k,-l
+        elif (op == 6): return k,h,-l
+        elif (op == 7): return -k,-h,-l
+        elif (op == 8): return -h,-k,-l
+        elif (op == 9): return h,k,-l
+        elif (op == 10): return k,-h,-l
+        elif (op == 11): return -k,h,-l
+        elif (op == 12): return h,-k,l
+        elif (op == 13): return -h,k,l
+        elif (op == 14): return -k,-h,l
+        else: return k,h,l
 
     elif (sym == 7):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x,-y,z
-        elif (op == 2): return -y,x,z
-        elif (op == 3): return y,-x,z
-        elif (op == 4): return -x,-y,-z
-        elif (op == 5): return x,y,-z
-        elif (op == 6): return y,-x,-z
-        else: return -y,x,-z
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h,-k,l
+        elif (op == 2): return -k,h,l
+        elif (op == 3): return k,-h,l
+        elif (op == 4): return -h,-k,-l
+        elif (op == 5): return h,k,-l
+        elif (op == 6): return k,-h,-l
+        else: return -k,h,-l
 
     elif (sym == 8):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x,-y,z
-        elif (op == 2): return -x,y,-z
-        elif (op == 3): return x,-y,-z
-        elif (op == 4): return -x,-y,-z
-        elif (op == 5): return x,y,-z
-        elif (op == 6): return x,-y,z
-        else: return -x,y,z
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h,-k,l
+        elif (op == 2): return -h,k,-l
+        elif (op == 3): return h,-k,-l
+        elif (op == 4): return -h,-k,-l
+        elif (op == 5): return h,k,-l
+        elif (op == 6): return h,-k,l
+        else: return -h,k,l
 
     elif (sym == 9):
 
-        if (op == 0): return x,y,z
-        elif (op == 1): return -x,y,-z
-        elif (op == 2): return -x,-y,-z
-        else: return x,-y,z
+        if (op == 0): return h,k,l
+        elif (op == 1): return -h,k,-l
+        elif (op == 2): return -h,-k,-l
+        else: return h,-k,l
 
     elif (sym == 10):
 
-        if (op == 0): return x,y,z
-        else: return -x,-y,-z
+        if (op == 0): return h,k,l
+        else: return -h,-k,-l
 
     else:
 
-        return x,y,z
+        return h,k,l
 
 def rotation_operator(val, col=0):
 
@@ -1159,6 +1189,39 @@ def operators(invert=False):
     return laue
 
 def laue(symmetry):
+    """
+    Laue symmetry operators.
+
+    ===== =========
+    Laue  Operators
+    ===== =========
+    m-3m  48
+    m-3   24
+    6/mmm 24
+    6/m   12
+    -3m   12
+    -3    6
+    4/mmm 16
+    4/m   8
+    mmm   8
+    2/m   4
+    -1    2
+    None  1
+    ===== =========
+
+    Parameters
+    ----------
+    symmetry : stry
+         Laue symmetry class.  One of ``'-1'``, ``'2/m'``, ``'mmm'``,
+         ``'4/m'``, ``'4/mmm'``,  ``'-3'``, ``'-3m'``, ``'6/m'``, ``'6/mmm'``,
+         ``'m-3'``, or ``'m-3m'``.
+
+    Returns
+    -------
+    ops : list, str
+        Symmetry operators.
+
+    """
 
     if (symmetry == 'm-3m'):
 

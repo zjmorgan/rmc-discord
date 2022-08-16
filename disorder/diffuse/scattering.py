@@ -14,13 +14,13 @@ def length(atms, n_hkl):
     ----------
     atms : 1d array, str
         Atoms or isotopes.
-    Q : 1d array
-        Magnitude of wavevector.
+    n_hkl : int
+        Number of reciprocal space points.
 
     Returns
     -------
     b : 1d array
-        Has the same shape as the input wavevector.
+        Has the shape as the number of reciprocal space points.
 
     """
     n_atm = len(atms)

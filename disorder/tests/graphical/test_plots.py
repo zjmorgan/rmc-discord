@@ -129,7 +129,7 @@ class test_plots(unittest.TestCase):
         z = np.sin(2*np.pi*x)*np.cos(2*np.pi*y)
 
         heat_map.plot_data(z, xmin, ymin, xmax, ymax)
-        heat_map.create_colorbar(orientation='horizontal')
+        heat_map.create_colorbar(orientation='vertical')
         heat_map.update_colormap('binary')
 
         np.testing.assert_array_equal(heat_map.get_data(), z)
@@ -142,13 +142,10 @@ class test_plots(unittest.TestCase):
 
         heat_map.set_normalization(-1, 1, norm='symlog')
         heat_map.update_colormap(category='diverging')
-        heat_map.reformat_colorbar()
 
         heat_map.set_normalization(-1.1, 1.1, norm='symlog')
-        heat_map.reformat_colorbar()
 
         heat_map.set_normalization(-0.4, 0.4, norm='symlog')
-        heat_map.reformat_colorbar()
 
         heat_map.set_labels(r'$z(x,y)$', r'$x$', r'$y$')
 
@@ -198,13 +195,10 @@ class test_plots(unittest.TestCase):
 
         scatter_plot.set_normalization(-1, 1, norm='symlog')
         scatter_plot.update_colormap(category='diverging')
-        scatter_plot.reformat_colorbar()
 
         scatter_plot.set_normalization(-1.1, 1.1, norm='symlog')
-        scatter_plot.reformat_colorbar()
 
         scatter_plot.set_normalization(-0.4, 0.4, norm='symlog')
-        scatter_plot.reformat_colorbar()
 
         scatter_plot.set_labels(r'$f(x,y)$', r'$x$', r'$y$')
 

@@ -244,7 +244,7 @@ class test_experimental(unittest.TestCase):
 
         grid = pv.read(folder+'/test.vts')
 
-        values = grid.point_arrays['intensity'].reshape(6,14,10,order='F')
+        values = grid.point_data['intensity'].reshape(6,14,10,order='F')
 
         np.testing.assert_array_almost_equal(data, values)
 

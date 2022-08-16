@@ -9,8 +9,11 @@ dependencies:
   - pycifrw
   - nexusformat
   - pyvista
+  - mayavi
   - qt
   - pyqt
+  - pydata-sphinx-theme
+  - numpydoc
   - ipython
   - cython
   - pytest

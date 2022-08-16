@@ -128,7 +128,7 @@ class test_filters(unittest.TestCase):
 
         w = filters.blurring(v, sigma)
 
-        x = ndimage.filters.gaussian_filter(v, sigma, mode='nearest')
+        x = ndimage.gaussian_filter(v, sigma, mode='nearest')
 
         np.testing.assert_array_almost_equal(w, x, decimal=1)
 

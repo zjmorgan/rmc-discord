@@ -11,7 +11,6 @@ import matplotlib.colors as colors
 import matplotlib.transforms as mtransforms
 
 from matplotlib import ticker
-from matplotlib.ticker import Locator
 from matplotlib.patches import Polygon
 
 from itertools import cycle
@@ -30,57 +29,6 @@ matplotlib.rcParams['axes.labelsize'] = 'medium'
 matplotlib.rcParams['legend.fancybox'] = True
 matplotlib.rcParams['legend.loc'] = 'best'
 matplotlib.rcParams['legend.fontsize'] = 'medium'
-
-class MinorSymLogLocator(Locator):
-
-    def __init__(self, linthresh, nints=10):
-
-        self.linthresh = linthresh
-        self.nintervals = nints
-
-    def __call__(self):
-
-        majorlocs = self.axis.get_majorticklocs()
-
-        if len(majorlocs) == 1:
-            return self.raise_if_exceeds(np.array([]))
-
-        dmlower = majorlocs[1]-majorlocs[0]
-        dmupper = majorlocs[-1]-majorlocs[-2]
-
-        if (majorlocs[0] != 0. and
-            ((majorlocs[0] != self.linthresh and dmlower > self.linthresh) or
-             (dmlower == self.linthresh and majorlocs[0] < 0))):
-            majorlocs = np.insert(majorlocs, 0, majorlocs[0]*10.)
-        else:
-            majorlocs = np.insert(majorlocs, 0, majorlocs[0]-self.linthresh)
-
-        if (majorlocs[-1] != 0. and
-            ((np.abs(majorlocs[-1]) != self.linthresh
-              and dmupper > self.linthresh) or
-             (dmupper == self.linthresh and majorlocs[-1] > 0))):
-            majorlocs = np.append(majorlocs, majorlocs[-1]*10.)
-        else:
-            majorlocs = np.append(majorlocs, majorlocs[-1]+self.linthresh)
-
-        minorlocs = []
-
-        for i in range(1, len(majorlocs)):
-            majorstep = majorlocs[i]-majorlocs[i-1]
-            if abs(majorlocs[i-1]+majorstep/2) < self.linthresh:
-                ndivs = self.nintervals
-            else:
-                ndivs = self.nintervals-1.
-
-            minorstep = majorstep/ndivs
-            locs = np.arange(majorlocs[i-1], majorlocs[i], minorstep)[1:]
-            minorlocs.extend(locs)
-
-        return self.raise_if_exceeds(np.array(minorlocs))
-
-    def tick_values(self, vmin, vmax):
-        raise NotImplementedError('Cannot get tick locations for a '
-                                  '%s type.' % type(self))
 
 class Plot():
 
@@ -207,12 +155,14 @@ class Line(Plot):
         elif (norm.lower() == 'logarithmic'):
             ax.set_yscale('log')
             ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
-            # ax.yaxis.set_minor_locator(ticker.LogLocator())
+            ax.yaxis.set_minor_locator(ticker.LogLocator())
         else:
             thresh, scale = 0.1, 0.9
             ax.set_yscale('symlog', linthresh=thresh, linscale=scale)
             ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
-            ax.yaxis.set_minor_locator(MinorSymLogLocator(0.1))
+            sym_log = ticker.SymmetricalLogLocator(linthresh=0.1, base=10,
+                                                   subs=np.linspace(0.1,0.9,9))
+            ax.yaxis.set_minor_locator(sym_log)
 
     def set_limits(self, vmin=None, vmax=None, twin=False):
 
@@ -367,8 +317,13 @@ class HeatMap(Plot):
             self.create_colorbar(orientation, norm)
 
             if (norm.lower() == 'symlog'):
-                self.cb.locator = ticker.SymmetricalLogLocator(linthresh=0.1,
-                                                               base=10)
+                sym_log = ticker.SymmetricalLogLocator(linthresh=0.1, base=10)
+                self.cb.locator = sym_log
+                subs = np.linspace(0.1,0.9,9)
+                sym_log = ticker.SymmetricalLogLocator(linthresh=0.1, base=10,
+                                                       subs=subs)
+                self.cb.minorlocator = sym_log
+                self.cb.formatter = ticker.ScalarFormatter()
                 self.cb.update_ticks()
 
     def update_normalization(self, norm='linear'):
@@ -378,64 +333,6 @@ class HeatMap(Plot):
             vmin, vmax = self.im.get_clim()
 
             self.set_normalization(vmin, vmax, norm)
-
-    def reformat_colorbar(self, formatstr='{:.1f}'):
-
-        if (self.cb.orientation == 'vertical'):
-            ticks = self.cb.ax.get_yticks()
-        else:
-            ticks = self.cb.ax.get_xticks()
-
-        vmin, vmax = self.cb.vmin, self.cb.vmax
-
-        inv = self.norm.inverse
-        tscale = inv((ticks-vmin)/(vmax-vmin))
-        labels = [formatstr.format(t) for t in tscale]
-
-        norm = self.norm
-        minorticks = []
-
-        if (vmin < ticks[0]):
-            vn = 11 if vmin >= -0.1 and vmin <= 0.1 else 10
-            tmin = inv((np.array([ticks[0]])-vmin)/(vmax-vmin))[0]
-            if (vmin >= -0.1 and vmin <= 0.1):
-                tn = int(vmin/-0.01)
-                nmin = -0.1 if vmin < 0.0 else 0.0
-            else:
-                tn = int(vmin/tmin)
-                nmin = tmin*10
-
-            values = (vmax-vmin)*norm(np.linspace(nmin, tmin, vn))[-tn:-1]+vmin
-            minorticks += values.tolist()
-
-        for i in range(len(ticks)-1):
-            tmin = inv((np.array([ticks[i]])-vmin)/(vmax-vmin))[0]
-            tmax = inv((np.array([ticks[i+1]])-vmin)/(vmax-vmin))[0]
-
-            tn = 11 if tmin >= -0.1 and tmax <= 0.1 else 10
-
-            values = (vmax-vmin)*norm(np.linspace(tmin, tmax, tn))[1:-1]+vmin
-            minorticks += values.tolist()
-
-        if (vmax > ticks[-1]):
-            vn = 11 if vmax >= -0.1 and vmax <= 0.1 else 10
-            tmax = inv((np.array([ticks[-1]])-vmin)/(vmax-vmin))[0]
-            if (vmax >= -0.1 and vmax <= 0.1):
-                tn = int(vmax/0.01)
-                nmax = 0.1 if vmax > 0.0 else 0.0
-            else:
-                tn = int(vmax/tmax)
-                nmax =  tmax*10
-
-            values = (vmax-vmin)*norm(np.linspace(tmax, nmax, vn))[1:tn]+vmin
-            minorticks += values.tolist()
-
-        if (self.cb.orientation == 'vertical'):
-            self.cb.ax.set_yticklabels(labels)
-            self.cb.ax.yaxis.set_ticks(minorticks, minor=True)
-        else:
-            self.cb.ax.set_xticklabels(labels)
-            self.cb.ax.xaxis.set_ticks(minorticks, minor=True)
 
     def update_colormap(self, category='sequential'):
 
@@ -590,8 +487,13 @@ class Scatter(Plot):
             self.create_colorbar(orientation, norm)
 
             if (norm.lower() == 'symlog'):
-                self.cb.locator = ticker.SymmetricalLogLocator(linthresh=0.1,
-                                                               base=10)
+                sym_log = ticker.SymmetricalLogLocator(linthresh=0.1, base=10)
+                self.cb.locator = sym_log
+                subs = np.linspace(0.1,0.9,9)
+                sym_log = ticker.SymmetricalLogLocator(linthresh=0.1, base=10,
+                                                       subs=subs)
+                self.cb.minorlocator = sym_log
+                self.cb.formatter = ticker.ScalarFormatter()
                 self.cb.update_ticks()
 
     def update_normalization(self, norm='linear'):
@@ -657,61 +559,3 @@ class Scatter(Plot):
     def plot_data(self, x, y, c):
 
         self.s = self.ax.scatter(x, y, c=c, cmap=self.cmap)
-
-    def reformat_colorbar(self, formatstr='{:.1f}'):
-
-        if (self.cb.orientation == 'vertical'):
-            ticks = self.cb.ax.get_yticks()
-        else:
-            ticks = self.cb.ax.get_xticks()
-
-        vmin, vmax = self.cb.vmin, self.cb.vmax
-
-        inv = self.norm.inverse
-        tscale = inv((ticks-vmin)/(vmax-vmin))
-        labels = [formatstr.format(t) for t in tscale]
-
-        norm = self.norm
-        minorticks = []
-
-        if (vmin < ticks[0]):
-            vn = 11 if vmin >= -0.1 and vmin <= 0.1 else 10
-            tmin = inv((np.array([ticks[0]])-vmin)/(vmax-vmin))[0]
-            if (vmin >= -0.1 and vmin <= 0.1):
-                tn = int(vmin/-0.01)
-                nmin = -0.1 if vmin < 0.0 else 0.0
-            else:
-                tn = int(vmin/tmin)
-                nmin = tmin*10
-
-            values = (vmax-vmin)*norm(np.linspace(nmin, tmin, vn))[-tn:-1]+vmin
-            minorticks += values.tolist()
-
-        for i in range(len(ticks)-1):
-            tmin = inv((np.array([ticks[i]])-vmin)/(vmax-vmin))[0]
-            tmax = inv((np.array([ticks[i+1]])-vmin)/(vmax-vmin))[0]
-
-            tn = 11 if tmin >= -0.1 and tmax <= 0.1 else 10
-
-            values = (vmax-vmin)*norm(np.linspace(tmin, tmax, tn))[1:-1]+vmin
-            minorticks += values.tolist()
-
-        if (vmax > ticks[-1]):
-            vn = 11 if vmax >= -0.1 and vmax <= 0.1 else 10
-            tmax = inv((np.array([ticks[-1]])-vmin)/(vmax-vmin))[0]
-            if (vmax >= -0.1 and vmax <= 0.1):
-                tn = int(vmax/0.01)
-                nmax = 0.1 if vmax > 0.0 else 0.0
-            else:
-                tn = int(vmax/tmax)
-                nmax =  tmax*10
-
-            values = (vmax-vmin)*norm(np.linspace(tmax, nmax, vn))[1:tn]+vmin
-            minorticks += values.tolist()
-
-        if (self.cb.orientation == 'vertical'):
-            self.cb.ax.set_yticklabels(labels)
-            self.cb.ax.yaxis.set_ticks(minorticks, minor=True)
-        else:
-            self.cb.ax.set_xticklabels(labels)
-            self.cb.ax.xaxis.set_ticks(minorticks, minor=True)

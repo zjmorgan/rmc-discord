@@ -71,9 +71,9 @@ def intensity(A_k, i_dft, factors):
     ----------
     A_k : 1d array
         Fourier transform of relative site occupancies.
-    i_dft: 1d array, int
+    i_dft : 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space.
-    factors: 1d array
+    factors : 1d array
         Prefactors of form factors, phase factors, and composition factors.
 
     Returns
@@ -109,9 +109,9 @@ def structure(A_k, i_dft, factors):
     ----------
     A_k : 1d array
         Fourier transform of relative site occupancies.
-    i_dft: 1d array, int
+    i_dft : 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space.
-    factors: 1d array
+    factors : 1d array
         Prefactors of form factors, phase factors, and composition factors.
 
     Returns

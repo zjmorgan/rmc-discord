@@ -71,9 +71,9 @@ def intensity(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
         Array indices corresponding to nuclear Bragg peaks.
     p : int
         Order of Taylor expansion.
-    i_dft: 1d array, int
+    i_dft : 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space.
-    factors: 1d array
+    factors : 1d array
         Prefactors of form factors, phase factors, and composition factors.
 
     Returns
@@ -151,9 +151,9 @@ def structure(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors):
         Array indices corresponding to nuclear Bragg peaks.
     p : int
         Order of Taylor expansion.
-    i_dft: 1d array, int
+    i_dft : 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space.
-    factors: 1d array
+    factors : 1d array
         Prefactors of scattering lengths, phase factors, and occupancies.
 
     Returns

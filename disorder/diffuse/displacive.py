@@ -396,6 +396,22 @@ def structure(U_k, Q_k, coeffs, cond, p, i_dft, factors):
            V_k.flatten(), V_k_nuc.flatten(), even, bragg
 
 def parameters(Ux, Uy, Uz, D, n_atm):
+    """
+    Atomic displacement paramters from atomic displacements.
+
+    Ux, Uy, Uz : 1d array
+        Atomic displacements in Cartesian coordinates.
+    D : 2d array, 3x3
+        Transform matrix from crystal axis to Cartesian coordiante system.
+    n_atm : int
+        Number of atoms in the unit cell.
+
+    Returns
+    -------
+    U11, U22, U33, U23, U13, U12 : 1d array
+        Has same size as input atomic displacements.
+
+    """
 
     Uxx = np.mean((Ux**2).reshape(Ux.size // n_atm, n_atm), axis=0)
     Uyy = np.mean((Uy**2).reshape(Uy.size // n_atm, n_atm), axis=0)
@@ -491,7 +507,7 @@ def isotropic(U11, U22, U33, U23, U13, U12, D):
 
 def principal(U11, U22, U33, U23, U13, U12, D):
     """
-    Principal atmoic displacement parameters :math:`U_\mathrm{1},
+    Principal atmoic displacement parameters :math:`U_\mathrm{1}`,
     :math:`U_\mathrm{2}`, and :math:`U_\mathrm{3}`.
 
     Parameters

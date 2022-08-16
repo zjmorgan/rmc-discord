@@ -1,5 +1,6 @@
 #cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
 #cython: language_level=3
+#cython: linetrace=True
 
 import numpy as np
 cimport numpy as np
@@ -53,7 +54,7 @@ def magnetic(double [::1] Sx,
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
 
-    m_np = np.arange(n_atm, dtype=int)
+    m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
 
     Sx_np = np.copy(Sx, order='C')
@@ -390,7 +391,7 @@ def magnetic(double [::1] Sx,
                 Qr_ij = Q[q]*rs_ij[a,p]
 
                 a_ij = sin(Qr_ij)/Qr_ij
-                b_ij = (a_ij-cos(Qr_ij))/Qr_ij
+                b_ij = (a_ij-cos(Qr_ij))/(Qr_ij*Qr_ij)
 
                 value += factors*(As_ij[a,p]*a_ij+Bs_ij[a,p]*b_ij)*mult_s[p]
 
@@ -449,7 +450,7 @@ def magnetic(double [::1] Sx,
                 Qr_ij = Q[q]*r_ij[a,p]
 
                 a_ij = sin(Qr_ij)/Qr_ij
-                b_ij = (a_ij-cos(Qr_ij))/Qr_ij
+                b_ij = (a_ij-cos(Qr_ij))/(Qr_ij*Qr_ij)
 
                 value += factors*(A_ij[a,p]*a_ij+B_ij[a,p]*b_ij)*mult[p]
 
@@ -464,7 +465,7 @@ def magnetic(double [::1] Sx,
         s_ = Q[q]*inv_M_SP
         s_sq = s_*s_
 
-        for p in prange(n_atm, nogil=True):
+        for p in prange(n_xyz, nogil=True):
 
             w = n[p]
 
@@ -498,7 +499,7 @@ def magnetic(double [::1] Sx,
 
     for q in prange(n_hkl, nogil=True):
 
-        I[q] = (auto[q]/n_atm+2*summation[q]/m_xyz)
+        I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
 
     return I_np
 
@@ -538,7 +539,7 @@ def occupational(double [::1] A_r,
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
 
-    m_np = np.arange(n_atm, dtype=int)
+    m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
 
     A_r_np = np.copy(A_r, order='C')
@@ -875,7 +876,7 @@ def occupational(double [::1] A_r,
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
 
-        for p in prange(n_atm, nogil=True):
+        for p in prange(n_xyz, nogil=True):
 
             w = n[p]
 
@@ -906,7 +907,7 @@ def occupational(double [::1] A_r,
 
     for q in prange(n_hkl, nogil=True):
 
-        I[q] = (auto[q]/n_atm+2*summation[q]/m_xyz)
+        I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
 
     return I_np
 
@@ -945,7 +946,7 @@ def displacive(double [::1] Ux,
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
 
-    m_np = np.arange(n_atm, dtype=int)
+    m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
 
     Ux_np = np.copy(Ux, order='C')
@@ -1170,7 +1171,7 @@ def displacive(double [::1] Ux,
         seq_id = np.concatenate((seq_id, cs))
         cs = np.cumsum(cs[1:cs.size-1])
 
-    num = (seq_id+1)*seq_id/2
+    num = (seq_id+1)*seq_id//2
 
     den = np.array([])
 
@@ -1369,7 +1370,7 @@ def displacive(double [::1] Ux,
 
         value = 0
 
-        for p in prange(n_atm, nogil=True):
+        for p in prange(n_xyz, nogil=True):
 
             w = n[p]
 
@@ -1401,7 +1402,7 @@ def displacive(double [::1] Ux,
 
     for q in prange(n_hkl, nogil=True):
 
-        I[q] = (auto[q]/n_atm+2*summation[q]/m_xyz)
+        I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
 
     return I_np
 
@@ -1440,7 +1441,7 @@ def structural(double [::1] occupancy,
     cdef Py_ssize_t m_xyz = mu*mv*mw*n_atm
     cdef Py_ssize_t n_xyz = nu*nv*nw*n_atm
 
-    m_np = np.arange(n_atm, dtype=int)
+    m_np = np.arange(n_xyz, dtype=int)
     n_np = np.mod(m_np, n_atm)
 
     c_uvw = np.arange(n_uvw)
@@ -1770,7 +1771,7 @@ def structural(double [::1] occupancy,
             s_ = Q[q]*inv_M_SP
             s_sq = s_*s_
 
-        for p in prange(n_atm, nogil=True):
+        for p in prange(n_xyz, nogil=True):
 
             w = n[p]
 
@@ -1801,6 +1802,6 @@ def structural(double [::1] occupancy,
 
     for q in prange(n_hkl, nogil=True):
 
-        I[q] = (auto[q]/n_atm+2*summation[q]/m_xyz)
+        I[q] = (auto[q]/n_xyz+2*summation[q]/m_xyz)
 
     return I_np

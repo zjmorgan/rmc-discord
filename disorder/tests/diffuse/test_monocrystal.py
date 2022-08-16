@@ -219,8 +219,13 @@ class test_monocrystal(unittest.TestCase):
         A = crystal.cartesian(a, b, c, alpha, beta, gamma)
         B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
         R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
 
-        U = np.row_stack((U11,U22,U33,U23,U13,U12))
+        Uxx, Uyy, Uzz, \
+        Uyz, Uxz, Uxy = displacive.cartesian(U11, U22, U33,
+                                             U23, U13, U12, D)
+
+        U = np.row_stack((Uxx, Uyy, Uzz, Uyz, Uxz, Uxy))
         Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm, value=U)
 
         index_parameters = space.mapping(h_range, k_range, l_range,

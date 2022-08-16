@@ -11,6 +11,7 @@ class CrystalStructure:
 
     def __init__(self):
 
+        mlab.options.offscreen = True
         self.fig = mlab.figure(fgcolor=(0,0,0), bgcolor=(1,1,1))
         self.engine = mlab.get_engine()
         self.engine.start()
@@ -35,13 +36,15 @@ class CrystalStructure:
 
         return radii, euler_angles
 
+    def show_figure(self):
+
+        mlab.show()
+
     def save_figure(self, filename):
 
         mlab.savefig(filename, figure=self.fig)
 
-    def view_direction(self, u, v, w):
-
-        A = self.A
+    def view_direction(self, A, u, v, w):
 
         x, y, z = np.dot(A, [u,v,w])
 
@@ -52,10 +55,7 @@ class CrystalStructure:
         mlab.view(azimuth=phi, elevation=theta, distance=None, focalpoint=None,
                   roll=None, reset_roll=True, figure=self.fig)
 
-    def draw_basis_vectors(self):
-
-        A = self.A
-        a, b, c = self.a, self.b, self.c
+    def draw_basis_vectors(self, A, a, b, c):
 
         scale = np.min([a,b,c])
         offset = 0.5
@@ -101,6 +101,18 @@ class CrystalStructure:
         tube.filter.radius_factor = 0.
         mlab.pipeline.surface(tube, color=(0.0,0.0,0.0), figure=self.fig)
 
+    def atomic_radii(self, ux, uy, uz, radii, colors):
+
+        n_atm = ux.shape[0]
+
+        points = []
+        for i in range(n_atm):
+            p = mlab.points3d(ux[i], uy[i], uz[i], radii[i], color=colors[i],
+                              resolution=60, scale_factor=1, figure=self.fig)
+            points.append(p)
+
+        return points
+
     def atomic_displacement_ellipsoids(self, ux, uy, uz,
                                        Uxx, Uyy, Uzz, Uyz, Uxz, Uxy,
                                        colors, p=0.99):
@@ -142,18 +154,6 @@ class CrystalStructure:
             actor.property.representation = 'surface'
 
         self.fig.scene.disable_render = False
-
-    def atomic_radii(self, ux, uy, uz, radii, colors):
-
-        n_atm = ux.shape[0]
-
-        points = []
-        for i in range(n_atm):
-            p = mlab.points3d(ux[i], uy[i], uz[i], radii[i], color=colors[i],
-                              resolution=60, scale_factor=1, figure=self.fig)
-            points.append(p)
-
-        return points
 
     def magnetic_vectors(self, ux, uy, uz, sx, sy, sz):
 

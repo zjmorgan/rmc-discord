@@ -6,6 +6,28 @@ from disorder.material import crystal
 from disorder.material import symmetry
 
 def reciprocal(h_range, k_range, l_range, mask, B, T=np.eye(3)):
+    """
+    Reciprocal space wavevector.
+
+    Parameters
+    ----------
+    h_range, k_range, l_range : 2-tuple or 2-list
+        Extents of :math:`h`, :math:`k`, and :math:`l` (min, max) pairs.
+    mask : 3d array, bool
+        Reciprocal space volume mask. Shape determines bin size.
+    B : 2d array, 3x3
+        Transformation matrix from crystal to Cartesian coodinates in
+        reciprocal space.
+    T : 2d array, 3x3, optional
+        Transformation matrix from axis-aligned to nonaxis-aligned projection.
+        Default identity matrix.
+
+    Returns
+    -------
+    Qh, Qk, Ql : 1d array
+        Wavevector in Cartesian coordinates.
+
+    """
 
     nh, nk, nl = mask.shape[0], mask.shape[1], mask.shape[2]
 
@@ -21,6 +43,24 @@ def reciprocal(h_range, k_range, l_range, mask, B, T=np.eye(3)):
     return Qh[~mask], Qk[~mask], Ql[~mask]
 
 def cell(nu, nv, nw, A):
+    """
+    Supercell lattice points.
+
+    Parameters
+    ----------
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
+    A : 2d array, 3x3
+        Transformation matrix from crystal to Cartesian coodinates in
+        real space.
+
+    Returns
+    -------
+    ix, iy, iz : 1d array
+        Lattice points in Cartesian coordinates.
+
+    """
 
     i, j, k = np.meshgrid(np.arange(nu),
                           np.arange(nv),
@@ -31,16 +71,51 @@ def cell(nu, nv, nw, A):
     return ix.flatten(), iy.flatten(), iz.flatten()
 
 def real(ux, uy, uz, ix, iy, iz, atm):
+    """
+    Real space spatial vectors.
+
+    Parameters
+    ----------
+    ux, uy, uz : 1d array
+        Unit cell atomic coordinates in Cartesian coordiantes.
+    ix, iy, iz : 1d array
+        Supercell lattice points in Cartesian coordinates.
+    atm : 1d array, str
+        Unit cell atomic, ions, or isotopes.
+
+    Returns
+    -------
+    rx, ry, rz : 1d array
+        Spatial vector in Cartesian coordinates.
+    atms : 1d array, str
+        Supercell atomic, ions, or isotopes.
+
+    """
 
     rx = (ix[:,np.newaxis]+ux).flatten()
     ry = (iy[:,np.newaxis]+uy).flatten()
     rz = (iz[:,np.newaxis]+uz).flatten()
 
-    ion = np.tile(atm, ix.shape[0])
+    ions = np.tile(atm, ix.shape[0])
 
-    return rx, ry, rz, ion
+    return rx, ry, rz, ions
 
 def factor(nu, nv, nw):
+    """
+    Phase factor for discrete Fourier Transform.
+
+    Parameters
+    ----------
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
+
+    Returns
+    -------
+    pf : 1d array
+        Spatial vector in Cartesian coordinates.
+
+    """
 
     ku = 2*np.pi*np.fft.fftfreq(nu)
     kv = 2*np.pi*np.fft.fftfreq(nv)
@@ -59,25 +134,54 @@ def factor(nu, nv, nw):
     return pf.flatten()
 
 def unit(vx, vy, vz):
+    """
+    Unit vectors and magnitude.
+
+    Parameters
+    ----------
+    vx, vy, vz : 1d array
+        Vector components in Cartesian coordinates.
+
+    Returns
+    -------
+    nx, ny, nz : 1d array
+        Unit vector.
+    v : 1d array
+        Scalar magnitude.
+
+    """
 
     v = np.sqrt(vx**2+vy**2+vz**2)
 
     mask = np.isclose(v, 0, rtol=1e-4)
 
-    if (np.sum(mask) > 0):
-        n = np.argwhere(mask)
-        v[n] = 1
+    n = np.argwhere(mask)
+    v[n] = 1
 
-        vx, vy, vz = vx/v, vy/v, vz/v
-        vx[n], vy[n], vz[n] = 0, 0, 0
+    nx, ny, nz = vx/v, vy/v, vz/v
+    nx[n], ny[n], nz[n] = 0, 0, 0
 
-        v[n] = 0
-    else:
-        vx, vy, vz = vx/v, vy/v, vz/v
+    v[n] = 0
 
-    return vx, vy, vz, v
+    return nx, ny, nz, v
 
 def indices(mask):
+    """
+    Masked and unmasked indices.
+
+    Parameters
+    ----------
+    mask : 1d array, bool
+        Mask array.
+
+    Returns
+    -------
+    i_mask : 1d array, int
+        Indices of the masked values.
+    i_unmask : 1d array, int
+        Indices of the unmask values.
+
+    """
 
     i_mask = np.arange(mask.size)[mask.flatten()]
 
@@ -85,7 +189,25 @@ def indices(mask):
 
     return i_mask, i_unmask
 
-def prefactors(scattering_length, phase_factor, occupancy, primitive=None):
+def prefactors(scattering_length, phase_factor, occupancy):
+    """
+    Scattering prefactors.
+
+    Parameters
+    ----------
+    scattering_length : 1d array
+        Scattering length or form factors.
+    phase_factor : 1d array
+        Phase factors
+    occupancy : 1d array
+        Unit cell occupancies.
+
+    Returns
+    -------
+    factors : 1d array
+        Constant prefactors.
+
+    """
 
     n_atm = occupancy.shape[0]
 
@@ -96,10 +218,7 @@ def prefactors(scattering_length, phase_factor, occupancy, primitive=None):
 
     factors = scattering_length*phase_factor*occupancy
 
-    if (not primitive is None):
-        return np.sum(factors[:,primitive],axis=2).flatten()
-    else:
-        return factors.flatten()
+    return factors.flatten()
 
 def transform(delta_r, H, K, L, nu, nv, nw, n_atm):
 
@@ -170,14 +289,14 @@ def bragg(Qx, Qy, Qz, rx, ry, rz, factors, cond):
 
 def debye_waller(h_range, k_range, l_range, nh, nk, nl,
                  U11, U22, U33, U23, U13, U12,
-                 a_, b_, c_, T=np.eye(3)):
+                 a_, b_, c_, W=np.eye(3)):
 
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh),
                              np.linspace(k_range[0],k_range[1],nk),
                              np.linspace(l_range[0],l_range[1],nl),
                              indexing='ij')
 
-    h, k, l = crystal.transform(h_, k_, l_, T)
+    h, k, l = crystal.transform(h_, k_, l_, W)
 
     h = h.flatten()
     k = k.flatten()
@@ -422,7 +541,7 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
 
     for i in range(n_symops):
 
-        h, k, l = symmetry.bragg(h_, k_, l_, sym, i)
+        h, k, l = symmetry.miller(h_, k_, l_, sym, i)
 
         ops[0,:,i], ops[1,:,i], ops[2,:,i] = h, k, l
 
