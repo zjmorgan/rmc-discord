@@ -11,7 +11,6 @@ class CrystalStructure:
 
     def __init__(self):
 
-        mlab.options.offscreen = True
         self.fig = mlab.figure(fgcolor=(0,0,0), bgcolor=(1,1,1))
         self.engine = mlab.get_engine()
         self.engine.start()

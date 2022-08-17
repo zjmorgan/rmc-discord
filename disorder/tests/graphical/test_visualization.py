@@ -15,8 +15,10 @@ from disorder.material import tables
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
 
-#path = os.environ['PATH']
-#os.environ["PATH"] = 'C:\Program Files (x86)\VTK\bin,'+path
+os.environ['VTK_USE_OFFSCREEN'] = 'ON'
+os.environ['ETS_TOOLKIT'] = 'null'
+
+from mayavi import mlab
 
 class test_visualization(unittest.TestCase):
 
@@ -83,6 +85,8 @@ class test_visualization(unittest.TestCase):
         ucx, ucy, ucz = np.dot(A, [uc,vc,wc])
 
         filename = 'test_figure.png'
+
+        mlab.options.offscreen = True
 
         cs = CrystalStructure()
         cs.draw_cell_edges(ucx, ucy, ucz)
