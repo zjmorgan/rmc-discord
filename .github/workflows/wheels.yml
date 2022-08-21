@@ -20,7 +20,7 @@ jobs:
            CIBW_ARCHS: auto64
            CIBW_SKIP: pp* cp310-* *musllinux*
            CIBW_BEFORE_BUILD: pip install numpy cython
-           CIBW_BEFORE_ALL_LINUX: yum -y install xvfb
+           CIBW_BEFORE_ALL_LINUX: yum -y install xorg-x11-server-Xvfb
            CIBW_BEFORE_ALL_MACOS: brew install llvm libomp
            CIBW_ENVIRONMENT: QT_QPA_PLATFORM=offscreen
                              OMP_NUM_THREADS=1

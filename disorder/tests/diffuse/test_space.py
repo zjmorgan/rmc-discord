@@ -47,11 +47,11 @@ class test_space(unittest.TestCase):
 
         np.testing.assert_array_almost_equal(d, 2*np.pi/Q)
 
-        T = np.array([[-1,1,0],[1,1,0],[0,0,1]])
+        W = np.array([[-1,1,0],[1,1,0],[0,0,1]])
 
-        Qh, Qk, Ql = space.reciprocal(h_range, k_range, l_range, mask, B, T=T)
+        Qh, Qk, Ql = space.reciprocal(h_range, k_range, l_range, mask, B, W=W)
 
-        h, k, l = np.dot(T, np.array([h_[~mask], k_[~mask], l_[~mask]]))
+        h, k, l = np.dot(W, np.array([h_[~mask], k_[~mask], l_[~mask]]))
 
         d = crystal.d(a, b, c, alpha, beta, gamma, h, k, l)
 
@@ -609,10 +609,10 @@ class test_space(unittest.TestCase):
 
         self.assertEqual(symops, u'x,y,z')
 
-        T = np.array([[1,-1,0],[1,1,0],[0,0,1]])
+        W = np.array([[1,-1,0],[1,1,0],[0,0,1]])
 
         mapping_params = space.mapping(h_range, k_range, l_range,
-                                       nh, nk, nl, nu, nv, nw, T=T)
+                                       nh, nk, nl, nu, nv, nw, W=W)
 
         h, k, l, H, K, L, index, reverses, symops = mapping_params
 
@@ -790,7 +790,7 @@ class test_space(unittest.TestCase):
 
         nu, nv, nw = 8, 4, 10
 
-        # T = np.array([[1,-1,0],[1,1,0],[0,0,1]])
+        # W = np.array([[1,-1,0],[1,1,0],[0,0,1]])
 
         reduced_params = space.reduced(h_range, k_range, l_range,
                                        nh, nk, nl, nu, nv, nw)

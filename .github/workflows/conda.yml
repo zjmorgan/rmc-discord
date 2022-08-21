@@ -48,9 +48,7 @@ jobs:
         conda install cython
         ulimit -c unlimited
         pip install -e .
-        Xvfb :1 -screen 0 1280x1024x24 -auth localhost
-        export DISPLAY=:1
-        python -m pytest --pyargs disorder
+        python -m pytest --pyargs disorder --ignore-glob *vis*.py
     - name: Store artifacts
       uses: actions/upload-artifact@v2
       with:
