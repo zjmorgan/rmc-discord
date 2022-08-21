@@ -36,13 +36,14 @@ jobs:
         OMP_NUM_THREADS: 1
         QT_QPA_PLATFORM: offscreen
       run: |
-        sudo apt-get install libxkbcommon-x11-0
-        sudo apt-get install libxcb-icccm4
-        sudo apt-get install libxcb-image0
-        sudo apt-get install libxcb-keysyms1
-        sudo apt-get install libxcb-randr0
-        sudo apt-get install libxcb-render-util0
-        sudo apt-get install libxcb-xinerama0
+        sudo apt install xvfb
+        sudo apt install libxkbcommon-x11-0
+        sudo apt install libxcb-icccm4
+        sudo apt install libxcb-image0
+        sudo apt install libxcb-keysyms1
+        sudo apt install libxcb-randr0
+        sudo apt install libxcb-render-util0
+        sudo apt install libxcb-xinerama0
         conda install pytest
         conda install cython
         ulimit -c unlimited

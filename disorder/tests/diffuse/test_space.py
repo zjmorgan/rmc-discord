@@ -790,7 +790,7 @@ class test_space(unittest.TestCase):
 
         nu, nv, nw = 8, 4, 10
 
-        T = np.array([[1,-1,0],[1,1,0],[0,0,1]])
+        # T = np.array([[1,-1,0],[1,1,0],[0,0,1]])
 
         reduced_params = space.reduced(h_range, k_range, l_range,
                                        nh, nk, nl, nu, nv, nw)

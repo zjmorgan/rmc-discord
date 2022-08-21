@@ -5,7 +5,7 @@ import numpy as np
 from disorder.material import crystal
 from disorder.material import symmetry
 
-def reciprocal(h_range, k_range, l_range, mask, B, T=np.eye(3)):
+def reciprocal(h_range, k_range, l_range, mask, B, W=np.eye(3)):
     """
     Reciprocal space wavevector.
 
@@ -18,9 +18,9 @@ def reciprocal(h_range, k_range, l_range, mask, B, T=np.eye(3)):
     B : 2d array, 3x3
         Transformation matrix from crystal to Cartesian coodinates in
         reciprocal space.
-    T : 2d array, 3x3, optional
+    W : 2d array, 3x3, optional
         Transformation matrix from axis-aligned to nonaxis-aligned projection.
-        Default identity matrix.
+        Default is the identity matrix.
 
     Returns
     -------
@@ -36,7 +36,7 @@ def reciprocal(h_range, k_range, l_range, mask, B, T=np.eye(3)):
                               np.linspace(l_range[0],l_range[1],nl),
                               indexing='ij')
 
-    h, k, l = crystal.transform(h_, k_, l_, T)
+    h, k, l = crystal.transform(h_, k_, l_, W)
 
     Qh, Qk, Ql = crystal.vector(h, k, l, B)
 
@@ -221,6 +221,30 @@ def prefactors(scattering_length, phase_factor, occupancy):
     return factors.flatten()
 
 def transform(delta_r, H, K, L, nu, nv, nw, n_atm):
+    """
+    Discrete Fourier transform of occupancy parameter.
+
+    Parameters
+    ----------
+    delta_r : 1d array
+         Occupancy parameter.
+    H, K, L : 1d array, int
+        Supercell index along the :math:`a^*`, :math:`b^*`, and
+        :math:`c^*`-axis in reciprocal space.
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
+    n_atm : int
+        Number of atoms in the unit cell.
+
+    Returns
+    -------
+    delta_k : 1d array
+        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+    i_dft : 1d array, int
+        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+
+    """
 
     delta_r = delta_r.reshape(nu,nv,nw,n_atm)
 
@@ -235,6 +259,24 @@ def transform(delta_r, H, K, L, nu, nv, nw, n_atm):
     return delta_k.flatten(), i_dft
 
 def intensity(delta_k, i_dft, factors):
+    """
+    Average structural scattering intensity.
+
+    Parameters
+    ----------
+    delta_k : 1d array
+        Fourier transform of occupancy parameter.
+    i_dft : 1d array, int
+        Array indices of Fourier transform corresponding to reciprocal space.
+    factors : 1d array
+        Prefactors of form factors, phase factors, and composition factors.
+
+    Returns
+    -------
+    I : 1d array
+        Array has a flattened shape of size ``i_dft.shape[0]``.
+
+    """
 
     n_hkl = i_dft.shape[0]
 
@@ -255,6 +297,27 @@ def intensity(delta_k, i_dft, factors):
     return I/(n_uvw*n_atm)
 
 def structure(delta_k, i_dft, factors):
+    """
+    Partial average structure factor.
+
+    Parameters
+    ----------
+    delta_k : 1d array
+        Fourier transform of occupancy parameter.
+    i_dft : 1d array, int
+        Array indices of Fourier transform corresponding to reciprocal space.
+    factors : 1d array
+        Prefactors of scattering lengths, phase factors, and occupancies.
+
+    Returns
+    -------
+    F : 1d array
+        Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``.
+    prod : 1d array
+        Array has a flattened shape of size
+        ``coeffs.shape[0]*i_dft.shape[0]*n_atm``.
+
+    """
 
     n_hkl = i_dft.shape[0]
 
@@ -290,6 +353,29 @@ def bragg(Qx, Qy, Qz, rx, ry, rz, factors, cond):
 def debye_waller(h_range, k_range, l_range, nh, nk, nl,
                  U11, U22, U33, U23, U13, U12,
                  a_, b_, c_, W=np.eye(3)):
+    """
+    Debye-Waller factor.
+
+    Parameters
+    ----------
+    h_range, k_range, l_range : 2-tuple or 2-list
+        Extents of :math:`h`, :math:`k`, and :math:`l` (min, max) pairs
+    nh, nk, nl : int
+        Number of grid points along the axes of the reciprocal space volume.
+    U11, U22, U33, U23, U13, U12 : 1d array
+        Atomic displacement parameters in crystal axis system.
+    a_, b_, c_ : float
+        Reciprocal lattice costants :math:`a^*`, :math:`b^*` and :math:`c^*`.
+    W : 2d array, 3x3, optional
+        Transformation matrix from axis-aligned to nonaxis-aligned projection.
+        Default is the identity matrix.
+
+    Returns
+    -------
+    T : 1d arry
+        Temperature factor.
+
+    """
 
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh),
                              np.linspace(k_range[0],k_range[1],nk),
@@ -319,6 +405,42 @@ def debye_waller(h_range, k_range, l_range, nh, nk, nl,
     return T.flatten()
 
 def condition(H, K, L, nu=1, nv=1, nw=1, centering=None):
+    """
+    Reflection condition.
+
+    Parameters
+    ----------
+    H, K, L : 1d array, int
+        Supercell index along the :math:`a^*`, :math:`b^*`, and
+        :math:`c^*`-axis in reciprocal space.
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell. Default is
+        `1`.
+    centering : str
+        Lattice centering. The default is `None`.
+
+    ====== ======================
+    Symbol Reflection condition
+    ====== ======================
+    P      Primitive
+    I      Body-centered
+    F      Face-centered
+    R(obv) Rhombohedral, obverse
+    R(rev) Rhombohedral, reverse
+    C      C-centered
+    A      A-centered
+    B      B-centered
+    ====== ======================
+
+    Returns
+    -------
+    h, k, l : 1d array
+        Supercell index where reflection condition is met.
+    cond : 1d array, bool
+        Array indices where reflection condition is met.
+
+    """
 
     iH = np.mod(H, nu)
     iK = np.mod(K, nv)
@@ -358,7 +480,39 @@ def condition(H, K, L, nu=1, nv=1, nw=1, centering=None):
     return H[cond], K[cond], L[cond], cond
 
 def mapping(h_range, k_range, l_range, nh, nk, nl,
-            nu, nv, nw, T=np.eye(3), laue=None):
+            nu, nv, nw, W=np.eye(3), laue=None):
+    """
+    Reciprocal space mapping.
+
+    Parameters
+    ----------
+    h_range, k_range, l_range : 2-tuple or 2-list
+        Extents of :math:`h`, :math:`k`, and :math:`l` (min, max) pairs
+    nh, nk, nl : int
+        Number of grid points along the axes of the reciprocal space volume.
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
+    W : 2d array, 3x3, optional
+        Transformation matrix from axis-aligned to nonaxis-aligned projection.
+        Default is the identity matrix.
+    laue : str
+        Laue class to use for symmetrization. Default is `None`.
+
+    Returns
+    -------
+    h, k, l : 1d array
+        Reciprocal space lattice units
+    H, K, L : 1d array, int
+        Supercell index along the :math:`a^*`, :math:`b^*`, and
+        :math:`c^*`-axis in reciprocal space.
+    index : 1d array, int
+        Array
+    reverses : 1d array, int
+        Array
+    symops :
+
+    """
 
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh),
                              np.linspace(k_range[0],k_range[1],nk),
@@ -369,7 +523,7 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
     k_ = k_.flatten()
     l_ = l_.flatten()
 
-    h, k, l = crystal.transform(h_, k_, l_, T)
+    h, k, l = crystal.transform(h_, k_, l_, W)
 
     H = np.round(h*nu).astype(int)
     K = np.round(k*nv).astype(int)
