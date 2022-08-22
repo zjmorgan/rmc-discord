@@ -24,6 +24,7 @@ os.environ['VTK_USE_OFFSCREEN'] = 'ON'
 os.environ['ETS_TOOLKIT'] = 'null'
 
 from mayavi import mlab
+from mayavi.api import OffScreenEngine
 
 class test_visualization(unittest.TestCase):
 
@@ -92,6 +93,12 @@ class test_visualization(unittest.TestCase):
         filename = 'test_figure.png'
 
         mlab.options.offscreen = True
+        print(mlab.options.backend)
+        print(mlab.options.offscreen)
+
+        e = OffScreenEngine()
+        e.start()
+        mlab.set_engine(e)
 
         cs = CrystalStructure()
         cs.draw_cell_edges(ucx, ucy, ucz)
