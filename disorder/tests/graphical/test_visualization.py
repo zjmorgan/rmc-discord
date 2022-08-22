@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 
-import os
-
-os.environ['ETS_TOOLKIT'] = 'null'
-os.environ['QT_API'] = 'pyqt5'
-
 import unittest
 
 import numpy as np
@@ -20,11 +15,10 @@ from disorder.material import tables
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
 
-os.environ['VTK_USE_OFFSCREEN'] = 'ON'
 os.environ['ETS_TOOLKIT'] = 'null'
+os.environ['QT_API'] = 'pyqt5'
 
 from mayavi import mlab
-from mayavi.api import OffScreenEngine
 
 class test_visualization(unittest.TestCase):
 
@@ -93,12 +87,6 @@ class test_visualization(unittest.TestCase):
         filename = 'test_figure.png'
 
         mlab.options.offscreen = True
-        print(mlab.options.backend)
-        print(mlab.options.offscreen)
-
-        e = OffScreenEngine()
-        e.start()
-        mlab.set_engine(e)
 
         cs = CrystalStructure()
         cs.draw_cell_edges(ucx, ucy, ucz)
