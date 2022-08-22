@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+import os
+
+os.environ['ETS_TOOLKIT'] = 'null'
+os.environ['QT_API'] = 'pyqt5'
+
 import unittest
 
 import numpy as np
