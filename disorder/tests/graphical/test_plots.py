@@ -54,8 +54,8 @@ class test_plots(unittest.TestCase):
 
         line_plot.show_legend()
 
-        np.testing.assert_array_equal(line_plot.p[0].lines[0].get_ydata(), ys)
-        np.testing.assert_array_equal(line_plot.p[1].lines[0].get_ydata(), yc)
+        np.testing.assert_array_equal(line_plot.pl[0].lines[0].get_ydata(), ys)
+        np.testing.assert_array_equal(line_plot.pl[1].lines[0].get_ydata(), yc)
 
         x, ys = line_plot.get_data(0)
         x, yc = line_plot.get_data(1)

@@ -31,6 +31,41 @@ matplotlib.rcParams['legend.loc'] = 'best'
 matplotlib.rcParams['legend.fontsize'] = 'medium'
 
 class Plot():
+    """
+    Figure for producing a general plot.
+
+    Parameters
+    ----------
+    canvas : canvas
+        Canvas for embedding in GUI.
+
+    Attributes
+    ----------
+    canvas : canvas
+        Qt canvas.
+    fig : figure
+        Canvas figure.
+    ax : axis
+        Figure axis.
+
+    Methods
+    -------
+    get_aspect()
+        Apect ratio of figure.
+    set_aspect()
+        Update apect ratio of figure.
+    set_labels()
+        Update axis titles and labels.
+    clear_canvas()
+        Clear canvas and remove axis.
+    draw_canvas()
+        Draw canvas.
+    tight_layout()
+        Use a tight layout for figure.
+    save_figure()
+        Save figure to file.
+
+    """
 
     def __init__(self, canvas):
 
@@ -40,6 +75,15 @@ class Plot():
         self.ax.minorticks_on()
 
     def get_aspect(self):
+        """
+        Apect ratio of figure.
+
+        Returns
+        -------
+        value : float
+            Ratio of height to width.
+
+        """
 
         width, height = self.ax.get_figure().get_size_inches()
         _, _, w, h = self.ax.get_position().bounds
@@ -52,11 +96,43 @@ class Plot():
 
         return disp_ratio/data_ratio
 
-    def save_figure(self, filename):
+    def set_aspect(self, value):
+        """
+        Update apect ratio of figure.
 
-        self.fig.savefig(filename, bbox_inches='tight', transparent=False)
+        Parameters
+        ----------
+        value : float
+            Ratio of height to width.
+
+        """
+
+        self.ax.set_aspect(value)
+
+    def set_labels(self, title='', xlabel='', ylabel=''):
+        """
+        Update axis titles and labels.
+
+        Parameters
+        ----------
+        title : str
+            Title of the figure. Default is ``''``.
+        xlabel : str
+            Label for x-axis. Default is ``''``.
+        ylabel : str
+            Label for y-axis. Default is ``''``.
+
+        """
+
+        self.ax.set_title(title)
+        self.ax.set_xlabel(xlabel)
+        self.ax.set_ylabel(ylabel)
 
     def clear_canvas(self):
+        """
+        Clear canvas and remove axis.
+
+        """
 
         self.ax.remove()
         self.fig.clear()
@@ -64,33 +140,92 @@ class Plot():
         self.ax.minorticks_on()
 
     def draw_canvas(self):
+        """
+        Draw canvas.
+
+        """
 
         self.canvas.draw_idle()
 
     def tight_layout(self, pad=3.24):
+        """
+        Use a tight layout for figure.
+
+        Parameters
+        ----------
+        pad : float, optional
+            Pad size. Default is ``3.24``.
+
+        """
 
         self.fig.tight_layout(pad=pad)
 
-    def set_labels(self, title='', xlabel='', ylabel=''):
+    def save_figure(self, filename):
+        """
+        Save figure to file.
 
-        self.ax.set_title(title)
-        self.ax.set_xlabel(xlabel)
-        self.ax.set_ylabel(ylabel)
+        Parameters
+        ----------
+        filename : str
+            Name of file. Allowed extensions are ``*.pdf`` and ``*.png``.
 
-    def set_aspect(self, value):
+        """
 
-        self.ax.set_aspect(value)
+        self.fig.savefig(filename, bbox_inches='tight', transparent=False)
 
 class Line(Plot):
+    """
+    Figure for producing a line plot.
+
+    Parameters
+    ----------
+    canvas : canvas
+        Canvas for embedding in GUI.
+
+    Attributes
+    ----------
+    pl : list
+        Line plots.
+    colors : color cycler
+        Cycle of colors for plotting.
+
+    Methods
+    -------
+    set_labels()
+        Set axis titles and labels.
+    clear_canvas()
+        Clear canvas and remove axis.
+    clear_lines()
+        Clear line plots.
+    set_normalization()
+        Update data normalization.
+    set_limits()
+        Update data limits.
+    reset_view()
+        Autoscale data.
+    update_data()
+        Replace indexed data.
+    get_data()
+        Indexed data.
+    plot_data()
+        Plot data sequentially.
+    show_legend()
+        Display legend.
+    draw_horizontal()
+        Draw horizontal line.
+    use_scientific()
+        Use scientific notation.
+
+    """
 
     def __init__(self, canvas):
 
         super(Line, self).__init__(canvas)
 
-        self.p = []
+        self.pl = []
 
-        self.hl = None
-        self.twin_ax = None
+        self.__hl = None
+        self.__twin_ax = None
 
         self.ax.spines['top'].set_visible(False)
         self.ax.spines['right'].set_visible(False)
@@ -103,18 +238,37 @@ class Line(Plot):
         if not twin:
             return self.ax
         else:
-            if self.twin_ax is None:
-                self.twin_ax = self.ax.twinx()
-            return self.twin_ax
+            if self.__twin_ax is None:
+                self.__twin_ax = self.ax.twinx()
+            return self.__twin_ax
 
     def set_labels(self, title='', xlabel='', ylabel='', twin_ylabel=''):
+        """
+        Update axis titles and labels.
+
+        Parameters
+        ----------
+        title : str
+            Title of the figure. Default is ``''``.
+        xlabel : str
+            Label for x-axis. Default is ``''``.
+        ylabel : str
+            Label for y-axis. Default is ``''``.
+        twin_ylabel : str
+            Label for twin y-axis. Default is ``''``.
+
+        """
 
         super().set_labels(title=title, xlabel=xlabel, ylabel=ylabel)
 
-        if self.twin_ax:
-            self.twin_ax.set_ylabel(twin_ylabel)
+        if self.__twin_ax:
+            self.__twin_ax.set_ylabel(twin_ylabel)
 
     def clear_canvas(self):
+        """
+        Clear canvas and remove axis.
+
+        """
 
         super().clear_canvas()
         self.clear_lines()
@@ -123,18 +277,22 @@ class Line(Plot):
         self.ax.spines['right'].set_visible(False)
 
     def clear_lines(self):
+        """
+        Clear line plots.
 
-        if self.p:
-            for p in self.p:
+        """
+
+        if self.pl:
+            for p in self.pl:
                 p.lines[0].remove()
-            self.p = []
+            self.pl = []
 
-        if self.hl:
-            self.hl.remove()
-            self.hl = None
-        if self.twin_ax:
-            self.twin_ax.remove()
-            self.twin_ax = None
+        if self.__hl:
+            self.__hl.remove()
+            self.__hl = None
+        if self.__twin_ax:
+            self.__twin_ax.remove()
+            self.__twin_ax = None
 
         if self.ax.get_legend():
             self.ax.get_legend().remove()
@@ -144,6 +302,17 @@ class Line(Plot):
         self.colors = cycle(prop_cycle.by_key()['color'])
 
     def set_normalization(self, norm='linear', twin=False):
+        """
+        Update data normalization.
+
+        Parameters
+        ----------
+        norm : str, optional
+            Data normalization. The default is ``'linear'``.
+        twin : bool, optional
+            Apply to twin axis. The default is ``False``.
+
+        """
 
         ax = self.__get_axis(twin)
 
@@ -165,6 +334,19 @@ class Line(Plot):
             ax.yaxis.set_minor_locator(sym_log)
 
     def set_limits(self, vmin=None, vmax=None, twin=False):
+        """
+        Update data limits.
+
+        Parameters
+        ----------
+        vmin : float, optional
+            Minimum ordinate value. The default is ``None``.
+        vmax : float, optional
+            Maximum ordinate value. The default is ``None``.
+        twin : bool, optional
+            Apply to twin axis. The default is ``False``.
+
+        """
 
         xmin, xmax, ymin, ymax = self.ax.axis()
 
@@ -187,6 +369,15 @@ class Line(Plot):
         ax.set_ylim([ymin,ymax])
 
     def reset_view(self, twin=False):
+        """
+        Autoscale data. Limits and scale are reset.
+
+        Parameters
+        ----------
+        twin : bool, optional
+            Apply to twin axis. The default is ``False``.
+
+        """
 
         ax = self.__get_axis(twin)
 
@@ -194,14 +385,62 @@ class Line(Plot):
         ax.autoscale_view()
 
     def update_data(self, x, y, i=0):
+        """
+        Replace indexed data on existing plot.
 
-        self.p[i].lines[0].set_data(x, y)
+        Parameters
+        ----------
+        x : 1d array or list
+            Data correpsonding to abscissa.
+        y : 1d array or list
+            Data correpsonding to ordinate.
+        i : int, optional
+            Index of dataset. The default is ``0``.
+
+        """
+
+        self.pl[i].lines[0].set_data(x, y)
 
     def get_data(self, i=0):
+        """
+        Indexed data.
 
-        return self.p[i].lines[0].get_xydata().T
+        Parameters
+        ----------
+        i : int, optional
+            Index of dataset. The default is ``0``.
+
+        Returns
+        -------
+        x : 1d array
+            Data correpsonding to abscissa.
+        y : 1d array
+            Data correpsonding to ordinate.
+
+        """
+
+        return self.pl[i].lines[0].get_xydata().T
 
     def plot_data(self, x, y, yerr=None, marker='o', label='', twin=False):
+        """
+        Plot data sequentially.
+
+        Parameters
+        ----------
+        x : 1d array or list
+            Data correpsonding to abscissa.
+        y : 1d array or list
+            Data correpsonding to ordinate.
+        yerr : 1d array or list, optional
+            Error correpsonding to ordinate. The default is ``None``.
+        marker : str, optional
+            Marker symbol. The default is ``'o'``.
+        label : str, optional
+            Label for legend. The default is ``''``.
+        twin : bool, optional
+            Plot on twin axis. The default is ``False``.
+
+        """
 
         ax = self.__get_axis(twin)
 
@@ -210,20 +449,37 @@ class Line(Plot):
         err = ax.errorbar(x, y, yerr=yerr, fmt=marker, label=label,
                           color=color, ecolor=color, clip_on=False)
 
-        self.p.append(err)
+        self.pl.append(err)
 
     def show_legend(self):
+        """
+        Display legend.
 
-        handles = [p for p in self.p if p.get_label() != '']
+        """
+
+        handles = [p for p in self.pl if p.get_label() != '']
         labels = [p.get_label() for p in handles]
         self.ax.legend(handles, labels)
 
     def draw_horizontal(self):
+        """
+        Draw horizontal line at zero ordinate.
 
-        self.hl = self.ax.axhline(y=0, xmin=0, xmax=1, color='k', \
-                                  linestyle='-', linewidth=0.8)
+        """
+
+        self.__hl = self.ax.axhline(y=0, xmin=0, xmax=1, color='k', \
+                                    linestyle='-', linewidth=0.8)
 
     def use_scientific(self, twin=False):
+        """
+        Use scientific notation.
+
+        Parameters
+        ----------
+        twin : bool, optional
+            Apply to twin axis. The default is ``False``.
+
+        """
 
         ax = self.__get_axis(twin)
 
@@ -453,7 +709,7 @@ class Scatter(Plot):
 
         super(Scatter, self).__init__(canvas)
 
-        self.s = None
+        self.sc = None
         self.__color_limits()
 
     def __color_limits(self, category='sequential'):
@@ -477,11 +733,11 @@ class Scatter(Plot):
             self.norm = colors.SymLogNorm(linthresh=0.1, linscale=0.9, base=10,
                                           vmin=vmin, vmax=vmax)
 
-        self.s.set_norm(self.norm)
+        self.sc.set_norm(self.norm)
 
-        if self.s.colorbar is not None:
+        if self.sc.colorbar is not None:
 
-            orientation = self.s.colorbar.orientation
+            orientation = self.sc.colorbar.orientation
 
             self.remove_colorbar()
             self.create_colorbar(orientation, norm)
@@ -498,9 +754,9 @@ class Scatter(Plot):
 
     def update_normalization(self, norm='linear'):
 
-        if self.s is not None:
+        if self.sc is not None:
 
-            vmin, vmax = self.s.get_clim()
+            vmin, vmax = self.sc.get_clim()
 
             self.set_normalization(vmin, vmax, norm)
 
@@ -508,54 +764,54 @@ class Scatter(Plot):
 
         self.__color_limits(category)
 
-        if self.s is not None:
+        if self.sc is not None:
 
-            self.s.set_cmap(self.cmap)
+            self.sc.set_cmap(self.cmap)
 
     def create_colorbar(self, orientation='vertical', norm='linear'):
 
-        if self.s is not None:
+        if self.sc is not None:
 
             self.remove_colorbar()
 
             pad = 0.05 if orientation.lower() == 'vertical' else 0.2
 
-            self.cb = self.fig.colorbar(self.s, ax=self.ax,
+            self.cb = self.fig.colorbar(self.sc, ax=self.ax,
                                         orientation=orientation, pad=pad)
 
             self.cb.ax.minorticks_on()
 
     def remove_colorbar(self):
 
-        if self.s.colorbar is not None:
+        if self.sc.colorbar is not None:
 
-            self.s.colorbar.remove()
+            self.sc.colorbar.remove()
 
     def set_colorbar_label(self, label):
 
-        if self.s.colorbar is not None:
+        if self.sc.colorbar is not None:
 
-            self.s.colorbar.set_label(label)
+            self.sc.colorbar.set_label(label)
 
     def reset_colorbar_limits(self):
 
-        if self.s is not None:
+        if self.sc is not None:
 
-            self.s.autoscale()
+            self.sc.autoscale()
 
     def update_data(self, c, vmin, vmax):
 
-        if self.s is not None:
+        if self.sc is not None:
 
-            self.s.set_array(c)
-            self.s.set_clim(vmin=vmin, vmax=vmax)
+            self.sc.set_array(c)
+            self.sc.set_clim(vmin=vmin, vmax=vmax)
 
     def get_data(self):
 
-        if self.s is not None:
+        if self.sc is not None:
 
-            return self.s.get_array()
+            return self.sc.get_array()
 
     def plot_data(self, x, y, c):
 
-        self.s = self.ax.scatter(x, y, c=c, cmap=self.cmap)
+        self.sc = self.ax.scatter(x, y, c=c, cmap=self.cmap)

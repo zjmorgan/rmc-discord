@@ -365,7 +365,7 @@ class UnitCell:
         Returns
         -------
         filename : str
-            Name of filename excluding path.
+            Name of file excluding path.
 
         """
 
