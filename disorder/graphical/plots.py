@@ -32,7 +32,7 @@ matplotlib.rcParams['legend.fontsize'] = 'medium'
 
 class Plot():
     """
-    Figure for producing a general plot.
+    General plot.
 
     Parameters
     ----------
@@ -175,7 +175,7 @@ class Plot():
 
 class Line(Plot):
     """
-    Figure for producing a line plot.
+    Line plot.
 
     Parameters
     ----------
@@ -192,7 +192,7 @@ class Line(Plot):
     Methods
     -------
     set_labels()
-        Set axis titles and labels.
+        Update axis titles and labels.
     clear_canvas()
         Clear canvas and remove axis.
     clear_lines()
@@ -308,7 +308,8 @@ class Line(Plot):
         Parameters
         ----------
         norm : str, optional
-            Data normalization. The default is ``'linear'``.
+            Data normalization. Options are ``'linear'``, ``'logarithmic'``, or
+            ``'symlog'``. The default is ``'linear'``.
         twin : bool, optional
             Apply to twin axis. The default is ``False``.
 
@@ -487,6 +488,53 @@ class Line(Plot):
         ax.ticklabel_format(style='sci', scilimits=(0,0), axis='y')
 
 class HeatMap(Plot):
+    """
+    Intensity heat map plot.
+
+    Parameters
+    ----------
+    canvas : canvas
+        Canvas for embedding in GUI.
+
+    Attributes
+    ----------
+    im : image
+        Image plot.
+    norm : normalization
+        Color normalization.
+    cmap : colormap
+        Colormap.
+
+    Methods
+    -------
+    set_normalization()
+        Update data normalization.
+    update_normalization()
+        Replace normalization.
+    update_colormap()
+        Replace colormap.
+    create_colorbar()
+        Create colorbar.
+    remove_colorbar()
+        Remove colorbar.
+    set_colorbar_label()
+        Update colorbar label.
+    reset_color_limits()
+        Autoscale color limits.
+    update_data()
+        Replace data.
+    get_data()
+        Data.
+    plot_data()
+        Plot data.
+    transform_axes()
+        Skew axes according to a transformation matrix.
+    draw_line()
+        Draw line with specified extents.
+    add_text()
+        Add text at specified location.
+
+    """
 
     def __init__(self, canvas):
 
@@ -494,6 +542,8 @@ class HeatMap(Plot):
 
         self.im = None
         self.norm = None
+        self.cmap = None
+
         self.__color_limits()
 
     def __matrix_transform(self, matrix):
@@ -552,6 +602,20 @@ class HeatMap(Plot):
             self.cmap = plt.cm.binary
 
     def set_normalization(self, vmin, vmax, norm='linear'):
+        """
+        Update data normalization.
+
+        Parameters
+        ----------
+        vmin : float
+            Minimum data value.
+        vmax : float
+            Maximum data value.
+        norm : str, optional
+            Data normalization. Options are ``'linear'``, ``'logarithmic'``, or
+            ``'symlog'``. The default is ``'linear'``.
+
+        """
 
         if np.isclose(vmin, vmax): vmin, vmax = 1e-3, 1e+3
 
@@ -583,6 +647,16 @@ class HeatMap(Plot):
                 self.cb.update_ticks()
 
     def update_normalization(self, norm='linear'):
+        """
+        Replace normalization.
+
+        Parameters
+        ----------
+        norm : str, optional
+            Data normalization. Options are ``'linear'``, ``'logarithmic'``, or
+            ``'symlog'``. The default is ``'linear'``.
+
+        """
 
         if self.im is not None:
 
@@ -591,6 +665,16 @@ class HeatMap(Plot):
             self.set_normalization(vmin, vmax, norm)
 
     def update_colormap(self, category='sequential'):
+        """
+        Replace colormap.
+
+        Parameters
+        ----------
+        category : str, optional
+            Update colormap. Options are ``'sequential'``, ``'diverging'``, or
+            ``'binary'``. The default is ``'sequential'``.
+
+        """
 
         self.__color_limits(category)
 
@@ -599,6 +683,19 @@ class HeatMap(Plot):
             self.im.set_cmap(self.cmap)
 
     def create_colorbar(self, orientation='vertical', norm='linear'):
+        """
+        Create colorbar.
+
+        Parameters
+        ----------
+        orientation : TYPE, optional
+            Orientation of colorbar. Either ``'vertical'`` or ``'horizontal'``.
+            The default is ``'vertical'``.
+        norm : str, optional
+            Data normalization. Options are ``'linear'``, ``'logarithmic'``, or
+            ``'symlog'``. The default is ``'linear'``.
+
+        """
 
         self.remove_colorbar()
 
@@ -610,22 +707,52 @@ class HeatMap(Plot):
         self.cb.ax.minorticks_on()
 
     def remove_colorbar(self):
+        """
+        Remove colorbar.
+
+        """
 
         if self.im.colorbar is not None:
 
             self.im.colorbar.remove()
 
     def set_colorbar_label(self, label):
+        """
+        Update colorbar label.
+
+        Parameters
+        ----------
+        label : str
+            Colorbar label.
+
+        """
 
         if self.im.colorbar is not None:
 
             self.im.colorbar.set_label(label)
 
     def reset_color_limits(self):
+        """
+        Autoscale color limits.
+
+        """
 
         self.im.autoscale()
 
     def update_data(self, data, vmin, vmax):
+        """
+        Replace data.
+
+        Parameters
+        ----------
+        data : 2d array
+            Image values.
+        vmin : float, optional
+            Minimum data value.
+        vmax : float, optional
+            Maximum data value.
+
+        """
 
         if self.im is not None:
 
@@ -633,12 +760,36 @@ class HeatMap(Plot):
             self.im.set_clim(vmin=vmin, vmax=vmax)
 
     def get_data(self):
+        """
+        Data.
+
+        Returns
+        -------
+        data : 2d array
+            Image values.
+
+        """
 
         if self.im is not None:
 
             return self.im.get_array().T
 
     def plot_data(self, data, min_x, min_y, max_x, max_y, matrix=np.eye(2)):
+        """
+        Plot data.
+
+        Parameters
+        ----------
+        data : 2d array
+            Image values.
+        min_x, min_y : float
+            Minimumx extents.
+        max_x, max_y : float
+            Maxium extents.
+        matrix : 2d array, 2x2, optional
+            Transformation matrix. The default is the identity matrix.
+
+        """
 
         size_x, size_y = data.shape[1], data.shape[0]
 
@@ -652,6 +803,15 @@ class HeatMap(Plot):
         self.ax.minorticks_on()
 
     def transform_axes(self, matrix):
+        """
+        Skew axes according to a transformation matrix.
+
+        Parameters
+        ----------
+        matrix : 2d array, 2x2
+            Transformation matrix.
+
+        """
 
         extents = self.__reverse_extents()
         transformation, scale = self.__matrix_transform(matrix)
@@ -693,6 +853,22 @@ class HeatMap(Plot):
         self.ax.add_patch(p)
 
     def draw_line(self, xlim=None, ylim=None):
+        """
+        Draw line with specified extents. If not specified, extents are over
+        the entire axis limits.
+
+        Parameters
+        ----------
+        xlim : list, optional
+            Extents along x-axis. The default is ``None``.
+        ylim : list, optional
+            Extents along y-axis. The default is ``None``.
+
+        Returns
+        -------
+        None.
+
+        """
 
         if xlim is None: xlim = self.ax.get_xlim()
         if ylim is None: ylim = self.ax.get_ylim()
@@ -700,16 +876,73 @@ class HeatMap(Plot):
         self.ax.plot(xlim, ylim, color='w')
 
     def add_text(self, x, y, s, color='w'):
+        """
+        Add text at specified location.
+
+        Parameters
+        ----------
+        x, y : float
+            Text location.
+        s : str
+            Text string.
+        color : str, optional
+            Text color. The default is ``'w'```.
+
+        """
 
         self.ax.text(x, y, s, color=color, ha='center', va='center')
 
 class Scatter(Plot):
+    """
+    Intensity heat map plot.
+
+    Parameters
+    ----------
+    canvas : canvas
+        Canvas for embedding in GUI.
+
+    Attributes
+    ----------
+    sc : scatter
+        Scatter plot.
+    norm : normalization
+        Color normalization.
+    cmap : colormap
+        Colormap.
+
+    Methods
+    -------
+    set_normalization()
+        Update data normalization.
+    update_normalization()
+        Replace normalization.
+    update_colormap()
+        Replace colormap.
+    create_colorbar()
+        Create colorbar.
+    remove_colorbar()
+        Remove colorbar.
+    set_colorbar_label()
+        Update colorbar label.
+    reset_color_limits()
+        Autoscale color limits.
+    update_data()
+        Replace data.
+    get_data()
+        Data.
+    plot_data()
+        Plot data.
+
+    """
 
     def __init__(self, canvas):
 
         super(Scatter, self).__init__(canvas)
 
         self.sc = None
+        self.norm = None
+        self.cmap = None
+
         self.__color_limits()
 
     def __color_limits(self, category='sequential'):
@@ -722,6 +955,20 @@ class Scatter(Plot):
             self.cmap = plt.cm.binary
 
     def set_normalization(self, vmin, vmax, norm='linear'):
+        """
+        Update data normalization.
+
+        Parameters
+        ----------
+        vmin : float
+            Minimum data value.
+        vmax : float
+            Maximum data value.
+        norm : str, optional
+            Data normalization. Options are ``'linear'``, ``'logarithmic'``, or
+            ``'symlog'``. The default is ``'linear'``.
+
+        """
 
         if np.isclose(vmin, vmax): vmin, vmax = 1e-3, 1e+3
 
@@ -753,6 +1000,16 @@ class Scatter(Plot):
                 self.cb.update_ticks()
 
     def update_normalization(self, norm='linear'):
+        """
+        Replace normalization.
+
+        Parameters
+        ----------
+        norm : str, optional
+            Data normalization. Options are ``'linear'``, ``'logarithmic'``, or
+            ``'symlog'``. The default is ``'linear'``.
+
+        """
 
         if self.sc is not None:
 
@@ -761,6 +1018,16 @@ class Scatter(Plot):
             self.set_normalization(vmin, vmax, norm)
 
     def update_colormap(self, category='sequential'):
+        """
+        Replace colormap.
+
+        Parameters
+        ----------
+        category : str, optional
+            Update colormap. Options are ``'sequential'``, ``'diverging'``, or
+            ``'binary'``. The default is ``'sequential'``.
+
+        """
 
         self.__color_limits(category)
 
@@ -769,6 +1036,19 @@ class Scatter(Plot):
             self.sc.set_cmap(self.cmap)
 
     def create_colorbar(self, orientation='vertical', norm='linear'):
+        """
+        Create colorbar.
+
+        Parameters
+        ----------
+        orientation : TYPE, optional
+            Orientation of colorbar. Either ``'vertical'`` or ``'horizontal'``.
+            The default is ``'vertical'``.
+        norm : str, optional
+            Data normalization. Options are ``'linear'``, ``'logarithmic'``, or
+            ``'symlog'``. The default is ``'linear'``.
+
+        """
 
         if self.sc is not None:
 
@@ -782,24 +1062,54 @@ class Scatter(Plot):
             self.cb.ax.minorticks_on()
 
     def remove_colorbar(self):
+        """
+        Remove colorbar.
+
+        """
 
         if self.sc.colorbar is not None:
 
             self.sc.colorbar.remove()
 
     def set_colorbar_label(self, label):
+        """
+        Update colorbar label.
+
+        Parameters
+        ----------
+        label : str
+            Colorbar label.
+
+        """
 
         if self.sc.colorbar is not None:
 
             self.sc.colorbar.set_label(label)
 
     def reset_colorbar_limits(self):
+        """
+        Autoscale color limits.
+
+        """
 
         if self.sc is not None:
 
             self.sc.autoscale()
 
     def update_data(self, c, vmin, vmax):
+        """
+        Replace data.
+
+        Parameters
+        ----------
+        c : 1d array
+            Scatter point values.
+        vmin : float, optional
+            Minimum data value.
+        vmax : float, optional
+            Maximum data value.
+
+        """
 
         if self.sc is not None:
 
@@ -807,11 +1117,31 @@ class Scatter(Plot):
             self.sc.set_clim(vmin=vmin, vmax=vmax)
 
     def get_data(self):
+        """
+        Data.
+
+        Returns
+        -------
+        c : 1d array
+            Scatter point values.
+
+        """
 
         if self.sc is not None:
 
             return self.sc.get_array()
 
     def plot_data(self, x, y, c):
+        """
+        Plot data.
+
+        Parameters
+        ----------
+        x, y : 1d array
+            Scatter point coordinates.
+        c : 1d array
+            Scatter point values.
+
+        """
 
         self.sc = self.ax.scatter(x, y, c=c, cmap=self.cmap)
