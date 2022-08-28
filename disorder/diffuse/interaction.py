@@ -25,6 +25,32 @@ def __C(alpha,r):
     return (3*erfc(alpha*r)/r+c*np.exp(-alpha**2*r**2))/r**4
 
 def atom_pairs_distance(rx, ry, rz, nu, nv, nw, n_atm, A, tol=1e-3):
+    """
+    Atom pairs.
+
+    Parameters
+    ----------
+    rx, ry, rz : 1d array
+        Atomic positions.
+    nu, nv, nw : int
+        Supercell size.
+    n_atm : int
+        Number of unit cell atoms.
+    A : 2d array, 3x3
+        Real space crystal axis to Cartesian transformation matrix.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-3``.
+
+    Returns
+    -------
+    dx, dy, dz : 1d array
+        Separation distance vector.
+    i, j : 1d array, int
+        Coordinate pairs.
+    inverse : 1d array, int
+        Indices of the unique pair distances array that reconstruct all pairs.
+
+    """
 
     A_inv = np.linalg.inv(A)
 
@@ -174,6 +200,26 @@ def atom_pairs_distance(rx, ry, rz, nu, nv, nw, n_atm, A, tol=1e-3):
     return dx, dy, dz, i, j, inverse
 
 def spatial_wavevector(nu, nv, nw, n_atm, B, R):
+    """
+    Spatial wavevector.
+
+    Parameters
+    ----------
+    nu, nv, nw : int
+        Supercell size.
+    n_atm : int
+        Number of unit cell atoms.
+    B : 2d array, 3x3
+        Reciprocal-space crystal axis to Cartesian transformation matrix.
+    R : 2d array, 3x3
+        Rotation matrix between real and reciprocal-space Cartesian axes.
+
+    Returns
+    -------
+    Gx, Gy, Gz : 1d array
+        Wavevector components.
+
+    """
 
     mu = (nu+1)//2
     mv = (nv+1)//2
@@ -194,6 +240,32 @@ def spatial_wavevector(nu, nv, nw, n_atm, B, R):
     return Gx, Gy, Gz
 
 def charge_charge_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
+    """
+    Charge-charge matrix.
+
+    Parameters
+    ----------
+    rx, ry, rz : 1d array
+        Atomic positions.
+    nu, nv, nw : int
+        Supercell size.
+    n_atm : int
+        Number of unit cell atoms.
+    A : 2d array, 3x3
+        Real space crystal axis to Cartesian transformation matrix.
+    B : 2d array, 3x3
+        Reciprocal-space crystal axis to Cartesian transformation matrix.
+    R : 2d array, 3x3
+        Rotation matrix between real and reciprocal-space Cartesian axes.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-3``.
+
+    Returns
+    -------
+    Qij : 1d array
+        Charge-charge matrix. Array of size ``n*(n+1)//2``.
+
+    """
 
     n = nu*nv*nw*n_atm
 
@@ -239,6 +311,32 @@ def charge_charge_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
     return Qij
 
 def charge_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
+    """
+    Charge-dipole matrix.
+
+    Parameters
+    ----------
+    rx, ry, rz : 1d array
+        Atomic positions.
+    nu, nv, nw : int
+        Supercell size.
+    n_atm : int
+        Number of unit cell atoms.
+    A : 2d array, 3x3
+        Real space crystal axis to Cartesian transformation matrix.
+    B : 2d array, 3x3
+        Reciprocal-space crystal axis to Cartesian transformation matrix.
+    R : 2d array, 3x3
+        Rotation matrix between real and reciprocal-space Cartesian axes.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-3``.
+
+    Returns
+    -------
+    Qijk : 2d array
+        Charge-dipole matrix. Array of shape ``n*(n+1)//2`` x3.
+
+    """
 
     n = nu*nv*nw*n_atm
 
@@ -287,6 +385,32 @@ def charge_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
     return Qijk
 
 def dipole_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
+    """
+    Dipole-dipole matrix.
+
+    Parameters
+    ----------
+    rx, ry, rz : 1d array
+        Atomic positions.
+    nu, nv, nw : int
+        Supercell size.
+    n_atm : int
+        Number of unit cell atoms.
+    A : 2d array, 3x3
+        Real space crystal axis to Cartesian transformation matrix.
+    B : 2d array, 3x3
+        Reciprocal-space crystal axis to Cartesian transformation matrix.
+    R : 2d array, 3x3
+        Rotation matrix between real and reciprocal-space Cartesian axes.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-3``.
+
+    Returns
+    -------
+    Qijkl : 2d array,
+        Dipole-dipole matrix. Array of shape ``n*(n+1)//2`` x6.
+
+    """
 
     n = nu*nv*nw*n_atm
 

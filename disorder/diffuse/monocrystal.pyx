@@ -262,6 +262,7 @@ cdef bint nuclear(double h, double k, double l, int centering) nogil:
 
     return cond
 
+@cython.binding(True)
 def magnetic(double [::1] Sx,
              double [::1] Sy,
              double [::1] Sz,
@@ -281,12 +282,12 @@ def magnetic(double [::1] Sx,
              l_range,
              long [::1] indices,
              symop,
-             double [:,:] T,
+             double [:,:] W,
              double [:,:] B,
              double [:,:] R,
              double [:,:] D,
-             double [:,:,:] domains,
-             double [:] variants,
+             double [:,:,:] T,
+             double [:] weights,
              Py_ssize_t nh,
              Py_ssize_t nk,
              Py_ssize_t nl,
@@ -297,6 +298,55 @@ def magnetic(double [::1] Sx,
              Py_ssize_t Nv,
              Py_ssize_t Nw,
              double [::1] g):
+    """
+    Magnetic scattering intensity.
+
+    Parameters
+    ----------
+    Sx, Sy, Sz : 1d array
+        Magnetic spin vector components.
+    occupancy : 1d array
+        Unit cell site occupancies.
+    U11, U22, U33, U23, U13, U12 : 1d array
+        Unit cell anisotropic displacemnt parameters.
+    ux, uy, uz : 1d array
+        Unit cell ion positions.
+    ions : 1d array
+        Unit cell ions.
+    h_range, k_range, l_range : 2-tuple or 2-list
+        Extents of :math:`h`, :math:`k`, and :math:`l` (min, max) pairs.
+    indices : 1d array, int
+        Array of reciprocal space volume indices.
+    symop : 2-tuple or 2-list, int
+        Symmetry operator identifier and number of operators.
+    W : 2d array, 3x3
+        Reciprocal space projection matrix.
+    B : 2d array, 3x3
+        Reciprocal lattice to Cartesian wavevector transformation matrix.
+    R : 2d array, 3x3
+        Cartesian axis rotation matrix between real and reciprocal space.
+    D : 2d array, 3x3
+        Crystal axis to Cartesian transformation matrix for atomic displacement
+        parameters.
+    T : 3d array
+        Twin transformation matrices. Last two axes are of size 3x3.
+    weights: 1d array
+        Twin mass fractions.
+    nh, nk, nl : int
+        Number of reciprocal space grid points.
+    nu, nv, nw : int
+        Number of supercell grid points.
+    Nu, Nv, Nw : int
+        Number of supercell grid points based on reciprocal space resolution.
+    g : 1d array
+        Magnetic g-factor.
+
+    Returns
+    -------
+    I : 1d array
+        Magnetic scattering intensity.
+
+    """
 
     cdef Py_ssize_t n_atm = len(ions)
 
@@ -305,7 +355,7 @@ def magnetic(double [::1] Sx,
     cdef Py_ssize_t sym = symop[0]
     cdef Py_ssize_t n_ops = symop[1]
 
-    cdef Py_ssize_t n_vars = variants.shape[0]
+    cdef Py_ssize_t n_vars = weights.shape[0]
 
     cdef Py_ssize_t n_uvw = nu*nv*nw
     cdef Py_ssize_t n = n_uvw*n_atm
@@ -489,15 +539,15 @@ def magnetic(double [::1] Sx,
         k_ = k_min_+k_step_*v
         l_ = l_min_+l_step_*w
 
-        x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
-        y = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
-        z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
+        x = W[0,0]*h_+W[0,1]*k_+W[0,2]*l_
+        y = W[1,0]*h_+W[1,1]*k_+W[1,2]*l_
+        z = W[2,0]*h_+W[2,1]*k_+W[2,2]*l_
 
         for var in range(n_vars):
 
-            x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z
-            y_ = domains[var,1,0]*x+domains[var,1,1]*y+domains[var,1,2]*z
-            z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z
+            x_ = T[var,0,0]*x+T[var,0,1]*y+T[var,0,2]*z
+            y_ = T[var,1,0]*x+T[var,1,1]*y+T[var,1,2]*z
+            z_ = T[var,2,0]*x+T[var,2,1]*y+T[var,2,2]*z
 
             for op in range(n_ops):
 
@@ -597,10 +647,11 @@ def magnetic(double [::1] Sx,
                 I[i] += (Fx_perp_real*Fx_perp_real+Fx_perp_imag*Fx_perp_imag\
                      +   Fy_perp_real*Fy_perp_real+Fy_perp_imag*Fy_perp_imag\
                      +   Fz_perp_real*Fz_perp_real+Fz_perp_imag*Fz_perp_imag)\
-                     *   factor*variants[var]
+                     *   factor*weights[var]
 
     return I_np
 
+@cython.binding(True)
 def occupational(double [::1] A_r,
                  double [::1] occupancy,
                  double [::1] U11,
@@ -618,12 +669,12 @@ def occupational(double [::1] A_r,
                  l_range,
                  long [::1] indices,
                  symop,
-                 double [:,:] T,
+                 double [:,:] W,
                  double [:,:] B,
                  double [:,:] R,
                  double [:,:] D,
-                 double [:,:,:] domains,
-                 double [:] variants,
+                 double [:,:,:] T,
+                 double [:] weights,
                  Py_ssize_t nh,
                  Py_ssize_t nk,
                  Py_ssize_t nl,
@@ -634,6 +685,56 @@ def occupational(double [::1] A_r,
                  Py_ssize_t Nv,
                  Py_ssize_t Nw,
                  source='neutron'):
+    """
+    Occupational diffuse scattering intensity.
+
+    Parameters
+    ----------
+    A_r : 1d array
+        Relative occupancy parameter.
+    occupancy : 1d array
+        Unit cell site occupancies.
+    U11, U22, U33, U23, U13, U12 : 1d array
+        Unit cell anisotropic displacemnt parameters.
+    ux, uy, uz : 1d array
+        Unit cell ion positions.
+    atms : 1d array
+        Unit cell atoms, ions, or isotopes.
+    h_range, k_range, l_range : 2-tuple or 2-list
+        Extents of :math:`h`, :math:`k`, and :math:`l` (min, max) pairs.
+    indices : 1d array, int
+        Array of reciprocal space volume indices.
+    symop : 2-tuple or 2-list, int
+        Symmetry operator identifier and number of operators.
+    W : 2d array, 3x3
+        Reciprocal space projection matrix.
+    B : 2d array, 3x3
+        Reciprocal lattice to Cartesian wavevector transformation matrix.
+    R : 2d array, 3x3
+        Cartesian axis rotation matrix between real and reciprocal space.
+    D : 2d array, 3x3
+        Crystal axis to Cartesian transformation matrix for atomic displacement
+        parameters.
+    T : 3d array
+        Twin transformation matrices. Last two axes are of size 3x3.
+    weights: 1d array
+        Twin mass fractions.
+    nh, nk, nl : int
+        Number of reciprocal space grid points.
+    nu, nv, nw : int
+        Number of supercell grid points.
+    Nu, Nv, Nw : int
+        Number of supercell grid points based on reciprocal space resolution.
+    source : str
+        Radiation source ``'neutron'``, ``'x-ray'``, or ``'electron'``.
+        Default ``'neutron'``.
+
+    Returns
+    -------
+    I : 1d array
+        Occupational diffuse scattering intensity.
+
+    """
 
     cdef bint neutron = source == 'neutron'
 
@@ -644,7 +745,7 @@ def occupational(double [::1] A_r,
     cdef Py_ssize_t sym = symop[0]
     cdef Py_ssize_t n_ops = symop[1]
 
-    cdef Py_ssize_t n_vars = variants.shape[0]
+    cdef Py_ssize_t n_vars = weights.shape[0]
 
     cdef Py_ssize_t n_uvw = nu*nv*nw
     cdef Py_ssize_t n = n_uvw*n_atm
@@ -800,15 +901,15 @@ def occupational(double [::1] A_r,
         k_ = k_min_+k_step_*v
         l_ = l_min_+l_step_*w
 
-        x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
-        y = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
-        z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
+        x = W[0,0]*h_+W[0,1]*k_+W[0,2]*l_
+        y = W[1,0]*h_+W[1,1]*k_+W[1,2]*l_
+        z = W[2,0]*h_+W[2,1]*k_+W[2,2]*l_
 
         for var in range(n_vars):
 
-            x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z
-            y_ = domains[var,1,0]*x+domains[var,1,1]*y+domains[var,1,2]*z
-            z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z
+            x_ = T[var,0,0]*x+T[var,0,1]*y+T[var,0,2]*z
+            y_ = T[var,1,0]*x+T[var,1,1]*y+T[var,1,2]*z
+            z_ = T[var,2,0]*x+T[var,2,1]*y+T[var,2,2]*z
 
             for op in range(n_ops):
 
@@ -883,10 +984,11 @@ def occupational(double [::1] A_r,
 
                 F_real, F_imag = F.real, F.imag
 
-                I[i] += (F_real*F_real+F_imag*F_imag)*factor*variants[var]
+                I[i] += (F_real*F_real+F_imag*F_imag)*factor*weights[var]
 
     return I_np
 
+@cython.binding(True)
 def displacive(double [::1] U_r,
                double complex [::1] coeffs,
                double [::1] occupancy,
@@ -899,11 +1001,11 @@ def displacive(double [::1] U_r,
                l_range,
                long [::1] indices,
                symop,
-               double [:,:] T,
+               double [:,:] W,
                double [:,:] B,
                double [:,:] R,
-               double [:,:,:] domains,
-               double [:] variants,
+               double [:,:,:] T,
+               double [:] weights,
                Py_ssize_t nh,
                Py_ssize_t nk,
                Py_ssize_t nl,
@@ -917,6 +1019,62 @@ def displacive(double [::1] U_r,
                long [::1] even,
                Py_ssize_t centering,
                source='neutron'):
+    """
+    Displacive diffuse scattering intensity.
+
+    Parameters
+    ----------
+    U_r : 1d array
+        Displacemet parameter.
+    coeffs : 1d array, complex
+        Coefficients for Taylor expansion.
+    occupancy : 1d array
+        Unit cell site occupancies.
+    ux, uy, uz : 1d array
+        Unit cell ion positions.
+    atms : 1d array
+        Unit cell atoms, ions, or isotopes.
+    h_range, k_range, l_range : 2-tuple or 2-list
+        Extents of :math:`h`, :math:`k`, and :math:`l` (min, max) pairs.
+    indices : 1d array, int
+        Array of reciprocal space volume indices.
+    symop : 2-tuple or 2-list, int
+        Symmetry operator identifier and number of operators.
+    W : 2d array, 3x3
+        Reciprocal space projection matrix.
+    B : 2d array, 3x3
+        Reciprocal lattice to Cartesian wavevector transformation matrix.
+    R : 2d array, 3x3
+        Cartesian axis rotation matrix between real and reciprocal space.
+    D : 2d array, 3x3
+        Crystal axis to Cartesian transformation matrix for atomic displacement
+        parameters.
+    T : 3d array
+        Twin transformation matrices. Last two axes are of size 3x3.
+    weights: 1d array
+        Twin mass fractions.
+    nh, nk, nl : int
+        Number of reciprocal space grid points.
+    nu, nv, nw : int
+        Number of supercell grid points.
+    Nu, Nv, Nw : int
+        Number of supercell grid points based on reciprocal space resolution.
+    p : int
+        Order of the Taylor expansion.
+    even : 1d array, int
+        Indices for the even terms of the Taylor expansion.
+    centering : int
+        Reflection centering condition identifier.
+    source : str
+        Radiation source ``'neutron'``, ``'x-ray'``, or ``'electron'``.
+        Default ``'neutron'``.
+
+    Returns
+    -------
+    I : 1d array
+        Displacive diffuse scattering intensity.
+
+    """
 
     cdef bint neutron = source == 'neutron'
 
@@ -930,7 +1088,7 @@ def displacive(double [::1] U_r,
     cdef Py_ssize_t sym = symop[0]
     cdef Py_ssize_t n_ops = symop[1]
 
-    cdef Py_ssize_t n_vars = variants.shape[0]
+    cdef Py_ssize_t n_vars = weights.shape[0]
 
     cdef Py_ssize_t n_uvw = nu*nv*nw
     cdef Py_ssize_t n = n_uvw*n_atm
@@ -1088,15 +1246,15 @@ def displacive(double [::1] U_r,
         k_ = k_min_+k_step_*v
         l_ = l_min_+l_step_*w
 
-        x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
-        y = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
-        z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
+        x = W[0,0]*h_+W[0,1]*k_+W[0,2]*l_
+        y = W[1,0]*h_+W[1,1]*k_+W[1,2]*l_
+        z = W[2,0]*h_+W[2,1]*k_+W[2,2]*l_
 
         for var in range(n_vars):
 
-            x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z
-            y_ = domains[var,1,0]*x+domains[var,1,1]*y+domains[var,1,2]*z
-            z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z
+            x_ = T[var,0,0]*x+T[var,0,1]*y+T[var,0,2]*z
+            y_ = T[var,1,0]*x+T[var,1,1]*y+T[var,1,2]*z
+            z_ = T[var,2,0]*x+T[var,2,1]*y+T[var,2,2]*z
 
             for op in range(n_ops):
 
@@ -1187,10 +1345,11 @@ def displacive(double [::1] U_r,
 
                 F_real, F_imag = F.real, F.imag
 
-                I[i] += (F_real*F_real+F_imag*F_imag)*factor*variants[var]
+                I[i] += (F_real*F_real+F_imag*F_imag)*factor*weights[var]
 
     return I_np
 
+@cython.binding(True)
 def structural(double [::1] occupancy,
                double [::1] U11,
                double [::1] U22,
@@ -1207,12 +1366,12 @@ def structural(double [::1] occupancy,
                l_range,
                long [::1] indices,
                symop,
-               double [:,:] T,
+               double [:,:] W,
                double [:,:] B,
                double [:,:] R,
                double [:,:] D,
-               double [:,:,:] domains,
-               double [:] variants,
+               double [:,:,:] T,
+               double [:] weights,
                Py_ssize_t nh,
                Py_ssize_t nk,
                Py_ssize_t nl,
@@ -1223,7 +1382,54 @@ def structural(double [::1] occupancy,
                Py_ssize_t Nv,
                Py_ssize_t Nw,
                source='neutron'):
+    """
+    Average structural scattering intensity.
 
+    Parameters
+    ----------
+    occupancy : 1d array
+        Unit cell site occupancies.
+    U11, U22, U33, U23, U13, U12 : 1d array
+        Unit cell anisotropic displacemnt parameters.
+    ux, uy, uz : 1d array
+        Unit cell ion positions.
+    atms : 1d array
+        Unit cell atoms, ions, or isotopes.
+    h_range, k_range, l_range : 2-tuple or 2-list
+        Extents of :math:`h`, :math:`k`, and :math:`l` (min, max) pairs.
+    indices : 1d array, int
+        Array of reciprocal space volume indices.
+    symop : 2-tuple or 2-list, int
+        Symmetry operator identifier and number of operators.
+    W : 2d array, 3x3
+        Reciprocal space projection matrix.
+    B : 2d array, 3x3
+        Reciprocal lattice to Cartesian wavevector transformation matrix.
+    R : 2d array, 3x3
+        Cartesian axis rotation matrix between real and reciprocal space.
+    D : 2d array, 3x3
+        Crystal axis to Cartesian transformation matrix for atomic displacement
+        parameters.
+    T : 3d array
+        Twin transformation matrices. Last two axes are of size 3x3.
+    weights: 1d array
+        Twin mass fractions.
+    nh, nk, nl : int
+        Number of reciprocal space grid points.
+    nu, nv, nw : int
+        Number of supercell grid points.
+    Nu, Nv, Nw : int
+        Number of supercell grid points based on reciprocal space resolution.
+s    source : str
+        Radiation source ``'neutron'``, ``'x-ray'``, or ``'electron'``.
+        Default ``'neutron'``.
+
+    Returns
+    -------
+    I : 1d array
+        Structural scattering intensity.
+
+    """
     cdef bint neutron = source == 'neutron'
 
     cdef Py_ssize_t n_atm = len(atms)
@@ -1233,7 +1439,7 @@ def structural(double [::1] occupancy,
     cdef Py_ssize_t sym = symop[0]
     cdef Py_ssize_t n_ops = symop[1]
 
-    cdef Py_ssize_t n_vars = variants.shape[0]
+    cdef Py_ssize_t n_vars = weights.shape[0]
 
     cdef Py_ssize_t n_uvw = nu*nv*nw
     cdef Py_ssize_t n = n_uvw*n_atm
@@ -1387,15 +1593,15 @@ def structural(double [::1] occupancy,
         k_ = k_min_+k_step_*v
         l_ = l_min_+l_step_*w
 
-        x = T[0,0]*h_+T[0,1]*k_+T[0,2]*l_
-        y = T[1,0]*h_+T[1,1]*k_+T[1,2]*l_
-        z = T[2,0]*h_+T[2,1]*k_+T[2,2]*l_
+        x = W[0,0]*h_+W[0,1]*k_+W[0,2]*l_
+        y = W[1,0]*h_+W[1,1]*k_+W[1,2]*l_
+        z = W[2,0]*h_+W[2,1]*k_+W[2,2]*l_
 
         for var in range(n_vars):
 
-            x_ = domains[var,0,0]*x+domains[var,0,1]*y+domains[var,0,2]*z
-            y_ = domains[var,1,0]*x+domains[var,1,1]*y+domains[var,1,2]*z
-            z_ = domains[var,2,0]*x+domains[var,2,1]*y+domains[var,2,2]*z
+            x_ = T[var,0,0]*x+T[var,0,1]*y+T[var,0,2]*z
+            y_ = T[var,1,0]*x+T[var,1,1]*y+T[var,1,2]*z
+            z_ = T[var,2,0]*x+T[var,2,1]*y+T[var,2,2]*z
 
             for op in range(n_ops):
 
@@ -1470,7 +1676,7 @@ def structural(double [::1] occupancy,
 
                 F_real, F_imag = F.real, F.imag
 
-                I[i] += (F_real*F_real+F_imag*F_imag)*factor*variants[var]
+                I[i] += (F_real*F_real+F_imag*F_imag)*factor*weights[var]
 
     return I_np
 

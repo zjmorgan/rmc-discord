@@ -819,6 +819,30 @@ def absence(symops, h, k, l):
         return absent
 
 def site(symops, coordinates, A, tol=1e-1):
+    """
+    Site symmetry.
+
+    Parameters
+    ----------
+    symops : 1d array, str
+        DESCRIPTION.
+    coordinates : TYPE
+        DESCRIPTION.
+    A : TYPE
+        DESCRIPTION.
+    tol : TYPE, optional
+        DESCRIPTION. The default is 1e-1.
+
+    Returns
+    -------
+    pg : TYPE
+        DESCRIPTION.
+    mult : TYPE
+        DESCRIPTION.
+    sp_poss : TYPE
+        DESCRIPTION.
+
+    """
 
     u, v, w = coordinates
 
@@ -1103,6 +1127,21 @@ def site(symops, coordinates, A, tol=1e-1):
     return pg, mult, sp_poss
 
 def laue_id(symops):
+    """
+    Laue symmetry identifier.
+
+    Parameters
+    ----------
+    symops : 1d array, str
+        Array of symmetry operators.
+
+    Returns
+    -------
+    symop_id : 2-list, int
+        Laue symmetry identifier. First number is identifies and second is
+        number of symmetry operators.
+
+    """
 
     n = len(symops)
 
@@ -1122,6 +1161,38 @@ def laue_id(symops):
     return symop_id
 
 def operators(invert=False):
+    """
+    Laue symmetry class and operators.
+
+    ===== =========
+    Laue  Operators
+    ===== =========
+    m-3m  48
+    m-3   24
+    6/mmm 24
+    6/m   12
+    -3m   12
+    -3    6
+    4/mmm 16
+    4/m   8
+    mmm   8
+    2/m   4
+    -1    2
+    None  1
+    ===== =========
+
+    Parameters
+    ----------
+    invert : bool, optional
+        Invert the Laue symmetry operators for reciprocal space. Default is
+        ``False`` for real space operators.
+
+    Returns
+    -------
+    laue : dictioanry
+        Symmetry operators with Laue class keys.
+
+    """
 
     laue = {
 

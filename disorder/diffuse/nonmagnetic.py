@@ -6,7 +6,7 @@ from disorder.diffuse.displacive import number
 
 def transform(U_r, A_r, H, K, L, nu, nv, nw, n_atm):
     """
-    Discrete Fourier transform of Taylor expansion displacement products and \
+    Discrete Fourier transform of Taylor expansion displacement products and
     relative occupancy parameter.
 
     Parameters
@@ -27,11 +27,14 @@ def transform(U_r, A_r, H, K, L, nu, nv, nw, n_atm):
     Returns
     -------
     U_k : 1d array
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform of displacement paramter. Array has a flattened shape
+        of size ``nu*nw*nv*n_atm``.
     A_k : 1d array
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform of relative occupancy parameter. Array has a
+        flattened shape of size ``nu*nw*nv*n_atm``.
     i_dft : 1d array, int
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform indices. Array has a flattened shape of size
+        ``nu*nw*nv*n_atm``.
 
     """
 
@@ -79,7 +82,7 @@ def intensity(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
     Returns
     -------
     I : 1d array
-        Array has a flattened shape of size ``i_dft.shape[0]``.
+        Intensity. Array has a flattened shape of size ``i_dft.shape[0]``.
 
     """
 
@@ -159,25 +162,28 @@ def structure(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors):
     Returns
     -------
     F : 1d array
-        Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``.
+       Structure factor. Array has a flattened shape of size
+       ``coeffs.shape[0]*i_dft.shape[0]``.
     F_nuc : 1d array
-        Array has a flattened shape of size ``cond.sum()*i_dft.shape[0]``.
+        Bragg structure factor. Array has a flattened shape of size
+        ``cond.sum()*i_dft.shape[0]``.
     prod : 1d array
-        Array has a flattened shape of size
+        Partial structure factor. Array has a flattened shape of size
         ``coeffs.shape[0]*i_dft.shape[0]*n_atm``.
     prod_nuc : 1d array
-        Array has a flattened shape of size
+        Partial Bragg structure factor.Array has a flattened shape of size
         ``coeffs.sum()*i_dft.shape[0]*n_atm``.
     V_k : 1d array
-        Array has a flattened shape of size
+        Structural parameter. Array has a flattened shape of size
         ``coeffs.shape[0]*i_dft.shape[0]*n_atm``.
     V_k_nuc : 1d array
-        Array has a flattened shape of size
+        Bragg Structural parameter. Array has a flattened shape of size
         ``coeffs.sum()*i_dft.shape[0]*n_atm``.
     even : 1d array, int
         Array indices of the even Taylor expandion coefficients.
     bragg : 1d array, int
-        Array has a flattened shape of size ``coeffs.sum()``.
+        Indices of integer reciprocal coordinates. Array has a flattened shape
+        of size ``coeffs.sum()``.
 
     """
 

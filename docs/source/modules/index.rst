@@ -6,3 +6,4 @@ Modules
 
    diffuse/index
    material/index
+   correlation/index

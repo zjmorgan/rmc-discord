@@ -47,9 +47,11 @@ def transform(A_r, H, K, L, nu, nv, nw, n_atm):
     Returns
     -------
     A_k : 1d array
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform of relative occupancy parameter. Array has a
+        flattened shape of size ``nu*nw*nv*n_atm``.
     i_dft : 1d array, int
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform indices. Array has a flattened shape of size
+        ``nu*nw*nv*n_atm``.
 
     """
 
@@ -79,7 +81,7 @@ def intensity(A_k, i_dft, factors):
     Returns
     -------
     I : 1d array
-        Array has a flattened shape of size ``i_dft.shape[0]``.
+        Intensity. Array has a flattened shape of size ``i_dft.shape[0]``.
 
     """
 
@@ -117,9 +119,9 @@ def structure(A_k, i_dft, factors):
     Returns
     -------
     F : 1d array
-        Array has a flattened shape of size ``i_dft.shape[0]``
+        Structure factor. Array has a flattened shape of size ``i_dft.shape[0]``
     prod : 1d array
-        Array has a flattened shape of size
+        Partial structure factor. Array has a flattened shape of size
         ``i_dft.shape[0]*n_atm``.
 
     """

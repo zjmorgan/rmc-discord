@@ -855,13 +855,13 @@ def twins(folder, filename):
         T32s = [0.0]
         T33s = [1.0]
 
-    weight = np.array(twin_mf)
+    weights = np.array(twin_mf)
 
     T = np.stack((T11s,T12s,T13s,
                   T21s,T22s,T23s,
                   T31s,T32s,T33s)).T.reshape(n_var,3,3)
 
-    return T, weight
+    return T, weights
 
 def parameters(folder=None, filename=None):
     """

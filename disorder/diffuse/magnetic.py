@@ -6,31 +6,22 @@ from disorder.material import tables
 
 def j0(Q, A, a, B, b, C, c, D):
     """
-    Appoximation of the zeroth-order spherical Bessesl function :math:`j_0(Q)`.
+    Appoximation of the integral with the zeroth-order spherical Bessesl
+    function :math:`j_0(Q)`.
 
     Parameters
     ----------
     Q : 1d array
         Magnitude of wavevector :math:`Q`.
-    A : float
-        :math:`A_0` constant.
-    a : float
-        :math:`a_0` constant.
-    B : float
-        :math:`B_0` constant.
-    b : float
-        :math:`b_0` constant.
-    C : float
-        :math:`C_0` constant.
-    c : float
-        :math:`c_0` constant.
-    D : float
-        :math:`D_0` constant.
+    A, a, B, b, C, c, D : float
+        Constants :math:`A_0`, :math:`a_0`, :math:`B_0`, :math:`b_0`,
+        :math:`C_0`, :math:`c_0` and :math:`D_0`.
 
     Returns
     -------
     j0 : 1d array
-        Has the same shape as the input wavevector.
+        Approximation of :math:`\\langle j_0(Q)\\rangle`. Has the same shape as
+        the input wavevector.
 
     """
 
@@ -40,31 +31,22 @@ def j0(Q, A, a, B, b, C, c, D):
 
 def j2(Q, A, a, B, b, C, c, D):
     """
-    Appoximation of the second-order spherical Bessesl function :math:`j_2(Q)`.
+    Appoximation of the integral with the second-order spherical Bessesl
+    function :math:`j_2(Q)`.
 
     Parameters
     ----------
     Q : 1d array
         Magnitude of wavevector :math:`Q`.
-    A : float
-        :math:`A_2` constant.
-    a : float
-        :math:`a_2` constant.
-    B : float
-        :math:`B_2` constant.
-    b : float
-        :math:`b_2` constant.
-    C : float
-        :math:`C_2` constant.
-    c : float
-        :math:`c_2` constant.
-    D : float
-        :math:`D_2` constant.
+    A, a, B, b, C, c, D : float
+        Constants :math:`A_2`, :math:`a_2`, :math:`B_2`, :math:`b_2`,
+        :math:`C_2`, :math:`c_2` and :math:`D_2`.
 
     Returns
     -------
     j2 : 1d array
-        Has the same shape as the input wavevector.
+        Approximation of :math:`\\langle j_2(Q)\\rangle`. Has the same shape as
+        the input wavevector.
 
     """
 
@@ -91,7 +73,7 @@ def f(Q, j0, j2=0, K2=0):
     Returns
     -------
     f : 1d array
-        Has the same shape as the input wavevector.
+        Form factor. Has the same shape as the input wavevector.
 
     """
 
@@ -113,7 +95,7 @@ def form(Q, ions, g=2):
     Returns
     -------
     f : 1d array
-        Has the same shape as the input wavevector.
+        Form factor. Has the same shape as the input wavevector.
 
     """
 
@@ -160,7 +142,8 @@ def spin(nu, nv, nw, n_atm, value=1, fixed=True):
     Returns
     -------
     Sx, Sy, Sz : 1d array
-        Each array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Spin vector components. Each array has a flattened shape of size
+        ``nu*nw*nv*n_atm``.
 
     """
 
@@ -216,9 +199,11 @@ def transform(Sx, Sy, Sz, H, K, L, nu, nv, nw, n_atm):
     Returns
     -------
     Sx_k, Sy_k, Sz_k : 1d array
-        Each array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform of spin vector components. Each array has a flattened
+        shape of size ``nu*nw*nv*n_atm``.
     i_dft : 1d array, int
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform indices. Array has a flattened shape of size
+        ``nu*nw*nv*n_atm``.
 
     """
 
@@ -246,15 +231,15 @@ def intensity(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     Sx_k, Sy_k, Sz_k : 1d array
         Fourier transform of the spin vector component :math:`S_x`,
         :math:`S_y`, and :math:`S_z` component.
-    i_dft: 1d array, int
+    i_dft : 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space.
-    factors: 1d array
+    factors : 1d array
         Prefactors of form factors and phase factors.
 
     Returns
     -------
     I : 1d array
-        Array has a flattened shape of size ``i_dft.shape[0]``.
+        Intensity. Array has a flattened shape of size ``i_dft.shape[0]``.
 
     """
 
@@ -302,17 +287,19 @@ def structure(Qx_norm, Qy_norm, Qz_norm, Sx_k, Sy_k, Sz_k, i_dft, factors):
     Sx_k, Sy_k, Sz_k : 1d array
         Fourier transform of the spin vector component :math:`S_x`,
         :math:`S_y`, and :math:`S_z` component.
-    i_dft: 1d array, int
+    i_dft : 1d array, int
         Array indices of Fourier transform corresponding to reciprocal space.
-    factors: 1d array
+    factors : 1d array
         Prefactors of form factors and phase factors.
 
     Returns
     -------
     Fx, Fy, Fz : 1d array
-        Each array has a flattened shape of size ``i_dft.shape[0]``.
+        Magnetic structure factor components. Each array has a flattened shape
+        of size ``i_dft.shape[0]``.
     prod_x, prod_y, prod_z : 1d array
-        Each array has a flattened shape of size ``i_dft.shape[0]*n_atm``.
+        Magnetic partial structure factor components. Each array has a
+        flattened shape of size ``i_dft.shape[0]*n_atm``.
 
     """
 
@@ -347,13 +334,14 @@ def magnitude(mu1, mu2, mu3, C):
     mu1, mu2, mu3 : 1d array
         Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`,
         and :math:`\mu_3`.
-    C: 2d array, 3x3
+    C : 2d array, 3x3
         Transform matrix from crystal axis to Cartesian coordiante system.
 
     Returns
     -------
     mu : 1d array
-        Has same size as input magnetic moment components.
+        Magnetic moment magnitude. Has same size as input magnetic moment
+        components.
 
     """
 
@@ -378,13 +366,14 @@ def cartesian(mu1, mu2, mu3, C):
     mu1, mu2, mu3 : float or 1d array
         Components of magnetic momenet :math:`\mu_1`, :math:`\mu_2`,
         and :math:`\mu_3`.
-    C: 2d array, 3x3
+    C : 2d array, 3x3
         Transform matrix from crystal axis to Cartesian coordiante system.
 
     Returns
     -------
     mu_x, mu_y, mu_z : 1d array
-        Has same size as input magnetic moment components.
+        Magnetic moment components in Cartesian coordinates. Has same size as
+        input magnetic moment components.
 
     """
 

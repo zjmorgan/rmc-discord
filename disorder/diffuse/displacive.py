@@ -19,7 +19,8 @@ def expansion(nu, nv, nw, n_atm, value=1, fixed=True):
     Returns
     -------
     Ux, Uy, Uz : 1d array
-        Each array has a flattened shape of size ``nu*nv*nw*n_atm``.
+        Atomic displacement vector components. Each array has a flattened shape
+        of size ``nu*nv*nw*n_atm``.
 
     """
 
@@ -85,7 +86,7 @@ def number(n):
 
     Returns
     -------
-    int
+    t : int
        Triangular number.
 
     """
@@ -103,7 +104,7 @@ def numbers(n):
 
     Returns
     -------
-    int
+    c : int
        Cumulative sum.
 
     """
@@ -147,7 +148,7 @@ def factorial(n):
 
     Returns
     -------
-    int
+    f : int
         Factorial of the number.
 
     """
@@ -190,6 +191,22 @@ def coefficients(p):
     return coeffs
 
 def products(Vx, Vy, Vz, p):
+    """
+    Trinomial expansion products.
+
+    Parameters
+    ----------
+    Vx, Vy, Vz : 1d array or float
+        Vector compontents for Taylor expansion.
+    p : int
+        Order of the Taylor expansion.
+
+    Returns
+    -------
+    values : 1d array or float
+        Trionomial products.
+
+    """
 
     if (type(Vx) is np.ndarray):
         n = Vx.shape[0]
@@ -229,9 +246,11 @@ def transform(U_r, H, K, L, nu, nv, nw, n_atm):
     Returns
     -------
     U_k : 1d array
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform of displacement parameter. Array has a flattened
+        shape  of size ``nu*nw*nv*n_atm``.
     i_dft : 1d array, int
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform indices. Array has a flattened shape of size
+        ``nu*nw*nv*n_atm``.
 
     """
 
@@ -276,9 +295,11 @@ def intensity(U_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
     Returns
     -------
     I : 1d array
-        Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``.
+        Intensity. Array has a flattened shape of size
+        ``coeffs.shape[0]*i_dft.shape[0]``.
     F_bragg : 1d array
-        Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``.
+        Bragg structure factor. Array has a flattened shape of size
+        ``coeffs.shape[0]*i_dft.shape[0]``.
 
     """
 
@@ -343,25 +364,28 @@ def structure(U_k, Q_k, coeffs, cond, p, i_dft, factors):
     Returns
     -------
     F : 1d array
-        Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``.
+        Structure factor. Array has a flattened shape of size
+        ``coeffs.shape[0]*i_dft.shape[0]``.
     F_nuc : 1d array
-        Array has a flattened shape of size ``cond.sum()*i_dft.shape[0]``.
+        Bragg structure factor. Array has a flattened shape of size
+        ``cond.sum()*i_dft.shape[0]``.
     prod : 1d array
-        Array has a flattened shape of size
+        Partial structure factor. Array has a flattened shape of size
         ``coeffs.shape[0]*i_dft.shape[0]*n_atm``.
     prod_nuc : 1d array
-        Array has a flattened shape of size
+        Partial Bragg structure factor. Array has a flattened shape of size
         ``coeffs.sum()*i_dft.shape[0]*n_atm``.
     V_k : 1d array
-        Array has a flattened shape of size
+        Structural parameter. Array has a flattened shape of size
         ``coeffs.shape[0]*i_dft.shape[0]*n_atm``.
     V_k_nuc : 1d array
-        Array has a flattened shape of size
+        Bragg Structural parameter. Array has a flattened shape of size
         ``coeffs.sum()*i_dft.shape[0]*n_atm``.
     even : 1d array, int
         Array indices of the even Taylor expandion coefficients.
     bragg : 1d array, int
-        Array has a flattened shape of size ``coeffs.sum()``.
+        Indices of integer reciprocal coordinates. Array has a flattened shape
+        of size ``coeffs.sum()``.
 
     """
 
@@ -409,7 +433,8 @@ def parameters(Ux, Uy, Uz, D, n_atm):
     Returns
     -------
     U11, U22, U33, U23, U13, U12 : 1d array
-        Has same size as input atomic displacements.
+        Atomic displacement parameter components. Has same size as input atomic
+        displacements.
 
     """
 
@@ -462,7 +487,8 @@ def equivalent(Uiso, D):
     Returns
     -------
     U11, U22, U33, U23, U13, U12 : float or 1d array
-        Has same size as input isotropic atomic displacement parameters.
+        Atomic displacement parameter components. Has same size as input
+        isotropic atomic displacement parameters.
 
     """
 
@@ -475,7 +501,7 @@ def equivalent(Uiso, D):
 
 def isotropic(U11, U22, U33, U23, U13, U12, D):
     """
-    Equivalent isotropic displacement parameters :math:`U_\mathrm{iso}`.
+    Equivalent isotropic atomic displacement parameters :math:`U_\mathrm{iso}`.
 
     Parameters
     ----------
@@ -489,7 +515,8 @@ def isotropic(U11, U22, U33, U23, U13, U12, D):
     Returns
     -------
     Uiso : 1d array
-        Has same size as input atomic displacement parameter components.
+        Isotropic atomic displacement parameters. Has same size as input atomic
+        displacement parameter components.
 
     """
 
@@ -507,7 +534,7 @@ def isotropic(U11, U22, U33, U23, U13, U12, D):
 
 def principal(U11, U22, U33, U23, U13, U12, D):
     """
-    Principal atmoic displacement parameters :math:`U_\mathrm{1}`,
+    Principal atomic displacement parameters :math:`U_\mathrm{1}`,
     :math:`U_\mathrm{2}`, and :math:`U_\mathrm{3}`.
 
     Parameters
@@ -522,7 +549,8 @@ def principal(U11, U22, U33, U23, U13, U12, D):
     Returns
     -------
     U1, U2, U3 : 1d array
-        Has same size as input atomic displacement parameter components.
+        Principal atomic displacement parameters. Has same size as input atomic
+        displacement parameter components.
 
     """
 
@@ -559,7 +587,8 @@ def cartesian(U11, U22, U33, U23, U13, U12, D):
     Returns
     -------
     Uxx, Uyy, Uzz, Uyz, Uxz, Uxy : 1d array
-        Has same size as input atomic displacement parameter components.
+        Atomic displacement parameters in Cartesian coordiantes. Has same size
+        as input atomic displacement parameter components.
 
     """
 

@@ -240,9 +240,11 @@ def transform(delta_r, H, K, L, nu, nv, nw, n_atm):
     Returns
     -------
     delta_k : 1d array
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform of occupancy parameter. Array has a flattened shape
+        of size ``nu*nw*nv*n_atm``.
     i_dft : 1d array, int
-        Array has a flattened shape of size ``nu*nw*nv*n_atm``.
+        Fourier transform indices. Array has a flattened shape of size
+        ``nu*nw*nv*n_atm``.
 
     """
 
@@ -274,7 +276,7 @@ def intensity(delta_k, i_dft, factors):
     Returns
     -------
     I : 1d array
-        Array has a flattened shape of size ``i_dft.shape[0]``.
+        Intensity. Array has a flattened shape of size ``i_dft.shape[0]``.
 
     """
 
@@ -312,9 +314,10 @@ def structure(delta_k, i_dft, factors):
     Returns
     -------
     F : 1d array
-        Array has a flattened shape of size ``coeffs.shape[0]*i_dft.shape[0]``.
+        Structure factor. Array has a flattened shape of size
+        ``coeffs.shape[0]*i_dft.shape[0]``.
     prod : 1d array
-        Array has a flattened shape of size
+        Partial structure factor. Array has a flattened shape of size
         ``coeffs.shape[0]*i_dft.shape[0]*n_atm``.
 
     """
@@ -408,21 +411,9 @@ def condition(H, K, L, nu=1, nv=1, nw=1, centering=None):
     """
     Reflection condition.
 
-    Parameters
-    ----------
-    H, K, L : 1d array, int
-        Supercell index along the :math:`a^*`, :math:`b^*`, and
-        :math:`c^*`-axis in reciprocal space.
-    nu, nv, nw : int
-        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
-        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell. Default is
-        `1`.
-    centering : str
-        Lattice centering. The default is `None`.
-
-    ====== ======================
+    ====== =====================
     Symbol Reflection condition
-    ====== ======================
+    ====== =====================
     P      Primitive
     I      Body-centered
     F      Face-centered
@@ -431,7 +422,19 @@ def condition(H, K, L, nu=1, nv=1, nw=1, centering=None):
     C      C-centered
     A      A-centered
     B      B-centered
-    ====== ======================
+    ====== =====================
+
+    Parameters
+    ----------
+    H, K, L : 1d array, int
+        Supercell index along the :math:`a^*`, :math:`b^*`, and
+        :math:`c^*`-axis in reciprocal space.
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell. Default is
+        ``1``.
+    centering : str
+        Lattice centering. The default is ``None``.
 
     Returns
     -------
@@ -497,7 +500,7 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
         Transformation matrix from axis-aligned to nonaxis-aligned projection.
         Default is the identity matrix.
     laue : str
-        Laue class to use for symmetrization. Default is `None`.
+        Laue class to use for symmetrization. Default is ``None``.
 
     Returns
     -------
@@ -507,10 +510,11 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
         Supercell index along the :math:`a^*`, :math:`b^*`, and
         :math:`c^*`-axis in reciprocal space.
     index : 1d array, int
-        Array
+        Index of reduced data.
     reverses : 1d array, int
-        Array
-    symops :
+        Mapping of reduced data that reconstructs full volume.
+    symops : 1d array, str
+        Symmetry operations correspoding to Laue class.
 
     """
 
@@ -596,6 +600,38 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
 
 def reduced(h_range, k_range, l_range, nh, nk, nl,
             nu, nv, nw, T=np.eye(3), laue=None):
+    """
+    Reduced reciprocal space mapping with resolution constrained by supercell.
+
+    Parameters
+    ----------
+    h_range, k_range, l_range : 2-tuple or 2-list
+        Extents of :math:`h`, :math:`k`, and :math:`l` (min, max) pairs
+    nh, nk, nl : int
+        Number of grid points along the axes of the reciprocal space volume.
+    nu, nv, nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
+    W : 2d array, 3x3, optional
+        Transformation matrix from axis-aligned to nonaxis-aligned projection.
+        Default is the identity matrix.
+    laue : str
+        Laue class to use for symmetrization. Default is ``None``.
+
+    Returns
+    -------
+    index : 1d array, int
+        Index of reduced data.
+    reverses : 1d array, int
+        Mapping of reduced data that reconstructs full volume.
+    symops : 1d array, str
+        Symmetry operations correspoding to Laue class.
+    Nu, Nv, Nw : int
+        Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
+        :math:`a`, :math:`b`, and :math:`c`-axis of the supercell corresponding
+        to the resolution of reciprocal space.
+
+    """
 
     h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh),
                              np.linspace(k_range[0],k_range[1],nk),

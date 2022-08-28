@@ -13,7 +13,11 @@ from libc.math cimport sqrt, fabs
 
 from disorder.material import crystal, symmetry
 
-cdef double iszero(double a) nogil:
+cdef bint sign(double a) nogil:
+
+    return (a > 0)-(a < 0)
+
+cdef bint iszero(double a) nogil:
 
     cdef double atol = 1e-08
 
@@ -28,10 +32,10 @@ def vector_correlation(double [::1] Sx,
 
     cdef Py_ssize_t N = counts.shape[0]
 
-    S_corr_np = np.zeros(N+1)
-    S_corr_np[N] = 1
+    C_corr_np = np.zeros(N+1)
+    C_corr_np[N] = 1
 
-    cdef double [::1] S_corr = S_corr_np
+    cdef double [::1] C_corr = C_corr_np
 
     cdef Py_ssize_t r, s, i, j
 
@@ -51,16 +55,16 @@ def vector_correlation(double [::1] Sx,
             V = sqrt(Sx[j]*Sx[j]+Sy[j]*Sy[j]+Sz[j]*Sz[j])
 
             if not (iszero(U) or iszero(V)):
-                S_corr[r] += (Sx[i]*Sx[j]+Sy[i]*Sy[j]+Sz[i]*Sz[j])/U/V
+                C_corr[r] += (Sx[i]*Sx[j]+Sy[i]*Sy[j]+Sz[i]*Sz[j])/U/V
             else:
                 count -= 1
 
         if (count > 0):
-            S_corr[r] /= count
+            C_corr[r] /= count
         else:
-            S_corr[r] = 0
+            C_corr[r] = 0
 
-    return S_corr_np
+    return C_corr_np
 
 def vector_average(double [::1] Sx,
                    double [::1] Sy,
@@ -71,10 +75,10 @@ def vector_average(double [::1] Sx,
 
     cdef Py_ssize_t N = counts.shape[0]
 
-    S_corr_np = np.zeros(N+1)
-    S_corr_np[N] = 1
+    C_corr_np = np.zeros(N+1)
+    C_corr_np[N] = 1
 
-    cdef double [::1] S_corr = S_corr_np
+    cdef double [::1] C_corr = C_corr_np
 
     cdef Py_ssize_t r, s, i, j
 
@@ -111,11 +115,11 @@ def vector_average(double [::1] Sx,
                 count -= 1
 
         if (count > 0):
-            S_corr[r] = (Sx_i*Sx_j+Sy_i*Sy_j+Sz_i*Sz_j)/count**2
+            C_corr[r] = (Sx_i*Sx_j+Sy_i*Sy_j+Sz_i*Sz_j)/count**2
         else:
-            S_corr[r] = 0
+            C_corr[r] = 0
 
-    return S_corr_np
+    return C_corr_np
 
 def vector_collinearity(double [::1] Sx,
                         double [::1] Sy,
@@ -126,10 +130,10 @@ def vector_collinearity(double [::1] Sx,
 
     cdef Py_ssize_t N = counts.shape[0]
 
-    S_coll_np = np.zeros(N+1)
-    S_coll_np[N] = 1
+    C_coll_np = np.zeros(N+1)
+    C_coll_np[N] = 1
 
-    cdef double [::1] S_coll = S_coll_np
+    cdef double [::1] C_coll = C_coll_np
 
     cdef Py_ssize_t r, s, i, j
 
@@ -149,28 +153,28 @@ def vector_collinearity(double [::1] Sx,
             V = Sx[j]*Sx[j]+Sy[j]*Sy[j]+Sz[j]*Sz[j]
 
             if not (iszero(U) or iszero(V)):
-                S_coll[r] += (Sx[i]*Sx[j]+Sy[i]*Sy[j]+Sz[i]*Sz[j])**2/U/V
+                C_coll[r] += (Sx[i]*Sx[j]+Sy[i]*Sy[j]+Sz[i]*Sz[j])**2/U/V
             else:
                 count -= 1
 
         if (count > 0):
-            S_coll[r] /= count
+            C_coll[r] /= count
         else:
-            S_coll[r] = 0
+            C_coll[r] = 0
 
-    return S_coll_np
+    return C_coll_np
 
-def scalar_correlation(double [::1] A_r,
+def scalar_correlation(double [::1] S,
                        signed long long [::1] counts,
                        signed long long [::1] search,
                        long long [:,::1] coordinate):
 
     cdef Py_ssize_t N = counts.shape[0]
 
-    S_corr_np = np.zeros(N+1)
-    S_corr_np[N] = 1
+    C_corr_np = np.zeros(N+1)
+    C_corr_np[N] = 1
 
-    cdef double [::1] S_corr = S_corr_np
+    cdef double [::1] C_corr = C_corr_np
 
     cdef Py_ssize_t r, s, i, j
 
@@ -186,32 +190,32 @@ def scalar_correlation(double [::1] A_r,
 
             i, j = coordinate[s,0], coordinate[s,1]
 
-            U = fabs(A_r[i])
-            V = fabs(A_r[j])
+            U = fabs(S[i])
+            V = fabs(S[j])
 
             if not (iszero(U) or iszero(V)):
-                S_corr[r] += (A_r[i]*A_r[j])/U/V
+                C_corr[r] += (S[i]*S[j])/U/V
             else:
                 count -= 1
 
         if (count > 0):
-            S_corr[r] /= count
+            C_corr[r] /= count
         else:
-            S_corr[r] = 0
+            C_corr[r] = 0
 
-    return S_corr_np
+    return C_corr_np
 
-def scalar_average(double [::1] A_r,
+def scalar_average(double [::1] S,
                    signed long long [::1] counts,
                    signed long long [::1] search,
                    long long [:,::1] coordinate):
 
     cdef Py_ssize_t N = counts.shape[0]
 
-    S_corr_np = np.zeros(N+1)
-    S_corr_np[N] = 1
+    C_corr_np = np.zeros(N+1)
+    C_corr_np[N] = 1
 
-    cdef double [::1] S_corr = S_corr_np
+    cdef double [::1] C_corr = C_corr_np
 
     cdef Py_ssize_t r, s, i, j
 
@@ -231,23 +235,23 @@ def scalar_average(double [::1] A_r,
 
             i, j = coordinate[s,0], coordinate[s,1]
 
-            U = fabs(A_r[i])
-            V = fabs(A_r[j])
+            U = fabs(S[i])
+            V = fabs(S[j])
 
             if not (iszero(U) or iszero(V)):
-                S_i += A_r[i]/U
-                S_j += A_r[j]/V
+                S_i += S[i]/U
+                S_j += S[j]/V
             else:
                 count -= 1
 
         if (count > 0):
-            S_corr[r] = S_i*S_j/count**2
+            C_corr[r] = S_i*S_j/count**2
         else:
-            S_corr[r] = 0
+            C_corr[r] = 0
 
-    return S_corr_np
+    return C_corr_np
 
-def scalar_vector_correlation(double [::1] delta,
+def scalar_vector_correlation(double [::1] S,
                               double [::1] Sx,
                               double [::1] Sy,
                               double [::1] Sz,
@@ -260,10 +264,10 @@ def scalar_vector_correlation(double [::1] delta,
 
     cdef Py_ssize_t N = counts.shape[0]
 
-    S_corr_np = np.zeros(N+1)
-    S_corr_np[N] = 1
+    C_corr_np = np.zeros(N+1)
+    C_corr_np[N] = 0
 
-    cdef double [::1] S_corr = S_corr_np
+    cdef double [::1] C_corr = C_corr_np
 
     cdef Py_ssize_t r, s, i, j
 
@@ -292,21 +296,57 @@ def scalar_vector_correlation(double [::1] delta,
             U = sqrt(rx_ij*rx_ij+ry_ij*ry_ij+rz_ij*rz_ij)
             V = sqrt(Sx_ij*Sx_ij+Sy_ij*Sy_ij+Sz_ij*Sz_ij)
 
-            metric = delta[i]*(1-delta[j])+delta[j]*(1-delta[i])
+            metric = 0.25*((1+sign(S[i]))*(1-sign(S[j]))
+                          +(1+sign(S[j]))*(1-sign(S[i])))
 
-            if (not (iszero(U) or iszero(V)) and metric > 0.5):
-                S_corr[r] += (rx_ij*Sx_ij+ry_ij*Sy_ij+rz_ij*Sz_ij)/U/V
+            if not (iszero(U) or iszero(V)) and metric > 0.5:
+                C_corr[r] += (rx_ij*Sx_ij+ry_ij*Sy_ij+rz_ij*Sz_ij)/U/V
             else:
                 count -= 1
 
         if (count > 0):
-            S_corr[r] /= count
+            C_corr[r] /= count
         else:
-            S_corr[r] = 0
+            C_corr[r] = 0
 
-    return S_corr_np
+    return C_corr_np
 
+@cython.binding(True)
 def pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+    """
+    Generate spherically averaged pairs.
+
+    Parameters
+    ----------
+    rx, ry, rz : 1d array
+        Atomic positions.
+    ion : 1d array, str
+        Atoms, ions, or isotopes.
+    nu, nv, nw : int
+        Supercell size.
+    A : 2d array, 3x3
+        Transformation matrix.
+    fract : float, optional
+        Fraction of longest distance for radial cutoff. Default is ``0.25``.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    d : 1d array
+        Separation distance magnitude.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+    counts : 1d array, int
+        Number of pair counts.
+    search : 1d array, int
+        Index of first appearance in sorted pairs.
+    coordinate : 2d array, int
+        Coordinate (i,j) pairs.
+    unique_pairs : int
+        Number of unique pairs.
+
+    """
 
     n_atm = ion.shape[0] // (nu*nv*nw)
 
@@ -376,14 +416,14 @@ def pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
     dx, dy, dz = crystal.transform(du, dv, dw, A)
 
-    distance = np.sqrt(dx**2+dy**2+dz**2)
+    d = np.sqrt(dx**2+dy**2+dz**2)
 
-    mask = distance <= distance.max()*fract
+    mask = d <= d.max()*fract
 
     dx = dx[mask]
     dy = dy[mask]
     dz = dz[mask]
-    distance = distance[mask]
+    d = d[mask]
 
     i = i[mask]
     j = j[mask]
@@ -397,12 +437,12 @@ def pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
     ions, ion_labels = np.unique(ion_ion, return_inverse=True)
 
-    metric = np.stack((np.round(np.round(distance/tol,1)).astype(int), \
+    metric = np.stack((np.round(np.round(d/tol,1)).astype(int), \
                        ion_labels)).T
 
     sort = np.lexsort(np.fliplr(metric).T)
 
-    distance = distance[sort]
+    d = d[sort]
     coordinate[:,0] = i[sort]
     coordinate[:,1] = j[sort]
 
@@ -415,17 +455,52 @@ def pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
                                         return_index=True,
                                         return_counts=True)
 
-    search = np.append(indices,len(distance))
+    search = np.append(indices,len(d))
 
-    distance = distance[indices]
-    ion_pair = ion_ion[indices]
+    d = d[indices]
+    pairs = ion_ion[indices]
 
-    distance = np.append(distance, 0)
-    ion_pair = np.append(ion_pair, '0')
+    d = np.append(d, 0)
+    pairs = np.append(pairs, '0')
 
-    return distance, ion_pair, counts, search, coordinate, unique.shape[0]+1
+    return d, pairs, counts, search, coordinate, unique.shape[0]+1
 
+@cython.binding(True)
 def pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+    """
+    Generate three-dimensional pairs.
+
+    Parameters
+    ----------
+    rx, ry, rz : 1d array
+        Atomic positions.
+    ion : 1d array, str
+        Atoms, ions, or isotopes.
+    nu, nv, nw : int
+        Supercell size.
+    A : 2d array, 3x3
+        Transformation matrix.
+    fract : float, optional
+        Fraction of longest distance for radial cutoff. Default is ``0.25``.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    dx, dy, dz : 1d array
+        Separation distance vector.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+    counts : 1d array, int
+        Number of pair counts.
+    search : 1d array, int
+        Index of first appearance in sorted pairs.
+    coordinate : 2d array, int
+        Coordinate (i,j) pairs.
+    unique_pairs : int
+        Number of unique pairs.
+
+    """
 
     n_atm = ion.shape[0] // (nu*nv*nw)
 
@@ -495,14 +570,14 @@ def pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
     dx, dy, dz = crystal.transform(du, dv, dw, A)
 
-    distance = np.sqrt(dx**2+dy**2+dz**2)
+    d = np.sqrt(dx**2+dy**2+dz**2)
 
-    mask = distance <= distance.max()*fract
+    mask = d <= d.max()*fract
 
     dx = dx[mask]
     dy = dy[mask]
     dz = dz[mask]
-    distance = np.stack((dx,dy,dz)).T
+    d = np.stack((dx,dy,dz)).T
 
     i = i[mask]
     j = j[mask]
@@ -516,12 +591,12 @@ def pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
 
     ions, ion_labels = np.unique(ion_ion, return_inverse=True)
 
-    metric = np.vstack((np.round(np.round(distance.T/tol,1)).astype(int), \
+    metric = np.vstack((np.round(np.round(d.T/tol,1)).astype(int), \
                         ion_labels)).T
 
     sort = np.lexsort(np.fliplr(metric).T)
 
-    distance = distance[sort]
+    d = d[sort]
     coordinate[:,0] = i[sort]
     coordinate[:,1] = j[sort]
 
@@ -534,123 +609,358 @@ def pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
                                         return_index=True,
                                         return_counts=True)
 
-    search = np.append(indices,len(distance))
+    search = np.append(indices,len(d))
 
     dx = dx[sort][indices]
     dy = dy[sort][indices]
     dz = dz[sort][indices]
-    ion_pair = ion_ion[indices]
+    pairs = ion_ion[indices]
 
     dx = np.append(dx, 0)
     dy = np.append(dy, 0)
     dz = np.append(dz, 0)
-    ion_pair = np.append(ion_pair, '0')
+    pairs = np.append(pairs, '0')
 
-    return dx, dy, dz, ion_pair, counts, search, coordinate, unique.shape[0]+1
+    return dx, dy, dz, pairs, counts, search, coordinate, unique.shape[0]+1
 
+@cython.binding(True)
 def vector1d(Sx, Sy, Sz, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+    """
+    Spherically averaged vector-pair correlations.
+
+    Parameters
+    ----------
+    Sx, Sy, Sz : 1d array
+        Vectors.
+    rx, ry, rz : 1d array
+        Atomic positions.
+    ion : 1d array, str
+        Atoms, ions, or isotopes.
+    nu, nv, nw : int
+        Supercell size.
+    A : 2d array, 3x3
+        Transformation matrix.
+    fract : float, optional
+        Fraction of longest distance for radial cutoff. Default is ``0.25``.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    C_corr : 1d array
+        Correlated averge product function.
+    C_coll : 1d array
+        Collinear correlated averge product function.
+    C_corr_ : 1d array
+        Uncorrelated averge product function.
+    C_coll_ : 1d array
+        Collinear uncorrelated averge product function.
+    d : 1d array
+        Separation distance magnitude.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+
+    """
 
     data = pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
-    distance, ion_pair, counts, search, coordinate, N = data
+    d, pairs, counts, search, coordinate, N = data
 
-    S_corr  = vector_correlation(Sx, Sy, Sz, counts, search, coordinate)
-    S_coll  = vector_collinearity(Sx, Sy, Sz, counts, search, coordinate)
-    S_corr_ = vector_average(Sx, Sy, Sz, counts, search, coordinate)
+    C_corr  = vector_correlation(Sx, Sy, Sz, counts, search, coordinate)
+    C_coll  = vector_collinearity(Sx, Sy, Sz, counts, search, coordinate)
+    C_corr_ = vector_average(Sx, Sy, Sz, counts, search, coordinate)
 
-    S_coll_ = S_corr**2
+    C_coll_ = C_corr**2
 
-    return S_corr, S_coll, S_corr_, S_coll_, distance, ion_pair
+    return C_corr, C_coll, C_corr_, C_coll_, d, pairs
 
+@cython.binding(True)
 def vector3d(Sx, Sy, Sz, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+    """
+    Three-dimensional vector-pair correlations.
+
+    Parameters
+    ----------
+    Sx, Sy, Sz : 1d array
+        Vectors.
+    rx, ry, rz : 1d array
+        Atomic positions.
+    ion : 1d array, str
+        Atoms, ions, or isotopes.
+    nu, nv, nw : int
+        Supercell size.
+    A : 2d array, 3x3
+        Transformation matrix.
+    fract : float, optional
+        Fraction of longest distance for radial cutoff. Default is ``0.25``.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    C_corr : 1d array
+        Correlated averge product function.
+    C_coll : 1d array
+        Collinear correlated averge product function.
+    C_corr_ : 1d array
+        Uncorrelated averge product function.
+    C_coll_ : 1d array
+        Collinear uncorrelated averge product function.
+    dx, dy, dz : 1d array
+        Separation distance vector.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+
+    """
 
     data = pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
-    dx, dy, dz, ion_pair, counts, search, coordinate, N = data
+    dx, dy, dz, pairs, counts, search, coordinate, N = data
 
-    S_corr  = vector_correlation(Sx, Sy, Sz, counts, search, coordinate)
-    S_coll  = vector_collinearity(Sx, Sy, Sz, counts, search, coordinate)
-    S_corr_ = vector_average(Sx, Sy, Sz, counts, search, coordinate)
+    C_corr  = vector_correlation(Sx, Sy, Sz, counts, search, coordinate)
+    C_coll  = vector_collinearity(Sx, Sy, Sz, counts, search, coordinate)
+    C_corr_ = vector_average(Sx, Sy, Sz, counts, search, coordinate)
 
-    S_coll_ = S_corr**2
+    C_coll_ = C_corr**2
 
     dx = np.concatenate((dx,-dx[:N-1]))
     dy = np.concatenate((dy,-dy[:N-1]))
     dz = np.concatenate((dz,-dz[:N-1]))
 
-    ion_pair = np.concatenate((ion_pair,ion_pair[:N-1]))
+    pairs = np.concatenate((pairs,pairs[:N-1]))
 
-    S_corr  = np.concatenate((S_corr,S_corr[:N-1]))
-    S_coll  = np.concatenate((S_coll,S_coll[:N-1]))
-    S_corr_ = np.concatenate((S_corr_,S_corr_[:N-1]))
-    S_coll_ = np.concatenate((S_coll_,S_coll_[:N-1]))
+    C_corr  = np.concatenate((C_corr,C_corr[:N-1]))
+    C_coll  = np.concatenate((C_coll,C_coll[:N-1]))
+    C_corr_ = np.concatenate((C_corr_,C_corr_[:N-1]))
+    C_coll_ = np.concatenate((C_coll_,C_coll_[:N-1]))
 
-    return S_corr, S_coll, S_corr_, S_coll_, dx, dy, dz, ion_pair
+    return C_corr, C_coll, C_corr_, C_coll_, dx, dy, dz, pairs
 
-def scalar1d(A_r, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+@cython.binding(True)
+def scalar1d(S, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+    """
+    Spherically averaged scalar-pair correlations.
+
+    Parameters
+    ----------
+    S : 1d array
+        Scalars.
+    rx, ry, rz : 1d array
+        Atomic positions.
+    ion : 1d array, str
+        Atoms, ions, or isotopes.
+    nu, nv, nw : int
+        Supercell size.
+    A : 2d array, 3x3
+        Transformation matrix.
+    fract : float, optional
+        Fraction of longest distance for radial cutoff. Default is ``0.25``.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    C_corr : 1d array
+        Correlated averge product function.
+    C_corr_ : 1d array
+        Uncorrelated averge product function.
+    d : 1d array
+        Separation distance magnitude.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+
+    """
 
     data = pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
-    distance, ion_pair, counts, search, coordinate, N = data
+    d, pairs, counts, search, coordinate, N = data
 
-    S_corr  = scalar_correlation(A_r, counts, search, coordinate)
-    S_corr_ = scalar_average(A_r, counts, search, coordinate)
+    C_corr  = scalar_correlation(S, counts, search, coordinate)
+    C_corr_ = scalar_average(S, counts, search, coordinate)
 
-    return S_corr, S_corr_, distance, ion_pair
+    return C_corr, C_corr_, d, pairs
 
-def scalar3d(A_r, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+@cython.binding(True)
+def scalar3d(S, rx, ry, rz, ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+    """
+    Three-dimensional scalar-pair correlations.
+
+    Parameters
+    ----------
+    S : 1d array
+        Scalars.
+    rx, ry, rz : 1d array
+        Atomic positions.
+    ion : 1d array, str
+        Atoms, ions, or isotopes.
+    nu, nv, nw : int
+        Supercell size.
+    A : 2d array, 3x3
+        Transformation matrix.
+    fract : float, optional
+        Fraction of longest distance for radial cutoff. Default is ``0.25``.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    C_corr : 1d array
+        Correlated averge product function.
+    C_corr_ : 1d array
+        Uncorrelated averge product function.
+    dx, dy, dz : 1d array
+        Separation distance vector.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+
+    """
 
     data = pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
-    dx, dy, dz, ion_pair, counts, search, coordinate, N = data
+    dx, dy, dz, pairs, counts, search, coordinate, N = data
 
-    S_corr  = scalar_correlation(A_r, counts, search, coordinate)
-    S_corr_ = scalar_average(A_r, counts, search, coordinate)
+    C_corr  = scalar_correlation(S, counts, search, coordinate)
+    C_corr_ = scalar_average(S, counts, search, coordinate)
 
     dx = np.concatenate((dx,-dx[:N-1]))
     dy = np.concatenate((dy,-dy[:N-1]))
     dz = np.concatenate((dz,-dz[:N-1]))
 
-    ion_pair = np.concatenate((ion_pair,ion_pair[:N-1]))
+    pairs = np.concatenate((pairs,pairs[:N-1]))
 
-    S_corr  = np.concatenate((S_corr,S_corr[:N-1]))
-    S_corr_ = np.concatenate((S_corr_,S_corr_[:N-1]))
+    C_corr  = np.concatenate((C_corr,C_corr[:N-1]))
+    C_corr_ = np.concatenate((C_corr_,C_corr_[:N-1]))
 
-    return S_corr, S_corr_, dx, dy, dz, ion_pair
+    return C_corr, C_corr_, dx, dy, dz, pairs
 
-def combination1d(delta, Sx, Sy, Sz, rx, ry, rz, ion, \
-                  nu, nv, nw, A, fract=0.25, tol=1e-4):
+@cython.binding(True)
+def scalar_vector1d(S, Sx, Sy, Sz, rx, ry, rz, ion,
+                    nu, nv, nw, A, fract=0.25, tol=1e-4):
+    """
+    Spherically averaged scalar-pair correlations.
+
+    Parameters
+    ----------
+    S : 1d array
+        Scalars.
+    Sx, Sy, Sz : 1d array
+        Vectors.
+    rx, ry, rz : 1d array
+        Atomic positions.
+    ion : 1d array, str
+        Atoms, ions, or isotopes.
+    nu, nv, nw : int
+        Supercell size.
+    A : 2d array, 3x3
+        Transformation matrix.
+    fract : float, optional
+        Fraction of longest distance for radial cutoff. Default is ``0.25``.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    C_corr : 1d array
+        Cross correlated averge product function.
+    d : 1d array
+        Separation distance magnitude.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+
+    """
 
     data = pairs1d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
-    distance, ion_pair, counts, search, coordinate, N = data
+    d, pairs, counts, search, coordinate, N = data
 
-    S_corr = scalar_vector_correlation(delta, Sx, Sy, Sz, rx, ry, rz,
+    C_corr = scalar_vector_correlation(S, Sx, Sy, Sz, rx, ry, rz,
                                        counts, search, coordinate)
 
-    return S_corr, distance, ion_pair
+    return C_corr, d, pairs
 
-def combination3d(delta, Sx, Sy, Sz, rx, ry, rz, \
-                  ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+@cython.binding(True)
+def scalar_vector3d(S, Sx, Sy, Sz, rx, ry, rz,
+                    ion, nu, nv, nw, A, fract=0.25, tol=1e-4):
+    """
+    Three-dimensional scalar-pair correlations.
+
+    Parameters
+    ----------
+    S : 1d array
+        Scalars.
+    Sx, Sy, Sz : 1d array
+        Vectors.
+    rx, ry, rz : 1d array
+        Atomic positions.
+    ion : 1d array, str
+        Atoms, ions, or isotopes.
+    nu, nv, nw : int
+        Supercell size.
+    A : 2d array, 3x3
+        Transformation matrix.
+    fract : float, optional
+        Fraction of longest distance for radial cutoff. Default is ``0.25``.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    C_corr : 1d array
+        Cross correlated averge product function.
+    dx, dy, dz : 1d array
+        Separation distance vector.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+
+    """
 
     data = pairs3d(rx, ry, rz, ion, nu, nv, nw, A, fract, tol)
 
-    dx, dy, dz, ion_pair, counts, search, coordinate, N = data
+    dx, dy, dz, pairs, counts, search, coordinate, N = data
 
-    S_corr = scalar_vector_correlation(delta, Sx, Sy, Sz, rx, ry, rz,
+    C_corr = scalar_vector_correlation(S, Sx, Sy, Sz, rx, ry, rz,
                                        counts, search, coordinate)
 
     dx = np.concatenate((dx,-dx[:N-1]))
     dy = np.concatenate((dy,-dy[:N-1]))
     dz = np.concatenate((dz,-dz[:N-1]))
 
-    ion_pair = np.concatenate((ion_pair,ion_pair[:N-1]))
+    pairs = np.concatenate((pairs,pairs[:N-1]))
 
-    S_corr  = np.concatenate((S_corr,S_corr[:N-1]))
+    C_corr  = np.concatenate((C_corr,C_corr[:N-1]))
 
-    return S_corr, dx, dy, dz, ion_pair
+    return C_corr, dx, dy, dz, pairs
 
-def symmetrize(arrays, dx, dy, dz, ion, A, laue, tol=1e-4):
+@cython.binding(True)
+def symmetrize(arrays, dx, dy, dz, pairs, A, laue, tol=1e-4):
+    """
+    Symmetrization of three-dimensional correlations.
+
+    Parameters
+    ----------
+    arrays : tuple
+        Arrays to average.
+    dx, dy, dz : 1d array
+        Separation distance vector.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+    A : 2d array, 3x3
+        Transformation matrix.
+    laue : str
+        Laue class.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    symmetrize : tuple
+        Symmetrized of arrays.
+    dx_ave, dy_ave, dz_ave : 1d array
+        Symmetrized separation distance vector.
+    pairs_ave : 1d array, str
+        Symmetrized atom, ion, or isotope-pairs.
+
+    """
 
     arrays = np.hstack(list((arrays,)))
 
@@ -672,10 +982,10 @@ def symmetrize(arrays, dx, dy, dz, ion, A, laue, tol=1e-4):
 
     arr = []
 
-    pairs = []
+    pair_list = []
     pair_labels = []
 
-    ions, ion_labels = np.unique(ion, return_inverse=True)
+    unique, labels = np.unique(pairs, return_inverse=True)
 
     for n in range(N):
 
@@ -697,8 +1007,8 @@ def symmetrize(arrays, dx, dy, dz, ion, A, laue, tol=1e-4):
 
         arr.append(np.tile(arrays[:,n], symmetries.shape[0]))
 
-        pairs.append(np.tile(ion[n], symmetries.shape[0]))
-        pair_labels.append(np.tile(ion_labels[n], symmetries.shape[0]))
+        pair_list.append(np.tile(pairs[n], symmetries.shape[0]))
+        pair_labels.append(np.tile(labels[n], symmetries.shape[0]))
 
     total = np.vstack(np.array(total, dtype=object)).astype(float)
 
@@ -706,7 +1016,7 @@ def symmetrize(arrays, dx, dy, dz, ion, A, laue, tol=1e-4):
 
     arr = arr.reshape(arr.shape[0] // M, M)
 
-    pairs = np.hstack(np.array(pairs, dtype=object))
+    pairs = np.hstack(np.array(pair_list, dtype=object))
     pair_labels = np.hstack(np.array(pair_labels, dtype=object)).astype(int)
 
     metric = np.vstack((np.round(np.round( \
@@ -731,7 +1041,7 @@ def symmetrize(arrays, dx, dy, dz, ion, A, laue, tol=1e-4):
     u_symm = total[sort][indices,0]
     v_symm = total[sort][indices,1]
     w_symm = total[sort][indices,2]
-    ion_symm = pairs[indices]
+    pairs_symm = pairs[indices]
 
     arrays_ave = np.zeros((M,D))
 
@@ -747,11 +1057,36 @@ def symmetrize(arrays, dx, dy, dz, ion, A, laue, tol=1e-4):
     arrays_ave = arrays_ave.flatten()
 
     output = tuple(np.split(arrays_ave, M))
-    output = (*output, dx_symm, dy_symm, dz_symm, ion_symm)
+    output = (*output, dx_symm, dy_symm, dz_symm, pairs_symm)
 
     return output
 
+@cython.binding(True)
 def average1d(arrays, d, pairs, tol=1e-4):
+    """
+    Average of one-dimensional correlations.
+
+    Parameters
+    ----------
+    arrays : tuple
+        Arrays to average.
+    d : 1d array
+        Separation distance magnitude.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    average : tuple
+        Averaged of arrays.
+    d : 1d array
+        Averaged separation distance magnitude.
+    pairs_ave : 1d array, str
+        Averaged atom, ion, or isotope-pairs.
+
+    """
 
     arrays = np.hstack(list((arrays,)))
 
@@ -796,7 +1131,32 @@ def average1d(arrays, d, pairs, tol=1e-4):
 
     return output
 
+@cython.binding(True)
 def average3d(arrays, dx, dy, dz, pairs, tol=1e-4):
+    """
+    Average of three-dimensional correlations.
+
+    Parameters
+    ----------
+    arrays : tuple
+        Arrays to average.
+    dx, dy, dz : 1d array
+        Separation distance vector.
+    pairs : 1d array, str
+        Atom, ion, or isotope-pairs.
+    tol : float, optional
+        Tolerance of distances for unique pairs. Default is ``1e-4``.
+
+    Returns
+    -------
+    average : tuple
+        Averaged of arrays.
+    dx_ave, dy_ave, dz_ave : 1d array
+        Averaged separation distance vector.
+    pairs_ave : 1d array, str
+        Averaged atom, ion, or isotope-pairs.
+
+    """
 
     arrays = np.hstack(list((arrays,)))
 
@@ -806,9 +1166,9 @@ def average3d(arrays, dx, dy, dz, pairs, tol=1e-4):
 
     M = arrays.shape[0]
 
-    distance = np.stack((dx,dy,dz)).T
+    d = np.stack((dx,dy,dz)).T
 
-    metric = (np.round(np.round(distance.astype(float)/tol,1))).astype(int)
+    metric = (np.round(np.round(d.astype(float)/tol,1))).astype(int)
 
     sort = np.lexsort(np.fliplr(metric).T)
 
@@ -824,7 +1184,7 @@ def average3d(arrays, dx, dy, dz, pairs, tol=1e-4):
                                         return_index=True,
                                         return_counts=True)
 
-    search = np.append(indices,len(distance))
+    search = np.append(indices,len(d))
 
     D = unique.shape[0]
 

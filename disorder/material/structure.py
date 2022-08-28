@@ -798,8 +798,8 @@ class UnitCell:
         """
         Update g-factors of active ions.
 
-        Paramters
-        ---------
+        Parameters
+        ----------
         g : 1d array
            Magnetic :math:`g`-factors.
 
