@@ -7,6 +7,22 @@ from disorder.material import symmetry, crystal
 
 class test_symmetry(unittest.TestCase):
 
+    def test_miller(self):
+
+        x, y, z = 2.2, 3.1, 4.5
+        h, k, l = x, y, z
+
+        laue = symmetry.operators(invert=True)
+
+        for sym, key in enumerate(laue.keys()):
+            ops = laue[key]
+            hkl, xyz = [], []
+            for no, op in enumerate(ops):
+                hkl.append(symmetry.miller(h, k, l, sym, no))
+                xyz.append(eval(op))
+            hkl, xyz = np.sort(hkl, axis=1), np.sort(xyz, axis=1)
+            np.testing.assert_array_almost_equal(hkl, xyz)
+
     def test_translation_operator(self):
 
         self.assertEqual(symmetry.translation_operator(0.0), '+0')

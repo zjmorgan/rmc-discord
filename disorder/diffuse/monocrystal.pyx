@@ -13,11 +13,11 @@ from disorder.material import tables
 
 from libc.math cimport M_PI, cos, sin, exp, sqrt, fabs, fmod, remainder
 
-cdef (double, double, double) transform(double x,
-                                        double y,
-                                        double z,
-                                        Py_ssize_t sym,
-                                        Py_ssize_t op) nogil:
+cpdef (double, double, double) transform(double x,
+                                         double y,
+                                         double z,
+                                         Py_ssize_t sym,
+                                         Py_ssize_t op) nogil:
 
     if (sym == 0):
 
@@ -697,7 +697,7 @@ def occupational(double [::1] A_r,
     U11, U22, U33, U23, U13, U12 : 1d array
         Unit cell anisotropic displacemnt parameters.
     ux, uy, uz : 1d array
-        Unit cell ion positions.
+        Unit cell atom, ion, or isotope positions.
     atms : 1d array
         Unit cell atoms, ions, or isotopes.
     h_range, k_range, l_range : 2-tuple or 2-list
@@ -1015,7 +1015,7 @@ def displacive(double [::1] U_r,
                Py_ssize_t Nu,
                Py_ssize_t Nv,
                Py_ssize_t Nw,
-               Py_ssize_t p,
+               Py_ssize_t order,
                long [::1] even,
                Py_ssize_t centering,
                source='neutron'):
@@ -1031,7 +1031,7 @@ def displacive(double [::1] U_r,
     occupancy : 1d array
         Unit cell site occupancies.
     ux, uy, uz : 1d array
-        Unit cell ion positions.
+        Unit cell atom, ion, or isotope positions.
     atms : 1d array
         Unit cell atoms, ions, or isotopes.
     h_range, k_range, l_range : 2-tuple or 2-list
@@ -1059,7 +1059,7 @@ def displacive(double [::1] U_r,
         Number of supercell grid points.
     Nu, Nv, Nw : int
         Number of supercell grid points based on reciprocal space resolution.
-    p : int
+    order : int
         Order of the Taylor expansion.
     even : 1d array, int
         Indices for the even terms of the Taylor expansion.
@@ -1219,7 +1219,7 @@ def displacive(double [::1] U_r,
             c[j] = tables.X.get(atm)
 
     g = 0
-    for f in range(p+1):
+    for f in range(order+1):
         for t in range(f+1):
             for s in range(f+1):
                 for r in range(f+1):
@@ -1392,7 +1392,7 @@ def structural(double [::1] occupancy,
     U11, U22, U33, U23, U13, U12 : 1d array
         Unit cell anisotropic displacemnt parameters.
     ux, uy, uz : 1d array
-        Unit cell ion positions.
+        Unit cell atom, ion, or isotope positions.
     atms : 1d array
         Unit cell atoms, ions, or isotopes.
     h_range, k_range, l_range : 2-tuple or 2-list
@@ -1420,7 +1420,7 @@ def structural(double [::1] occupancy,
         Number of supercell grid points.
     Nu, Nv, Nw : int
         Number of supercell grid points based on reciprocal space resolution.
-s    source : str
+    source : str
         Radiation source ``'neutron'``, ``'x-ray'``, or ``'electron'``.
         Default ``'neutron'``.
 
@@ -1430,6 +1430,7 @@ s    source : str
         Structural scattering intensity.
 
     """
+
     cdef bint neutron = source == 'neutron'
 
     cdef Py_ssize_t n_atm = len(atms)

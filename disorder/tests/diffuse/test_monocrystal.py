@@ -7,7 +7,23 @@ from disorder.material import crystal, symmetry
 from disorder.diffuse import space, scattering, monocrystal
 from disorder.diffuse import magnetic, occupational, displacive
 
-class test_monocrystal(unittest.TestCase):
+class test_transform(unittest.TestCase):
+
+    def test_transform(self):
+
+        x, y, z = 2, 3, 4
+        h, k, l = x, y, z
+
+        laue = symmetry.operators(invert=True)
+
+        for sym, key in enumerate(laue.keys()):
+            ops = laue[key]
+            hkl, xyz = [], []
+            for no, op in enumerate(ops):
+                hkl.append(monocrystal.transform(h, k, l, sym, no))
+                xyz.append(eval(op))
+            hkl, xyz = np.sort(hkl, axis=1), np.sort(xyz, axis=1)
+            np.testing.assert_array_almost_equal(hkl, xyz)
 
     def test_magnetic(self):
 

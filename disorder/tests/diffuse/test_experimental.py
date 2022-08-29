@@ -8,6 +8,7 @@ import pyvista as pv
 from disorder.diffuse import experimental
 
 import os
+import shutil
 directory = os.path.dirname(os.path.abspath(__file__))
 
 class test_experimental(unittest.TestCase):
@@ -227,6 +228,42 @@ class test_experimental(unittest.TestCase):
         self.assertEqual(experimental.reflections(1, 2, 3, centering=cntr), 1)
         self.assertEqual(experimental.reflections(1, 4, 4, centering=cntr), 1)
         self.assertEqual(experimental.reflections(1, 4, 5, centering=cntr), 0)
+
+    def test_correlation(self):
+
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+
+        n = 10
+
+        x, y, z = np.random.random(n), np.random.random(n), np.random.random(n)
+
+        labels = np.empty(n, dtype=str)
+        labels[0] = '0'
+        labels[1::3] = 'Fe-Mn'
+        labels[2::3] = 'Fe-Co'
+
+        corr = 2*np.random.random(n)-1
+        coll = np.random.random(n)
+
+        data = (x, y, z, corr, coll, labels)
+        experimental.correlations(folder+'/vector-pair.vtm', data, 'vector-pair')
+        os.remove(folder+'/vector-pair.vtm')
+        shutil.rmtree(folder+'/vector-pair')
+
+        data = (x, y, z, corr, labels)
+        experimental.correlations(folder+'/scalar-pair.vtm', data, 'scalar-pair')
+        os.remove(folder+'/scalar-pair.vtm')
+        shutil.rmtree(folder+'/scalar-pair')
+
+        data = (x, y, z, corr, coll)
+        experimental.correlations(folder+'/vector.vtm', data, 'vector')
+        os.remove(folder+'/vector.vtm')
+        shutil.rmtree(folder+'/vector')
+
+        data = (x, y, z, corr)
+        experimental.correlations(folder+'/scalar.vtm', data, 'scalar')
+        os.remove(folder+'/scalar.vtm')
+        shutil.rmtree(folder+'/scalar')
 
     def test_intensity(self):
 

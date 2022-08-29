@@ -825,22 +825,22 @@ def site(symops, coordinates, A, tol=1e-1):
     Parameters
     ----------
     symops : 1d array, str
-        DESCRIPTION.
-    coordinates : TYPE
-        DESCRIPTION.
-    A : TYPE
-        DESCRIPTION.
-    tol : TYPE, optional
-        DESCRIPTION. The default is 1e-1.
+        Symmetry operators of space group.
+    coordinates : 2d array
+        Factional coordinates.
+    A : 2d array, 3x3
+        Crystal to Cartesian axis coodinate system transformation matrix.
+    tol : int, optional
+        Distance tolerance. The default is ``1e-1``.
 
     Returns
     -------
-    pg : TYPE
-        DESCRIPTION.
-    mult : TYPE
-        DESCRIPTION.
-    sp_poss : TYPE
-        DESCRIPTION.
+    pg : 1d array, str
+        Point group.
+    mult : 1d array, int
+        Multiplicity.
+    sp_pos : 1d array, str
+        Special position.
 
     """
 
@@ -1110,21 +1110,21 @@ def site(symops, coordinates, A, tol=1e-1):
     T = T.reshape(n,3,3)
     t = t.reshape(n,3)
 
-    sp_poss = []
+    sp_pos = []
     for i in range(n):
-        sp_pos = [u''.join(T[i,0,:])+t[i,0],
-                  u''.join(T[i,1,:])+t[i,1],
-                  u''.join(T[i,2,:])+t[i,2]]
+        pos = [u''.join(T[i,0,:])+t[i,0],
+               u''.join(T[i,1,:])+t[i,1],
+               u''.join(T[i,2,:])+t[i,2]]
 
-        sp_pos = [op.lstrip('+') for op in sp_pos]
-        sp_pos = [op.rstrip('0') for op in sp_pos]
-        sp_pos = [op.rstrip('+') for op in sp_pos]
-        sp_pos = ['0' if op == '' else op for op in sp_pos]
+        pos = [op.lstrip('+') for op in pos]
+        pos = [op.rstrip('0') for op in pos]
+        pos = [op.rstrip('+') for op in pos]
+        pos = ['0' if op == '' else op for op in pos]
 
-        sp_pos = ','.join(sp_pos)
-        sp_poss.append(sp_pos)
+        pos = ','.join(pos)
+        sp_pos.append(pos)
 
-    return pg, mult, sp_poss
+    return pg, mult, sp_pos
 
 def laue_id(symops):
     """

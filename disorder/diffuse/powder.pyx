@@ -18,6 +18,7 @@ from disorder.material import crystal, tables
 
 import os
 
+@cython.binding(True)
 def magnetic(double [::1] Sx,
              double [::1] Sy,
              double [::1] Sz,
@@ -39,6 +40,39 @@ def magnetic(double [::1] Sx,
              Py_ssize_t nv,
              Py_ssize_t nw,
              double [::1] g):
+    """
+    Magnetic scattering intensity.
+
+    Parameters
+    ----------
+    Sx, Sy, Sz : 1d array
+        Magnetic spin vector components.
+    occupancy : 1d array
+        Unit cell site occupancies.
+    U11, U22, U33, U23, U13, U12 : 1d array
+        Unit cell anisotropic displacemnt parameters.
+    rx, ry, rz : 1d array
+        Supercell ion positions.
+    ions : 1d array
+        Unit cell ions.
+    Q : 1d array
+        Momentum transfer.
+    A : 2d array, 3x3
+        Crystal to Cartesian axis transformation matrix.
+    D : 2d array, 3x3
+        Crystal axis to Cartesian transformation matrix for atomic displacement
+        parameters.
+    nu, nv, nw : int
+        Number of supercell grid points.
+    g : 1d array
+        Magnetic g-factor.
+
+    Returns
+    -------
+    I : 1d array
+        Magnetic scattering intensity.
+
+    """
 
     cdef Py_ssize_t n_atm = occupancy.shape[0]
 
@@ -503,6 +537,7 @@ def magnetic(double [::1] Sx,
 
     return I_np
 
+@cython.binding(True)
 def occupational(double [::1] A_r,
                  double [::1] occupancy,
                  double [::1] U11,
@@ -522,6 +557,40 @@ def occupational(double [::1] A_r,
                  Py_ssize_t nv,
                  Py_ssize_t nw,
                  source='neutron'):
+    """
+    Occupational scattering intensity.
+
+    Parameters
+    ----------
+    A_r : 1d array
+        Relative occupancy parameter.
+    occupancy : 1d array
+        Unit cell site occupancies.
+    U11, U22, U33, U23, U13, U12 : 1d array
+        Unit cell anisotropic displacemnt parameters.
+    rx, ry, rz : 1d array
+        Supercell atom, ion, or isotope positions.
+    atms : 1d array
+        Unit cell atoms, ions, or isotopes.
+    Q : 1d array
+        Momentum transfer.
+    A : 2d array, 3x3
+        Crystal to Cartesian axis transformation matrix.
+    D : 2d array, 3x3
+        Crystal axis to Cartesian transformation matrix for atomic displacement
+        parameters.
+    nu, nv, nw : int
+        Number of supercell grid points.
+    source : str
+        Radiation source ``'neutron'``, ``'x-ray'``, or ``'electron'``.
+        Default ``'neutron'``.
+
+    Returns
+    -------
+    I : 1d array
+        Occupational scattering intensity.
+
+    """
 
     cdef bint neutron = source == 'neutron'
 
@@ -911,6 +980,7 @@ def occupational(double [::1] A_r,
 
     return I_np
 
+@cython.binding(True)
 def displacive(double [::1] Ux,
                double [::1] Uy,
                double [::1] Uz,
@@ -927,6 +997,40 @@ def displacive(double [::1] Ux,
                Py_ssize_t nw,
                int order,
                source='neutron'):
+    """
+    Displacive scattering intensity.
+
+    Parameters
+    ----------
+    Ux, Uy, Uz : 1d array
+        Atomic displacements.
+    occupancy : 1d array
+        Unit cell site occupancies.
+    rx, ry, rz : 1d array
+        Supercell atom, ion, or isotope positions.
+    atms : 1d array
+        Unit cell atoms, ions, or isotopes.
+    Q : 1d array
+        Momentum transfer.
+    A : 2d array, 3x3
+        Crystal to Cartesian axis transformation matrix.
+    D : 2d array, 3x3
+        Crystal axis to Cartesian transformation matrix for atomic displacement
+        parameters.
+    nu, nv, nw : int
+        Number of supercell grid points.
+    order : int
+        Order of the Taylor expansion.
+    source : str
+        Radiation source ``'neutron'``, ``'x-ray'``, or ``'electron'``.
+        Default ``'neutron'``.
+
+    Returns
+    -------
+    I : 1d array
+        Displacive scattering intensity.
+
+    """
 
     cdef bint neutron = source == 'neutron'
 
@@ -1406,6 +1510,7 @@ def displacive(double [::1] Ux,
 
     return I_np
 
+@cython.binding(True)
 def structural(double [::1] occupancy,
                double [::1] U11,
                double [::1] U22,
@@ -1424,6 +1529,40 @@ def structural(double [::1] occupancy,
                Py_ssize_t nv,
                Py_ssize_t nw,
                source='neutron'):
+    """
+    Structural scattering intensity.
+
+    Parameters
+    ----------
+    Ux, Uy, Uz : 1d array
+        Atomic displacements.
+    occupancy : 1d array
+        Unit cell site occupancies.
+    rx, ry, rz : 1d array
+        Supercell atom, ion, or isotope positions.
+    atms : 1d array
+        Unit cell atoms, ions, or isotopes.
+    Q : 1d array
+        Momentum transfer.
+    A : 2d array, 3x3
+        Crystal to Cartesian axis transformation matrix.
+    D : 2d array, 3x3
+        Crystal axis to Cartesian transformation matrix for atomic displacement
+        parameters.
+    nu, nv, nw : int
+        Number of supercell grid points.
+    order : int
+        Order of the Taylor expansion.
+    source : str
+        Radiation source ``'neutron'``, ``'x-ray'``, or ``'electron'``.
+        Default ``'neutron'``.
+
+    Returns
+    -------
+    I : 1d array
+        Structural scattering intensity.
+
+    """
 
     cdef bint neutron = source == 'neutron'
 

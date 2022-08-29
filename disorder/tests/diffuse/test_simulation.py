@@ -8,7 +8,8 @@ from disorder.material import crystal
 
 import pyximport
 
-pyximport.install(setup_args={ 'script_args': ['--force']}, language_level=3)
+args = ['--force', '--define', 'CYTHON_TRACE_NOGIL']
+pyximport.install(setup_args={ 'script_args': args}, language_level=3)
 
 from disorder.tests.diffuse.test_c_simulation import test_c_simulation
 
