@@ -1350,40 +1350,40 @@ def displacive(double [::1] U_r,
     return I_np
 
 @cython.binding(True)
-def structural(double [::1] occupancy,
-               double [::1] U11,
-               double [::1] U22,
-               double [::1] U33,
-               double [::1] U23,
-               double [::1] U13,
-               double [::1] U12,
-               double [::1] ux,
-               double [::1] uy,
-               double [::1] uz,
-               atms,
-               h_range,
-               k_range,
-               l_range,
-               long [::1] indices,
-               symop,
-               double [:,:] W,
-               double [:,:] B,
-               double [:,:] R,
-               double [:,:] D,
-               double [:,:,:] T,
-               double [:] weights,
-               Py_ssize_t nh,
-               Py_ssize_t nk,
-               Py_ssize_t nl,
-               Py_ssize_t nu,
-               Py_ssize_t nv,
-               Py_ssize_t nw,
-               Py_ssize_t Nu,
-               Py_ssize_t Nv,
-               Py_ssize_t Nw,
-               source='neutron'):
+def average(double [::1] occupancy,
+            double [::1] U11,
+            double [::1] U22,
+            double [::1] U33,
+            double [::1] U23,
+            double [::1] U13,
+            double [::1] U12,
+            double [::1] ux,
+            double [::1] uy,
+            double [::1] uz,
+            atms,
+            h_range,
+            k_range,
+            l_range,
+            long [::1] indices,
+            symop,
+            double [:,:] W,
+            double [:,:] B,
+            double [:,:] R,
+            double [:,:] D,
+            double [:,:,:] T,
+            double [:] weights,
+            Py_ssize_t nh,
+            Py_ssize_t nk,
+            Py_ssize_t nl,
+            Py_ssize_t nu,
+            Py_ssize_t nv,
+            Py_ssize_t nw,
+            Py_ssize_t Nu,
+            Py_ssize_t Nv,
+            Py_ssize_t Nw,
+            source='neutron'):
     """
-    Average structural scattering intensity.
+    Average scattering intensity.
 
     Parameters
     ----------
@@ -1427,7 +1427,7 @@ def structural(double [::1] occupancy,
     Returns
     -------
     I : 1d array
-        Structural scattering intensity.
+        Average scattering intensity.
 
     """
 

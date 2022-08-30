@@ -923,9 +923,9 @@ class Model:
 
         return I_calc
 
-    def structural_intensity_1d(self, occupancy,
-                                U11, U22, U33, U23, U13, U12, rx, ry, rz,
-                                atm, Q_range, nQ, A, D, nu, nv, nw, mask):
+    def average_intensity_1d(self, occupancy,
+                             U11, U22, U33, U23, U13, U12, rx, ry, rz,
+                             atm, Q_range, nQ, A, D, nu, nv, nw, mask):
 
         n_atm = np.size(rx) // (nu*nv*nw)
 
@@ -935,8 +935,8 @@ class Model:
 
         Q = np.linspace(Q_range[0], Q_range[1], nQ)
 
-        I_calc = powder.structural(occupancy, U11, U22, U33, U23, U13, U12,
-                                   rx, ry, rz, atm, Q, A, D, nu, nv, nw)
+        I_calc = powder.average(occupancy, U11, U22, U33, U23, U13, U12,
+                                rx, ry, rz, atm, Q, A, D, nu, nv, nw)
 
         return I_calc
 
@@ -1008,19 +1008,18 @@ class Model:
 
         return I_calc
 
-    def structural_intensity_3d(self, occupancy,
-                                U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
-                                h_range, k_range, l_range, indices, symop,
-                                T, B, R, D, twins, variants, nh, nk, nl,
-                                nu, nv, nw, Nu, Nv, Nw, cntr, mask):
+    def average_intensity_3d(self, occupancy,
+                             U11, U22, U33, U23, U13, U12, ux, uy, uz, atm,
+                             h_range, k_range, l_range, indices, symop,
+                             T, B, R, D, twins, variants, nh, nk, nl,
+                             nu, nv, nw, Nu, Nv, Nw, cntr, mask):
 
-        I_calc = monocrystal.structural(occupancy,
-                                        U11, U22, U33, U23, U13, U12,
-                                        ux, uy, uz, atm,
-                                        h_range, k_range, l_range, indices,
-                                        symop, T, B, R, D, twins, variants,
-                                        nh, nk, nl, nu, nv, nw, Nu, Nv, Nw,
-                                        cntr)
+        I_calc = monocrystal.average(occupancy,
+                                     U11, U22, U33, U23, U13, U12,
+                                     ux, uy, uz, atm,
+                                     h_range, k_range, l_range, indices,
+                                     symop, T, B, R, D, twins, variants,
+                                     nh, nk, nl, nu, nv, nw, Nu, Nv, Nw, cntr)
 
         return I_calc
 

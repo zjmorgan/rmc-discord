@@ -729,6 +729,22 @@ def laue(folder, filename):
     """
     Determines Laue class from a CIF file.
 
+    ===== ==================
+    Laue  Noncentrosymmetric
+    ===== ==================
+    m-3m  432, -43m
+    m-3   23
+    6/mmm 622, -62m, 6mmm
+    6/m   6, -6
+    -3m   32, 3m
+    -3    3
+    4/mmm 422, -42m, 4mm
+    4/m   4, -4
+    mmm   222, 22m
+    2/m   2, m
+    -1    1
+    ===== ==================
+
     Parameters
     ----------
     folder : str,

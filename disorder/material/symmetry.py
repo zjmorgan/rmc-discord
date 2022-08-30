@@ -237,7 +237,23 @@ def miller(h, k, l, sym, op):
 
         return h,k,l
 
-def rotation_operator(val, col=0):
+def rotation_operator(val, col):
+    """
+    Convert values to rotation operator.
+
+    Parameters
+    ----------
+    val : float
+        Value of rotation.
+    col : int
+        Column of symmetry operator (``0``, ``1``, or ``2``).
+
+    Returns
+    -------
+    op : str
+        Rotation operator.
+
+    """
 
     if (col == 0):
         sym = 'x'
@@ -376,6 +392,20 @@ def rotation_operator(val, col=0):
     return sign+w
 
 def translation_operator(val):
+    """
+    Convert values to translation operator.
+
+    Parameters
+    ----------
+    val : float
+        Value of translation.
+
+    Returns
+    -------
+    op : str
+        Translation operator.
+
+    """
 
     if (val >= 0):
         sign = '+'
@@ -501,6 +531,24 @@ def unique(data):
     return u.view(data_type).reshape(-1, data_size), ind, inv
 
 def evaluate(operators, coordinates, translate=True):
+    """
+    Evaluate symmetry operators.
+
+    Parameters
+    ----------
+    operators : list, str
+        Symmetry operators.
+    coordinates : 3-list
+        Coordiantes to trasnsform.
+    translate : bool, optional
+        Apply translation to rotation operator. The default is ``True``.
+
+    Returns
+    -------
+    transformed : list
+        Transformed coordinates.
+
+    """
 
     code = evaluate_op(operators, translate=translate)
 
@@ -526,6 +574,22 @@ def evaluate_code(code, coordinates):
     return np.array(eval(code))
 
 def evaluate_mag(operators, moments):
+    """
+    Evaluate magnetic symmetry operators.
+
+    Parameters
+    ----------
+    operators : list, str
+        Magnetic symmetry operators.
+    moments : 3-list
+        Moments to trasnsform.
+
+    Returns
+    -------
+    transformed : list
+        Transformed moments.
+
+    """
 
     operators = str([[op] for op in operators])
 
@@ -536,6 +600,22 @@ def evaluate_mag(operators, moments):
     return np.array(eval(operators))
 
 def evaluate_disp(operator, displacements):
+    """
+    Evaluate atomic displacement symmetry operators.
+
+    Parameters
+    ----------
+    operators : list, str
+        Magnetic symmetry operators.
+    displacements : 6-list
+        Atomic displacement parameters to trasnsform.
+
+    Returns
+    -------
+    transformed : list
+        Transformed atomic displacement parameters.
+
+    """
 
     U11, U22, U33, U23, U13, U12 = displacements
 
@@ -723,6 +803,48 @@ def binary_mag(symop0, symop1):
     return symops
 
 def classification(symops):
+    """
+    Symmetry operator classification.
+
+    ===== ==== =====
+    Determinant +1
+    ----------------
+    Trace Type Order
+    ===== ==== =====
+    3      1    1
+    2      6    6
+    1      4    4
+    0      3    3
+    -1     2    2
+    ===== ==== =====
+
+    ===== ==== =====
+    Determinant -1
+    ----------------
+    Trace Type Order
+    ===== ==== =====
+    -3    -1   1
+    -2    -6   6
+    -1    -4   4
+    0     -3   3
+    1     m    2
+    ===== ==== =====
+
+    Parameters
+    ----------
+    symops : list, str
+        Symmetry operators.
+
+    Returns
+    -------
+    rotation : list, str
+        Rotation type.
+    k : list, int
+        Order of operation.
+    wg : list, str
+        Glide or screw vector.
+
+    """
 
     n = len(symops)
 
@@ -741,52 +863,68 @@ def classification(symops):
 
     w_symop_ord = np.zeros((n,3))
 
-    rotations, ks = [], []
+    rotation, k = [], []
 
     for i, symop in enumerate(symops):
 
         if np.isclose(W_det[i], 1):
             if np.isclose(W_tr[i], 3):
-                rotation, k = '1', 1
+                rot, order = '1', 1
             elif np.isclose(W_tr[i], 2):
-                rotation, k = '6', 6
+                rot, order = '6', 6
             elif np.isclose(W_tr[i], 1):
-                rotation, k = '4', 4
+                rot, order = '4', 4
             elif np.isclose(W_tr[i], 0):
-                rotation, k = '3', 3
+                rot, order = '3', 3
             elif np.isclose(W_tr[i], -1):
-                rotation, k = '2', 2
+                rot, order = '2', 2
         elif np.isclose(W_det[i], -1):
             if np.isclose(W_tr[i], -3):
-                rotation, k = '-1', 2
+                rot, order = '-1', 2
             elif np.isclose(W_tr[i], -2):
-                rotation, k = '-6', 6
+                rot, order = '-6', 6
             elif np.isclose(W_tr[i], -1):
-                rotation, k = '-4', 4
+                rot, order = '-4', 4
             elif np.isclose(W_tr[i], 0):
-                rotation, k = '-3', 6
+                rot, order = '-3', 6
             elif np.isclose(W_tr[i], 1):
-                rotation, k = 'm', 2
+                rot, order = 'm', 2
 
-        rotations.append(rotation)
-        ks.append(k)
+        rotation.append(rot)
+        k.append(order)
 
         W0, w0 = W[i,:,:].copy(), w[i,:].copy()
         W1, w1 = W[i,:,:].copy(), w[i,:].copy()
 
-        for _ in range(1,k):
+        for _ in range(1,order):
             W1 = np.dot(W0,W1)
             w1 = np.dot(W0,w1)+w0
 
         w_symop_ord[i,:] = w1
 
-    k_inv = 1/np.array(ks)
+    k_inv = 1/np.array(k)
 
-    wgs = k_inv[:,np.newaxis]*w_symop_ord
+    wg = k_inv[:,np.newaxis]*w_symop_ord
 
-    return rotations, ks, wgs.tolist()
+    return rotation, k, wg.tolist()
 
 def absence(symops, h, k, l):
+    """
+    Systematic absence of reflections.
+
+    Parameters
+    ----------
+    symops : list, str
+        Symmetry operators.
+    h, k, l : int
+        Miller indices.
+
+    Returns
+    -------
+    absent : bool
+         Reflection indication of sytematic extinction.
+
+    """
 
     n = len(symops)
 

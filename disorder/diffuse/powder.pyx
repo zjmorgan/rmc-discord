@@ -1511,26 +1511,26 @@ def displacive(double [::1] Ux,
     return I_np
 
 @cython.binding(True)
-def structural(double [::1] occupancy,
-               double [::1] U11,
-               double [::1] U22,
-               double [::1] U33,
-               double [::1] U23,
-               double [::1] U13,
-               double [::1] U12,
-               double [::1] rx,
-               double [::1] ry,
-               double [::1] rz,
-               atms,
-               double [::1] Q,
-               double [:,:] A,
-               double [:,:] D,
-               Py_ssize_t nu,
-               Py_ssize_t nv,
-               Py_ssize_t nw,
-               source='neutron'):
+def average(double [::1] occupancy,
+            double [::1] U11,
+            double [::1] U22,
+            double [::1] U33,
+            double [::1] U23,
+            double [::1] U13,
+            double [::1] U12,
+            double [::1] rx,
+            double [::1] ry,
+            double [::1] rz,
+            atms,
+            double [::1] Q,
+            double [:,:] A,
+            double [:,:] D,
+            Py_ssize_t nu,
+            Py_ssize_t nv,
+            Py_ssize_t nw,
+            source='neutron'):
     """
-    Structural scattering intensity.
+    Average scattering intensity.
 
     Parameters
     ----------
@@ -1560,7 +1560,7 @@ def structural(double [::1] occupancy,
     Returns
     -------
     I : 1d array
-        Structural scattering intensity.
+        Average scattering intensity.
 
     """
 

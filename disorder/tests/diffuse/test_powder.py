@@ -143,8 +143,8 @@ class test_powder(unittest.TestCase):
         I = powder.occupational(A_r, occupancy, U11, U22, U33, U23, U13, U12,
                                 rx, ry, rz, atms, Q, A, D, nu, nv, nw)
 
-        I_ave = powder.structural(occupancy, U11, U22, U33, U23, U13, U12,
-                                  rx, ry, rz, atms, Q, A, D, nu, nv, nw)
+        I_ave = powder.average(occupancy, U11, U22, U33, U23, U13, U12,
+                               rx, ry, rz, atms, Q, A, D, nu, nv, nw)
 
         I_diff = I-I_ave
 
@@ -237,8 +237,8 @@ class test_powder(unittest.TestCase):
         I = powder.displacive(Ux, Uy, Uz, occupancy,
                               rx, ry, rz, atms, Q, A, D, nu, nv, nw, 3)
 
-        I_ave = powder.structural(occupancy, U11, U22, U33, U23, U13, U12,
-                                  rx, ry, rz, atms, Q, A, D, nu, nv, nw)
+        I_ave = powder.average(occupancy, U11, U22, U33, U23, U13, U12,
+                               rx, ry, rz, atms, Q, A, D, nu, nv, nw)
 
         I_diff = I-I_ave
 

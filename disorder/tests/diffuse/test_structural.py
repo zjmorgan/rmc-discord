@@ -5,7 +5,7 @@ import numpy as np
 
 from disorder.material import crystal
 from disorder.diffuse import displacive, occupational
-from disorder.diffuse import nonmagnetic, space, scattering
+from disorder.diffuse import structural, space, scattering
 
 class test_nonmagnetic(unittest.TestCase):
 
@@ -30,8 +30,8 @@ class test_nonmagnetic(unittest.TestCase):
 
         n_prod = U_r.shape[0] // (nu*nv*nw*n_atm)
 
-        U_k, A_k, i_dft = nonmagnetic.transform(U_r, A_r, H, K, L,
-                                                nu, nv, nw, n_atm)
+        U_k, A_k, i_dft = structural.transform(U_r, A_r, H, K, L,
+                                               nu, nv, nw, n_atm)
 
         A_r = np.tile(A_r, n_prod)
 
@@ -126,13 +126,13 @@ class test_nonmagnetic(unittest.TestCase):
         U_r = displacive.products(Ux, Uy, Uz, p)
         Q_k = displacive.products(Qx, Qy, Qz, p)
 
-        U_k, A_k, i_dft = nonmagnetic.transform(U_r, A_r, H, K, L,
-                                                nu, nv, nw, n_atm)
+        U_k, A_k, i_dft = structural.transform(U_r, A_r, H, K, L,
+                                               nu, nv, nw, n_atm)
 
         factors = space.prefactors(scattering_length, phase_factor, occupancy)
 
-        I, F_nuc = nonmagnetic.intensity(U_k, A_k, Q_k, coeffs, cond, p, i_dft,
-                                         factors, subtract=False)
+        I, F_nuc = structural.intensity(U_k, A_k, Q_k, coeffs, cond, p, i_dft,
+                                        factors, subtract=False)
 
         n_hkl = Q.size
         n_xyz = nu*nv*nw*n_atm
@@ -243,16 +243,16 @@ class test_nonmagnetic(unittest.TestCase):
         U_r = displacive.products(Ux, Uy, Uz, p)
         Q_k = displacive.products(Qx, Qy, Qz, p)
 
-        U_k, A_k, i_dft = nonmagnetic.transform(U_r, A_r, H, K, L,
-                                                nu, nv, nw, n_atm)
+        U_k, A_k, i_dft = structural.transform(U_r, A_r, H, K, L,
+                                               nu, nv, nw, n_atm)
 
         factors = space.prefactors(scattering_length, phase_factor, occupancy)
 
         F, F_nuc, \
         prod, prod_nuc, \
         V_k, V_k_nuc, \
-        even, bragg = nonmagnetic.structure(U_k, A_k, Q_k, coeffs, cond,
-                                            p, i_dft, factors)
+        even, bragg = structural.structure(U_k, A_k, Q_k, coeffs, cond,
+                                           p, i_dft, factors)
 
         n_hkl = Q.size
         n_xyz = nu*nv*nw*n_atm

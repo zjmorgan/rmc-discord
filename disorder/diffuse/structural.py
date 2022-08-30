@@ -58,7 +58,7 @@ def transform(U_r, A_r, H, K, L, nu, nv, nw, n_atm):
 
 def intensity(U_k, A_k, Q_k, coeffs, cond, p, i_dft, factors, subtract=True):
     """
-    Chemical scattering intensity.
+    Structural scattering intensity.
 
     Parameters
     ----------

@@ -299,7 +299,7 @@ class test_transform(unittest.TestCase):
 
         np.testing.assert_array_almost_equal(I, I_ref)
 
-    def test_structural(self):
+    def test_average(self):
 
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
 
@@ -349,11 +349,11 @@ class test_transform(unittest.TestCase):
 
         symop = symmetry.laue_id(symops)
 
-        I = monocrystal.structural(occupancy, U11, U22, U33, U23, U13, U12,
-                                   ux, uy, uz, atm, h_range, k_range, l_range,
-                                   indices, symop, W, B, R, D,
-                                   twins, variants, nh, nk, nl,
-                                   nu, nv, nw, Nu, Nv, Nw)
+        I = monocrystal.average(occupancy, U11, U22, U33, U23, U13, U12,
+                                ux, uy, uz, atm, h_range, k_range, l_range,
+                                indices, symop, W, B, R, D,
+                                twins, variants, nh, nk, nl,
+                                nu, nv, nw, Nu, Nv, Nw)
 
         hmin, hmax = h_range
         kmin, kmax = k_range
