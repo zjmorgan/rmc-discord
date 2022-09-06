@@ -599,7 +599,7 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
     return h, k, l, H, K, L, index, reverses, symops
 
 def reduced(h_range, k_range, l_range, nh, nk, nl,
-            nu, nv, nw, T=np.eye(3), laue=None):
+            nu, nv, nw, W=np.eye(3), laue=None):
     """
     Reduced reciprocal space mapping with resolution constrained by supercell.
 
@@ -638,7 +638,7 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
                              np.linspace(l_range[0],l_range[1],nl),
                              indexing='ij')
 
-    h, k, l = crystal.transform(h_, k_, l_, T)
+    h, k, l = crystal.transform(h_, k_, l_, W)
 
     h = h.flatten()
     k = k.flatten()
@@ -662,7 +662,7 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
         l_max_res = 0
 
     hkl_max_res = np.array([[h_max_res,0,0],[0,k_max_res,0],[0,0,l_max_res]])
-    hkl_res = np.abs(np.dot(T, hkl_max_res))
+    hkl_res = np.abs(np.dot(W, hkl_max_res))
 
     h_res, k_res, l_res = np.max(hkl_res, axis=0)
 

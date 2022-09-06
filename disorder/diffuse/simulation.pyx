@@ -667,11 +667,11 @@ def magnetic_energy(double [:,:,:,:,::1] Sx,
                     double [:,:,::1] g,
                     double [::1] B,
                     long [:,::1] atm_ind,
-                    long [:,::1] img_ind_i,
-                    long [:,::1] img_ind_j,
-                    long [:,::1] img_ind_k,
+                    long [:,::1] img_i,
+                    long [:,::1] img_j,
+                    long [:,::1] img_k,
                     long [:,::1] pair_ind,
-                    bint [:,::1] pair_ij):
+                    bint [:,::1] pair_trans):
 
     cdef Py_ssize_t nu = Sx.shape[0]
     cdef Py_ssize_t nv = Sx.shape[1]
@@ -709,9 +709,9 @@ def magnetic_energy(double [:,:,:,:,::1] Sx,
 
                         for p in range(n_pairs):
 
-                            i_ = (i+img_ind_i[a,p]+nu)%nu
-                            j_ = (j+img_ind_j[a,p]+nv)%nv
-                            k_ = (k+img_ind_k[a,p]+nw)%nw
+                            i_ = (i+img_i[a,p]+nu)%nu
+                            j_ = (j+img_j[a,p]+nv)%nv
+                            k_ = (k+img_k[a,p]+nw)%nw
                             a_ = atm_ind[a,p]
 
                             vx = Sx[i_,j_,k_,a_,t]
@@ -719,7 +719,7 @@ def magnetic_energy(double [:,:,:,:,::1] Sx,
                             vz = Sz[i_,j_,k_,a_,t]
 
                             q = pair_ind[a,p]
-                            f = pair_ij[a,p]
+                            f = pair_trans[a,p]
 
                             if (f == 1):
                                 e[i,j,k,a,p,t] = -0.5\
@@ -792,11 +792,11 @@ cdef double magnetic(double [:,:,:,:,::1] Sx,
                      double [:,:,::1] g,
                      double [::1] B,
                      long [:,::1] atm_ind,
-                     long [:,::1] img_ind_i,
-                     long [:,::1] img_ind_j,
-                     long [:,::1] img_ind_k,
+                     long [:,::1] img_i,
+                     long [:,::1] img_j,
+                     long [:,::1] img_k,
                      long [:,::1] pair_ind,
-                     bint [:,::1] pair_ij,
+                     bint [:,::1] pair_trans,
                      Py_ssize_t i,
                      Py_ssize_t j,
                      Py_ssize_t k,
@@ -827,13 +827,13 @@ cdef double magnetic(double [:,:,:,:,::1] Sx,
 
     for p in prange(n_pairs, nogil=True):
 
-        i_ = (i+img_ind_i[a,p]+nu)%nu
-        j_ = (j+img_ind_j[a,p]+nv)%nv
-        k_ = (k+img_ind_k[a,p]+nw)%nw
+        i_ = (i+img_i[a,p]+nu)%nu
+        j_ = (j+img_j[a,p]+nv)%nv
+        k_ = (k+img_k[a,p]+nw)%nw
         a_ = atm_ind[a,p]
 
         q = pair_ind[a,p]
-        f = pair_ij[a,p]
+        f = pair_trans[a,p]
 
         wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
 
@@ -871,11 +871,11 @@ def heisenberg(double [:,:,:,:,::1] Sx,
                double [::1] B,
                double [:,::1] Q,
                long [:,::1] atm_ind,
-               long [:,::1] img_ind_i,
-               long [:,::1] img_ind_j,
-               long [:,::1] img_ind_k,
+               long [:,::1] img_i,
+               long [:,::1] img_j,
+               long [:,::1] img_k,
                long [:,::1] pair_ind,
-               bint [:,::1] pair_ij,
+               bint [:,::1] pair_trans,
                double [::1] T_range,
                double kB,
                Py_ssize_t N):
@@ -903,9 +903,9 @@ def heisenberg(double [:,:,:,:,::1] Sx,
     cdef double [::1] H = np.zeros(n_temp)
 
     cdef double [:,:,:,:,:,::1] e = magnetic_energy(Sx, Sy, Sz, J, A, g, B,
-                                                    atm_ind, img_ind_i,
-                                                    img_ind_j, img_ind_k,
-                                                    pair_ind, pair_ij)
+                                                    atm_ind, img_i,
+                                                    img_j, img_k,
+                                                    pair_ind, pair_trans)
 
     for i in range(nu):
         for j in range(nv):
@@ -955,8 +955,8 @@ def heisenberg(double [:,:,:,:,::1] Sx,
                 vx, vy, vz = gaussian_vector_candidate(ux, uy, uz, sigma[t])
 
                 E = magnetic(Sx, Sy, Sz, vx, vy, vz, ux, uy, uz, J, A, g, B,
-                             atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                             pair_ind, pair_ij, i, j, k, a, t)
+                             atm_ind, img_i, img_j, img_k,
+                             pair_ind, pair_trans, i, j, k, a, t)
 
                 if long_range:
 
@@ -1005,11 +1005,11 @@ cdef (double, bint) annealing_cluster(double [:,:,:,:,::1] Sx,
                                       bint [:,:,:,::1] c,
                                       Py_ssize_t n_c,
                                       long [:,::1] atm_ind,
-                                      long [:,::1] img_ind_i,
-                                      long [:,::1] img_ind_j,
-                                      long [:,::1] img_ind_k,
+                                      long [:,::1] img_i,
+                                      long [:,::1] img_j,
+                                      long [:,::1] img_k,
                                       long [:,::1] pair_ind,
-                                      bint [:,::1] pair_ij,
+                                      bint [:,::1] pair_trans,
                                       double [::1] H,
                                       double Eij,
                                       double [::1] beta,
@@ -1134,12 +1134,12 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
                                  bint [:,:,:,::1] c,
                                  Py_ssize_t n_c,
                                  long [:,::1] atm_ind,
-                                 long [:,::1] img_ind_i,
-                                 long [:,::1] img_ind_j,
-                                 long [:,::1] img_ind_k,
+                                 long [:,::1] img_i,
+                                 long [:,::1] img_j,
+                                 long [:,::1] img_k,
                                  long [:,::1] pair_ind,
                                  long [:,::1] pair_inv,
-                                 bint [:,::1] pair_ij,
+                                 bint [:,::1] pair_trans,
                                  double [::1] beta,
                                  Py_ssize_t i,
                                  Py_ssize_t j,
@@ -1174,9 +1174,9 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
 
     for p in prange(n_pairs, nogil=True):
 
-        i_ = (i+img_ind_i[a,p]+nu)%nu
-        j_ = (j+img_ind_j[a,p]+nv)%nv
-        k_ = (k+img_ind_k[a,p]+nw)%nw
+        i_ = (i+img_i[a,p]+nu)%nu
+        j_ = (j+img_j[a,p]+nv)%nv
+        k_ = (k+img_k[a,p]+nw)%nw
         a_ = atm_ind[a,p]
         p_ = pair_inv[a,p]
 
@@ -1200,7 +1200,7 @@ cdef Py_ssize_t magnetic_cluster(double [:,:,:,:,::1] Sx,
             vz_perp = vz-nz*n_dot_v
 
             q = pair_ind[a,p]
-            f = pair_ij[a,p]
+            f = pair_trans[a,p]
 
             if (f == 1):
                 Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
@@ -1270,12 +1270,12 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
                             bint [:,:,:,::1] c,
                             Py_ssize_t n_c,
                             long [:,::1] atm_ind,
-                            long [:,::1] img_ind_i,
-                            long [:,::1] img_ind_j,
-                            long [:,::1] img_ind_k,
+                            long [:,::1] img_i,
+                            long [:,::1] img_j,
+                            long [:,::1] img_k,
                             long [:,::1] pair_ind,
                             long [:,::1] pair_inv,
-                            bint [:,::1] pair_ij,
+                            bint [:,::1] pair_trans,
                             Py_ssize_t t):
 
     cdef Py_ssize_t nu = Sx.shape[0]
@@ -1314,9 +1314,9 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
 
         for p in prange(n_pairs, nogil=True):
 
-            i_ = (i+img_ind_i[a,p]+nu)%nu
-            j_ = (j+img_ind_j[a,p]+nv)%nv
-            k_ = (k+img_ind_k[a,p]+nw)%nw
+            i_ = (i+img_i[a,p]+nu)%nu
+            j_ = (j+img_j[a,p]+nv)%nv
+            k_ = (k+img_k[a,p]+nw)%nw
             a_ = atm_ind[a,p]
 
             if (c[i_,j_,k_,a_] == 0):
@@ -1328,7 +1328,7 @@ cdef double boundary_energy(double [:,:,:,:,::1] Sx,
                 n_dot_v = vx*nx+vy*ny+vz*nz
 
                 q = pair_ind[a,p]
-                f = pair_ij[a,p]
+                f = pair_trans[a,p]
 
                 if (f == 1):
                     Jx_eff_ij = J[q,0,0]*nx+J[q,1,0]*ny+J[q,2,0]*nz
@@ -1354,12 +1354,12 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                        double [::1] B,
                        double [:,::1] Q,
                        long [:,::1] atm_ind,
-                       long [:,::1] img_ind_i,
-                       long [:,::1] img_ind_j,
-                       long [:,::1] img_ind_k,
+                       long [:,::1] img_i,
+                       long [:,::1] img_j,
+                       long [:,::1] img_k,
                        long [:,::1] pair_ind,
                        long [:,::1] pair_inv,
-                       bint [:,::1] pair_ij,
+                       bint [:,::1] pair_trans,
                        double [::1] T_range,
                        double kB,
                        Py_ssize_t N):
@@ -1389,9 +1389,9 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
     cdef double [::1] H = np.zeros(n_temp)
 
     cdef double [:,:,:,:,:,::1] e = magnetic_energy(Sx, Sy, Sz, J, A, g, B,
-                                                    atm_ind, img_ind_i,
-                                                    img_ind_j, img_ind_k,
-                                                    pair_ind, pair_ij)
+                                                    atm_ind, img_i,
+                                                    img_j, img_k,
+                                                    pair_ind, pair_trans)
 
     for i in range(nu):
         for j in range(nv):
@@ -1529,8 +1529,8 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                            pairs_i, pairs_j, pairs_k, pairs_a,
                                            activated, h_eff, h_eff_ij,
                                            b, c, n_c, atm_ind,
-                                           img_ind_i, img_ind_j, img_ind_k,
-                                           pair_ind, pair_inv, pair_ij, beta,
+                                           img_i, img_j, img_k, pair_ind,
+                                           pair_inv, pair_trans, beta,
                                            i_, j_, k_, a_, t)
 
                     n_c = m_c
@@ -1539,8 +1539,8 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
                 E = boundary_energy(Sx, Sy, Sz, nx, ny, nz, J,
                                     clust_i, clust_j, clust_k, clust_a, c, n_c,
-                                    atm_ind, img_ind_i, img_ind_j, img_ind_k,
-                                    pair_ind, pair_inv, pair_ij, t)
+                                    atm_ind, img_i, img_j, img_k,
+                                    pair_ind, pair_inv, pair_trans, t)
 
                 if long_range:
 
@@ -1557,8 +1557,8 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
                                                clust_i, clust_j, clust_k,
                                                clust_a, h_eff,
                                                b, c, n_c, atm_ind,
-                                               img_ind_i, img_ind_j, img_ind_k,
-                                               pair_ind, pair_ij,
+                                               img_i, img_j, img_k,
+                                               pair_ind, pair_trans,
                                                H, E, beta, count, total, t)
 
                 if long_range and flip:

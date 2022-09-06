@@ -159,9 +159,9 @@ class test_simulation(unittest.TestCase):
 
         ux, uy, uz = crystal.transform(u, v, w, A)
 
-        pair_dict = crystal.pairs(u, v, w, atm, A, extend=True)
+        pair_dict = interaction.pairs(u, v, w, atm, A, extend=True)
 
-        img_ind_i, img_ind_j, img_ind_k, atm_ind = [], [], [], []
+        img_i, img_j, img_k, atm_ind = [], [], [], []
 
         du, dv, dw = [], [], []
 
@@ -177,14 +177,14 @@ class test_simulation(unittest.TestCase):
                     du.append(u[j]-u[i]+img[0])
                     dv.append(v[j]-v[i]+img[1])
                     dw.append(w[j]-w[i]+img[2])
-                img_ind_i.append(ind_i)
-                img_ind_j.append(ind_j)
-                img_ind_k.append(ind_k)
+                img_i.append(ind_i)
+                img_j.append(ind_j)
+                img_k.append(ind_k)
                 atm_ind.append(atm_a)
 
-        img_ind_i = np.array(img_ind_i, dtype=np.int_)
-        img_ind_j = np.array(img_ind_j, dtype=np.int_)
-        img_ind_k = np.array(img_ind_k, dtype=np.int_)
+        img_i = np.array(img_i, dtype=np.int_)
+        img_j = np.array(img_j, dtype=np.int_)
+        img_k = np.array(img_k, dtype=np.int_)
         atm_ind = np.array(atm_ind, dtype=np.int_)
 
         du, dv, dw = np.array(du), np.array(dv), np.array(dw)
@@ -216,9 +216,9 @@ class test_simulation(unittest.TestCase):
 
         pair_ind = pair_ind[mask].reshape(n_atm,n_pair)
 
-        img_ind_i = img_ind_i[mask].reshape(n_atm,n_pair)
-        img_ind_j = img_ind_j[mask].reshape(n_atm,n_pair)
-        img_ind_k = img_ind_k[mask].reshape(n_atm,n_pair)
+        img_i = img_i[mask].reshape(n_atm,n_pair)
+        img_j = img_j[mask].reshape(n_atm,n_pair)
+        img_k = img_k[mask].reshape(n_atm,n_pair)
         atm_ind = atm_ind[mask].reshape(n_atm,n_pair)
 
         d_xyz = np.stack((dx,dy,dz))
@@ -233,7 +233,7 @@ class test_simulation(unittest.TestCase):
                     if (np.allclose(d_xyz[:,i,p],inv_d_xyz[:,atm_ind[i,p],q])):
                         pair_inv[i,p] = q
 
-        pair_ij = np.zeros((n_atm,n_pair), dtype=np.intc)
+        pair_trans = np.zeros((n_atm,n_pair), dtype=np.intc)
 
         J = np.zeros((n_pair,3,3))
         K = np.zeros((n_atm,3,3))
@@ -276,8 +276,8 @@ class test_simulation(unittest.TestCase):
         Sx[...,2], Sy[...,2], Sz[...,2] = 0, 0, 1
 
         E = simulation.magnetic_energy(Sx, Sy, Sz, J, K, g, B, atm_ind,
-                                       img_ind_i, img_ind_j, img_ind_k,
-                                       pair_ind, pair_ij)
+                                       img_i, img_j, img_k,
+                                       pair_ind, pair_trans)
 
         self.assertAlmostEqual(E[...,0].sum(), -(0.5*Jx*n_pair+Kx+Bx*gx)*n)
         self.assertAlmostEqual(E[...,1].sum(), -(0.5*Jy*n_pair+Ky+By*gy)*n)
@@ -301,9 +301,9 @@ class test_simulation(unittest.TestCase):
 
         ux, uy, uz = crystal.transform(u, v, w, A)
 
-        pair_dict = crystal.pairs(u, v, w, atm, A, extend=True)
+        pair_dict = interaction.pairs(u, v, w, atm, A, extend=True)
 
-        img_ind_i, img_ind_j, img_ind_k, atm_ind = [], [], [], []
+        img_i, img_j, img_k, atm_ind = [], [], [], []
 
         du, dv, dw = [], [], []
 
@@ -319,14 +319,14 @@ class test_simulation(unittest.TestCase):
                     du.append(u[j]-u[i]+img[0])
                     dv.append(v[j]-v[i]+img[1])
                     dw.append(w[j]-w[i]+img[2])
-                img_ind_i.append(ind_i)
-                img_ind_j.append(ind_j)
-                img_ind_k.append(ind_k)
+                img_i.append(ind_i)
+                img_j.append(ind_j)
+                img_k.append(ind_k)
                 atm_ind.append(atm_a)
 
-        img_ind_i = np.array(img_ind_i, dtype=np.int_)
-        img_ind_j = np.array(img_ind_j, dtype=np.int_)
-        img_ind_k = np.array(img_ind_k, dtype=np.int_)
+        img_i = np.array(img_i, dtype=np.int_)
+        img_j = np.array(img_j, dtype=np.int_)
+        img_k = np.array(img_k, dtype=np.int_)
         atm_ind = np.array(atm_ind, dtype=np.int_)
 
         du, dv, dw = np.array(du), np.array(dv), np.array(dw)
@@ -358,9 +358,9 @@ class test_simulation(unittest.TestCase):
 
         pair_ind = pair_ind[mask].reshape(n_atm,n_pair)
 
-        img_ind_i = img_ind_i[mask].reshape(n_atm,n_pair)
-        img_ind_j = img_ind_j[mask].reshape(n_atm,n_pair)
-        img_ind_k = img_ind_k[mask].reshape(n_atm,n_pair)
+        img_i = img_i[mask].reshape(n_atm,n_pair)
+        img_j = img_j[mask].reshape(n_atm,n_pair)
+        img_k = img_k[mask].reshape(n_atm,n_pair)
         atm_ind = atm_ind[mask].reshape(n_atm,n_pair)
 
         d_xyz = np.stack((dx,dy,dz))
@@ -375,7 +375,7 @@ class test_simulation(unittest.TestCase):
                     if (np.allclose(d_xyz[:,i,p],inv_d_xyz[:,atm_ind[i,p],q])):
                         pair_inv[i,p] = q
 
-        pair_ij = np.zeros((n_atm,n_pair), dtype=np.intc)
+        pair_trans = np.zeros((n_atm,n_pair), dtype=np.intc)
 
         J = np.zeros((n_pair,3,3))
         K = np.zeros((n_atm,3,3))
@@ -425,12 +425,12 @@ class test_simulation(unittest.TestCase):
         Sz = np.cos(phi)
 
         E, T_range = simulation.heisenberg(Sx, Sy, Sz, J, K, g, B, Q, atm_ind,
-                                           img_ind_i, img_ind_j, img_ind_k,
-                                           pair_ind, pair_ij, T_range, kB, N)
+                                           img_i, img_j, img_k, pair_ind,
+                                           pair_trans, T_range, kB, N)
 
         E_ref = simulation.magnetic_energy(Sx, Sy, Sz, J, K, g, B, atm_ind,
-                                           img_ind_i, img_ind_j, img_ind_k,
-                                           pair_ind, pair_ij)
+                                           img_i, img_j, img_k,
+                                           pair_ind, pair_trans)
 
         V_ref = simulation.dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
 
@@ -456,9 +456,9 @@ class test_simulation(unittest.TestCase):
 
         ux, uy, uz = crystal.transform(u, v, w, A)
 
-        pair_dict = crystal.pairs(u, v, w, atm, A, extend=True)
+        pair_dict = interaction.pairs(u, v, w, atm, A, extend=True)
 
-        img_ind_i, img_ind_j, img_ind_k, atm_ind = [], [], [], []
+        img_i, img_j, img_k, atm_ind = [], [], [], []
 
         du, dv, dw = [], [], []
 
@@ -474,14 +474,14 @@ class test_simulation(unittest.TestCase):
                     du.append(u[j]-u[i]+img[0])
                     dv.append(v[j]-v[i]+img[1])
                     dw.append(w[j]-w[i]+img[2])
-                img_ind_i.append(ind_i)
-                img_ind_j.append(ind_j)
-                img_ind_k.append(ind_k)
+                img_i.append(ind_i)
+                img_j.append(ind_j)
+                img_k.append(ind_k)
                 atm_ind.append(atm_a)
 
-        img_ind_i = np.array(img_ind_i, dtype=np.int_)
-        img_ind_j = np.array(img_ind_j, dtype=np.int_)
-        img_ind_k = np.array(img_ind_k, dtype=np.int_)
+        img_i = np.array(img_i, dtype=np.int_)
+        img_j = np.array(img_j, dtype=np.int_)
+        img_k = np.array(img_k, dtype=np.int_)
         atm_ind = np.array(atm_ind, dtype=np.int_)
 
         du, dv, dw = np.array(du), np.array(dv), np.array(dw)
@@ -513,9 +513,9 @@ class test_simulation(unittest.TestCase):
 
         pair_ind = pair_ind[mask].reshape(n_atm,n_pair)
 
-        img_ind_i = img_ind_i[mask].reshape(n_atm,n_pair)
-        img_ind_j = img_ind_j[mask].reshape(n_atm,n_pair)
-        img_ind_k = img_ind_k[mask].reshape(n_atm,n_pair)
+        img_i = img_i[mask].reshape(n_atm,n_pair)
+        img_j = img_j[mask].reshape(n_atm,n_pair)
+        img_k = img_k[mask].reshape(n_atm,n_pair)
         atm_ind = atm_ind[mask].reshape(n_atm,n_pair)
 
         d_xyz = np.stack((dx,dy,dz))
@@ -530,7 +530,7 @@ class test_simulation(unittest.TestCase):
                     if (np.allclose(d_xyz[:,i,p],inv_d_xyz[:,atm_ind[i,p],q])):
                         pair_inv[i,p] = q
 
-        pair_ij = np.zeros((n_atm,n_pair), dtype=np.intc)
+        pair_trans = np.zeros((n_atm,n_pair), dtype=np.intc)
 
         J = np.zeros((n_pair,3,3))
         K = np.zeros((n_atm,3,3))
@@ -580,14 +580,14 @@ class test_simulation(unittest.TestCase):
         Sz = np.cos(phi)
 
         E, T_range = simulation.heisenberg_cluster(Sx, Sy, Sz, J, K, g, B, Q,
-                                                   atm_ind, img_ind_i,
-                                                   img_ind_j, img_ind_k,
-                                                   pair_ind, pair_inv, pair_ij,
+                                                   atm_ind, img_i,
+                                                   img_j, img_k, pair_ind,
+                                                   pair_inv, pair_trans,
                                                    T_range, kB, N)
 
         E_ref = simulation.magnetic_energy(Sx, Sy, Sz, J, K, g, B, atm_ind,
-                                           img_ind_i, img_ind_j, img_ind_k,
-                                           pair_ind, pair_ij)
+                                           img_i, img_j, img_k,
+                                           pair_ind, pair_trans)
 
         V_ref = simulation.dipole_dipole_interaction_energy(Sx, Sy, Sz, Q)
 

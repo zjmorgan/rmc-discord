@@ -6,3 +6,4 @@ Classes
 
    material/index
    graphical/index
+   diffuse/index

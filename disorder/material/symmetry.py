@@ -528,7 +528,9 @@ def unique(data):
 
     u, ind, inv = np.unique(b, return_index=True, return_inverse=True)
 
-    return u.view(data_type).reshape(-1, data_size), ind, inv
+    uni_size = u.shape[0]
+
+    return u.view(data_type).reshape(uni_size, data_size), ind, inv
 
 def evaluate(operators, coordinates, translate=True):
     """

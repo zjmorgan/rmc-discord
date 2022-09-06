@@ -8,21 +8,7 @@ from disorder.material import structure, crystal
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
 
-# import pstats, cProfile
-
 class test_structure(unittest.TestCase):
-
-    # def setUp(self):
-
-    #     self.pr = cProfile.Profile()
-    #     self.pr.enable()
-
-    # def tearDown(self):
-
-    #     p = pstats.Stats(self.pr)
-    #     p.strip_dirs()
-    #     p.sort_stats('cumtime')
-    #     p.print_stats()
 
     def test_factor(self):
 
@@ -76,8 +62,8 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(F.imag, data[5], decimal=4)
 
         uc_dict = crystal.unitcell(folder=folder,
-                                    filename='CaTiOSiO4.cif',
-                                    tol=1e-4)
+                                   filename='CaTiOSiO4.cif',
+                                   tol=1e-4)
 
         u = uc_dict['u']
         v = uc_dict['v']
@@ -117,6 +103,36 @@ class test_structure(unittest.TestCase):
 
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))
 
+        cif_file = 'Cu3Au.cif'
+
+        filename = os.path.join(folder, cif_file)
+
+        uc = structure.UnitCell(filename, tol=1e-4)
+
+        self.assertEqual(uc.get_filepath(), folder)
+        self.assertEqual(uc.get_filename(), cif_file)
+
+        self.assertTrue(uc.get_active_sites().all())
+        self.assertEqual(uc.get_number_atoms_per_unit_cell(), 4)
+
+        act_sites = uc.get_active_sites()
+        atm_sites = uc.get_atom_sites()
+
+        act_sites[atm_sites == 'Au'] = False
+        uc.set_active_sites(act_sites)
+
+        self.assertEqual(uc.get_number_atoms_per_unit_cell(), 3)
+
+        u, v, w = uc.get_fractional_coordinates()
+        uc.set_fractional_coordinates(u, v, w)
+
+        u_ref, v_ref, w_ref = uc.get_fractional_coordinates()
+        np.testing.assert_array_almost_equal(u, u_ref)
+        np.testing.assert_array_almost_equal(v, v_ref)
+        np.testing.assert_array_almost_equal(w, w_ref)
+
+        # ---
+
         cif_file = 'CaTiOSiO4.cif'
 
         filename = os.path.join(folder, cif_file)
@@ -129,11 +145,11 @@ class test_structure(unittest.TestCase):
         self.assertTrue(uc.get_active_sites().all())
         self.assertEqual(uc.get_number_atoms_per_unit_cell(), 32)
 
-        active_sites = uc.get_active_sites()
-        atms = uc.get_unit_cell_atoms()
+        act_sites = uc.get_active_sites()
+        atm_sites = uc.get_atom_sites()
 
-        active_sites[atms == 'O'] = False
-        uc.set_active_sites(active_sites)
+        act_sites[atm_sites == 'O'] = False
+        uc.set_active_sites(act_sites)
 
         u, v, w = uc.get_fractional_coordinates()
         uc.set_fractional_coordinates(u, v, w)
@@ -175,11 +191,11 @@ class test_structure(unittest.TestCase):
         self.assertTrue(uc.get_active_sites().all())
         self.assertEqual(uc.get_number_atoms_per_unit_cell(), 104)
 
-        active_sites = uc.get_active_sites()
-        atms = uc.get_unit_cell_atoms()
+        act_sites = uc.get_active_sites()
+        atm_sites = uc.get_atom_sites()
 
-        active_sites[atms == 'O'] = False
-        uc.set_active_sites(active_sites)
+        act_sites[atm_sites == 'O'] = False
+        uc.set_active_sites(act_sites)
 
         mu1, mu2, mu3 = uc.get_crystal_axis_magnetic_moments()
         uc.set_crystal_axis_magnetic_moments(mu1, mu2, mu3)
@@ -194,6 +210,45 @@ class test_structure(unittest.TestCase):
 
         g_ref = uc.get_g_factors()
         np.testing.assert_array_almost_equal(g, g_ref)
+
+        # ---
+
+        cif_file = 'Ba3Co2O6(CO3)0.6.cif'
+
+        filename = os.path.join(folder, cif_file)
+
+        uc = structure.UnitCell(filename, tol=1e-4)
+
+        self.assertEqual(uc.get_filepath(), folder)
+        self.assertEqual(uc.get_filename(), cif_file)
+
+        self.assertTrue(uc.get_active_sites().all())
+        self.assertEqual(uc.get_number_atoms_per_unit_cell(), 70)
+
+        atms = uc.get_unit_cell_atoms()
+
+        charge = uc.get_unit_cell_charge_numbers()
+        mass = uc.get_unit_cell_mass_numbers()
+
+        np.testing.assert_array_equal(charge[atms == 'Ba'], '2+')
+        np.testing.assert_array_equal(charge[atms == 'Co'], '3+')
+        np.testing.assert_array_equal(charge[atms == 'C'], '4+')
+        np.testing.assert_array_equal(charge[atms == 'O'], '2-')
+        np.testing.assert_array_equal(mass, '')
+
+        u, v, w = uc.get_fractional_coordinates()
+        sp_pos = uc.get_wyckoff_special_positions()
+
+        mult = uc.get_site_multiplicities()
+        symm = uc.get_site_symmetries()
+
+        np.testing.assert_array_equal(mult[symm == '1'], 6)
+        np.testing.assert_array_equal(mult[symm == 'm'], 3)
+        np.testing.assert_array_equal(mult[symm == '3'], 2)
+
+        for i in range(len(atms)):
+            x, y, z = u[i], v[i], w[i]
+            np.testing.assert_array_almost_equal([x,y,z], eval(sp_pos[i]), 4)
 
 if __name__ == '__main__':
     unittest.main()

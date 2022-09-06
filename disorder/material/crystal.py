@@ -326,6 +326,10 @@ def unitcell(folder, filename, tol=1e-2):
 
     atm = atm[sort]
 
+    ion = np.array([''.join(re.findall(r'[\d.+-]+$', a)) for a in atm])
+    iso = np.array([''.join(re.findall(r'^\d+\s*', a)) for a in atm])
+    atm = np.array([''.join(re.findall(r'[a-zA-Z]', a)) for a in atm])
+
     unit_cell = {}
 
     unit_cell['u'] = u
@@ -337,6 +341,8 @@ def unitcell(folder, filename, tol=1e-2):
     unit_cell['site'] = s
     unit_cell['operator'] = ops
     unit_cell['magnetic_operator'] = mag_ops
+    unit_cell['isotope'] = iso
+    unit_cell['ion'] = ion
     unit_cell['atom'] = atm
     unit_cell['n_atom'] = n_atm
 
@@ -349,7 +355,7 @@ def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
 
     Parameters
     ----------
-    atm : 1d array
+    atm : 1d array, str
         Atoms, ions, or isotopes.
     occ : 1d array
         Site occupancies.
@@ -588,7 +594,7 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
     nu, nv, nw : int
         Number of grid points :math:`N_1`, :math:`N_2`, :math:`N_3` along the
         :math:`a`, :math:`b`, and :math:`c`-axis of the supercell.
-    atm : 1d array
+    atm : 1d array, str
         Atoms, ions, or isotopes.
     A : 2d array
         Transformation matrix from crystal to Cartesian coordinates.
@@ -1007,6 +1013,7 @@ def operators(folder, filename):
     symops = cif_dict[loop_ops[ind_ops]]
 
     symops = [symop.replace(' ', '') for symop in symops]
+    symops = [','.join(symop.split(',')[:3]) for symop in symops]
 
     return symops
 
@@ -1337,9 +1344,9 @@ def vector(h, k, l, B):
 
     """
 
-    qh, qk, ql = transform(h, k, l, B)
+    kh, kk, kl = transform(h, k, l, B)
 
-    Qh, Qk, Ql = 2*np.pi*qh, 2*np.pi*qk, 2*np.pi*ql
+    Qh, Qk, Ql = 2*np.pi*kh, 2*np.pi*kk, 2*np.pi*kl
 
     return Qh, Qk, Ql
 
@@ -1366,107 +1373,3 @@ def transform(p, q, r, U):
     z = U[2,0]*p+U[2,1]*q+U[2,2]*r
 
     return x, y, z
-
-def pairs(u, v, w, ion, A, extend=False):
-
-    n_atm = ion.shape[0]
-
-    i, j = np.triu_indices(n_atm, k=1)
-    i, j = np.concatenate((i,j)), np.concatenate((j,i))
-
-    du = u[j]-u[i]
-    dv = v[j]-v[i]
-    dw = w[j]-w[i]
-
-    u_img = -1*(du > 0.5)+(du < -0.5)
-    v_img = -1*(dv > 0.5)+(dv < -0.5)
-    w_img = -1*(dw > 0.5)+(dw < -0.5)
-
-    du[du < -0.5] += 1
-    dv[dv < -0.5] += 1
-    dw[dw < -0.5] += 1
-
-    du[du > 0.5] -= 1
-    dv[dv > 0.5] -= 1
-    dw[dw > 0.5] -= 1
-
-    if extend:
-
-        U, V, W = np.meshgrid(np.arange(-1,2),
-                              np.arange(-1,2),
-                              np.arange(-1,2), indexing='ij')
-
-        U = U.flatten()[:,np.newaxis]
-        V = V.flatten()[:,np.newaxis]
-        W = W.flatten()[:,np.newaxis]
-
-        u_img = (u_img+U).flatten()
-        v_img = (v_img+V).flatten()
-        w_img = (w_img+W).flatten()
-
-        du, dv, dw = (du+U).flatten(), (dv+V).flatten(), (dw+W).flatten()
-
-        U = np.repeat(np.delete(U.flatten(), 13), n_atm)
-        V = np.repeat(np.delete(V.flatten(), 13), n_atm)
-        W = np.repeat(np.delete(W.flatten(), 13), n_atm)
-
-        du = np.concatenate((du,U))
-        dv = np.concatenate((dv,V))
-        dw = np.concatenate((dw,W))
-
-        u_img = np.concatenate((u_img,U))
-        v_img = np.concatenate((v_img,V))
-        w_img = np.concatenate((w_img,W))
-
-        i = np.tile(i, 27)
-        j = np.tile(j, 27)
-
-        i = np.concatenate((i,np.tile(np.arange(n_atm), 26)))
-        j = np.concatenate((j,np.tile(np.arange(n_atm), 26)))
-
-    dx, dy, dz = transform(du, dv, dw, A)
-
-    d = np.sqrt(dx**2+dy**2+dz**2)
-
-    atms = np.stack((ion[i],ion[j]))
-
-    ion_ion = np.array(['_'.join((a,b)) for a, b in zip(*atms)])
-    ions, ion_labels = np.unique(ion_ion, return_inverse=True)
-
-    metric = np.stack((dx,dy,dz,d)).T
-
-    pair_dict = { }
-
-    for k in range(n_atm):
-
-        mask = i == k
-
-        sort = np.lexsort(metric[mask].T)
-
-        label_dict = { }
-
-        l = j[mask][sort]
-        ion_lab = ion_labels[mask][sort]
-        ion_ref = [ion_pair.split('_')[1] for ion_pair in ion_ion[mask][sort]]
-
-        iu, iv, iw = u_img[mask][sort], v_img[mask][sort], w_img[mask][sort]
-
-        c = 0
-        m, c_uvw = [], []
-        m.append(l[0])
-        c_uvw.append((iu[0],iv[0],iw[0]))
-        ind = -1
-        for ind in range(ion_lab.shape[0]-1):
-            if ion_lab[ind] != ion_lab[ind+1]:
-                key = c, ion_ref[ind]
-                label_dict[key] = m, c_uvw
-                m, c_uvw = [], []
-                c += 1
-            m.append(l[ind+1])
-            c_uvw.append((iu[ind+1],iv[ind+1],iw[ind+1]))
-        key = c, ion_ref[ind+1]
-        label_dict[key] = m, c_uvw
-
-        pair_dict[k] = label_dict
-
-    return pair_dict

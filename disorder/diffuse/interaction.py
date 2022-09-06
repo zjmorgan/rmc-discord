@@ -4,7 +4,7 @@ import numpy as np
 
 from scipy.special import erfc
 
-from disorder.material import crystal
+from disorder.material import crystal, symmetry
 
 def __A(alpha,r):
 
@@ -83,7 +83,11 @@ def atom_pairs_distance(rx, ry, rz, nu, nv, nw, n_atm, A, tol=1e-3):
 
     pairs = np.stack((i_lat,j_lat)).reshape(2,n_uvw*m_uvw*(m_uvw-1)//2)
 
-    i_lat, j_lat = np.unique(np.sort(pairs, axis=0), axis=1)
+    pairs.sort(axis=0)
+
+    uni, _, _ = symmetry.unique(pairs)
+
+    i_lat, j_lat = uni
 
     # ---
 
@@ -94,18 +98,9 @@ def atom_pairs_distance(rx, ry, rz, nu, nv, nw, n_atm, A, tol=1e-3):
 
     distance = np.stack((du,dv,dw))
 
-    distance = np.stack((distance.T,-distance.T)).T
-
-    sort = np.lexsort(distance, axis=1)[:,0]
-
-    n_pairs = sort.size
-
-    distance = distance.reshape(3,2*n_pairs)[:,sort+2*np.arange(n_pairs)]
-
     metric = np.vstack(distance).T
 
-    _, index, inverse = np.unique(metric, return_index=True,
-                                  return_inverse=True, axis=0)
+    _, index, inverse = symmetry.unique(metric)
 
     i_lat = np.ravel_multi_index((iu[index],iv[index],iw[index]), (nu,nv,nw))
     j_lat = np.ravel_multi_index((ju[index],jv[index],jw[index]), (nu,nv,nw))
@@ -124,18 +119,9 @@ def atom_pairs_distance(rx, ry, rz, nu, nv, nw, n_atm, A, tol=1e-3):
 
     distance = np.stack((dx,dy,dz))
 
-    distance = np.stack((distance.T,-distance.T)).T
-
-    sort = np.lexsort(distance, axis=1)[:,0]
-
-    n_pairs = sort.size
-
-    distance = distance.reshape(3,2*n_pairs)[:,sort+2*np.arange(n_pairs)]
-
     metric = np.vstack(np.round(distance/tol,0)).astype(int).T
 
-    _, ind, inv = np.unique(metric, return_index=True,
-                            return_inverse=True, axis=0)
+    _, ind, inv = symmetry.unique(metric)
 
     i_atm, j_atm = i_atm[ind], j_atm[ind]
 
@@ -473,3 +459,235 @@ def dipole_dipole_matrix(rx, ry, rz, nu, nv, nw, n_atm, A, B, R, tol=1e-3):
     Qijkl[k,5] += np.sum(g*Gxy, axis=1)[inverse]
 
     return Qijkl
+
+def pairs(u, v, w, atm, A, extend=False):
+    """
+    Generate pairs.
+
+    Parameters
+    ----------
+    u, v, w : 1d array
+        Fractional coordinates.
+    atm : 1d array, str
+        Atoms, ions, or isotopes.
+    A : 2d array, 3x3
+        Real space crystal axis to Cartesian transformation matrix.
+    extend : bool, optional
+        Extend beyond one unit cell. The default is ``False``.
+
+    Returns
+    -------
+    pair_info : dict
+        Pair information for constructing bonds.
+
+    """
+
+    n_atm = atm.shape[0]
+
+    i, j = np.triu_indices(n_atm, k=1)
+    i, j = np.concatenate((i,j)), np.concatenate((j,i))
+
+    du = u[j]-u[i]
+    dv = v[j]-v[i]
+    dw = w[j]-w[i]
+
+    u_img = -1*(du > 0.5)+(du < -0.5)
+    v_img = -1*(dv > 0.5)+(dv < -0.5)
+    w_img = -1*(dw > 0.5)+(dw < -0.5)
+
+    du[du < -0.5] += 1
+    dv[dv < -0.5] += 1
+    dw[dw < -0.5] += 1
+
+    du[du > 0.5] -= 1
+    dv[dv > 0.5] -= 1
+    dw[dw > 0.5] -= 1
+
+    if extend:
+
+        U, V, W = np.meshgrid(np.arange(-1,2),
+                              np.arange(-1,2),
+                              np.arange(-1,2), indexing='ij')
+
+        U = U.flatten()[:,np.newaxis]
+        V = V.flatten()[:,np.newaxis]
+        W = W.flatten()[:,np.newaxis]
+
+        u_img = (u_img+U).flatten()
+        v_img = (v_img+V).flatten()
+        w_img = (w_img+W).flatten()
+
+        du, dv, dw = (du+U).flatten(), (dv+V).flatten(), (dw+W).flatten()
+
+        U = np.repeat(np.delete(U.flatten(), 13), n_atm)
+        V = np.repeat(np.delete(V.flatten(), 13), n_atm)
+        W = np.repeat(np.delete(W.flatten(), 13), n_atm)
+
+        du = np.concatenate((du,U))
+        dv = np.concatenate((dv,V))
+        dw = np.concatenate((dw,W))
+
+        u_img = np.concatenate((u_img,U))
+        v_img = np.concatenate((v_img,V))
+        w_img = np.concatenate((w_img,W))
+
+        i = np.tile(i, 27)
+        j = np.tile(j, 27)
+
+        i = np.concatenate((i,np.tile(np.arange(n_atm), 26)))
+        j = np.concatenate((j,np.tile(np.arange(n_atm), 26)))
+
+    dx, dy, dz = crystal.transform(du, dv, dw, A)
+
+    d = np.sqrt(dx**2+dy**2+dz**2)
+
+    atms = np.stack((atm[i],atm[j]))
+
+    atm_pairs = np.array(['_'.join((a,b)) for a, b in zip(*atms)])
+    atms, atm_labels = np.unique(atm_pairs, return_inverse=True)
+
+    metric = np.stack((dx,dy,dz,d)).T
+
+    pair_info = { }
+
+    for k in range(n_atm):
+
+        mask = i == k
+
+        sort = np.lexsort(metric[mask].T)
+
+        label_dict = { }
+
+        l = j[mask][sort]
+        lab = atm_labels[mask][sort]
+        ref = [atm_pair.split('_')[1] for atm_pair in atm_pairs[mask][sort]]
+
+        iu, iv, iw = u_img[mask][sort], v_img[mask][sort], w_img[mask][sort]
+
+        c = 0
+        m, c_uvw = [], []
+        m.append(l[0])
+        c_uvw.append((iu[0],iv[0],iw[0]))
+        ind = -1
+        for ind in range(lab.shape[0]-1):
+            if lab[ind] != lab[ind+1]:
+                key = c, ref[ind]
+                label_dict[key] = m, c_uvw
+                m, c_uvw = [], []
+                c += 1
+            m.append(l[ind+1])
+            c_uvw.append((iu[ind+1],iv[ind+1],iw[ind+1]))
+        key = c, ref[ind+1]
+        label_dict[key] = m, c_uvw
+
+        pair_info[k] = label_dict
+
+    return pair_info
+
+def bonds(pair_info, u, v, w, A, tol=1e-3):
+    """
+    Generate bond pairs.
+
+    Parameters
+    ----------
+    pair_info : dict
+        Pair information for constructing bonds.
+    u, v, w : 1d array
+        Fractional coordinates.
+    atm : 1d array, str
+        Atoms, ions, or isotopes.
+    A : 2d array, 3x3
+        Real space crystal axis to Cartesian transformation matrix.
+    tol : float, optional
+        Tolerance of distances for unique pairs. The default is ``1e-3``.
+
+    Returns
+    -------
+    dx, dy, dz : 2d array
+        Separation distance vector.
+    img_i, img_j, img_k : 2d array, int
+        Indices of cell-pairs.
+    atm_ind : 2d array, int
+        Indices of atom-pairs.
+    pair_inv : 2d array, int
+        Indices of inverse-pairs.
+    pair_ind : 2d array, int
+        Indices of bond-pairs.
+    pair_trans : 2d array, int
+        Indices of transpose-pairs.
+
+    """
+
+    n_atm = u.shape[0]
+
+    indices = [[[a,*b] for sub in value.values()
+                for a, b in zip(*sub)] for value in pair_info.values()]
+
+    atm_ind, img_i, img_j, img_k = np.array(indices).T
+
+    atm_ind, img_i, img_j, img_k = atm_ind.T, img_i.T, img_j.T, img_k.T
+
+    du, dv, dw = (u[atm_ind].T-u).T, (v[atm_ind].T-v).T, (w[atm_ind].T-w).T
+
+    du += img_i
+    dv += img_j
+    dw += img_k
+
+    dx, dy, dz = crystal.transform(du, dv, dw, A)
+
+    dx = dx.reshape(atm_ind.shape)
+    dy = dy.reshape(atm_ind.shape)
+    dz = dz.reshape(atm_ind.shape)
+
+    d = np.sqrt(dx**2+dy**2+dz**2)
+
+    n_pair = atm_ind.shape[1]
+
+    dist = np.round(d/tol).astype(int)
+
+    _, inv_ind = np.unique(dist, return_inverse=True)
+
+    pair_ind = np.arange(n_pair+1)[inv_ind].reshape(n_atm,n_pair)
+
+    d_xyz = np.round(np.stack((dx,dy,dz))/tol).astype(int)
+
+    inv_d_xyz = -d_xyz
+
+    p = np.repeat(np.arange(n_pair), n_atm*n_pair).reshape(n_pair,n_pair,n_atm)
+
+    mask = (d_xyz.T == inv_d_xyz[:,atm_ind,:].T).all(axis=3)
+
+    pair_inv = p.T[mask.T].reshape(n_atm,n_pair)
+
+    pair_trans = np.zeros((n_atm,n_pair), dtype=np.int32)
+
+    indices = atm_ind, pair_inv, pair_ind, pair_trans
+
+    return dx, dy, dz, img_i, img_j, img_k, *indices
+
+def anisotropy(dx, dy, dz):
+    """
+    Easy axes components.
+
+    Parameters
+    ----------
+    dx, dy, dz : 2d array
+        Separation distance vector.
+
+    Returns
+    -------
+    uxx, uyy, uzz, uyz, uxz, uxy : 2d array
+        Components of easy axes.
+
+    """
+
+    d = np.sqrt(dx**2+dy**2+dz**2)
+
+    uxx = (dx*dx).mean(axis=1)/d.mean(axis=1)**2
+    uyy = (dy*dy).mean(axis=1)/d.mean(axis=1)**2
+    uzz = (dz*dz).mean(axis=1)/d.mean(axis=1)**2
+    uyz = (dy*dz).mean(axis=1)/d.mean(axis=1)**2
+    uxz = (dx*dz).mean(axis=1)/d.mean(axis=1)**2
+    uxy = (dx*dy).mean(axis=1)/d.mean(axis=1)**2
+
+    return uxx, uyy, uzz, uyz, uxz, uxy

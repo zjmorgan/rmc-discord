@@ -3,8 +3,9 @@
 import os
 import numpy as np
 
-from disorder.diffuse import scattering, space
-from disorder.diffuse import displacive, magnetic
+from disorder.diffuse import scattering, space, powder, monocrystal
+from disorder.diffuse import displacive, magnetic, occupational
+from disorder.correlation import functions
 from disorder.material import crystal, symmetry
 
 def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
@@ -151,6 +152,8 @@ class UnitCell:
         Name of CIF file.
     get_sites()
         Atom sites in the unit cell.
+    get_atom_sites()
+        Atom sites in the unit cell.
     get_active_sites()
         Active atom sites in the unit cell.
     set_active_sites()
@@ -167,6 +170,14 @@ class UnitCell:
         Atom symbols of active atoms.
     set_unit_cell_atoms()
         Update atom symbols.
+    get_unit_cell_charge_numbers()
+        Charge numbers of active ions.
+    set_unit_cell_charge_numbers()
+        Update charge numbers of active ions.
+    get_unit_cell_isotope_numbers()
+        Mass numbers of active isotopes.
+    set_unit_cell_isotope_numbers()
+        Update mass numbers of active isotopes.
     get_occupancies()
         Occupancies.
     set_occupancies()
@@ -238,6 +249,10 @@ class UnitCell:
         Wyckoff special positions.
     get_site_multiplicities()
         Site multiplicites.
+    get_twins()
+        Twin transformation matrices and mass fractions.
+    set_twins()
+        Update twin transformation matrices and mass fractions.
 
     """
 
@@ -258,17 +273,19 @@ class UnitCell:
         folder = self.get_filepath()
         filename = self.get_filename()
 
-        constants = crystal.parameters(folder=folder, filename=filename)
+        constants = crystal.parameters(folder, filename)
 
         a, b, c, alpha, beta, gamma = constants
 
         self.__a, self.__b, self.__c = a, b, c
         self.__alpha, self.__beta, self.__gamma = alpha, beta, gamma
 
-        uc_dict = crystal.unitcell(folder=folder, filename=filename, tol=tol)
+        uc_dict = crystal.unitcell(folder, filename, tol=tol)
 
         n_atm = uc_dict['n_atom']
 
+        self.__ion = uc_dict['ion']
+        self.__iso = uc_dict['isotope']
         self.__atm = uc_dict['atom']
         self.__site = uc_dict['site']
 
@@ -299,7 +316,7 @@ class UnitCell:
         self.__U13 = np.zeros(n_atm)
         self.__U12 = np.zeros(n_atm)
 
-        if (displacement.shape[1] == 1):
+        if displacement.shape[1] == 1:
             self.set_isotropic_displacement_parameter(displacement.flatten())
         else:
             self.__U11 = displacement.T[0]
@@ -313,7 +330,7 @@ class UnitCell:
 
         self.__g = np.full(n_atm, 2.0)
 
-        hm, sg = crystal.group(folder=folder, filename=filename)
+        hm, sg = crystal.group(folder, filename)
 
         self.__hm = hm
         self.__sg = sg
@@ -322,7 +339,7 @@ class UnitCell:
 
         self.__lat = lat
 
-        laue =  crystal.laue(folder=folder, filename=filename)
+        laue = crystal.laue(folder, filename)
 
         self.__laue = laue
 
@@ -332,11 +349,20 @@ class UnitCell:
 
         A = self.get_fractional_cartesian_transform()
 
+        operators = crystal.operators(folder, filename)
+
         for i, (u, v, w) in enumerate(zip(self.__u,self.__v,self.__w)):
 
-            pg, mult, sp_pos = symmetry.site(self.__op, [u,v,w], A, tol=1e-2)
+            pg, mult, sp_pos = symmetry.site(operators, [u,v,w], A, tol=1e-2)
 
-            self.__pg[i], self.__mult[i], self.__sp_pos[i] = pg, mult, sp_pos
+            self.__pg[i] = pg
+            self.__mult[i] = mult
+            self.__sp_pos[i] = sp_pos[0]
+
+        T, weights = crystal.twins(folder, filename)
+
+        self.__T = T
+        self.__weights = weights
 
     def __get_all_lattice_constants(self):
 
@@ -383,6 +409,19 @@ class UnitCell:
         """
 
         return self.__site
+
+    def get_atom_sites(self):
+        """
+        Atom site symbols in the unit cell.
+
+        Returns
+        -------
+        atms : 1d array, int
+            All atom sites.
+
+        """
+
+        return self.__atm[self.__mask]
 
     def get_active_sites(self):
         """
@@ -438,9 +477,9 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        return self.__u[mask], self.__v[mask], self.__w[mask]
+        return self.__u[ind], self.__v[ind], self.__w[ind]
 
     def set_fractional_coordinates(self, u, v, w):
         """
@@ -453,20 +492,15 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
-
         ind = self.__index
-        inv = self.__inverse
 
-        operators = symmetry.binary(self.__op[ind], self.__op[mask][inv])
-
-        up, vp, wp = u[inv], v[inv], w[inv]
+        operators = self.__op[ind]
 
         for i, operator in enumerate(operators):
-            uvw = symmetry.evaluate([operator], [up[i], vp[i], wp[i]])
-            up[i], vp[i], wp[i] = np.mod(uvw, 1).flatten()
+            uvw = symmetry.evaluate([operator], [u[i], v[i], w[i]])
+            u[i], v[i], w[i] = np.mod(uvw, 1).flatten()
 
-        self.__u[ind], self.__v[ind], self.__w[ind] = up, vp, wp
+        self.__u[ind], self.__v[ind], self.__w[ind] = u, v, w
 
     def get_unit_cell_cartesian_atomic_coordinates(self):
         """
@@ -490,14 +524,14 @@ class UnitCell:
 
         Returns
         -------
-        atm : 1d array
+        atm : 1d array, str
             Atom symbols.
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        return self.__atm[mask]
+        return self.__atm[ind]
 
     def set_unit_cell_atoms(self, atm):
         """
@@ -505,7 +539,7 @@ class UnitCell:
 
         Parameters
         ----------
-        atm : 1d array
+        atm : 1d array, str
             Atom symbols.
 
         """
@@ -514,6 +548,104 @@ class UnitCell:
         inv = self.__inverse
 
         self.__atm[ind] = atm[inv]
+
+    def get_unit_cell_charge_numbers(self):
+        """
+        Charge numbers of active ions.
+
+        Returns
+        -------
+        ion : 1d array, str
+            Valence charge number of active ions.
+
+        """
+
+        ind = self.__index
+
+        return self.__ion[ind]
+
+    def set_unit_cell_charge_numbers(self, ion):
+        """
+        Update charge numbers of active ions.
+
+        Parameters
+        ----------
+        ion : 1d array, str
+            Valence charge number of active ions.
+
+        """
+
+        ind = self.__index
+        inv = self.__inverse
+
+        self.__ion[ind] = ion[inv]
+
+    def get_unit_cell_mass_numbers(self):
+        """
+        Mass numbers of active isotopes.
+
+        Returns
+        -------
+        iso : 1d array, str
+            Nuclide charge number of active ions.
+
+        """
+
+        ind = self.__index
+
+        return self.__iso[ind]
+
+    def set_unit_cell_mass_numbers(self, iso):
+        """
+        Update mass numbers of active isotopes.
+
+        Parameters
+        ----------
+        iso : 1d array, str
+            Nuclide mass number of active ions.
+
+        """
+
+        ind = self.__index
+        inv = self.__inverse
+
+        self.__iso[ind] = iso[inv]
+
+    def get_unit_cell_ions(self):
+        """
+        Ion symbols of active ions.
+
+        Returns
+        -------
+        ion : 1d array, str
+            Ion symbols.
+
+        """
+
+        ind = self.__index
+
+        atm = self.__atm[ind]
+        ion = self.__ion[ind]
+
+        return np.array([a+c for a, c in zip(atm, ion)])
+
+    def get_unit_cell_isotopes(self):
+        """
+        Isotopes symbols of active isotopes.
+
+        Returns
+        -------
+        iso : 1d array, str
+            Isotopes symbols.
+
+        """
+
+        ind = self.__index
+
+        atm = self.__atm[ind]
+        iso = self.__iso[ind]
+
+        return np.array([A+a for a, A in zip(atm, iso)])
 
     def get_occupancies(self):
         """
@@ -526,9 +658,9 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        return self.__occ[mask]
+        return self.__occ[ind]
 
     def set_occupancies(self, occ):
         """
@@ -559,14 +691,14 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        U11 = self.__U11[mask]
-        U22 = self.__U22[mask]
-        U33 = self.__U33[mask]
-        U23 = self.__U23[mask]
-        U13 = self.__U13[mask]
-        U12 = self.__U12[mask]
+        U11 = self.__U11[ind]
+        U22 = self.__U22[ind]
+        U33 = self.__U33[ind]
+        U23 = self.__U23[ind]
+        U13 = self.__U13[ind]
+        U12 = self.__U12[ind]
 
         return U11, U22, U33, U23, U13, U12
 
@@ -584,31 +716,21 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
-
         ind = self.__index
-        inv = self.__inverse
 
-        operators = symmetry.binary(self.__op[ind], self.__op[mask][inv])
-
-        U11p = U11[inv]
-        U22p = U22[inv]
-        U33p = U33[inv]
-        U23p = U23[inv]
-        U13p = U13[inv]
-        U12p = U12[inv]
+        operators = self.__op[ind]
 
         for i, operator in enumerate(operators):
-            disp = [U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i]]
+            disp = [U11[i], U22[i], U33[i], U23[i], U13[i], U12[i]]
             disp = symmetry.evaluate_disp([operator], disp)
-            U11p[i], U22p[i], U33p[i], U23p[i], U13p[i], U12p[i] = disp
+            U11[i], U22[i], U33[i], U23[i], U13[i], U12[i] = disp
 
-        self.__U11[ind] = U11p
-        self.__U22[ind] = U22p
-        self.__U33[ind] = U33p
-        self.__U23[ind] = U23p
-        self.__U13[ind] = U13p
-        self.__U12[ind] = U12p
+        self.__U11[ind] = U11
+        self.__U22[ind] = U22
+        self.__U33[ind] = U33
+        self.__U23[ind] = U23
+        self.__U13[ind] = U13
+        self.__U12[ind] = U12
 
     def get_isotropic_displacement_parameter(self):
         """
@@ -707,11 +829,11 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        mu1 = self.__mu1[mask]
-        mu2 = self.__mu2[mask]
-        mu3 = self.__mu3[mask]
+        mu1 = self.__mu1[ind]
+        mu2 = self.__mu2[ind]
+        mu3 = self.__mu3[ind]
 
         return mu1, mu2, mu3
 
@@ -726,26 +848,18 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
-
         ind = self.__index
-        inv = self.__inverse
 
-        operators = symmetry.binary_mag(self.__mag_op[ind],
-                                        self.__mag_op[mask][inv])
-
-        mu1p = mu1[inv]
-        mu2p = mu2[inv]
-        mu3p = mu3[inv]
+        operators = self.__mag_op[ind]
 
         for i, operator in enumerate(operators):
-            mag = [mu1p[i], mu2p[i], mu3p[i]]
+            mag = [mu1[i], mu2[i], mu3[i]]
             mag = symmetry.evaluate_mag([operator], mag)
-            mu1p[i], mu2p[i], mu3p[i] = np.array(mag).flatten()
+            mu1[i], mu2[i], mu3[i] = np.array(mag).flatten()
 
-        self.__mu1[ind] = mu1p
-        self.__mu2[ind] = mu2p
-        self.__mu3[ind] = mu3p
+        self.__mu1[ind] = mu1
+        self.__mu2[ind] = mu2
+        self.__mu3[ind] = mu3
 
     def get_magnetic_moment_magnitude(self):
         """
@@ -790,9 +904,9 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        return self.__g[mask]
+        return self.__g[ind]
 
     def set_g_factors(self, g):
         """
@@ -842,16 +956,16 @@ class UnitCell:
         beta = self.__beta
         gamma = self.__gamma
 
-        if (lat == 'Cubic'):
+        if lat == 'Cubic':
             constants = a,
-        elif (lat == 'Hexagonal' or lat == 'Tetragonal'):
+        elif lat == 'Hexagonal' or lat == 'Tetragonal':
             constants = a, c
-        elif (lat == 'Rhobmohedral'):
+        elif lat == 'Rhobmohedral':
             constants = a, alpha
-        elif (lat == 'Orthorhombic'):
+        elif lat == 'Orthorhombic':
             constants = a, b, c
-        elif (lat == 'Monoclinic'):
-            if (not np.isclose(beta, np.pi/2)):
+        elif lat == 'Monoclinic':
+            if not np.isclose(beta, np.pi/2):
                 constants = a, b, c, alpha, gamma
             else:
                 constants = a, b, c, alpha, beta
@@ -892,20 +1006,20 @@ class UnitCell:
         beta = self.__beta
         gamma = self.__gamma
 
-        if (lat == 'Cubic'):
+        if lat == 'Cubic':
             a = constants
             b = c = a
-        elif (lat == 'Hexagonal' or lat == 'Tetragonal'):
+        elif lat == 'Hexagonal' or lat == 'Tetragonal':
             a, c = constants
             b = a
-        elif (lat == 'Rhobmohedral'):
+        elif lat == 'Rhobmohedral':
             a, alpha = constants
             b = c = a
             beta = gamma = alpha
-        elif (lat == 'Orthorhombic'):
+        elif lat == 'Orthorhombic':
             a, b, c = constants
             alpha = beta = gamma = np.pi/2
-        elif (lat == 'Monoclinic'):
+        elif lat == 'Monoclinic':
             if (not np.isclose(beta, np.pi/2)):
                 a, b, c, alpha, gamma = constants
             else:
@@ -948,9 +1062,9 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        return self.__op[mask]
+        return self.__op[ind]
 
     def get_magnetic_symmetry_operators(self):
         """
@@ -963,9 +1077,9 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        return self.__mag_op[mask]
+        return self.__mag_op[ind]
 
     def get_lattice_system(self):
         """
@@ -1252,9 +1366,9 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        return self.__pg[mask]
+        return self.__pg[ind]
 
     def get_wyckoff_special_positions(self):
         """
@@ -1267,9 +1381,9 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        return self.__sp_pos[mask]
+        return self.__sp_pos[ind]
 
     def get_site_multiplicities(self):
         """
@@ -1282,9 +1396,40 @@ class UnitCell:
 
         """
 
-        mask = self.__mask
+        ind = self.__index
 
-        return self.__mult[mask]
+        return self.__mult[ind]
+
+    def get_twins(self):
+        """
+        Twin transformation matrices and mass fractions.
+
+        Returns
+        -------
+        T : 3d array
+            Twin transformation matrices.
+        weights : 1d array
+            Twin mass fractions.
+
+        """
+
+        return self.__T, self.__weights
+
+    def set_twins(self, T, weights):
+        """
+        Update twin transformation matrices and mass fractions.
+
+        Parameters
+        ----------
+        T : 3d array
+            Twin transformation matrices.
+        weights : 1d array
+            Twin mass fractions.
+
+        """
+
+        self.__T = T
+        self.__weights = weights
 
 class SuperCell(UnitCell):
     """
@@ -1322,6 +1467,10 @@ class SuperCell(UnitCell):
         super(SuperCell, self).__init__(filename, tol)
 
         self.set_super_cell_extents(nu, nv, nw)
+
+        self.randomize_spin_vectors()
+        self.randomize_site_occupancies()
+        self.randomize_atomic_displacements()
 
     def get_super_cell_extents(self):
         """
@@ -1364,7 +1513,7 @@ class SuperCell(UnitCell):
 
         """
 
-        nu, nv, nw = self.get_super_cell_dimensions()
+        nu, nv, nw = self.get_super_cell_extents()
 
         return nu*nv*nw
 
@@ -1396,7 +1545,7 @@ class SuperCell(UnitCell):
         """
 
         A = self.get_fractional_cartesian_transform()
-        nu, nv, nw = self.get_super_cell_dimensions()
+        nu, nv, nw = self.get_super_cell_extents()
 
         return space.cell(nu, nv, nw, A)
 
@@ -1418,3 +1567,321 @@ class SuperCell(UnitCell):
         atm = self.get_unit_cell_atoms()
 
         return space.real(ux, uy, uz, ix, iy, iz, atm)
+
+    def randomize_spin_vectors(self):
+        """
+        Generate random spin vectors.
+
+        """
+
+        dims = self.get_super_cell_extents()
+        n_atm = self.get_number_atoms_per_unit_cell()
+
+        mu_x, mu_y, mu_z = self.get_cartesian_magnetic_moments()
+
+        moment = np.row_stack((mu_x, mu_y, mu_z))
+
+        self._Sx, self._Sy, self._Sz = magnetic.spin(*dims, n_atm, moment)
+
+    def randomize_site_occupancies(self):
+        """
+        Generate random site occupancies.
+
+        """
+
+        dims = self.get_super_cell_extents()
+        n_atm = self.get_number_atoms_per_unit_cell()
+
+        occ = self.get_occupancies()
+
+        self._A_r = occupational.composition(*dims, n_atm, occ)
+
+    def randomize_atomic_displacements(self):
+        """
+        Generate random atomic displacements.
+
+        """
+
+        dims = self.get_super_cell_extents()
+        n_atm = self.get_number_atoms_per_unit_cell()
+
+        U = self.get_cartesian_anistropic_displacement_parameters()
+
+        disp = np.row_stack(U)
+
+        self._Ux, self._Uy, self._Uz = displacive.expansion(*dims, n_atm, disp)
+
+    def spin_correlations_1d(self, fract, tol):
+        """
+        Spherically-averaged spin correlations.
+
+        Parameters
+        ----------
+        fract : float
+            Fraction of longest distance for radial cutoff.
+        tol : float
+            Tolerance of distances for unique pairs.
+
+        Returns
+        -------
+        corr : 1d array
+            Correlation.
+        coll : TYPE
+            Collinearity.
+        d : 1d array
+            Separation distance magnitude.
+        pairs : 1d array, str
+            Atom, ion, or isotope-pairs.
+
+        """
+
+        dims = self.get_super_cell_extents()
+
+        A = self.get_fractional_cartesian_transform()
+
+        *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
+
+        moments = self._Sx, self._Sy, self._Sz
+
+        args = *moments, *coords, atms, *dims, A, fract, tol
+
+        corr, coll, _, _, d, pairs = functions.vector1d(*args)
+
+        return corr, coll, d, pairs
+
+    def spin_correlations_3d(self, fract, tol):
+        """
+        Three-dimensional spin correlations.
+
+        Parameters
+        ----------
+        fract : float
+            Fraction of longest distance for radial cutoff.
+        tol : float
+            Tolerance of distances for unique pairs.
+
+        Returns
+        -------
+        corr : 1d array
+            Correlation.
+        coll : 1d array
+            Collinearity.
+        dx, dy, dz : 1d array
+            Separation distance vector.
+        pairs : 1d array, str
+            Atom, ion, or isotope-pairs.
+
+        """
+
+        dims = self.get_super_cell_extents()
+
+        A = self.get_fractional_cartesian_transform()
+
+        *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
+
+        moments = self._Sx, self._Sy, self._Sz
+
+        args = *moments, *coords, atms, *dims, A, fract, tol
+
+        corr, coll, _, _, dx, dy, dz, pairs = functions.vector3d(*args)
+
+        return corr, coll, dx, dy, dz, pairs
+
+    def occupancy_correlations_1d(self, fract, tol):
+        """
+        Spherically-averaged occupancy correlations.
+
+        Parameters
+        ----------
+        fract : float
+            Fraction of longest distance for radial cutoff.
+        tol : float
+            Tolerance of distances for unique pairs.
+
+        Returns
+        -------
+        corr : 1d array
+            Correlation.
+        d : 1d array
+            Separation distance magnitude.
+        pairs : 1d array, str
+            Atom, ion, or isotope-pairs.
+
+        """
+
+        dims = self.get_super_cell_extents()
+
+        A = self.get_fractional_cartesian_transform()
+
+        *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
+
+        args = self._A_r, *coords, atms, *dims, A, fract, tol
+
+        corr, coll, _, _, d, pairs = functions.vector1d(*args)
+
+        return corr, coll, d, pairs
+
+    def occupancy_correlations_3d(self, fract, tol):
+        """
+        Three-dimensional occupancy correlations.
+
+        Parameters
+        ----------
+        fract : float
+            Fraction of longest distance for radial cutoff.
+        tol : float
+            Tolerance of distances for unique pairs.
+
+        Returns
+        -------
+        corr : 1d array
+            Correlation.
+        dx, dy, dz : 1d array
+            Separation distance vector.
+        pairs : 1d array, str
+            Atom, ion, or isotope-pairs.
+
+        """
+
+        dims = self.get_super_cell_extents()
+
+        A = self.get_fractional_cartesian_transform()
+
+        *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
+
+        args = self._A_r, *coords, atms, *dims, A, fract, tol
+
+        corr, coll, _, _, dx, dy, dz, pairs = functions.vector3d(*args)
+
+        return corr, coll, dx, dy, dz, pairs
+
+    def displacement_correlations_1d(self, fract, tol):
+        """
+        Spherically-averaged displacement correlations.
+
+        Parameters
+        ----------
+        fract : float
+            Fraction of longest distance for radial cutoff.
+        tol : float
+            Tolerance of distances for unique pairs.
+
+        Returns
+        -------
+        corr : 1d array
+            Correlation.
+        coll : 1d array
+            Collinearity.
+        d : 1d array
+            Separation distance magnitude.
+        pairs : 1d array, str
+            Atom, ion, or isotope-pairs.
+
+        """
+
+        dims = self.get_super_cell_extents()
+
+        A = self.get_fractional_cartesian_transform()
+
+        *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
+
+        displacements = self._Ux, self._Uy, self._Uz
+
+        args = *displacements, *coords, atms, *dims, A, fract, tol
+
+        corr, coll, _, _, d, pairs = functions.vector1d(*args)
+
+        return corr, coll, d, pairs
+
+    def displacement_correlations_3d(self, fract, tol):
+        """
+        Three-dimensional displacement correlations.
+
+        Parameters
+        ----------
+        fract : float
+            Fraction of longest distance for radial cutoff.
+        tol : float
+            Tolerance of distances for unique pairs.
+
+        Returns
+        -------
+        corr : 1d array
+            Correlation.
+        coll : 1d array
+            Collinearity.
+        dx, dy, dz : 1d array
+            Separation distance vector.
+        pairs : 1d array, str
+            Atom, ion, or isotope-pairs.
+
+        """
+
+        dims = self.get_super_cell_extents()
+
+        A = self.get_fractional_cartesian_transform()
+
+        *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
+
+        displacements = self._Ux, self._Uy, self._Uz
+
+        args = *displacements, *coords, atms, *dims, A, fract, tol
+
+        corr, coll, _, _, dx, dy, dz, pairs = functions.vector3d(*args)
+
+        return corr, coll, dx, dy, dz, pairs
+
+    def magnetic_powder_intensity(self, extents, bins):
+
+        Q = np.linspace(*extents, bins)
+
+        dims = self.get_super_cell_extents()
+
+        A = self.get_fractional_cartesian_transform()
+        D = self.get_atomic_displacement_cartesian_transform()
+
+        *coords, _ = self.get_super_cell_cartesian_atomic_coordinates()
+        ions = self.get_unit_cell_ions()
+
+        occ = self.get_occupancies()
+        U = self.get_cartesian_anistropic_displacement_parameters()
+
+        g = self.get_g_factors()
+
+        moments = self._Sx, self._Sy, self._Sz
+
+        args = *moments, occ, *U, *coords, ions, Q, A, D, *dims, g
+
+        return powder.magnetic(*args)
+
+    def magnetic_single_crystal_intensity(self, extents, bins, W, laue):
+
+        dims = self.get_super_cell_extents()
+
+        B = self.get_miller_cartesian_transform()
+        R = self.get_cartesian_rotation()
+        D = self.get_atomic_displacement_cartesian_transform()
+
+        T, wgts = self.get_twins()
+
+        coords = self.get_unit_cell_cartesian_atomic_coordinates()
+        ions = self.get_unit_cell_ions()
+
+        occ = self.get_occupancies()
+        U = self.get_cartesian_anistropic_displacement_parameters()
+
+        g = self.get_g_factors()
+
+        args = *extents, *bins, *dims, W, laue
+
+        indices, _, ops, *points = space.reduced(*args)
+
+        symop = symmetry.laue_id(ops)
+
+        trans = *extents, indices, symop, W, B, R, D, T, wgts, *bins
+
+        moments = self._Sx, self._Sy, self._Sz
+
+        args = *moments, occ, *U, *coords, ions, *trans, *dims, *points, g
+
+        return monocrystal.magnetic(*args)

@@ -142,10 +142,17 @@ class test_crystal(unittest.TestCase):
         site = uc_dict['site']
         atm = uc_dict['atom']
 
-        np.testing.assert_array_equal(atm[site < 3], 'Ba2+')
-        np.testing.assert_array_equal(atm[(site >= 3) & (site < 7)], 'Co3+')
-        np.testing.assert_array_equal(atm[(site >= 7) & (site < 9)], 'C4+')
-        np.testing.assert_array_equal(atm[site >= 9], 'O2-')
+        ion = uc_dict['ion']
+
+        np.testing.assert_array_equal(atm[site < 3], 'Ba')
+        np.testing.assert_array_equal(atm[(site >= 3) & (site < 7)], 'Co')
+        np.testing.assert_array_equal(atm[(site >= 7) & (site < 9)], 'C')
+        np.testing.assert_array_equal(atm[site >= 9], 'O')
+
+        np.testing.assert_array_equal(ion[site < 3], '2+')
+        np.testing.assert_array_equal(ion[(site >= 3) & (site < 7)], '3+')
+        np.testing.assert_array_equal(ion[(site >= 7) & (site < 9)], '4+')
+        np.testing.assert_array_equal(ion[site >= 9], '2-')
 
     def test_supercell(self):
 
@@ -733,87 +740,6 @@ class test_crystal(unittest.TestCase):
 
         lat = crystal.lattice(5, 6, 7, np.pi/2, np.pi/3, np.pi/4)
         self.assertEqual(lat, 'Triclinic')
-
-    def test_pairs(self):
-
-        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
-
-        uc_dict = crystal.unitcell(folder=folder, filename='CaTiOSiO4.cif')
-
-        u = uc_dict['u']
-        v = uc_dict['v']
-        w = uc_dict['w']
-        atms = uc_dict['atom']
-
-        constants = crystal.parameters(folder=folder, filename='CaTiOSiO4.cif')
-
-        A = crystal.cartesian(*constants)
-
-        pair_dict = crystal.pairs(u, v, w, atms, A)
-
-        pairs = []
-        coordination = []
-        for i in pair_dict.keys():
-            atm = atms[i]
-            if (atm != 'O'):
-                pair_num, pair_atm = list(pair_dict[i])[0]
-                coord_num = len(pair_dict[i][(pair_num,pair_atm)][0])
-            pairs.append('_'.join((atm,pair_atm)))
-            coordination.append(coord_num)
-
-        pairs = np.array(pairs)
-        coordination = np.array(coordination)
-
-        mask = pairs == 'Ca_O'
-        np.testing.assert_array_equal(coordination[mask], 7)
-
-        mask = pairs == 'Ti_O'
-        np.testing.assert_array_equal(coordination[mask], 6)
-
-        mask = pairs == 'Si_O'
-        np.testing.assert_array_equal(coordination[mask], 4)
-
-        uc_dict = crystal.unitcell(folder=folder, filename='Tb2Ir3Ga9.cif')
-
-        u = uc_dict['u']
-        v = uc_dict['v']
-        w = uc_dict['w']
-        atms = uc_dict['atom']
-
-        constants = crystal.parameters(folder=folder, filename='Tb2Ir3Ga9.cif')
-
-        A = crystal.cartesian(*constants)
-
-        pair_dict = crystal.pairs(u, v, w, atms, A)
-
-        pairs = []
-        for i in pair_dict.keys():
-            atm = atms[i]
-            if (atm == 'Tb'):
-                for pair in pair_dict[i].keys():
-                    if pair[1] == 'Tb':
-                        for ind in pair_dict[i][pair][0]:
-                            pairs.append([i, ind])
-
-        pairs = np.unique(pairs)
-
-        self.assertEqual(pairs.size, (atms == 'Tb').sum())
-
-        pair_dict = crystal.pairs(u, v, w, atms, A, extend=True)
-
-        for i in pair_dict.keys():
-            d_ref = 0
-            for pair in pair_dict[i].keys():
-                j, atm_j = pair
-                for j, img in zip(*pair_dict[i][pair]):
-                    du = u[j]-u[i]+img[0]
-                    dv = v[j]-v[i]+img[1]
-                    dw = w[j]-w[i]+img[2]
-                    dx, dy, dz = crystal.transform(du, dv, dw, A)
-                    d = np.sqrt(dx**2+dy**2+dz**2)
-                    self.assertGreaterEqual(np.round(d,6), np.round(d_ref,6))
-                    self.assertEqual(atms[j], atm_j)
-                    d_ref = d
 
 if __name__ == '__main__':
     unittest.main()
