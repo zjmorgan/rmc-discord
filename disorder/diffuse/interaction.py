@@ -623,7 +623,7 @@ def bonds(pair_info, u, v, w, A, tol=1e-3):
     indices = [[[a,*b] for sub in value.values()
                 for a, b in zip(*sub)] for value in pair_info.values()]
 
-    atm_ind, img_i, img_j, img_k = np.array(indices).T
+    atm_ind, img_i, img_j, img_k = np.array(indices, dtype=np.int_).T
 
     atm_ind, img_i, img_j, img_k = atm_ind.T, img_i.T, img_j.T, img_k.T
 
@@ -647,7 +647,9 @@ def bonds(pair_info, u, v, w, A, tol=1e-3):
 
     _, inv_ind = np.unique(dist, return_inverse=True)
 
-    pair_ind = np.arange(n_pair+1)[inv_ind].reshape(n_atm,n_pair)
+    n_ind = n_pair+1
+
+    pair_ind = np.arange(n_ind, dtype=np.int_)[inv_ind].reshape(n_atm,n_pair)
 
     d_xyz = np.round(np.stack((dx,dy,dz))/tol).astype(int)
 
@@ -657,9 +659,9 @@ def bonds(pair_info, u, v, w, A, tol=1e-3):
 
     mask = (d_xyz.T == inv_d_xyz[:,atm_ind,:].T).all(axis=3)
 
-    pair_inv = p.T[mask.T].reshape(n_atm,n_pair)
+    pair_inv = p.T[mask.T].reshape(n_atm,n_pair).astype(np.int_)
 
-    pair_trans = np.zeros((n_atm,n_pair), dtype=np.int32)
+    pair_trans = np.zeros((n_atm,n_pair), dtype=np.intc)
 
     indices = atm_ind, pair_inv, pair_ind, pair_trans
 

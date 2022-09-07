@@ -180,9 +180,6 @@ class Simulation:
 
         uxx, uyy, uzz, uyz, uxz, uxy = interaction.anisotropy(dx, dy, dz)
 
-        self.__uxx, self.__uyy, self.__uzz = uxx, uyy, uzz
-        self.__uyz, self.__uxz, self.__uxy = uyz, uxz, uxy
-
         n_pair = 1+np.max(pair_ind)
 
         self.__J = np.zeros((n_pair,3,3))
@@ -199,7 +196,9 @@ class Simulation:
 
     def __mask(self):
 
-        return (self.__pair_ind[...,np.newaxis] == self.__active).any(axis=2)
+        indices = np.arange(self.__active.size)[self.__active]
+
+        return (self.__pair_ind[...,np.newaxis] == indices).any(axis=2)
 
     def ___get_indices(self):
 
@@ -420,24 +419,83 @@ class Simulation:
 
         self.__B = B
 
+    def get_easy_axes_matrices(self):
+        """
+        Easy axes matrices.
+
+        Returns
+        -------
+        U : 3d array
+            Axes matrices.
+
+        """
+
+        dx, dy, dz = self.get_bond_vectors()
+
+        uxx, uyy, uzz, uyz, uxz, uxy = interaction.anisotropy(dx, dy, dz)
+
+        U = np.zeros((self.__n_atm,3,3))
+
+        U[:,0,0], U[:,1,1], U[:,2,2] = uxx, uyy, uzz
+
+        U[:,0,1] = U[:,1,0] = uxy
+        U[:,0,2] = U[:,2,0] = uxz
+        U[:,1,2] = U[:,2,1] = uyz
+
+        return U
+
     def get_magnetic_dipole_dipole_coupling_strength(self):
+        """
+        Magnetic dipole-dipole coupling strength.
+
+        Returns
+        -------
+        const : float
+            Strength of dipole-dipole interaction.
+
+        """
 
         return self.__const_dd
 
     def set_magnetic_dipole_dipole_coupling_strength(self, const):
+        """
+        Update magnetic dipole-dipole coupling strength.
+
+        Parameters
+        ----------
+        const : float
+            Strength of dipole-dipole interaction.
+
+        """
 
         self.__const_dd = const
 
     def initialize_parallel_tempering(self, T0, T1, replicas=1, space='log2'):
+        """
+        Initialize parallel tempering simulation.
+
+        Parameters
+        ----------
+        T0 : float
+            Start temperature.
+        T1 : float
+            End temperature.
+        replicas : int, optional
+            Number of replica simulations. The default is ``1``.
+        space : str, optional
+            Temperature spacing among ``'log2'`, ``'log10'`, and ``'linear'`.
+            The default is ``'log2'``.
+
+        """
 
         if space == 'log2':
-            T_range = np.logspace(np.log2(T0), np.log2(T1), replicas, base=2)
+            T = np.logspace(np.log2(T0), np.log2(T1), replicas, base=2)
         elif space == 'log10':
-            T_range = np.logspace(np.log10(T0), np.log10(T1), replicas)
+            T = np.logspace(np.log10(T0), np.log10(T1), replicas)
         else:
-            T_range = np.linspace(T0, T1, replicas)
+            T = np.linspace(T0, T1, replicas)
 
-        self.__T_range = T_range
+        self.__T = T
 
         dims = self.sc.get_super_cell_extents()
         n_atm = self.sc.get_number_atoms_per_unit_cell()
@@ -451,6 +509,15 @@ class Simulation:
         self.__Sz.T[:,...] = self.sc._Sz.reshape(*dims,n_atm).T.copy()
 
     def magnetic_energy(self):
+        """
+        Magnetic interaction energy.
+
+        Returns
+        -------
+        E : 6d array
+            Magnetic interaction energies.
+
+        """
 
         spins = self.__Sx, self.__Sy, self.__Sz
 
@@ -465,12 +532,37 @@ class Simulation:
         return simulation.magnetic_energy(*args)
 
     def magnetic_dipole_dipole_interaction_energy(self):
+        """
+        Magnetic dipole-dipole interaction energy.
+
+        Returns
+        -------
+        E : 4d array
+            Magnetic dipole-dipole interaction energies.
+
+        """
 
         args = self.__Sx, self.__Sy, self.__Sz, self.__const_dd*self.__Qijkl
 
         return simulation.dipole_dipole_interaction_energy(*args)
 
     def magnetic_simulation(self, N):
+        """
+        Perform magnetic Heisenberg simulation.
+
+        Parameters
+        ----------
+        N : int
+            Number of Monte Carlo cycles.
+
+        Returns
+        -------
+        H : 1d array
+            Hamiltonian of each replica.
+        T : 1d array
+            Temperature of each replica.
+
+        """
 
         kB = 0.08617 # meV/K
 
@@ -482,10 +574,25 @@ class Simulation:
 
         indices = self.___get_indices()
 
-        args = *spins, *properties, *fields, *indices, self.__T_range, kB, N
+        args = *spins, *properties, *fields, *indices, self.__T, kB, N
 
-        H, T_range = simulation.heisenberg(*args)
+        H, T = simulation.heisenberg(*args)
 
-        self.__T_range = T_range
+        self.__T = T
 
-        return H, T_range
+        return H, T
+
+class Refinement:
+    """
+    Refinement.
+
+    Parameters
+    ----------
+    sc : supercell
+        Supercell for refinement.
+
+    """
+
+    def __init__(self, sc):
+
+        self.sc = sc
