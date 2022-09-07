@@ -159,52 +159,15 @@ class test_simulation(unittest.TestCase):
 
         ux, uy, uz = crystal.transform(u, v, w, A)
 
-        pair_dict = interaction.pairs(u, v, w, atm, A, extend=True)
+        pair_info = interaction.pairs(u, v, w, atm, A, extend=True)
 
-        img_i, img_j, img_k, atm_ind = [], [], [], []
+        bond_info = interaction.bonds(pair_info, u, v, w, A, tol=1e-2)
 
-        du, dv, dw = [], [], []
+        dx, dy, dz, img_i, img_j, img_k, *indices = bond_info
 
-        for i in pair_dict.keys():
-            for pair in pair_dict[i].keys():
-                pair_no, atm_j = pair
-                ind_i, ind_j, ind_k, atm_a = [], [], [], []
-                for j, img in zip(*pair_dict[i][pair]):
-                    ind_i.append(img[0])
-                    ind_j.append(img[1])
-                    ind_k.append(img[2])
-                    atm_a.append(j)
-                    du.append(u[j]-u[i]+img[0])
-                    dv.append(v[j]-v[i]+img[1])
-                    dw.append(w[j]-w[i]+img[2])
-                img_i.append(ind_i)
-                img_j.append(ind_j)
-                img_k.append(ind_k)
-                atm_ind.append(atm_a)
-
-        img_i = np.array(img_i, dtype=np.int_)
-        img_j = np.array(img_j, dtype=np.int_)
-        img_k = np.array(img_k, dtype=np.int_)
-        atm_ind = np.array(atm_ind, dtype=np.int_)
-
-        du, dv, dw = np.array(du), np.array(dv), np.array(dw)
-
-        dx, dy, dz = crystal.transform(du, dv, dw, A)
-
-        dx = dx.reshape(atm_ind.shape)
-        dy = dy.reshape(atm_ind.shape)
-        dz = dz.reshape(atm_ind.shape)
+        atm_ind, pair_inv, pair_ind, pair_trans = indices
 
         d = np.sqrt(dx**2+dy**2+dz**2)
-
-        n_pair = atm_ind.shape[1]
-
-        dist = np.round(d/1e-2).astype(int)
-
-        _, inv_ind = np.unique(dist, return_inverse=True)
-
-        pair_ind = np.arange(n_pair+1,
-                             dtype=np.int_)[inv_ind].reshape(n_atm,n_pair)
 
         mask = d < 0.99*np.sqrt(2*a**2)
 
@@ -219,21 +182,9 @@ class test_simulation(unittest.TestCase):
         img_i = img_i[mask].reshape(n_atm,n_pair)
         img_j = img_j[mask].reshape(n_atm,n_pair)
         img_k = img_k[mask].reshape(n_atm,n_pair)
+
         atm_ind = atm_ind[mask].reshape(n_atm,n_pair)
-
-        d_xyz = np.stack((dx,dy,dz))
-
-        inv_d_xyz = -d_xyz
-
-        pair_inv = np.zeros((n_atm,n_pair), dtype=np.int_)
-
-        for i in range(n_atm):
-            for p in range(n_pair):
-                for q in range(n_pair):
-                    if (np.allclose(d_xyz[:,i,p],inv_d_xyz[:,atm_ind[i,p],q])):
-                        pair_inv[i,p] = q
-
-        pair_trans = np.zeros((n_atm,n_pair), dtype=np.intc)
+        pair_trans = pair_trans[mask].reshape(n_atm,n_pair)
 
         J = np.zeros((n_pair,3,3))
         K = np.zeros((n_atm,3,3))
@@ -301,52 +252,15 @@ class test_simulation(unittest.TestCase):
 
         ux, uy, uz = crystal.transform(u, v, w, A)
 
-        pair_dict = interaction.pairs(u, v, w, atm, A, extend=True)
+        pair_info = interaction.pairs(u, v, w, atm, A, extend=True)
 
-        img_i, img_j, img_k, atm_ind = [], [], [], []
+        bond_info = interaction.bonds(pair_info, u, v, w, A, tol=1e-2)
 
-        du, dv, dw = [], [], []
+        dx, dy, dz, img_i, img_j, img_k, *indices = bond_info
 
-        for i in pair_dict.keys():
-            for pair in pair_dict[i].keys():
-                pair_no, atm_j = pair
-                ind_i, ind_j, ind_k, atm_a = [], [], [], []
-                for j, img in zip(*pair_dict[i][pair]):
-                    ind_i.append(img[0])
-                    ind_j.append(img[1])
-                    ind_k.append(img[2])
-                    atm_a.append(j)
-                    du.append(u[j]-u[i]+img[0])
-                    dv.append(v[j]-v[i]+img[1])
-                    dw.append(w[j]-w[i]+img[2])
-                img_i.append(ind_i)
-                img_j.append(ind_j)
-                img_k.append(ind_k)
-                atm_ind.append(atm_a)
-
-        img_i = np.array(img_i, dtype=np.int_)
-        img_j = np.array(img_j, dtype=np.int_)
-        img_k = np.array(img_k, dtype=np.int_)
-        atm_ind = np.array(atm_ind, dtype=np.int_)
-
-        du, dv, dw = np.array(du), np.array(dv), np.array(dw)
-
-        dx, dy, dz = crystal.transform(du, dv, dw, A)
-
-        dx = dx.reshape(atm_ind.shape)
-        dy = dy.reshape(atm_ind.shape)
-        dz = dz.reshape(atm_ind.shape)
+        atm_ind, pair_inv, pair_ind, pair_trans = indices
 
         d = np.sqrt(dx**2+dy**2+dz**2)
-
-        n_pair = atm_ind.shape[1]
-
-        dist = np.round(d/1e-2).astype(int)
-
-        _, inv_ind = np.unique(dist, return_inverse=True)
-
-        pair_ind = np.arange(n_pair+1,
-                             dtype=np.int_)[inv_ind].reshape(n_atm,n_pair)
 
         mask = d < 0.99*np.sqrt(2*a**2)
 
@@ -361,21 +275,9 @@ class test_simulation(unittest.TestCase):
         img_i = img_i[mask].reshape(n_atm,n_pair)
         img_j = img_j[mask].reshape(n_atm,n_pair)
         img_k = img_k[mask].reshape(n_atm,n_pair)
+
         atm_ind = atm_ind[mask].reshape(n_atm,n_pair)
-
-        d_xyz = np.stack((dx,dy,dz))
-
-        inv_d_xyz = -d_xyz
-
-        pair_inv = np.zeros((n_atm,n_pair), dtype=np.int_)
-
-        for i in range(n_atm):
-            for p in range(n_pair):
-                for q in range(n_pair):
-                    if (np.allclose(d_xyz[:,i,p],inv_d_xyz[:,atm_ind[i,p],q])):
-                        pair_inv[i,p] = q
-
-        pair_trans = np.zeros((n_atm,n_pair), dtype=np.intc)
+        pair_trans = pair_trans[mask].reshape(n_atm,n_pair)
 
         J = np.zeros((n_pair,3,3))
         K = np.zeros((n_atm,3,3))
@@ -456,52 +358,15 @@ class test_simulation(unittest.TestCase):
 
         ux, uy, uz = crystal.transform(u, v, w, A)
 
-        pair_dict = interaction.pairs(u, v, w, atm, A, extend=True)
+        pair_info = interaction.pairs(u, v, w, atm, A, extend=True)
 
-        img_i, img_j, img_k, atm_ind = [], [], [], []
+        bond_info = interaction.bonds(pair_info, u, v, w, A, tol=1e-2)
 
-        du, dv, dw = [], [], []
+        dx, dy, dz, img_i, img_j, img_k, *indices = bond_info
 
-        for i in pair_dict.keys():
-            for pair in pair_dict[i].keys():
-                pair_no, atm_j = pair
-                ind_i, ind_j, ind_k, atm_a = [], [], [], []
-                for j, img in zip(*pair_dict[i][pair]):
-                    ind_i.append(img[0])
-                    ind_j.append(img[1])
-                    ind_k.append(img[2])
-                    atm_a.append(j)
-                    du.append(u[j]-u[i]+img[0])
-                    dv.append(v[j]-v[i]+img[1])
-                    dw.append(w[j]-w[i]+img[2])
-                img_i.append(ind_i)
-                img_j.append(ind_j)
-                img_k.append(ind_k)
-                atm_ind.append(atm_a)
-
-        img_i = np.array(img_i, dtype=np.int_)
-        img_j = np.array(img_j, dtype=np.int_)
-        img_k = np.array(img_k, dtype=np.int_)
-        atm_ind = np.array(atm_ind, dtype=np.int_)
-
-        du, dv, dw = np.array(du), np.array(dv), np.array(dw)
-
-        dx, dy, dz = crystal.transform(du, dv, dw, A)
-
-        dx = dx.reshape(atm_ind.shape)
-        dy = dy.reshape(atm_ind.shape)
-        dz = dz.reshape(atm_ind.shape)
+        atm_ind, pair_inv, pair_ind, pair_trans = indices
 
         d = np.sqrt(dx**2+dy**2+dz**2)
-
-        n_pair = atm_ind.shape[1]
-
-        dist = np.round(d/1e-2).astype(int)
-
-        _, inv_ind = np.unique(dist, return_inverse=True)
-
-        pair_ind = np.arange(n_pair+1,
-                             dtype=np.int_)[inv_ind].reshape(n_atm,n_pair)
 
         mask = d < 0.99*np.sqrt(2*a**2)
 
@@ -516,21 +381,9 @@ class test_simulation(unittest.TestCase):
         img_i = img_i[mask].reshape(n_atm,n_pair)
         img_j = img_j[mask].reshape(n_atm,n_pair)
         img_k = img_k[mask].reshape(n_atm,n_pair)
+
         atm_ind = atm_ind[mask].reshape(n_atm,n_pair)
-
-        d_xyz = np.stack((dx,dy,dz))
-
-        inv_d_xyz = -d_xyz
-
-        pair_inv = np.zeros((n_atm,n_pair), dtype=np.int_)
-
-        for i in range(n_atm):
-            for p in range(n_pair):
-                for q in range(n_pair):
-                    if (np.allclose(d_xyz[:,i,p],inv_d_xyz[:,atm_ind[i,p],q])):
-                        pair_inv[i,p] = q
-
-        pair_trans = np.zeros((n_atm,n_pair), dtype=np.intc)
+        pair_trans = pair_trans[mask].reshape(n_atm,n_pair)
 
         J = np.zeros((n_pair,3,3))
         K = np.zeros((n_atm,3,3))

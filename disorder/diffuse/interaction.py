@@ -663,7 +663,7 @@ def bonds(pair_info, u, v, w, A, tol=1e-3):
 
     indices = atm_ind, pair_inv, pair_ind, pair_trans
 
-    return dx, dy, dz, img_i, img_j, img_k, *indices
+    return (dx, dy, dz, img_i, img_j, img_k, *indices)
 
 def anisotropy(dx, dy, dz):
     """

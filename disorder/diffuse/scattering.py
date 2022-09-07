@@ -201,10 +201,6 @@ class Simulation:
 
         return (self.__pair_ind[...,np.newaxis] == self.__active).any(axis=2)
 
-    def get_pair_indices(self):
-
-        return self.__pair_ind[self.__mask()].reshape(self.__n_atm,-1)
-
     def ___get_indices(self):
 
         mask = self.__mask()
@@ -321,26 +317,106 @@ class Simulation:
         return self.__Qijkl
 
     def get_magnetic_exchange_interaction_matrices(self):
+        """
+        Magnetic exchange interaction matrices.
+
+        Returns
+        -------
+        J : 3d array
+            Interaction matrices.
+
+        """
 
         return self.__J[self.__active,...]
 
     def set_magnetic_exchange_interaction_matrices(self, J):
+        """
+        Update magnetic exchange interaction matrices.
+
+        Parameters
+        ----------
+        J : 3d array
+            Interaction matrices.
+
+        """
 
         self.__J[self.__active,...] = J
 
-    def get_magnetic_single_ion_anistropy_matrices(self):
+    def get_magnetic_single_ion_anisotropy_matrices(self):
+        """
+        Magnetocrystalline anisotropy matrices.
+
+        Returns
+        -------
+        K : 3d array
+            Anisotropy matrices.
+
+        """
 
         return self.__K
 
+    def set_magnetic_single_ion_anisotropy_matrices(self, K):
+        """
+        Update magnetocrystalline anisotropy matrices.
+
+        Parameters
+        ----------
+        K : 3d array
+            Anisotropy matrices.
+
+        """
+
+        self.__K = K
+
     def get_magnetic_g_tensor_matrices(self):
+        """
+        g-tensor matrices.
+
+        Returns
+        -------
+        g : 3d array
+            g-tensors.
+
+        """
 
         return self.__g
 
+    def set_magnetic_g_tensor_matrices(self, g):
+        """
+        Update g-tensor matrices.
+
+        Parameters
+        ----------
+        g : 3d array
+            g-tensors.
+
+        """
+
+        self.__g
+
     def get_magnetic_field(self):
+        """
+        External magnetic field vector.
+
+        Returns
+        -------
+        B : 1d array
+            Fied vector.
+
+        """
 
         return self.__B
 
     def set_magnetic_field(self, B):
+        """
+        Update external magnetic field vector.
+
+        Parameters
+        ----------
+        B : 1d array
+            Fied vector.
+
+        """
 
         self.__B = B
 
@@ -402,10 +478,14 @@ class Simulation:
 
         properties = self.__J[self.__active,...], self.__K, self.__g
 
-        field = self.__B
+        fields = self.__B, self.__Qijkl
 
         indices = self.___get_indices()
 
-        args = *spins, *properties, field, *indices, kB, N
+        args = *spins, *properties, *fields, *indices, self.__T_range, kB, N
 
         H, T_range = simulation.heisenberg(*args)
+
+        self.__T_range = T_range
+
+        return H, T_range
