@@ -529,7 +529,31 @@ class test_displacive(unittest.TestCase):
         np.testing.assert_array_almost_equal(Uzz, U33)
         np.testing.assert_array_almost_equal(Uyz, U23)
         np.testing.assert_array_almost_equal(Uxz, U13)
-        np.testing.assert_array_almost_equal(Uyz, U12)
+        np.testing.assert_array_almost_equal(Uxy, U12)
+
+    def test_decompose(self):
+
+        U11 = np.array([0.4,0.3])
+        U22 = np.array([0.5,0.4])
+        U33 = np.array([0.6,0.6])
+        U23 = np.array([0.0,0.0])
+        U13 = np.array([0.0,0.0])
+        U12 = np.array([0.0,0.0])
+
+        a, b, c, alpha, beta, gamma = 5, 5, 5, np.pi/2, np.pi/2, np.pi/2
+
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+
+        Lxx, Lyy, Lzz, \
+        Lyz, Lxz, Lxy = displacive.decompose(U11, U22, U33,
+                                             U23, U13, U12, D)
+
+        np.testing.assert_array_almost_equal(Lxx, np.sqrt(U11))
+        np.testing.assert_array_almost_equal(Lyy, np.sqrt(U22))
+        np.testing.assert_array_almost_equal(Lzz, np.sqrt(U33))
+        np.testing.assert_array_almost_equal(Lyz, np.sqrt(U23))
+        np.testing.assert_array_almost_equal(Lxz, np.sqrt(U13))
+        np.testing.assert_array_almost_equal(Lxy, np.sqrt(U12))
 
 if __name__ == '__main__':
     unittest.main()

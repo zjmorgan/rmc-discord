@@ -1324,5 +1324,202 @@ class test_refinement(unittest.TestCase):
 
         np.testing.assert_array_almost_equal(I_calc, I_ref)
 
+    def test_displacive(self):
+
+        a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4
+
+        inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+
+        a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+
+        h_range, nh = [-1,1], 5
+        k_range, nk = [0,2], 11
+        l_range, nl = [-1,0], 5
+
+        nu, nv, nw, n_atm = 2, 5, 4, 2
+
+        sigma = [1,2,1]
+
+        u = np.array([0.2,0.1])
+        v = np.array([0.3,0.4])
+        w = np.array([0.4,0.5])
+
+        atm = np.array(['Fe','Mn'])
+        occupancy = np.array([0.75,0.5])
+
+        U11 = np.array([0.5,0.3])
+        U22 = np.array([0.6,0.4])
+        U33 = np.array([0.4,0.6])
+        U23 = np.array([0.05,-0.03])
+        U13 = np.array([-0.04,0.02])
+        U12 = np.array([0.03,-0.02])
+
+        T = space.debye_waller(h_range, k_range, l_range, nh, nk, nl,
+                               U11, U22, U33, U23, U13, U12, a_, b_, c_)
+
+        A = crystal.cartesian(a, b, c, alpha, beta, gamma)
+        B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+        R = crystal.cartesian_rotation(a, b, c, alpha, beta, gamma)
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+
+        fixed = False
+
+        displacement = np.stack((U11,U22,U33,U23,U13,U12))
+
+        Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm,
+                                          displacement, fixed)
+
+        space_factor = space.factor(nu, nv, nw)
+
+        ux, uy, uz = crystal.transform(u, v, w, A)
+
+        ix, iy, iz = space.cell(nu, nv, nw, A)
+
+        rx, ry, rz, atms = space.real(ux, uy, uz, ix, iy, iz, atm)
+
+        output = space.mapping(h_range, k_range, l_range,
+                               nh, nk, nl, nu, nv, nw)
+
+        h, k, l, H, K, L, indices, inverses, operators = output
+
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
+
+        Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
+
+        Qx_norm, Qy_norm, Qz_norm, Q = space.unit(Qx, Qy, Qz)
+
+        phase_factor = scattering.phase(Qx, Qy, Qz, ux, uy, uz)
+
+        space_factor = space.factor(nu, nv, nw)
+
+        scattering_length = scattering.length(atm, Q.size)
+
+        p = 3
+
+        coeffs = displacive.coefficients(p)
+
+        H_nuc, K_nuc, L_nuc, cond = space.condition(H, K, L,
+                                                    nu, nv, nw, centering='P')
+
+        factors = space.prefactors(scattering_length, phase_factor, occupancy)
+
+        factors = factors*T
+
+        n_hkl = nh*nk*nl
+        I = np.random.random((nh,nk,nl))
+
+        mask = I < 0
+
+        i_mask, i_unmask = space.indices(mask)
+
+        I_expt = I[mask]
+        inv_sigma_sq = 1/np.sqrt(I_expt)
+
+        n_uvw = nu*nv*nw
+
+        i_dft = np.random.randint(n_uvw, size=n_hkl)
+
+        U_r = displacive.products(Ux, Uy, Uz, p)
+        Q_k = displacive.products(Qx, Qy, Qz, p)
+
+        U_k, i_dft = displacive.transform(U_r, H, K, L, nu, nv, nw, n_atm)
+
+        F, F_nuc, \
+        prod, prod_nuc, \
+        V_k, V_k_nuc, \
+        even, bragg = displacive.structure(U_k, Q_k, coeffs, cond,
+                                           p, i_dft, factors)
+
+        Lxx, Lyy, Lzz, \
+        Lyz, Lxz, Lxy = displacive.decompose(U11, U22, U33,
+                                             U23, U13, U12, D)
+
+        # ---
+
+        F_orig = np.zeros(indices.size, dtype=complex)
+        F_nuc_orig = np.zeros(bragg.size, dtype=complex)
+
+        prod_orig = np.zeros(indices.size, dtype=complex)
+        prod_nuc_orig = np.zeros(bragg.size, dtype=complex)
+
+        V_k_orig = np.zeros(indices.size, dtype=complex)
+        V_k_nuc_orig = np.zeros(bragg.size, dtype=complex)
+
+        U_k_orig = np.zeros(n_uvw*coeffs.size, dtype=complex)
+
+        F_cand = np.zeros(indices.shape, dtype=complex)
+        F_nuc_cand = np.zeros(bragg.shape, dtype=complex)
+
+        prod_cand = np.zeros(indices.shape, dtype=complex)
+        prod_nuc_cand = np.zeros(bragg.shape, dtype=complex)
+
+        V_k_cand = np.zeros(indices.size, dtype=complex)
+        V_k_nuc_cand = np.zeros(bragg.size, dtype=complex)
+
+        U_k_cand = np.zeros(n_uvw*coeffs.size, dtype=complex)
+
+        U_r_orig = np.zeros(coeffs.size, dtype=float)
+
+        U_r_cand = np.zeros(coeffs.size, dtype=float)
+
+        nh, nk, nl = mask.shape
+
+        I_obs = np.full((nh, nk, nl), np.nan)
+        I_ref = I_obs[~mask]
+
+        I_calc = np.zeros(Q.size, dtype=float)
+
+        I_raw = np.zeros(mask.size, dtype=float)
+        I_flat = np.zeros(mask.size, dtype=float)
+
+        a_filt = np.zeros(mask.size, dtype=float)
+        b_filt = np.zeros(mask.size, dtype=float)
+        c_filt = np.zeros(mask.size, dtype=float)
+        d_filt = np.zeros(mask.size, dtype=float)
+        e_filt = np.zeros(mask.size, dtype=float)
+        f_filt = np.zeros(mask.size, dtype=float)
+        g_filt = np.zeros(mask.size, dtype=float)
+        h_filt = np.zeros(mask.size, dtype=float)
+        i_filt = np.zeros(mask.size, dtype=float)
+
+        v_inv = filters.gaussian(mask, sigma)
+
+        boxes = filters.boxblur(sigma, 3)
+
+        acc_moves, acc_temps, rej_moves, rej_temps = [], [], [], [],
+        energy, scale, chi_sq, temperature = [], [], [100], [np.inf]
+        constant = 1e-3
+
+        isotropic, fixed = False, True
+
+        n = n_uvw*n_atm
+
+        N = 1000
+
+        refinement.displacive(Ux, Uy, Uz,
+                              U_r, U_r_orig, U_r_cand,
+                              U_k, U_k_orig, U_k_cand,
+                              V_k, V_k_nuc, V_k_orig,
+                              V_k_nuc_orig, V_k_cand, V_k_nuc_cand,
+                              F, F_nuc, F_orig, F_nuc_orig, F_cand, F_nuc_cand,
+                              prod, prod_nuc, prod_orig, prod_nuc_orig,
+                              prod_cand, prod_nuc_cand, space_factor, factors,
+                              coeffs, Q_k, Lxx, Lyy, Lzz, Lyz, Lxz, Lxy,
+                              I_calc, I_expt, inv_sigma_sq,
+                              I_raw, I_flat, I_ref, v_inv,
+                              a_filt, b_filt, c_filt,
+                              d_filt, e_filt, f_filt,
+                              g_filt, h_filt, i_filt,
+                              bragg, even, boxes, i_dft, inverses, i_mask,
+                              i_unmask, acc_moves, acc_temps, rej_moves,
+                              rej_temps, chi_sq, energy, temperature, scale,
+                              constant, fixed, isotropic, p, nh, nk, nl,
+                              nu, nv, nw, n_atm, n, N)
+
+        I_ref = displacive.intensity(U_k, Q_k, coeffs, cond, p,
+                                     i_dft, factors, subtract=True)
+
+        np.testing.assert_array_almost_equal(I_calc, I_ref)
+
 if __name__ == '__main__':
     unittest.main()

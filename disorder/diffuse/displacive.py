@@ -609,3 +609,45 @@ def cartesian(U11, U22, U33, U23, U13, U12, D):
 
     return np.array(Uxx), np.array(Uyy), np.array(Uzz), \
            np.array(Uyz), np.array(Uxz), np.array(Uxy)
+
+def decompose(U11, U22, U33, U23, U13, U12, D):
+    """
+    Componenents of factorized atomic displacement parameters in Cartesian
+    coordiantes :math:`L_{xx}`, :math:`L_{yy}`, :math:`L_{zz}`, :math:`L_{yz}`,
+    :math:`L_{xz}`, and :math:`L_{xy}`.
+
+    Parameters
+    ----------
+    U11, U22, U33, U23, U13, U12 : float or 1d array
+        Components of atomic displacement parameters :math:`U_{11}`,
+        :math:`U_{22}`, :math:`U_{33}`, :math:`U_{23}`, :math:`U_{13}`,
+        and :math:`U_{12}`.
+    D : 2d array, 3x3
+        Transform matrix from crystal axis to Cartesian coordiante system.
+
+    Returns
+    -------
+    Lxx, Lyy, Lzz, Lyz, Lxz, Lxy : 1d array
+        Lower triangular Cholesky decomposition in Cartesian coordiantes. Has
+        same size as input atomic displacement parameter components.
+
+    """
+
+    U = np.array([[U11,U12,U13], [U12,U22,U23], [U13,U23,U33]])
+    n = np.size(U11)
+
+    U = U.reshape(3,3,n)
+
+    Lxx, Lyy, Lzz, Lyz, Lxz, Lxy = [], [], [], [], [], []
+    for i in range(n):
+        if np.all(np.linalg.eigvals(U[...,i]) > 0):
+            L = np.linalg.cholesky(np.dot(np.dot(D, U[...,i]), D.T))
+            Lxx.append(L[0,0])
+            Lyy.append(L[1,1])
+            Lzz.append(L[2,2])
+            Lyz.append(L[1,2])
+            Lxz.append(L[0,2])
+            Lxy.append(L[0,1])
+
+    return np.array(Lxx), np.array(Lyy), np.array(Lzz), \
+           np.array(Lyz), np.array(Lxz), np.array(Lxy)
