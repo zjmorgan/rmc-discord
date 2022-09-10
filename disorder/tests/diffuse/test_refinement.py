@@ -80,7 +80,7 @@ class test_refinement(unittest.TestCase):
 
         structure = np.mod(np.arange(16)[:,np.newaxis]+np.array([-1,1]), 16)
 
-        i = np.zeros(2, dtype=np.intc)
+        i = np.zeros(2, dtype=np.int_)
         A_orig = np.zeros(2)
 
         k = refinement.original_scalars(A_orig, i, A, structure)
@@ -97,7 +97,7 @@ class test_refinement(unittest.TestCase):
 
         structure = np.mod(np.arange(16)[:,np.newaxis]+np.array([-1,1]), 16)
 
-        i = np.zeros(2, dtype=np.intc)
+        i = np.zeros(2, dtype=np.int_)
         A_orig = np.zeros(2)
         B_orig = np.zeros(2)
         C_orig = np.zeros(2)
