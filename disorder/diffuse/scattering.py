@@ -786,7 +786,7 @@ class Refinement:
 
         boxes = filters.boxblur(sigma, 3)
 
-        return v_inv, *filt, boxes
+        return (v_inv, *filt, boxes)
 
     def magnetic_refinement(self, N, sigma):
 
