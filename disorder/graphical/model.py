@@ -424,7 +424,7 @@ class Model:
 
     def get_refinement_data(self, signal, error_sq, mask):
 
-            return signal[~mask], 1/error_sq[~mask]
+        return signal[~mask], 1/error_sq[~mask]
 
     def reciprocal_space_mapping(self, h_range, k_range, l_range,
                                  nu, nv, nw, mask):

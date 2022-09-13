@@ -156,12 +156,12 @@ class test_experimental(unittest.TestCase):
         signal[mask] = 10
 
         data = experimental.punch(signal, radius_h, radius_k, radius_l,
-                                  h_range, k_range, l_range, punch='Box')
+                                  h_range, k_range, l_range, ptype='cuboid')
 
         np.testing.assert_array_equal(np.isnan(data[mask]), True)
 
         data = experimental.punch(signal, radius_h, radius_k, radius_l,
-                                  h_range, k_range, l_range, punch='Ellipsoid')
+                                  h_range, k_range, l_range, ptype='ellipsoid')
 
         np.testing.assert_array_equal(np.isnan(data[mask]), True)
 

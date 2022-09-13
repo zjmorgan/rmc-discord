@@ -1648,8 +1648,6 @@ class test_refinement(unittest.TestCase):
 
         Sx, Sy, Sz = magnetic.spin(nu, nv, nw, n_atm, value=moment)
 
-        space_factor = space.factor(nu, nv, nw)
-
         ux, uy, uz = crystal.transform(u, v, w, A)
 
         ix, iy, iz = space.cell(nu, nv, nw, A)
@@ -1824,8 +1822,6 @@ class test_refinement(unittest.TestCase):
 
         A_r = occupational.composition(nu, nv, nw, n_atm, value=occupancy)
 
-        space_factor = space.factor(nu, nv, nw)
-
         ux, uy, uz = crystal.transform(u, v, w, A)
 
         ix, iy, iz = space.cell(nu, nv, nw, A)
@@ -1861,7 +1857,7 @@ class test_refinement(unittest.TestCase):
         i_mask, i_unmask = space.indices(mask)
 
         I_expt = I[mask]
-        inv_sigma_sq = 1/np.sqrt(I_expt)
+        inv_sigma_sq = 1/np.sqrt(I[mask])
 
         n_uvw = nu*nv*nw
 
@@ -1982,8 +1978,6 @@ class test_refinement(unittest.TestCase):
         Ux, Uy, Uz = displacive.expansion(nu, nv, nw, n_atm,
                                           displacement, fixed)
 
-        space_factor = space.factor(nu, nv, nw)
-
         ux, uy, uz = crystal.transform(u, v, w, A)
 
         ix, iy, iz = space.cell(nu, nv, nw, A)
@@ -2026,7 +2020,7 @@ class test_refinement(unittest.TestCase):
         i_mask, i_unmask = space.indices(mask)
 
         I_expt = I[mask]
-        inv_sigma_sq = 1/np.sqrt(I_expt)
+        inv_sigma_sq = 1/np.sqrt(I[mask])
 
         n_uvw = nu*nv*nw
 
@@ -2100,7 +2094,7 @@ class test_refinement(unittest.TestCase):
         boxes = filters.boxblur(sigma, 3)
 
         acc_moves, acc_temps, rej_moves, rej_temps = [], [], [], [],
-        energy, scale, chi_sq, temperature = [], [], [np.inf], [100]
+        energy, scale, chi_sq, temperature = [], [], [np.inf], [10]
         constant = 1e-4
 
         isotropic, fixed = False, True

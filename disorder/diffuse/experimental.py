@@ -16,35 +16,35 @@ def data(filename):
     signal = np.array(data.MDHistoWorkspace.data.signal.nxdata.T)
     error_sq = np.array(data.MDHistoWorkspace.data.errors_squared.nxdata.T)
 
-    if ('Q1' in data.MDHistoWorkspace.data.keys()):
-        Qh = data.MDHistoWorkspace.data['Q1']
-        Qk = data.MDHistoWorkspace.data['Q2']
-        Ql = data.MDHistoWorkspace.data['Q3']
-    elif ('[H,0,0]' in data.MDHistoWorkspace.data.keys()):
-        Qh = data.MDHistoWorkspace.data['[H,0,0]']
-        Qk = data.MDHistoWorkspace.data['[0,K,0]']
-        Ql = data.MDHistoWorkspace.data['[0,0,L]']
+    if 'Q1' in data.MDHistoWorkspace.data.keys():
+        h = data.MDHistoWorkspace.data['Q1']
+        k = data.MDHistoWorkspace.data['Q2']
+        l = data.MDHistoWorkspace.data['Q3']
+    elif '[H,0,0]' in data.MDHistoWorkspace.data.keys():
+        h = data.MDHistoWorkspace.data['[H,0,0]']
+        k = data.MDHistoWorkspace.data['[0,K,0]']
+        l = data.MDHistoWorkspace.data['[0,0,L]']
 
-    Qh_min, Qk_min, Ql_min = Qh.min(), Qk.min(), Ql.min()
-    Qh_max, Qk_max, Ql_max = Qh.max(), Qk.max(), Ql.max()
+    h_min, k_min, l_min = h.min(), k.min(), l.min()
+    h_max, k_max, l_max = h.max(), k.max(), l.max()
 
-    mh, mk, ml = Qh.size, Qk.size, Ql.size
+    mh, mk, ml = h.size, k.size, l.size
 
     nh = mh-1
     nk = mk-1
     nl = ml-1
 
-    step_h = (Qh_max-Qh_min)/nh
-    step_k = (Qk_max-Qk_min)/nk
-    step_l = (Ql_max-Ql_min)/nl
+    step_h = (h_max-h_min)/nh
+    step_k = (k_max-k_min)/nk
+    step_l = (l_max-l_min)/nl
 
-    min_h = np.round(Qh_min+step_h/2, 4)
-    min_k = np.round(Qk_min+step_k/2, 4)
-    min_l = np.round(Ql_min+step_l/2, 4)
+    min_h = np.round(h_min+step_h/2, 4)
+    min_k = np.round(k_min+step_k/2, 4)
+    min_l = np.round(l_min+step_l/2, 4)
 
-    max_h = np.round(Qh_max-step_h/2, 4)
-    max_k = np.round(Qk_max-step_k/2, 4)
-    max_l = np.round(Ql_max-step_l/2, 4)
+    max_h = np.round(h_max-step_h/2, 4)
+    max_k = np.round(k_max-step_k/2, 4)
+    max_l = np.round(l_max-step_l/2, 4)
 
     h_range, k_range, l_range = [min_h, max_h], [min_k, max_k], [min_l, max_l]
 
@@ -148,7 +148,7 @@ def factors(n):
       ([i, n/i] for i in range(1, int(n**0.5) + 1) if n % i == 0))).astype(int)
 
 def punch(data, radius_h, radius_k, radius_l, h_range, k_range, l_range,
-          centering='P', outlier=1.5, punch='Box'):
+          centering='P', outlier=1.5, ptype='cuboid'):
 
     step_h = (h_range[1]-h_range[0])/data.shape[0]
     step_k = (k_range[1]-k_range[0])/data.shape[1]
@@ -188,7 +188,7 @@ def punch(data, radius_h, radius_k, radius_l, h_range, k_range, l_range,
 
                     values = data[h0:h1,k0:k1,l0:l1].copy()
 
-                    if (punch == 'Ellipsoid'):
+                    if ptype == 'ellipsoid':
                         values_outside = values.copy()
                         x, y, z = np.meshgrid(np.arange(h0,h1)-i_hkl[0],
                                               np.arange(k0,k1)-i_hkl[1],
@@ -207,7 +207,7 @@ def punch(data, radius_h, radius_k, radius_l, h_range, k_range, l_range,
 
                     values[reject] = np.nan
 
-                    if (punch == 'Ellipsoid'):
+                    if ptype == 'ellipsoid':
                         values[mask] = values_outside[mask].copy()
 
                     data[h0:h1,k0:k1,l0:l1] = values.copy()
@@ -278,15 +278,15 @@ def correlations(fname, data, label):
     vectors = ['Correlation', 'Collinearity']
     scalars = ['Correlation']
 
-    if (label == 'vector-pair'):
+    if label == 'vector-pair':
         datasets = [data[3], data[4]]
         pairs = data[5]
-    elif (label == 'scalar-pair'):
+    elif label == 'scalar-pair':
         datasets = [data[3]]
         pairs = data[4]
-    elif (label == 'vector'):
+    elif label == 'vector':
         datasets = [data[3], data[4]]
-    elif (label == 'scalar'):
+    elif label == 'scalar':
         datasets = [data[3]]
 
     form = vectors if label.startswith('vector') else scalars

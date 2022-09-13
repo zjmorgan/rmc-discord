@@ -4,8 +4,10 @@ import re
 
 import numpy as np
 
+from disorder.diffuse import space, filters, magnetic
 from disorder.diffuse import interaction, simulation
-from disorder.material import tables
+from disorder.diffuse import experimental, refinement
+from disorder.material import crystal, tables
 
 def length(atms, n_hkl):
     """
@@ -570,7 +572,7 @@ class Simulation:
 
         properties = self.__J[self.__active,...], self.__K, self.__g
 
-        fields = self.__B, self.__Qijkl
+        fields = self.__B, self.__Qijkl*self.__const_dd
 
         indices = self.___get_indices()
 
@@ -579,6 +581,12 @@ class Simulation:
         H, T = simulation.heisenberg(*args)
 
         self.__T = T
+
+        ind = np.argmin(H)
+
+        self.sc._Sx = self.__Sx[...,ind].flatten()
+        self.sc._Sy = self.__Sy[...,ind].flatten()
+        self.sc._Sz = self.__Sz[...,ind].flatten()
 
         return H, T
 
@@ -596,3 +604,244 @@ class Refinement:
     def __init__(self, sc):
 
         self.sc = sc
+
+    def load_intensity(self, filename):
+
+        self.signal, self.sigma_sq, *binning = experimental.data(filename)
+
+        self.extents, self.bins = binning[0:3], binning[3:6]
+
+        self.reset_intensity()
+
+    def reset_intensity(self):
+
+        self.__signal = self.signal.copy()
+        self.__sigma_sq = self.sigma_sq.copy()
+
+        self.__extents = self.extents
+        self.__bins = self.bins
+
+    def crop(self, slices):
+
+        self.__signal = experimental.crop(self.__signal, *slices)
+        self.__sigma_sq = experimental.crop(self.__sigma_sq, *slices)
+
+    def rebin(self, bins):
+
+        self.__signal = experimental.rebin(self.__signal, *bins)
+        self.__sigma_sq = experimental.rebin(self.__sigma_sq, *bins)
+
+    def punch(self, radii, centering='P', outlier=1.5, ptype='cuboid'):
+
+        params = *radii, self.__extents, centering, outlier, ptype
+
+        self.__signal = experimental.punch(self.__signal, *params)
+        self.__sigma_sq = experimental.punch(self.__sigma_sq, *params)
+
+    def __mask(self):
+
+        return experimental.mask(self.__signal, self.__sigma_sq)
+
+    def __mask_indices(self):
+
+        return space.indices(self.__mask())
+
+    def initialize_refinement(self, temp, const):
+
+        self.__acc_moves, self.__acc_temps = [], []
+        self.__rej_moves, self.__rej_temps = [], []
+
+        self.__energy, self.__scale = [], []
+
+        self.__chi_sq, self.__temperature =  [np.inf], [temp]
+        self.__constant = const
+
+        self.__A_r = self.sc._A_r
+        self.__Ux, self.__Uy, self.__Uz = self.sc._Ux, self.sc._Uy, self.sc._Uz
+        self.__Sx, self.__Sy, self.__Sz = self.sc._Sx, self.sc._Sy, self.sc._Sz
+
+        dims = self.sc.get_super_cell_extents()
+
+        rx, ry, rz, _ = self.sc.get_super_cell_cartesian_atomic_coordinates()
+
+        extents = self.__extents
+        bins = self.__bins
+
+        mapping = space.mapping(*extents, *bins, *dims)
+
+        h, k, l, self.__H, self.__K, self.__L, \
+        self.__indices, self.__inverses, symops = mapping
+
+        B = self.sc.get_miller_cartesian_transform()
+        R = self.sc.get_cartesian_rotation()
+
+        Qh, Qk, Ql = crystal.vector(h, k, l, B)
+
+        Qx, Qy, Qz = crystal.transform(Qh, Qk, Ql, R)
+
+        Qx_norm, Qy_norm, Qz_norm, Q = space.unit(Qx, Qy, Qz)
+
+        self.__Qx_norm = Qx_norm
+        self.__Qy_norm = Qy_norm
+        self.__Qz_norm = Qz_norm
+        self.__Q = Q
+
+        ux, uy, uz = self.sc.get_unit_cell_cartesian_atomic_coordinates()
+
+        phase_factor = phase(Qx, Qy, Qz, ux, uy, uz)
+
+        self.__space_factor = space.factor(*dims)
+
+        isotopes = self.sc.get_unit_cell_isotopes()
+        ions = self.sc.get_unit_cell_ions()
+
+        occ = self.sc.get_occupancies()
+        U = self.sc.get_cartesian_anistropic_displacement_parameters()
+
+        g = self.sc.get_g_factors()
+
+        a_, b_, c_, *_ = self.sc.get_reciprocal_lattice_constants()
+
+        self.__T = space.debye_waller(*extents, *bins, *U, a_, b_, c_)
+
+        form_factor = magnetic.form(Q, ions, g)
+
+        self.__mag_factors = space.prefactors(form_factor, phase_factor, occ)
+
+        scattering_length = length(isotopes, Q.size)
+
+        self.__factors = space.prefactors(scattering_length, phase_factor, occ)
+
+    def __initialize_magnetic(self):
+
+        dims = self.sc.get_super_cell_extents()
+        n_atm = self.sc.get_number_atoms_per_unit_cell()
+
+        spins = self.__Sx, self.__Sy, self.__Sz
+
+        points = self.__H, self.__K, self.__L
+
+        args = *spins, *points, *dims, n_atm
+
+        transform = magnetic.transform(*args)
+
+        dirs = self.__Qx_norm, self.__Qy_norm, self.__Qz_norm
+
+        structure = magnetic.structure(*dirs, *transform, self.__factors)
+
+        self.__Sx_k, self.__Sy_k, self.__Sz_k, self.__i_dft = transform
+
+        self.__Fx, self.__Fy, self.__Fz, \
+        self.__prod_x, self.__prod_y, self.__prod_z = structure
+
+        n_uvw = self.sc.get_super_cell_size()
+
+        self.__Fx_orig = np.zeros(self.__indices.size, dtype=complex)
+        self.__Fy_orig = np.zeros(self.__indices.size, dtype=complex)
+        self.__Fz_orig = np.zeros(self.__indices.size, dtype=complex)
+
+        self.__prod_x_orig = np.zeros(self.__indices.size, dtype=complex)
+        self.__prod_y_orig = np.zeros(self.__indices.size, dtype=complex)
+        self.__prod_z_orig = np.zeros(self.__indices.size, dtype=complex)
+
+        self.__Sx_k_orig = np.zeros(n_uvw, dtype=complex)
+        self.__Sy_k_orig = np.zeros(n_uvw, dtype=complex)
+        self.__Sz_k_orig = np.zeros(n_uvw, dtype=complex)
+
+        self.__Fx_cand = np.zeros(self.__indices.size, dtype=complex)
+        self.__Fy_cand = np.zeros(self.__indices.size, dtype=complex)
+        self.__Fz_cand = np.zeros(self.__indices.size, dtype=complex)
+
+        self.__prod_x_cand = np.zeros(self.__indices.size, dtype=complex)
+        self.__prod_y_cand = np.zeros(self.__indices.size, dtype=complex)
+        self.__prod_z_cand = np.zeros(self.__indices.size, dtype=complex)
+
+        self.__Sx_k_cand = np.zeros(n_uvw, dtype=complex)
+        self.__Sy_k_cand = np.zeros(n_uvw, dtype=complex)
+        self.__Sz_k_cand = np.zeros(n_uvw, dtype=complex)
+
+    def __intensities(self):
+
+        mask = self.__mask()
+
+        I_obs = np.full(mask.shape, np.nan)
+        I_ref = I_obs[~mask]
+
+        I_calc = np.zeros(self.__Q.size, dtype=float)
+
+        I_raw = np.zeros(mask.size, dtype=float)
+        I_flat = np.zeros(mask.size, dtype=float)
+
+        I_expt, inv_sigma_sq = self.__signal[~mask], 1/self.__sigma_sq[~mask]
+
+        return I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref
+
+    def __filters(self, sigma):
+
+        mask = self.__mask()
+
+        filt = np.zeros((9,mask.size), dtype=float)
+
+        v_inv = filters.gaussian(mask, sigma)
+
+        boxes = filters.boxblur(sigma, 3)
+
+        return v_inv, *filt, boxes
+
+    def magnetic_refinement(self, N, sigma):
+
+        fixed, heisenberg = True, True
+
+        mu = self.sc.get_magnetic_moment_magnitude()
+
+        self.__initialize_magnetic()
+
+        dims = self.sc.get_super_cell_extents()
+        n_atm = self.sc.get_number_atoms_per_unit_cell()
+
+        n = self.sc.get_number_atoms_per_unit_cell()
+
+        bins = self.__bins
+
+        spins = self.__Sx, self.__Sy, self.__Sz
+
+        dirs = self.__Qx_norm, self.__Qy_norm, self.__Qz_norm
+
+        trans = self.__Sx_k, self.__Sy_k, self.__Sz_k
+
+        trans_orig = self.__Sx_k_orig, self.__Sy_k_orig, self.__Sz_k_orig
+        trans_cand = self.__Sx_k_cand, self.__Sy_k_cand, self.__Sz_k_cand
+
+        struct = self.__Fx, self.__Fy, self.__Fz
+
+        struct_orig = self.__Fx_orig, self.__Fy_orig, self.__Fz_orig
+        struct_cand = self.__Fx_cand, self.__Fy_cand, self.__Fz_cand
+
+        prod = self.__prod_x, self.__prod_y, self.__prod_z
+
+        prod_orig = self.__prod_x_orig, self.__prod_y_orig, self.__prod_z_orig
+        prod_cand = self.__prod_x_cand, self.__prod_y_cand, self.__prod_z_cand
+
+        indices = self.__i_dft, self.__inverses, *self.__mask_indices()
+
+        accepted = self.__acc_moves, self.__acc_temps
+        rejected = self.__rej_moves, self.__rej_temps
+        statistics = self.__chi_sq, self.__energy
+        optimization = self.__temperature, self.__scale, self.__constant
+
+        factors = self.__space_factor, self.__mag_factors
+
+        intensities = self.__intensities()
+        filters = self.__filters(sigma)
+
+        opts = fixed, heisenberg
+
+        args = *spins, *dirs, *trans, *trans_orig, *trans_cand, *struct, \
+               *struct_orig, *struct_cand, *prod, *prod_orig, *prod_cand, \
+               *factors, mu, *intensities, *filters, *indices, \
+               *accepted, *rejected, *statistics, *optimization, \
+               *opts, *bins, *dims, n_atm, n, N
+
+        refinement.magnetic(*args)
+
+        self.sc._Sx, self.sc._Sy, self.sc._Sz = self.__Sx, self.__Sy, self.__Sz

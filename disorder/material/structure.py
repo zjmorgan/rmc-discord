@@ -3,7 +3,7 @@
 import os
 import numpy as np
 
-from disorder.diffuse import scattering, space, powder, monocrystal
+from disorder.diffuse import scattering, space, powder, monocrystal, filters
 from disorder.diffuse import displacive, magnetic, occupational
 from disorder.correlation import functions
 from disorder.material import crystal, symmetry
@@ -284,9 +284,9 @@ class UnitCell:
 
         n_atm = uc_dict['n_atom']
 
-        self.__ion = uc_dict['ion']
-        self.__iso = uc_dict['isotope']
-        self.__atm = uc_dict['atom']
+        self.__ion = uc_dict['ion'].astype('<U3')
+        self.__iso = uc_dict['isotope'].astype('<U3')
+        self.__atm = uc_dict['atom'].astype('<U3')
         self.__site = uc_dict['site']
 
         uni, ind = np.unique(self.__site, return_index=True)
@@ -1220,7 +1220,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_reciprocal_lattice_constants()
 
         return crystal.cartesian(*constants)
 
@@ -1577,11 +1577,9 @@ class SuperCell(UnitCell):
         dims = self.get_super_cell_extents()
         n_atm = self.get_number_atoms_per_unit_cell()
 
-        mu_x, mu_y, mu_z = self.get_cartesian_magnetic_moments()
+        mu = self.get_magnetic_moment_magnitude()
 
-        moment = np.row_stack((mu_x, mu_y, mu_z))
-
-        self._Sx, self._Sy, self._Sz = magnetic.spin(*dims, n_atm, moment)
+        self._Sx, self._Sy, self._Sz = magnetic.spin(*dims, n_atm, mu)
 
     def randomize_site_occupancies(self):
         """
@@ -1626,7 +1624,7 @@ class SuperCell(UnitCell):
         -------
         corr : 1d array
             Correlation.
-        coll : TYPE
+        coll : 1d array
             Collinearity.
         d : 1d array
             Separation distance magnitude.
@@ -1832,6 +1830,22 @@ class SuperCell(UnitCell):
         return corr, coll, dx, dy, dz, pairs
 
     def magnetic_powder_intensity(self, extents, bins):
+        """
+        Calculate magnetic powder intensity.
+
+        Parameters
+        ----------
+        extents : list, float
+            Reciprocal space extents.
+        bins : int
+            Number of bins.
+
+        Returns
+        -------
+        I : 1d array
+            Magnetic scattering intensity.
+
+        """
 
         Q = np.linspace(*extents, bins)
 
@@ -1854,7 +1868,27 @@ class SuperCell(UnitCell):
 
         return powder.magnetic(*args)
 
-    def magnetic_single_crystal_intensity(self, extents, bins, W, laue):
+    def magnetic_single_crystal_intensity(self, extents, bins, W, laue=None):
+        """
+        Calculate magnetic _single_crystal intensity.
+
+        Parameters
+        ----------
+        extents : list of lists, float
+            Reciprocal space extents.
+        bins : list, int
+            Number of bins.
+        W : 2d array
+            Projection matrix.
+        laue : str, optional
+            Laue symmetry.
+
+        Returns
+        -------
+        I : 1d array
+            Magnetic scattering intensity.
+
+        """
 
         dims = self.get_super_cell_extents()
 
@@ -1874,7 +1908,7 @@ class SuperCell(UnitCell):
 
         args = *extents, *bins, *dims, W, laue
 
-        indices, _, ops, *points = space.reduced(*args)
+        indices, inverses, ops, *points = space.reduced(*args)
 
         symop = symmetry.laue_id(ops)
 
@@ -1884,4 +1918,8 @@ class SuperCell(UnitCell):
 
         args = *moments, occ, *U, *coords, ions, *trans, *dims, *points, g
 
-        return monocrystal.magnetic(*args)
+        return monocrystal.magnetic(*args)[inverses].reshape(*bins)
+
+    def single_crystal_intensity_blur(self, I, sigma):
+
+        return filters.blurring(I, sigma)

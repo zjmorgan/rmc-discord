@@ -1,6 +1,5 @@
-#cython: boundscheck=False, wraparound=True, nonecheck=False, cdivision=True
+#cython: boundscheck=False, wraparound=False, nonecheck=False, cdivision=True
 #cython: language_level=3
-#cython: linetrace=True
 
 import os, sys
 
@@ -1646,8 +1645,8 @@ cpdef void magnetic(double [::1] Sx,
 
     cdef Py_ssize_t i, j, s
 
-    chi_sq_orig = chi_sq[-1]
-    temp = temperature[-1]
+    chi_sq_orig = chi_sq[len(chi_sq)-1]
+    temp = temperature[len(temperature)-1]
 
     with nogil:
 
@@ -1892,8 +1891,8 @@ cpdef void occupational(double [::1] A_r,
 
     cdef Py_ssize_t i, j, s
 
-    chi_sq_orig = chi_sq[-1]
-    temp = temperature[-1]
+    chi_sq_orig = chi_sq[len(chi_sq)-1]
+    temp = temperature[len(temperature)-1]
 
     with nogil:
 
@@ -2124,8 +2123,8 @@ cpdef void displacive(double [::1] Ux,
 
     cdef Py_ssize_t i, j, s
 
-    chi_sq_orig = chi_sq[-1]
-    temp = temperature[-1]
+    chi_sq_orig = chi_sq[len(chi_sq)-1]
+    temp = temperature[len(temperature)-1]
 
     with nogil:
 
