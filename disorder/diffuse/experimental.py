@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from nexusformat.nexus import nxload
+import h5py
 import pyvista as pv
 
 from functools import reduce
@@ -11,19 +11,19 @@ from disorder.diffuse import filters
 
 def data(filename):
 
-    data = nxload(filename)
+    f = h5py.File(filename, 'r')
 
-    signal = np.array(data.MDHistoWorkspace.data.signal.nxdata.T)
-    error_sq = np.array(data.MDHistoWorkspace.data.errors_squared.nxdata.T)
+    signal = f['MDHistoWorkspace/data/signal'][()].T
+    error_sq = f['MDHistoWorkspace/data/errors_squared'][()].T
 
-    if 'Q1' in data.MDHistoWorkspace.data.keys():
-        h = data.MDHistoWorkspace.data['Q1']
-        k = data.MDHistoWorkspace.data['Q2']
-        l = data.MDHistoWorkspace.data['Q3']
-    elif '[H,0,0]' in data.MDHistoWorkspace.data.keys():
-        h = data.MDHistoWorkspace.data['[H,0,0]']
-        k = data.MDHistoWorkspace.data['[0,K,0]']
-        l = data.MDHistoWorkspace.data['[0,0,L]']
+    if 'Q1' in f['MDHistoWorkspace/data/'].keys():
+        h = f['MDHistoWorkspace/data/Q1'][...]
+        k = f['MDHistoWorkspace/data/Q2'][...]
+        l = f['MDHistoWorkspace/data/Q3'][...]
+    elif '[H,0,0]'in f['MDHistoWorkspace/data/'].keys():
+        h = f['MDHistoWorkspace/data/[H,0,0]'][...]
+        k = f['MDHistoWorkspace/data/[0,K,0]'][...]
+        l = f['MDHistoWorkspace/data/[0,0,L]'][...]
 
     h_min, k_min, l_min = h.min(), k.min(), l.min()
     h_max, k_max, l_max = h.max(), k.max(), l.max()

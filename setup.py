@@ -104,7 +104,7 @@ setup(
         'scipy',
         'matplotlib',
         'pycifrw',
-        'nexusformat',
+        'h5py',
         'pyvista',
         'mayavi',
         'pyqt5',

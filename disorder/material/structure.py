@@ -268,6 +268,55 @@ class UnitCell:
 
         self. __load_unit_cell(tol)
 
+    def __repr__(self):
+
+        lat = self.get_lattice_system()
+
+        sym = self.get_space_group_symbol()
+        no = self.get_space_group_number()
+
+        a, b, c, alpha, beta, gamma = self.__get_all_lattice_constants()
+
+        standard = np.isclose(gamma, np.pi/2)
+
+        a = 'a = {:.4}'.format(a)
+        b = 'b = {:.4}'.format(b)
+        c = 'c = {:.4}'.format(c)
+        alpha = 'alpha = {:.2}'.format(np.rad2deg(alpha))
+        beta = 'beta = {:.2}'.format(np.rad2deg(beta))
+        gamma = 'gamma = {:.2}'.format(np.rad2deg(gamma))
+
+        if lat == 'Cubic':
+            constants = a,
+        elif lat == 'Hexagonal' or lat == 'Tetragonal':
+            constants = a, c
+        elif lat == 'Rhobmohedral':
+            constants = a, alpha
+        elif lat == 'Orthorhombic':
+            constants = a, b, c
+        elif lat == 'Monoclinic':
+            if not standard:
+                constants = a, b, c, gamma
+            else:
+                constants = a, b, c, beta
+        else:
+            constants = a, b, c, alpha, beta, gamma
+
+        title = '{} {}, {}\n'.format(sym,no,', '.join(constants))
+
+        atms = self.get_unit_cell_atoms()
+        occ = self.get_occupancies()
+        u, v, w = self.get_fractional_coordinates()
+        Uiso = self.get_isotropic_displacement_parameter()
+
+        header = 'atm    occ     u     v     w  Uiso\n'
+        divide = '==================================\n'
+        coords = '{:4}{:6.2}{:6.2}{:6.2}{:6.2}{:6.2}\n'
+
+        sites = ''.join([coords.format(*x) for x in zip(atms,occ,u,v,w,Uiso)])
+
+        return title+divide+header+divide+sites+divide
+
     def __load_unit_cell(self, tol):
 
         folder = self.get_filepath()
@@ -965,10 +1014,10 @@ class UnitCell:
         elif lat == 'Orthorhombic':
             constants = a, b, c
         elif lat == 'Monoclinic':
-            if not np.isclose(beta, np.pi/2):
-                constants = a, b, c, alpha, gamma
+            if np.isclose(beta, np.pi/2):
+                constants = a, b, c, gamma
             else:
-                constants = a, b, c, alpha, beta
+                constants = a, b, c, beta
         else:
             constants = a, b, c, alpha, beta, gamma
 
@@ -1020,10 +1069,10 @@ class UnitCell:
             a, b, c = constants
             alpha = beta = gamma = np.pi/2
         elif lat == 'Monoclinic':
-            if (not np.isclose(beta, np.pi/2)):
-                a, b, c, alpha, gamma = constants
+            if np.isclose(beta, np.pi/2):
+                a, b, c, gamma = constants
             else:
-                a, b, c, alpha, beta = constants
+                a, b, c, beta = constants
         else:
             a, b, c, alpha, beta, gamma = constants
 
@@ -1471,6 +1520,13 @@ class SuperCell(UnitCell):
         self.randomize_spin_vectors()
         self.randomize_site_occupancies()
         self.randomize_atomic_displacements()
+
+    def __repr__(self):
+
+        dims = self.get_super_cell_extents()
+        n_atm = self.get_number_atoms_per_unit_cell()
+
+        return '{}x{}x{} supercell {} atom unit cell'.format(*dims,n_atm)
 
     def get_super_cell_extents(self):
         """

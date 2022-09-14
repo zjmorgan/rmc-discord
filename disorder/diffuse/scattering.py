@@ -605,6 +605,31 @@ class Refinement:
 
         self.sc = sc
 
+        self.__extents = [[None,None],[None,None],[None,None]]
+        self.__bins = [None,None,None]
+
+    def __repr__(self):
+
+        extents = self.__extents
+        bins = self.__bins
+
+        if all(bins):
+
+            steps = [self.__step(*ext,size) for ext, size in zip(extents,bins)]
+
+            header = '     min     max    size    step\n'
+            divide = '================================\n'
+
+            binning = '{:8.4}{:8.4}{:8}{:8.4}\n'
+            diminfo = [binning.format(*ext,size,step) \
+                       for ext, size, step in zip(extents,bins,steps)]
+
+            return header+divide+''.join(diminfo)+divide
+
+        else:
+
+            return 'No data loaded\n'
+
     def load_intensity(self, filename):
 
         self.signal, self.sigma_sq, *binning = experimental.data(filename)
@@ -637,6 +662,10 @@ class Refinement:
 
         self.__signal = experimental.punch(self.__signal, *params)
         self.__sigma_sq = experimental.punch(self.__sigma_sq, *params)
+
+    def __step(self, vmin, vmax, size):
+
+        return (vmax-vmin)/(size-1) if (size > 1) else 0
 
     def __mask(self):
 
