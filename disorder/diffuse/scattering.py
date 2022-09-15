@@ -196,6 +196,26 @@ class Simulation:
 
         self.__n_atm = n_atm
 
+    def __repr__(self):
+
+        mask = self.__mask()
+
+        pair_ind = self.__pair_ind[mask]
+
+        uni, ind = np.unique(pair_ind, return_index=True)
+
+        d = self.get_bond_lengths().flatten()[ind]
+
+        pair_ind = pair_ind[ind]
+
+        header = ' ind       d\n'
+        divide = '============\n'
+        bond = '{:4}{:8.4}\n'
+
+        bondinfo = ''.join([bond.format(*x) for x in zip(pair_ind,d)])
+
+        return header+divide+bondinfo+divide
+
     def __mask(self):
 
         indices = np.arange(self.__active.size)[self.__active]
@@ -632,29 +652,53 @@ class Refinement:
 
     def load_intensity(self, filename):
 
-        self.signal, self.sigma_sq, *binning = experimental.data(filename)
+        self.__signal, self.__sigma_sq, *binning = experimental.data(filename)
 
         self.extents, self.bins = binning[0:3], binning[3:6]
 
-        self.reset_intensity()
+        with open('tmp.npy', 'wb') as f:
+             np.save(f, self.__signal)
+             np.save(f, self.__sigma_sq)
+
+        self.__extents = self.extents
+        self.__bins = self.bins
 
     def reset_intensity(self):
 
-        self.__signal = self.signal.copy()
-        self.__sigma_sq = self.sigma_sq.copy()
+        with open('tmp.npy', 'rb') as f:
+            self.__signal = np.load(f)
+            self.__sigma_sq = np.load(f)
 
         self.__extents = self.extents
         self.__bins = self.bins
 
     def crop(self, slices):
 
-        self.__signal = experimental.crop(self.__signal, *slices)
-        self.__sigma_sq = experimental.crop(self.__sigma_sq, *slices)
+        indices = []
+        for extents, bins, values in zip(self.__extents, self.__bins, slices):
+            indices.append([self.__index(*extents,bins,values[0]),
+                            self.__index(*extents,bins,values[1])+1])
 
-    def rebin(self, bins):
+        self.__signal = experimental.crop(self.__signal, *indices)
+        self.__sigma_sq = experimental.crop(self.__sigma_sq, *indices)
 
-        self.__signal = experimental.rebin(self.__signal, *bins)
-        self.__sigma_sq = experimental.rebin(self.__sigma_sq, *bins)
+        values = []
+        for extents, bins, inds in zip(self.__extents, self.__bins, indices):
+            values.append([self.__value(*extents,bins,inds[0]),
+                           self.__value(*extents,bins,inds[1]-1)])
+
+        self.__extents = values
+        self.__bins = self.__signal.shape
+
+    def rebin(self, sizes):
+
+        bins = [size if (0 < size < bins) else bins \
+                for size, bins in zip(sizes, self.__bins)]
+
+        self.__signal = experimental.rebin(self.__signal, bins)
+        self.__sigma_sq = experimental.rebin(self.__sigma_sq, bins)
+
+        self.__bins = self.__signal.shape
 
     def punch(self, radii, centering='P', outlier=1.5, ptype='cuboid'):
 
@@ -665,7 +709,39 @@ class Refinement:
 
     def __step(self, vmin, vmax, size):
 
-        return (vmax-vmin)/(size-1) if (size > 1) else 0
+        return (vmax-vmin)/(size-1) if size > 1 else 0
+
+    def __value(self, vmin, vmax, size, index):
+
+        if index > size:
+            return np.round(vmax, 4)
+        elif index < 0 or size <= 1:
+            return np.round(vmin, 4)
+        else:
+            step = (vmax-vmin)/(size-1)
+            return np.round(vmin+step*index, 4)
+
+    def __index(self, vmin, vmax, size, value):
+
+        if value > vmax:
+            return size-1
+        elif value < vmin or size <= 1:
+            return 0
+        else:
+            step = (vmax-vmin)/(size-1)
+            return int(round((value-vmin)/step))
+
+    def __size(self, vmin, vmax, step):
+
+        return int(round((vmax-vmin)/step))+1 if (step > 0) else 1
+
+    def __minimum(self, size, step, vmax):
+
+        return vmax-step*(size-1)
+
+    def __maximum(self, size, step, vmin):
+
+        return vmin+step*(size-1)
 
     def __mask(self):
 
