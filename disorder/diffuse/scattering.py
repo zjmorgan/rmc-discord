@@ -34,9 +34,7 @@ def length(atms, n_hkl):
 
         bc = tables.bc.get(atm)
 
-        for i_hkl in range(n_hkl):
-
-            b[i::n_atm] = bc
+        b[i::n_atm] = bc
 
     return b
 
@@ -70,7 +68,7 @@ def form(ions, Q, source='x-ray'):
 
     for i, ion in enumerate(ions):
 
-        if (source == 'x-ray'):
+        if source == 'x-ray':
 
             a1, b1, a2, b2, a3, b3, a4, b4, c = tables.X.get(ion)
 
@@ -651,6 +649,15 @@ class Refinement:
             return 'No data loaded\n'
 
     def load_intensity(self, filename):
+        """
+        Load intensity data.
+
+        Parameters
+        ----------
+        filename : str
+            Name of file.
+
+        """
 
         self.__signal, self.__sigma_sq, *binning = experimental.data(filename)
 
@@ -664,6 +671,10 @@ class Refinement:
         self.__bins = self.bins
 
     def reset_intensity(self):
+        """
+        Reset intensity data.
+
+        """
 
         with open('tmp.npy', 'rb') as f:
             self.__signal = np.load(f)
@@ -673,6 +684,15 @@ class Refinement:
         self.__bins = self.bins
 
     def crop(self, slices):
+        """
+        Crop intensity data to new extents.
+
+        Parameters
+        ----------
+        slices : list of lists
+            Extents along each dimension.
+
+        """
 
         indices = []
         for extents, bins, values in zip(self.__extents, self.__bins, slices):
@@ -691,6 +711,15 @@ class Refinement:
         self.__bins = self.__signal.shape
 
     def rebin(self, sizes):
+        """
+        Rebin intensity data to new bin sizes.
+
+        Parameters
+        ----------
+        sizes : list, int
+            Bins along each dimension.
+
+        """
 
         bins = [size if (0 < size < bins) else bins \
                 for size, bins in zip(sizes, self.__bins)]
@@ -701,8 +730,39 @@ class Refinement:
         self.__bins = self.__signal.shape
 
     def punch(self, radii, centering='P', outlier=1.5, ptype='cuboid'):
+        """
+        Punch intensity data.
 
-        params = *radii, self.__extents, centering, outlier, ptype
+        ========= ==================================
+        Centering Condition
+        ========= ==================================
+        P         None
+        I         h + k + l = 2n
+        F         h + k = 2n, k + l = 2n, l + h = 2n
+        C         h + k = 2n
+        A         k + l = 2n
+        B         l + h = 2n
+        R(obv)    k - h + l = 3n
+        R(rev)    h - k + l = 3n
+        H         h - k = 3n
+        D         h + k + l = 3n
+        ========= ==================================
+
+        Parameters
+        ----------
+        radii : list, int
+            Punch radii along each dimension.
+        centering : str, optional
+            Reflection condition lattice centering. The default is ``'P'``.
+        outlier : float, optional
+            Multiplier of interquartile range. The default is ``1.5``.
+        ptype : str, optional
+            Punch type, either ``'cuboid'`` or ``'ellispoid'``. The default is
+            ``'cuboid'``.
+
+        """
+
+        params = *radii, *self.__extents, centering, outlier, ptype
 
         self.__signal = experimental.punch(self.__signal, *params)
         self.__sigma_sq = experimental.punch(self.__sigma_sq, *params)
@@ -752,6 +812,17 @@ class Refinement:
         return space.indices(self.__mask())
 
     def initialize_refinement(self, temp, const):
+        """
+        Initialize refinement.
+
+        Parameters
+        ----------
+        temp : float
+            Initial temperature.
+        const : float
+            Cooling constant.
+
+        """
 
         self.__acc_moves, self.__acc_temps = [], []
         self.__rej_moves, self.__rej_temps = [], []
@@ -893,7 +964,18 @@ class Refinement:
 
         return (v_inv, *filt, boxes)
 
-    def magnetic_refinement(self, N, sigma):
+    def magnetic_refinement(self, cycles, sigma):
+        """
+        Perform magnetic refinement.
+
+        Parameters
+        ----------
+        cycles : int
+            Number of Monte Carlo cycles.
+        sigma : list
+            Pixel size of filter along each dimension.
+
+        """
 
         fixed, heisenberg = True, True
 
@@ -904,7 +986,9 @@ class Refinement:
         dims = self.sc.get_super_cell_extents()
         n_atm = self.sc.get_number_atoms_per_unit_cell()
 
-        n = self.sc.get_number_atoms_per_unit_cell()
+        n = self.sc.get_number_atoms_per_super_cell()
+
+        N = n*cycles
 
         bins = self.__bins
 
@@ -949,4 +1033,6 @@ class Refinement:
 
         refinement.magnetic(*args)
 
-        self.sc._Sx, self.sc._Sy, self.sc._Sz = self.__Sx, self.__Sy, self.__Sz
+        self.sc._Sx = self.__Sx.copy()
+        self.sc._Sy = self.__Sy.copy()
+        self.sc._Sz = self.__Sz.copy()

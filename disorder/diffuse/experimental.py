@@ -107,25 +107,37 @@ def rebin(a, binsize):
         return a
 
 def weights(old, new):
+
     weights = np.zeros((new,old))
+
     binning = old/new
     interval = binning
+
     row, col = 0, 0
+
     while (row < weights.shape[0] and col < weights.shape[1]):
-        if (np.round(interval-col, 1) >= 1):
+
+        if np.round(interval-col, 1) >= 1:
+
             weights[row,col] = 1
             col += 1
-        elif (interval == col):
+
+        elif interval == col:
+
             row += 1
             interval += binning
+
         else:
+
             partial = interval-col
             weights[row,col] = partial
             row += 1
             weights[row,col] = 1-partial
             col += 1
             interval += binning
+
     weights /= binning
+
     return weights
 
 def crop(x, h_slice, k_slice, l_slice):
@@ -229,7 +241,7 @@ def outlier(signal, size):
 
 def reflections(h, k, l, centering='P'):
 
-    # centering == 'P', 'R (rhombohedral axes, primitive cell')
+    # centering == 'P', 'R (rhombohedral axes, primitive cell)'
     allow = 1
 
     if (centering == 'I'):
