@@ -1,6 +1,7 @@
 #!/usr/bin/env/python3
 
 import os
+import h5py
 import numpy as np
 
 from disorder.diffuse import scattering, space, powder, monocrystal, filters
@@ -146,6 +147,10 @@ class UnitCell:
 
     Methods
     -------
+    save()
+        Save unit cell data.
+    load()
+        Load unit cell data.
     get_filepath()
         Path of CIF file.
     get_filename()
@@ -258,15 +263,23 @@ class UnitCell:
 
     def __init__(self, filename, tol=1e-2):
 
-        filename = os.path.abspath(filename)
+        name, ext = os.path.splitext(filename)
 
-        folder = os.path.dirname(filename)
-        filename = os.path.basename(filename)
+        if 'cif' in ext:
 
-        self.__folder = folder
-        self.__filename = filename
+            filename = os.path.abspath(filename)
 
-        self. __load_unit_cell(tol)
+            folder = os.path.dirname(filename)
+            filename = os.path.basename(filename)
+
+            self.__folder = folder
+            self.__filename = filename
+
+            self. __load_unit_cell(tol)
+
+        else:
+
+            self.__load_unitcell(filename)
 
     def __repr__(self):
 
@@ -419,6 +432,156 @@ class UnitCell:
                     self.__alpha, self.__beta, self.__gamma
 
         return constants
+
+    def __save_unitcell(self, filename):
+
+        with h5py.File(filename, 'w') as f:
+
+            uc = f.create_group('disorder/unitcell')
+
+            uc.create_dataset('ions', data=self.__ion.astype('S'))
+            uc.create_dataset('isotopes', data=self.__iso.astype('S'))
+            uc.create_dataset('atoms', data=self.__atm.astype('S'))
+            uc.create_dataset('sites', data=self.__site)
+
+            uc.create_dataset('active', data=self.__act)
+            uc.create_dataset('unique', data=self.__ind)
+            uc.create_dataset('index', data=self.__index)
+            uc.create_dataset('inverse', data=self.__inverse)
+            uc.create_dataset('mask', data=self.__mask)
+
+            uc.create_dataset('operators', data=self.__op.astype('S'))
+            uc.create_dataset('moments', data=self.__mag_op.astype('S'))
+
+            uc.create_dataset('u', data=self.__u)
+            uc.create_dataset('v', data=self.__v)
+            uc.create_dataset('w', data=self.__w)
+
+            uc.create_dataset('occupancy', data=self.__occ)
+
+            uc.create_dataset('U11', data=self.__U11)
+            uc.create_dataset('U22', data=self.__U22)
+            uc.create_dataset('U33', data=self.__U33)
+            uc.create_dataset('U23', data=self.__U23)
+            uc.create_dataset('U13', data=self.__U13)
+            uc.create_dataset('U12', data=self.__U12)
+
+            uc.create_dataset('mu1', data=self.__mu1)
+            uc.create_dataset('mu2', data=self.__mu2)
+            uc.create_dataset('mu3', data=self.__mu3)
+
+            uc.create_dataset('g', data=self.__g)
+
+            uc.create_dataset('point_group', data=self.__pg)
+            uc.create_dataset('multiplicity', data=self.__mult)
+            uc.create_dataset('positions', data=self.__sp_pos)
+
+            uc.create_dataset('T', data=self.__T)
+            uc.create_dataset('weights', data=self.__weights)
+
+            uc.attrs['folder'] = self.__folder
+            uc.attrs['filename'] = self.__filename
+
+            uc.attrs['a'] = self.__a
+            uc.attrs['b'] = self.__b
+            uc.attrs['c'] = self.__c
+            uc.attrs['alpha'] = self.__alpha
+            uc.attrs['beta'] = self.__beta
+            uc.attrs['gamma'] = self.__gamma
+
+            uc.attrs['hermann_mauguin'] = self.__hm
+            uc.attrs['space_group'] = self.__sg
+            uc.attrs['laue'] = self.__laue
+
+            uc.attrs['lattice'] = self.__lat
+
+    def __load_unitcell(self, filename):
+
+        with h5py.File(filename, 'r') as f:
+
+            uc = f['disorder/unitcell']
+
+            self.__ion = uc['ions'][...].astype('<U3')
+            self.__iso = uc['isotopes'][...].astype('<U3')
+            self.__atm = uc['atoms'][...].astype('<U3')
+            self.__site = uc['sites'][...]
+
+            self.__act = uc['active'][...]
+            self.__ind = uc['unique'][...]
+            self.__index = uc['index'][...]
+            self.__inverse = uc['inverse'][...]
+            self.__mask = uc['mask'][...]
+
+            self.__op = uc['operators'][...].astype('U')
+            self.__mag_op = uc['moments'][...].astype('U')
+
+            self.__u = uc['u'][...]
+            self.__v = uc['v'][...]
+            self.__w = uc['w'][...]
+
+            self.__occ = uc['occupancy'][...]
+
+            self.__U11 = uc['U11'][...]
+            self.__U22 = uc['U22'][...]
+            self.__U33 = uc['U33'][...]
+            self.__U23 = uc['U23'][...]
+            self.__U13 = uc['U13'][...]
+            self.__U12 = uc['U12'][...]
+
+            self.__mu1 = uc['mu1'][...]
+            self.__mu2 = uc['mu2'][...]
+            self.__mu3 = uc['mu3'][...]
+
+            self.__g = uc['g'][...]
+
+            self.__pg  = uc['point_group'][...]
+            self.__mult = uc['multiplicity'][...]
+            self.__sp_pos = uc['positions'][...]
+
+            self.__T = uc['T'][...]
+            self.__weights = uc['weights'][...]
+
+            self.__folder = uc.attrs['folder']
+            self.__filename = uc.attrs['filename']
+
+            self.__a = uc.attrs['a']
+            self.__b = uc.attrs['b']
+            self.__c = uc.attrs['c']
+            self.__alpha = uc.attrs['alpha']
+            self.__beta = uc.attrs['beta']
+            self.__gamma = uc.attrs['gamma']
+
+            self.__hm = uc.attrs['hermann_mauguin']
+            self.__sg = uc.attrs['space_group']
+            self.__laue = uc.attrs['laue']
+
+            self.__lat = uc.attrs['lattice']
+
+    def save(self, filename):
+        """
+        Save unit cell data.
+
+        Parameters
+        ----------
+        filename : str
+            Name of HDF5 file.
+
+        """
+
+        self.__save_unitcell(filename)
+
+    def load(self, filename):
+        """
+        Load unit cell data.
+
+        Parameters
+        ----------
+        filename : str
+            Name of HDF5 file.
+
+        """
+
+        self.__load_unitcell(filename)
 
     def get_filepath(self):
         """
@@ -1496,6 +1659,10 @@ class SuperCell(UnitCell):
 
     Methods
     -------
+    save()
+        Save supercell data.
+    load()
+        Load supercell data.
     get_super_cell_extents()
         Number of cells along each dimension.
     set_super_cell_extents()
@@ -1515,11 +1682,19 @@ class SuperCell(UnitCell):
 
         super(SuperCell, self).__init__(filename, tol)
 
-        self.set_super_cell_extents(nu, nv, nw)
+        name, ext = os.path.splitext(filename)
 
-        self.randomize_spin_vectors()
-        self.randomize_site_occupancies()
-        self.randomize_atomic_displacements()
+        if 'cif' in ext:
+
+            self.set_super_cell_extents(nu, nv, nw)
+
+            self.randomize_spin_vectors()
+            self.randomize_site_occupancies()
+            self.randomize_atomic_displacements()
+
+        else:
+
+            self.__load_supercell(filename)
 
     def __repr__(self):
 
@@ -1527,6 +1702,74 @@ class SuperCell(UnitCell):
         n_atm = self.get_number_atoms_per_unit_cell()
 
         return '{}x{}x{} supercell {} atom unit cell'.format(*dims,n_atm)
+
+    def __save_supercell(self, filename):
+
+        super().save(filename)
+
+        with h5py.File(filename, 'a') as f:
+
+            sc = f.create_group('disorder/supercell')
+
+            sc.create_dataset('Sx', data=self._Sx)
+            sc.create_dataset('Sy', data=self._Sy)
+            sc.create_dataset('Sz', data=self._Sz)
+
+            sc.create_dataset('A_r', data=self._A_r)
+
+            sc.create_dataset('Ux', data=self._Ux)
+            sc.create_dataset('Uy', data=self._Uy)
+            sc.create_dataset('Uz', data=self._Uz)
+
+            sc.attrs['nu'] = self.__nu
+            sc.attrs['nv'] = self.__nv
+            sc.attrs['nw'] = self.__nw
+
+    def __load_supercell(self, filename):
+
+        with h5py.File(filename, 'r') as f:
+
+            sc = f['disorder/supercell']
+
+            self._Sx = sc['Sx'][...]
+            self._Sy = sc['Sy'][...]
+            self._Sz = sc['Sz'][...]
+
+            self._A_r = sc['A_r'][...]
+
+            self._Ux = sc['Ux'][...]
+            self._Uy = sc['Uy'][...]
+            self._Uz = sc['Uz'][...]
+
+            self.__nu = sc.attrs['nu']
+            self.__nv = sc.attrs['nv']
+            self.__nw = sc.attrs['nw']
+
+    def save(self, filename):
+        """
+        Save supercell data.
+
+        Parameters
+        ----------
+        filename : str
+            Name of HDF5 file.
+
+        """
+
+        self.__save_supercell(filename)
+
+    def load(self, filename):
+        """
+        Load supercell data.
+
+        Parameters
+        ----------
+        filename : str
+            Name of HDF5 file.
+
+        """
+
+        self.__load_supercell(filename)
 
     def get_super_cell_extents(self):
         """

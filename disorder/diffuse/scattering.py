@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import re
+import os
+import h5py
 
 import numpy as np
 
@@ -138,61 +140,71 @@ class Simulation:
 
     """
 
-    def __init__(self, sc, extend=False):
+    def __init__(self, sc, filename=None, extend=False):
 
-        self.sc = sc
+        if filename is None:
 
-        dims = sc.get_super_cell_extents()
-        n_atm = sc.get_number_atoms_per_unit_cell()
+            self.sc = sc
 
-        *coords, atms = sc.get_super_cell_cartesian_atomic_coordinates()
+            dims = sc.get_super_cell_extents()
+            n_atm = sc.get_number_atoms_per_unit_cell()
 
-        A = sc.get_fractional_cartesian_transform()
-        B = sc.get_miller_cartesian_transform()
-        R = sc.get_cartesian_rotation()
+            *coords, atms = sc.get_super_cell_cartesian_atomic_coordinates()
 
-        args = *coords, *dims, n_atm, A, B, R
+            A = sc.get_fractional_cartesian_transform()
+            B = sc.get_miller_cartesian_transform()
+            R = sc.get_cartesian_rotation()
 
-        self.__Qij = interaction.charge_charge_matrix(*args)
-        self.__Qijk = interaction.charge_dipole_matrix(*args)
-        self.__Qijkl = interaction.dipole_dipole_matrix(*args)
+            args = *coords, *dims, n_atm, A, B, R
 
-        self.__const_cc = 0.0
-        self.__const_cd = 0.0
-        self.__const_dd = 0.0
+            self.__Qij = interaction.charge_charge_matrix(*args)
+            self.__Qijk = interaction.charge_dipole_matrix(*args)
+            self.__Qijkl = interaction.dipole_dipole_matrix(*args)
 
-        coords = sc.get_fractional_coordinates()
-        atms = sc.get_unit_cell_atoms()
+            self.__const_cc = 0.0
+            self.__const_cd = 0.0
+            self.__const_dd = 0.0
 
-        pair_info = interaction.pairs(*coords, atms, A, extend=extend)
-        bond_info = interaction.bonds(pair_info, *coords, A)
+            coords = sc.get_fractional_coordinates()
+            atms = sc.get_unit_cell_atoms()
 
-        dx, dy, dz, img_i, img_j, img_k, *indices = bond_info
+            pair_info = interaction.pairs(*coords, atms, A, extend=extend)
+            bond_info = interaction.bonds(pair_info, *coords, A)
 
-        self.__dx, self.__dy, self.__dz = dx, dy, dz
+            dx, dy, dz, img_i, img_j, img_k, *indices = bond_info
 
-        self.__img_i, self.__img_j, self.__img_k = img_i, img_j, img_k
+            self.__dx, self.__dy, self.__dz = dx, dy, dz
 
-        atm_ind, pair_inv, pair_ind, pair_trans = indices
+            self.__img_i, self.__img_j, self.__img_k = img_i, img_j, img_k
 
-        self.__atm_ind, self.__pair_ind = atm_ind, pair_ind
-        self.__pair_inv, self.__pair_trans = pair_inv, pair_trans
+            atm_ind, pair_inv, pair_ind, pair_trans = indices
 
-        uxx, uyy, uzz, uyz, uxz, uxy = interaction.anisotropy(dx, dy, dz)
+            self.__atm_ind, self.__pair_ind = atm_ind, pair_ind
+            self.__pair_inv, self.__pair_trans = pair_inv, pair_trans
 
-        n_pair = 1+np.max(pair_ind)
+            uxx, uyy, uzz, uyz, uxz, uxy = interaction.anisotropy(dx, dy, dz)
 
-        self.__J = np.zeros((n_pair,3,3))
-        self.__K = np.zeros((n_atm,3,3))
-        self.__B = np.zeros(3)
+            n_pair = 1+np.max(pair_ind)
 
-        g = sc.get_g_factors()
+            self.__J = np.zeros((n_pair,3,3))
+            self.__K = np.zeros((n_atm,3,3))
+            self.__B = np.zeros(3)
 
-        self.__g = np.einsum('i,jk->ijk', g, np.eye(3))
+            g = sc.get_g_factors()
 
-        self.__active = np.ones(n_pair, dtype=bool)
+            self.__g = np.einsum('i,jk->ijk', g, np.eye(3))
 
-        self.__n_atm = n_atm
+            self.__active = np.ones(n_pair, dtype=bool)
+
+            self.__n_atm = n_atm
+
+            self.initialize_parallel_tempering(1, 1)
+
+        else:
+
+            self.sc = sc(filename)
+
+            self.load(filename)
 
     def __repr__(self):
 
@@ -213,6 +225,114 @@ class Simulation:
         bondinfo = ''.join([bond.format(*x) for x in zip(pair_ind,d)])
 
         return header+divide+bondinfo+divide
+
+    def save(self, filename):
+        """
+        Save simulation data.
+
+        Parameters
+        ----------
+        filename : str
+            Name of HDF5 file.
+
+        """
+
+        self.sc.save(filename)
+
+        with h5py.File(filename, 'a') as f:
+
+            sim = f.create_group('disorder/simulation')
+
+            sim.create_dataset('charge_charge_matrix', data=self.__Qij)
+            sim.create_dataset('charge_dipole_matrix', data=self.__Qijk)
+            sim.create_dataset('dipole_dipole_matrix', data=self.__Qijkl)
+
+            sim.create_dataset('img_i', data=self.__img_i)
+            sim.create_dataset('img_j', data=self.__img_j)
+            sim.create_dataset('img_k', data=self.__img_k)
+
+            sim.create_dataset('indices', data=self.__atm_ind)
+            sim.create_dataset('pairs', data=self.__pair_ind)
+            sim.create_dataset('inverse', data=self.__pair_inv)
+            sim.create_dataset('transpose', data=self.__pair_trans)
+            sim.create_dataset('active', data=self.__active)
+
+            sim.create_dataset('dx', data=self.__dx)
+            sim.create_dataset('dy', data=self.__dy)
+            sim.create_dataset('dz', data=self.__dz)
+
+            sim.create_dataset('temperature', data=self.__T)
+
+            sim.attrs['n'] = self.__n_atm
+
+            mag = f.create_group('disorder/simulation/magnetic')
+
+            mag.create_dataset('J', data=self.__J)
+            mag.create_dataset('K', data=self.__K)
+            mag.create_dataset('B', data=self.__B)
+            mag.create_dataset('g', data=self.__g)
+
+            mag.create_dataset('Sx', data=self.__Sx)
+            mag.create_dataset('Sy', data=self.__Sy)
+            mag.create_dataset('Sz', data=self.__Sz)
+
+            mag.attrs['const_cc'] = self.__const_cc
+            mag.attrs['const_cd'] = self.__const_cd
+            mag.attrs['const_dd'] = self.__const_dd
+
+    def load(self, filename):
+        """
+        Load simulation data.
+
+        Parameters
+        ----------
+        filename : str
+            Name of HDF5 file.
+
+        """
+
+        self.sc.load(filename)
+
+        with h5py.File(filename, 'r') as f:
+
+            sim = f['disorder/simulation']
+
+            self.__Qij = sim['charge_charge_matrix'][...]
+            self.__Qijk = sim['charge_dipole_matrix'][...]
+            self.__Qijkl = sim['dipole_dipole_matrix'][...]
+
+            self.__img_i = sim['img_i'][...]
+            self.__img_j = sim['img_j'][...]
+            self.__img_k = sim['img_k'][...]
+
+            self.__atm_ind = sim['indices'][...]
+            self.__pair_ind = sim['pairs'][...]
+            self.__pair_inv = sim['inverse'][...]
+            self.__pair_trans = sim['transpose'][...]
+            self.__active = sim['active'][...]
+
+            self.__dx = sim['dx'][...]
+            self.__dy = sim['dy'][...]
+            self.__dz = sim['dz'][...]
+
+            self.__T = sim['temperature'][...]
+
+            self.__n_atm = sim.attrs['n']
+
+            mag = f['disorder/simulation/magnetic']
+
+            self.__J = mag['J'][...]
+            self.__K = mag['K'][...]
+            self.__B = mag['B'][...]
+            self.__g = mag['g'][...]
+
+            self.__Sx = mag['Sx'][...]
+            self.__Sy = mag['Sy'][...]
+            self.__Sz = mag['Sz'][...]
+
+            self.__const_cc = mag.attrs['const_cc']
+            self.__const_cd = mag.attrs['const_cd']
+            self.__const_dd = mag.attrs['const_dd']
 
     def __mask(self):
 
@@ -616,37 +736,117 @@ class Refinement:
     ----------
     sc : supercell
         Supercell for refinement.
+    filename : str
+        Name of file.
 
     """
 
-    def __init__(self, sc):
+    def __init__(self, sc, filename):
 
-        self.sc = sc
+        name, ext = os.path.splitext(filename)
 
-        self.__extents = [[None,None],[None,None],[None,None]]
-        self.__bins = [None,None,None]
+        if ext == '.h5':
+
+            self.sc = sc(filename)
+
+            self.load(filename)
+
+        else:
+
+            self.sc = sc
+
+            self.load_intensity(filename)
 
     def __repr__(self):
 
         extents = self.__extents
         bins = self.__bins
 
-        if all(bins):
+        steps = [self.__step(*ext,size) for ext, size in zip(extents,bins)]
 
-            steps = [self.__step(*ext,size) for ext, size in zip(extents,bins)]
+        header = '     min     max    size    step\n'
+        divide = '================================\n'
 
-            header = '     min     max    size    step\n'
-            divide = '================================\n'
+        binning = '{:8.4}{:8.4}{:8}{:8.4}\n'
+        diminfo = [binning.format(*ext,size,step) \
+                   for ext, size, step in zip(extents,bins,steps)]
 
-            binning = '{:8.4}{:8.4}{:8}{:8.4}\n'
-            diminfo = [binning.format(*ext,size,step) \
-                       for ext, size, step in zip(extents,bins,steps)]
+        return header+divide+''.join(diminfo)+divide
 
-            return header+divide+''.join(diminfo)+divide
+    def save(self, filename):
+        """
+        Save refinement data.
 
-        else:
+        Parameters
+        ----------
+        filename : str
+            Name of HDF5 file.
 
-            return 'No data loaded\n'
+        """
+
+        self.sc.save(filename)
+
+        with open('tmp.npy', 'rb') as f:
+
+            signal = np.load(f)
+            sigma_sq = np.load(f)
+
+        with h5py.File(filename, 'a') as f:
+
+            data = f.create_group('disorder/data')
+
+            data.create_dataset('extents', data=self.extents)
+            data.create_dataset('bins', data=self.bins)
+
+            data.create_dataset('signal', data=signal)
+            data.create_dataset('sigma_sq', data=sigma_sq)
+
+            ref = f.create_group('disorder/refinement')
+
+            ref.create_dataset('extents', data=self.__extents)
+            ref.create_dataset('bins', data=self.__bins)
+
+            ref.create_dataset('signal', data=self.__signal)
+            ref.create_dataset('sigma_sq', data=self.__sigma_sq)
+
+    def load(self, filename):
+        """
+        Load refinement data.
+
+        Parameters
+        ----------
+        filename : str
+            Name of HDF5 file.
+
+        """
+
+        self.sc.load(filename)
+
+        with h5py.File(filename, 'r') as f:
+
+            data = f['disorder/data']
+
+            self.extents = data['extents'][...]
+            self.bins = data['bins'][...]
+
+            signal = data['signal'][...]
+            sigma_sq = data['sigma_sq'][...]
+
+            ref = f['disorder/refinement']
+
+            self.__extents = ref['extents'][...]
+            self.__bins = ref['bins'][...]
+
+            self.__signal = ref['signal'][...]
+            self.__sigma_sq = ref['sigma_sq'][...]
+
+        if os.path.exists('tmp.npy'):
+            os.remove('tmp.npy')
+
+        with open('tmp.npy', 'wb') as f:
+
+             np.save(f, signal)
+             np.save(f, sigma_sq)
 
     def load_intensity(self, filename):
         """
@@ -663,7 +863,11 @@ class Refinement:
 
         self.extents, self.bins = binning[0:3], binning[3:6]
 
+        if os.path.exists('tmp.npy'):
+            os.remove('tmp.npy')
+
         with open('tmp.npy', 'wb') as f:
+
              np.save(f, self.__signal)
              np.save(f, self.__sigma_sq)
 
@@ -677,6 +881,7 @@ class Refinement:
         """
 
         with open('tmp.npy', 'rb') as f:
+
             self.__signal = np.load(f)
             self.__sigma_sq = np.load(f)
 
@@ -757,7 +962,7 @@ class Refinement:
         outlier : float, optional
             Multiplier of interquartile range. The default is ``1.5``.
         ptype : str, optional
-            Punch type, either ``'cuboid'`` or ``'ellispoid'``. The default is
+            Punch type, either ``'cuboid'`` or ``'ellipsoid'``. The default is
             ``'cuboid'``.
 
         """

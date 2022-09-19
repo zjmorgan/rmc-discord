@@ -25,6 +25,8 @@ def data(filename):
         k = f['MDHistoWorkspace/data/[0,K,0]'][...]
         l = f['MDHistoWorkspace/data/[0,0,L]'][...]
 
+    f.close()
+
     h_min, k_min, l_min = h.min(), k.min(), l.min()
     h_max, k_max, l_max = h.max(), k.max(), l.max()
 
