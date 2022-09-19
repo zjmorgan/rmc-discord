@@ -115,6 +115,14 @@ class test_structure(unittest.TestCase):
         self.assertTrue(uc.get_active_sites().all())
         self.assertEqual(uc.get_number_atoms_per_unit_cell(), 4)
 
+        uc.set_unit_cell_charge_numbers(np.array(['3-','1+']))
+        np.testing.assert_array_equal(uc.get_unit_cell_ions(),
+                                      ['Au3-','Cu1+','Cu1+','Cu1+'])
+
+        uc.set_unit_cell_mass_numbers(np.array(['197','64']))
+        np.testing.assert_array_equal(uc.get_unit_cell_isotopes(),
+                                      ['197Au','64Cu','64Cu','64Cu'])
+
         act_sites = uc.get_active_sites()
         atm_sites = uc.get_atom_sites()
 
@@ -130,6 +138,11 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(u, u_ref)
         np.testing.assert_array_almost_equal(v, v_ref)
         np.testing.assert_array_almost_equal(w, w_ref)
+
+        sites = uc.get_sites()
+        np.testing.assert_array_almost_equal(sites, [0,1,1,1])
+
+        # uc.set_unit_cell_atoms(np.array(['Yb','Mn']))
 
         # ---
 

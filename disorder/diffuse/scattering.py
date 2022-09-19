@@ -138,6 +138,55 @@ class Simulation:
     extend : bool, optional
         Extend beyond one unit cell for neighbor bonds. Defualt is ``False``.
 
+    Methods
+    -------
+    save()
+        Save simulation data.
+    load()
+        Load simulation data.
+    get_active_bonds()
+        Active bonds.
+    set_active_bonds():
+        Update active bonds.
+    get_bond_lengths()
+        Bond lengths.
+    get_charge_charge_matrix()
+        Charge-charge interaction matrix.
+    get_charge_dipole_matrix()
+        Charge-dipole interaction matrix.
+    get_dipole_dipole_matrix()
+        Dipole-dipole interaction matrix.
+    get_magnetic_exchange_interaction_matrices()
+        Magnetic exchange interaction matrices.
+    set_magnetic_exchange_interaction_matrices()
+        Update magnetic exchange interaction matrices.
+    get_magnetic_single_ion_anisotropy_matrices()
+        Magnetocrystalline anisotropy matrices.
+    set_magnetic_single_ion_anisotropy_matrices()
+        Update magnetocrystalline anisotropy matrices.
+    get_magnetic_g_tensor_matrices()
+        g-tensor matrices.
+    set_magnetic_g_tensor_matrices()
+        Update g-tensor matrices.
+    get_magnetic_field()
+        External magnetic field vector.
+    set_magnetic_field()
+        Update external magnetic field vector.
+    get_easy_axes_matrices()
+        Easy axes matrices.
+    get_magnetic_dipole_dipole_coupling_strength()
+        Magnetic dipole-dipole coupling strength.
+    set_magnetic_dipole_dipole_coupling_strength()
+        Update magnetic dipole-dipole coupling strength.
+    initialize_parallel_tempering()
+        Initialize parallel tempering simulation.
+    magnetic_energy()
+        Magnetic interaction energy.
+    magnetic_dipole_dipole_interaction_energy()
+        Magnetic dipole-dipole interaction energy.
+    magnetic_simulation()
+        Perform magnetic Heisenberg simulation.
+
     """
 
     def __init__(self, sc, filename=None, extend=False):
@@ -738,6 +787,27 @@ class Refinement:
         Supercell for refinement.
     filename : str
         Name of file.
+
+    Methods
+    -------
+    save()
+        Save refinement data.
+    load()
+        Load refinement data.
+    load_intensity()
+        Load intensity data.
+    reset_intensity()
+        Reset intensity data.
+    crop()
+        Crop intensity data to new extents.
+    rebin()
+        Rebin intensity data to new bin sizes.
+    punch()
+        Punch intensity data.
+    initialize_refinement()
+        Initialize refinement.
+    magnetic_refinement()
+        Perform magnetic refinement.
 
     """
 
