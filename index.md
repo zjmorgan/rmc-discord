@@ -8,13 +8,13 @@ discord (*noun*) a lack of harmony or agreement
 [https://doi.org/10.1107/S1600576721010141](https://doi.org/10.1107/S1600576721010141)
 
 ## **Overview**
-* [Installation](docs/installation)
-* [Tutorials](docs/tutorials)
-* [Performance](docs/performance)
+* [Installation](docs/installation/index)
+* [Tutorials](docs/tutorials/index)
+* [Performance](docs/performance/index)
 
 ## **Background**
-* [Reverse Monte Carlo refinement](docs/reverse-monte-carlo-refinement)
-* [Diffuse scattering and correlated disorder](docs/diffuse-scattering-and-correlated-disorder)
+* [Reverse Monte Carlo refinement](docs/refinement/index)
+* [Diffuse scattering and correlated disorder](docs/disorder/index)
 
 <!--
 <br />

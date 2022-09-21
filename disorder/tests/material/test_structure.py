@@ -400,7 +400,30 @@ class test_structure(unittest.TestCase):
 
         self.assertEqual(repr(uc), repr(test))
 
+        uc.load(folder+'/test.h5')
+
         os.remove(folder+'/test.h5')
 
+    def test_SuperCell(self):
+
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+
+        cif_file = 'Cu3Au.cif'
+
+        filename = os.path.join(folder, cif_file)
+
+        sc = structure.SuperCell(filename, 3, 4, 5, tol=1e-4)
+
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+
+        sc.save(folder+'/test.h5')
+
+        test = structure.SuperCell(folder+'/test.h5')
+
+        self.assertEqual(repr(sc), repr(test))
+
+        sc.load(folder+'/test.h5')
+
+        os.remove(folder+'/test.h5')
 if __name__ == '__main__':
     unittest.main()
