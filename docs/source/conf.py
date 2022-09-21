@@ -37,7 +37,6 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
     'numpydoc',
-    'matplotlib.sphinxext.only_directives',
     'matplotlib.sphinxext.plot_directive',
 ]
 # Add any paths that contain templates here, relative to this directory.
@@ -58,6 +57,7 @@ master_doc = 'index'
 html_theme = 'pydata_sphinx_theme'
 html_permalinks_icon = '#'
 html_show_sourcelink = False
+
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -93,6 +93,10 @@ html_theme_options = {
 }
 
 # -- Extension configuration -------------------------------------------------
+
+plot_basedir = 'plots'
+plot_html_show_source_link = False
+plot_html_show_formats = False
 
 add_module_names = False
 
