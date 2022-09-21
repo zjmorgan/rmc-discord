@@ -265,7 +265,7 @@ class UnitCell:
 
         name, ext = os.path.splitext(filename)
 
-        if 'cif' in ext:
+        if '.cif' == ext or '.mcif' == ext:
 
             filename = os.path.abspath(filename)
 
@@ -1186,7 +1186,7 @@ class UnitCell:
 
         return constants
 
-    def set_lattice_constants(self, *constants):
+    def set_lattice_constants(self, constants):
         """
         Update lattice parameters.
 
@@ -1341,7 +1341,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_reciprocal_lattice_constants()
 
         return crystal.volume(*constants)
 
@@ -1383,7 +1383,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_reciprocal_lattice_constants()
 
         return crystal.metric(*constants)
 

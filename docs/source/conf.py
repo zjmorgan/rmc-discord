@@ -37,6 +37,8 @@ extensions = [
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
     'numpydoc',
+    'matplotlib.sphinxext.only_directives',
+    'matplotlib.sphinxext.plot_directive',
 ]
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

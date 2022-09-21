@@ -162,7 +162,8 @@ class test_structure(unittest.TestCase):
 
         ux, uy, uz = uc.get_unit_cell_cartesian_atomic_coordinates()
 
-        a = uc.get_lattice_constants()
+        a, = uc.get_lattice_constants()
+        uc.set_lattice_constants(a)
 
         np.testing.assert_array_almost_equal(ux/a, [0,0.5,0.5,0])
         np.testing.assert_array_almost_equal(uy/a, [0,0,0.5,0.5])
@@ -185,6 +186,24 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(Uyz, [0,0,0,0])
         np.testing.assert_array_almost_equal(Uxz, [0,0,0,0])
         np.testing.assert_array_almost_equal(Uxy, [0,0,0,0])
+
+        B = uc.get_miller_cartesian_transform()
+        R = uc.get_cartesian_rotation()
+
+        np.testing.assert_array_almost_equal(B*a, np.eye(3))
+        np.testing.assert_array_almost_equal(R, np.eye(3))
+
+        V = uc.get_lattice_volume()
+        self.assertAlmostEqual(V, a**3)
+
+        V_ = uc.get_reciprocal_lattice_volume()
+        self.assertAlmostEqual(V_, 1/a**3)
+
+        G = uc.get_metric_tensor()
+        np.testing.assert_array_almost_equal(G, a**2*np.eye(3))
+
+        G_ = uc.get_reciprocal_metric_tensor()
+        np.testing.assert_array_almost_equal(G_, 1/a**2*np.eye(3))
 
         # ---
 
@@ -227,7 +246,7 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(disp_params, disp_params_ref)
 
         constants = uc.get_lattice_constants()
-        uc.set_lattice_constants(*constants)
+        uc.set_lattice_constants(constants)
 
         constants_ref = uc.get_lattice_constants()
         np.testing.assert_array_almost_equal(constants, constants_ref)
@@ -260,11 +279,33 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(mu2, mu2_ref)
         np.testing.assert_array_almost_equal(mu3, mu3_ref)
 
+        mu_x, mu_y, mu_z = uc.get_cartesian_magnetic_moments()
+        mu = uc.get_magnetic_moment_magnitude()
+
+        np.testing.assert_array_almost_equal(mu_x**2+mu_y**2+mu_z**2, mu**2)
+        np.testing.assert_array_almost_equal(mu1**2+mu2**2+mu3**2, mu**2)
+
         g = uc.get_g_factors()
         uc.set_g_factors(g)
 
         g_ref = uc.get_g_factors()
         np.testing.assert_array_almost_equal(g, g_ref)
+
+        mult = uc.get_site_multiplicities()
+        mag_ops = uc.get_magnetic_symmetry_operators()
+
+        for i in range(len(g)):
+            mx, my, mz = mu1[i], mu2[i], mu3[i]
+            for _ in range(mult[i]):
+                mx, my, mz = eval(mag_ops[i])
+            np.testing.assert_array_almost_equal([mx,my,mz],
+                                                 [mu1[i],mu2[i],mu3[i]], 4)
+
+        constants = uc.get_lattice_constants()
+        uc.set_lattice_constants(constants)
+
+        constants_ref = uc.get_lattice_constants()
+        np.testing.assert_array_almost_equal(constants, constants_ref)
 
         # ---
 
@@ -305,6 +346,21 @@ class test_structure(unittest.TestCase):
             x, y, z = u[i], v[i], w[i]
             np.testing.assert_array_almost_equal([x,y,z], eval(sp_pos[i]), 4)
 
+        ops = uc.get_symmetry_operators()
+
+        for i in range(len(atms)):
+            x, y, z = u[i], v[i], w[i]
+            for _ in range(mult[i]):
+                x, y, z = eval(ops[i])
+            x, y, z = np.mod([x,y,z], 1)
+            np.testing.assert_array_almost_equal([x,y,z], [u[i],v[i],w[i]], 4)
+
+        constants = uc.get_lattice_constants()
+        uc.set_lattice_constants(constants)
+
+        constants_ref = uc.get_lattice_constants()
+        np.testing.assert_array_almost_equal(constants, constants_ref)
+
         # ---
 
         cif_file = 'bixbyite.cif'
@@ -335,6 +391,16 @@ class test_structure(unittest.TestCase):
         self.assertAlmostEqual(np.sum(weights), 1)
 
         np.testing.assert_array_equal(T[0], [[1,0,0],[0,1,0],[0,0,1]])
+
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+
+        uc.save(folder+'/test.h5')
+
+        test = structure.UnitCell(folder+'/test.h5')
+
+        self.assertEqual(repr(uc), repr(test))
+
+        os.remove(folder+'/test.h5')
 
 if __name__ == '__main__':
     unittest.main()
