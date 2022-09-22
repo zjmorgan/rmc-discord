@@ -9,5 +9,6 @@ Graphical
 
 The classes in the `graphical` package.
 
-.. plot:: plot.py
+.. plot:: classes/graphical/plot.py
    :include-source:
+   :caption: Line plot.

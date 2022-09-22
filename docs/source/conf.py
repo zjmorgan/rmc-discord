@@ -49,6 +49,11 @@ exclude_patterns = []
 
 master_doc = 'index'
 
+import matplotlib
+matplotlib.use('agg')
+import matplotlib.pyplot as plt
+plt.ioff()
+
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -57,7 +62,6 @@ master_doc = 'index'
 html_theme = 'pydata_sphinx_theme'
 html_permalinks_icon = '#'
 html_show_sourcelink = False
-
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -94,9 +98,11 @@ html_theme_options = {
 
 # -- Extension configuration -------------------------------------------------
 
-plot_basedir = 'plots'
-plot_html_show_source_link = False
+numpydoc_use_plots = True
+plot_include_source = True
+plot_formats = [('png', 96)]
 plot_html_show_formats = False
+plot_html_show_source_link = False
 
 add_module_names = False
 
