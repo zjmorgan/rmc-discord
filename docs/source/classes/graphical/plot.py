@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 from disorder.graphical.canvas import Canvas
 from disorder.graphical.plots import Line
@@ -16,3 +17,4 @@ line.plot_data(x, y, marker='o', label=r'$\sin(2 \pi x)$')
 line.plot_data(X, Y, marker='-', label=r'$\cos(2 \pi x)$')
 line.set_labels(r'$y=f(x)$', r'$x$', r'$y$')
 line.show_legend()
+plt.show()

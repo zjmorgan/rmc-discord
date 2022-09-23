@@ -173,6 +173,14 @@ class Plot():
 
         self.fig.savefig(filename, bbox_inches='tight', transparent=False)
 
+    def show(self):
+        """
+        Show figure.
+
+        """
+
+        self.fig.show()
+
 class Line(Plot):
     """
     Line plot.

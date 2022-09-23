@@ -13,6 +13,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../disorder/'))
+sys.path.append(os.path.abspath('sphinxext'))
 
 import inspect
 import importlib
@@ -47,7 +48,8 @@ templates_path = ['_templates']
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = []
 
-master_doc = 'index'
+root_doc = 'index'
+keep_warings = True
 
 import matplotlib
 matplotlib.use('agg')
@@ -61,12 +63,13 @@ plt.ioff()
 #
 html_theme = 'pydata_sphinx_theme'
 html_permalinks_icon = '#'
-html_show_sourcelink = False
+html_show_sourcelink = True
+html_copy_source = True
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named 'default.css' will overwrite the builtin 'default.css'.
-html_static_path = ['_static']
+html_static_path = ['_static', '_images']
 
 html_theme_options = {
     'logo': {
@@ -96,13 +99,13 @@ html_theme_options = {
     'show_nav_level': 2,
 }
 
+
 # -- Extension configuration -------------------------------------------------
 
-numpydoc_use_plots = True
 plot_include_source = True
-plot_formats = [('png', 96)]
 plot_html_show_formats = False
 plot_html_show_source_link = False
+# plot_basedir = ''
 
 add_module_names = False
 

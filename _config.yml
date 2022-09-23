@@ -6,3 +6,4 @@ description: [Reverse Monte Carlo refinement of diffuse scattering and correlate
 show_downloads: ["true"]
 include:
   - _static
+  - _images
