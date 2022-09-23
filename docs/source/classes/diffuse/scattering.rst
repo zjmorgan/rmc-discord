@@ -5,3 +5,4 @@ The `scattering` module contains classes for simulating  and refining disordered
 
 .. automodule:: disorder.diffuse.scattering
     :members: Simulation, Refinement
+    :noindex:

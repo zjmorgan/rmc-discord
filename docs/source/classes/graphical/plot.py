@@ -4,10 +4,10 @@ import matplotlib.pyplot as plt
 from disorder.graphical.canvas import Canvas
 from disorder.graphical.plots import Line
 
-x = np.linspace(0,1,16)
+x = np.linspace(0, 1, 16)
 y = np.sin(2*np.pi*x)
 
-X = np.linspace(0,1,128)
+X = np.linspace(0, 1, 128)
 Y = np.cos(2*np.pi*X)
 
 canvas = Canvas()
