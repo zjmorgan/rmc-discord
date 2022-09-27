@@ -47,6 +47,8 @@ jobs:
         run: |
           python setup.py install
       - name: Build Sphinx
+        env:
+          QT_QPA_PLATFORM: offscreen
         run: |
           cd docs
           make html

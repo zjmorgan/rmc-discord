@@ -1,3 +1,6 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 from disorder.graphical.canvas import Canvas
 from disorder.graphical.plots import Line
 
