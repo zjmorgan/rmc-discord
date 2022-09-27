@@ -50,11 +50,6 @@ exclude_patterns = []
 
 root_doc = 'index'
 
-import matplotlib
-matplotlib.use('agg')
-import matplotlib.pyplot as plt
-plt.ioff()
-
 # -- Options for HTML output -------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
@@ -98,9 +93,19 @@ html_theme_options = {
     'show_nav_level': 2,
 }
 
-html_extra_path = ['_images']
-
 # -- Extension configuration -------------------------------------------------
+
+plot_pre_code = """
+import numpy as np
+np.random.seed(13)
+
+import matplotlib
+matplotlib.use('agg')
+
+import matplotlib.pyplot as plt
+plt.switch_backend('agg')
+plt.ioff()
+"""
 
 plot_include_source = True
 plot_html_show_formats = False
