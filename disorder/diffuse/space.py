@@ -518,10 +518,9 @@ def mapping(h_range, k_range, l_range, nh, nk, nl,
 
     """
 
-    h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh),
-                             np.linspace(k_range[0],k_range[1],nk),
-                             np.linspace(l_range[0],l_range[1],nl),
-                             indexing='ij')
+    h_, k_, l_ = np.meshgrid(np.linspace(*h_range,nh),
+                             np.linspace(*k_range,nk),
+                             np.linspace(*l_range,nl), indexing='ij')
 
     h_ = h_.flatten()
     k_ = k_.flatten()
@@ -633,10 +632,9 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
 
     """
 
-    h_, k_, l_ = np.meshgrid(np.linspace(h_range[0],h_range[1],nh),
-                             np.linspace(k_range[0],k_range[1],nk),
-                             np.linspace(l_range[0],l_range[1],nl),
-                             indexing='ij')
+    h_, k_, l_ = np.meshgrid(np.linspace(*h_range,nh),
+                             np.linspace(*k_range,nk),
+                             np.linspace(*l_range,nl), indexing='ij')
 
     h, k, l = crystal.transform(h_, k_, l_, W)
 
@@ -683,18 +681,18 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
 
     H = np.round(h*Nu).astype(np.int16)
 
-    iH = np.mod(H, Nu)
-    del iH, h
+    # iH = np.mod(H, Nu)
+    # del iH, h
 
     K = np.round(k*Nv).astype(np.int16)
 
-    iK = np.mod(K, Nv)
-    del iK, k
+    # iK = np.mod(K, Nv)
+    # del iK, k
 
     L = np.round(l*Nw).astype(np.int16)
 
-    iL = np.mod(L, Nw)
-    del iL, l
+    # iL = np.mod(L, Nw)
+    # del iL, l
 
     if (laue == None or laue == 'None'):
 
@@ -717,13 +715,18 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
     pair = coordinate.reshape(3,2*n)[:,sort+2*np.arange(n)].T
     index = np.arange(n)
 
-    del coordinate, sort
+    # del coordinate, sort
 
-    cosymmetries, coindices, coinverses = symmetry.unique(pair)
-    h_, k_, l_ = cosymmetries.T
-    n = cosymmetries.shape[0]
+    _, coindices, coinverses = symmetry.unique(pair)
 
-    del cosymmetries
+    coordinate = np.stack((h,k,l)).T
+    coordinate = np.stack((coordinate,-coordinate)).T
+    coordinate = coordinate.reshape(3,2*n)[:,sort+2*np.arange(n)]
+
+    h_, k_, l_ = coordinate[:,coindices]
+    n = h_.shape[0]
+
+    # del cosymmetries
 
     sym, n_symops = symmetry.laue_id(symops)
 
@@ -733,7 +736,9 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
 
         h, k, l = symmetry.miller(h_, k_, l_, sym, i)
 
-        ops[0,:,i], ops[1,:,i], ops[2,:,i] = h, k, l
+        ops[0,:,i] = np.round(h*Nu).astype(np.int16)
+        ops[1,:,i] = np.round(k*Nv).astype(np.int16)
+        ops[2,:,i] = np.round(l*Nw).astype(np.int16)
 
     sort = np.lexsort(ops, axis=1)[:,0]
     total = ops.reshape(3,n_symops*n)[:,sort+n_symops*np.arange(n)].T

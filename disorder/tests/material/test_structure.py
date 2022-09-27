@@ -425,5 +425,6 @@ class test_structure(unittest.TestCase):
         sc.load(folder+'/test.h5')
 
         os.remove(folder+'/test.h5')
+
 if __name__ == '__main__':
     unittest.main()

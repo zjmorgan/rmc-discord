@@ -693,10 +693,6 @@ class Simulation:
         self.__Sy = np.zeros((*dims,n_atm,replicas))
         self.__Sz = np.zeros((*dims,n_atm,replicas))
 
-        self.__Sx.T[:,...] = self.sc._Sx.reshape(*dims,n_atm).T.copy()
-        self.__Sy.T[:,...] = self.sc._Sy.reshape(*dims,n_atm).T.copy()
-        self.__Sz.T[:,...] = self.sc._Sz.reshape(*dims,n_atm).T.copy()
-
     def magnetic_energy(self):
         """
         Magnetic interaction energy.
@@ -735,7 +731,7 @@ class Simulation:
 
         return simulation.dipole_dipole_interaction_energy(*args)
 
-    def magnetic_simulation(self, N):
+    def magnetic_simulation(self, N, batch=1):
         """
         Perform magnetic Heisenberg simulation.
 
@@ -753,9 +749,13 @@ class Simulation:
 
         """
 
-        kB = 0.08617 # meV/K
+        self.sc._Sx, self.sc._Sy, self.sc._Sz = [], [], []
 
-        spins = self.__Sx, self.__Sy, self.__Sz
+        for _ in range(batch):
+
+            self.sc.randomize_magnetic_moments()
+
+        kB = 0.08617 # meV/K
 
         properties = self.__J[self.__active,...], self.__K, self.__g
 
@@ -763,17 +763,27 @@ class Simulation:
 
         indices = self.___get_indices()
 
-        args = *spins, *properties, *fields, *indices, self.__T, kB, N
+        dims = self.sc.get_super_cell_extents()
+        n_atm = self.sc.get_number_atoms_per_unit_cell()
 
-        H, T = simulation.heisenberg(*args)
+        for b in range(batch):
 
-        self.__T = T
+            self.__Sx.T[:,...] = self.sc._Sx[b].reshape(*dims,n_atm).T.copy()
+            self.__Sy.T[:,...] = self.sc._Sy[b].reshape(*dims,n_atm).T.copy()
+            self.__Sz.T[:,...] = self.sc._Sz[b].reshape(*dims,n_atm).T.copy()
 
-        ind = np.argmin(H)
+            spins = self.__Sx, self.__Sy, self.__Sz
+            args = *spins, *properties, *fields, *indices, self.__T, kB, N
 
-        self.sc._Sx = self.__Sx[...,ind].flatten()
-        self.sc._Sy = self.__Sy[...,ind].flatten()
-        self.sc._Sz = self.__Sz[...,ind].flatten()
+            H, T = simulation.heisenberg(*args)
+
+            self.__T = T
+
+            ind = np.argmin(H)
+
+            self.sc._Sx[b] = self.__Sx[...,ind].flatten()
+            self.sc._Sy[b] = self.__Sy[...,ind].flatten()
+            self.sc._Sz[b] = self.__Sz[...,ind].flatten()
 
         return H, T
 
@@ -1239,7 +1249,7 @@ class Refinement:
 
         return (v_inv, *filt, boxes)
 
-    def magnetic_refinement(self, cycles, sigma):
+    def magnetic_refinement(self, cycles, sigma, batch=1):
         """
         Perform magnetic refinement.
 

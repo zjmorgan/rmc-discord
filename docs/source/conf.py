@@ -98,6 +98,7 @@ html_theme_options = {
     'show_nav_level': 2,
 }
 
+html_extra_path = ['_images']
 
 # -- Extension configuration -------------------------------------------------
 

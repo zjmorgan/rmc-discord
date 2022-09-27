@@ -5,6 +5,7 @@ import h5py
 import numpy as np
 
 from disorder.diffuse import scattering, space, powder, monocrystal, filters
+from disorder.diffuse import experimental, filters
 from disorder.diffuse import displacive, magnetic, occupational
 from disorder.correlation import functions
 from disorder.material import crystal, symmetry
@@ -1688,10 +1689,6 @@ class SuperCell(UnitCell):
 
             self.set_super_cell_extents(nu, nv, nw)
 
-            self.randomize_spin_vectors()
-            self.randomize_site_occupancies()
-            self.randomize_atomic_displacements()
-
         else:
 
             self.__load_supercell(filename)
@@ -1771,6 +1768,20 @@ class SuperCell(UnitCell):
 
         self.__load_supercell(filename)
 
+    def reset_disorder(self):
+        """
+        Reset data arrays.
+
+        """
+
+        self._Sx, self._Sy, self._Sz = [], [], []
+        self._Ux, self._Uy, self._Uz = [], [], []
+        self._A_r = []
+
+        self.randomize_magnetic_moments()
+        self.randomize_site_occupancies()
+        self.randomize_atomic_displacements()
+
     def get_super_cell_extents(self):
         """
         Number of cells along each dimension.
@@ -1800,6 +1811,8 @@ class SuperCell(UnitCell):
         self.__nu = nu
         self.__nv = nv
         self.__nw = nw
+
+        self.reset_disorder()
 
     def get_super_cell_size(self):
         """
@@ -1867,7 +1880,7 @@ class SuperCell(UnitCell):
 
         return space.real(ux, uy, uz, ix, iy, iz, atm)
 
-    def randomize_spin_vectors(self):
+    def randomize_magnetic_moments(self):
         """
         Generate random spin vectors.
 
@@ -1878,7 +1891,11 @@ class SuperCell(UnitCell):
 
         mu = self.get_magnetic_moment_magnitude()
 
-        self._Sx, self._Sy, self._Sz = magnetic.spin(*dims, n_atm, mu)
+        Sx, Sy, Sz = magnetic.spin(*dims, n_atm, mu)
+
+        self._Sx.append(Sx)
+        self._Sy.append(Sy)
+        self._Sz.append(Sz)
 
     def randomize_site_occupancies(self):
         """
@@ -1891,7 +1908,9 @@ class SuperCell(UnitCell):
 
         occ = self.get_occupancies()
 
-        self._A_r = occupational.composition(*dims, n_atm, occ)
+        A_r = occupational.composition(*dims, n_atm, occ)
+
+        self._A_r.append(A_r)
 
     def randomize_atomic_displacements(self):
         """
@@ -1906,9 +1925,17 @@ class SuperCell(UnitCell):
 
         disp = np.row_stack(U)
 
-        self._Ux, self._Uy, self._Uz = displacive.expansion(*dims, n_atm, disp)
+        Ux, Uy, Uz = displacive.expansion(*dims, n_atm, disp)
 
-    def spin_correlations_1d(self, fract, tol):
+        self._Ux.append(Ux)
+        self._Uy.append(Uy)
+        self._Uz.append(Uz)
+
+    def __statistics(self, data):
+
+        return np.mean(data, axis=0), np.std(data, axis=0)**2
+
+    def spin_correlations_1d(self, fract, tol, average=False):
         """
         Spherically-averaged spin correlations.
 
@@ -1938,15 +1965,26 @@ class SuperCell(UnitCell):
 
         *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
 
-        moments = self._Sx, self._Sy, self._Sz
+        _corr, _coll = [], []
 
-        args = *moments, *coords, atms, *dims, A, fract, tol
+        for Sx, Sy, Sz in zip(self._Sx, self._Sy, self._Sz):
 
-        corr, coll, _, _, d, pairs = functions.vector1d(*args)
+            args = Sx, Sy, Sz, *coords, atms, *dims, A, fract, tol
 
-        return corr, coll, d, pairs
+            corr, coll, _, _, d, pairs = functions.vector1d(*args)
 
-    def spin_correlations_3d(self, fract, tol):
+            _corr.append(corr)
+            _coll.append(coll)
+
+        data = *self.__statistics(_corr), *self.__statistics(_coll)
+
+        if average:
+
+            *data, d, pairs = functions.average1d(data, d, pairs, tol)
+
+        return (*data, d, pairs)
+
+    def spin_correlations_3d(self, fract, tol, average=False, laue=None):
         """
         Three-dimensional spin correlations.
 
@@ -1976,15 +2014,34 @@ class SuperCell(UnitCell):
 
         *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
 
-        moments = self._Sx, self._Sy, self._Sz
+        _corr, _coll = [], []
 
-        args = *moments, *coords, atms, *dims, A, fract, tol
+        for Sx, Sy, Sz in zip(self._Sx, self._Sy, self._Sz):
 
-        corr, coll, _, _, dx, dy, dz, pairs = functions.vector3d(*args)
+            args = Sx, Sy, Sz, *coords, atms, *dims, A, fract, tol
 
-        return corr, coll, dx, dy, dz, pairs
+            corr, coll, _, _, dx, dy, dz, pairs = functions.vector3d(*args)
 
-    def occupancy_correlations_1d(self, fract, tol):
+            _corr.append(corr)
+            _coll.append(coll)
+
+        data = *self.__statistics(_corr), *self.__statistics(_coll)
+
+        if laue is not None:
+
+            args = data, dx, dy, dz, pairs, A, laue, tol
+
+            *data, dx, dy, dz, pairs = functions.symmetrize(*args)
+
+        if average:
+
+            args = data, dx, dy, dz, pairs, tol
+
+            *data, dx, dy, dz, pairs = functions.average3d(*args)
+
+        return (*data, dx, dy, dz, pairs)
+
+    def occupancy_correlations_1d(self, fract, tol, average=False):
         """
         Spherically-averaged occupancy correlations.
 
@@ -2012,13 +2069,25 @@ class SuperCell(UnitCell):
 
         *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
 
-        args = self._A_r, *coords, atms, *dims, A, fract, tol
+        _corr = []
 
-        corr, coll, _, _, d, pairs = functions.vector1d(*args)
+        for A_r in self._A_r:
 
-        return corr, coll, d, pairs
+            args = A_r, *coords, atms, *dims, A, fract, tol
 
-    def occupancy_correlations_3d(self, fract, tol):
+            corr, _, d, pairs = functions.scalar1d(*args)
+
+            _corr.append(corr)
+
+        data = self.__statistics(_corr)
+
+        if average:
+
+            *data, d, pairs = functions.average1d(data, d, pairs, tol)
+
+        return (*data, d, pairs)
+
+    def occupancy_correlations_3d(self, fract, tol, average=False, laue=None):
         """
         Three-dimensional occupancy correlations.
 
@@ -2052,7 +2121,33 @@ class SuperCell(UnitCell):
 
         return corr, coll, dx, dy, dz, pairs
 
-    def displacement_correlations_1d(self, fract, tol):
+        _corr = []
+
+        for A_r in self._A_r:
+
+            args = A_r, *coords, atms, *dims, A, fract, tol
+
+            corr, _, _, dx, dy, dz, pairs = functions.scalar3d(*args)
+
+            _corr.append(corr)
+
+        data = self.__statistics(_corr)
+
+        if laue is not None:
+
+            args = data, dx, dy, dz, pairs, A, laue, tol
+
+            *data, dx, dy, dz, pairs = functions.symmetrize(*args)
+
+        if average:
+
+            args = data, dx, dy, dz, pairs, tol
+
+            *data, dx, dy, dz, pairs = functions.average1d(*args)
+
+        return (*data, dx, dy, dz, pairs)
+
+    def displacement_correlations_1d(self, fract, tol, average=False):
         """
         Spherically-averaged displacement correlations.
 
@@ -2082,15 +2177,26 @@ class SuperCell(UnitCell):
 
         *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
 
-        displacements = self._Ux, self._Uy, self._Uz
+        _corr, _coll = [], []
 
-        args = *displacements, *coords, atms, *dims, A, fract, tol
+        for Ux, Uy, Uz in zip(self._Ux, self._Uy, self._Uz):
 
-        corr, coll, _, _, d, pairs = functions.vector1d(*args)
+            args = Ux, Uy, Uz, *coords, atms, *dims, A, fract, tol
 
-        return corr, coll, d, pairs
+            corr, coll, _, _, d, pairs = functions.vector1d(*args)
 
-    def displacement_correlations_3d(self, fract, tol):
+            _corr.append(corr)
+            _coll.append(coll)
+
+        data = *self.__statistics(_corr), *self.__statistics(_coll)
+
+        if average:
+
+            *data, d, pairs = functions.average1d(data, d, pairs, tol)
+
+        return (*data, d, pairs)
+
+    def displacement_correlations_3d(self, fract, tol, average=False, laue=None):
         """
         Three-dimensional displacement correlations.
 
@@ -2120,13 +2226,32 @@ class SuperCell(UnitCell):
 
         *coords, atms = self.get_super_cell_cartesian_atomic_coordinates()
 
-        displacements = self._Ux, self._Uy, self._Uz
+        _corr, _coll = [], []
 
-        args = *displacements, *coords, atms, *dims, A, fract, tol
+        for Ux, Uy, Uz in zip(self._Ux, self._Uy, self._Uz):
 
-        corr, coll, _, _, dx, dy, dz, pairs = functions.vector3d(*args)
+            args = Ux, Uy, Uz, *coords, atms, *dims, A, fract, tol
 
-        return corr, coll, dx, dy, dz, pairs
+            corr, coll, _, _, dx, dy, dz, pairs = functions.vector3d(*args)
+
+            _corr.append(corr)
+            _coll.append(coll)
+
+        data = *self.__statistics(_corr), *self.__statistics(_coll)
+
+        if laue is not None:
+
+            args = data, dx, dy, dz, pairs, A, laue, tol
+
+            *data, dx, dy, dz, pairs = functions.symmetrize(*args)
+
+        if average:
+
+            args = data, dx, dy, dz, pairs, tol
+
+            *data, dx, dy, dz, pairs = functions.average3d(*args)
+
+        return (*data, dx, dy, dz, pairs)
 
     def magnetic_powder_intensity(self, extents, bins):
         """
@@ -2161,11 +2286,15 @@ class SuperCell(UnitCell):
 
         g = self.get_g_factors()
 
-        moments = self._Sx, self._Sy, self._Sz
+        intensity = []
 
-        args = *moments, occ, *U, *coords, ions, Q, A, D, *dims, g
+        for Sx, Sy, Sz in zip(self._Sx, self._Sy, self._Sz):
 
-        return powder.magnetic(*args)
+            args = Sx, Sy, Sz, occ, *U, *coords, ions, Q, A, D, *dims, g
+
+            intensity.append(powder.magnetic(*args))
+
+        return self.__statistics(intensity)
 
     def magnetic_single_crystal_intensity(self, extents, bins, W, laue=None):
         """
@@ -2205,6 +2334,8 @@ class SuperCell(UnitCell):
 
         g = self.get_g_factors()
 
+        W = np.array(W).astype(float)
+
         args = *extents, *bins, *dims, W, laue
 
         indices, inverses, ops, *points = space.reduced(*args)
@@ -2213,12 +2344,58 @@ class SuperCell(UnitCell):
 
         trans = *extents, indices, symop, W, B, R, D, T, wgts, *bins
 
-        moments = self._Sx, self._Sy, self._Sz
+        intensity = []
 
-        args = *moments, occ, *U, *coords, ions, *trans, *dims, *points, g
+        for Sx, Sy, Sz in zip(self._Sx, self._Sy, self._Sz):
 
-        return monocrystal.magnetic(*args)[inverses].reshape(*bins)
+            spins = Sx, Sy, Sz
+
+            args = *spins, occ, *U, *coords, ions, *trans, *dims, *points, g
+
+            intensity.append(monocrystal.magnetic(*args))
+
+        I, sigma_sq = self.__statistics(intensity)
+
+        return I[inverses].reshape(*bins), sigma_sq[inverses].reshape(*bins)
 
     def single_crystal_intensity_blur(self, I, sigma):
 
         return filters.blurring(I, sigma)
+
+    def save_intensity_3d(self, filename, I, extents, bins, W=np.eye(3)):
+
+        B = self.get_miller_cartesian_transform()
+
+        h_range, k_range, l_range = extents
+        nh, nk, nl = bins
+
+        h, k, l = np.meshgrid(np.linspace(*h_range,nh),
+                              np.linspace(*k_range,nk),
+                              np.linspace(*l_range,nl), indexing='ij')
+
+
+        experimental.intensity(filename, h, k, l, I, np.dot(B,W))
+
+    def save_correlations_3d(self, filename, data, dx, dy, dz, pairs):
+
+        label = 'vector-pair'
+
+        corr, _, coll, _ = data
+
+        outdata = (dx, dy, dz, corr, coll, pairs)
+
+        experimental.correlations(filename, outdata, label)
+
+    def save_data(self, filename, signal, sigma_sq, extents, bins):
+
+        self.__save_supercell(filename)
+
+        with h5py.File(filename, 'a') as f:
+
+            data = f.create_group('disorder/data')
+
+            data.create_dataset('extents', data=extents)
+            data.create_dataset('bins', data=bins)
+
+            data.create_dataset('signal', data=signal)
+            data.create_dataset('sigma_sq', data=sigma_sq)

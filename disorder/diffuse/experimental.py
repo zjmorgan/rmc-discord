@@ -13,17 +13,26 @@ def data(filename):
 
     f = h5py.File(filename, 'r')
 
-    signal = f['MDHistoWorkspace/data/signal'][()].T
-    error_sq = f['MDHistoWorkspace/data/errors_squared'][()].T
+    if 'MDHistoWorkspace' in f.keys():
+        data = f['MDHistoWorkspace/data/']
+    else:
+        data = f['disorder/data']
 
-    if 'Q1' in f['MDHistoWorkspace/data/'].keys():
-        h = f['MDHistoWorkspace/data/Q1'][...]
-        k = f['MDHistoWorkspace/data/Q2'][...]
-        l = f['MDHistoWorkspace/data/Q3'][...]
-    elif '[H,0,0]'in f['MDHistoWorkspace/data/'].keys():
-        h = f['MDHistoWorkspace/data/[H,0,0]'][...]
-        k = f['MDHistoWorkspace/data/[0,K,0]'][...]
-        l = f['MDHistoWorkspace/data/[0,0,L]'][...]
+    signal = data['signal'][...].T
+    error_sq = data['errors_squared'][...].T
+
+    if 'Q1' in data.keys():
+        h = data['Q1'][...]
+        k = data['Q2'][...]
+        l = data['Q3'][...]
+    elif '[H,0,0]'in f.keys():
+        h = data['[H,0,0]'][...]
+        k = data['[0,K,0]'][...]
+        l = data['[0,0,L]'][...]
+    else:
+        h = data['h'][...]
+        k = data['k'][...]
+        l = data['l'][...]
 
     f.close()
 
@@ -67,7 +76,7 @@ def rebin(a, binsize):
 
     changed = np.array(binsize) != np.array(a.shape)
 
-    if (changed[0] and changed[1] and changed[2]):
+    if changed[0] and changed[1] and changed[2]:
         comp0 = weights(a.shape[0], binsize[0])
         comp1 = weights(a.shape[1], binsize[1])
         comp2 = weights(a.shape[2], binsize[2])
@@ -75,33 +84,33 @@ def rebin(a, binsize):
         c = filters.rebin1(b, comp1)
         d = filters.rebin2(c, comp2)
         return d
-    elif (changed[0] and changed[1]):
+    elif changed[0] and changed[1]:
         comp0 = weights(a.shape[0], binsize[0])
         comp1 = weights(a.shape[1], binsize[1])
         b = filters.rebin0(a, comp0)
         c = filters.rebin1(b, comp1)
         return c
-    elif (changed[1] and changed[2]):
+    elif changed[1] and changed[2]:
         comp1 = weights(a.shape[1], binsize[1])
         comp2 = weights(a.shape[2], binsize[2])
         b = filters.rebin1(a, comp1)
         c = filters.rebin2(b, comp2)
         return c
-    elif (changed[2] and changed[0]):
+    elif changed[2] and changed[0]:
         comp2 = weights(a.shape[2], binsize[2])
         comp0 = weights(a.shape[0], binsize[0])
         b = filters.rebin2(a, comp2)
         c = filters.rebin0(b, comp0)
         return c
-    elif (changed[0]):
+    elif changed[0]:
         comp0 = weights(a.shape[0], binsize[0])
         b = filters.rebin0(a, comp0)
         return b
-    elif (changed[1]):
+    elif changed[1]:
         comp1 = weights(a.shape[1], binsize[1])
         b = filters.rebin1(a, comp1)
         return b
-    elif (changed[2]):
+    elif changed[2]:
         comp2 = weights(a.shape[2], binsize[2])
         b = filters.rebin2(a, comp2)
         return b
@@ -304,7 +313,6 @@ def correlations(fname, data, label):
         datasets = [data[3]]
 
     form = vectors if label.startswith('vector') else scalars
-
     if label.endswith('pair'):
         labels = np.unique(pairs)
         for t, array in zip(form, datasets):

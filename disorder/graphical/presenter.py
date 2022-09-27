@@ -3598,7 +3598,7 @@ class Presenter:
 
             H = '{}'.format(h) if (h >= 0) else r'\bar{{{}}}'.format(h)
             K = '{}'.format(k) if (k >= 0) else r'\bar{{{}}}'.format(k)
-            L = '{}'.format(k) if (l >= 0) else r'\bar{{{}}}'.format(l)
+            L = '{}'.format(l) if (l >= 0) else r'\bar{{{}}}'.format(l)
 
             d = np.round(d, int(-np.log10(tol)))
 
