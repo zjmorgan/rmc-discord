@@ -912,13 +912,23 @@ class Refinement:
             signal = data['signal'][...]
             sigma_sq = data['sigma_sq'][...]
 
-            ref = f['disorder/refinement']
+            if 'refinement' in f['disorder'].keys():
 
-            self.__extents = ref['extents'][...]
-            self.__bins = ref['bins'][...]
+                ref = f['disorder/refinement']
 
-            self.__signal = ref['signal'][...]
-            self.__sigma_sq = ref['sigma_sq'][...]
+                self.__extents = ref['extents'][...]
+                self.__bins = ref['bins'][...]
+
+                self.__signal = ref['signal'][...]
+                self.__sigma_sq = ref['sigma_sq'][...]
+
+            else:
+
+                self.__extents = self.extents
+                self.__bins = sigma_sq
+
+                self.__signal = signal
+                self.__sigma_sq = sigma_sq
 
         if os.path.exists('tmp.npy'):
             os.remove('tmp.npy')
