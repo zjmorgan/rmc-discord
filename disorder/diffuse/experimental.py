@@ -255,40 +255,40 @@ def reflections(h, k, l, centering='P'):
     # centering == 'P', 'R (rhombohedral axes, primitive cell)'
     allow = 1
 
-    if (centering == 'I'):
-        if ((h+k+l) % 2 != 0):
+    if centering == 'I':
+        if (h+k+l) % 2 != 0:
             allow = 0
 
-    elif (centering == 'F'):
-        if ((h+k) % 2 != 0 or (k+l) % 2 != 0 or (l+h) % 2 != 0):
+    elif centering == 'F':
+        if (h+k) % 2 != 0 or (k+l) % 2 != 0 or (l+h) % 2 != 0:
             allow = 0
 
-    elif (centering == 'A'):
-        if ((k+l) % 2 != 0):
+    elif centering == 'A':
+        if (k+l) % 2 != 0:
             allow = 0
 
-    elif (centering == 'B'):
-        if ((l+h) % 2 != 0):
+    elif centering == 'B':
+        if (l+h) % 2 != 0:
             allow = 0
 
-    elif (centering == 'C'):
-        if ((h+k) % 2 != 0):
+    elif centering == 'C':
+        if (h+k) % 2 != 0:
             allow = 0
 
-    elif (centering == 'R(obv)'): # (hexagonal axes, triple obverse cell)
-        if ((-h+k+l) % 3 != 0):
+    elif centering == 'R(obv)': # (hexagonal axes, triple obverse cell)
+        if (-h+k+l) % 3 != 0:
             allow = 0
 
-    elif (centering == 'R(rev)'): # (hexagonal axes, triple reverse cell)
-        if ((h-k+l) % 3 != 0):
+    elif centering == 'R(rev)': # (hexagonal axes, triple reverse cell)
+        if (h-k+l) % 3 != 0:
             allow = 0
 
-    elif (centering == 'H'): # (hexagonal axes, triple hexagonal cell)
-        if ((h-k) % 3 != 0):
+    elif centering == 'H': # (hexagonal axes, triple hexagonal cell)
+        if (h-k) % 3 != 0:
             allow = 0
 
-    elif (centering == 'D'): # (rhombohedral axes, triple rhombohedral cell)
-        if ((h+k+l) % 3 != 0):
+    elif centering == 'D': # (rhombohedral axes, triple rhombohedral cell)
+        if (h+k+l) % 3 != 0:
             allow = 0
 
     return allow

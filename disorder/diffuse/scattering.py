@@ -1276,8 +1276,6 @@ class Refinement:
 
         mu = self.sc.get_magnetic_moment_magnitude()
 
-        self.__initialize_magnetic()
-
         dims = self.sc.get_super_cell_extents()
         n_atm = self.sc.get_number_atoms_per_unit_cell()
 
@@ -1287,47 +1285,64 @@ class Refinement:
 
         bins = self.__bins
 
-        spins = self.__Sx, self.__Sy, self.__Sz
+        self.sc._Sx, self.sc._Sy, self.sc._Sz = [], [], []
 
-        dirs = self.__Qx_norm, self.__Qy_norm, self.__Qz_norm
+        for b in range(batch):
 
-        trans = self.__Sx_k, self.__Sy_k, self.__Sz_k
+            self.sc.randomize_magnetic_moments()
 
-        trans_orig = self.__Sx_k_orig, self.__Sy_k_orig, self.__Sz_k_orig
-        trans_cand = self.__Sx_k_cand, self.__Sy_k_cand, self.__Sz_k_cand
+            self.__Sx = self.sc._Sx[b]
+            self.__Sy = self.sc._Sy[b]
+            self.__Sz = self.sc._Sz[b]
 
-        struct = self.__Fx, self.__Fy, self.__Fz
+            self.__initialize_magnetic()
 
-        struct_orig = self.__Fx_orig, self.__Fy_orig, self.__Fz_orig
-        struct_cand = self.__Fx_cand, self.__Fy_cand, self.__Fz_cand
+            spins = self.__Sx, self.__Sy, self.__Sz
 
-        prod = self.__prod_x, self.__prod_y, self.__prod_z
+            dirs = self.__Qx_norm, self.__Qy_norm, self.__Qz_norm
 
-        prod_orig = self.__prod_x_orig, self.__prod_y_orig, self.__prod_z_orig
-        prod_cand = self.__prod_x_cand, self.__prod_y_cand, self.__prod_z_cand
+            trans = self.__Sx_k, self.__Sy_k, self.__Sz_k
 
-        indices = self.__i_dft, self.__inverses, *self.__mask_indices()
+            trans_orig = self.__Sx_k_orig, self.__Sy_k_orig, self.__Sz_k_orig
+            trans_cand = self.__Sx_k_cand, self.__Sy_k_cand, self.__Sz_k_cand
 
-        accepted = self.__acc_moves, self.__acc_temps
-        rejected = self.__rej_moves, self.__rej_temps
-        statistics = self.__chi_sq, self.__energy
-        optimization = self.__temperature, self.__scale, self.__constant
+            struct = self.__Fx, self.__Fy, self.__Fz
 
-        factors = self.__space_factor, self.__mag_factors
+            struct_orig = self.__Fx_orig, self.__Fy_orig, self.__Fz_orig
+            struct_cand = self.__Fx_cand, self.__Fy_cand, self.__Fz_cand
 
-        intensities = self.__intensities()
-        filters = self.__filters(sigma)
+            prod = self.__prod_x, self.__prod_y, self.__prod_z
 
-        opts = fixed, heisenberg
+            prod_orig = self.__prod_x_orig, \
+                        self.__prod_y_orig, \
+                        self.__prod_z_orig
 
-        args = *spins, *dirs, *trans, *trans_orig, *trans_cand, *struct, \
-               *struct_orig, *struct_cand, *prod, *prod_orig, *prod_cand, \
-               *factors, mu, *intensities, *filters, *indices, \
-               *accepted, *rejected, *statistics, *optimization, \
-               *opts, *bins, *dims, n_atm, n, N
+            prod_cand = self.__prod_x_cand, \
+                        self.__prod_y_cand, \
+                        self.__prod_z_cand
 
-        refinement.magnetic(*args)
+            indices = self.__i_dft, self.__inverses, *self.__mask_indices()
 
-        self.sc._Sx = self.__Sx.copy()
-        self.sc._Sy = self.__Sy.copy()
-        self.sc._Sz = self.__Sz.copy()
+            accepted = self.__acc_moves, self.__acc_temps
+            rejected = self.__rej_moves, self.__rej_temps
+            statistics = self.__chi_sq, self.__energy
+            optimization = self.__temperature, self.__scale, self.__constant
+
+            factors = self.__space_factor, self.__mag_factors
+
+            intensities = self.__intensities()
+            filters = self.__filters(sigma)
+
+            opts = fixed, heisenberg
+
+            args = *spins, *dirs, *trans, *trans_orig, *trans_cand, *struct, \
+                   *struct_orig, *struct_cand, *prod, *prod_orig, *prod_cand, \
+                   *factors, mu, *intensities, *filters, *indices, \
+                   *accepted, *rejected, *statistics, *optimization, \
+                   *opts, *bins, *dims, n_atm, n, N
+
+            refinement.magnetic(*args)
+
+            self.sc._Sx[b] = self.__Sx.copy()
+            self.sc._Sy[b] = self.__Sy.copy()
+            self.sc._Sz[b] = self.__Sz.copy()

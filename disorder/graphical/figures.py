@@ -119,8 +119,6 @@ class Correlations3d:
         self.corr, self.corr_sig_sq, *coll = data
         self.coll, self.coll_sig_sq = coll if len(coll) == 2 else (None, None)
 
-        print(len(self.coll),len(self.coll_sig_sq))
-
     def __mask(self, h, k, l, d=0, tol=1e-4):
 
         if np.isclose(h**2+k**2+l**2, 0):
