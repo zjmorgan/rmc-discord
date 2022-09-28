@@ -49,6 +49,7 @@ jobs:
       - name: Build Sphinx
         env:
           QT_QPA_PLATFORM: offscreen
+          QT_API: pyqt5
           MPLBACKEND: agg
         run: |
           sudo apt install xvfb

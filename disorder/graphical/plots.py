@@ -3,6 +3,8 @@
 import numpy as np
 
 import matplotlib
+matplotlib.use('agg')
+
 import matplotlib.style as mplstyle
 mplstyle.use('fast')
 
