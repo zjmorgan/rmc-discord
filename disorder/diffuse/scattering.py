@@ -1127,10 +1127,6 @@ class Refinement:
         self.__chi_sq, self.__temperature =  [np.inf], [temp]
         self.__constant = const
 
-        self.__A_r = self.sc._A_r
-        self.__Ux, self.__Uy, self.__Uz = self.sc._Ux, self.sc._Uy, self.sc._Uz
-        self.__Sx, self.__Sy, self.__Sz = self.sc._Sx, self.sc._Sy, self.sc._Sz
-
         dims = self.sc.get_super_cell_extents()
 
         rx, ry, rz, _ = self.sc.get_super_cell_cartesian_atomic_coordinates()

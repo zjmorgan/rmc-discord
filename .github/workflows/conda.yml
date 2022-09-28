@@ -35,6 +35,7 @@ jobs:
       env:
         OMP_NUM_THREADS: 1
         QT_QPA_PLATFORM: offscreen
+        QT_API: pyqt5
       run: |
         sudo apt install xvfb
         sudo apt install libxkbcommon-x11-0
@@ -48,7 +49,7 @@ jobs:
         conda install cython
         ulimit -c unlimited
         pip install -e .
-        python -m pytest --pyargs disorder --ignore-glob *vis*.py
+        python -m pytest --pyargs disorder
     - name: Store artifacts
       uses: actions/upload-artifact@v2
       with:
