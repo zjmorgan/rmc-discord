@@ -51,7 +51,6 @@ jobs:
           QT_QPA_PLATFORM: offscreen
           MPLBACKEND: agg
         run: |
-          export DISPLAY=:0
           sudo apt install xvfb
           sudo apt install libxkbcommon-x11-0
           sudo apt install libxcb-icccm4
