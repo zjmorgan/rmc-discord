@@ -49,6 +49,7 @@ jobs:
       - name: Build Sphinx
         env:
           QT_QPA_PLATFORM: offscreen
+          MPLBACKEND: agg
         run: |
           sudo apt install xvfb
           sudo apt install libxkbcommon-x11-0
