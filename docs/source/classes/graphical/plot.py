@@ -4,6 +4,8 @@ import matplotlib.pyplot as plt
 from disorder.graphical.canvas import Canvas
 from disorder.graphical.plots import Line
 
+plt.switch_backend('agg')
+
 x = np.linspace(0,1,16)
 y = np.sin(2*np.pi*x)
 
