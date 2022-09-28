@@ -52,7 +52,6 @@ jobs:
           QT_API: pyqt5
           MPLBACKEND: agg
         run: |
-          export DISPLAY=:0
           sudo apt install xvfb
           sudo apt install libxkbcommon-x11-0
           sudo apt install libxcb-icccm4
@@ -62,7 +61,7 @@ jobs:
           sudo apt install libxcb-render-util0
           sudo apt install libxcb-xinerama0
           cd docs
-          make html
+          xvfb-run make html
           cd ..
       - run: bundle exec jekyll build --baseurl ${{ steps.pages.outputs.base_path }} # defaults output to '/_site'
       - name: Upload artifact
