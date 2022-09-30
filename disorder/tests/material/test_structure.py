@@ -18,8 +18,8 @@ class test_structure(unittest.TestCase):
         formats = (int, int, int, float, float, float, int)
 
         uc_dict = crystal.unitcell(folder=folder,
-                                    filename='Cu3Au.cif',
-                                    tol=1e-4)
+                                   filename='Cu3Au.cif',
+                                   tol=1e-4)
 
         u = uc_dict['u']
         v = uc_dict['v']

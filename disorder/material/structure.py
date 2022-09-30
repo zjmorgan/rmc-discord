@@ -5,7 +5,7 @@ import h5py
 import numpy as np
 
 from disorder.diffuse import scattering, space, powder, monocrystal, filters
-from disorder.diffuse import experimental, filters
+from disorder.diffuse import experimental
 from disorder.diffuse import displacive, magnetic, occupational
 from disorder.correlation import functions
 from disorder.material import crystal, symmetry
@@ -216,6 +216,8 @@ class UnitCell:
         Lattice parameters.
     set_lattice_constants()
         Update lattice parameters.
+    get_all_lattice_constants()
+        All lattice parameters.
     get_reciprocal_lattice_constants()
         Reciprocal lattice parameters.
     get_symmetry_operators()
@@ -259,6 +261,8 @@ class UnitCell:
         Twin transformation matrices and mass fractions.
     set_twins()
         Update twin transformation matrices and mass fractions.
+    get_space_group_symmetry_operators()
+        All symmetry operators.
 
     """
 
@@ -289,7 +293,7 @@ class UnitCell:
         sym = self.get_space_group_symbol()
         no = self.get_space_group_number()
 
-        a, b, c, alpha, beta, gamma = self.__get_all_lattice_constants()
+        a, b, c, alpha, beta, gamma = self.get_all_lattice_constants()
 
         standard = np.isclose(gamma, np.pi/2)
 
@@ -427,12 +431,7 @@ class UnitCell:
         self.__T = T
         self.__weights = weights
 
-    def __get_all_lattice_constants(self):
-
-        constants = self.__a, self.__b, self.__c, \
-                    self.__alpha, self.__beta, self.__gamma
-
-        return constants
+        self.__symops = crystal.operators(folder, filename)
 
     def __save_unitcell(self, filename):
 
@@ -479,6 +478,8 @@ class UnitCell:
 
             uc.create_dataset('T', data=self.__T)
             uc.create_dataset('weights', data=self.__weights)
+
+            uc.create_dataset('symops', data=self.__symops)
 
             uc.attrs['folder'] = self.__folder
             uc.attrs['filename'] = self.__filename
@@ -541,6 +542,8 @@ class UnitCell:
 
             self.__T = uc['T'][...]
             self.__weights = uc['weights'][...]
+
+            self.__symops = uc['symops'][...]
 
             self.__folder = uc.attrs['folder']
             self.__filename = uc.attrs['filename']
@@ -1247,6 +1250,22 @@ class UnitCell:
         self.__beta = beta
         self.__gamma = gamma
 
+    def get_all_lattice_constants(self):
+        """
+        All lattice parameters.
+
+        Returns
+        -------
+        constants : tuple
+           Lattice constants and angles. Angles in radians.
+
+        """
+
+        constants = self.__a, self.__b, self.__c, \
+                    self.__alpha, self.__beta, self.__gamma
+
+        return constants
+
     def get_reciprocal_lattice_constants(self):
         """
         Reciprocal lattice parameters.
@@ -1260,7 +1279,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_all_lattice_constants()
 
         return crystal.reciprocal(*constants)
 
@@ -1323,7 +1342,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_all_lattice_constants()
 
         return crystal.volume(*constants)
 
@@ -1363,7 +1382,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_all_lattice_constants()
 
         return crystal.metric(*constants)
 
@@ -1406,7 +1425,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_all_lattice_constants()
 
         return crystal.cartesian(*constants)
 
@@ -1460,7 +1479,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_all_lattice_constants()
 
         return crystal.cartesian_rotation(*constants)
 
@@ -1485,7 +1504,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_all_lattice_constants()
 
         return crystal.cartesian_moment(*constants)
 
@@ -1523,7 +1542,7 @@ class UnitCell:
 
         """
 
-        constants = self.__get_all_lattice_constants()
+        constants = self.get_all_lattice_constants()
 
         return crystal.cartesian_displacement(*constants)
 
@@ -1552,6 +1571,20 @@ class UnitCell:
         """
 
         return self.__sg
+
+
+    def get_space_group_symmetry_operators(self):
+        """
+        All symmetry operators.
+
+        Returns
+        -------
+        sym_ops : 1d array, str
+            Space group symmetry operators.
+
+        """
+
+        return self.__symops
 
     def get_laue(self):
         """
