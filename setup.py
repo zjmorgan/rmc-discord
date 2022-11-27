@@ -6,10 +6,10 @@ import sys, re
 import numpy as np
 from Cython.Build import cythonize
 
-if (sys.platform == 'win32'):
+if sys.platform == 'win32':
     compile_openmp = ['/openmp']
     link_openmp = []
-elif (sys.platform == 'darwin'):
+elif sys.platform == 'darwin':
     compile_openmp = ['-Xpreprocessor','-fopenmp','-lomp,',
                      '-I"$(brew --prefix libomp)/include"',
                      '-L"$(brew --prefix libomp)/lib"']
@@ -106,7 +106,6 @@ setup(
         'pycifrw',
         'h5py',
         'pyvista',
-        'mayavi',
         'pyqt5',
         'ipython',
     ],
