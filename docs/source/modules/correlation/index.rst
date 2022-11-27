@@ -7,4 +7,4 @@ Correlation
 
    *
 
-The classes in the `correlation` package.
+The modules in the `correlation` package.

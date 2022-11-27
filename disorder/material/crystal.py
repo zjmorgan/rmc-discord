@@ -54,7 +54,9 @@ def unitcell(folder, filename, tol=1e-2):
                 left_op = ','.join(symop.split(',')[:3])
                 right_op = ','.join(add_symop.split(',')[:3])
                 combine_op = symmetry.binary([left_op],[right_op])
-                parity = int(symop.split(',')[-1])*int(add_symop.split(',')[-1])
+                par = int(symop.split(',')[-1])
+                add_par = int(add_symop.split(',')[-1])
+                parity = par*add_par
                 combine += [combine_op[0]+','+str(parity)]
         symops = combine
 
