@@ -15,5 +15,5 @@ The classes in the `material` package.
 
 .. csv-table:: Cu3Au
    :file: Cu3Au.csv
-   :header: "h", "k", "l", "d-spacing", "F(real)", "F(imag)", "Mult"
+   :header: "h", "k", "l", "d", "F(real)", "F(imag)", "Mult"
    :widths: auto

@@ -85,25 +85,103 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
 
     n_hkl = Q.size
 
+    coordinate = [h,k,l]
+
+    total = []
+    for symop in symops:
+
+        transformed = symmetry.evaluate([symop], coordinate, translate=False)
+        total.append(transformed)
+
+    total = np.vstack(total)
+
+    for i in range(n_hkl):
+
+        total[:,:,i] = total[np.lexsort(total[:,:,i].T),:,i]
+
+    total = np.vstack(total)
+
+    total, ind, mult = np.unique(total, axis=1,
+                                 return_index=True,
+                                 return_counts=True)
+
+    h, k, l, d, Q = h[ind], k[ind], l[ind], d[ind], Q[ind]
+
+    ind = np.lexsort((h,k,l,d),axis=0)[::-1]
+
+    h, k, l, d, Q, mult = h[ind], k[ind], l[ind], d[ind], Q[ind], mult[ind]
+
+    n_hkl = Q.size
+
     phase_factor = np.exp(2j*np.pi*(h[:,np.newaxis]*u+
                                     k[:,np.newaxis]*v+
                                     l[:,np.newaxis]*w))
 
-    if (source == 'neutron'):
+    if source == 'neutron':
         scattering_power = scattering.length(atms, n_hkl).reshape(n_hkl,n_atm)
     else:
         scattering_power = scattering.form(atms, Q).reshape(n_hkl,n_atm)
 
-    T = np.exp(-2*np.pi**2*(U11*(h*a_)[:,np.newaxis]**2+
-                            U22*(k*b_)[:,np.newaxis]**2+
-                            U33*(l*c_)[:,np.newaxis]**2+
-                            U23*(k*l*b_*c_*2)[:,np.newaxis]+
-                            U13*(h*l*a_*c_*2)[:,np.newaxis]+
-                            U12*(h*k*a_*b_*2)[:,np.newaxis]))
+    dw_factors = np.exp(-2*np.pi**2*(U11*(h*a_)[:,np.newaxis]**2+
+                                     U22*(k*b_)[:,np.newaxis]**2+
+                                     U33*(l*c_)[:,np.newaxis]**2+
+                                     U23*(k*l*b_*c_*2)[:,np.newaxis]+
+                                     U13*(h*l*a_*c_*2)[:,np.newaxis]+
+                                     U12*(h*k*a_*b_*2)[:,np.newaxis]))
 
-    factors = scattering_power*occupancy*T*phase_factor
+    factors = scattering_power*occupancy*dw_factors*phase_factor
 
     F = factors.sum(axis=1)
+
+    return h, k, l, d, F, mult
+
+def factor_magnetic(mu1, mu2, mu3, kvecs, u, v, w, atms, occupancy,
+                    U11, U22, U33, U23, U13, U12,
+                    a, b, c, alpha, beta, gamma, symops, dmin=1.0):
+    """
+    Magnetic tructure factor :math:`F(h,k,l)`.
+
+    """
+
+    p = 0.2695*10
+
+    n_atm = atms.shape[0]
+
+    inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+
+    a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+
+    B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+
+    hmax, kmax, lmax = np.floor(np.array([a,b,c])/dmin).astype(int)
+
+    h, k, l = np.meshgrid(np.arange(-hmax, hmax+1),
+                          np.arange(-kmax, kmax+1),
+                          np.arange(-lmax, lmax+1), indexing='ij')
+
+    h = np.delete(h, lmax+(2*lmax+1)*(kmax+(2*kmax+1)*hmax))
+    k = np.delete(k, lmax+(2*lmax+1)*(kmax+(2*kmax+1)*hmax))
+    l = np.delete(l, lmax+(2*lmax+1)*(kmax+(2*kmax+1)*hmax))
+
+    h, k, l = h[::-1], k[::-1], l[::-1]
+
+    Qh, Qk, Ql = crystal.vector(h, k, l, B)
+
+    Q = np.sqrt(Qh**2+Qk**2+Ql**2)
+
+    d = 2*np.pi/Q
+
+    ind = d >= dmin
+
+    h, k, l, d, Q = h[ind], k[ind], l[ind], d[ind], Q[ind]
+
+    ind = ~symmetry.absence(symops, h, k, l)
+
+    h, k, l, d, Q = h[ind], k[ind], l[ind], d[ind], Q[ind]
+
+    Qh, Qk, Ql = crystal.vector(h, k, l, B)
+
+    n_hkl = Q.size
 
     coordinate = [h,k,l]
 
@@ -127,13 +205,54 @@ def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
                                  return_index=True,
                                  return_counts=True)
 
-    h, k, l, d, F = h[ind], k[ind], l[ind], d[ind], F[ind]
+    h, k, l, d, Q = h[ind], k[ind], l[ind], d[ind], Q[ind]
 
     ind = np.lexsort((h,k,l,d),axis=0)[::-1]
 
-    h, k, l, d, F, mult = h[ind], k[ind], l[ind], d[ind], F[ind], mult[ind]
+    h, k, l, d, Q, mult = h[ind], k[ind], l[ind], d[ind], Q[ind], mult[ind]
 
-    return h, k, l, d, F, mult
+    if len(kvecs) > 0:
+
+        kvecs = np.array(kvecs)
+        kvecs = np.vstack([kvecs,-kvecs])
+
+        h, k, l = np.rollaxis(np.stack([h,k,l])+kvecs[...,np.newaxis], axis=1)
+
+        h, k, l = h.flatten(), k.flatten(), l.flatten()
+
+    Qh, Qk, Ql = crystal.vector(h, k, l, B)
+
+    eh, ek, el, Q = space.unit(Qh, Qk, Ql)
+
+    n_hkl = Q.size
+
+    phase_factor = np.exp(2j*np.pi*(h[:,np.newaxis]*u+
+                                    k[:,np.newaxis]*v+
+                                    l[:,np.newaxis]*w))
+
+    magnetic_form = magnetic.form(Q, atms).reshape(n_hkl,n_atm)
+
+
+    e_dot_mu = eh[:,np.newaxis]*mu1+ek[:,np.newaxis]*mu2+el[:,np.newaxis]*mu3
+
+    mu1_perp = mu1-e_dot_mu*eh[:,np.newaxis]
+    mu2_perp = mu2-e_dot_mu*ek[:,np.newaxis]
+    mu3_perp = mu3-e_dot_mu*el[:,np.newaxis]
+
+    dw_factors = np.exp(-2*np.pi**2*(U11*(h*a_)[:,np.newaxis]**2+
+                                     U22*(k*b_)[:,np.newaxis]**2+
+                                     U33*(l*c_)[:,np.newaxis]**2+
+                                     U23*(k*l*b_*c_*2)[:,np.newaxis]+
+                                     U13*(h*l*a_*c_*2)[:,np.newaxis]+
+                                     U12*(h*k*a_*b_*2)[:,np.newaxis]))
+
+    factors = magnetic_form*occupancy*dw_factors*phase_factor
+
+    M1 = p*(mu1_perp*factors).sum(axis=1)
+    M2 = p*(mu2_perp*factors).sum(axis=1)
+    M3 = p*(mu3_perp*factors).sum(axis=1)
+
+    return h, k, l, d, M1, M2, M3, mult
 
 class UnitCell:
     """

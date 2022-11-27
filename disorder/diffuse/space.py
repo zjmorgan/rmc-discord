@@ -679,20 +679,22 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
     else:
         Nw = nw
 
-    H = np.round(h*Nu).astype(np.int16)
+    H = np.round(h*Nu).astype(int)
+    K = np.round(k*Nv).astype(int)
+    L = np.round(l*Nw).astype(int)
 
-    # iH = np.mod(H, Nu)
-    # del iH, h
+    iH = np.mod(H, Nu)
+    iK = np.mod(K, Nv)
+    iL = np.mod(L, Nw)
 
-    K = np.round(k*Nv).astype(np.int16)
+    mask = (iH == 0) & (~np.isclose(np.mod(h*Nu,Nu),0))
+    H[mask] += 1
 
-    # iK = np.mod(K, Nv)
-    # del iK, k
+    mask = (iK == 0) & (~np.isclose(np.mod(k*Nv,Nv),0))
+    K[mask] += 1
 
-    L = np.round(l*Nw).astype(np.int16)
-
-    # iL = np.mod(L, Nw)
-    # del iL, l
+    mask = (iL == 0) & (~np.isclose(np.mod(l*Nw,Nw),0))
+    L[mask] += 1
 
     if (laue == None or laue == 'None'):
 
@@ -730,15 +732,15 @@ def reduced(h_range, k_range, l_range, nh, nk, nl,
 
     sym, n_symops = symmetry.laue_id(symops)
 
-    ops = np.zeros((3,n,n_symops), dtype=np.int16)
+    ops = np.zeros((3,n,n_symops), dtype=int)
 
     for i in range(n_symops):
 
         h, k, l = symmetry.miller(h_, k_, l_, sym, i)
 
-        ops[0,:,i] = np.round(h*Nu).astype(np.int16)
-        ops[1,:,i] = np.round(k*Nv).astype(np.int16)
-        ops[2,:,i] = np.round(l*Nw).astype(np.int16)
+        ops[0,:,i] = np.round(h*Nu).astype(int)
+        ops[1,:,i] = np.round(k*Nv).astype(int)
+        ops[2,:,i] = np.round(l*Nw).astype(int)
 
     sort = np.lexsort(ops, axis=1)[:,0]
     total = ops.reshape(3,n_symops*n)[:,sort+n_symops*np.arange(n)].T

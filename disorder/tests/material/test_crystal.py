@@ -464,6 +464,18 @@ class test_crystal(unittest.TestCase):
         self.assertEqual(symops[0], u'x,y,z')
         self.assertEqual(len(symops), 192)
 
+    def test_vectors(self):
+
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+
+        kvecs = crystal.vectors(folder, 'copper.cif')
+
+        np.testing.assert_array_almost_equal(kvecs, [])
+
+        kvecs = crystal.vectors(folder, 'MnO.mcif')
+
+        np.testing.assert_array_almost_equal(kvecs, [[0.5,0.5,0.5]])
+
     def test_d(self):
 
         a, b, c, alpha, beta, gamma = 5, 6, 7, np.pi/2, np.pi/3, np.pi/4

@@ -261,17 +261,20 @@ class Simulation:
 
         pair_ind = self.__pair_ind[mask]
 
-        uni, ind = np.unique(pair_ind, return_index=True)
+        uni, ind, cnt = np.unique(pair_ind,
+                                  return_index=True,
+                                  return_counts=True)
 
         d = self.get_bond_lengths().flatten()[ind]
 
         pair_ind = pair_ind[ind]
+        cnt //= self.__n_atm
 
-        header = ' ind       d\n'
-        divide = '============\n'
-        bond = '{:4}{:8.4}\n'
+        header = ' ind cnt       d\n'
+        divide = '================\n'
+        bond = '{:4}{:4}{:8.4}\n'
 
-        bondinfo = ''.join([bond.format(*x) for x in zip(pair_ind,d)])
+        bondinfo = ''.join([bond.format(*x) for x in zip(pair_ind,cnt,d)])
 
         return header+divide+bondinfo+divide
 
@@ -389,7 +392,7 @@ class Simulation:
 
         return (self.__pair_ind[...,np.newaxis] == indices).any(axis=2)
 
-    def ___get_indices(self):
+    def __get_indices(self):
 
         mask = self.__mask()
 
@@ -401,6 +404,20 @@ class Simulation:
         pair_trans = self.__pair_trans[mask].reshape(self.__n_atm,-1)
 
         return atm_ind, img_i, img_j, img_k, pair_ind, pair_trans
+
+    def __get_cluster_indices(self):
+
+        mask = self.__mask()
+
+        atm_ind = self.__atm_ind[mask].reshape(self.__n_atm,-1)
+        img_i = self.__img_i[mask].reshape(self.__n_atm,-1)
+        img_j = self.__img_j[mask].reshape(self.__n_atm,-1)
+        img_k = self.__img_k[mask].reshape(self.__n_atm,-1)
+        pair_ind = self.__pair_ind[mask].reshape(self.__n_atm,-1)
+        pair_inv = self.__pair_inv[mask].reshape(self.__n_atm,-1)
+        pair_trans = self.__pair_trans[mask].reshape(self.__n_atm,-1)
+
+        return atm_ind, img_i, img_j, img_k, pair_ind, pair_inv, pair_trans
 
     def get_active_bonds(self):
         """
@@ -731,7 +748,7 @@ class Simulation:
 
         return simulation.dipole_dipole_interaction_energy(*args)
 
-    def magnetic_simulation(self, N, batch=1):
+    def magnetic_simulation(self, N, batch=1, cluster=False):
         """
         Perform magnetic Heisenberg simulation.
 
@@ -761,7 +778,10 @@ class Simulation:
 
         fields = self.__B, self.__Qijkl*self.__const_dd
 
-        indices = self.___get_indices()
+        if cluster:
+            indices = self.__get_cluster_indices()
+        else:
+            indices = self.__get_indices()
 
         dims = self.sc.get_super_cell_extents()
         n_atm = self.sc.get_number_atoms_per_unit_cell()
@@ -775,7 +795,10 @@ class Simulation:
             spins = self.__Sx, self.__Sy, self.__Sz
             args = *spins, *properties, *fields, *indices, self.__T, kB, N
 
-            H, T = simulation.heisenberg(*args)
+            if cluster:
+                H, T = simulation.heisenberg_cluster(*args)
+            else:
+                H, T = simulation.heisenberg(*args)
 
             self.__T = T
 

@@ -541,7 +541,7 @@ def evaluate(operators, coordinates, translate=True):
     operators : list, str
         Symmetry operators.
     coordinates : 3-list
-        Coordiantes to trasnsform.
+        Coordiantes to transform.
     translate : bool, optional
         Apply translation to rotation operator. The default is ``True``.
 
@@ -575,16 +575,65 @@ def evaluate_code(code, coordinates):
 
     return np.array(eval(code))
 
-def evaluate_mag(operators, moments):
+def generate_mag(operator, symmform, parity):
     """
-    Evaluate magnetic symmetry operators.
+    Generate magnetic symmetry operator.
 
     Parameters
     ----------
-    operators : list, str
-        Magnetic symmetry operators.
-    moments : 3-list
-        Moments to trasnsform.
+    operator : list, str
+        Symmetry operator.
+    symmform : 3-list
+        Magnetic symmetry form.
+    parity : 3-list
+        Moment parity.
+
+    Returns
+    -------
+    mag_symops : list
+        Magnetic symmetry operator.
+
+    """
+
+    code = evaluate_op(operator, translate=False)
+
+    W_0 = evaluate_code(code, [1,0,0])
+    W_1 = evaluate_code(code, [0,1,0])
+    W_2 = evaluate_code(code, [0,0,1])
+
+    W = np.hstack((W_0,W_1,W_2)).T.reshape(3,3).T
+
+    M = (parity*np.linalg.det(W)*W).astype(int)
+
+    symmform = symmform.split(',')
+
+    mag_ops = []
+    for i in range(3):
+        mag_op = []
+        for j in range(3):
+            if M[i,j] > 0:
+                mag_op.append(symmform[j])
+            elif M[i,j] < 0:
+                mag_op.append('-'+symmform[j])
+        mag_op = '+'.join(mag_op)
+        mag_op = mag_op.replace('--','')
+        mag_op = mag_op.replace('+-','-')
+        mag_ops.append(mag_op)
+
+    mag_ops = ','.join(mag_ops)
+
+    return mag_ops
+
+def evaluate_mag(operator, moments):
+    """
+    Evaluate magnetic symmetry operator.
+
+    Parameters
+    ----------
+    operator : list, str
+        Magnetic symmetry operator.
+    moment : 3-list
+        Moments to transform.
 
     Returns
     -------
@@ -593,7 +642,7 @@ def evaluate_mag(operators, moments):
 
     """
 
-    operators = str([[op] for op in operators])
+    operators = str([[op] for op in operator])
 
     mx, my, mz = moments
 
@@ -603,14 +652,14 @@ def evaluate_mag(operators, moments):
 
 def evaluate_disp(operator, displacements):
     """
-    Evaluate atomic displacement symmetry operators.
+    Evaluate atomic displacement symmetry operator.
 
     Parameters
     ----------
-    operators : list, str
-        Magnetic symmetry operators.
-    displacements : 6-list
-        Atomic displacement parameters to trasnsform.
+    operator : list, str
+        Symmetry operator.
+    displacement : 6-list
+        Atomic displacement parameters to transform.
 
     Returns
     -------
@@ -763,47 +812,6 @@ def binary(symop0, symop1):
 
     return symops
 
-def binary_mag(symop0, symop1):
-
-    n0, n1 = len(symop0), len(symop1)
-
-    W0_0 = evaluate_mag(symop0, [1,0,0])
-    W0_1 = evaluate_mag(symop0, [0,1,0])
-    W0_2 = evaluate_mag(symop0, [0,0,1])
-
-    W1_0 = evaluate_mag(symop1, [1,0,0])
-    W1_1 = evaluate_mag(symop1, [0,1,0])
-    W1_2 = evaluate_mag(symop1, [0,0,1])
-
-    W0 = np.hstack((W0_0,W0_1,W0_2)).T.reshape(3,3,n0).T
-    W1 = np.hstack((W1_0,W1_1,W1_2)).T.reshape(3,3,n1).T
-
-    W = np.einsum('ijk,ikl->ijl', W0, W1).round()
-
-    W = np.array([rotation_operator(c,col=i%3) \
-                  for i, c in enumerate(W.flatten())])
-
-    W = W.reshape(n0,3,3)
-
-    symops = []
-    for i in range(n0):
-        symop = [u''.join(W[i,0,:]),
-                 u''.join(W[i,1,:]),
-                 u''.join(W[i,2,:])]
-
-        symop = [op.lstrip('+') for op in symop]
-        symop = [op.rstrip('0') for op in symop]
-        symop = [op.rstrip('+') for op in symop]
-        symop = ['0' if op == '' else op for op in symop]
-        symop = [op.replace('x','mx') for op in symop]
-        symop = [op.replace('y','my') for op in symop]
-        symop = [op.replace('z','mz') for op in symop]
-
-        symop = ','.join(symop)
-        symops.append(symop)
-
-    return symops
-
 def classification(symops):
     """
     Symmetry operator classification.
@@ -934,7 +942,8 @@ def absence(symops, h, k, l):
 
     m = 1 if H.size == 3 else H.shape[1]
 
-    if (m == 1): H = H.reshape(3,1)
+    if m == 1:
+        H = H.reshape(3,1)
 
     absent = np.full((len(symops),m), False)
 
@@ -953,7 +962,7 @@ def absence(symops, h, k, l):
 
     absent = absent.any(axis=0)
 
-    if (m == 1):
+    if m == 1:
         return absent[0]
     else:
         return absent

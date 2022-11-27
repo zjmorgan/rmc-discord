@@ -108,14 +108,14 @@ def form(Q, ions, g=2):
 
     for i, ion in enumerate(ions):
 
-        if (tables.j0.get(ion) is None):
+        if tables.j0.get(ion) is None:
             A0, a0, B0, b0, C0, c0, D0 = 0, 0, 0, 0, 0, 0, 0
             A2, a2, B2, b2, C2, c2, D2 = 0, 0, 0, 0, 0, 0, 0
         else:
             A0, a0, B0, b0, C0, c0, D0 = tables.j0.get(ion)
             A2, a2, B2, b2, C2, c2, D2 = tables.j2.get(ion)
 
-        if (np.size(k) > 1):
+        if np.size(k) > 1:
             K = k[i]
         else:
             K = k

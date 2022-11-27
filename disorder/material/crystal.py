@@ -44,7 +44,9 @@ def unitcell(folder, filename, tol=1e-2):
 
     symops = cif_dict[loop_ops[ind_ops]]
 
-    if (ind_ops == 2):
+    parity = False if len(symops[0].split(',')) == 3 else True
+
+    if ind_ops == 2:
         add_symops = cif_dict['_space_group_symop_magn_centering_xyz']
         combine = []
         for symop in symops:
@@ -52,26 +54,35 @@ def unitcell(folder, filename, tol=1e-2):
                 left_op = ','.join(symop.split(',')[:3])
                 right_op = ','.join(add_symop.split(',')[:3])
                 combine_op = symmetry.binary([left_op],[right_op])
-                combine += combine_op
+                parity = int(symop.split(',')[-1])*int(add_symop.split(',')[-1])
+                combine += [combine_op[0]+','+str(parity)]
         symops = combine
 
     atomic_sites = cif_dict['_atom_site_label']
 
-    if ('_atom_site_moment_label' in cif_dict):
+
+    if '_atom_site_moment_label' in cif_dict:
         magnetic_sites = cif_dict['_atom_site_moment_label']
         magnetic_atoms = [asite in magnetic_sites \
                           for asite in atomic_sites]
 
+    if parity:
+        parities = [int(symop.split(',')[-1]) for symop in symops]
+    else:
+        parities = [1 for symop in symops]
+
+    symops = [','.join(symop.split(',')[:3]) for symop in symops]
+
     atomic_sites = [re.sub(r'[0-9]', '', asite) for asite in atomic_sites]
 
-    if ('_atom_site_type_symbol' in cif_dict):
+    if '_atom_site_type_symbol' in cif_dict:
         symbols = cif_dict['_atom_site_type_symbol']
-    elif ('_atom_site_symbol' in cif_dict):
+    elif '_atom_site_symbol' in cif_dict:
         symbols = cif_dict['_atom_site_symbol']
     else:
         symbols = atomic_sites
 
-    symbols = [sym if (sym != 'D') else '2H' for sym in symbols]
+    symbols = [sym if sym != 'D' else '2H' for sym in symbols]
 
     xs = cif_dict['_atom_site_fract_x']
     ys = cif_dict['_atom_site_fract_y']
@@ -81,7 +92,7 @@ def unitcell(folder, filename, tol=1e-2):
     ys = [re.sub(r'\([^()]*\)', '', y) for y in ys]
     zs = [re.sub(r'\([^()]*\)', '', z) for z in zs]
 
-    if ('_atom_site_occupancy' in cif_dict):
+    if '_atom_site_occupancy' in cif_dict:
         occs = cif_dict['_atom_site_occupancy']
         occs = [re.sub(r'\([^()]*\)', '', occ) for occ in occs]
     else:
@@ -90,9 +101,9 @@ def unitcell(folder, filename, tol=1e-2):
     iso = False
     ani = False
 
-    if ('_atom_site_aniso_label' in cif_dict):
+    if '_atom_site_aniso_label' in cif_dict:
         adp_type, ani = 'ani', True
-        if ('_atom_site_aniso_u_11' in cif_dict):
+        if '_atom_site_aniso_u_11' in cif_dict:
             adp_U = True
             U11s = cif_dict['_atom_site_aniso_u_11']
             U22s = cif_dict['_atom_site_aniso_u_22']
@@ -121,22 +132,22 @@ def unitcell(folder, filename, tol=1e-2):
             B13s = [re.sub(r'\([^()]*\)', '', B13) for B13 in B13s]
             B12s = [re.sub(r'\([^()]*\)', '', B12) for B12 in B12s]
 
-    if ('_atom_site_u_iso_or_equiv' in cif_dict):
+    if '_atom_site_u_iso_or_equiv' in cif_dict:
         adp_type, iso = 'iso', True
         adp_U = True
         Uisos = cif_dict['_atom_site_u_iso_or_equiv']
         Uisos = [re.sub(r'\([^()]*\)', '', Uiso) for Uiso in Uisos]
-    elif ('_atom_site_b_iso_or_equiv' in cif_dict):
+    elif '_atom_site_b_iso_or_equiv' in cif_dict:
         adp_type, iso = 'iso', True
         adp_U = False
         Bisos = cif_dict['_atom_site_b_iso_or_equiv']
         Bisos = [re.sub(r'\([^()]*\)', '', Biso) for Biso in Bisos]
-    elif (ani == False):
+    elif ani == False:
         adp_type, iso = 'iso', True
         adp_U = True
         Uisos = [0.0]*len(atomic_sites)
 
-    if (ani and iso):
+    if ani and iso:
         adp_type = 'ani'
         D = cartesian_displacement(*parameters(folder, filename))
         iso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
@@ -146,7 +157,7 @@ def unitcell(folder, filename, tol=1e-2):
         U11, U22, U33, U23, U13, U12 = [], [], [], [], [], []
         B11, B22, B33, B23, B13, B12 = [], [], [], [], [], []
         for adp, label in zip(adp_types, iso_labels):
-            if (adp.lower() == 'uani'):
+            if adp.lower() == 'uani':
                 index = ani_labels.index(label)
                 U11.append(U11s[index])
                 U22.append(U22s[index])
@@ -154,7 +165,7 @@ def unitcell(folder, filename, tol=1e-2):
                 U23.append(U23s[index])
                 U13.append(U13s[index])
                 U12.append(U12s[index])
-            elif (adp.lower() == 'bani'):
+            elif adp.lower() == 'bani':
                 index = ani_labels.index(label)
                 B11.append(B11s[index])
                 B22.append(B22s[index])
@@ -162,7 +173,7 @@ def unitcell(folder, filename, tol=1e-2):
                 B23.append(B23s[index])
                 B13.append(B13s[index])
                 B12.append(B12s[index])
-            elif (adp.lower() == 'uiso'):
+            elif adp.lower() == 'uiso':
                 index = iso_labels.index(label)
                 Uani = iso*float(Uisos[index])
                 U11.append(str(Uani[0,0]))
@@ -171,7 +182,7 @@ def unitcell(folder, filename, tol=1e-2):
                 U23.append(str(Uani[1,2]))
                 U13.append(str(Uani[0,2]))
                 U12.append(str(Uani[0,1]))
-            elif (adp.lower() == 'biso'):
+            elif adp.lower() == 'biso':
                 index = iso_labels.index(label)
                 Bani = iso*float(Bisos[index])
                 B11.append(str(Bani[0,0]))
@@ -187,27 +198,28 @@ def unitcell(folder, filename, tol=1e-2):
     Mys = [0.0]*len(atomic_sites)
     Mzs = [0.0]*len(atomic_sites)
 
-    if ('_atom_site_moment_label' in cif_dict):
+    mag_symops = ['0,0,0']*len(atomic_sites)
+
+    if '_atom_site_moment_label' in cif_dict:
         mxs = cif_dict['_atom_site_moment_crystalaxis_x']
         mys = cif_dict['_atom_site_moment_crystalaxis_y']
         mzs = cif_dict['_atom_site_moment_crystalaxis_z']
+        symmform = cif_dict.get('_atom_site_moment_symmform')
+        if symmform is None:
+           symmform = ['mx,my,mz']*len(mzs)
         mxs = [re.sub(r'\([^()]*\)', '', mx) for mx in mxs]
         mys = [re.sub(r'\([^()]*\)', '', my) for my in mys]
         mzs = [re.sub(r'\([^()]*\)', '', mz) for mz in mzs]
-        if (len(magnetic_sites) != len(atomic_sites)):
+        if len(magnetic_sites) != len(atomic_sites):
             j = 0
             for i, mag in enumerate(magnetic_atoms):
                 if mag:
                     Mxs[i], Mys[i], Mzs[i] = mxs[j], mys[j], mzs[j]
+                    mag_symops[i] = symmform[j]
                     j += 1
         else:
             Mxs, Mys, Mzs = mxs, mys, mzs
-
-    if ('_space_group_symop_magn_centering_mxmymz' in cif_dict):
-        mag_symops = cif_dict['_space_group_symop_magn_centering_mxmymz']
-        mag_symops += cif_dict['_space_group_symop_magn_operation_mxmymz']
-    else:
-        mag_symops = ['mx,my,mz']*len(symops)
+            mag_symops = symmform
 
     c, d, m, s = [], [], [], []
 
@@ -222,8 +234,8 @@ def unitcell(folder, filename, tol=1e-2):
 
         occ = float(occs[i])
 
-        if (adp_type == 'ani'):
-            if (adp_U is False):
+        if adp_type == 'ani':
+            if adp_U is False:
                 B11 = float(B11s[i])
                 B22 = float(B22s[i])
                 B33 = float(B33s[i])
@@ -241,21 +253,24 @@ def unitcell(folder, filename, tol=1e-2):
                 U12 = float(U12s[i])
 
         else:
-            if (adp_U is False):
+            if adp_U is False:
                 Biso = float(Bisos[i])
                 Uiso = Biso/(8*np.pi**2)
             else:
                 Uiso = float(Uisos[i])
 
         symbol = symbols[i]
+        mag_symop = mag_symops[i]
 
-        for symop, mag_symop in zip(symops, mag_symops):
+        for symop, parity in zip(symops, parities):
 
             transformed = symmetry.evaluate([symop], [x,y,z]).flatten()
 
-            mom = symmetry.evaluate_mag([mag_symop], [Mx,My,Mz]).flatten()
+            mag_op = symmetry.generate_mag([symop], mag_symop, parity)
 
-            if (adp_type == 'ani'):
+            mom = symmetry.evaluate_mag([mag_op], [Mx,My,Mz]).flatten()
+
+            if adp_type == 'ani':
                 disp = symmetry.evaluate_disp([symop], [U11,U22,U33,
                                                         U23,U13,U12])
             else:
@@ -266,7 +281,7 @@ def unitcell(folder, filename, tol=1e-2):
             total.append(transformed)
             types.append(symbol)
             operators.append(symop)
-            mag_operators.append(mag_symop)
+            mag_operators.append(mag_op)
 
             c.append(occ)
             d.append(disp)
@@ -393,17 +408,6 @@ def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
 
     symops = cif_dict[loop_ops[ind_ops]]
 
-    if (ind_ops == 2):
-        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']
-        combine = []
-        for symop in symops:
-            for add_symop in add_symops:
-                left_op = ','.join(symop.split(',')[:3])
-                right_op = ','.join(add_symop.split(',')[:3])
-                combine_op = symmetry.binary([left_op],[right_op])
-                combine += combine_op
-        symops = combine
-
     symops = [re.sub(r'[+/][0-9]', '', symop) for symop in symops]
 
     for symop in symops:
@@ -456,7 +460,7 @@ def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
     atom = np.tile(atm, n_uvw)
     occupancy = np.tile(occ, n_uvw)
 
-    if (np.shape(disp)[1] == 1):
+    if np.shape(disp)[1] == 1:
 
         D = cartesian_displacement(a,
                                    b,
@@ -487,10 +491,10 @@ def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
     MV = np.tile(mom[:,1], n_uvw)
     MW = np.tile(mom[:,2], n_uvw)
 
-    if ('_atom_site_aniso_label' in cif_dict):
+    if '_atom_site_aniso_label' in cif_dict:
         cb.RemoveLoopItem('_atom_site_aniso_label')
 
-    if ('_atom_site_moment_label' in cif_dict):
+    if '_atom_site_moment_label' in cif_dict:
         cb.RemoveLoopItem('_atom_site_moment_label')
         cb.RemoveLoopItem('_atom_site_moment.label')
         cb.RemoveLoopItem('_space_group_symop.magn_id')
@@ -552,7 +556,7 @@ def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
                      '_atom_site_aniso_U_23'],
                      map(list, zip(*aniso))))
 
-    if (not np.allclose((MU,MV,MW), 0)):
+    if not np.allclose((MU,MV,MW), 0):
         cb.AddLoopItem((['_atom_site_moment_label',
                          '_atom_site_moment_crystalaxis_x',
                          '_atom_site_moment_crystalaxis_y',
@@ -560,7 +564,7 @@ def supercell(atm, occ, disp, mom, u, v, w, nu, nv, nw,
                          '_atom_site_moment_symmform'],
                          map(list, zip(*magn))))
 
-        if (name.split('.')[-1] == 'cif'):
+        if name.split('.')[-1] == 'cif':
             name = name.replace('cif', 'mcif')
 
     outfile = open(name, mode='w')
@@ -621,17 +625,6 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
 
     symops = cif_dict[loop_ops[ind_ops]]
 
-    if (ind_ops == 2):
-        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']
-        combine = []
-        for symop in symops:
-            for add_symop in add_symops:
-                left_op = ','.join(symop.split(',')[:3])
-                right_op = ','.join(add_symop.split(',')[:3])
-                combine_op = symmetry.binary([left_op],[right_op])
-                combine += combine_op
-        symops = combine
-
     for symop in symops:
         cb.RemoveLoopItem(symop)
 
@@ -640,7 +633,7 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
     for asite in atomic_sites:
         cb.RemoveLoopItem(asite)
 
-    if ('_atom_site_aniso_label' in cif_dict):
+    if '_atom_site_aniso_label' in cif_dict:
         atomic_disp = cb.GetLoopNames('_atom_site_aniso_label')
         for adisp in atomic_disp:
             cb.RemoveLoopItem(adisp)
@@ -706,7 +699,7 @@ def disordered(delta, Ux, Uy, Uz, Sx, Sy, Sz, rx, ry, rz,
                      '_atom_site_occupancy'],
                      map(list, zip(*site))))
 
-    if (not np.allclose((mx,my,mz), 0)):
+    if not np.allclose((mx,my,mz), 0):
 
         cb.AddLoopItem((['_atom_site_moment_label',
                          '_atom_site_moment_crystalaxis_x',
@@ -783,17 +776,6 @@ def laue(folder, filename):
 
     symops = cif_dict[loop_ops[ind_ops]]
 
-    if (ind_ops == 2):
-        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']
-        combine = []
-        for symop in symops:
-            for add_symop in add_symops:
-                left_op = ','.join(symop.split(',')[:3])
-                right_op = ','.join(add_symop.split(',')[:3])
-                combine_op = symmetry.binary([left_op],[right_op])
-                combine += combine_op
-        symops = combine
-
     symops = symmetry.inverse(symmetry.inverse(symops))
 
     symops.append(u'-x,-y,-z')
@@ -805,7 +787,7 @@ def laue(folder, filename):
     symmetries = list(laue_sym.keys())
 
     for symm in symmetries:
-        if (set(laue_sym[symm]) == set(symops)):
+        if set(laue_sym[symm]) == set(symops):
             return symm
 
 def twins(folder, filename):
@@ -835,13 +817,13 @@ def twins(folder, filename):
     cif_dict = dict(cb.items())
     cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
 
-    if ('_twin_individual_id' in cif_dict):
+    if '_twin_individual_id' in cif_dict:
         twin_ids = cif_dict['_twin_individual_id']
         n_var = len(twin_ids)
     else:
         n_var = 1
 
-    if ('_twin_individual_mass_fraction_refined' in cif_dict):
+    if '_twin_individual_mass_fraction_refined' in cif_dict:
         twin_mf = cif_dict['_twin_individual_mass_fraction_refined']
         twin_mf = [float(re.sub(r'\([^()]*\)', '', mf)) for mf in twin_mf]
 
@@ -877,7 +859,7 @@ def twins(folder, filename):
         T32s = [0.0]
         T33s = [1.0]
 
-    weights = np.array(twin_mf)
+    weights = np.array(twin_mf)/np.sum(twin_mf)
 
     T = np.stack((T11s,T12s,T13s,
                   T21s,T22s,T23s,
@@ -953,7 +935,7 @@ def group(folder, filename):
     ind_hms = next((i for i, loop_key in enumerate(loop_hms) \
                     if loop_key in cif_dict), None)
 
-    if (ind_hms is not None):
+    if ind_hms is not None:
         hm = cif_dict[loop_hms[ind_hms]]
     else:
         hm = ''
@@ -967,13 +949,13 @@ def group(folder, filename):
     ind_gps = next((i for i, loop_key in enumerate(loop_gps) \
                     if loop_key in cif_dict), None)
 
-    if (ind_gps is not None):
+    if ind_gps is not None:
         group = int(cif_dict[loop_gps[ind_gps]])
     else:
         group = 0
 
-    if (group == 0):
-        if (hm in tables.sg):
+    if group == 0:
+        if hm in tables.sg:
             group = tables.sg[hm]
 
     return group, hm
@@ -991,7 +973,7 @@ def operators(folder, filename):
 
     Returns
     -------
-    symops : 1d array
+    symops : list
         Symmetry operators in Jones-faithful notation.
 
     """
@@ -1012,10 +994,66 @@ def operators(folder, filename):
 
     symops = cif_dict[loop_ops[ind_ops]]
 
+    if ind_ops == 2:
+        add_symops = cif_dict['_space_group_symop_magn_centering_xyz']
+        combine = []
+        for symop in symops:
+            for add_symop in add_symops:
+                left_op = ','.join(symop.split(',')[:3])
+                right_op = ','.join(add_symop.split(',')[:3])
+                combine_op = symmetry.binary([left_op],[right_op])
+                parity = int(symop.split(',')[-1])*int(add_symop.split(',')[-1])
+                combine += [combine_op[0]+','+str(parity)]
+        symops = combine
+
     symops = [symop.replace(' ', '') for symop in symops]
     symops = [','.join(symop.split(',')[:3]) for symop in symops]
 
     return symops
+
+def vectors(folder, filename):
+    """
+    Reads propagation vectors from a CIF file.
+
+    Parameters
+    ----------
+    folder : str,
+        Name of path excluding filename.
+    filename : str
+        Name of filename excluding path.
+
+    Returns
+    -------
+    kvecs : list
+        Proapagtion operators.
+
+    """
+
+    cf = CifFile.ReadCif(os.path.join(folder, filename))
+    cb = cf[[key for key in cf.keys() \
+             if cf[key].get('_cell_length_a') is not None][0]]
+
+    cif_dict = dict(cb.items())
+    cif_dict = {k.replace('.','_'):v for k,v in cif_dict.items()}
+
+    loop_kvecs = ['_parent_propagation_vector_kxkykz',
+                  '_cell_wave_vector_seq_id']
+
+    ind_kvecs = next((i for i, loop_key in enumerate(loop_kvecs) \
+                    if loop_key in cif_dict), None)
+
+    if ind_kvecs == 0:
+        kvecs = cif_dict[loop_kvecs[ind_kvecs]]
+        kvecs = [np.array([eval(k) for k in kvec]) for kvec in kvecs]
+    elif ind_kvecs == 1:
+        kxs = cif_dict['_cell_wave_vector_x']
+        kys = cif_dict['_cell_wave_vector_y']
+        kzs = cif_dict['_cell_wave_vector_z']
+        kvecs = [np.array([kx, ky, kz]) for kx, ky, kz in zip(kxs, kys, kzs)]
+    else:
+        kvecs = []
+
+    return kvecs
 
 def lattice(a, b, c, alpha, beta, gamma):
     """
@@ -1296,7 +1334,7 @@ def cartesian_moment(a, b, c, alpha, beta, gamma):
 
     A = cartesian(a, b, c, alpha, beta, gamma)
 
-    L = np.array([[a,0,0],[0,b,0],[0,0,c]])
+    L = np.diag([a,b,c])
 
     return np.dot(A, np.linalg.inv(L))
 
@@ -1321,7 +1359,7 @@ def cartesian_displacement(a, b, c, alpha, beta, gamma):
 
     A = cartesian(a, b, c, alpha, beta, gamma)
 
-    L_ = np.array([[a_,0,0],[0,b_,0],[0,0,c_]])
+    L_ = np.diag([a_,b_,c_])
 
     return np.dot(A, L_)
 

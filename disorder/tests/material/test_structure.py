@@ -4,6 +4,7 @@ import unittest
 import numpy as np
 
 from disorder.material import structure, crystal
+from disorder.diffuse import scattering
 
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
@@ -17,20 +18,17 @@ class test_structure(unittest.TestCase):
         names = ('h', 'k', 'l', 'd(angstrom)', 'F(real)', 'F(imag)', 'mult')
         formats = (int, int, int, float, float, float, int)
 
-        uc_dict = crystal.unitcell(folder=folder,
-                                   filename='Cu3Au.cif',
-                                   tol=1e-4)
+        uc_dict = crystal.unitcell(folder, 'Cu3Au.cif', tol=1e-4)
 
         u = uc_dict['u']
         v = uc_dict['v']
         w = uc_dict['w']
         occ = uc_dict['occupancy']
-        disp = uc_dict['displacement']
         atm = uc_dict['atom']
 
-        constants = crystal.parameters(folder=folder, filename='Cu3Au.cif')
+        constants = crystal.parameters(folder, 'Cu3Au.cif')
 
-        symops = crystal.operators(folder=folder, filename='Cu3Au.cif')
+        symops = crystal.operators(folder, 'Cu3Au.cif')
 
         a, b, c, alpha, beta, gamma = constants
 
@@ -61,9 +59,7 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(F.real, data[4], decimal=4)
         np.testing.assert_array_almost_equal(F.imag, data[5], decimal=4)
 
-        uc_dict = crystal.unitcell(folder=folder,
-                                   filename='CaTiOSiO4.cif',
-                                   tol=1e-4)
+        uc_dict = crystal.unitcell(folder, 'CaTiOSiO4.cif', tol=1e-4)
 
         u = uc_dict['u']
         v = uc_dict['v']
@@ -72,9 +68,9 @@ class test_structure(unittest.TestCase):
         disp = uc_dict['displacement']
         atm = uc_dict['atom']
 
-        constants = crystal.parameters(folder=folder, filename='CaTiOSiO4.cif')
+        constants = crystal.parameters(folder, 'CaTiOSiO4.cif')
 
-        symops = crystal.operators(folder=folder, filename='CaTiOSiO4.cif')
+        symops = crystal.operators(folder, 'CaTiOSiO4.cif')
 
         a, b, c, alpha, beta, gamma = constants
 
@@ -98,6 +94,133 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(d, data[3])
         np.testing.assert_array_almost_equal(F.real, data[4], decimal=4)
         np.testing.assert_array_almost_equal(F.imag, data[5], decimal=4)
+
+    def test_factor_magnetic(self):
+
+        folder = os.path.abspath(os.path.join(directory, '..', 'data'))
+
+        names = ('h', 'k', 'l', 'Fnuc', 'Fmag', 'd')
+        formats = (int, int, int, float, float, float)
+
+        uc_dict = crystal.unitcell(folder, 'Tb2Ir3Ga9.mcif', tol=1e-4)
+
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        occ = uc_dict['occupancy']
+        mom = uc_dict['moment']
+        atm = uc_dict['atom']
+
+        ion = atm.astype('<U4')
+        ion[atm == 'Tb'] = 'Tb3+'
+
+        constants = crystal.parameters(folder, 'Tb2Ir3Ga9.mcif')
+
+        symops = crystal.operators(folder, 'Tb2Ir3Ga9.mcif')
+
+        a, b, c, alpha, beta, gamma = constants
+
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+
+        Uiso = 0.001
+        uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
+
+        U11, U22, U33 = Uiso*uiso[0,0], Uiso*uiso[1,1], Uiso*uiso[2,2]
+        U23, U13, U12 = Uiso*uiso[1,2], Uiso*uiso[0,2], Uiso*uiso[0,1]
+
+        mu1, mu2, mu3 = mom.T
+
+        kvecs = crystal.vectors(folder, 'Tb2Ir3Ga9.mcif')
+
+        data = np.loadtxt(os.path.join(folder, 'Tb2Ir3Ga9.csv'),
+                          dtype={'names': names, 'formats': formats},
+                          delimiter=',', skiprows=1, unpack=True)
+
+        h, k, l, d, F, mult = structure.factor(u, v, w, atm, occ,
+                                               U11, U22, U33, U23, U13, U12,
+                                               a, b, c, alpha, beta, gamma,
+                                               symops, dmin=0.731,
+                                               source='neutron')
+
+        test_nuc = {}
+        test_mag = {}
+        for hkl, Fnuc, Fmag in zip(np.stack(data[0:3]).T, data[3], data[4]):
+            test_nuc[tuple(hkl)] = Fnuc
+            test_mag[tuple(hkl)] = Fmag
+
+        test_data = {}
+        for hkl, sf in zip(np.stack([h,k,l]).T, F):
+            test_data[tuple(hkl)] = np.abs(sf)
+
+        for key in set(test_nuc).intersection(test_data):
+            self.assertAlmostEqual(test_nuc[key], test_data[key], delta=0.3)
+
+        h, k, l, d, *M, mult = structure.factor_magnetic(mu1, mu2, mu3, kvecs,
+                                                         u, v, w, ion, occ,
+                                                         U11, U22, U33,
+                                                         U23, U13, U12,
+                                                         a, b, c,
+                                                         alpha, beta, gamma,
+                                                         symops, dmin=0.731)
+
+        M1, M2, M3 = M
+
+        F = np.sqrt(np.abs(M1)**2+np.abs(M2)**2+np.abs(M3)**2)
+
+        test_data = {}
+        for hkl, sf in zip(np.stack([h,k,l]).T, F):
+            test_data[tuple(hkl)] = np.abs(sf)
+
+        for key in set(test_mag).intersection(test_data):
+            self.assertAlmostEqual(test_mag[key], test_data[key], delta=0.3)
+
+        # ---
+
+        uc_dict = crystal.unitcell(folder, 'MnO.mcif', tol=1e-4)
+
+        u = uc_dict['u']
+        v = uc_dict['v']
+        w = uc_dict['w']
+        occ = uc_dict['occupancy']
+        mom = uc_dict['moment']
+        atm = uc_dict['atom']
+
+        ion = atm.astype('<U4')
+        ion[atm == 'Mn'] = 'Mn4+'
+
+        symops = crystal.operators(folder, 'MnO.mcif')
+
+        a, b, c, alpha, beta, gamma = constants
+
+        D = crystal.cartesian_displacement(a, b, c, alpha, beta, gamma)
+
+        Uiso = 0.001
+        uiso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
+
+        U11, U22, U33 = Uiso*uiso[0,0], Uiso*uiso[1,1], Uiso*uiso[2,2]
+        U23, U13, U12 = Uiso*uiso[1,2], Uiso*uiso[0,2], Uiso*uiso[0,1]
+
+        mu1, mu2, mu3 = mom.T
+
+        kvecs = crystal.vectors(folder, 'MnO.mcif')
+
+        h, k, l, d, *M, mult = structure.factor_magnetic(mu1, mu2, mu3, kvecs,
+                                                         u, v, w, ion, occ,
+                                                         U11, U22, U33,
+                                                         U23, U13, U12,
+                                                         a, b, c,
+                                                         alpha, beta, gamma,
+                                                         symops, dmin=0.731)
+
+        M1, M2, M3 = M
+
+        F = np.sqrt(np.abs(M1)**2+np.abs(M2)**2+np.abs(M3)**2)
+
+        np.testing.assert_array_almost_equal(h-h//1, 0.5)
+        np.testing.assert_array_almost_equal(k-k//1, 0.5)
+        np.testing.assert_array_almost_equal(l-l//1, 0.5)
+
+        np.testing.assert_array_less(0, F)
 
     def test_UnitCell(self):
 
