@@ -20,8 +20,9 @@ jobs:
            CIBW_ARCHS: auto64
            CIBW_SKIP: pp* cp310-* *musllinux*
            CIBW_BEFORE_BUILD: pip install numpy cython
-           CIBW_BEFORE_ALL_MACOS: brew install llvm libomp
-                                  echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> /Users/runner/.bash_profile
+           CIBW_BEFORE_ALL_MACOS: >
+             brew install llvm libomp &&
+             echo 'export PATH="/usr/local/opt/llvm/bin:$PATH"' >> /Users/runner/.bash_profile
            CIBW_ENVIRONMENT: QT_QPA_PLATFORM=offscreen
                              OMP_NUM_THREADS=1
                              CYTHON_TRACE=0
