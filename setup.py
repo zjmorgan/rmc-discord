@@ -9,6 +9,11 @@ from Cython.Build import cythonize
 if sys.platform == 'win32':
     compile_openmp = ['/openmp']
     link_openmp = []
+elif sys.platform == 'darwin':
+    compile_openmp = ['-Xpreprocessor','-fopenmp','-lomp,',
+                     '-I"$(brew --prefix libomp)/include"',
+                     '-L"$(brew --prefix libomp)/lib"']
+    link_openmp = ['-lomp']
 else:
     compile_openmp = ['-fopenmp']
     link_openmp = ['-fopenmp']
