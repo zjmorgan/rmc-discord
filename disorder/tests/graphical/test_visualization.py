@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import pytest
 import unittest
 
 import numpy as np
@@ -17,6 +18,7 @@ directory = os.path.dirname(os.path.abspath(__file__))
 
 class test_visualization(unittest.TestCase):
 
+    @pytest.mark.skip(reason='Should be done offscreen')
     def test_CrystalStructure(self):
 
         a, b, c = 5, 5, 12
