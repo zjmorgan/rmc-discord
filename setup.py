@@ -92,7 +92,7 @@ setup(
         'License :: OSI Approved :: GNU General Public License (GPL)',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.6',
+    python_requires='>=3.7',
     packages=find_packages(),
     setup_requires=[
         'numpy',
