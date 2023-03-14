@@ -105,7 +105,7 @@ setup(
         'matplotlib',
         'pycifrw',
         'h5py',
-        'pyvista',
+        'pyvista>=0.34.2',
         'pyqt5',
         'ipython',
     ],
