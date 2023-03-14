@@ -155,7 +155,9 @@ def unitcell(folder, filename, tol=1e-2):
         iso = np.dot(np.linalg.inv(D), np.linalg.inv(D.T))
         iso_labels = cif_dict['_atom_site_label']
         ani_labels = cif_dict['_atom_site_aniso_label']
-        adp_types = cif_dict['_atom_site_adp_type']
+        adp_types = cif_dict.get('_atom_site_adp_type')
+        if adp_types is None:
+            adp_types = ['uani']*len(iso_labels)
         U11, U22, U33, U23, U13, U12 = [], [], [], [], [], []
         B11, B22, B33, B23, B13, B12 = [], [], [], [], [], []
         for adp, label in zip(adp_types, iso_labels):
@@ -200,7 +202,7 @@ def unitcell(folder, filename, tol=1e-2):
     Mys = [0.0]*len(atomic_sites)
     Mzs = [0.0]*len(atomic_sites)
 
-    mag_symops = ['0,0,0']*len(atomic_sites)
+    mag_symops = ['mx,my,mz']*len(atomic_sites)
 
     if '_atom_site_moment_label' in cif_dict:
         mxs = cif_dict['_atom_site_moment_crystalaxis_x']
@@ -253,7 +255,6 @@ def unitcell(folder, filename, tol=1e-2):
                 U23 = float(U23s[i])
                 U13 = float(U13s[i])
                 U12 = float(U12s[i])
-
         else:
             if adp_U is False:
                 Biso = float(Bisos[i])
@@ -1075,20 +1076,20 @@ def lattice(a, b, c, alpha, beta, gamma):
 
     """
 
-    if (np.allclose([a, b], c) and np.allclose([alpha, beta, gamma], np.pi/2)):
+    if np.allclose([a, b], c) and np.allclose([alpha, beta, gamma], np.pi/2):
         return 'Cubic'
-    elif (np.allclose([a, b], c) and np.allclose([alpha, beta], gamma)):
+    elif np.allclose([a, b], c) and np.allclose([alpha, beta], gamma):
         return 'Rhombohedral'
-    elif (np.isclose(a, b) and np.allclose([alpha, beta, gamma], np.pi/2)):
+    elif np.isclose(a, b) and np.allclose([alpha, beta, gamma], np.pi/2):
         return 'Tetragonal'
-    elif (np.isclose(a, b) and \
-          np.allclose([alpha, beta], np.pi/2) and \
-          np.isclose(gamma, 2*np.pi/3)):
+    elif np.isclose(a, b) and \
+         np.allclose([alpha, beta], np.pi/2) and \
+         np.isclose(gamma, 2*np.pi/3):
         return 'Hexagonal'
-    elif (np.allclose([alpha, beta, gamma], np.pi/2)):
+    elif np.allclose([alpha, beta, gamma], np.pi/2):
         return 'Orthorhombic'
-    elif (np.allclose([alpha, beta], np.pi/2) or \
-          np.allclose([alpha, gamma], np.pi/2)):
+    elif np.allclose([alpha, beta], np.pi/2) or \
+         np.allclose([alpha, gamma], np.pi/2):
         return 'Monoclinic'
     else:
         return 'Triclinic'
@@ -1197,7 +1198,7 @@ def d(a, b, c, alpha, beta, gamma, h, k, l):
 
     mask = np.isclose(inv_d_spacing, 0)
 
-    if (np.sum(mask) > 0):
+    if np.sum(mask) > 0:
         n = np.argwhere(mask)
         inv_d_spacing[n] = 1
 
@@ -1241,7 +1242,7 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
     mask0 = np.isclose(inv_d0_spacing, 0)
     mask1 = np.isclose(inv_d1_spacing, 0)
 
-    if (np.sum(mask0) > 0):
+    if np.sum(mask0) > 0:
         n0 = np.argwhere(mask0)
         inv_d0_spacing[n0] = 1
 
@@ -1250,7 +1251,7 @@ def interplanar(a, b, c, alpha, beta, gamma, h0, k0, l0, h1, k1, l1):
     else:
         d0_spacing = 1/inv_d0_spacing
 
-    if (np.sum(mask1) > 0):
+    if np.sum(mask1) > 0:
         n1 = np.argwhere(mask1)
         inv_d1_spacing[n1] = 1
 

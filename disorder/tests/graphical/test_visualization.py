@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import pytest
 import unittest
 
 import numpy as np
@@ -16,14 +15,8 @@ from disorder.material import tables
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
 
-os.environ['ETS_TOOLKIT'] = 'null'
-os.environ['QT_API'] = 'pyqt5'
-
-from mayavi import mlab
-
 class test_visualization(unittest.TestCase):
 
-    @pytest.mark.skip(reason='Issue with build server')
     def test_CrystalStructure(self):
 
         a, b, c = 5, 5, 12
@@ -34,6 +27,8 @@ class test_visualization(unittest.TestCase):
         atms = np.array(['Co', 'Fe', 'Mn'])
 
         n_atm = atms.shape[0]
+
+        occ = np.ones(n_atm)
 
         u = np.array([0.5,0.0,0.0])
         v = np.array([0.0,0.5,0.0])
@@ -48,13 +43,13 @@ class test_visualization(unittest.TestCase):
 
         rots = Rotation.random(n_atm).as_matrix()
 
-        ae = np.random.random(n_atm)
-        be = np.random.random(n_atm)
-        ce = np.random.random(n_atm)
+        ae = 2*np.random.random(n_atm)+1
+        be = 2*np.random.random(n_atm)+1
+        ce = 2*np.random.random(n_atm)+1
 
         for i in range(n_atm):
 
-            S = np.dot(rots[i], np.array([1,1,1]))
+            S = np.dot(rots[i], np.array([2,2,2]))
             Sx.append(S[0])
             Sy.append(S[1])
             Sz.append(S[2])
@@ -80,24 +75,18 @@ class test_visualization(unittest.TestCase):
 
         colors = [tables.rgb.get(atm) for atm in atms]
 
-        uc = np.array([0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0])
-        vc = np.array([0.0,0.0,1.0,1.0,0.0,0.0,1.0,1.0])
-        wc = np.array([0.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0])
+        filename = 'test_figure.svg'
 
-        ucx, ucy, ucz = np.dot(A, [uc,vc,wc])
-
-        filename = 'test_figure.png'
-
-        mlab.options.offscreen = True
-
-        cs = CrystalStructure()
-        cs.draw_cell_edges(ucx, ucy, ucz)
-        cs.view_direction(A, 1,1,1)
-        cs.draw_basis_vectors(A,a,b,c)
-        cs.atomic_radii(ux, uy, uz, radii, colors)
-        cs.atomic_displacement_ellipsoids(ux, uy, uz, Uxx, Uyy, Uzz, Uyz, Uxz, Uxy, colors)
-        cs.magnetic_vectors(ux, uy, uz, Sx, Sy, Sz)
+        cs = CrystalStructure(A, ux, uy, uz, atms, colors)
+        cs.draw_cell_edges()
+        cs.view_direction(1, 1, 1)
+        cs.draw_basis_vectors()
+        cs.atomic_radii(radii, occ)
+        cs.atomic_displacement_ellipsoids(Uxx, Uyy, Uzz,
+                                          Uyz, Uxz, Uxy)
+        cs.magnetic_vectors(Sx, Sy, Sz)
         cs.save_figure(filename)
+        cs.show_figure()
 
         self.assertTrue(os.path.exists(filename))
         os.remove(filename)

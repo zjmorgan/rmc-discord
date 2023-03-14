@@ -1443,7 +1443,7 @@ def laue(symmetry):
 
     """
 
-    if (symmetry == 'm-3m'):
+    if symmetry == 'm-3m':
 
         ops = [u'x,y,z',u'-x,-y,z',u'-x,y,-z',u'x,-y,-z',
                u'z,x,y',u'z,-x,-y',u'-z,-x,y',u'-z,x,-y',
@@ -1458,7 +1458,7 @@ def laue(symmetry):
                u'-x,-z,y',u'x,-z,-y',u'x,z,y',u'-x,z,-y',
                u'-z,-y,x',u'-z,y,-x',u'z,-y,-x',u'z,y,x']
 
-    elif (symmetry == 'm-3'):
+    elif symmetry == 'm-3':
 
         ops = [u'x,y,z',u'-x,-y,z',u'-x,y,-z',u'x,-y,-z',
                u'z,x,y',u'z,-x,-y',u'-z,-x,y',u'-z,x,-y',
@@ -1467,7 +1467,7 @@ def laue(symmetry):
                u'-z,-x,-y',u'-z,x,y',u'z,x,-y',u'z,-x,y',
                u'-y,-z,-x',u'y,-z,x',u'-y,z,x',u'y,z,-x']
 
-    elif (symmetry == '6/mmm'):
+    elif symmetry == '6/mmm':
 
         ops = [u'x,y,z',u'-y,x-y,z',u'-x+y,-x,z',u'-x,-y,z',
                u'y,-x+y,z',u'x-y,x,z',u'y,x,-z',u'x-y,-y,-z',
@@ -1476,45 +1476,45 @@ def laue(symmetry):
                u'-y,x-y,-z',u'-x+y,-x,-z',u'-y,-x,z',u'-x+y,y,z',
                u'x,x-y,z',u'y,x,z',u'x-y,-y,z',u'-x,-x+y,z']
 
-    elif (symmetry == '6/m'):
+    elif symmetry == '6/m':
 
         ops = [u'x,y,z',u'-y,x-y,z',u'-x+y,-x,z',u'-x,-y,z',
                u'y,-x+y,z',u'x-y,x,z',u'-x,-y,-z',u'y,-x+y,-z',
                u'x-y,x,-z',u'x,y,-z',u'-y,x-y,-z',u'-x+y,-x,-z']
 
-    elif (symmetry == '-3m'):
+    elif symmetry == '-3m':
 
         ops = [u'x,y,z',u'-y,x-y,z',u'-x+y,-x,z',u'-y,-x,-z',
                u'-x+y,y,-z',u'x,x-y,-z',u'-x,-y,-z',u'y,-x+y,-z',
                u'x-y,x,-z',u'y,x,z',u'x-y,-y,z',u'-x,-x+y,z']
 
-    elif (symmetry == '-3'):
+    elif symmetry == '-3':
 
         ops = [u'x,y,z',u'-y,x-y,z',u'-x+y,-x,z',
                u'-x,-y,-z',u'y,-x+y,-z',u'x-y,x,-z']
 
-    elif (symmetry == '4/mmm'):
+    elif symmetry == '4/mmm':
 
         ops = [u'x,y,z',u'-x,-y,z',u'-y,x,z',u'y,-x,z',
                u'-x,y,-z',u'x,-y,-z',u'y,x,-z',u'-y,-x,-z',
                u'-x,-y,-z',u'x,y,-z',u'y,-x,-z',u'-y,x,-z',
                u'x,-y,z',u'-x,y,z',u'-y,-x,z',u'y,x,z']
 
-    elif (symmetry == '4/m'):
+    elif symmetry == '4/m':
 
         ops = [u'x,y,z',u'-x,-y,z',u'-y,x,z',u'y,-x,z',
                u'-x,-y,-z',u'x,y,-z',u'y,-x,-z',u'-y,x,-z']
 
-    elif (symmetry == 'mmm'):
+    elif symmetry == 'mmm':
 
         ops = [u'x,y,z',u'-x,-y,z',u'-x,y,-z',u'x,-y,-z',
                u'-x,-y,-z',u'x,y,-z',u'x,-y,z',u'-x,y,z']
 
-    elif (symmetry == '2/m'):
+    elif symmetry == '2/m':
 
         ops = [u'x,y,z',u'-x,y,-z',u'-x,-y,-z',u'x,-y,z']
 
-    elif (symmetry == '-1'):
+    elif symmetry == '-1':
 
         ops = [u'x,y,z',u'-x,-y,-z']
 

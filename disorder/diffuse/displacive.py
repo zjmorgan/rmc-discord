@@ -24,10 +24,10 @@ def expansion(nu, nv, nw, n_atm, value=1, fixed=True):
 
     """
 
-    if (len(np.shape(value)) == 0):
+    if len(np.shape(value)) == 0:
         Vxx = Vyy = Vzz = np.full(n_atm, value)
         Vyz = Vxz = Vxy = np.full(n_atm, 0)
-    elif (len(np.shape(value)) == 1):
+    elif len(np.shape(value)) == 1:
         Vxx = Vyy = Vzz = value
         Vyz = Vxz = Vxy = np.full(n_atm, 0)
     else:

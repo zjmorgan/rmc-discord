@@ -169,6 +169,10 @@ cdef (double, double, double) ising_vector_candidate(double ux,
 
     return -ux, -uy, -uz
 
+cdef double ising_scalar_candidate(double u) nogil:
+
+    return -u
+
 cdef double random_gaussian() nogil:
 
     cdef double x0, x1, w
@@ -743,6 +747,92 @@ def magnetic_energy(double [:,:,:,:,::1] Sx,
 
     return e_np
 
+def structural_energy(double [:,:,:,:,::1] S,
+                      double [:,:,:,:,::1] Sx,
+                      double [:,:,:,:,::1] Sy,
+                      double [:,:,:,:,::1] Sz,
+                      double [::1] J,
+                      double [::1] h,
+                      double [::1] K,
+                      double [:,::1] epsilon,
+                      double [:,::1] rx,
+                      double [:,::1] ry,
+                      double [:,::1] rz,
+                      double [:,::1] r,
+                      long [:,::1] atm_ind,
+                      long [:,::1] img_i,
+                      long [:,::1] img_j,
+                      long [:,::1] img_k,
+                      long [:,::1] pair_ind):
+
+    cdef Py_ssize_t nu = S.shape[0]
+    cdef Py_ssize_t nv = S.shape[1]
+    cdef Py_ssize_t nw = S.shape[2]
+    cdef Py_ssize_t n_atm = S.shape[3]
+    cdef Py_ssize_t n_temp = S.shape[4]
+
+    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+
+    cdef Py_ssize_t i, j, k, a, t, p, q
+
+    cdef Py_ssize_t i_, j_, k_, a_
+
+    e_np = np.zeros((nu,nv,nw,n_atm,n_pairs*2+1,n_temp))
+
+    cdef double [:,:,:,:,:,::1] e = e_np
+
+    cdef double dUx, dUy, dUz, dr, eta
+
+    cdef double u, v, ux, uy, uz, vx, vy, vz
+
+    for i in range(nu):
+        for j in range(nv):
+            for k in range(nw):
+                for a in range(n_atm):
+                    for t in range(n_temp):
+
+                        u = S[i,j,k,a,t]
+
+                        ux = Sx[i,j,k,a,t]
+                        uy = Sy[i,j,k,a,t]
+                        uz = Sz[i,j,k,a,t]
+
+                        for p in range(n_pairs):
+
+                            i_ = (i+img_i[a,p]+nu)%nu
+                            j_ = (j+img_j[a,p]+nv)%nv
+                            k_ = (k+img_k[a,p]+nw)%nw
+                            a_ = atm_ind[a,p]
+
+                            v = S[i_,j_,k_,a_,t]
+
+                            vx = Sx[i_,j_,k_,a_,t]
+                            vy = Sy[i_,j_,k_,a_,t]
+                            vz = Sz[i_,j_,k_,a_,t]
+
+                            q = pair_ind[a,p]
+
+                            e[i,j,k,a,p,t] = -0.5*J[q]*u*v
+
+                            dUx = rx[a,p]+(vx-ux)
+                            dUy = ry[a,p]+(vy-uy)
+                            dUz = rz[a,p]+(vz-uz)
+
+                            if u > 0 and v > 0:
+                                eta = epsilon[0,q]
+                            elif u < 0 and v < 0:
+                                eta = epsilon[1,q]
+                            else:
+                                eta = epsilon[2,q]
+
+                            dr = sqrt(dUx*dUx+dUy*dUy+dUz*dUz)-r[a,p]*(1.0+eta)
+
+                            e[i,j,k,a,n_pairs+p,t] = 0.5*K[q]*dr*dr
+
+                        e[i,j,k,a,2*n_pairs,t] = -h[a]*u
+
+    return e_np
+
 cdef (double, bint) annealing_vector(double [:,:,:,:,::1] Sx,
                                      double [:,:,:,:,::1] Sy,
                                      double [:,:,:,:,::1] Sz,
@@ -767,6 +857,34 @@ cdef (double, bint) annealing_vector(double [:,:,:,:,::1] Sx,
         Sx[i,j,k,a,t] = sx
         Sy[i,j,k,a,t] = sy
         Sz[i,j,k,a,t] = sz
+
+        H[t] += E
+        count[t] += 1
+
+        flip = True
+
+    total[t] += 1
+
+    return count[t]/total[t], flip
+
+cdef (double, bint) annealing_scalar(double [:,:,:,:,::1] S,
+                                     double s,
+                                     double [::1] H,
+                                     double E,
+                                     double [::1] beta,
+                                     double [::1] count,
+                                     double [::1] total,
+                                     Py_ssize_t i,
+                                     Py_ssize_t j,
+                                     Py_ssize_t k,
+                                     Py_ssize_t a,
+                                     Py_ssize_t t):
+
+    cdef bint flip = False
+
+    if (random_uniform() < alpha(E, beta[t])):
+
+        S[i,j,k,a,t] = s
 
         H[t] += E
         count[t] += 1
@@ -858,6 +976,107 @@ cdef double magnetic(double [:,:,:,:,::1] Sx,
     E -= Bx*(g[a,0,0]*dx+g[a,0,1]*dy+g[a,0,2]*dz)\
       +  By*(g[a,1,0]*dx+g[a,1,1]*dy+g[a,1,2]*dz)\
       +  Bz*(g[a,2,0]*dx+g[a,2,1]*dy+g[a,2,2]*dz)
+
+    return E
+
+cdef double structural(double [:,:,:,:,::1] S,
+                       double [:,:,:,:,::1] Sx,
+                       double [:,:,:,:,::1] Sy,
+                       double [:,:,:,:,::1] Sz,
+                       double u,
+                       double v,
+                       double vx,
+                       double vy,
+                       double vz,
+                       double ux,
+                       double uy,
+                       double uz,
+                       double [::1] J,
+                       double [::1] h,
+                       double [::1] K,
+                       double [:,::1] epsilon,
+                       bint chemical,
+                       double [:,::1] rx,
+                       double [:,::1] ry,
+                       double [:,::1] rz,
+                       double [:,::1] r,
+                       long [:,::1] atm_ind,
+                       long [:,::1] img_i,
+                       long [:,::1] img_j,
+                       long [:,::1] img_k,
+                       long [:,::1] pair_ind,
+                       Py_ssize_t i,
+                       Py_ssize_t j,
+                       Py_ssize_t k,
+                       Py_ssize_t a,
+                       Py_ssize_t t):
+
+    cdef Py_ssize_t nu = S.shape[0]
+    cdef Py_ssize_t nv = S.shape[1]
+    cdef Py_ssize_t nw = S.shape[2]
+
+    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+
+    cdef Py_ssize_t i_, j_, k_, a_, p, q
+
+    cdef double Ej, Ek, E = 0
+
+    cdef double w, wx, wy, wz
+
+    cdef double d, dx, dy, dz
+
+    d, dx, dy, dz = v-u, vx-ux, vy-uy, vz-uz
+
+    cdef double r0, R0, dr, dR, e0, E0, dux, duy, duz, dUx, dUy, dUz
+
+    for p in prange(n_pairs, nogil=True):
+
+        i_ = (i+img_i[a,p]+nu)%nu
+        j_ = (j+img_j[a,p]+nv)%nv
+        k_ = (k+img_k[a,p]+nw)%nw
+        a_ = atm_ind[a,p]
+
+        q = pair_ind[a,p]
+
+        w = S[i_,j_,k_,a_,t]
+
+        Ej = -d*J[q]*w
+
+        wx, wy, wz = Sx[i_,j_,k_,a_,t], Sy[i_,j_,k_,a_,t], Sz[i_,j_,k_,a_,t]
+
+        dux = rx[a,p]+(wx-ux)
+        duy = ry[a,p]+(wy-uy)
+        duz = rz[a,p]+(wz-uz)
+
+        dUx = rx[a,p]+(wx-vx)
+        dUy = ry[a,p]+(wy-vy)
+        dUz = rz[a,p]+(wz-vz)
+
+        if w > 0 and u > 0:
+            e0 = epsilon[0,q]
+        elif w < 0 and u < 0:
+            e0 = epsilon[1,q]
+        else:
+            e0 = epsilon[2,q]
+
+        if w > 0 and v > 0:
+            E0 = epsilon[0,q]
+        elif w < 0 and v < 0:
+            E0 = epsilon[1,q]
+        else:
+            E0 = epsilon[2,q]
+
+        r0 = r[a,p]*(1.0+e0)
+        R0 = r[a,p]*(1.0+E0)
+
+        dr = sqrt(dux*dux+duy*duy+duz*duz)-r0
+        dR = sqrt(dUx*dUx+dUy*dUy+dUz*dUz)-R0
+
+        Ek = K[q]*(dR*dR-dr*dr)
+
+        E += Ej+Ek
+
+    E -= h[a]*d
 
     return E
 
@@ -978,6 +1197,212 @@ def heisenberg(double [:,:,:,:,::1] Sx,
 
                     if (sigma[t] < 0.01): sigma[t] = 0.01
                     if (sigma[t] > 10): sigma[t] = 10
+
+            replica_exchange(H, beta, sigma)
+
+    return np.copy(H), 1/(kB*np.copy(beta))
+
+def size_effect(double [:,:,:,:,::1] S,
+                double [:,:,:,:,::1] Sx,
+                double [:,:,:,:,::1] Sy,
+                double [:,:,:,:,::1] Sz,
+                double [::1] J,
+                double [::1] h,
+                double [::1] K,
+                double [:,::1] epsilon,
+                double [:,::1] rx,
+                double [:,::1] ry,
+                double [:,::1] rz,
+                double [:,::1] r,
+                long [:,::1] atm_ind,
+                long [:,::1] img_i,
+                long [:,::1] img_j,
+                long [:,::1] img_k,
+                long [:,::1] pair_ind,
+                double [::1] T_range,
+                double kB,
+                Py_ssize_t N):
+
+    cdef Py_ssize_t nu = S.shape[0]
+    cdef Py_ssize_t nv = S.shape[1]
+    cdef Py_ssize_t nw = S.shape[2]
+    cdef Py_ssize_t n_atm = S.shape[3]
+
+    cdef Py_ssize_t n_temp = T_range.shape[0]
+
+    initialize_random(nu, nv, nw, n_atm, n_temp)
+
+    cdef Py_ssize_t i, j, k, a, t, p, n
+
+    cdef Py_ssize_t i_ind
+
+    cdef bint occupational = np.any(J)
+    cdef bint displacive = np.any(K)
+
+    cdef bint flip
+
+    cdef double p_chem, p_rate
+    if occupational and displacive:
+        p_chem = 0.5
+    elif occupational:
+        p_chem = 1.0
+    elif displacive:
+        p_chem = 0.0
+
+    cdef Py_ssize_t n_pairs = atm_ind.shape[1]
+
+    cdef double E
+
+    cdef double [::1] H = np.zeros(n_temp)
+
+    cdef double [:,:,:,:,:,::1] e = structural_energy(S, Sx, Sy, Sz, J, h, K,
+                                                      epsilon, rx, ry, rz,
+                                                      r, atm_ind, img_i, img_j,
+                                                      img_k, pair_ind)
+
+    for i in range(nu):
+        for j in range(nv):
+            for k in range(nw):
+                for a in range(n_atm):
+                    for p in range(n_pairs*2+1):
+                        for t in range(n_temp):
+                            H[t] += e[i,j,k,a,p,t]
+
+    cdef double [::1] rc = np.zeros(n_atm)
+
+    cdef double [:,::1] px = np.zeros((n_atm,n_pairs))
+    cdef double [:,::1] py = np.zeros((n_atm,n_pairs))
+    cdef double [:,::1] pz = np.zeros((n_atm,n_pairs))
+
+    cdef double [:,::1] nx = np.zeros((n_atm,n_pairs))
+    cdef double [:,::1] ny = np.zeros((n_atm,n_pairs))
+    cdef double [:,::1] nz = np.zeros((n_atm,n_pairs))
+
+    cdef double rc_max
+    for a in range(n_atm):
+       for p in range(n_pairs):
+            rc_max = sqrt(rx[a,p]*rx[a,p]+ry[a,p]*ry[a,p]+rz[a,p]*rz[a,p])
+            if rc[a] < rc_max:
+                rc[a] = rc_max
+            px[a,p], nx[a,p] = 0.5*rx[a,p], 0.5*rx[a,p]/rc_max
+            py[a,p], ny[a,p] = 0.5*ry[a,p], 0.5*ry[a,p]/rc_max
+            pz[a,p], nz[a,p] = 0.5*rz[a,p], 0.5*rz[a,p]/rc_max
+
+    n = nu*nv*nw*n_atm
+
+    cdef double u, v
+
+    cdef double ux, uy, uz
+    cdef double vx, vy, vz
+
+    cdef double dx, dy, dz, d
+
+    cdef double dmin, dmax, rmin, rmax, smin, smax, s0, ds, x, y, fract
+
+    rmin, rmax = float('-inf'), float('inf')
+
+    cdef double [::1] sigma = np.full(n_temp, 1.)
+
+    cdef double [::1] count_occ = np.zeros(n_temp)
+    cdef double [::1] total_occ = np.zeros(n_temp)
+
+    cdef double [::1] count_disp = np.zeros(n_temp)
+    cdef double [::1] total_disp = np.zeros(n_temp)
+
+    cdef double rate, factor
+
+    cdef double [::1] beta = 1/(kB*np.copy(T_range))
+
+    for _ in range(N):
+
+        for _ in range(n):
+
+            i, j, k, a = random_original(nu, nv, nw, n_atm)
+
+            for t in range(n_temp):
+
+                u = S[i,j,k,a,t]
+
+                ux, uy, uz = Sx[i,j,k,a,t], Sy[i,j,k,a,t], Sz[i,j,k,a,t]
+
+                v, vx, vy, vz = u, ux, uy, uz
+
+                p_rate = random_uniform()
+
+                if p_rate < p_chem:
+                    chemical = True
+                else:
+                    chemical = False
+
+                if chemical:
+
+                    v = ising_scalar_candidate(u)
+
+                else:
+
+                    #dx, dy, dz = gaussian_vector_candidate(ux, uy, uz,
+                    #                                       sigma[t])
+
+                    dx, dy, dz = random_vector_candidate()
+
+                    dmin, dmax = rmin, rmax
+
+                    for p in range(n_pairs):
+
+                        d = ((px[a,p]-ux)*nx[a,p]
+                            +(py[a,p]-uy)*ny[a,p]
+                            +(pz[a,p]-uz)*nz[a,p])/(dx*nx[a,p]
+                                                   +dy*ny[a,p]
+                                                   +dz*nz[a,p])
+
+                        if d > 0 and dmax > d:
+                            dmax = d
+                        if d < 0 and dmin < d:
+                            dmin = d
+
+                    s0 = -(ux*dx+uy*dy+uz*dz)
+
+                    ds = sqrt(s0*s0-ux*ux-uy*uy-uz*uz+rc_max*rc_max)
+
+                    smin, smax = s0-ds, s0+ds
+
+                    if dmin < smin:
+                        dmin = smin
+                    if dmax > smax:
+                        dmax = smax
+
+                    x = random_uniform()
+                    y = dmin/(dmin-dmax)
+
+                    fract = sigma[t]/(1.0+sigma[t])
+
+                    d = dmin+(dmax-dmin)*(fract*x+(1.0-fract)*y)
+
+                    vx, vy, vz = d*dx, d*dy, d*dz
+
+                E = structural(S, Sx, Sy, Sz, u, v, vx, vy, vz, ux, uy, uz,
+                               J, h, K, epsilon, chemical, rx, ry, rz, r,
+                               atm_ind, img_i, img_j, img_k, pair_ind,
+                               i, j, k, a, t)
+
+
+                if chemical:
+
+                    rate, flip = annealing_scalar(S, v, H, E, beta, count_occ,
+                                                  total_occ, i, j, k, a, t)
+
+                else:
+
+                    rate, flip = annealing_vector(Sx, Sy, Sz, vx, vy, vz, H, E,
+                                                  beta, count_disp, total_disp,
+                                                  i, j, k, a, t)
+
+                    if (rate > 0.0 and rate < 1.0):
+                        factor = rate/(1.0-rate)
+                        sigma[t] *= factor
+
+                        if (sigma[t] < 0.01): sigma[t] = 0.01
+                        if (sigma[t] > 10): sigma[t] = 10
 
             replica_exchange(H, beta, sigma)
 
@@ -1573,8 +1998,6 @@ def heisenberg_cluster(double [:,:,:,:,::1] Sx,
 
                 #     if (sigma[t] < 0.1): sigma[t] = 0.1
                 #     if (sigma[t] > 10): sigma[t] = 10
-
-                # print(sigma[t],rate,factor)
 
                 for i in range(nu):
                     for j in range(nv):

@@ -4,7 +4,6 @@ import unittest
 import numpy as np
 
 from disorder.material import structure, crystal
-from disorder.diffuse import scattering
 
 import os
 directory = os.path.dirname(os.path.abspath(__file__))
@@ -299,7 +298,7 @@ class test_structure(unittest.TestCase):
         np.testing.assert_array_almost_equal(U2, [1,1,1,1])
         np.testing.assert_array_almost_equal(U3, [1,1,1,1])
 
-        U = uc.get_cartesian_anistropic_displacement_parameters()
+        U = uc.get_cartesian_anisotropic_displacement_parameters()
         Uxx, Uyy, Uzz, Uyz, Uxz, Uxy = U
 
         np.testing.assert_array_almost_equal(Uxx, [1,1,1,1])

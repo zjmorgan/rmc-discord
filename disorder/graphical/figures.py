@@ -40,6 +40,8 @@ class Intensity3d:
         self.proj = np.stack([projection(w, ['h','k','l']) for w in W])
         self.trans = self.__transform(B, W)
 
+        self.fig.set_integer_axes()
+
     def __transform(self, B, W):
 
         W = np.array(W)
@@ -105,6 +107,8 @@ class Intensity3d:
         self.fig.create_colorbar()
         self.fig.set_colorbar_label('r$I(\mathbf{Q})$ [arb. unit]')
 
+        self.fig.add_grid_lines(alpha=0.25)
+
 class Correlations3d:
 
     def __init__(self, canvas, data, dx, dy, dz, pairs, A, B):
@@ -166,21 +170,21 @@ class Correlations3d:
         Dx = (px*self.dx[plane]+py*self.dy[plane]+pz*self.dz[plane])*scale_dx
         Dy = (qx*self.dx[plane]+qy*self.dy[plane]+qz*self.dz[plane])*scale_dy
 
-        return aspect, proj_x, proj_y, Dx, Dy
+        return aspect, proj_x, proj_y, Dx, Dy, plane
 
     def slice_real_space(self, h, k, l, d=0, tol=1e-4, dataset='correlation'):
 
         var = ['u','v','w']
 
-        aspect, proj_x, proj_y, Dx, Dy = self.__mask(h, k, l, d, tol)
+        aspect, proj_x, proj_y, Dx, Dy, plane = self.__mask(h, k, l, d, tol)
 
         if dataset == 'collinearity' and self.coll is not None:
-            data = self.coll
+            data = self.coll[plane]
             label = r'$C_2(\mathbf{r}-\mathbf{r^\prime})$'
             colormap = 'binary'
             vmin = 0
         else:
-            data = self.corr
+            data = self.corr[plane]
             label = r'$C_1(\mathbf{r}-\mathbf{r^\prime})$'
             colormap = 'diverging'
             vmin = -1

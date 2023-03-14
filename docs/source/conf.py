@@ -13,10 +13,18 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../disorder/'))
-sys.path.append(os.path.abspath('sphinxext'))
+sys.path.append(os.path.abspath('ext'))
 
 import inspect
 import importlib
+
+from typing import Any, Union
+import sphinx.config
+
+def add(self, name: str, default: Any, rebuild: Union[bool, str], types: Any) -> None:
+    self.values[name] = (default, rebuild, types)
+
+sphinx.config.Config.add = add
 
 # -- Project information -----------------------------------------------------
 
@@ -39,7 +47,9 @@ extensions = [
     'sphinx.ext.todo',
     'numpydoc',
     'matplotlib.sphinxext.plot_directive',
+    'pyvista.ext.plot_directive',
 ]
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -111,7 +121,7 @@ plt.ioff()
 plot_include_source = True
 plot_html_show_formats = False
 plot_html_show_source_link = False
-# plot_basedir = ''
+plot_basedir = ''
 
 add_module_names = False
 

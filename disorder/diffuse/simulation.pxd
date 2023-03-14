@@ -33,6 +33,9 @@ cdef (double, double, double) ising_vector_candidate(double ux,
                                                      double uy,
                                                      double uz) nogil
 
+
+cdef double ising_scalar_candidate(double u) nogil
+
 cdef double random_gaussian() nogil
 
 cdef (double, double, double) random_gaussian_3d() nogil

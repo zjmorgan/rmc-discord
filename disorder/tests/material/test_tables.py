@@ -94,7 +94,7 @@ class test_tables(unittest.TestCase):
 
         r_Sn = r.get('Sn')
 
-        self.assertEqual(r_Sn, (1.58,2.02,0.69,))
+        self.assertEqual(r_Sn, (1.45,1.45,2.17,))
 
     def test_element_colors(self):
 

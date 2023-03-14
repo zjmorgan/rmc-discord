@@ -8,7 +8,7 @@ from disorder.diffuse import scattering, space, powder, monocrystal, filters
 from disorder.diffuse import experimental
 from disorder.diffuse import displacive, magnetic, occupational
 from disorder.correlation import functions
-from disorder.material import crystal, symmetry
+from disorder.material import crystal, symmetry, tables
 
 def factor(u, v, w, atms, occupancy, U11, U22, U33, U23, U13, U12,
            a, b, c, alpha, beta, gamma, symops, dmin=0.3, source='neutron'):
@@ -317,7 +317,7 @@ class UnitCell:
         Update isotropic displacement parameters.
     get_principal_displacement_parameters()
         Principal displacement parameters in Cartesian coordinates.
-    get_cartesian_anistropic_displacement_parameters()
+    get_cartesian_anisotropic_displacement_parameters()
         Anisotropic displacement parameters in Cartesian coordinates.
     get_crystal_axis_magnetic_moments()
         Magnetic moments in crystal coordinates.
@@ -382,6 +382,10 @@ class UnitCell:
         Update twin transformation matrices and mass fractions.
     get_space_group_symmetry_operators()
         All symmetry operators.
+    get_atom_colors()
+        Color of each atom.
+    get_atom_radii()
+        Radius of each atom.
 
     """
 
@@ -448,7 +452,7 @@ class UnitCell:
 
         header = 'atm    occ     u     v     w  Uiso\n'
         divide = '==================================\n'
-        coords = '{:4}{:6.2}{:6.2}{:6.2}{:6.2}{:6.2}\n'
+        coords = '{:4}{:6.3}{:6.3}{:6.3}{:6.3}{:6.3}\n'
 
         sites = ''.join([coords.format(*x) for x in zip(atms,occ,u,v,w,Uiso)])
 
@@ -1133,7 +1137,7 @@ class UnitCell:
 
         return displacive.principal(U11, U22, U33, U23, U13, U12, D)
 
-    def get_cartesian_anistropic_displacement_parameters(self):
+    def get_cartesian_anisotropic_displacement_parameters(self):
         """
         Anisotropic displacement parameters in Cartesian coordinates of active
         atoms.
@@ -1742,7 +1746,7 @@ class UnitCell:
         Returns
         -------
         sp_pos : 1d array, str
-            Special position of eac site
+            Special position of each site
 
         """
 
@@ -1796,6 +1800,35 @@ class UnitCell:
         self.__T = T
         self.__weights = weights
 
+    def get_atom_colors(self):
+        """
+        Color of each atom.
+
+        Parameters
+        ----------
+        colors : 1d array
+            Colors of atoms in rgb..
+
+        """
+
+        return np.array([tables.rgb.get(atm) for atm in self.__atm])
+
+    def get_atom_radii(self, radii='empirical'):
+        """
+        Radius of each atom.
+
+        Parameters
+        ----------
+        r : 1d array
+            Radii of atoms in angstroms. One of ``'empirical'``,
+            ``'calculated'``, or ``'van der waals'``. Default ``'empirical'``.
+
+        """
+
+        ind = ['empirical', 'calculated', 'van der waals'].index(radii)
+
+        return np.array([tables.r.get(atm)[ind] for atm in self.__atm])
+
 class SuperCell(UnitCell):
     """
     Supercell.
@@ -1825,9 +1858,15 @@ class SuperCell(UnitCell):
     get_number_atoms_per_super_cell()
         Total number of atoms.
     get_cartesian_lattice_points()
-        Position of lattice points in Cartesian coordinates,
+        Position of lattice points in Cartesian coordinates.
     get_super_cell_cartesian_atomic_coordinates()
-        Atom positions in Cartesian coordinates.
+        Average atom positions in Cartesian coordinates.
+    get_super_cell_cartesian_displaced_atomic_coordinates()
+        Displaced atom positions in Cartesian coordinates.
+    get_super_cell_occupancies()
+        Occupancies.
+    get_super_cell_cartesian_magnetic_moments()
+        Magnetic moments in Cartesian coordinates.
 
     """
 
@@ -2015,7 +2054,7 @@ class SuperCell(UnitCell):
 
     def get_super_cell_cartesian_atomic_coordinates(self):
         """
-        Atom positions in Cartesian coordinates.
+        Average atom positions in Cartesian coordinates.
 
         Returns
         -------
@@ -2032,6 +2071,61 @@ class SuperCell(UnitCell):
 
         return space.real(ux, uy, uz, ix, iy, iz, atm)
 
+    def get_super_cell_cartesian_displaced_atomic_coordinates(self):
+        """
+        Displaced atom positions in Cartesian coordinates.
+
+        Returns
+        -------
+        px, py, pz : list, 1d array
+            Spatial vectors :math:`r_x`, :math:`r_y`, and :math:`r_z`.
+
+        """
+
+        rx, ry, rz, _ = self.get_super_cell_cartesian_atomic_coordinates()
+
+        px = [rx+Ux for Ux in self._Ux]
+        py = [ry+Uy for Uy in self._Uy]
+        pz = [rz+Uz for Uz in self._Uz]
+
+        return px, py, pz
+
+    def get_super_cell_occupancies(self):
+        """
+        Occupancies.
+
+        Returns
+        -------
+        delta : list, 1d array
+            Spatial vectors :math:`r_x`, :math:`r_y`, and :math:`r_z`.
+
+        """
+
+        delta = [(A_r >= 0).astype(float) for A_r in self._A_r]
+
+        return delta
+
+    def get_super_cell_cartesian_magnetic_moments(self):
+        """
+        Magnetic moments in Cartesian coordinates
+
+        Returns
+        -------
+        mu_x, mu_y, mu_z : list, 1d array
+            Magnetic moments :math:`\mu_x`, :math:`\mu_y`, and :math:`\mu_z`.
+
+        """
+
+        n_atm = self.get_number_atoms_per_unit_cell()
+
+        mu = self.get_magnetic_moment_magnitude()
+
+        mu_x = [(mu*Sx.reshape(-1,n_atm)).ravel() for Sx in self._Sx]
+        mu_y = [(mu*Sy.reshape(-1,n_atm)).ravel() for Sy in self._Sy]
+        mu_z = [(mu*Sz.reshape(-1,n_atm)).ravel() for Sz in self._Sz]
+
+        return mu_x, mu_y, mu_z
+
     def randomize_magnetic_moments(self):
         """
         Generate random spin vectors.
@@ -2041,9 +2135,9 @@ class SuperCell(UnitCell):
         dims = self.get_super_cell_extents()
         n_atm = self.get_number_atoms_per_unit_cell()
 
-        mu = self.get_magnetic_moment_magnitude()
+        #  mu = self.get_magnetic_moment_magnitude()
 
-        Sx, Sy, Sz = magnetic.spin(*dims, n_atm, mu)
+        Sx, Sy, Sz = magnetic.spin(*dims, n_atm, 1)
 
         self._Sx.append(Sx)
         self._Sy.append(Sy)
@@ -2073,7 +2167,7 @@ class SuperCell(UnitCell):
         dims = self.get_super_cell_extents()
         n_atm = self.get_number_atoms_per_unit_cell()
 
-        U = self.get_cartesian_anistropic_displacement_parameters()
+        U = self.get_cartesian_anisotropic_displacement_parameters()
 
         disp = np.row_stack(U)
 
@@ -2269,17 +2363,13 @@ class SuperCell(UnitCell):
 
         args = self._A_r, *coords, atms, *dims, A, fract, tol
 
-        corr, coll, _, _, dx, dy, dz, pairs = functions.vector3d(*args)
-
-        return corr, coll, dx, dy, dz, pairs
-
         _corr = []
 
         for A_r in self._A_r:
 
             args = A_r, *coords, atms, *dims, A, fract, tol
 
-            corr, _, _, dx, dy, dz, pairs = functions.scalar3d(*args)
+            corr, _, dx, dy, dz, pairs = functions.scalar3d(*args)
 
             _corr.append(corr)
 
@@ -2434,7 +2524,7 @@ class SuperCell(UnitCell):
         ions = self.get_unit_cell_ions()
 
         occ = self.get_occupancies()
-        U = self.get_cartesian_anistropic_displacement_parameters()
+        U = self.get_cartesian_anisotropic_displacement_parameters()
 
         g = self.get_g_factors()
 
@@ -2450,7 +2540,7 @@ class SuperCell(UnitCell):
 
     def magnetic_single_crystal_intensity(self, extents, bins, W, laue=None):
         """
-        Calculate magnetic _single_crystal intensity.
+        Calculate magnetic single crystal intensity.
 
         Parameters
         ----------
@@ -2482,7 +2572,7 @@ class SuperCell(UnitCell):
         ions = self.get_unit_cell_ions()
 
         occ = self.get_occupancies()
-        U = self.get_cartesian_anistropic_displacement_parameters()
+        U = self.get_cartesian_anisotropic_displacement_parameters()
 
         g = self.get_g_factors()
 
@@ -2510,6 +2600,136 @@ class SuperCell(UnitCell):
 
         return I[inverses].reshape(*bins), sigma_sq[inverses].reshape(*bins)
 
+    def occupational_single_crystal_intensity(self, extents, bins,
+                                                    W, laue=None):
+        """
+        Calculate occupational single crystal intensity.
+
+        Parameters
+        ----------
+        extents : list of lists, float
+            Reciprocal space extents.
+        bins : list, int
+            Number of bins.
+        W : 2d array
+            Projection matrix.
+        laue : str, optional
+            Laue symmetry.
+
+        Returns
+        -------
+        I : 1d array
+            Occupational scattering intensity.
+
+        """
+
+        dims = self.get_super_cell_extents()
+
+        B = self.get_miller_cartesian_transform()
+        R = self.get_cartesian_rotation()
+        D = self.get_atomic_displacement_cartesian_transform()
+
+        T, wgts = self.get_twins()
+
+        coords = self.get_unit_cell_cartesian_atomic_coordinates()
+        atms = self.get_unit_cell_atoms()
+
+        occ = self.get_occupancies()
+        U = self.get_cartesian_anisotropic_displacement_parameters()
+
+        W = np.array(W).astype(float)
+
+        args = *extents, *bins, *dims, W, laue
+
+        indices, inverses, ops, *points = space.reduced(*args)
+
+        symop = symmetry.laue_id(ops)
+
+        trans = *extents, indices, symop, W, B, R, D, T, wgts, *bins
+
+        intensity = []
+
+        for A_r in self._A_r:
+
+            args = A_r, occ, *U, *coords, atms, *trans, *dims, *points
+
+            intensity.append(monocrystal.occupational(*args))
+
+        I, sigma_sq = self.__statistics(intensity)
+
+        return I[inverses].reshape(*bins), sigma_sq[inverses].reshape(*bins)
+
+    def displacive_single_crystal_intensity(self, extents, bins, W, laue=None,
+                                            order=2, centering='P'):
+        """
+        Calculate displacive single crystal intensity.
+
+        Parameters
+        ----------
+        extents : list of lists, float
+            Reciprocal space extents.
+        bins : list, int
+            Number of bins.
+        W : 2d array
+            Projection matrix.
+        laue : str, optional
+            Laue symmetry.
+
+        Returns
+        -------
+        I : 1d array
+            Displacive scattering intensity.
+
+        """
+
+        dims = self.get_super_cell_extents()
+
+        B = self.get_miller_cartesian_transform()
+        R = self.get_cartesian_rotation()
+
+        T, wgts = self.get_twins()
+
+        coords = self.get_unit_cell_cartesian_atomic_coordinates()
+        atms = self.get_unit_cell_atoms()
+
+        occ = self.get_occupancies()
+
+        coeffs = displacive.coefficients(order)
+        even, odd = displacive.indices(order)
+
+        centering = [None, 'P', 'I', 'F', 'A', 'B', 'C',
+                     'R(obv)', 'R(rev)', 'H', 'D'].index(centering)
+
+        disp = order, even, centering
+
+        even, odd = displacive.indices(order)
+
+        W = np.array(W).astype(float)
+
+        args = *extents, *bins, *dims, W, laue
+
+        indices, inverses, ops, *points = space.reduced(*args)
+
+        symop = symmetry.laue_id(ops)
+
+        trans = *extents, indices, symop, W, B, R, T, wgts, *bins
+
+        intensity = []
+
+        for Ux, Uy, Uz in zip(self._Ux, self._Uy, self._Uz):
+
+            U_r = displacive.products(Ux, Uy, Uz, order)
+
+            expans = U_r, coeffs
+
+            args = *expans, occ, *coords, atms, *trans, *dims, *points, *disp
+
+            intensity.append(monocrystal.displacive(*args))
+
+        I, sigma_sq = self.__statistics(intensity)
+
+        return I[inverses].reshape(*bins), sigma_sq[inverses].reshape(*bins)
+
     def single_crystal_intensity_blur(self, I, sigma):
 
         return filters.blurring(I, sigma)
@@ -2530,11 +2750,14 @@ class SuperCell(UnitCell):
 
     def save_correlations_3d(self, filename, data, dx, dy, dz, pairs):
 
-        label = 'vector-pair'
-
-        corr, _, coll, _ = data
-
-        outdata = (dx, dy, dz, corr, coll, pairs)
+        if len(data) == 4:
+            label = 'vector-pair'
+            corr, _, coll, _ = data
+            outdata = (dx, dy, dz, corr, coll, pairs)
+        else:
+            label = 'scalar-pair'
+            corr, _ = data
+            outdata = (dx, dy, dz, corr, pairs)
 
         experimental.correlations(filename, outdata, label)
 

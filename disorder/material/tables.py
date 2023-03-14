@@ -206,7 +206,7 @@ def space_groups():
 
 def element_radii():
     """
-    Table of atomic, ionic and van der Waals radii.
+    Table of atomic and van der Waals radii.
 
     Returns
     -------
@@ -216,11 +216,11 @@ def element_radii():
     """
 
     filename = directory+'/radii.csv'
-    names = ('Element', 'Atomic', 'Ionic', 'van der Waals')
+    names = ('Element', 'Empirical', 'Calculated', 'van der Waals')
     formats = ('U15', float, float, float)
     columns = (0, 1, 2, 3)
 
-    element, atm, ion, vdw = np.loadtxt(filename,
+    element, emp, cal, vdw = np.loadtxt(filename,
                                         delimiter=',',
                                         dtype={'names': names,
                                                'formats': formats},
@@ -228,7 +228,7 @@ def element_radii():
                                         skiprows=1,
                                         unpack=True)
 
-    vals = [atm, ion, vdw]
+    vals = [emp, cal, vdw]
 
     return dict(zip(element, zip(*vals)))
 

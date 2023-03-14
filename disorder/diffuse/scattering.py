@@ -156,6 +156,8 @@ class Simulation:
         Charge-dipole interaction matrix.
     get_dipole_dipole_matrix()
         Dipole-dipole interaction matrix.
+    get_easy_axes_matrices()
+        Easy axes matrices.
     get_magnetic_exchange_interaction_matrices()
         Magnetic exchange interaction matrices.
     set_magnetic_exchange_interaction_matrices()
@@ -172,8 +174,6 @@ class Simulation:
         External magnetic field vector.
     set_magnetic_field()
         Update external magnetic field vector.
-    get_easy_axes_matrices()
-        Easy axes matrices.
     get_magnetic_dipole_dipole_coupling_strength()
         Magnetic dipole-dipole coupling strength.
     set_magnetic_dipole_dipole_coupling_strength()
@@ -210,9 +210,7 @@ class Simulation:
             self.__Qijk = interaction.charge_dipole_matrix(*args)
             self.__Qijkl = interaction.dipole_dipole_matrix(*args)
 
-            self.__const_cc = 0.0
-            self.__const_cd = 0.0
-            self.__const_dd = 0.0
+            self.__mag_dd = 0.0
 
             coords = sc.get_fractional_coordinates()
             atms = sc.get_unit_cell_atoms()
@@ -235,13 +233,19 @@ class Simulation:
 
             n_pair = 1+np.max(pair_ind)
 
-            self.__J = np.zeros((n_pair,3,3))
-            self.__K = np.zeros((n_atm,3,3))
-            self.__B = np.zeros(3)
+            self.__mag_J = np.zeros((n_pair,3,3))
+            self.__mag_K = np.zeros((n_atm,3,3))
+            self.__mag_B = np.zeros(3)
 
             g = sc.get_g_factors()
 
-            self.__g = np.einsum('i,jk->ijk', g, np.eye(3))
+            self.__mag_g = np.einsum('i,jk->ijk', g, np.eye(3))
+
+            self.__occ_J = np.zeros(n_pair)
+            self.__occ_H = np.zeros(n_atm)
+
+            self.__disp_K = np.zeros(n_pair)
+            self.__disp_eta = np.zeros((3,n_pair))
 
             self.__active = np.ones(n_pair, dtype=bool)
 
@@ -268,7 +272,7 @@ class Simulation:
         d = self.get_bond_lengths().flatten()[ind]
 
         pair_ind = pair_ind[ind]
-        cnt //= self.__n_atm
+        #cnt //= self.__n_atm
 
         header = ' ind cnt       d\n'
         divide = '================\n'
@@ -319,18 +323,34 @@ class Simulation:
 
             mag = f.create_group('disorder/simulation/magnetic')
 
-            mag.create_dataset('J', data=self.__J)
-            mag.create_dataset('K', data=self.__K)
-            mag.create_dataset('B', data=self.__B)
-            mag.create_dataset('g', data=self.__g)
+            mag.create_dataset('J', data=self.__mag_J)
+            mag.create_dataset('K', data=self.__mag_K)
+            mag.create_dataset('B', data=self.__mag_B)
+            mag.create_dataset('g', data=self.__mag_g)
 
             mag.create_dataset('Sx', data=self.__Sx)
             mag.create_dataset('Sy', data=self.__Sy)
             mag.create_dataset('Sz', data=self.__Sz)
 
-            mag.attrs['const_cc'] = self.__const_cc
-            mag.attrs['const_cd'] = self.__const_cd
-            mag.attrs['const_dd'] = self.__const_dd
+            mag.attrs['const_cc'] = self.__mag_cc
+            mag.attrs['const_cd'] = self.__mag_cd
+            mag.attrs['const_dd'] = self.__mag_dd
+
+            occ = f.create_group('disorder/simulation/occupational')
+
+            occ.create_dataset('J', data=self.__occ_J)
+            occ.create_dataset('H', data=self.__occ_H)
+
+            occ.create_dataset('sigma', data=self.__sigma)
+
+            disp = f.create_group('disorder/simulation/displacive')
+
+            disp.create_dataset('K', data=self.__disp_K)
+            disp.create_dataset('eta', data=self.__disp_eta)
+
+            disp.create_dataset('Ux', data=self.__Ux)
+            disp.create_dataset('Uy', data=self.__Uy)
+            disp.create_dataset('Uz', data=self.__Uz)
 
     def load(self, filename):
         """
@@ -373,18 +393,33 @@ class Simulation:
 
             mag = f['disorder/simulation/magnetic']
 
-            self.__J = mag['J'][...]
-            self.__K = mag['K'][...]
-            self.__B = mag['B'][...]
-            self.__g = mag['g'][...]
+            self.__mag_J = mag['J'][...]
+            self.__mag_K = mag['K'][...]
+            self.__mag_B = mag['B'][...]
+            self.__mag_g = mag['g'][...]
 
             self.__Sx = mag['Sx'][...]
             self.__Sy = mag['Sy'][...]
             self.__Sz = mag['Sz'][...]
 
-            self.__const_cc = mag.attrs['const_cc']
-            self.__const_cd = mag.attrs['const_cd']
-            self.__const_dd = mag.attrs['const_dd']
+            self.__mag_dd = mag.attrs['const_dd']
+
+            occ = f['disorder/simulation/occupational']
+
+            self.__occ_J = occ['J'][...]
+            self.__occ_H = occ['H'][...]
+
+            self.__sigma = occ['sigma'][...]
+
+            disp = f['disorder/simulation/displacive']
+
+            self.__disp_K = disp['K'][...]
+            self.__disp_eta = disp['eta'][...]
+
+            self.__Ux = disp['Ux'][...]
+            self.__Uy = disp['Uy'][...]
+            self.__Uz = disp['Uz'][...]
+
 
     def __mask(self):
 
@@ -521,110 +556,6 @@ class Simulation:
 
         return self.__Qijkl
 
-    def get_magnetic_exchange_interaction_matrices(self):
-        """
-        Magnetic exchange interaction matrices.
-
-        Returns
-        -------
-        J : 3d array
-            Interaction matrices.
-
-        """
-
-        return self.__J[self.__active,...]
-
-    def set_magnetic_exchange_interaction_matrices(self, J):
-        """
-        Update magnetic exchange interaction matrices.
-
-        Parameters
-        ----------
-        J : 3d array
-            Interaction matrices.
-
-        """
-
-        self.__J[self.__active,...] = J
-
-    def get_magnetic_single_ion_anisotropy_matrices(self):
-        """
-        Magnetocrystalline anisotropy matrices.
-
-        Returns
-        -------
-        K : 3d array
-            Anisotropy matrices.
-
-        """
-
-        return self.__K
-
-    def set_magnetic_single_ion_anisotropy_matrices(self, K):
-        """
-        Update magnetocrystalline anisotropy matrices.
-
-        Parameters
-        ----------
-        K : 3d array
-            Anisotropy matrices.
-
-        """
-
-        self.__K = K
-
-    def get_magnetic_g_tensor_matrices(self):
-        """
-        g-tensor matrices.
-
-        Returns
-        -------
-        g : 3d array
-            g-tensors.
-
-        """
-
-        return self.__g
-
-    def set_magnetic_g_tensor_matrices(self, g):
-        """
-        Update g-tensor matrices.
-
-        Parameters
-        ----------
-        g : 3d array
-            g-tensors.
-
-        """
-
-        self.__g
-
-    def get_magnetic_field(self):
-        """
-        External magnetic field vector.
-
-        Returns
-        -------
-        B : 1d array
-            Fied vector.
-
-        """
-
-        return self.__B
-
-    def set_magnetic_field(self, B):
-        """
-        Update external magnetic field vector.
-
-        Parameters
-        ----------
-        B : 1d array
-            Fied vector.
-
-        """
-
-        self.__B = B
-
     def get_easy_axes_matrices(self):
         """
         Easy axes matrices.
@@ -650,6 +581,110 @@ class Simulation:
 
         return U
 
+    def get_magnetic_exchange_interaction_matrices(self):
+        """
+        Magnetic exchange interaction matrices.
+
+        Returns
+        -------
+        J : 3d array
+            Interaction matrices.
+
+        """
+
+        return self.__mag_J[self.__active,...]
+
+    def set_magnetic_exchange_interaction_matrices(self, J):
+        """
+        Update magnetic exchange interaction matrices.
+
+        Parameters
+        ----------
+        J : 3d array
+            Interaction matrices.
+
+        """
+
+        self.__mag_J[self.__active,...] = J
+
+    def get_magnetic_single_ion_anisotropy_matrices(self):
+        """
+        Magnetocrystalline anisotropy matrices.
+
+        Returns
+        -------
+        K : 3d array
+            Anisotropy matrices.
+
+        """
+
+        return self.__mag_K
+
+    def set_magnetic_single_ion_anisotropy_matrices(self, K):
+        """
+        Update magnetocrystalline anisotropy matrices.
+
+        Parameters
+        ----------
+        K : 3d array
+            Anisotropy matrices.
+
+        """
+
+        self.__mag_K = K
+
+    def get_magnetic_g_tensor_matrices(self):
+        """
+        g-tensor matrices.
+
+        Returns
+        -------
+        g : 3d array
+            g-tensors.
+
+        """
+
+        return self.__mag_g
+
+    def set_magnetic_g_tensor_matrices(self, g):
+        """
+        Update g-tensor matrices.
+
+        Parameters
+        ----------
+        g : 3d array
+            g-tensors.
+
+        """
+
+        self.__mag_g = g
+
+    def get_magnetic_field(self):
+        """
+        External magnetic field vector.
+
+        Returns
+        -------
+        B : 1d array
+            Fied vector.
+
+        """
+
+        return self.__mag_B
+
+    def set_magnetic_field(self, B):
+        """
+        Update external magnetic field vector.
+
+        Parameters
+        ----------
+        B : 1d array
+            Fied vector.
+
+        """
+
+        self.__mag_B = B
+
     def get_magnetic_dipole_dipole_coupling_strength(self):
         """
         Magnetic dipole-dipole coupling strength.
@@ -661,7 +696,7 @@ class Simulation:
 
         """
 
-        return self.__const_dd
+        return self.__mag_dd
 
     def set_magnetic_dipole_dipole_coupling_strength(self, const):
         """
@@ -674,7 +709,7 @@ class Simulation:
 
         """
 
-        self.__const_dd = const
+        self.__mag_dd = const
 
     def initialize_parallel_tempering(self, T0, T1, replicas=1, space='log2'):
         """
@@ -710,6 +745,12 @@ class Simulation:
         self.__Sy = np.zeros((*dims,n_atm,replicas))
         self.__Sz = np.zeros((*dims,n_atm,replicas))
 
+        self.__sigma = np.zeros((*dims,n_atm,replicas))
+
+        self.__Ux = np.zeros((*dims,n_atm,replicas))
+        self.__Uy = np.zeros((*dims,n_atm,replicas))
+        self.__Uz = np.zeros((*dims,n_atm,replicas))
+
     def magnetic_energy(self):
         """
         Magnetic interaction energy.
@@ -723,9 +764,9 @@ class Simulation:
 
         spins = self.__Sx, self.__Sy, self.__Sz
 
-        properties = self.__J[self.__active,...], self.__K, self.__g
+        properties = self.__mag_J[self.__active], self.__mag_K, self.__mag_g
 
-        field = self.__B
+        field = self.__mag_B
 
         indices = self.___get_indices()
 
@@ -744,7 +785,7 @@ class Simulation:
 
         """
 
-        args = self.__Sx, self.__Sy, self.__Sz, self.__const_dd*self.__Qijkl
+        args = self.__Sx, self.__Sy, self.__Sz, self.__mag_dd*self.__Qijkl
 
         return simulation.dipole_dipole_interaction_energy(*args)
 
@@ -774,9 +815,9 @@ class Simulation:
 
         kB = 0.08617 # meV/K
 
-        properties = self.__J[self.__active,...], self.__K, self.__g
+        properties = self.__mag_J[self.__active], self.__mag_K, self.__mag_g
 
-        fields = self.__B, self.__Qijkl*self.__const_dd
+        fields = self.__mag_B, self.__mag_dd*self.__Qijkl
 
         if cluster:
             indices = self.__get_cluster_indices()
@@ -807,6 +848,205 @@ class Simulation:
             self.sc._Sx[b] = self.__Sx[...,ind].flatten()
             self.sc._Sy[b] = self.__Sy[...,ind].flatten()
             self.sc._Sz[b] = self.__Sz[...,ind].flatten()
+
+        return H, T
+
+    def get_occupational_interaction_constants(self):
+        """
+        Occupational interaction constants.
+
+        Returns
+        -------
+        J : 1d array
+            Interaction constants.
+
+        """
+
+        return self.__occ_J[self.__active,...]
+
+    def set_occupational_interaction_constants(self, J):
+        """
+        Update occupational interaction constants.
+
+        Parameters
+        ----------
+        J : 1d array
+            Interaction constants.
+
+        """
+
+        self.__occ_J[self.__active,...] = J
+
+    def get_displacive_stiffness_constants(self):
+        """
+        Displacive stiffness constants.
+
+        Returns
+        -------
+        K : 1d array
+            Stiffness constants.
+
+        """
+
+        return self.__disp_K[self.__active]
+
+    def set_displacive_stiffness_constants(self, K):
+        """
+        Update displacive stiffness constants.
+
+        Parameters
+        ----------
+        K : 1d array
+            Stiffness matrices.
+
+        """
+
+        self.__disp_K[self.__active] = K
+
+    def get_occupational_single_site_constant(self):
+        """
+        Single site constant.
+
+        Returns
+        -------
+        H : 1d array
+            Site constant.
+
+        """
+
+        return self.__occ_H[self.__active]
+
+    def set_occupational_single_site_constant(self, H):
+        """
+        Update single site constant.
+
+        Parameters
+        ----------
+        H : 1d array
+            Site constant.
+
+        """
+
+        self.__occ_H[self.__active] = H
+
+    def get_displacive_distortion_constants(self):
+        """
+        Displacive distortion constants.
+
+        Returns
+        -------
+        eta : 2d array
+            Distortion constants.
+
+        """
+
+        return self.__disp_eta[:,self.__active]
+
+    def set_displacive_distortion_constants(self, eta):
+        """
+        Update displacive distortion constants.
+
+        Parameters
+        ----------
+        eta : 2d array
+            Distortion constants.
+
+        """
+
+        self.__disp_eta[:,self.__active] = eta
+
+    def structural_energy(self):
+        """
+        Structural interaction energy.
+
+        Returns
+        -------
+        E : 6d array
+            Structural interaction energies.
+
+        """
+
+        parameters = self.__sigma, self.__Ux, self.__Uy, self.__Uz
+
+        occupational = self.__occ_J[self.__active], self.__occ_H,
+        displacive = self.__disp_K, self.__disp_eta
+
+        properties = *occupational, *displacive
+
+        indices = self.__get_indices()[:-1]
+
+        bonds = *self.get_bond_vectors(), self.get_bond_lengths()
+
+        args = *parameters, *properties, *bonds, *indices
+
+        return simulation.structural_energy(*args)
+
+    def structural_simulation(self, N, batch=1):
+        """
+        Perform structural occupational/displacive simulation.
+
+        Parameters
+        ----------
+        N : int
+            Number of Monte Carlo cycles.
+
+        Returns
+        -------
+        H : 1d array
+            Hamiltonian of each replica.
+        T : 1d array
+            Temperature of each replica.
+
+        """
+
+        self.sc._A_r, self.sc._Ux, self.sc._Uy, self.sc._Uz = [], [], [], []
+
+        for _ in range(batch):
+
+            self.sc.randomize_site_occupancies()
+            self.sc.randomize_atomic_displacements()
+
+        kB = 0.08617 # meV/K
+
+        occupational = self.__occ_J[self.__active], self.__occ_H,
+        displacive = self.__disp_K, self.__disp_eta
+
+        properties = *occupational, *displacive
+
+        indices = self.__get_indices()[:-1]
+
+        bonds = *self.get_bond_vectors(), self.get_bond_lengths()
+
+        dims = self.sc.get_super_cell_extents()
+        n_atm = self.sc.get_number_atoms_per_unit_cell()
+
+        for b in range(batch):
+
+            sigma = 2*(self.sc._A_r[b] >= 0).astype(float)-1
+
+            self.__sigma.T[:,...] = sigma.reshape(*dims,n_atm).T.copy()
+
+            self.__Ux.T[:,...] = self.sc._Ux[b].reshape(*dims,n_atm).T.copy()
+            self.__Uy.T[:,...] = self.sc._Uy[b].reshape(*dims,n_atm).T.copy()
+            self.__Uz.T[:,...] = self.sc._Uz[b].reshape(*dims,n_atm).T.copy()
+
+            parameters = self.__sigma, self.__Ux, self.__Uy, self.__Uz
+            args = *parameters, *properties, *bonds, *indices, self.__T, kB, N
+
+            H, T = simulation.size_effect(*args)
+
+            self.__T = T
+
+            ind = np.argmin(H)
+
+            delta = 0.5*(self.__sigma+1)
+            c = delta[...,ind].mean(axis=(0,1,2))
+
+            self.sc._A_r[b] = (delta[...,ind]/c-1).flatten()
+
+            self.sc._Ux[b] = self.__Ux[...,ind].flatten()
+            self.sc._Uy[b] = self.__Uy[...,ind].flatten()
+            self.sc._Uz[b] = self.__Uz[...,ind].flatten()
 
         return H, T
 

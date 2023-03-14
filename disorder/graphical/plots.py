@@ -900,6 +900,15 @@ class HeatMap(Plot):
 
         self.ax.text(x, y, s, color=color, ha='center', va='center')
 
+    def add_grid_lines(self, alpha=1.0):
+
+        self.ax.grid(which='both', alpha=alpha)
+
+    def set_integer_axes(self):
+
+        self.ax.xaxis.get_major_locator().set_params(integer=True)
+        self.ax.yaxis.get_major_locator().set_params(integer=True)
+
 class Scatter(Plot):
     """
     Intensity heat map plot.

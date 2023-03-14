@@ -93,6 +93,24 @@ class test_c_simulation(unittest.TestCase):
         self.assertAlmostEqual(np.cos(t).mean(), 0.0, 1)
         self.assertAlmostEqual(p.mean(), 0.0, 1)
 
+    def test_ising_vector_candidate(self):
+
+        ux, uy, uz = simulation.random_vector_candidate()
+
+        vx, vy, vz = simulation.ising_vector_candidate(ux, uy, uz)
+
+        self.assertAlmostEqual(ux, -vx)
+        self.assertAlmostEqual(uy, -vy)
+        self.assertAlmostEqual(uz, -vz)
+
+    def test_ising_scalar_candidate(self):
+
+        u = simulation.random_gaussian()
+
+        v = simulation.ising_scalar_candidate(u)
+
+        self.assertAlmostEqual(u, -v)
+
     def test_random_gaussian_3d(self):
 
         N = 100000
