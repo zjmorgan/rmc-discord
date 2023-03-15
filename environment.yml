@@ -17,6 +17,7 @@ dependencies:
   - cython
   - pytest
   - pillow>=8.3.2
+  - gcc>=12.1.0
 variables:
   OMP_NUM_THREADS: 1
   PYTEST_QT_API: pyqt5

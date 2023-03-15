@@ -914,7 +914,7 @@ class Simulation:
 
         """
 
-        return self.__occ_H[self.__active]
+        return self.__occ_H
 
     def set_occupational_single_site_constant(self, H):
         """
@@ -927,7 +927,7 @@ class Simulation:
 
         """
 
-        self.__occ_H[self.__active] = H
+        self.__occ_H[:] = H
 
     def get_displacive_distortion_constants(self):
         """
