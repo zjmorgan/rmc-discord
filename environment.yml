@@ -8,8 +8,7 @@ dependencies:
   - matplotlib
   - pycifrw
   - nexusformat
-  - pyvista
-  - mayavi
+  - pyvista>=0.34.2,
   - qt
   - pyqt
   - pydata-sphinx-theme
