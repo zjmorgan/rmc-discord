@@ -560,7 +560,7 @@ def evaluate_op(operators, translate=True):
 
     operators = str([[op] for op in operators])
 
-    if (not translate):
+    if not translate:
         operators = re.sub(r'\.', '', operators)
         operators = re.sub(r'\/', '', operators)
         operators = re.sub(r'[-+][\d]+', '', operators)

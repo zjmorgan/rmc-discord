@@ -7,7 +7,7 @@ dependencies:
   - scipy
   - matplotlib
   - pycifrw
-  - nexusformat
+  - h5py
   - pyvista>=0.34.2
   - qt
   - pyqt
