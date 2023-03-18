@@ -45,8 +45,6 @@ jobs:
           conda env update --file environment.yml --name base
       - name: Build package
         run: |
-          sudo apt update
-          sudo apt install --reinstall build-essential
           python setup.py install
       - name: Build Sphinx
         env:
