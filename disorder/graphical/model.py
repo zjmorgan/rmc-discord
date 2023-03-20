@@ -683,11 +683,11 @@ class Model:
                i_dft, coeffs, H_nuc, K_nuc, L_nuc, cond, even, bragg
 
     def reduced_reciprocal_space_symmetry(self, h_range, k_range, l_range,
-                                          nh, nk, nl, nu, nv, nw, T, laue):
+                                          nh, nk, nl, nu, nv, nw, W, laue):
 
         indices, inverses, operators, \
         Nu, Nv, Nw = space.reduced(h_range, k_range, l_range, nh, nk, nl,
-                                   nu, nv, nw, T=T, laue=laue)
+                                   nu, nv, nw, W=W, laue=laue)
 
         lauesym = symmetry.operators(invert=True)
 

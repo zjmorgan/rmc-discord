@@ -3817,10 +3817,10 @@ class Presenter:
 
                     self.ds_total_intensity[:] += I_calc
 
-                I_calc = self.model.structural_intensity_1d(
-                             occupancy, U11, U22, U33, U23, U13, U12,
-                             rx, ry, rz, atm, Q_range, nQ, A, D,
-                             nu, nv, nw, mask)
+                # I_calc = self.model.structural_intensity_1d(
+                #              occupancy, U11, U22, U33, U23, U13, U12,
+                #              rx, ry, rz, atm, Q_range, nQ, A, D,
+                #              nu, nv, nw, mask)
 
                 self.ds_bragg_intensity[:] += I_calc
 
