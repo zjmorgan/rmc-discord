@@ -517,6 +517,25 @@ def translation_operator(val):
     return sign+f
 
 def unique(data):
+    """
+    Unique values, their indices in the original array, and the indices of the
+    unique array to reconstruct the original array
+
+    Parameters
+    ----------
+    data : 1d-array
+        Array with values of either string or integer type.
+
+    Returns
+    -------
+    uni, 1d-array
+        Unique values.
+    ind : 1d-array, int
+        Indices of unique values in the original.
+    inv : 1d-array, int
+        Indices of the unique array that reconstructs the original.
+
+    """
 
     data_type = data.dtype
     item_size = data_type.itemsize
@@ -557,6 +576,22 @@ def evaluate(operators, coordinates, translate=True):
     return evaluate_code(code, coordinates)
 
 def evaluate_op(operators, translate=True):
+    """
+    Compile evaluation code for symmetry operators.
+
+    Parameters
+    ----------
+    operators : list, str
+        Symmetry operators.
+    translate : bool, optional
+        Apply translation to rotation operator. The default is ``True``.
+
+    Returns
+    -------
+    code : object
+        Code object that can be evaluated.
+
+    """
 
     operators = str([[op] for op in operators])
 
@@ -570,6 +605,22 @@ def evaluate_op(operators, translate=True):
     return compile(operators, '<string>', 'eval')
 
 def evaluate_code(code, coordinates):
+    """
+    Evaluate code object over coordinates.
+
+    Parameters
+    ----------
+    code : object
+        Code object that can be evaluated.
+    coordinates : 3-list
+        Coordiantes to transform.
+
+    Returns
+    -------
+    values : 2d-array, float
+        Evaluated coordinates. Last axis has size of 3.
+
+    """
 
     x, y, z = coordinates
 
@@ -687,6 +738,20 @@ def evaluate_disp(operator, displacements):
     return Up[0,0], Up[1,1], Up[2,2], Up[1,2], Up[0,2], Up[0,1]
 
 def reverse(symops):
+    """
+    Reverse symmetry operators. Includes translation.
+
+    Parameters
+    ----------
+    symops : list, str
+        Symmetry operators.
+
+    Returns
+    -------
+    rev_symops : list, str
+        Reverse operators.
+
+    """
 
     n = len(symops)
 
@@ -730,6 +795,20 @@ def reverse(symops):
     return rev_symops
 
 def inverse(symops):
+    """
+    Inverse symmetry operators. Removes translation.
+
+    Parameters
+    ----------
+    symops : list, str
+        Symmetry operators.
+
+    Returns
+    -------
+    inv_symops : list, str
+        Inverse operators.
+
+    """
 
     n = len(symops)
 
@@ -764,6 +843,23 @@ def inverse(symops):
     return inv_symops
 
 def binary(symop0, symop1):
+    """
+    Binary operation betwen symmetry operators.
+
+    Parameters
+    ----------
+    symop0 : list, str
+        Symmetry operators.
+    symop1 : list, str
+        Symmetry operators. Must contain either 1 operator or same number of
+        operators as the first.
+
+    Returns
+    -------
+    symops : list, str
+        Binary operations of the second acting on the first operator list.
+
+    """
 
     n0, n1 = len(symop0), len(symop1)
 
