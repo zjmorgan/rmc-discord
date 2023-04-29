@@ -6,40 +6,76 @@ import pyvista
 pyvista.set_plot_theme('document')
 
 class CrystalStructure:
+    """
+    Draw a crystal structure. Atom can drawn with various radii with occupancy
+    displayed using opacity. Atoms can allso be draw as atomic displacement
+    ellipsoids or be decorated with magnetic moments vectors.
+
+    Parameters
+    ----------
+    A : 2d-array
+        Real-space Cartesian transform.
+    ux, uy, uz : 1d-array
+        Cartesian fractional coordinates.
+    atms : 1d-array, str
+        Atom labels.
+    colors : 2d-array
+        RGB color for each atom.
+    nu, nv, nw : int
+        Number of cells along each dimension. Default is ``1`` along each
+        dimension.
+
+    Attributres
+    ----------
+    pl : plotter
+        Plot object.
+
+    Methods
+    -------
+    show_figure()
+    save_figure()
+    view_direction)
+    draw_basis_vectors()
+    draw_cell_edges()
+    atomic_radii()
+    atomic_displacement_ellipsoids()
+    magnetic_vectors()
+
+    """
 
     def __init__(self, A, ux, uy, uz, atms, colors, nu=1, nv=1, nw=1):
 
         self.pl = pyvista.Plotter()
         self.pl.enable_parallel_projection()
         self.pl.enable_depth_peeling()
-        self.pl.enable_mesh_picking(callback=self.callback, style='surface',
+        self.pl.enable_mesh_picking(callback=self.__callback, style='surface',
                                     left_clicking=True, show=True,
                                     show_message=False, smooth_shading=True)
 
-        self.A = A
+        self._A = A
 
-        self.nu, self.nv, self.nw = nu, nv, nw
+        self._nu, self._nv, self._nw = nu, nv, nw
 
-        self.ux, self.uy, self.uz = self.__wrap_coordinates(ux, uy, uz)
+        self._ux, self._uy, self._uz = self.__wrap_coordinates(ux, uy, uz)
 
-        self.atms = atms
-        self.colors = colors
+        self._atms = atms
+        self._colors = colors
 
-        self.atm_scale = 0.5
+        self._atm_scale = 0.5
 
-    def callback(self, mesh):
+    def __callback(self, mesh):
 
         display, atom = mesh.__name.split('-')
 
         i = int(atom)
 
-        n_atm = len(self.colors)
+        n_atm = len(self._colors)
 
         k = i % n_atm
 
-        atm, ux, uy, uz = self.atms[k], self.ux[i], self.uy[i], self.uz[i]
+        atm, ux, uy, uz = self._atms[k], self._ux[i], self._uy[i], self._uz[i]
 
-        u, v, w = np.dot(np.linalg.inv(self.A), [ux,uy,uz])
+        u, v, w = np.dot(np.linalg.inv(self._A), [ux,uy,uz])
 
         header = 'atm        u     v     w\n'
         divide = '========================\n'
@@ -51,9 +87,9 @@ class CrystalStructure:
 
     def __wrap_coordinates(self, ux, uy, uz):
 
-        nu, nv, nw = self.nu, self.nv, self.nw
+        nu, nv, nw = self._nu, self._nv, self._nw
 
-        u, v, w = np.dot(np.linalg.inv(self.A), [ux,uy,uz])
+        u, v, w = np.dot(np.linalg.inv(self._A), [ux,uy,uz])
 
         wrap = np.isclose([u,v,w], 0)
         mask = wrap.sum(axis=0)
@@ -117,10 +153,10 @@ class CrystalStructure:
         v = np.concatenate((v,v_face,v_edges.flatten(),v_corners.flatten()))
         w = np.concatenate((w,w_face,w_edges.flatten(),w_corners.flatten()))
 
-        self.indices = np.concatenate((indices,face_indices,
-                                       edge_indices,corner_indices))
+        self._indices = np.concatenate((indices,face_indices,
+                                        edge_indices,corner_indices))
 
-        return np.dot(self.A, [u,v,w])
+        return np.dot(self._A, [u,v,w])
 
     def __probability_ellipsoid(self, Uxx, Uyy, Uzz, Uyz, Uxz, Uxy, p=0.99):
 
@@ -139,26 +175,54 @@ class CrystalStructure:
         return T
 
     def show_figure(self):
+        """
+        Display the drawing.
+
+        """
 
         self.pl.show()
 
     def save_figure(self, filename):
+        """
+        Save the figure as a graphic image.
+
+        Parameters
+        ----------
+        filename : str
+            Name of file with extension. Supported extensions are ``.svg`` and
+            ``.pdf``.
+
+        """
 
         self.pl.save_graphic(filename)
 
     def view_direction(self, u, v, w):
+        """
+        View drawing along a crystallographic direction.
 
-        nu, nv, nw = self.nu, self.nv, self.nw
+        Parameters
+        ----------
+        u, v, w : float
+            Components of the viewing axis. Units are in fractional
+            coordinates.
 
-        x, y, z = 2*np.dot(self.A, [u,v,w])
-        xc, yc, zc = np.dot(self.A, [0.5*nu,0.5*nv,0.5*nw])
+        """
+
+        nu, nv, nw = self._nu, self._nv, self._nw
+
+        x, y, z = 2*np.dot(self._A, [u,v,w])
+        xc, yc, zc = np.dot(self._A, [0.5*nu,0.5*nv,0.5*nw])
 
         self.pl.camera.focal_point = (xc, yc, zc)
         self.pl.camera.position = (xc+x, yc+y, zc+z)
 
     def draw_basis_vectors(self):
+        """
+        Draw the baasis vector directions for the crytallographic directions.
 
-        t = self.A.copy()
+        """
+
+        t = self._A.copy()
         t /= np.max(t, axis=1)
 
         a = pyvista._vtk.vtkMatrix4x4()
@@ -171,12 +235,16 @@ class CrystalStructure:
         actor.SetUserMatrix(a)
 
     def draw_cell_edges(self):
+        """
+        Draw unit cell edges.
+
+        """
 
         uc = np.array([0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0])
         vc = np.array([0.0,0.0,1.0,1.0,0.0,0.0,1.0,1.0])
         wc = np.array([0.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0])
 
-        ucx, ucy, ucz = np.dot(self.A, [uc,vc,wc])
+        ucx, ucy, ucz = np.dot(self._A, [uc,vc,wc])
 
         connections = ((0,1),(0,2),(0,4),(1,3),(1,5),(2,3),
                        (2,6),(3,7),(4,5),(4,6),(5,7),(6,7))
@@ -187,10 +255,22 @@ class CrystalStructure:
             self.pl.add_lines(points, color='black', width=2)
 
     def atomic_radii(self, radii, occ):
+        """
+        Draw atoms with given radii and displayed with opacity corresponding to
+        site occupancy
 
-        n_atm = len(self.colors)
+        Parameters
+        ----------
+        radii : 1d-array
+            The radii of the atom sites.
+        occ : 1d-array
+            The site occupancy of each atom. The value ranges from 0-1.
 
-        for j, i in enumerate(self.indices):
+        """
+
+        n_atm = len(self._colors)
+
+        for j, i in enumerate(self._indices):
 
             k = i % n_atm
 
@@ -202,13 +282,13 @@ class CrystalStructure:
             glyph = mesh.glyph(scale=1, geom=geom)
 
             T = np.zeros((4,4))
-            T[0,0] = T[1,1] = T[2,2] = radii[k]*self.atm_scale
-            T[:3,-1] = np.array([self.ux[j], self.uy[j], self.uz[j]])
+            T[0,0] = T[1,1] = T[2,2] = radii[k]*self._atm_scale
+            T[:3,-1] = np.array([self._ux[j], self._uy[j], self._uz[j]])
             T[-1,-1] = 1
 
             glyph.transform(T, inplace=True)
 
-            scalars = np.tile(np.column_stack([*self.colors[k],occ[i]]),
+            scalars = np.tile(np.column_stack([*self._colors[k],occ[i]]),
                               geom.n_cells).reshape(-1,4)
 
             glyph.__name = 's-{}'.format(i)
@@ -220,10 +300,21 @@ class CrystalStructure:
 
     def atomic_displacement_ellipsoids(self, Uxx, Uyy, Uzz, Uyz, Uxz, Uxy,
                                        p=0.99):
+        """
+        Draw atomic displacement ellipsoids
 
-        n_atm = len(self.colors)
+        Parameters
+        ----------
+        Uxx, Uyy, Uzz, Uyz, Uxz, Uxy : 1d-array
+            Atomic displacement parameters in Cartesian coordinates.
+        p : float
+            Probability surface. Default is ``p=0.99``
 
-        for j, i in enumerate(self.indices):
+        """
+
+        n_atm = len(self._colors)
+
+        for j, i in enumerate(self._indices):
 
             k = i % n_atm
 
@@ -239,12 +330,12 @@ class CrystalStructure:
 
             T = np.zeros((4,4))
             T[:3,:3] = P
-            T[:3,-1] = np.array([self.ux[j], self.uy[j], self.uz[j]])
+            T[:3,-1] = np.array([self._ux[j], self._uy[j], self._uz[j]])
             T[-1,-1] = 1
 
             glyph.transform(T, inplace=True)
 
-            scalars = np.tile(np.column_stack(self.colors[k]),
+            scalars = np.tile(np.column_stack(self._colors[k]),
                               geom.n_cells).reshape(-1,3)
 
             glyph.__name = 'e-{}'.format(i)
@@ -253,19 +344,28 @@ class CrystalStructure:
                              rgb=True, smooth_shading=True)
 
     def magnetic_vectors(self, sx, sy, sz):
+        """
+        Draw magnetic vectors.
 
-        n_atm = len(self.colors)
+        Parameters
+        ----------
+        sx, sy, sz : 1d-array
+            The magnetic moment vector components in Cartesian coordinates.
+
+        """
+
+        n_atm = len(self._colors)
 
         k = np.arange(len(sx)) % n_atm
 
         s = np.sqrt(sx**2+sy**2+sz**2)
         mask = s > 0
 
-        mag_scale = 2.5*np.mean(self.radii[k[mask]]/s[mask])*self.atm_scale
+        mag_scale = 2.5*np.mean(self.radii[k[mask]]/s[mask])*self._atm_scale
 
-        for j, i in enumerate(self.indices):
+        for j, i in enumerate(self._indices):
 
-            r = np.array([self.ux[j],self.uy[j],self.uz[j]])
+            r = np.array([self._ux[j],self._uy[j],self._uz[j]])
             v = np.array([sx[i],sy[i],sz[i]])
 
             s = np.linalg.norm(v)

@@ -14,12 +14,12 @@ atms = uc.get_unit_cell_atoms()
 colors = uc.get_atom_colors()
 radii = uc.get_atom_radii()
 
-cs = CrystalStructure(A, *xyz, atms, colors)
+cs = CrystalStructure(A, *xyz, atms, colors, 1, 1, 1)
 
 cs.draw_cell_edges()
 cs.draw_basis_vectors()
 cs.atomic_radii(radii, occ)
-#cs.atomic_displacement_ellipsoids(*U, p=1.0)
+# cs.atomic_displacement_ellipsoids(*U, p=1.0)
 cs.magnetic_vectors(*mxmymz)
 cs.view_direction(3, 2, 1)
 

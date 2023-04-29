@@ -2731,15 +2731,47 @@ class SuperCell(UnitCell):
         return I[inverses].reshape(*bins), sigma_sq[inverses].reshape(*bins)
 
     def single_crystal_intensity_blur(self, I, sigma):
+        """
+        Perform an approximate Gaussian blur to the intensity dataset.
+
+        Parameters
+        ----------
+        I : 1d-array
+            Intensity data.
+        sigma : 3-tuple, float or float
+            Blur width in voxels.
+
+        Returns
+        -------
+        I_blur : 3d-array
+            Gaussian blurred intensity.
+
+        """
 
         return filters.blurring(I, sigma)
 
-    def save_intensity_3d(self, filename, I, extents, bins, W=np.eye(3)):
+    def save_intensity_3d(self, filename, I, extents, W=np.eye(3)):
+        """
+        Save the intensity to VTK file.
+
+        Parameters
+        ----------
+        filename : str
+            Name of file to be saved.
+        I : 1d-array
+            Intensity data.
+        extents : 3-tuple of 2-list, float
+            The (min, max) limits along each dimension.
+        W : 2d-array, optional
+            Projection matrix of the intensity file. The default is
+            ``np.eye(3)``.
+
+        """
 
         B = self.get_miller_cartesian_transform()
 
         h_range, k_range, l_range = extents
-        nh, nk, nl = bins
+        nh, nk, nl = I.shape
 
         h, k, l = np.meshgrid(np.linspace(*h_range,nh),
                               np.linspace(*k_range,nk),
@@ -2748,20 +2780,58 @@ class SuperCell(UnitCell):
 
         experimental.intensity(filename, h, k, l, I, np.dot(B,W))
 
-    def save_correlations_3d(self, filename, data, dx, dy, dz, pairs):
+    def save_correlations_3d(self, filename, data, coordinates, pairs):
+        """
+        Save three-dimensional correlations.
+
+        ============================ ===========
+        Vector                       Scalar
+        ============================ ===========
+        Correlation and collinearity Correlation
+        ============================ ===========
+
+        Parameters
+        ----------
+        filename : str
+            Name of file to be saved.
+        data : 2-tuple or 4-tuple of 1d-array
+            List of correlation data.
+        coordinates : 3-tuple of 1d-array
+            Separation vector in Cartesian coordinates.
+        pairs : 1d-array, str
+            Pair identifier.
+
+        """
 
         if len(data) == 4:
             label = 'vector-pair'
             corr, _, coll, _ = data
-            outdata = (dx, dy, dz, corr, coll, pairs)
+            outdata = (*coordinates, corr, coll, pairs)
         else:
             label = 'scalar-pair'
             corr, _ = data
-            outdata = (dx, dy, dz, corr, pairs)
+            outdata = (*coordinates, corr, pairs)
 
         experimental.correlations(filename, outdata, label)
 
     def save_data(self, filename, signal, sigma_sq, extents, bins):
+        """
+        Save the dataset to a h5 binary file.
+
+        Parameters
+        ----------
+        filename : str
+            Name of file to be saved.
+        signal : 3d-array
+            THe data signal.
+        sigma_sq : 3d-array
+            The error weights.
+        bins : 3-tuple, int
+            Number of voxels along each dimension.
+        extents : 3-tuple of 2-list, float
+            The (min, max) limits along each dimension.
+
+        """
 
         self.__save_supercell(filename)
 

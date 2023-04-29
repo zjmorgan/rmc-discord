@@ -62,6 +62,22 @@ def data(filename):
     return signal, error_sq, h_range, k_range, l_range, nh, nk, nl
 
 def mask(signal, error_sq):
+    """
+    Mask of invalid values for signal and weights.
+
+    Parameters
+    ----------
+    signal : nd-array
+        The signal.
+    error_sq : nd-array
+        The weigts.
+
+    Returns
+    -------
+    mask : nd-array, bool
+        The mask of invalid values.
+
+    """
 
     mask = np.isnan(signal)\
          + np.isinf(signal)\
