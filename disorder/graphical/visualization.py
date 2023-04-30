@@ -26,7 +26,7 @@ class CrystalStructure:
         dimension.
 
     Attributres
-    ----------
+    -----------
     pl : plotter
         Plot object.
 
@@ -234,25 +234,21 @@ class CrystalStructure:
 
         actor.SetUserMatrix(a)
 
+        actor = self.pl.add_camera_orientation_widget()
+
     def draw_cell_edges(self):
         """
         Draw unit cell edges.
 
         """
 
-        uc = np.array([0.0,0.0,0.0,0.0,1.0,1.0,1.0,1.0])
-        vc = np.array([0.0,0.0,1.0,1.0,0.0,0.0,1.0,1.0])
-        wc = np.array([0.0,1.0,0.0,1.0,0.0,1.0,0.0,1.0])
+        T = np.eye(4)
+        T[:3,:3] = self._A
 
-        ucx, ucy, ucz = np.dot(self._A, [uc,vc,wc])
-
-        connections = ((0,1),(0,2),(0,4),(1,3),(1,5),(2,3),
-                       (2,6),(3,7),(4,5),(4,6),(5,7),(6,7))
-
-        for i, j in connections:
-            points = np.row_stack(((ucx[i],ucy[i],ucz[i]),
-                                   (ucx[j],ucy[j],ucz[j])))
-            self.pl.add_lines(points, color='black', width=2)
+        mesh = pyvista.Box(bounds=(0,1,0,1,0,1), level=0, quads=True)
+        mesh.transform(T, inplace=True)
+        self.pl.add_mesh(mesh, style='wireframe',
+                         render_lines_as_tubes=True, show_edges=True)
 
     def atomic_radii(self, radii, occ):
         """

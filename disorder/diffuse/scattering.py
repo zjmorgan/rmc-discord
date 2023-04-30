@@ -1426,7 +1426,7 @@ class Refinement:
         ions = self.sc.get_unit_cell_ions()
 
         occ = self.sc.get_occupancies()
-        U = self.sc.get_cartesian_anistropic_displacement_parameters()
+        U = self.sc.get_cartesian_anisotropic_displacement_parameters()
 
         g = self.sc.get_g_factors()
 
@@ -1507,6 +1507,8 @@ class Refinement:
         return I_calc, I_expt, inv_sigma_sq, I_raw, I_flat, I_ref
 
     def __filters(self, sigma):
+
+        sigma = np.asarray(sigma)
 
         mask = self.__mask()
 

@@ -1773,6 +1773,23 @@ class UnitCell:
         """
         Twin transformation matrices and mass fractions.
 
+        .. math::
+            \\begin{bmatrix}
+            h^\\prime \\\\
+            k^\\prime \\\\
+            l^\\prime
+            \\end{bmatrix} =
+            \\begin{bmatrix}
+            T_{11} & T_{12} & T_{13} \\\\
+            T_{21} & T_{22} & T_{23} \\\\
+            T_{31} & T_{32} & T_{33}
+            \\end{bmatrix}
+            \\begin{bmatrix}
+            h \\\\
+            k \\\\
+            l
+            \\end{bmatrix}
+
         Returns
         -------
         T : 3d array
@@ -1807,7 +1824,7 @@ class UnitCell:
         Parameters
         ----------
         colors : 1d array
-            Colors of atoms in rgb..
+            Colors of atoms in RGB.
 
         """
 
@@ -2747,6 +2764,8 @@ class SuperCell(UnitCell):
             Gaussian blurred intensity.
 
         """
+
+        sigma = np.asarray(sigma)
 
         return filters.blurring(I, sigma)
 
