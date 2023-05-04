@@ -900,7 +900,7 @@ class HeatMap(Plot):
 
         self.ax.text(x, y, s, color=color, ha='center', va='center')
 
-    def add_grid_lines(self, alpha=1.0):
+    def add_grid_lines(self, alpha=0.0):
 
         self.ax.grid(which='both', alpha=alpha)
 
