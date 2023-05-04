@@ -3,9 +3,7 @@ Installation
 
 Download a copy of the source directory from the [repository](https://github.com/zjmorgan/rmc-discord).
 
-```bash
-git clone https://github.com/zjmorgan/rmc-discord.git
-```
+``git clone https://github.com/zjmorgan/rmc-discord.git``
 
 +++++
 Conda
