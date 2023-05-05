@@ -469,7 +469,7 @@ def gaussian(mask, sigma):
 
     nh, nk, nl = mask.shape[0], mask.shape[1], mask.shape[2]
 
-    if (np.isclose(sigma, 0).all()):
+    if np.isclose(sigma, 0).all():
 
         return v
 
@@ -524,23 +524,43 @@ def boxfilter(I, mask, sigma, v_inv):
 
         return (v_inv*i).reshape(nh,nk,nl)
 
-def blurring(I, sigma):
+def blurring(a, sigma):
+    """
+    Gaussian blur.
 
-    i = np.zeros(I.size)
+    Parameters
+    ----------
+    a : 3d array
+        Array to filter.
+    sigma : tuple, float
+        Window size.
+
+    Returns
+    -------
+    b : 3d array
+        Filtered array.
+
+    """
+
+    a = np.asarray(a)
+
+    sigma = np.asarray(sigma)
+
+    b = np.zeros(a.size)
 
     boxes = boxblur(sigma, 3)
 
-    nh, nk, nl = I.shape[0], I.shape[1], I.shape[2]
+    nh, nk, nl = b.shape[0], b.shape[1], b.shape[2]
 
     if np.isclose(sigma, 0).all():
 
-        return I
+        return a
 
     else:
 
-        blur(i, I.flatten(), boxes, nh, nk, nl)
+        blur(b, a.flatten(), boxes, nh, nk, nl)
 
-        return i.reshape(nh,nk,nl)
+        return b.reshape(nh,nk,nl)
 
 cdef void sort(double [:,::1] data,
                long long [:,::1] order,
@@ -609,6 +629,22 @@ def padding(data, rank):
     return data
 
 def median(double [:,:,::1] a, Py_ssize_t size):
+    """
+    Median filter.
+
+    Parameters
+    ----------
+    a : 1d array
+        Array to filter.
+    size : int
+        Window size.
+
+    Returns
+    -------
+    b : 1d array
+        Filtered array.
+
+    """
 
     cdef Py_ssize_t thread_id, num_threads = openmp.omp_get_max_threads()
 

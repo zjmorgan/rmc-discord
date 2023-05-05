@@ -231,10 +231,13 @@ class CrystalStructure:
                 a.SetElement(i,j,t[i,j])
 
         actor = self.pl.add_axes(xlabel='a', ylabel='b', zlabel='c')
-
         actor.SetUserMatrix(a)
 
         actor = self.pl.add_camera_orientation_widget()
+
+        actor.GetRepresentation().GetXPlusLabelProperty()
+        actor.GetRepresentation().GetYPlusLabelProperty()
+        actor.GetRepresentation().GetZPlusLabelProperty()
 
     def draw_cell_edges(self):
         """
@@ -266,14 +269,13 @@ class CrystalStructure:
 
         n_atm = len(self._colors)
 
+        mesh = pyvista.PolyData(np.column_stack((0,0,0)))
+
+        geom = pyvista.Sphere(radius=1, theta_resolution=60, phi_resolution=60)
+
         for j, i in enumerate(self._indices):
 
             k = i % n_atm
-
-            mesh = pyvista.PolyData(np.column_stack((0,0,0)))
-
-            geom = pyvista.Sphere(radius=1, theta_resolution=60,
-                                  phi_resolution=60)
 
             glyph = mesh.glyph(scale=1, geom=geom)
 
@@ -310,17 +312,16 @@ class CrystalStructure:
 
         n_atm = len(self._colors)
 
+        mesh = pyvista.PolyData(np.column_stack((0,0,0)))
+
+        geom = pyvista.Sphere(radius=1, theta_resolution=60, phi_resolution=60)
+
         for j, i in enumerate(self._indices):
 
             k = i % n_atm
 
             P = self.__probability_ellipsoid(Uxx[i], Uyy[i], Uzz[i],
                                              Uyz[i], Uxz[i], Uxy[i], p)
-
-            mesh = pyvista.PolyData(np.column_stack((0,0,0)))
-
-            geom = pyvista.Sphere(radius=1, theta_resolution=60,
-                                  phi_resolution=60)
 
             glyph = mesh.glyph(scale=1, geom=geom)
 
@@ -366,8 +367,7 @@ class CrystalStructure:
 
             s = np.linalg.norm(v)
 
-            if s > 0:
-                v /= s
+            if s > 0: v /= s
 
             glyph = pyvista.Arrow(start=r-s*mag_scale*v,
                                   direction=v, scale=2*s*mag_scale,

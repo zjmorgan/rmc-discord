@@ -67,9 +67,9 @@ def mask(signal, error_sq):
 
     Parameters
     ----------
-    signal : nd-array
+    signal : nd array
         The signal.
-    error_sq : nd-array
+    error_sq : nd array
         The weigts.
 
     Returns
@@ -142,7 +142,7 @@ def weights(old, new):
 
     row, col = 0, 0
 
-    while (row < weights.shape[0] and col < weights.shape[1]):
+    while row < weights.shape[0] and col < weights.shape[1]:
 
         if np.round(interval-col, 1) >= 1:
 
@@ -261,7 +261,7 @@ def outlier(signal, size):
 
     asigma = np.abs(mad*3*1.4826)
 
-    mask = np.logical_or(signal < (median-asigma), signal > (median+asigma))
+    mask = np.logical_or(signal < median-asigma, signal > median+asigma)
     signal[mask] = np.nan
 
     return signal

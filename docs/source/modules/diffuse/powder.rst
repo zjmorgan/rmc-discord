@@ -1,5 +1,5 @@
 Powder
-===========
+======
 
 The `powder` module contains functions for calculating powder scattering patterns.
 
