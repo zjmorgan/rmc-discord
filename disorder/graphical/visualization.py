@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 
 from scipy.stats import chi2
@@ -194,6 +196,10 @@ class CrystalStructure:
 
         """
 
+        _, ext = os.path.splitext(filename)
+
+        if ext == '': filename + '.pdf'
+
         self.pl.save_graphic(filename)
 
     def view_direction(self, u, v, w):
@@ -233,11 +239,7 @@ class CrystalStructure:
         actor = self.pl.add_axes(xlabel='a', ylabel='b', zlabel='c')
         actor.SetUserMatrix(a)
 
-        actor = self.pl.add_camera_orientation_widget()
-
-        actor.GetRepresentation().GetXPlusLabelProperty()
-        actor.GetRepresentation().GetYPlusLabelProperty()
-        actor.GetRepresentation().GetZPlusLabelProperty()
+        # actor = self.pl.add_camera_orientation_widget()
 
     def draw_cell_edges(self):
         """

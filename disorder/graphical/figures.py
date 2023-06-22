@@ -107,7 +107,7 @@ class Intensity3d:
         self.fig.create_colorbar()
         self.fig.set_colorbar_label('r$I(\mathbf{Q})$ [arb. unit]')
 
-        self.fig.add_grid_lines(alpha=0.25)
+        #self.fig.add_grid_lines(alpha=0.25)
 
 class Correlations3d:
 

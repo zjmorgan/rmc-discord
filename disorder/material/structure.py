@@ -139,7 +139,41 @@ def factor_magnetic(mu1, mu2, mu3, kvecs, u, v, w, atms, occupancy,
                     U11, U22, U33, U23, U13, U12,
                     a, b, c, alpha, beta, gamma, symops, dmin=1.0):
     """
-    Magnetic tructure factor :math:`F(h,k,l)`.
+    Magnetic structure factor :math:`\\boldsymbol{M}(h,k,l)`.
+
+    Parameters
+    ----------
+    mu1, mu2, mu3 : 1d array
+        Magnetic moment components in crystal axis system.
+    kvecs : list
+        Magnetic k-vectors.
+    u, v, w : 1d array
+        Fractional coordinates for each atom site.
+    atms : 1d array, str
+        Ion or isotope for each atom site.
+    occupancy : 1d array
+        Site occupancies for each atom site.
+    U11, U22, U33, U23, U13, U12 : 1d array
+        Atomic displacement parameters in crystal axis system.
+    a, b, c, alpha, beta, gamma : float
+        Lattice constants :math:`a`, :math:`b`, :math:`c`, :math:`\\alpha`,
+        :math:`\\beta`, and :math:`\\gamma`. Angles are in radians.
+    symops : 1d array, str
+        Space group symmetry operations.
+    dmin : float, optional
+        Minimum d-spacing. Default ``0.3``
+
+
+    Returns
+    -------
+    h, k, l : 1d array, int
+        Miller indices.
+    d : 1d array
+        d-spacing distance between planes of atoms.
+    M1, M2, M3 : 1d array, complex
+        Magnetic tructure factor components.
+    mult : 1d array, int
+        Multiplicity.
 
     """
 
@@ -232,7 +266,6 @@ def factor_magnetic(mu1, mu2, mu3, kvecs, u, v, w, atms, occupancy,
 
     magnetic_form = magnetic.form(Q, atms).reshape(n_hkl,n_atm)
 
-
     e_dot_mu = eh[:,np.newaxis]*mu1+ek[:,np.newaxis]*mu2+el[:,np.newaxis]*mu3
 
     mu1_perp = mu1-e_dot_mu*eh[:,np.newaxis]
@@ -253,6 +286,107 @@ def factor_magnetic(mu1, mu2, mu3, kvecs, u, v, w, atms, occupancy,
     M3 = p*(mu3_perp*factors).sum(axis=1)
 
     return h, k, l, d, M1, M2, M3, mult
+
+def factors_hkl(h, k, l, u, v, w, atms, occupancy,
+                U11, U22, U33, U23, U13, U12,
+                a, b, c, alpha, beta, gamma, source='neutron'):
+
+    h = np.array(h)
+    k = np.array(k)
+    l = np.array(l)
+
+    n_atm = atms.shape[0]
+
+    inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+
+    a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+
+    B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+
+    Qh, Qk, Ql = crystal.vector(h, k, l, B)
+
+    Q = np.sqrt(Qh**2+Qk**2+Ql**2)
+
+    n_hkl = Q.size
+
+    phase_factor = np.exp(2j*np.pi*(h[:,np.newaxis]*u+
+                                    k[:,np.newaxis]*v+
+                                    l[:,np.newaxis]*w))
+
+    if source == 'neutron':
+        scattering_power = scattering.length(atms, n_hkl).reshape(n_hkl,n_atm)
+    else:
+        scattering_power = scattering.form(atms, Q).reshape(n_hkl,n_atm)
+
+    dw_factors = np.exp(-2*np.pi**2*(U11*(h*a_)[:,np.newaxis]**2+
+                                     U22*(k*b_)[:,np.newaxis]**2+
+                                     U33*(l*c_)[:,np.newaxis]**2+
+                                     U23*(k*l*b_*c_*2)[:,np.newaxis]+
+                                     U13*(h*l*a_*c_*2)[:,np.newaxis]+
+                                     U12*(h*k*a_*b_*2)[:,np.newaxis]))
+
+    factors = scattering_power*occupancy*dw_factors*phase_factor
+
+    F = factors.sum(axis=1)
+
+    return F
+
+def factor_magnetic_hkl(h, k, l, mu1, mu2, mu3, u, v, w, atms, occupancy,
+                        U11, U22, U33, U23, U13, U12,
+                        a, b, c, alpha, beta, gamma):
+
+    h = np.array(h)
+    k = np.array(k)
+    l = np.array(l)
+
+    p = 0.2695*10 # fm
+
+    n_atm = atms.shape[0]
+
+    inv_constants = crystal.reciprocal(a, b, c, alpha, beta, gamma)
+
+    a_, b_, c_, alpha_, beta_, gamma_ = inv_constants
+
+    B = crystal.cartesian(a_, b_, c_, alpha_, beta_, gamma_)
+
+    Qh, Qk, Ql = crystal.vector(h, k, l, B)
+
+    Q = np.sqrt(Qh**2+Qk**2+Ql**2)
+
+    Qh, Qk, Ql = crystal.vector(h, k, l, B)
+
+    n_hkl = Q.size
+
+    eh, ek, el, Q = space.unit(Qh, Qk, Ql)
+
+    n_hkl = Q.size
+
+    phase_factor = np.exp(2j*np.pi*(h[:,np.newaxis]*u+
+                                    k[:,np.newaxis]*v+
+                                    l[:,np.newaxis]*w))
+
+    magnetic_form = magnetic.form(Q, atms).reshape(n_hkl,n_atm)
+
+    e_dot_mu = eh[:,np.newaxis]*mu1+ek[:,np.newaxis]*mu2+el[:,np.newaxis]*mu3
+
+    mu1_perp = mu1-e_dot_mu*eh[:,np.newaxis]
+    mu2_perp = mu2-e_dot_mu*ek[:,np.newaxis]
+    mu3_perp = mu3-e_dot_mu*el[:,np.newaxis]
+
+    dw_factors = np.exp(-2*np.pi**2*(U11*(h*a_)[:,np.newaxis]**2+
+                                     U22*(k*b_)[:,np.newaxis]**2+
+                                     U33*(l*c_)[:,np.newaxis]**2+
+                                     U23*(k*l*b_*c_*2)[:,np.newaxis]+
+                                     U13*(h*l*a_*c_*2)[:,np.newaxis]+
+                                     U12*(h*k*a_*b_*2)[:,np.newaxis]))
+
+    factors = magnetic_form*occupancy*dw_factors*phase_factor
+
+    M1 = p*(mu1_perp*factors).sum(axis=1)
+    M2 = p*(mu2_perp*factors).sum(axis=1)
+    M3 = p*(mu3_perp*factors).sum(axis=1)
+
+    return M1, M2, M3
 
 class UnitCell:
     """

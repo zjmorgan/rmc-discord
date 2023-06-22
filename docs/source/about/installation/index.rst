@@ -1,7 +1,7 @@
 Installation
 ============
 
-Download a copy of the source directory from the [repository](https://github.com/zjmorgan/rmc-discord).
+Download a copy of the source directory from the repository https://github.com/zjmorgan/rmc-discord.
 
 ``git clone https://github.com/zjmorgan/rmc-discord.git``
 

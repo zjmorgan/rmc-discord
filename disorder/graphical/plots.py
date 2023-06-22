@@ -127,6 +127,26 @@ class Plot():
         self.ax.set_title(title)
         self.ax.set_xlabel(xlabel)
         self.ax.set_ylabel(ylabel)
+        
+    def set_axis_scales(self, xscale='linear', yscale='linear'):
+        """
+        Update axis scales.
+        
+        Parameters
+        ----------
+        xscale : str
+            Axis scale type. Allowed values are ``'linear'``, ``'log'``, 
+            ``'symlog'``, or ``'logit'``. Default is ``'linear'``.
+        yscale : str
+            Axis scale type. Allowed values are ``'linear'``, ``'log'``, 
+            ``'symlog'``, or ``'logit'``. Default is ``'linear'``.
+            
+        """
+
+        self.ax.set_xscale(xscale)
+        self.ax.set_yscale(yscale)
+        self.ax.minorticks_on()
+
 
     def clear_canvas(self):
         """
@@ -325,12 +345,12 @@ class Line(Plot):
 
         ax = self.__get_axis(twin)
 
-        if (norm.lower() == 'linear'):
+        if norm.lower() == 'linear':
             ax.set_yscale('linear')
             ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
             ax.yaxis.set_minor_locator(ticker.AutoMinorLocator())
 
-        elif (norm.lower() == 'logarithmic'):
+        elif norm.lower() == 'logarithmic':
             ax.set_yscale('log')
             ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
             ax.yaxis.set_minor_locator(ticker.LogLocator())
@@ -911,7 +931,7 @@ class HeatMap(Plot):
 
 class Scatter(Plot):
     """
-    Intensity heat map plot.
+    Scatter plot.
 
     Parameters
     ----------
@@ -964,9 +984,9 @@ class Scatter(Plot):
 
     def __color_limits(self, category='sequential'):
 
-        if (category == 'sequential'):
+        if category == 'sequential':
             self.cmap = plt.cm.viridis
-        elif (category == 'diverging'):
+        elif category == 'diverging':
             self.cmap = plt.cm.bwr
         else:
             self.cmap = plt.cm.binary
@@ -1006,7 +1026,7 @@ class Scatter(Plot):
             self.remove_colorbar()
             self.create_colorbar(orientation, norm)
 
-            if (norm.lower() == 'symlog'):
+            if norm.lower() == 'symlog':
                 sym_log = ticker.SymmetricalLogLocator(linthresh=0.1, base=10)
                 self.cb.locator = sym_log
                 subs = np.linspace(0.1,0.9,9)
@@ -1162,3 +1182,4 @@ class Scatter(Plot):
         """
 
         self.sc = self.ax.scatter(x, y, c=c, cmap=self.cmap)
+
