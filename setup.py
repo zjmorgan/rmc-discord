@@ -1,5 +1,4 @@
-from setuptools import setup, dist, find_packages, Extension
-dist.Distribution().fetch_build_eggs(['Cython>=0.15.1', 'numpy>=1.10'])
+from setuptools import setup, find_packages, Extension
 
 import sys, re
 

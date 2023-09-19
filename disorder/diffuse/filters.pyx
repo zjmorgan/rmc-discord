@@ -604,7 +604,7 @@ cdef void copysort(double [:,::1] data,
         temp_ind = order[thread_id,i]
         temp_temp_ind = temp_order[thread_id,i]
         j = i-1
-        while (j >= 0 and data[thread_id,j] > temp):
+        while j >= 0 and data[thread_id,j] > temp:
             k = j+1
             data[thread_id,k] = data[thread_id,j]
             order[thread_id,k] = order[thread_id,j]
@@ -739,7 +739,7 @@ def median(double [:,:,::1] a, Py_ssize_t size):
                                  window_size,
                                  thread_id)
 
-                    elif (k == 0):
+                    elif k == 0:
 
                         p = 0
                         q = 0
