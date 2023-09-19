@@ -2,6 +2,8 @@
 
 import numpy as np
 
+np.bool = bool
+
 import h5py
 import pyvista as pv
 

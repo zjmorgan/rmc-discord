@@ -2,6 +2,8 @@ import os
 
 import numpy as np
 
+np.bool = bool
+
 from scipy.stats import chi2
 
 import pyvista
