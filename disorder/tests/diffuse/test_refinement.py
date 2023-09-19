@@ -380,16 +380,20 @@ class test_refinement(unittest.TestCase):
         x = np.linspace(-3,3,n)
 
         y_fit = 5*np.exp(-0.5*x**2)
-        y_obs = 2*y_fit+0.01*(2*np.random.random(n)-1)
+        y_obs = 2*y_fit+0.01*(2*np.random.random(n)-1)+3
 
         e = np.sqrt(y_obs)
-        inv_err_sq = 1/e**2
+        weight = 1/e**2
 
-        chi_sq, scale = refinement.reduced_chi_square(y_fit, y_obs, inv_err_sq)
+        chi_sq, scale, level = refinement.reduced_chi_square(y_fit, 
+                                                             y_obs,
+                                                             weight)
 
         self.assertAlmostEqual(scale, 2, 2)
 
-        self.assertAlmostEqual(chi_sq, np.sum((2*y_fit-y_obs)**2/e**2), 3)
+        self.assertAlmostEqual(level, 3, 2)
+
+        self.assertAlmostEqual(chi_sq, np.sum((2*y_fit+3-y_obs)**2/e**2), 3)
 
     def test_products(self):
 
@@ -1749,7 +1753,7 @@ class test_refinement(unittest.TestCase):
         boxes = filters.boxblur(sigma, 3)
 
         acc_moves, acc_temps, rej_moves, rej_temps = [], [], [], [],
-        energy, scale, chi_sq, temperature = [], [], [np.inf], [100]
+        energy, scale, level, chi_sq, temperature = [], [], [], [np.inf], [100]
         constant = 1e-4
 
         heisenberg, fixed = True, True
@@ -1775,7 +1779,7 @@ class test_refinement(unittest.TestCase):
                             g_filt, h_filt, i_filt,
                             boxes, i_dft, inverses, i_mask, i_unmask,
                             acc_moves, acc_temps, rej_moves, rej_temps, chi_sq,
-                            energy, temperature, scale, constant, fixed,
+                            energy, temperature, scale, level, constant, fixed,
                             heisenberg, nh, nk, nl, nu, nv, nw, n_atm, n, N)
 
         I_ref = magnetic.intensity(Qx_norm, Qy_norm, Qz_norm,
@@ -1906,7 +1910,7 @@ class test_refinement(unittest.TestCase):
         boxes = filters.boxblur(sigma, 3)
 
         acc_moves, acc_temps, rej_moves, rej_temps = [], [], [], [],
-        energy, scale, chi_sq, temperature = [], [], [np.inf], [100]
+        energy, scale, level, chi_sq, temperature = [], [], [], [np.inf], [100]
         constant = 1e-4
 
         fixed = True
@@ -1926,8 +1930,9 @@ class test_refinement(unittest.TestCase):
                                 g_filt, h_filt, i_filt,
                                 boxes, i_dft, inverses, i_mask, i_unmask,
                                 acc_moves, acc_temps, rej_moves, rej_temps,
-                                chi_sq, energy, temperature, scale, constant,
-                                fixed, nh, nk, nl, nu, nv, nw, n_atm, n, N)
+                                chi_sq, energy, temperature, scale, level,
+                                constant, fixed, nh, nk, nl,
+                                nu, nv, nw, n_atm, n, N)
 
         I_ref = occupational.intensity(A_k, i_dft, factors)
 
@@ -2094,7 +2099,7 @@ class test_refinement(unittest.TestCase):
         boxes = filters.boxblur(sigma, 3)
 
         acc_moves, acc_temps, rej_moves, rej_temps = [], [], [], [],
-        energy, scale, chi_sq, temperature = [], [], [np.inf], [10]
+        energy, scale, level, chi_sq, temperature = [], [], [], [np.inf], [10]
         constant = 1e-4
 
         isotropic, fixed = False, True
@@ -2120,7 +2125,7 @@ class test_refinement(unittest.TestCase):
                               bragg, even, boxes, i_dft, inverses, i_mask,
                               i_unmask, acc_moves, acc_temps, rej_moves,
                               rej_temps, chi_sq, energy, temperature, scale,
-                              constant, fixed, isotropic, p, nh, nk, nl,
+                              level, constant, fixed, isotropic, p, nh, nk, nl,
                               nu, nv, nw, n_atm, n, N)
 
         I_ref = displacive.intensity(U_k, Q_k, coeffs, cond, p,

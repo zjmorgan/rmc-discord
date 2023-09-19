@@ -147,7 +147,6 @@ class Plot():
         self.ax.set_yscale(yscale)
         self.ax.minorticks_on()
 
-
     def clear_canvas(self):
         """
         Clear canvas and remove axis.

@@ -550,7 +550,7 @@ def blurring(a, sigma):
 
     boxes = boxblur(sigma, 3)
 
-    nh, nk, nl = b.shape[0], b.shape[1], b.shape[2]
+    nh, nk, nl = a.shape[0], a.shape[1], a.shape[2]
 
     if np.isclose(sigma, 0).all():
 

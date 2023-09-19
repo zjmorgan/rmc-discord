@@ -273,7 +273,7 @@ class CrystalStructure:
 
         mesh = pyvista.PolyData(np.column_stack((0,0,0)))
 
-        geom = pyvista.Sphere(radius=1, theta_resolution=60, phi_resolution=60)
+        geom = pyvista.Sphere(radius=1, theta_resolution=10, phi_resolution=10)
 
         for j, i in enumerate(self._indices):
 
@@ -294,7 +294,7 @@ class CrystalStructure:
             glyph.__name = 's-{}'.format(i)
 
             self.pl.add_mesh(glyph, name='s-{}'.format(j), scalars=scalars,
-                             style='surface', rgb=True, smooth_shading=True)
+                              style='surface', rgb=True, smooth_shading=True)
 
         self.radii = radii
 
@@ -316,7 +316,7 @@ class CrystalStructure:
 
         mesh = pyvista.PolyData(np.column_stack((0,0,0)))
 
-        geom = pyvista.Sphere(radius=1, theta_resolution=60, phi_resolution=60)
+        geom = pyvista.Sphere(radius=1, theta_resolution=10, phi_resolution=10)
 
         for j, i in enumerate(self._indices):
 
@@ -373,7 +373,7 @@ class CrystalStructure:
 
             glyph = pyvista.Arrow(start=r-s*mag_scale*v,
                                   direction=v, scale=2*s*mag_scale,
-                                  shaft_resolution=60, tip_resolution=60)
+                                  shaft_resolution=10, tip_resolution=10)
 
             self.pl.add_mesh(glyph, color='red',
                              smooth_shading=True, pickable=False)

@@ -379,37 +379,49 @@ cpdef void unmask_intensity(double [::1] I_calc,
     for i_hkl in prange(n_hkl):
 
         I_calc[i_hkl] = I[i_unmask[i_hkl]]
-
-cpdef (double, double) reduced_chi_square(double [::1] calc,
-                                          double [::1] exp,
-                                          double [::1] inv_error_sq) nogil:
+        
+cpdef (double, double, double) reduced_chi_square(double [::1] calc,
+                                                  double [::1] expt,
+                                                  double [::1] weight) nogil:
 
     cdef Py_ssize_t n_hkl = calc.shape[0]
 
     cdef double chi_sq = 0
 
-    cdef double sum_calc = 0, sum_exp = 0
+    cdef double sum_calc = 0, sum_expt = 0, sum_weight = 0
+    cdef double sum_calc_calc = 0, sum_calc_expt = 0
 
-    cdef double scale, inter_calc, diff
+    cdef double inter_calc, inter_expt
+
+    cdef double scale, level, diff
 
     cdef Py_ssize_t i_hkl
 
     for i_hkl in prange(n_hkl):
 
-        inter_calc = calc[i_hkl]*inv_error_sq[i_hkl]
+        inter_calc = calc[i_hkl]*weight[i_hkl]
+        inter_expt = expt[i_hkl]*weight[i_hkl]
 
-        sum_exp += exp[i_hkl]*inter_calc
-        sum_calc += calc[i_hkl]*inter_calc
+        sum_weight += weight[i_hkl]
 
-    scale = sum_exp/sum_calc
+        sum_calc += inter_calc
+        sum_expt += inter_expt
+
+        sum_calc_calc += inter_calc*calc[i_hkl]
+        sum_calc_expt += inter_calc*expt[i_hkl]
+
+    scale = (sum_weight*sum_calc_expt-sum_calc*sum_expt)\
+          / (sum_weight*sum_calc_calc-sum_calc*sum_calc)
+
+    level = (sum_expt-scale*sum_calc)/sum_weight
 
     for i_hkl in prange(n_hkl):
 
-        diff = scale*calc[i_hkl]-exp[i_hkl]
+        diff = scale*calc[i_hkl]+level-expt[i_hkl]
 
-        chi_sq += inv_error_sq[i_hkl]*diff*diff
+        chi_sq += weight[i_hkl]*diff*diff
 
-    return chi_sq, scale
+    return chi_sq, scale, level
 
 cpdef void products(double [::1] V,
                     double Vx,
@@ -1578,8 +1590,8 @@ cpdef void magnetic(double [::1] Sx,
                     double complex [::1] factors,
                     double [::1] moment,
                     double [::1] I_calc,
-                    double [::1] I_exp,
-                    double [::1] inv_sigma_sq,
+                    double [::1] I_expt,
+                    double [::1] weight,
                     double [::1] I_raw,
                     double [::1] I_flat,
                     double [::1] I_ref,
@@ -1606,6 +1618,7 @@ cpdef void magnetic(double [::1] Sx,
                     list energy,
                     list temperature,
                     list scale,
+                    list level,
                     double constant,
                     bint fixed,
                     bint heisenberg,
@@ -1621,7 +1634,8 @@ cpdef void magnetic(double [::1] Sx,
 
     cdef double temp, inv_temp
 
-    cdef double delta_chi_sq, chi_sq_cand, chi_sq_orig, scale_factor
+    cdef double delta_chi_sq, chi_sq_cand, chi_sq_orig
+    cdef double scale_factor, background
 
     cdef double Sx_orig, Sy_orig, Sz_orig, Sx_cand, Sy_cand, Sz_cand, mu
 
@@ -1633,6 +1647,7 @@ cpdef void magnetic(double [::1] Sx,
     energy_np = np.zeros(N, dtype=np.double)
     temperature_np = np.zeros(N, dtype=np.double)
     scale_np = np.zeros(N, dtype=np.double)
+    level_np = np.zeros(N, dtype=np.double)
 
     cdef double [::1] acc_moves_arr = acc_moves_np
     cdef double [::1] acc_temps_arr = acc_temps_np
@@ -1642,6 +1657,7 @@ cpdef void magnetic(double [::1] Sx,
     cdef double [::1] energy_arr = energy_np
     cdef double [::1] temperature_arr = temperature_np
     cdef double [::1] scale_arr = scale_np
+    cdef double [::1] level_arr = level_np
 
     cdef Py_ssize_t i, j, s
 
@@ -1762,9 +1778,9 @@ cpdef void magnetic(double [::1] Sx,
 
             unmask_intensity(I_ref, I_flat, i_unmask)
 
-            chi_sq_cand, scale_factor = reduced_chi_square(I_ref,
-                                                           I_exp,
-                                                           inv_sigma_sq)
+            chi_sq_cand, scale_factor, background = reduced_chi_square(I_ref, 
+                                                                       I_expt, 
+                                                                       weight)
 
             delta_chi_sq = chi_sq_cand-chi_sq_orig
 
@@ -1801,6 +1817,7 @@ cpdef void magnetic(double [::1] Sx,
             energy_arr[s] = delta_chi_sq
             temperature_arr[s] = temp
             scale_arr[s] = scale_factor
+            level_arr[s] = background
 
     acc_moves.extend(acc_moves_arr)
     acc_temps.extend(acc_temps_arr)
@@ -1810,6 +1827,7 @@ cpdef void magnetic(double [::1] Sx,
     energy.extend(energy_arr)
     temperature.extend(temperature_arr)
     scale.extend(scale_arr)
+    level.extend(level_arr)
 
 cpdef void occupational(double [::1] A_r,
                         double complex [::1] A_k,
@@ -1825,8 +1843,8 @@ cpdef void occupational(double [::1] A_r,
                         double complex [::1] factors,
                         double [::1] occupancy,
                         double [::1] I_calc,
-                        double [::1] I_exp,
-                        double [::1] inv_sigma_sq,
+                        double [::1] I_expt,
+                        double [::1] weight,
                         double [::1] I_raw,
                         double [::1] I_flat,
                         double [::1] I_ref,
@@ -1853,6 +1871,7 @@ cpdef void occupational(double [::1] A_r,
                         list energy,
                         list temperature,
                         list scale,
+                        list level,
                         double constant,
                         bint fixed,
                         Py_ssize_t nh,
@@ -1867,7 +1886,8 @@ cpdef void occupational(double [::1] A_r,
 
     cdef double temp, inv_temp
 
-    cdef double delta_chi_sq, chi_sq_cand, chi_sq_orig, scale_factor
+    cdef double delta_chi_sq, chi_sq_cand, chi_sq_orig
+    cdef double scale_factor, background
 
     cdef double A_r_orig, A_r_cand, occ
 
@@ -1879,6 +1899,7 @@ cpdef void occupational(double [::1] A_r,
     energy_np = np.zeros(N, dtype=np.double)
     temperature_np = np.zeros(N, dtype=np.double)
     scale_np = np.zeros(N, dtype=np.double)
+    level_np = np.zeros(N, dtype=np.double)
 
     cdef double [::1] acc_moves_arr = acc_moves_np
     cdef double [::1] acc_temps_arr = acc_temps_np
@@ -1888,6 +1909,7 @@ cpdef void occupational(double [::1] A_r,
     cdef double [::1] energy_arr = energy_np
     cdef double [::1] temperature_arr = temperature_np
     cdef double [::1] scale_arr = scale_np
+    cdef double [::1] level_arr = level_np
 
     cdef Py_ssize_t i, j, s
 
@@ -1968,9 +1990,9 @@ cpdef void occupational(double [::1] A_r,
 
             unmask_intensity(I_ref, I_flat, i_unmask)
 
-            chi_sq_cand, scale_factor = reduced_chi_square(I_ref,
-                                                           I_exp,
-                                                           inv_sigma_sq)
+            chi_sq_cand, scale_factor, background = reduced_chi_square(I_ref, 
+                                                                       I_expt, 
+                                                                       weight)
 
             delta_chi_sq = chi_sq_cand-chi_sq_orig
 
@@ -2001,6 +2023,7 @@ cpdef void occupational(double [::1] A_r,
             energy_arr[s] = delta_chi_sq
             temperature_arr[s] = temp
             scale_arr[s] = scale_factor
+            level_arr[s] = background
 
     acc_moves.extend(acc_moves_arr)
     acc_temps.extend(acc_temps_arr)
@@ -2010,6 +2033,7 @@ cpdef void occupational(double [::1] A_r,
     energy.extend(energy_arr)
     temperature.extend(temperature_arr)
     scale.extend(scale_arr)
+    level.extend(level_arr)
 
 cpdef void displacive(double [::1] Ux,
                       double [::1] Uy,
@@ -2049,8 +2073,8 @@ cpdef void displacive(double [::1] Ux,
                       double [::1] Lxz,
                       double [::1] Lxy,
                       double [::1] I_calc,
-                      double [::1] I_exp,
-                      double [::1] inv_sigma_sq,
+                      double [::1] I_expt,
+                      double [::1] weight,
                       double [::1] I_raw,
                       double [::1] I_flat,
                       double [::1] I_ref,
@@ -2079,6 +2103,7 @@ cpdef void displacive(double [::1] Ux,
                       list energy,
                       list temperature,
                       list scale,
+                      list level,
                       double constant,
                       bint fixed,
                       bint isotropic,
@@ -2095,7 +2120,8 @@ cpdef void displacive(double [::1] Ux,
 
     cdef double temp, inv_temp
 
-    cdef double delta_chi_sq, chi_sq_cand, chi_sq_orig, scale_factor
+    cdef double delta_chi_sq, chi_sq_cand, chi_sq_orig
+    cdef double scale_factor, background
 
     cdef double Ux_orig, Uy_orig, Uz_orig, Ux_cand, Uy_cand, Uz_cand
 
@@ -2109,6 +2135,7 @@ cpdef void displacive(double [::1] Ux,
     energy_np = np.zeros(N, dtype=np.double)
     temperature_np = np.zeros(N, dtype=np.double)
     scale_np = np.zeros(N, dtype=np.double)
+    level_np = np.zeros(N, dtype=np.double)
 
     cdef double [::1] acc_moves_arr = acc_moves_np
     cdef double [::1] acc_temps_arr = acc_temps_np
@@ -2118,6 +2145,7 @@ cpdef void displacive(double [::1] Ux,
     cdef double [::1] energy_arr = energy_np
     cdef double [::1] temperature_arr = temperature_np
     cdef double [::1] scale_arr = scale_np
+    cdef double [::1] level_arr = level_np
 
     cdef double [::1] result = np.zeros(3, dtype=np.double)
 
@@ -2236,9 +2264,9 @@ cpdef void displacive(double [::1] Ux,
 
             unmask_intensity(I_ref, I_flat, i_unmask)
 
-            chi_sq_cand, scale_factor = reduced_chi_square(I_ref,
-                                                           I_exp,
-                                                           inv_sigma_sq)
+            chi_sq_cand, scale_factor, background = reduced_chi_square(I_ref, 
+                                                                       I_expt, 
+                                                                       weight)
 
             delta_chi_sq = chi_sq_cand-chi_sq_orig
 
@@ -2276,6 +2304,7 @@ cpdef void displacive(double [::1] Ux,
             energy_arr[s] = delta_chi_sq
             temperature_arr[s] = temp
             scale_arr[s] = scale_factor
+            level_arr[s] = background
 
     acc_moves.extend(acc_moves_arr)
     acc_temps.extend(acc_temps_arr)
@@ -2285,3 +2314,4 @@ cpdef void displacive(double [::1] Ux,
     energy.extend(energy_arr)
     temperature.extend(temperature_arr)
     scale.extend(scale_arr)
+    level.extend(level_arr)

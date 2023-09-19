@@ -416,7 +416,7 @@ class Model:
                                   h_range, k_range, l_range,
                                   centering=centering,
                                   outlier=outlier,
-                                  punch=punch)
+                                  ptype=punch)
 
     def get_mask(self, signal, error_sq):
 
@@ -764,7 +764,8 @@ class Model:
         return Ux, Uy, Uz
 
     def save_refinement(self, fname, run, I_obs, chi_sq, energy, temperature,
-                        scale, acc_moves, rej_moves, acc_temps, rej_temps):
+                        scale, level, acc_moves, rej_moves,
+                        acc_temps, rej_temps):
 
         np.save('{}-calculated-intensity-{}.npy'.format(fname,run), I_obs)
 
@@ -772,6 +773,7 @@ class Model:
         np.save('{}-energy-{}.npy'.format(fname,run), energy)
         np.save('{}-temperature-{}.npy'.format(fname,run), temperature)
         np.save('{}-scale-factor-{}.npy'.format(fname,run), scale)
+        np.save('{}-background-level-{}.npy'.format(fname,run), level)
 
         np.save('{}-accepted-moves-{}.npy'.format(fname,run), acc_moves)
         np.save('{}-rejected-moves-{}.npy'.format(fname,run), rej_moves)
@@ -787,6 +789,7 @@ class Model:
         energy = np.load('{}-energy-{}.npy'.format(fname,run))
         temperature = np.load('{}-temperature-{}.npy'.format(fname,run))
         scale = np.load('{}-scale-factor-{}.npy'.format(fname,run))
+        level = np.load('{}-background-level-{}.npy'.format(fname,run))
 
         acc_moves = np.load('{}-accepted-moves-{}.npy'.format(fname,run))
         rej_moves = np.load('{}-rejected-moves-{}.npy'.format(fname,run))
@@ -795,7 +798,7 @@ class Model:
         rej_temps = np.load('{}-rejected-temperature-{}.npy'.format(fname,run))
 
         return I_obs, chi_sq.tolist(), energy.tolist(), \
-               temperature.tolist(), scale.tolist(), \
+               temperature.tolist(), scale.tolist(), level.tolist(), \
                acc_moves.tolist(), rej_moves.tolist(), \
                acc_temps.tolist(), rej_temps.tolist()
 
@@ -1040,7 +1043,7 @@ class Model:
                             g_filt, h_filt, i_filt,
                             boxes, i_dft, inverses, i_mask, i_unmask,
                             acc_moves, acc_temps, rej_moves, rej_temps, chi_sq,
-                            energy, temperature, scale, constant, fixed,
+                            energy, temperature, scale, level, constant, fixed,
                             heisenberg, nh, nk, nl, nu, nv, nw, n_atm, n, N):
 
         refinement.magnetic(Sx, Sy, Sz, Qx_norm, Qy_norm, Qz_norm,
@@ -1060,7 +1063,7 @@ class Model:
                             g_filt, h_filt, i_filt,
                             boxes, i_dft, inverses, i_mask, i_unmask,
                             acc_moves, acc_temps, rej_moves, rej_temps, chi_sq,
-                            energy, temperature, scale, constant, fixed,
+                            energy, temperature, scale, level, constant, fixed,
                             heisenberg, nh, nk, nl, nu, nv, nw, n_atm, n, N)
 
     def occupational_refinement(self, A_r, A_k, A_k_orig, A_k_cand,
@@ -1074,7 +1077,8 @@ class Model:
                                 g_filt, h_filt, i_filt,
                                 boxes, i_dft, inverses, i_mask, i_unmask,
                                 acc_moves, acc_temps, rej_moves, rej_temps,
-                                chi_sq, energy, temperature, scale, constant,
+                                chi_sq, energy, temperature,
+                                scale, level, constant,
                                 fixed, nh, nk, nl, nu, nv, nw, n_atm, n, N):
 
         refinement.occupational(A_r, A_k, A_k_orig, A_k_cand,
@@ -1088,7 +1092,8 @@ class Model:
                                 g_filt, h_filt, i_filt,
                                 boxes, i_dft, inverses, i_mask, i_unmask,
                                 acc_moves, acc_temps, rej_moves, rej_temps,
-                                chi_sq, energy, temperature, scale, constant,
+                                chi_sq, energy, temperature,
+                                scale, level, constant,
                                 fixed, nh, nk, nl, nu, nv, nw, n_atm, n, N)
 
     def displacive_refinement(self, Ux, Uy, Uz,
@@ -1107,8 +1112,9 @@ class Model:
                               g_filt, h_filt, i_filt,
                               bragg, even, boxes, i_dft, inverses, i_mask,
                               i_unmask, acc_moves, acc_temps, rej_moves,
-                              rej_temps, chi_sq, energy, temperature, scale,
-                              constant, fixed, isotropic, p, nh, nk, nl,
+                              rej_temps, chi_sq, energy, temperature,
+                              scale, level, constant,
+                              fixed, isotropic, p, nh, nk, nl,
                               nu, nv, nw, n_atm, n, N):
 
         refinement.displacive(Ux, Uy, Uz,
@@ -1127,8 +1133,9 @@ class Model:
                               g_filt, h_filt, i_filt,
                               bragg, even, boxes, i_dft, inverses, i_mask,
                               i_unmask, acc_moves, acc_temps, rej_moves,
-                              rej_temps, chi_sq, energy, temperature, scale,
-                              constant, fixed, isotropic, p, nh, nk, nl,
+                              rej_temps, chi_sq, energy, temperature,
+                              scale, level, constant, fixed,
+                              isotropic, p, nh, nk, nl,
                               nu, nv, nw, n_atm, n, N)
 
     def correlation_statistics(self, corr):

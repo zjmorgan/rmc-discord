@@ -290,11 +290,13 @@ class Presenter:
                 self.filter_sigma()
                 stats = self.model.load_refinement(fname, run)
                 self.I_obs, self.chi_sq, self.energy, self.temperature, \
-                self.scale, self.acc_moves, self.rej_moves, \
+                self.scale, self.level, self.acc_moves, self.rej_moves, \
                 self.acc_temps, self.rej_temps = stats
                 self.iteration = len(self.scale) // (self.n_uvw*self.n_atm)
                 scale = self.scale[-1]
-                self.refinement_m = self.model.mask_array(self.I_obs*scale)
+                level = self.level[-1]
+                self.refinement_m = self.model.mask_array(self.I_obs*scale+
+                                                          level)
                 self.allocated = True
                 plot_type = self.view.get_plot_ref()
                 if (plot_type == 'Calculated'):
@@ -2314,6 +2316,7 @@ class Presenter:
         self.energy = []
         self.temperature = [self.view.get_prefactor()]
         self.scale = []
+        self.level = []
 
     def populate_atom_site_recalculation_1d_table(self):
 
@@ -2506,7 +2509,7 @@ class Presenter:
 
             self.model.save_refinement(self.fname, b, self.I_obs, self.chi_sq,
                                        self.energy, self.temperature,
-                                       self.scale, self.acc_moves,
+                                       self.scale, self.level, self.acc_moves,
                                        self.rej_moves, self.acc_temps,
                                        self.rej_temps)
 
@@ -2689,6 +2692,7 @@ class Presenter:
         chi_sq, energy = self.chi_sq, self.energy
         temperature = self.temperature
         scale = self.scale
+        level = self.level
 
         nh, nk, nl = self.nh, self.nk, self.nl
         nu, nv, nw, n_atm, n = self.nu, self.nv, self.nw, self.n_atm, self.n
@@ -2745,7 +2749,7 @@ class Presenter:
                 g_filt, h_filt, i_filt,
                 boxes, i_dft, inverses, i_mask, i_unmask,
                 acc_moves, acc_temps, rej_moves, rej_temps,
-                chi_sq, energy, temperature, scale, constant,
+                chi_sq, energy, temperature, scale, level, constant,
                 fixed_mag, heisenberg, nh, nk, nl, nu, nv, nw, n_atm, n, N)
 
         elif self.occupational:
@@ -2774,7 +2778,7 @@ class Presenter:
                 g_filt, h_filt, i_filt,
                 boxes, i_dft, inverses, i_mask, i_unmask,
                 acc_moves, acc_temps, rej_moves, rej_temps,
-                chi_sq, energy, temperature, scale, constant, fixed_occ,
+                chi_sq, energy, temperature, scale, level, constant, fixed_occ,
                 nh, nk, nl, nu, nv, nw, n_atm, n, N)
 
         elif self.displacive:
@@ -2827,13 +2831,14 @@ class Presenter:
                 g_filt, h_filt, i_filt,
                 bragg, even, boxes, i_dft, inverses, i_mask, i_unmask,
                 acc_moves, acc_temps, rej_moves, rej_temps,
-                chi_sq, energy, temperature, scale, constant,
+                chi_sq, energy, temperature, scale, level, constant,
                 fixed_dis, isotropic, p, nh, nk, nl, nu, nv, nw, n_atm, n, N)
 
         self.I_obs = I_flat.reshape(nh,nk,nl)
         self.I_obs[self.mask] = np.nan
 
-        self.refinement_m = self.model.mask_array(self.I_obs*scale[-1])
+        self.refinement_m = self.model.mask_array(self.I_obs*scale[-1]+
+                                                  level[-1])
 
     def draw_plot_ref(self):
 
@@ -2976,7 +2981,7 @@ class Presenter:
 
             acc_moves, rej_moves = self.acc_moves, self.rej_moves
             temperature, energy = self.temperature, self.energy
-            chi_sq, scale = self.chi_sq, self.scale
+            chi_sq, scale, level = self.chi_sq, self.scale, self.level
 
             chi_sq_plot = Line(canvas)
             chi_sq_plot.clear_canvas()
@@ -3015,6 +3020,10 @@ class Presenter:
                 ylabel = r'$s$'
                 yl = scale.copy()
                 norm = 'linear'
+            elif (plot_l == 'Background level'):
+                ylabel = r'$b$'
+                yl = level.copy()
+                norm = 'linear'
 
             if (plot_r == 'Accepted' and not plot_l == 'Rejected'):
                 twin_ylabel = r'$\chi^2$'
@@ -3035,6 +3044,10 @@ class Presenter:
             elif (plot_r == 'Scale factor'):
                 twin_ylabel = r'$s$'
                 yr = scale.copy()
+                twin_norm = 'linear'
+            elif (plot_r == 'Background lebel'):
+                twin_ylabel = r'$b$'
+                yr = level.copy()
                 twin_norm = 'linear'
 
             xl, xr = np.arange(len(yl)), np.arange(len(yr))
@@ -3067,7 +3080,7 @@ class Presenter:
 
         acc_moves, rej_moves = self.acc_moves, self.rej_moves
         temperature, energy = self.temperature, self.energy
-        chi_sq, scale = self.chi_sq, self.scale
+        chi_sq, scale, level = self.chi_sq, self.scale, self.level
 
         twin = True
 
@@ -3088,6 +3101,8 @@ class Presenter:
             yl = chi_sq.copy()
         elif (plot_l == 'Scale factor'):
             yl = scale.copy()
+        elif (plot_l == 'Background level'):
+            yl = level.copy()
 
         if (plot_r == 'Accepted'):
             yr = acc_moves.copy()
@@ -3101,6 +3116,8 @@ class Presenter:
             yr = chi_sq.copy()
         elif (plot_r == 'Scale factor'):
             yr = scale.copy()
+        elif (plot_r == 'Backgound level'):
+            yr = level.copy()
 
         xl, xr = np.arange(len(yl)), np.arange(len(yr))
 

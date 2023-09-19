@@ -1961,8 +1961,10 @@ class UnitCell:
             Colors of atoms in RGB.
 
         """
+        
+        ind = self.__index
 
-        return np.array([tables.rgb.get(atm) for atm in self.__atm])
+        return np.array([tables.rgb.get(atm) for atm in self.__atm[ind]])
 
     def get_atom_radii(self, radii='empirical'):
         """
@@ -1976,9 +1978,11 @@ class UnitCell:
 
         """
 
-        ind = ['empirical', 'calculated', 'van der waals'].index(radii)
+        typ = ['empirical', 'calculated', 'van der waals'].index(radii)
 
-        return np.array([tables.r.get(atm)[ind] for atm in self.__atm])
+        ind = self.__index
+
+        return np.array([tables.r.get(atm)[typ] for atm in self.__atm[ind]])
 
 class SuperCell(UnitCell):
     """

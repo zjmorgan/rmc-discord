@@ -1369,7 +1369,7 @@ class Refinement:
 
         return space.indices(self.__mask())
 
-    def initialize_refinement(self, temp, const):
+    def initialize_refinement(self, temp=1, const=0):
         """
         Initialize refinement.
 

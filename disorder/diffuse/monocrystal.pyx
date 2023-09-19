@@ -1756,12 +1756,12 @@ def idft(X, Nu, Nv, Nw):
     x = np.fft.ifftn(U, axes=(0,1,2))
 
     for i in range(1, Nu // nu):
-        x[i::(Nu//nu),:,:,:] += x[0::(Nu//nu),:,:,:]*0#*(Nu//nu-i)/(Nu//nu)
+        x[i::(Nu//nu),:,:,:] += x[0::(Nu//nu),:,:,:]#*(Nu//nu-i)/(Nu//nu)
 
     for j in range(1, Nv // nv):
-        x[:,j::(Nv//nv),:,:] += x[:,0::(Nv//nv),:,:]*0#*(Nv//nv-j)/(Nv//nv)
+        x[:,j::(Nv//nv),:,:] += x[:,0::(Nv//nv),:,:]#*(Nv//nv-j)/(Nv//nv)
 
     for k in range(1, Nw // nw):
-        x[:,:,k::(Nw//nw),:] += x[:,:,0::(Nw//nw),:]*0#*(Nw//nw-k)/(Nw//nw)
+        x[:,:,k::(Nw//nw),:] += x[:,:,0::(Nw//nw),:]#*(Nw//nw-k)/(Nw//nw)
 
     return x

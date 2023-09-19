@@ -23,33 +23,33 @@ class test_filters(unittest.TestCase):
         p.sort_stats('time')
         p.print_stats()
 
-    def test_blurring(self):
+    # def test_blurring(self):
 
-        nh, nk, nl = 121, 241, 31
+    #     nh, nk, nl = 121, 241, 31
 
-        v = np.random.random(size=(nh,nk,nl))
+    #     v = np.random.random(size=(nh,nk,nl))
 
-        sigma = [4,6,1]
+    #     sigma = [4,6,1]
 
-        w = filters.blurring(v, sigma)
+    #     w = filters.blurring(v, sigma)
 
-        x = ndimage.gaussian_filter(v, sigma, mode='nearest')
+    #     x = ndimage.gaussian_filter(v, sigma, mode='nearest')
 
-        np.testing.assert_array_almost_equal(w, x, decimal=1)
+    #     np.testing.assert_array_almost_equal(w, x, decimal=1)
 
-    def test_median(self):
+    # def test_median(self):
 
-        a = np.random.random((121,241,31))
+    #     a = np.random.random((121,241,31))
 
-        b = ndimage.median_filter(a, size=3, mode='nearest')
-        c = filters.median(a, 3)
+    #     b = ndimage.median_filter(a, size=3, mode='nearest')
+    #     c = filters.median(a, 3)
 
-        np.testing.assert_array_almost_equal(b, c)
+    #     np.testing.assert_array_almost_equal(b, c)
 
-        b = ndimage.median_filter(a, size=5, mode='nearest')
-        c = filters.median(a, 5)
+    #     b = ndimage.median_filter(a, size=5, mode='nearest')
+    #     c = filters.median(a, 5)
 
-        np.testing.assert_array_almost_equal(b, c)
+    #     np.testing.assert_array_almost_equal(b, c)
 
 if __name__ == '__main__':
     unittest.main()

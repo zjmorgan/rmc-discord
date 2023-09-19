@@ -129,6 +129,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_plot_top_chi_sq.addItem('Energy')
         self.comboBox_plot_top_chi_sq.addItem('Chi-squared')
         self.comboBox_plot_top_chi_sq.addItem('Scale factor')
+        self.comboBox_plot_top_chi_sq.addItem('Background level')
 
         self.comboBox_plot_bottom_chi_sq.addItem('Accepted')
         self.comboBox_plot_bottom_chi_sq.addItem('Rejected')
@@ -136,6 +137,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
         self.comboBox_plot_bottom_chi_sq.addItem('Energy')
         self.comboBox_plot_bottom_chi_sq.addItem('Chi-squared')
         self.comboBox_plot_bottom_chi_sq.addItem('Scale factor')
+        self.comboBox_plot_bottom_chi_sq.addItem('Background level')
 
         self.comboBox_plot_ref.addItem('Calculated')
         self.comboBox_plot_ref.addItem('Experimental')
@@ -1390,7 +1392,7 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
             check = self.tableWidget_atm.cellWidget(i, k)
             site = self.tableWidget_atm.indexAt(check.pos()).row()
             for j in range(self.tableWidget_CIF.rowCount()):
-                s = np.int(self.tableWidget_CIF.item(j, l).text())-1
+                s = int(self.tableWidget_CIF.item(j, l).text())-1
                 if (site == s):
                     if check.isChecked():
                         self.tableWidget_CIF.setRowHidden(j, False)
