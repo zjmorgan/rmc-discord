@@ -40,7 +40,7 @@ To define a supercell, it is first necessary to construct a unit cell from the a
           The equivalent isotropic parameter $$U_\text{iso}$$ and its principal components will be updated ($$U_1$$, $$U_2$$, $$U_3$$).
           If available, *Magnetic parameters* allows the magnetic ion to be chosen along with the magnetic moment component along the crystal axes.
           If a valid  `.mcif` is used, the magnetic symmetry will be accounted for. The $$g$$-factor can also be specified.
-     - Select *Magnetic parameters*, choose $$\mathrm{Fe3+}$$ and $$\mathrm{Mn3+}$$ ions and deactivate site 3 since oxygen is nonmagnetic.
+     - Select *Magnetic parameters*, choose $$\mathrm{Mn2+}$$ ions and deactivate site 2 since oxygen is nonmagnetic.
      - Create a supercell with size $$N_1=8$$, $$N_2=8$$, and $$N_3=8$$ by entering the number of cells along each crystal axes. 
 3. Optionally save the CIF file of the supercell and visualize it in external program [VESTA](https://jp-minerals.org/vesta/en/)
 
