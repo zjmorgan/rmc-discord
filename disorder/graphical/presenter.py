@@ -1244,7 +1244,7 @@ class Presenter:
 
         plot_exp_h.set_labels(r'$h={}$'.format(h), r'$(0k0)$', r'$(00l)$')
         plot_exp_k.set_labels(r'$k={}$'.format(k), r'$(h00)$', r'$(00l)$')
-        plot_exp_l.set_labels(r'$l={}$'.format(l), r'$(0k0)$', r'$(0k0)$')
+        plot_exp_l.set_labels(r'$l={}$'.format(l), r'$(h00)$', r'$(0k0)$')
 
         plot_exp_h.tight_layout()
         plot_exp_k.tight_layout()
@@ -2908,7 +2908,7 @@ class Presenter:
                 slice_data = data[:,:,i_hkl]
                 limits = min_h, min_k, max_h, max_k
                 matrix = Bp[0:2,0:2]
-                labels = r'$l={}$'.format(slice_hkl), r'$(0k0)$', r'$(0k0)$'
+                labels = r'$l={}$'.format(slice_hkl), r'$(h00)$', r'$(0k0)$'
 
             plot_ref.plot_data(slice_data, *limits)
             plot_ref.transform_axes(matrix)
@@ -3045,7 +3045,7 @@ class Presenter:
                 twin_ylabel = r'$s$'
                 yr = scale.copy()
                 twin_norm = 'linear'
-            elif (plot_r == 'Background lebel'):
+            elif (plot_r == 'Background level'):
                 twin_ylabel = r'$b$'
                 yr = level.copy()
                 twin_norm = 'linear'
@@ -4285,7 +4285,7 @@ class Presenter:
                 slice_data = data[:,:,i_hkl]
                 limits = min_h, min_k, max_h, max_k
                 matrix = Bp[0:2,0:2]
-                labels = r'$l={}$'.format(slice_hkl), r'$(0k0)$', r'$(0k0)$'
+                labels = r'$l={}$'.format(slice_hkl), r'$(h00)$', r'$(0k0)$'
 
             plot_calc_3d.plot_data(slice_data, *limits)
             plot_calc_3d.transform_axes(matrix)
