@@ -278,7 +278,7 @@ class Model:
 
     def load_data(self, fname):
 
-        if fname.endswith('.nxs'):
+        if fname.endswith('.nxs') or fname.endswith('.h5'):
             signal, sigma_sq, \
             h_range, k_range, l_range, \
             nh, nk, nl = experimental.data(fname)

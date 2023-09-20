@@ -1856,7 +1856,8 @@ class View(QtWidgets.QMainWindow, Ui_MainWindow):
 
         filename, \
         filters = QtWidgets.QFileDialog.getOpenFileName(self, 'Open file', '.',
-                                                        'NeXus files *.nxs',
+                                                        'NeXus files *.nxs;;'+
+                                                        'HDF5 files *.h5;;'+
                                                         'NumPy files *.npz',
                                                         options=options)
         return filename

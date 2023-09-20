@@ -27,11 +27,11 @@ def data(filename):
         h = data['Q1'][...]
         k = data['Q2'][...]
         l = data['Q3'][...]
-    if 'D0' in data.keys():
+    elif 'D0' in data.keys():
         h = data['D0'][...]
         k = data['D1'][...]
         l = data['D2'][...]
-    elif '[H,0,0]'in f.keys():
+    elif '[H,0,0]'in data.keys():
         h = data['[H,0,0]'][...]
         k = data['[0,K,0]'][...]
         l = data['[0,0,L]'][...]
