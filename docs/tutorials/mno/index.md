@@ -1,9 +1,13 @@
-# **Bixbyite -- magnetic**
+# **MnO -- magnetic**
+
+This example is courtesy of 
+[Joseph A. M. Paddison, Matthias J. Gutmann, J. Ross Stewart, Matthew G. Tucker, Martin T. Dove, David A. Keen, and Andrew L. Goodwin
+Phys. Rev. B 97, 014429](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.97.014429) 
 
 ### Getting started on `analysis.sns.gov`
 1. Open a terminal (Ctrl+Alt+T)
 2. Create a directory on your Desktop `mkdir ~/Desktop/Workshop/`
-3. Copy over CIF and data files `cp /SNS/software/scd/examples/bixbyite.* ~/Desktop/Workshop/`
+3. Copy over CIF and data files `cp /SNS/software/scd/examples/MnO.* ~/Desktop/Workshop/`
 4. Launch rmc-discord `/SNS/software/scd/rmc-discord.sh`
 
 ## **RMC refinement**
@@ -20,7 +24,7 @@ To define a supercell, it is first necessary to construct a unit cell from the a
 
 1. Begin by loading a crystallographic information file (CIF) or magnetic CIF file
   - The button is located on the upper left corner of window *Load CIF*.
-  - Choose `bixbyite.cif`.
+  - Choose `MnO.cif`.
   - The parameters are extracted from the CIF file and populated into two tables.
     - The left hand table displays all atoms in the unit supercell.
     - The right hand table gives the basic atom site information.
@@ -37,13 +41,11 @@ To define a supercell, it is first necessary to construct a unit cell from the a
           If available, *Magnetic parameters* allows the magnetic ion to be chosen along with the magnetic moment component along the crystal axes.
           If a valid  `.mcif` is used, the magnetic symmetry will be accounted for. The $$g$$-factor can also be specified.
      - Select *Magnetic parameters*, choose $$\mathrm{Fe3+}$$ and $$\mathrm{Mn3+}$$ ions and deactivate site 3 since oxygen is nonmagnetic.
-     - Update the occupancy of the Fe-rich site at $$(0,0,0)$$ to 1.0 and deactivate the Mn-deficient part.
-     - Update the occupancy of the Mn site at $$(0,0.75,z)$$ to 1.0 and deactivate Fe part.
-     - Create a supercell with size $$N_1=4$$, $$N_2=4$$, and $$N_3=4$$ by entering the number of cells along each crystal axes. 
+     - Create a supercell with size $$N_1=8$$, $$N_2=8$$, and $$N_3=8$$ by entering the number of cells along each crystal axes. 
 3. Optionally save the CIF file of the supercell and visualize it in external program [VESTA](https://jp-minerals.org/vesta/en/)
 
 <p align="center">
-<img src="bixbyite-gui-crystal.png" alt="Bixbyite GUI crystal tab" width="640">
+<img src="mno-gui-crystal.png" alt="Bixbyite GUI crystal tab" width="640">
 <br />
 Crystal tab
 </p>
@@ -60,9 +62,9 @@ Crystal tab
 
 Once a supercell is defined, the experimental data can be loaded and preprocessed for refinement
 
-1. Load a NeXus (NXS) with the diffuse scattering data
-  - The button is located on the upper left corner of window *Load NeXus file*.
-  -  Choose `bixbyite.nxs`.
+1. Load a HDF5 (H5) with the diffuse scattering data
+  - The button is located on the upper left corner of window *Load NeXus file*. 
+  - Choose `MnO.h5`.
   - The loaded data are displayed as three separate reciprocal space slices: $$(0kl)$$, $$(h0l)$$, and $$(hk0)$$.
     - The table displays the binning information along each reciprocal space dimension.
     - The tabs give basic options for rebinning, cropping, and punching out Bragg peaks.
@@ -77,17 +79,11 @@ Once a supercell is defined, the experimental data can be loaded and preprocesse
      - The *Centered at integer* check boxes give only the options where the binning is centered over each integer $$h$$, $$k$$, and $$l$$.
   - The *Crop* table allows the $$h$$-, $$k$$-, and $$l$$-range to be specified.
      - The *Reset* button resets the binning and cropping to the original values of the loaded data.
-  - Rebin the data to $$0.2\times0.2\times0.2$$ and crop to -4 to 4 along each dimension.
-3. Remove the Bragg peaks
-  - Select the *Centering* of the crystal (*I* for body centering).
-  - Optionally, choose between *Box* and *Ellipsoid*.
-  - Choose the size for each radius in number of pixels, for exampe 2 pixels.
-  - Optionally, decrease the *Outlier* parameter to remove more data.
-  - The *Punch* can be done in multiple passes.
-  - The removal can be *Reset*.
+  - Rebin the data to $$0.12\times0.12\times0.12$$ and crop to -3 to 3 along each dimension.
+3. The Bragg peaks are already removed
 
   <p align="center">
-  <img src="bixbyite-gui-intensity.png" alt="Bixbyite GUI intensity tab" width="640">
+  <img src="mno-gui-intensity.png" alt="MnO GUI intensity tab" width="640">
   <br />
   Crystal tab
   </p>
@@ -95,7 +91,6 @@ Once a supercell is defined, the experimental data can be loaded and preprocesse
 **Hints**
 - View the data in logarithmic scale to better observe the diffuse scattering.
 - Select a region of interest that covers at least the primitive features of the observed diffuse scattering.
-- Check for complete Bragg peak removal by switching between linear and logarithmic scaling.
 
 ### **Refinement tab**
 
@@ -121,7 +116,7 @@ Setup and run a refinement.
   - View different refinement static plots.
 
 <p align="center">
-<img src="bixbyite-gui-refinement.png" alt="Bixbyite GUI refinement tab" width="640">
+<img src="mno-gui-refinement.png" alt="MnO GUI refinement tab" width="640">
 <br />
 Crystal tab
 </p>
@@ -159,7 +154,7 @@ After completing a refinement, the pair correlations can be calculated.
  - Choose a distance $$d$$ from the origin where $$(hkl)\cdot[uvw]=d$$.
 
 <p align="center">
-<img src="bixbyite-gui-correlations.png" alt="Bixbyite GUI correlations tab" width="640">
+<img src="mno-gui-correlations.png" alt="MnO GUI correlations tab" width="640">
 <br />
 Crystal tab
 </p>
@@ -173,7 +168,7 @@ Crystal tab
 ### **Recalculation tab**
 
 <p align="center">
-<img src="bixbyite-gui-recalculation.png" alt="Bixbyite GUI recalculation tab" width="640">
+<img src="mno-gui-recalculation.png" alt="MnO GUI recalculation tab" width="640">
 <br />
 Crystal tab
 </p>

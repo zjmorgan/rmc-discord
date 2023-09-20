@@ -2,6 +2,13 @@
 
 In the examples below, the diffuse scattering patterns without Bragg peaks are generated using a forward Monte Carlo method.
 
+# **Workshop example**
+
+The following example use collected data.
+
+* [MnO -- magnetic](mno/index)
+* [Bixbyite -- magnetic](bixbyite/index)
+
 ## **Hexagonal examples**
 The following introductory examples illustrate refinement each of the three disorder types in two-dimensions.
 * [Kagome -- magnetic](kagome/index)
@@ -15,8 +22,3 @@ Refinement of correlated disorder on the pyrochlore lattice is demonstrated in t
 * [Charge ice](pyrochlore/occupational/index)
 * [Displacement ice](pyrochlore/displacive/index)
 
-# **Workshop example**
-
-The following example use collected data.
-
-* [Bixbyite -- magnetic](bixbyite/index)
