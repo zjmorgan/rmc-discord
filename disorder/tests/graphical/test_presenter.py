@@ -30,6 +30,43 @@ class test_presenter(unittest.TestCase):
 
         plt.close('all')
 
+    def test_preprocess_displacement_covariance(self):
+
+        values = {
+            'get_nu': 2, 'get_nv': 2, 'get_nw': 2, 'get_n_atm': 1, 'get_n': 8,
+            'get_lattice_parameters': (4.,4.,4.,np.pi/2,np.pi/2,np.pi/2),
+            'get_site': np.array([0]), 'get_atom': np.array(['C']),
+            'get_isotope': np.array(['-']), 'get_ion': np.array(['-']),
+            'get_occupancy': np.ones(1), 'get_Uiso': np.array([.02]),
+            'get_mu': np.ones(1), 'get_mu1': np.zeros(1),
+            'get_mu2': np.zeros(1), 'get_mu3': np.ones(1),
+            'get_g': np.full(1, 2.),
+            'get_u': np.zeros(1), 'get_v': np.zeros(1), 'get_w': np.zeros(1),
+            'get_experiment_binning_h': (.5,3,0.,1.),
+            'get_experiment_binning_k': (.5,3,0.,1.),
+            'get_experiment_binning_l': (.5,3,0.,1.),
+            'get_moment_constraint': 'Heisenberg',
+            'get_displacement_constraint': 'Anisotropic',
+            'get_adp_type': 'Anisotropic', 'get_disorder_dis': True,
+            'get_type': 'Neutron', 'get_order': 2,
+            'fixed_moment_check': False, 'fixed_composition_check': False,
+            'fixed_displacement_check': False,
+        }
+        for name, value in values.items():
+            setattr(self.view, name, MagicMock(return_value=value))
+        self.presenter.signal_m = np.ones((3,3,3))
+        self.presenter.error_sq_m = np.ones((3,3,3))
+
+        for adps in ([.02,.02,.02,0.,0.,0.],
+                     [.04,.03,.02,.004,.006,.012]):
+            with self.subTest(adps=adps):
+                for name, value in zip(('11','22','33','23','13','12'), adps):
+                    setattr(self.view, 'get_U'+name,
+                            MagicMock(return_value=np.array([value])))
+                self.presenter.preprocess_supercell()
+                np.testing.assert_allclose(self.presenter.displacement[:,0],
+                                           adps, rtol=1e-12, atol=1e-14)
+
     def test_supercell_n(self):
 
         self.view.get_nu = MagicMock(return_value=2)

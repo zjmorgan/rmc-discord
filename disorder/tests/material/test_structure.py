@@ -526,6 +526,57 @@ class test_structure(unittest.TestCase):
 
         os.remove(folder+'/test.h5')
 
+    def test_single_crystal_isotropic_attenuation(self):
+
+        self.addCleanup(np.random.set_state, np.random.get_state())
+        np.random.seed(7)
+        filename = os.path.join(directory, '..', 'data', 'CuMnO2.mcif')
+        sc = structure.SuperCell(filename, 2, 2, 2)
+        n_sites = np.count_nonzero(sc.get_active_sites())
+        sc.set_occupancies(np.full(n_sites, .5))
+        sc.reset_disorder()
+
+        hkl = np.array(np.meshgrid(*[np.linspace(.25,.75,3)]*3,
+                                  indexing='ij')).reshape(3,-1)
+        A = sc.get_fractional_cartesian_transform()
+        Q = 2*np.pi*np.linalg.solve(A.T, hkl)
+        attenuation = np.exp(-.05*np.sum(Q**2, axis=0)).reshape(3,3,3)
+        args = [[.25,.75]]*3, [3]*3, np.eye(3)
+
+        for calculate in (sc.magnetic_single_crystal_intensity,
+                          sc.occupational_single_crystal_intensity):
+            with self.subTest(scattering=calculate.__name__):
+                sc.set_isotropic_displacement_parameter(np.zeros(n_sites))
+                I0, _ = calculate(*args)
+                sc.set_isotropic_displacement_parameter(np.full(n_sites, .05))
+                I1, _ = calculate(*args)
+                self.assertTrue(np.all(np.isfinite(I0)))
+                self.assertTrue(np.all(np.isfinite(I1)))
+                self.assertGreater(np.max(np.abs(I0)), 0)
+                np.testing.assert_allclose(I1, I0*attenuation,
+                                           rtol=1e-12, atol=1e-12)
+
+    def test_magnetic_powder_isotropic_attenuation(self):
+
+        self.addCleanup(np.random.set_state, np.random.get_state())
+        np.random.seed(7)
+        filename = os.path.join(directory, '..', 'data', 'CuMnO2.mcif')
+        sc = structure.SuperCell(filename, 3, 3, 3)
+        # Exclude coincident mixed-occupancy sites from the powder pair sum.
+        sc.set_active_sites(np.array([True,False,False,False]))
+        sc.reset_disorder()
+        Q = np.linspace(.8, 1.2, 3)
+
+        sc.set_isotropic_displacement_parameter(np.zeros(1))
+        I0, _ = sc.magnetic_powder_intensity([.8,1.2], 3)
+        sc.set_isotropic_displacement_parameter(np.full(1, .05))
+        I1, _ = sc.magnetic_powder_intensity([.8,1.2], 3)
+        self.assertTrue(np.all(np.isfinite(I0)))
+        self.assertTrue(np.all(np.isfinite(I1)))
+        self.assertGreater(np.max(np.abs(I0)), 0)
+        np.testing.assert_allclose(I1, I0*np.exp(-.05*Q**2),
+                                   rtol=1e-12, atol=1e-12)
+
     def test_SuperCell(self):
 
         folder = os.path.abspath(os.path.join(directory, '..', 'data'))

@@ -2679,7 +2679,7 @@ class SuperCell(UnitCell):
         ions = self.get_unit_cell_ions()
 
         occ = self.get_occupancies()
-        U = self.get_cartesian_anisotropic_displacement_parameters()
+        U = self.get_anisotropic_displacement_parameters()
 
         g = self.get_g_factors()
 
@@ -2727,7 +2727,7 @@ class SuperCell(UnitCell):
         ions = self.get_unit_cell_ions()
 
         occ = self.get_occupancies()
-        U = self.get_cartesian_anisotropic_displacement_parameters()
+        U = self.get_anisotropic_displacement_parameters()
 
         g = self.get_g_factors()
 
@@ -2790,7 +2790,7 @@ class SuperCell(UnitCell):
         atms = self.get_unit_cell_atoms()
 
         occ = self.get_occupancies()
-        U = self.get_cartesian_anisotropic_displacement_parameters()
+        U = self.get_anisotropic_displacement_parameters()
 
         W = np.array(W).astype(float)
 
