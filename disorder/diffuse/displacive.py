@@ -645,9 +645,9 @@ def decompose(U11, U22, U33, U23, U13, U12, D):
             Lxx.append(L[0,0])
             Lyy.append(L[1,1])
             Lzz.append(L[2,2])
-            Lyz.append(L[1,2])
-            Lxz.append(L[0,2])
-            Lxy.append(L[0,1])
+            Lyz.append(L[2,1])
+            Lxz.append(L[2,0])
+            Lxy.append(L[1,0])
 
     return np.array(Lxx), np.array(Lyy), np.array(Lzz), \
            np.array(Lyz), np.array(Lxz), np.array(Lxy)

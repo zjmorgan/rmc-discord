@@ -531,6 +531,28 @@ class test_displacive(unittest.TestCase):
         np.testing.assert_array_almost_equal(Uxz, U13)
         np.testing.assert_array_almost_equal(Uxy, U12)
 
+    def test_decompose_correlated_covariance(self):
+
+        U = np.array([[[0.04, 0.02, 0.006],
+                       [0.02, 0.03, 0.004],
+                       [0.006, 0.004, 0.02]],
+                      [[0.03, -0.008, 0.005],
+                       [-0.008, 0.04, -0.003],
+                       [0.005, -0.003, 0.025]]])
+        adps = U[:,0,0], U[:,1,1], U[:,2,2], \
+               U[:,1,2], U[:,0,2], U[:,0,1]
+        D = crystal.cartesian_displacement(4, 5, 6,
+                                           np.pi/2, np.pi/2, 2*np.pi/3)
+
+        for transform in (np.eye(3), D):
+            with self.subTest(transform=transform):
+                components = displacive.decompose(*adps, transform)
+                for i, (xx, yy, zz, yz, xz, xy) in enumerate(zip(*components)):
+                    L = np.array([[xx, 0, 0], [xy, yy, 0], [xz, yz, zz]])
+                    expected = transform @ U[i] @ transform.T
+                    np.testing.assert_allclose(L @ L.T, expected,
+                                               rtol=1e-12, atol=1e-14)
+
     def test_decompose(self):
 
         U11 = np.array([0.4,0.3])

@@ -2246,10 +2246,10 @@ class Presenter:
         self.Lxx, self.Lyy, self.Lzz, self.Lyz, self.Lxz, self.Lxy = L
 
         uxx, uyy, uzz, \
-        uyz, uxz, uxx = self.model.transform_adps(u11, u22, u33,
+        uyz, uxz, uxy = self.model.transform_adps(u11, u22, u33,
                                                   u23, u13, u12, D)
 
-        self.displacement = np.row_stack((uxx, uyy, uzz, uyz, uxz, uxx))
+        self.displacement = np.row_stack((uxx, uyy, uzz, uyz, uxz, uxy))
 
         # ---
 
