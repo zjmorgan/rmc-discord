@@ -66,7 +66,11 @@ class Correlations:
         Number of contributing atom pairs per configuration.
     tensor : ndarray, (n, 3, 3) or None
         Cartesian :math:`\\langle\\mathbf{u}_i \\otimes \\mathbf{u}_j\\rangle`
-        (A^2) for displacements.
+        (A^2) for displacements, :math:`\\langle\\mathbf{S}_i \\otimes
+        \\mathbf{S}_j\\rangle` for spins (needed for the magnetic
+        recalculation); ``value`` is its trace.
+    normalized : bool
+        Values are correlation coefficients (``normalize=True``).
 
     """
 
@@ -81,9 +85,70 @@ class Correlations:
     error: np.ndarray
     count: np.ndarray
     tensor: np.ndarray = None
+    normalized: bool = False
 
     def __len__(self):
         return len(self.value)
+
+    def pair(self, a, b=None):
+        """
+        Pairs between sites named ``a`` and ``b`` (either order).
+
+        Names match a site's full name (``"Fe1/Mn1"``) or any one of its
+        occupant labels (``"Fe1"``); ``b`` defaults to ``a``.
+        """
+
+        b = a if b is None else b
+
+        def match(name, key):
+            return name == key or key in name.split("/")
+
+        keep = np.zeros(len(self), dtype=bool)
+        for i, label in enumerate(self.labels):
+            s, t = label.split("-")
+            keep[i] = (match(s, a) and match(t, b)) or (match(s, b) and match(t, a))
+        return self.select(keep)
+
+    def within(self, r_max, r_min=0.0):
+        """Pairs with ``r_min <= distance <= r_max``."""
+        return self.select((self.distance >= r_min) & (self.distance <= r_max))
+
+    def save(self, filename):
+        """
+        Write to HDF5.
+
+        Parameters
+        ----------
+        filename : str or Path
+            Output file; overwritten if it exists.
+
+        """
+
+        import h5py
+
+        with h5py.File(filename, "w") as f:
+            f.attrs["quantity"] = self.quantity
+            f.attrs["format"] = "rmc_discord.correlations/1"
+            f.attrs["normalized"] = bool(self.normalized)
+            for key in ("sites", "orbits", "dR", "r", "distance", "value", "error", "count"):
+                f.create_dataset(key, data=getattr(self, key), compression="gzip")
+            f.create_dataset("labels", data=np.array(self.labels, dtype=object), dtype=h5py.string_dtype())
+            if self.tensor is not None:
+                f.create_dataset("tensor", data=self.tensor, compression="gzip")
+
+    @classmethod
+    def load(cls, filename):
+        """Read a file written by :meth:`save`."""
+
+        import h5py
+
+        with h5py.File(filename, "r") as f:
+            data = {key: f[key][()] for key in f}
+            quantity = f.attrs["quantity"]
+            normalized = bool(f.attrs.get("normalized", False))
+        labels = [v.decode() if isinstance(v, bytes) else str(v) for v in data.pop("labels")]
+        return cls(quantity=str(quantity), labels=labels, tensor=data.pop("tensor", None),
+                   normalized=normalized, **data)
 
     def select(self, keep):
         """Subset of the pairs."""
@@ -101,6 +166,7 @@ class Correlations:
             self.error[idx],
             self.count[idx],
             None if self.tensor is None else self.tensor[idx],
+            self.normalized,
         )
 
     def shells(self, tol=1e-3, r_max=None):
@@ -142,6 +208,32 @@ class Correlations:
         first[inverse[::-1]] = np.arange(len(inverse))[::-1]
         labels = np.array(["-".join(sorted(c.labels[i].split("-"))) for i in first])
         return {"label": labels, "distance": distance, "value": value, "error": error, "n": n}
+
+
+def write_shells(shells, filename):
+    """
+    Write a :meth:`Correlations.shells` table as CSV.
+
+    Columns are ``label, distance, value, error, n``.
+    """
+
+    with open(filename, "w") as f:
+        f.write("label,distance,value,error,n\n")
+        for row in zip(shells["label"], shells["distance"], shells["value"], shells["error"], shells["n"]):
+            f.write("%s,%.6f,%.8g,%.8g,%d\n" % row)
+
+
+def read_shells(filename):
+    """Read a CSV written by :func:`write_shells`."""
+
+    rows = [line.rstrip("\n").split(",") for line in open(filename)][1:]
+    return {
+        "label": np.array([r[0] for r in rows]),
+        "distance": np.array([float(r[1]) for r in rows]),
+        "value": np.array([float(r[2]) for r in rows]),
+        "error": np.array([float(r[3]) for r in rows]),
+        "n": np.array([int(r[4]) for r in rows]),
+    }
 
 
 def _grid(sc, x):
@@ -301,7 +393,7 @@ def correlations(
     sc = supercell
     if states is None:
         states = [{}]
-    tensor = quantity == "displacement"
+    tensor = quantity in ("displacement", "spin")
 
     results = []
     for state in states:
@@ -343,7 +435,9 @@ def correlations(
     T = None if not tensor else np.mean([r[1] for r in results], axis=0)
     den = np.mean([r[2] for r in results], axis=0)
 
-    return _table(sc, quantity, channels, value, error, den, T)
+    corr = _table(sc, quantity, channels, value, error, den, T)
+    corr.normalized = bool(normalize) and quantity != "spin"
+    return corr
 
 
 def _table(sc, quantity, channels, value, error, den, T):

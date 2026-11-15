@@ -144,3 +144,142 @@ def test_normalized_and_errors(toy_crystal):
     assert self_disp.value == pytest.approx(np.ones(len(self_disp)))
     assert disp.tensor.shape == (len(disp), 3, 3)
     assert 0 < c < 1
+
+
+def test_save_load_and_selection(toy_crystal, tmp_path):
+    from rmc_discord.analysis import Correlations, read_shells, write_shells
+
+    sc = toy_supercell(toy_crystal)
+    for quantity in ("occupancy", "displacement"):
+        corr = correlations(sc, quantity)
+        corr.save(tmp_path / "c.h5")
+        back = Correlations.load(tmp_path / "c.h5")
+        assert back.quantity == quantity and back.labels == corr.labels
+        for key in ("sites", "dR", "r", "value", "error", "count"):
+            assert np.array_equal(getattr(back, key), getattr(corr, key))
+        assert (back.tensor is None) == (corr.tensor is None)
+    fe = corr.pair("Fe1")
+    assert len(fe) > 0 and all(label == "Fe1/Mn1-Fe1/Mn1" for label in fe.labels)
+    mixed = corr.pair("Fe1", "Co1")
+    assert all(set(label.split("-")) == {"Fe1/Mn1", "Co1"} for label in mixed.labels)
+    assert np.all(corr.within(5.0).distance <= 5.0)
+    shells = corr.shells(r_max=6.0)
+    write_shells(shells, tmp_path / "s.csv")
+    back = read_shells(tmp_path / "s.csv")
+    assert np.array_equal(back["label"], shells["label"])
+    assert np.allclose(back["value"], shells["value"]) and np.array_equal(back["n"], shells["n"])
+
+
+def commensurate_points(crystal, N):
+    from rmc_discord.data.sampling import QSample
+
+    N = np.array(N)
+    m = np.stack(np.meshgrid(*[np.arange(-n, n) for n in N], indexing="ij"), -1).reshape(-1, 3)
+    m = m[~np.all(m % N == 0, axis=1)]
+    hkl = m / N
+    n = len(m)
+    return QSample(m=m, N=tuple(N), hkl=hkl, Q=crystal.Q(hkl), y=np.ones(n),
+                   variance=np.ones(n), bins=np.ones(n, dtype=int))
+
+
+def test_occupancy_recalculation_is_exact(carbonate_crystal):
+    from rmc_discord.analysis import recalculate
+    from rmc_discord.engine.refinement import Refinement
+
+    sc = Supercell(carbonate_crystal, (3, 3, 2), ["C2"], rng=2)
+    sample = commensurate_points(carbonate_crystal, sc.N)
+    expected = Refinement(sc, sample, fit="none").intensity()
+    corr = correlations(sc, "occupancy", symmetrize=False)
+    assert np.allclose(recalculate(sc, corr, sample.hkl), expected, rtol=1e-10, atol=1e-12)
+    with pytest.raises(ValueError):
+        recalculate(sc, correlations(sc, "occupancy", normalize=True), sample.hkl)
+    # truncation keeps a real, finite intensity
+    near = recalculate(sc, corr, sample.hkl, r_max=6.0)
+    assert np.all(np.isfinite(near)) and not np.allclose(near, expected)
+
+
+def test_spin_recalculation_is_exact():
+    from rmc_discord.analysis import recalculate
+    from rmc_discord.crystal.cif import AsymmetricSite
+    from rmc_discord.crystal.structure import Crystal
+    from rmc_discord.engine.refinement import Refinement
+
+    crystal = Crystal((4.0, 4.5, 5.0, 90, 90, 90), "P 1",
+                      [AsymmetricSite("Mn1", "Mn", np.zeros(3), 1.0, U_iso=0.004),
+                       AsymmetricSite("Mn2", "Mn", np.array([0.5, 0.3, 0.2]), 1.0, U_iso=0.006)])
+    sc = Supercell(crystal, (3, 3, 2), ["Mn1", "Mn2"], ions={"Mn1": "Mn2+", "Mn2": "Mn3+"},
+                   moments={"Mn2+": 5.0, "Mn3+": 4.0}, rng=4)
+    sample = commensurate_points(crystal, sc.N)
+    expected = Refinement(sc, sample, nuclear=False, magnetic=True, fit="none").intensity()
+    corr = correlations(sc, "spin")
+    assert corr.tensor.shape == (len(corr), 3, 3)
+    assert np.allclose(np.trace(corr.tensor, axis1=1, axis2=2), corr.value)
+    assert np.allclose(recalculate(sc, corr, sample.hkl), expected, rtol=1e-10, atol=1e-12)
+
+
+def test_symmetrized_recalculation_averages_equivalent_q(carbonate_crystal):
+    from rmc_discord.analysis import recalculate
+
+    from rmc_discord.analysis import max_range
+
+    sc = Supercell(carbonate_crystal, (4, 4, 4), ["C2"], rng=2)
+    raw = correlations(sc, "occupancy", symmetrize=False)
+    sym = correlations(sc, "occupancy")
+    ops = carbonate_crystal.operators
+    # commensurate points: exact for the full table
+    hkl = commensurate_points(carbonate_crystal, sc.N).hkl[::7]
+    avg = np.mean([recalculate(sc, raw, hkl @ W) for W, _ in ops], axis=0)
+    assert np.allclose(recalculate(sc, sym, hkl), avg, rtol=1e-10, atol=1e-12)
+    # any Q: exact once truncated inside the supercell
+    r = max_range(sc)
+    a, c = carbonate_crystal.cell[0], carbonate_crystal.cell[2]
+    assert r == pytest.approx(min(4 * a * np.sqrt(3) / 2, 4 * c) / 2)  # hexagonal d_100 = a sqrt(3)/2
+    hkl = np.random.default_rng(0).uniform(-3, 3, size=(40, 3))
+    avg = np.mean([recalculate(sc, raw, hkl @ W, r_max=0.99 * r) for W, _ in ops], axis=0)
+    assert np.allclose(recalculate(sc, sym, hkl, r_max=0.99 * r), avg, rtol=1e-10, atol=1e-12)
+
+
+def test_displacement_recalculation_without_displacements_is_exact(carbonate_crystal):
+    from rmc_discord.analysis import recalculate
+    from rmc_discord.engine.refinement import Refinement
+
+    sc = Supercell(carbonate_crystal, (3, 3, 2), ["C2"], rng=2)
+    sc.u[:] = 0.0
+    sample = commensurate_points(carbonate_crystal, sc.N)
+    expected = Refinement(sc, sample, displacive=range(sc.n_sites), fit="none").intensity()
+    corr = correlations(sc, "displacement", symmetrize=False)
+    assert np.allclose(recalculate(sc, corr, sample.hkl), expected, rtol=1e-10, atol=1e-12)
+
+
+def test_displacement_recalculation_matches_gaussian_ensemble(carbonate_crystal):
+    """Correlated Gaussian displacements around vacancies: recalculation = ensemble mean."""
+    from rmc_discord.analysis import recalculate
+    from rmc_discord.engine.refinement import Refinement
+
+    rng = np.random.default_rng(7)
+    sc = Supercell(carbonate_crystal, (3, 3, 2), ["C2"], rng=2)
+    sample = commensurate_points(carbonate_crystal, sc.N)
+    sample = sample.select(sample.Q_norm < 5.0)
+    N = np.array(sc.N)
+    # neighbor along a with the same site
+    nbr = np.array([np.ravel_multi_index(np.mod(c + [1, 0, 0], N), N) * sc.n_sites + s
+                    for c, s in zip(sc.cell, sc.site)])
+    states, intensities = [], []
+    for _ in range(400):
+        g = rng.normal(scale=0.2, size=(len(sc), 3))
+        sc.u[:] = (g + 0.8 * g[nbr]) / np.sqrt(1 + 0.8**2)
+        states.append({"kind": sc.kind.copy(), "u": sc.u.copy()})
+        intensities.append(Refinement(sc, sample, displacive=range(sc.n_sites), fit="none").intensity())
+    mean = np.mean(intensities, axis=0)
+    error = np.std(intensities, axis=0) / np.sqrt(len(intensities))
+    corr = correlations(sc, "displacement", states=states, symmetrize=False)
+    I = recalculate(sc, corr, sample.hkl)
+    z = (I - mean) / error
+    assert np.abs(z).mean() < 1.5 and np.abs(np.mean(z)) < 0.3
+    # control: dropping the inter-atomic displacement correlations is clearly wrong
+    from dataclasses import replace
+
+    tensor = corr.tensor.copy()
+    tensor[~((corr.distance == 0) & (corr.sites[:, 0] == corr.sites[:, 1]))] = 0.0
+    z0 = (recalculate(sc, replace(corr, tensor=tensor), sample.hkl) - mean) / error
+    assert np.abs(z0).mean() > 3 * np.abs(z).mean()

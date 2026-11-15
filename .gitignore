@@ -158,3 +158,6 @@ make.bat
 # Cython
 *.c
 *.cpp
+
+# written by versioningit at build time
+src/rmc_discord/_version.py

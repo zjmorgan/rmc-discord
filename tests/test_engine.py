@@ -339,9 +339,14 @@ def test_minibatch_subsets(toy_crystal):
     sample = all_points(toy_crystal, N)
     sample.y = np.random.default_rng(10).random(len(sample))
     ref = Refinement(sc, sample, magnetic=True, displacive=[1], seed=11)
-    ref.run(600, temperature=1e2, recompute_every=200, subset=0.4)
+    ref.run(600, temperature=1e2, recompute_every=200, subset=0.4, restore=False)
+    assert len(ref.sample) < len(sample)
+    incremental = ref.chi_sq
+    ref.recompute()
+    assert ref.drift < 1e-10
+    assert np.isclose(incremental, ref.chi_sq, rtol=1e-8)
+    ref.run(600, recompute_every=200, subset=0.4)
     assert len(ref.sample) == len(sample)
-    assert max(ref.drifts) < 1e-10
     F0, FM0, I0 = brute_force(sc, sample, ref.P, ref.M)
     assert np.allclose(ref.intensity(), I0)
 
@@ -577,3 +582,122 @@ def test_symmetrized_model_averages_equivalents(carbonate_crystal, basis):
     with pytest.raises(ValueError):
         Refinement(carbonate_supercell(carbonate_crystal, N=(3, 2, 2)),
                    all_points(carbonate_crystal, (3, 2, 2)), symmetrize=["k,h,l"])
+
+
+def test_anneal_with_held_out_validation(tmp_path):
+    """Minibatch annealing improves held-out chi^2 and keeps the best state."""
+
+    from rmc_discord.crystal.cif import AsymmetricSite
+    from rmc_discord.crystal.structure import Crystal
+    from rmc_discord.engine.anneal import Schedule, anneal, split_sample
+
+    crystal = Crystal(
+        (4.0, 4.0, 4.0, 90, 90, 90), "P 1",
+        [AsymmetricSite("Mn1", "Mn", np.zeros(3), 1.0, U_iso=0.0)],
+    )
+    Ns = np.array((6, 6, 6))
+
+    def make(rng):
+        return Supercell(crystal, Ns, ["Mn1"], ions={"Mn1": "Mn2+"}, moments={"Mn2+": 5.0}, rng=rng)
+
+    truth = make(0)
+    sign = np.where(np.sum(truth.cell, axis=1) % 2 == 0, 1.0, -1.0)
+    S = sign[:, None] * np.array([0.0, 0.0, 1.0]) + np.random.default_rng(1).normal(scale=0.6, size=(len(truth), 3))
+    truth.S = S / np.linalg.norm(S, axis=1, keepdims=True)
+    m = np.stack(np.meshgrid(*[np.arange(-n, n) for n in Ns], indexing="ij"), -1).reshape(-1, 3)
+    m = m[~np.all(m % Ns == 0, axis=1)]
+    hkl = m / Ns
+    sample = QSample(m=m, N=tuple(Ns), hkl=hkl, Q=crystal.Q(hkl), y=np.ones(len(m)),
+                     variance=np.ones(len(m)), bins=np.ones(len(m), dtype=int))
+    P = scatterers.nuclear_prefactor(truth, sample)
+    M = scatterers.magnetic_prefactor(truth, sample)
+    _, _, I_true = brute_force(truth, sample, P, M)
+    sample.y = 2.0 * I_true + 0.1
+    sample.variance = 1e-3 * sample.y.mean() * sample.y + 1e-6
+
+    Q = sample.Q_norm
+    strata = {"low": Q < np.median(Q), "high": Q >= np.median(Q)}
+    pool, held = split_sample(sample, held_out=0.2, strata=strata, seed=0)
+    assert set(held) == {"low", "high"}
+    assert len(pool) + sum(len(h) for h in held.values()) == len(sample)
+
+    sc = make(2)
+    ref = Refinement(sc, sample.select(pool), nuclear=False, magnetic=True, cone=30, seed=3)
+    lines = []
+    schedule = Schedule(rounds=15, sweeps=10, cool=0.8, temperature=1.0, batch=len(pool) // 2,
+                        batch_sweeps=5, check_every=3)
+    out = anneal(ref, held, schedule, save=tmp_path / "best.npz", log=lines.append)
+    assert len(out.records) == 5 and len(lines) == 7
+    assert out.best["score"] == min(r["score"] for r in out.records)
+    assert out.best["score"] < 0.2
+    assert np.array_equal(sc.S, out.best["S"])
+    assert np.allclose(np.load(tmp_path / "best.npz")["S"], out.best["S"])
+    best = out.records[[r["round"] for r in out.records].index(out.best["round"])]
+    assert ref.score(held["low"], scale=best["scale"]) == pytest.approx(best["held"]["low"])
+
+    calls, rounds = [], []
+    sc2 = make(2)
+    ref2 = Refinement(sc2, sample.select(pool), nuclear=False, magnetic=True, cone=30, seed=3)
+
+    def stop():
+        rounds.append(1)
+        return len(rounds) == 4
+
+    out2 = anneal(ref2, held, schedule, log=None, callback=lambda row, res: calls.append(row["round"]), stop=stop)
+    assert calls == [2, 3] and [r["round"] for r in out2.records] == calls
+
+
+@pytest.mark.parametrize("basis", [None, "radial"])
+def test_fused_nuclear_path_matches_general(carbonate_crystal, basis):
+    """Phase-table kernels give the same chain as the general kernels."""
+    chains = []
+    for fused in (True, False):
+        sc = carbonate_supercell(carbonate_crystal, N=(3, 3, 2), rng=4)
+        sc.randomize_displacements()
+        sample = all_points(carbonate_crystal, sc.N)
+        sample.y = np.random.default_rng(5).random(len(sample)) + 1
+        ref = Refinement(sc, sample, displacive=range(sc.n_sites), symmetrize=["k,h,l"], background_basis=basis,
+                         penalty=1.0, seed=6,
+                         weights={"swap": 1, "displace": 1, "swap_displace": 1, "exchange": 1})
+        assert ref.use_fused
+        ref.use_fused = fused
+        ref.run(1500, temperature=1e2)
+        chains.append((ref.history.array("chi_sq"), ref.history.array("move"), ref.F.copy(), sc.kind.copy()))
+        if fused:
+            incremental = ref.chi_sq
+            ref.recompute()
+            assert ref.drift < 1e-10
+            assert np.isclose(incremental, ref.chi_sq, rtol=1e-8)
+    (c1, m1, F1, k1), (c2, m2, F2, k2) = chains
+    assert {0, 2, 3, 4} <= set(np.unique(m1).tolist())
+    assert np.array_equal(m1, m2) and np.array_equal(k1, k2)
+    assert np.allclose(c1, c2, rtol=1e-9)
+    assert np.allclose(F1, F2, rtol=1e-9, atol=1e-9 * np.abs(F2).max())
+
+
+@pytest.mark.parametrize("nuclear", [True, False])
+@pytest.mark.parametrize("offset", [None, "paramagnetic"])
+def test_fused_magnetic_path_matches_general(toy_crystal, nuclear, offset):
+    chains = []
+    for fused in (True, False):
+        sc = supercell(toy_crystal, rng=3)
+        sc.randomize_displacements()
+        sample = all_points(toy_crystal, N)
+        sample.y = np.random.default_rng(4).random(len(sample))
+        ref = Refinement(sc, sample, magnetic=True, nuclear=nuclear, displacive=[0, 1], offset=offset,
+                         cone=60, step=0.5, seed=5, background_basis="radial",
+                         weights={"swap": 1, "spin": 1, "displace": 1, "swap_displace": 1, "exchange": 1})
+        ref.use_fused = fused
+        ref.run(2000, temperature=1e2)
+        chains.append((ref.history.array("chi_sq"), ref.history.array("move"), ref.F.copy(), ref.FM.copy()))
+        if fused:
+            incremental = ref.chi_sq
+            ref.recompute()
+            assert ref.drift < 1e-10
+            assert np.isclose(incremental, ref.chi_sq, rtol=1e-8)
+    (c1, m1, F1, M1), (c2, m2, F2, M2) = chains
+    assert set(np.unique(m1).tolist()) == {0, 1, 2, 3, 4}
+    assert np.array_equal(m1, m2)
+    assert np.allclose(c1, c2, rtol=1e-9)
+    assert np.allclose(F1, F2, atol=1e-9 * max(np.abs(F2).max(), 1))
+    assert np.allclose(M1, M2, atol=1e-9 * np.abs(M2).max())

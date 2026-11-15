@@ -208,6 +208,66 @@ def structure_factors(points, factors, cell, site, su, kind, S, F, FM):
         FM[q, 2] = fz
 
 
+@njit(parallel=True, cache=True)
+def atom_tables(m_lo, theta, E):
+    """``E[a, k, i] = exp(i (m_lo[a] + k) theta[i, a])`` for a block of atoms."""
+    n = theta.shape[0]
+    L = E.shape[1]
+    for i in prange(n):
+        for a in range(3):
+            th = theta[i, a]
+            step = complex(np.cos(th), np.sin(th))
+            z = 0j
+            for k in range(L):
+                if k % 32 == 0:
+                    p = (m_lo[a] + k) * th
+                    z = complex(np.cos(p), np.sin(p))
+                E[a, k, i] = z
+                z = z * step
+
+
+@njit(parallel=True, cache=True)
+def accumulate_atoms(m, m_lo, E, n, cn, cm, S, T_nuc, has_tn, T_mag, has_tm, nuclear, magnetic, F, FM):
+    r"""
+    Add a block of ``n`` atoms sharing prefactor tables to the structure
+    factors.
+
+    Atom ``i`` has phase :math:`\prod_a E[a, m_a - m_{lo,a}, i]`, nuclear
+    constant ``cn[i]`` times ``T_nuc`` (if ``has_tn``), and magnetic constant
+    ``cm[i]`` times ``T_mag`` (if ``has_tm``) along spin ``S[i]``.
+    """
+    for q in prange(m.shape[0]):
+        r0 = E[0, m[q, 0] - m_lo[0]]
+        r1 = E[1, m[q, 1] - m_lo[1]]
+        r2 = E[2, m[q, 2] - m_lo[2]]
+        f = 0j
+        fx = 0j
+        fy = 0j
+        fz = 0j
+        if magnetic:
+            for i in range(n):
+                e = r0[i] * r1[i] * r2[i]
+                if nuclear:
+                    f += cn[i] * e
+                ae = cm[i] * e
+                fx += ae * S[i, 0]
+                fy += ae * S[i, 1]
+                fz += ae * S[i, 2]
+        else:
+            for i in range(n):
+                f += cn[i] * (r0[i] * r1[i] * r2[i])
+        if nuclear:
+            if has_tn:
+                F[q] += f * T_nuc[q]
+            else:
+                F[q] += f
+        if magnetic:
+            t = T_mag[q] if has_tm else 1.0
+            FM[q, 0] += t * fx
+            FM[q, 1] += t * fy
+            FM[q, 2] += t * fz
+
+
 @njit(cache=True, inline="always")
 def _I(m, B, q, f, fx, fy, fz, magnetic):
     """Unnormalized intensity |F|^2 + |F_M,perp|^2 at point q."""
@@ -702,6 +762,276 @@ def apply_pair(points, factors, F, FM, lat, sites, su_old, su_new, k_old, k_new,
             FM[q, 2] += Sa2 * ga + Sb2 * gb
 
 
+# ----------------------------------------------------------------------
+# Fused nuclear move kernels. Without magnetic scattering a move changes
+# F by a few terms, each an atom's phase times a prefactor,
+#
+#     dF(Q) = sum_t (c_t1 T_t1(Q) + c_t2 T_t2(Q)) prod_a E_ta[m_a],
+#
+# with per-move phase tables E_ta[k] = exp(i k theta_a), theta_a =
+# 2 pi (R_a + x_a)/N_a + s_a, over the range of m_a. A point costs three
+# table lookups per term and no trigonometric function. Evaluation loops
+# over observations, so averaging symmetry equivalents and the background
+# basis sums happen in the same pass, by chunks.
+
+MAX_TERMS = 4
+
+
+@njit(cache=True)
+def phase_table(m_lo, theta, E):
+    """``E[a, k] = exp(i (m_lo[a] + k) theta[a])`` by recurrence, reset every 32."""
+    L = E.shape[1]
+    for a in range(3):
+        th = theta[a]
+        step = complex(np.cos(th), np.sin(th))
+        z = 0j
+        for k in range(L):
+            if k % 32 == 0:
+                p = (m_lo[a] + k) * th
+                z = complex(np.cos(p), np.sin(p))
+            E[a, k] = z
+            z = z * step
+
+
+@njit(cache=True, inline="always")
+def _delta_nuc(m, q, m_lo, E, n_terms, coef, tt, T):
+    d = 0j
+    k0 = m[q, 0] - m_lo[0]
+    k1 = m[q, 1] - m_lo[1]
+    k2 = m[q, 2] - m_lo[2]
+    for t in range(n_terms):
+        p = coef[t, 0] if tt[t, 0] < 0 else coef[t, 0] * T[tt[t, 0], q]
+        if coef[t, 1] != 0:
+            p += coef[t, 1] if tt[t, 1] < 0 else coef[t, 1] * T[tt[t, 1], q]
+        d += p * E[t, 0, k0] * E[t, 1, k1] * E[t, 2, k2]
+    return d
+
+
+@njit(parallel=True, cache=True)
+def evaluate_nuclear(m, F, T, m_lo, E, n_terms, coef, tt, inv_n, n_ops,
+                     w, wy, offset, has_offset, kb, tb, has_basis, partial, chunk_sums):
+    r"""
+    Candidate observation sums of a nuclear move.
+
+    Returns :math:`\sum w x`, :math:`\sum w x^2`, :math:`\sum w x y` of the
+    symmetry-averaged candidate model ``x`` and, with a basis, the chunk
+    partials of :math:`B^T W x` in ``partial``.
+    """
+    n_obs = w.shape[0]
+    n_chunks = partial.shape[0]
+    K = partial.shape[1]
+    inv_ops = 1.0 / n_ops
+    for c in prange(n_chunks):
+        if has_basis:
+            for k in range(K):
+                partial[c, k] = 0.0
+        sx = 0.0
+        sxx = 0.0
+        sxy = 0.0
+        for o in range(c * n_obs // n_chunks, (c + 1) * n_obs // n_chunks):
+            v = 0.0
+            for r in range(n_ops):
+                q = o + r * n_obs
+                f = F[q] + _delta_nuc(m, q, m_lo, E, n_terms, coef, tt, T)
+                x = inv_n * (f.real * f.real + f.imag * f.imag)
+                if has_offset:
+                    x -= offset[q]
+                v += x
+            v *= inv_ops
+            wx = w[o] * v
+            sx += wx
+            sxx += wx * v
+            sxy += wy[o] * v
+            if has_basis:
+                partial[c, kb[o]] += wx * (1.0 - tb[o])
+                partial[c, kb[o] + 1] += wx * tb[o]
+        chunk_sums[c, 0] = sx
+        chunk_sums[c, 1] = sxx
+        chunk_sums[c, 2] = sxy
+    sx = 0.0
+    sxx = 0.0
+    sxy = 0.0
+    for c in range(n_chunks):
+        sx += chunk_sums[c, 0]
+        sxx += chunk_sums[c, 1]
+        sxy += chunk_sums[c, 2]
+    return sx, sxx, sxy
+
+
+@njit(parallel=True, cache=True)
+def apply_nuclear(m, F, T, m_lo, E, n_terms, coef, tt):
+    for q in prange(F.shape[0]):
+        F[q] += _delta_nuc(m, q, m_lo, E, n_terms, coef, tt, T)
+
+
+@njit(cache=True)
+def _fit_nuclear(sw, sy, syy, sx, sxx, sxy, fit_mode, scale, background, basis, partial):
+    if basis[0]:
+        K = partial.shape[1]
+        bx = np.zeros(K)
+        for c in range(partial.shape[0]):
+            for k in range(K):
+                bx[k] += partial[c, k]
+        chi_sq, s = fit_basis(sxx, sxy, bx, basis[3], basis[4], basis[5], fit_mode, scale)
+        return chi_sq, s, 0.0
+    return fit(sw, sy, syy, sx, sxx, sxy, fit_mode, scale, background)
+
+
+@njit(cache=True)
+def _add_term(n, cell, xyz, su, tpN, m_lo, E, coef, tt, mcoef, mtt, vec,
+              c1, t1, c2, t2, a1, u1, a2, u2, v, theta):
+    """
+    Append a term: an atom phase table times the nuclear coefficient
+    ``c1 T_t1 + c2 T_t2`` and the magnetic one ``(a1 T_u1 + a2 T_u2) v``,
+    unless both are zero.
+    """
+    mag = (a1 != 0 or a2 != 0) and (v[0] != 0 or v[1] != 0 or v[2] != 0)
+    if c1 == 0 and c2 == 0 and not mag:
+        return n
+    if c1 == 0:
+        c1, t1, c2, t2 = c2, t2, 0j, -1
+    if a1 == 0:
+        a1, u1, a2, u2 = a2, u2, 0.0, -1
+    for a in range(3):
+        theta[a] = tpN[a] * (cell[a] + xyz[a]) + su[a]
+    phase_table(m_lo, theta, E[n])
+    coef[n, 0] = c1
+    coef[n, 1] = c2
+    tt[n, 0] = t1
+    tt[n, 1] = t2
+    if mag:
+        mcoef[n, 0] = a1
+        mcoef[n, 1] = a2
+        mtt[n, 0] = u1
+        mtt[n, 1] = u2
+    else:
+        mcoef[n, 0] = 0.0
+        mcoef[n, 1] = 0.0
+        mtt[n, 0] = -1
+        mtt[n, 1] = -1
+    for e in range(3):
+        vec[n, e] = v[e]
+    return n + 1
+
+
+@njit(cache=True)
+def _move_terms(move, n_change, idx, cell, xyz, c_site, c_su_old, c_su_new, k_old, k_new,
+                S_old, dS, factors, tpN, m_lo, E, coef, tt, mcoef, mtt, vec, theta):
+    """Terms of a move for the fused kernels; returns their number."""
+    c_nuc, t_nuc, c_mag, t_mag = factors[0], factors[1], factors[3], factors[4]
+    nuclear, magnetic = factors[6], factors[7]
+    n = 0
+    if move == MOVE_SPIN:
+        k = k_old[0]
+        a = c_mag[k] if magnetic else 0.0
+        return _add_term(n, cell[idx[0]], xyz[c_site[0]], c_su_old[0], tpN, m_lo, E, coef, tt, mcoef, mtt,
+                         vec, 0j, -1, 0j, -1, a, t_mag[k], 0.0, -1, dS, theta)
+    if move == MOVE_SWAP:
+        for c in range(2):
+            ka, kb = k_old[c], k_old[1 - c]
+            cn_a = c_nuc[ka] if nuclear else 0j
+            cn_b = c_nuc[kb] if nuclear else 0j
+            cm_a = c_mag[ka] if magnetic else 0.0
+            cm_b = c_mag[kb] if magnetic else 0.0
+            n = _add_term(n, cell[idx[c]], xyz[c_site[c]], c_su_old[c], tpN, m_lo, E, coef, tt, mcoef, mtt,
+                          vec, cn_b, t_nuc[kb], -cn_a, t_nuc[ka], cm_b, t_mag[kb], -cm_a, t_mag[ka],
+                          S_old[c], theta)
+        return n
+    for c in range(n_change):
+        i = idx[c]
+        for side in range(2):
+            k = k_new[c] if side == 0 else k_old[c]
+            sign = 1.0 if side == 0 else -1.0
+            su = c_su_new[c] if side == 0 else c_su_old[c]
+            cn = sign * c_nuc[k] if nuclear else 0j
+            cm = sign * c_mag[k] if magnetic else 0.0
+            n = _add_term(n, cell[i], xyz[c_site[c]], su, tpN, m_lo, E, coef, tt, mcoef, mtt, vec,
+                          cn, t_nuc[k], 0j, -1, cm, t_mag[k], 0.0, -1, S_old[c], theta)
+    return n
+
+
+@njit(cache=True, inline="always")
+def _delta_mag(m, q, m_lo, E, n_terms, coef, tt, T, mcoef, mtt, Tm, vec, nuclear):
+    d = 0j
+    dx = 0j
+    dy = 0j
+    dz = 0j
+    k0 = m[q, 0] - m_lo[0]
+    k1 = m[q, 1] - m_lo[1]
+    k2 = m[q, 2] - m_lo[2]
+    for t in range(n_terms):
+        e = E[t, 0, k0] * E[t, 1, k1] * E[t, 2, k2]
+        if nuclear:
+            p = coef[t, 0] if tt[t, 0] < 0 else coef[t, 0] * T[tt[t, 0], q]
+            if coef[t, 1] != 0:
+                p += coef[t, 1] if tt[t, 1] < 0 else coef[t, 1] * T[tt[t, 1], q]
+            d += p * e
+        if mcoef[t, 0] != 0:
+            a = mcoef[t, 0] if mtt[t, 0] < 0 else mcoef[t, 0] * Tm[mtt[t, 0], q]
+            if mcoef[t, 1] != 0:
+                a += mcoef[t, 1] if mtt[t, 1] < 0 else mcoef[t, 1] * Tm[mtt[t, 1], q]
+            ae = a * e
+            dx += ae * vec[t, 0]
+            dy += ae * vec[t, 1]
+            dz += ae * vec[t, 2]
+    return d, dx, dy, dz
+
+
+@njit(parallel=True, cache=True)
+def evaluate_magnetic(m, B, F, FM, T, Tm, m_lo, E, n_terms, coef, tt, mcoef, mtt, vec, nuclear, inv_n, n_ops,
+                      w, wy, offset, has_offset, kb, tb, has_basis, partial, chunk_sums):
+    """Candidate observation sums of a move with magnetic scattering (see :func:`evaluate_nuclear`)."""
+    n_obs = w.shape[0]
+    n_chunks = partial.shape[0]
+    K = partial.shape[1]
+    inv_ops = 1.0 / n_ops
+    for c in prange(n_chunks):
+        if has_basis:
+            for k in range(K):
+                partial[c, k] = 0.0
+        sx = 0.0
+        sxx = 0.0
+        sxy = 0.0
+        for o in range(c * n_obs // n_chunks, (c + 1) * n_obs // n_chunks):
+            v = 0.0
+            for r in range(n_ops):
+                q = o + r * n_obs
+                d, dx, dy, dz = _delta_mag(m, q, m_lo, E, n_terms, coef, tt, T, mcoef, mtt, Tm, vec, nuclear)
+                x = inv_n * _I(m, B, q, F[q] + d, FM[q, 0] + dx, FM[q, 1] + dy, FM[q, 2] + dz, True)
+                if has_offset:
+                    x -= offset[q]
+                v += x
+            v *= inv_ops
+            wx = w[o] * v
+            sx += wx
+            sxx += wx * v
+            sxy += wy[o] * v
+            if has_basis:
+                partial[c, kb[o]] += wx * (1.0 - tb[o])
+                partial[c, kb[o] + 1] += wx * tb[o]
+        chunk_sums[c, 0] = sx
+        chunk_sums[c, 1] = sxx
+        chunk_sums[c, 2] = sxy
+    sx = 0.0
+    sxx = 0.0
+    sxy = 0.0
+    for c in range(n_chunks):
+        sx += chunk_sums[c, 0]
+        sxx += chunk_sums[c, 1]
+        sxy += chunk_sums[c, 2]
+    return sx, sxx, sxy
+
+
+@njit(parallel=True, cache=True)
+def apply_magnetic(m, F, FM, T, Tm, m_lo, E, n_terms, coef, tt, mcoef, mtt, vec, nuclear):
+    for q in prange(F.shape[0]):
+        d, dx, dy, dz = _delta_mag(m, q, m_lo, E, n_terms, coef, tt, T, mcoef, mtt, Tm, vec, nuclear)
+        F[q] += d
+        FM[q, 0] += dx
+        FM[q, 1] += dy
+        FM[q, 2] += dz
+
+
 @njit(cache=True)
 def site_penalty(su, suu, n, Linv):
     r"""
@@ -862,6 +1192,7 @@ def run(
     out,
     basis,
     obs,
+    fused,
 ):
     """
     Metropolis refinement for ``n_moves`` proposals.
@@ -893,6 +1224,12 @@ def run(
         ``(n_ops, w, wy, xobs)``: number of symmetry-equivalent points per
         observation (blocks of the point arrays), observation weights,
         weights times observations, and a buffer for the averaged model.
+    fused : tuple
+        ``(enabled, m_lo, E, coef, tt, mcoef, mtt, vec, xyz, tpN, theta,
+        partial, chunk_sums)`` for the fused kernels (used for every move
+        when enabled): lowest index per axis, term tables (MAX_TERMS, 3, L),
+        nuclear and magnetic term coefficients and table indices, term spin
+        vectors, site positions, ``2 pi / N``, and work arrays.
 
     The configuration, structure factors, and displacement sums are updated
     in place. Displacements belong to positions, so a swap moves each
@@ -925,6 +1262,12 @@ def run(
         out_delta,
     ) = out
     magnetic = factors[7]
+    use_fused, m_lo, E, coef, tt, mcoef, mtt, vec, xyz, tpN_f, theta, f_partial, f_chunks = fused
+    m_pts = points[0]
+    T_nuc, T_mag, nuclear = factors[2], factors[5], factors[6]
+    w_o, wy_o = obs[1], obs[2]
+    offset, has_offset = data[2], data[3]
+    n_terms = 0
 
     n_pen = 0
     g_total = 0.0
@@ -1064,7 +1407,25 @@ def run(
 
         ok = False
         d_cost = np.nan
-        if possible:
+        chi_cand, s_cand, b_cand = chi_sq, scale, background
+        if possible and use_fused:
+            n_terms = _move_terms(move, n_change, idx, cell, xyz, c_site, c_su_old, c_su_new, k_old, k_new,
+                                  S_old, dS, factors, tpN_f, m_lo, E, coef, tt, mcoef, mtt, vec, theta)
+            if magnetic:
+                sx, sxx, sxy = evaluate_magnetic(
+                    m_pts, points[2], F, FM, T_nuc, T_mag, m_lo, E, n_terms, coef, tt, mcoef, mtt, vec,
+                    nuclear, inv_n, obs[0], w_o, wy_o, offset, has_offset, basis[1], basis[2], basis[0],
+                    f_partial, f_chunks,
+                )
+            else:
+                sx, sxx, sxy = evaluate_nuclear(
+                    m_pts, F, T_nuc, m_lo, E, n_terms, coef, tt, inv_n, obs[0],
+                    w_o, wy_o, offset, has_offset, basis[1], basis[2], basis[0], f_partial, f_chunks,
+                )
+            chi_cand, s_cand, b_cand = _fit_nuclear(
+                sw, sy, syy, sx, sxx, sxy, fit_mode, scale, background, basis, f_partial
+            )
+        elif possible:
             if move == MOVE_SWAP:
                 sx, sxx, sxy = evaluate_swap(
                     points, data, data[4], factors, F, FM, inv_n, c_lat, c_site, c_su_old,
@@ -1089,6 +1450,7 @@ def run(
             chi_cand, s_cand, b_cand = _fit(
                 sw, sy, syy, sx, sxx, sxy, fit_mode, scale, background, obs, basis
             )
+        if possible:
             g_cand = g_total + dg
             cost_cand = chi_cand / dof + pen_norm * g_cand
 
@@ -1098,7 +1460,12 @@ def run(
                 ok = np.random.random() < np.exp(-d_cost / temperature)
 
             if ok:
-                if move == MOVE_SWAP:
+                if use_fused and magnetic:
+                    apply_magnetic(m_pts, F, FM, T_nuc, T_mag, m_lo, E, n_terms, coef, tt, mcoef, mtt, vec,
+                                   nuclear)
+                elif use_fused:
+                    apply_nuclear(m_pts, F, T_nuc, m_lo, E, n_terms, coef, tt)
+                elif move == MOVE_SWAP:
                     apply_swap(
                         points, factors, F, FM, c_lat, c_site, c_su_old,
                         k_old[0], k_old[1], S_old[0], S_old[1],

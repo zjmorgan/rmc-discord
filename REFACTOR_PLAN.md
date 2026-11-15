@@ -317,3 +317,117 @@ pair and distance. Timing: CO3 8x8x20 (3 sites) 0.01 s, bixbyite N=10 (32 sites,
 Tests (44 total): FFT = brute-force pair sums for all quantities; symmetrized correlations invariant when the
 configuration is moved by each P-6 operator (raw ones are not); pair-reversal identity; AFM pattern; normalization.
 Next: run several independent refinements per case for error bars; correlation export (and later the GUI viewer).
+
+Export, script API, packaging (2026-11-14):
+- `Correlations.save/load` (HDF5, format "rmc_discord.correlations/1"), `pair(a, b)`, `within(r_max)`;
+  `write_shells/read_shells` (CSV: label, distance, value, error, n).
+- `Refinement.score(sample, fit="background", scale=None)`: held-out chi^2 with the same settings and state.
+- `engine/anneal.py`: `split_sample` (stratified held-out sets), `Schedule`, `anneal` (minibatches, geometric
+  cooling, calibrated or given T0, optional scale floor, optional step/cone adaptation, held-out checks, best
+  state kept/saved/restored), returning `AnnealResult`. `examples/co3.py`, `examples/bixbyite.py` package the
+  two regression recipes (data under $DIFFUSE_DATA_ROOT).
+- Packaging: one build for both packages. pyproject.toml holds metadata, dependencies, versioningit
+  (default-tag 0.0.4, writes src/rmc_discord/_version.py, gitignored) and finds rmc_discord in src/ and
+  disorder in .; setup.py only defines the legacy Cython extensions. Verified up to compiling the Cython
+  extensions (isolated pip wheel: version 0.0.4.post381+gd6a62c0..., both packages and data collected);
+  this machine has no gcc, so the full build was not completed here.
+
+Seed results (2026-11-14, 4 independent runs each, fixed data split): held-out chi2 CO3 on 31.3-31.7 / off 17.4-17.7
+(background only 36.3 / 16.6); bixbyite 5.641-5.652 (background and shuffled 5.889). Shell correlations reproducible:
+CO3 normalized occupancy C1-C2 3.00 A +0.206(4), 6.59 A +0.260(9), C2-C2 3.59 A +0.196(21), along c 9.60 A +0.10-0.15,
+next channel 9.68 A -0.01 to -0.02; displacement similar. Bixbyite <S.S> nn -0.036 to -0.054 (+-1-2e-4), 4.70 A
++0.061-0.067. Errors are run-to-run only (not data treatment).
+
+Recalculation (2026-11-14): `analysis/recalculation.py`, `recalculate(supercell, corr, hkl, r_max=None)` for
+occupancy (binary sites, contrast P_k - P_k') and spins (needs the spin tensor <S_a S_b>, now computed by
+`correlations`; perpendicular projection exact). Numba sum over pair vectors per Q. Exact at commensurate points
+without truncation (tests: occupancy and spin equal Refinement.intensity() to 1e-10); symmetrized correlations give
+the average over space-group-equivalent Q. Off the grid, truncate at r_max <= `max_range(supercell)` (inscribed
+sphere radius, min_i N_i d_i / 2): beyond it minimum-image vectors stand for periodic images and are not closed
+under the group. `Correlations.normalized` flag (recalculation refuses normalized input). 49 tests.
+Bixbyite: 4-run averaged spin correlations, r < 20 A, on the data's (h,k,0) and (h,k,0.5) bin centres (3 s per
+40k-point plane), paramagnetic term subtracted, one scale + background: Pearson r 0.32 (l = 0) and 0.67 (l = 0.5)
+against the 6 K - 300 K data; the diffuse streak pattern is reproduced. Not yet: displacement recalculation
+(pair <u u> gives only the first-order term), mixed-species moments (site prefactor = fraction-weighted mean).
+
+Displacement recalculation (2026-11-14): `recalculate` on displacement correlations gives the whole nuclear diffuse
+intensity with vacancies in the Gaussian pair approximation, I = (1/n) sum P_j* P_j' D_j D_j' e^{iQ.r}
+[n_jj' exp(Q.C_jj'.Q) - N_c c_j c_j'] (C over occupied pairs, D from the on-site tensor, last term removes Bragg;
+all orders in u, not first-order). Tests: exact for zero displacements (= Refinement.intensity); for a 400-member
+ensemble of correlated Gaussian displacements around fixed vacancies, mean |z| 0.65, mean z 0.02 against the
+ensemble mean (dropping inter-atomic correlations: mean |z| 3.2). Size-effect cross terms <delta u> not included.
+CO3: 4-run averaged correlations, r < 33.5 A (max_range of 8x8x20), data bin centres (2.5 <= |Q| < 10), one scale
+plus quadratic-in-|Q| background: Pearson r 0.70 (l = 2.82, cluster lattice reproduced) and 0.38 (l = 0.78). 51 tests.
+
+## Speed (2026-11-15)
+
+CO3 run-13 settings (3840 atoms, 100k-observation minibatch x 2 symmetry equivalents = 200k points,
+radial basis, swap + exchange). Profile before: 3.9 ms/move (evaluate_pair alone 2-4 ms, memory-bound:
+~150 B/point read incl. unused FM, Phi gather, tiled weights, xbuf, then separate obs_sums/basis_sums passes),
+recompute of the displaced atoms 2.5 s per minibatch (one sincos per atom per point), resample(1.0) 16 s per
+round. ~85 s/round, ~1.5 h per 60-round run.
+
+Changes:
+- Fused nuclear move kernels (`evaluate_nuclear`/`apply_nuclear`, used whenever there is no magnetic
+  scattering): a move is <= 4 terms (atom phase table x prefactor); per-move phase tables
+  E_a[k] = exp(i k theta_a), theta_a = 2 pi (R_a + x_a)/N_a + s_a, replace the Phi gather, the mod-N tables,
+  and every sincos (3 lookups per term). The loop runs over observations in chunks, averaging symmetry
+  equivalents and accumulating the basis partials in the same pass (no xbuf, no extra parallel regions).
+- Displaced-atom structure factors by blocked atom phase tables (`atom_tables`/`accumulate_atoms`):
+  E[a, k, i] with atoms contiguous, two complex products per atom-point. Agrees with the old kernel to 1e-13.
+- `run(subset=...)` no longer recomputes before each new minibatch (resample recomputes) and takes
+  `restore=False`; `anneal` restores the full pool only at checks.
+
+After: 1.2-1.4 ms/move, minibatch recompute 0.5 s, full-pool restore 2.5 s, build 17 -> 5 s;
+18 s/round with 24 threads (25 s with Numba's default 32 on this hybrid i9 under WSL; set NUMBA_NUM_THREADS).
+Test suite 75 -> 27 s. `test_fused_nuclear_path_matches_general`: identical chains (moves, kinds, chi^2 to 1e-9).
+Magnetic moves: `evaluate_magnetic`/`apply_magnetic` (terms carry a magnetic coefficient pair along a spin
+vector; spin, swap, displace, pair, exchange). Identical chains to the general kernels
+(`test_fused_magnetic_path_matches_general`, nuclear on/off, paramagnetic offset on/off). For bixbyite (32000
+undisplaced spins, 100k points) no gain (309 vs 269 us/move, both near the ~100-150 us launch floor), so
+`use_fused` defaults to: no magnetic scattering, or any displacive site.
+
+End-to-end `examples/co3.py` (seed 1, NUMBA_NUM_THREADS=24): 18 min wall including data loading (run 13: ~1.5 h);
+best round 54, score 0.959, held-out on 31.73 / off 17.34 (run 13: 0.960, 31.28 / 17.56; seeds 31.3-31.7 / 17.4-17.7).
+Remaining: bixbyite build 78 s and full-pool resample 27 s on 7M points (gathers), launch overhead for small batches.
+
+## Phase 4 GUI, first slice (2026-11-15)
+
+`src/rmc_discord/gui` (qtpy on PySide6 + pyvistaqt + matplotlib), layout/look of NeuXtalViz (qt views):
+`BaseView` = NeuXtalVizWidget (camera buttons, Direction/Manual View tabs, Reciprocal Lattice/Show Axes/Parallel
+Projection, plotter, Lattice Parameters/Supercell info tabs, status + progress bar), tools in tabs on the right,
+model/view/presenter with Worker/ThreadPool, light theme as a style sheet (pyqtdarktheme unsupported on Py 3.13;
+used if installed). App switch: workflow sidebar (1 Structure, 2 Data, 3 Refinement, 4 Correlations,
+5 Recalculation), steps enabled when their inputs exist, check mark when done; Applications menu kept.
+Shared `Session` (QObject signals) carries crystal, supercell, sample, refinement, correlations.
+
+Done: Structure (load CIF, editable lattice + occupancies, check disordered sites, rigid groups / ions / moments,
+N + seed, build in worker, kinds table, unit cell (active opaque) or supercell 3D), Data (data/norm/subtract NXS,
+commensurate sampling with Bragg/ring/|Q| masks + error floor, 3D Q cloud, slices on the projection axes with true
+metric, Mantid-style axis names). CO3 pipeline reproduces the scripted recipe (3840 atoms, 2,647,090 points).
+Entry point `rmc-discord-gui` (extra `gui`); tests/test_gui.py offscreen (60 tests).
+All five applications done (2026-11-15):
+- Refinement: Setup (nuclear/magnetic, radiation, offset, move weights, displacive sites, penalty/step/cone,
+  radial/constant background, symmetrize ops, held-out fraction or count, plane strata + pool off:on ratio) ->
+  Initialize (worker); Anneal (Schedule fields, Run/Stop, save/load configuration npz, live score + held-out/pool
+  chi^2 plots, records table); 3D configuration colored by kind label, spins as arrows. `anneal` gained
+  `callback(row, result)` and `stop()` (polled each round).
+- Correlations: quantity (available from the supercell), symmetrize, normalize, current configuration + added npz
+  states (error bars), pair/r filters, shells plot + table, 3D pair-vector map (size/color by value), HDF5/CSV.
+- Recalculation: data plane on the projection axes, r_max (default 0.99 max_range), |Q| window, Bragg exclusion,
+  scale + polynomial background in |Q|, data vs model side by side (true metric), Pearson r, 3D plane in Q.
+CO3 through the GUI reproduces the scripts: pool 618,928 / held-out baselines 36.31, 16.6; 4-run displacement
+recalculation at l=2.82 Pearson r 0.683 (0.698 diffuse). 62 tests.
+Open: session save/restore, refinement 'done' mark for loaded configurations, NeuXtalViz-like volume slicer for
+model vs data in 3D.
+
+### GUI: current NeuXtalViz look (NeuXtalViz-tools)
+
+The current NeuXtalViz is `neutrons/NeuXtalViz-tools` (the older
+`neutrons/NeuXtalViz` uses the unmaintained pyqtdarktheme). Ported from it:
+QDarkStyle light/dark (system-detected; the "dark" plot theme switches the
+whole app, synced across views), qtawesome Font Awesome 6 icons (themed,
+redrawn on theme change), Rotate View tab (roll/elevation/azimuth steps,
+camera readout), console with Expand Console (task stdout/logging routed per
+worker thread, not a global redirect), Stop Process in the status bar,
+red/green/blue a, b, c buttons, last-directory memory for file dialogs.

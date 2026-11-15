@@ -236,6 +236,18 @@ class Refinement:
 
         self.supercell = supercell
         self.full_sample = sample
+        self._settings = dict(
+            nuclear=nuclear,
+            magnetic=magnetic,
+            displacive=tuple(displacive),
+            radiation=radiation,
+            offset=offset if offset is None or isinstance(offset, str) else None,
+            penalty=penalty,
+            background_basis=background_basis,
+            knot_spacing=knot_spacing,
+            symmetrize=symmetrize,
+        )
+        self._array_offset = offset is not None and not isinstance(offset, str)
         self.nuclear = bool(nuclear)
         self.magnetic = bool(magnetic)
         self.displacive = np.array(sorted(set(displacive)), dtype=np.int64)
@@ -286,6 +298,13 @@ class Refinement:
         self.A_inv = np.linalg.inv(sc.crystal.A)
         self.roots = tuple(np.exp(2j * np.pi * np.arange(n) / n) for n in N)
         xyz = np.array([site.xyz for site in sc.sites])
+        self.xyz = np.ascontiguousarray(xyz, dtype=float)
+        self._coef = np.zeros((kernels.MAX_TERMS, 2), dtype=complex)
+        self._tt = np.full((kernels.MAX_TERMS, 2), -1, dtype=np.int64)
+        self._mcoef = np.zeros((kernels.MAX_TERMS, 2))
+        self._mtt = np.full((kernels.MAX_TERMS, 2), -1, dtype=np.int64)
+        self._vec = np.zeros((kernels.MAX_TERMS, 3))
+        self._theta = np.zeros(3)
         self._Phi_full = np.exp(2j * np.pi * xyz @ points.hkl.T)
         self.cell = np.ascontiguousarray(sc.cell, dtype=np.int64)
         self.site = np.ascontiguousarray(sc.site, dtype=np.int64)
@@ -300,6 +319,10 @@ class Refinement:
             sc.magnetic_sites if self.magnetic else [], dtype=np.int64
         )
         self.swap_displace_sites = np.intersect1d(self.swap_sites, self.displacive)
+        # Phase-table move kernels avoid the per-point trigonometry of
+        # displaced atoms; for pure spin refinements of undisplaced atoms the
+        # general kernels are as fast.
+        self.use_fused = bool(not self.magnetic or self.displacive.size > 0)
 
         self.n_kind = np.bincount(sc.kind, minlength=len(sc.kinds)).astype(np.int64)
         self.penalized = np.array(
@@ -353,6 +376,9 @@ class Refinement:
         m = self._points_full.m[self.point_indices]
 
         self.m = np.ascontiguousarray(m, dtype=np.int16)
+        self.m_lo = np.ascontiguousarray(m.min(axis=0), dtype=np.int64)
+        L = int((m.max(axis=0) - self.m_lo).max()) + 1
+        self._E = np.zeros((kernels.MAX_TERMS, 3, L), dtype=complex)
         self.mm = np.ascontiguousarray(np.mod(m, self.full_sample.N), dtype=np.int16)
         self.Phi = np.ascontiguousarray(self._Phi_full[:, self.point_indices])
         y = np.ascontiguousarray(self.sample.y, dtype=float)
@@ -392,7 +418,8 @@ class Refinement:
             self.Ginv = np.zeros((1, 1))
             self.gy = np.zeros(1)
             self.yPy = 0.0
-            self.partial = np.zeros((1, 1))
+            self.partial = np.zeros((self._n_chunks(), 1))
+            self.chunk_sums = np.zeros((len(self.partial), 3))
             return
         y = self.sample.y
         Bm = np.zeros((n, K))
@@ -404,9 +431,19 @@ class Refinement:
         by = Bm.T @ (self.w * y)
         self.gy = self.Ginv @ by
         self.yPy = float(self.syy - by @ self.gy)
+        self.partial = np.zeros((self._n_chunks(), K))
+        self.chunk_sums = np.zeros((len(self.partial), 3))
+
+    def _n_chunks(self):
         import numba
 
-        self.partial = np.zeros((4 * numba.get_num_threads(), K))
+        return max(1, min(len(self.sample), 8 * numba.get_num_threads()))
+
+    @property
+    def _fused(self):
+        return (self.use_fused, self.m_lo, self._E, self._coef, self._tt, self._mcoef, self._mtt, self._vec,
+                self.xyz, self.tpN,
+                self._theta, self.partial, self.chunk_sums)
 
     @property
     def _basis(self):
@@ -561,22 +598,49 @@ class Refinement:
                     FM += (Phi * T)[:, None] * G
 
         if np.any(displaced):
-            sel = np.flatnonzero(displaced)
-            Fd = np.zeros_like(F)
-            FMd = np.zeros_like(FM)
-            kernels.structure_factors(
-                self._points, self._factors,
-                np.ascontiguousarray(self.cell[sel]),
-                np.ascontiguousarray(self.site[sel]),
-                np.ascontiguousarray(self.su_scaled[sel]),
-                np.ascontiguousarray(sc.kind[sel]),
-                np.ascontiguousarray(sc.S[sel]),
-                Fd, FMd,
-            )
-            F += Fd
-            FM += FMd
+            self._displaced_sum(np.flatnonzero(displaced), F, FM)
 
         return F, FM
+
+    def _displaced_sum(self, sel, F, FM, max_bytes=64e6):
+        r"""
+        Add displaced atoms to the structure factors directly.
+
+        Atoms are grouped by prefactor tables and summed in blocks; each
+        block gets phase tables :math:`E_a[k, i] = e^{i k \theta_{ia}}`,
+        :math:`\theta_a = 2\pi(R_a + x_a)/N_a + s_a`, so a point costs two
+        complex products per atom and no trigonometric function.
+        """
+
+        sc = self.supercell
+        kind = sc.kind[sel]
+        cn = self.nuc.c[kind] if self.nuclear else np.zeros(len(sel), dtype=complex)
+        cm = self.mag.c[kind] if self.magnetic else np.zeros(len(sel))
+        keep = (cn != 0) | (cm != 0)
+        sel, kind, cn, cm = sel[keep], kind[keep], cn[keep], cm[keep]
+        if sel.size == 0:
+            return
+        theta = self.tpN * (self.cell[sel] + self.xyz[self.site[sel]]) + self.su_scaled[sel]
+        L = self._E.shape[2]
+        block = int(max(256, max_bytes // (48 * L)))
+        tn, tm = self.nuc.t[kind], self.mag.t[kind]
+        dummy_n = np.zeros(1, dtype=self.nuc.T.dtype)
+        dummy_m = np.zeros(1, dtype=self.mag.T.dtype)
+        for a, b in sorted(set(zip(tn.tolist(), tm.tolist()))):
+            group = np.flatnonzero((tn == a) & (tm == b))
+            T_n = np.ascontiguousarray(self.nuc.T[a]) if a >= 0 else dummy_n
+            T_m = np.ascontiguousarray(self.mag.T[b]) if b >= 0 else dummy_m
+            for start in range(0, len(group), block):
+                g = group[start:start + block]
+                E = np.empty((3, L, len(g)), dtype=complex)
+                kernels.atom_tables(self.m_lo, np.ascontiguousarray(theta[g]), E)
+                kernels.accumulate_atoms(
+                    self.m, self.m_lo, E, len(g),
+                    np.ascontiguousarray(cn[g], dtype=complex),
+                    np.ascontiguousarray(cm[g], dtype=float),
+                    np.ascontiguousarray(sc.S[sel[g]], dtype=float),
+                    T_n, a >= 0, T_m, b >= 0, self.nuclear, self.magnetic, F, FM,
+                )
 
     def recompute(self, track_drift=True):
         """
@@ -667,6 +731,39 @@ class Refinement:
         if not self.penalized.any():
             return 0.0
         return self.penalty * self.g[self.penalized == 1].mean()
+
+    def score(self, sample, fit="background", scale=None):
+        """
+        Reduced chi^2 of the current configuration on other sample points.
+
+        Uses this refinement's scattering settings (and the same supercell
+        state). For held-out validation the scale stays fixed at the
+        refinement's value and only the background is refit.
+
+        Parameters
+        ----------
+        sample : QSample
+            Points to score, e.g. held-out points.
+        fit : {"background", "free", "none", "scale"}, optional
+            What is refit on ``sample``.
+        scale : float, optional
+            Scale to use; the current scale if omitted.
+
+        Returns
+        -------
+        chi_sq : float
+            Reduced chi^2 on ``sample``.
+
+        """
+
+        if self._array_offset:
+            raise ValueError("score needs a string or no offset (array offsets are tied to the points)")
+        other = Refinement(
+            self.supercell, sample, fit=fit,
+            scale=self.scale if scale is None else scale, background=self.background,
+            **self._settings,
+        )
+        return other.reduced_chi_sq
 
     def calibrate_temperature(self, n_moves=None, acceptance=0.5):
         """
@@ -767,6 +864,7 @@ class Refinement:
         recompute_every=None,
         adapt=None,
         subset=None,
+        restore=True,
     ):
         """
         Run Metropolis moves.
@@ -791,7 +889,13 @@ class Refinement:
             if omitted.
         subset : float, optional
             Refine each chunk against a new random fraction of the sample
-            points (minibatch). All points are restored at the end.
+            points (minibatch). The structure factors are recomputed from
+            scratch for each minibatch, so ``recompute_every`` sets the
+            minibatch length and drift is not recorded.
+        restore : bool, optional
+            Restore all sample points at the end of a minibatch run (a full
+            recompute). With False the last minibatch stays active until
+            :meth:`resample` is called with 1.
 
         Returns
         -------
@@ -841,12 +945,13 @@ class Refinement:
                 tuple(out[key] for key in RECORDS),
                 self._basis,
                 self._obs,
+                self._fused,
             )
             self.scale = float(out["scale"][-1])
             self.background = float(out["background"][-1])
             self.chi_sq = float(out["chi_sq"][-1])
             self.incremental_chi_sq = self.chi_sq
-            if recompute_every:
+            if recompute_every and subset is None:
                 self.recompute()
                 self.drifts.append(self.drift)
 
@@ -858,7 +963,7 @@ class Refinement:
                 self.adapt(chunk_history, target=adapt)
             done += n
 
-        if subset is not None:
+        if subset is not None and restore:
             self.resample(1.0)
 
         return run_history

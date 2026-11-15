@@ -1,2 +1,84 @@
 [build-system]
-requires = ["setuptools", "wheel", "Cython", "numpy"]
+requires = ["setuptools>=77", "versioningit>=3", "Cython", "numpy"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rmc-discord"
+dynamic = ["version"]
+description = "Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals"
+readme = "README.md"
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+authors = [{ name = "Zachary Morgan" }]
+requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+# Mantid (crystallography and MD workspace I/O for rmc_discord) is installed
+# separately, e.g. from conda-forge or mantidproject.
+dependencies = [
+    "numpy",
+    "scipy",
+    "numba",
+    "h5py",
+    "pycifrw",
+    # legacy `disorder` package
+    "cython",
+    "matplotlib",
+    "pyvista>=0.34.2",
+    "pyqt5",
+    "ipython",
+]
+
+[project.optional-dependencies]
+test = ["pytest"]
+gui = ["qtpy", "pyvistaqt", "qdarkstyle"]
+
+[project.urls]
+Homepage = "https://github.com/zjmorgan/rmc-discord"
+
+[project.scripts]
+rmc-discord = "disorder.application:run"
+
+[project.gui-scripts]
+rmc-discord-gui = "rmc_discord.gui.app:gui"
+
+[tool.setuptools]
+zip-safe = false
+
+[tool.setuptools.packages.find]
+where = ["src", "."]
+include = ["rmc_discord*", "disorder*"]
+
+[tool.setuptools.package-data]
+rmc_discord = ["crystal/data/*.csv"]
+disorder = [
+    "material/*.csv",
+    "graphical/*.ui",
+    "graphical/*.png",
+    "diffuse/*.pxd",
+    "diffuse/*.pyx",
+    "material/*.pxd",
+    "material/*.pyx",
+    "tests/diffuse/*.pyx",
+    "tests/data/*",
+]
+
+[tool.versioningit]
+default-version = "0.0.0+unknown"
+
+[tool.versioningit.vcs]
+method = "git"
+default-tag = "0.0.4"
+
+[tool.versioningit.format]
+distance = "{base_version}.post{distance}+{vcs}{rev}"
+dirty = "{base_version}+d{build_date:%Y%m%d}"
+distance-dirty = "{base_version}.post{distance}+{vcs}{rev}.d{build_date:%Y%m%d}"
+
+[tool.versioningit.write]
+file = "src/rmc_discord/_version.py"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
