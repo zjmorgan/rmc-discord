@@ -17,7 +17,7 @@ from qtpy.QtWidgets import (
     QWidget,
 )
 
-from rmc_discord.gui.views.base_view import BaseView, set_icon
+from rmc_discord.gui.views.base_view import BaseView, scalar_bar, set_icon
 from rmc_discord.gui.views.plots import CMAPS, LIMITS, PlotWidget, metric_mesh, norm
 
 
@@ -204,5 +204,5 @@ class DataView(BaseView):
         cloud["log10 I"] = values
         scale, limits, cmap, _ = self.get_slice_style()
         self.plotter.add_mesh(cloud, scalars="log10 I", cmap=cmap, point_size=2, render_points_as_spheres=False,
-                              clim=tuple(np.percentile(values, [2, 98])), scalar_bar_args={"title": "log₁₀ I"})
+                              clim=tuple(np.percentile(values, [2, 98])), scalar_bar_args=scalar_bar("log10 I"))
         self.reset_scene()

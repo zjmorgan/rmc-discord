@@ -254,10 +254,15 @@ class StructureView(BaseView):
     def draw_atoms(self, style, edges, scale=1.0, show_inactive=True):
         self.clear_scene()
         r, rgb, radius, active = style["r"], style["rgb"], style["radius"] * scale, style["active"]
-        for mask, opacity in ((active, 1.0), (~active, 0.25)):
-            if not np.any(mask) or (opacity < 1 and not show_inactive):
-                continue
-            add_spheres(self.plotter, r[mask], radius[mask], rgb=rgb[mask], opacity=opacity)
+        if not show_inactive:
+            r, rgb, radius = r[active], rgb[active], radius[active]
+        else:
+            # Faded toward the background rather than translucent:
+            # translucent point sprites render black.
+            background = np.array(self.plotter.background_color.int_rgb, dtype=float)
+            rgb = np.where(active[:, None], rgb, 0.3 * rgb + 0.7 * background).astype(np.uint8)
+        if len(r):
+            add_spheres(self.plotter, r, radius, rgb=rgb)
         lines = pv.line_segments_from_points(edges.reshape(-1, 3))
         self.plotter.add_mesh(lines, color="black", line_width=1)
         self.reset_scene()

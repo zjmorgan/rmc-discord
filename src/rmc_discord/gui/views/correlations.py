@@ -25,7 +25,7 @@ from qtpy.QtWidgets import (
 
 from rmc_discord.gui.models.correlations import NAMES
 from rmc_discord.gui.models.display import add_spheres
-from rmc_discord.gui.views.base_view import BaseView, set_icon
+from rmc_discord.gui.views.base_view import BaseView, scalar_bar, set_icon
 from rmc_discord.gui.views.plots import PlotWidget
 
 
@@ -228,6 +228,6 @@ class CorrelationsView(BaseView):
         if r is not None and len(r):
             m = np.max(np.abs(value)) or 1.0
             add_spheres(self.plotter, r, 0.5 * size * np.sqrt(np.abs(value) / m), values=value, cmap="bwr",
-                        clim=(-m, m), scalar_bar_args={"title": "correlation"})
+                        clim=(-m, m), scalar_bar_args=scalar_bar("correlation"))
             self.plotter.add_mesh(pv.Sphere(radius=0.15 * size), color="black")
         self.reset_scene()

@@ -49,6 +49,17 @@ def button(text, icon_name=None, tooltip=None, parent=None):
     return b
 
 
+def scalar_bar(title):
+    """
+    Arguments of a vertical scalar bar at the right edge.
+
+    PyVista's default horizontal bar draws its title over the tick labels.
+    """
+
+    return dict(title=title, vertical=True, position_x=0.86, position_y=0.12, width=0.06, height=0.76,
+                n_labels=5, fmt="%.3g", title_font_size=16, label_font_size=14)
+
+
 def decorate_combo(combo):
     """Item icons and a width that fits the longest item (as in NeuXtalViz)."""
 

@@ -64,7 +64,7 @@ def metric_mesh(ax, image, edges_a, edges_b, skew, aspect, **kwargs):
     """
     pcolormesh in projection coordinates with the true reciprocal metric:
     the ``b`` axis is sheared by ``skew`` and the aspect set so circles of
-    constant |Q| are round.
+    constant :math:`|Q|` are round.
     """
     T = Affine2D(np.array([[1.0, skew, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]))
     mesh = ax.pcolormesh(edges_a, edges_b, image.T, transform=T + ax.transData, shading="flat", **kwargs)

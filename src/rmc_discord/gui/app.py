@@ -196,9 +196,14 @@ class MainWindow(QMainWindow):
         super().closeEvent(event)
 
     def about(self):
+        doi = "https://doi.org/10.1107/S1600576721010141"
         QMessageBox.about(self, "rmc-discord",
-                          f"rmc-discord {__version__}\n\nReverse Monte Carlo refinement of diffuse "
-                          "scattering from single crystals.\n\nInterface after NeuXtalViz.")
+                          f"<b>rmc-discord</b> {__version__}<br><br>Reverse Monte Carlo refinement of diffuse "
+                          "scattering from single crystals.<br>Interface after NeuXtalViz.<br><br>"
+                          "If you use rmc-discord, please cite:<br>"
+                          "Z. J. Morgan, H. D. Zhou, B. C. Chakoumakos, and F. Ye, "
+                          "<i>J. Appl. Cryst.</i> <b>54</b>(6), 1867-1885 (2021).<br>"
+                          f'<a href="{doi}">{doi}</a>')
 
 
 def gui():

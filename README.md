@@ -18,4 +18,22 @@ There are several outputs:
 - VTK file of recalculated diffuse scattering pattern
 
 The program is written in Python with underlying performance-critical extensions written in Cython and includes a PyQt5 GUI.
-https://doi.org/10.1107/S1600576721010141
+
+### Citation
+
+If you use rmc-discord in your work, please cite:
+
+Z. J. Morgan, H. D. Zhou, B. C. Chakoumakos, and F. Ye, "*rmc-discord*: reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals," *J. Appl. Cryst.* **54**(6), 1867-1885 (2021). [https://doi.org/10.1107/S1600576721010141](https://doi.org/10.1107/S1600576721010141)
+
+```bibtex
+@article{morgan2021rmcdiscord,
+  author  = {Morgan, Zachary J. and Zhou, Haidong D. and Chakoumakos, Bryan C. and Ye, Feng},
+  title   = {{rmc-discord}: reverse {Monte Carlo} refinement of diffuse scattering and correlated disorder from single crystals},
+  journal = {Journal of Applied Crystallography},
+  volume  = {54},
+  number  = {6},
+  pages   = {1867--1885},
+  year    = {2021},
+  doi     = {10.1107/S1600576721010141}
+}
+```

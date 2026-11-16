@@ -62,12 +62,13 @@ data : tuple
     symmetry equivalents.
 basis : tuple
     ``(has_basis, kb, tb, Ginv, gy, yPy, partial)``: linear hat-function
-    background in |Q| (point q has weight ``1 - tb`` on function ``kb`` and
+    background in :math:`|Q|` (point q has weight ``1 - tb`` on function ``kb`` and
     ``tb`` on ``kb + 1``), with :math:`G = B^T W B`,
     :math:`g_y = G^{-1} B^T W y`, :math:`y^T P y = y^T W y - b_y^T g_y`, and
     a per-chunk work array.
 factors : tuple
     ``(c_nuc, t_nuc, T_nuc, c_mag, t_mag, T_mag, nuclear, magnetic)``.
+
 Move kernels receive per-move lattice tables ``lat[c, a, k] =
 omega_a[(k R_a) mod N_a]`` for the changed atoms' cells, so the per-point
 loops contain no integer division.

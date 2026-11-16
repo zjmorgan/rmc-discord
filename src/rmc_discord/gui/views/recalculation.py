@@ -17,7 +17,7 @@ from qtpy.QtWidgets import (
 )
 
 from rmc_discord.gui.models.correlations import NAMES
-from rmc_discord.gui.views.base_view import BaseView, set_icon
+from rmc_discord.gui.views.base_view import BaseView, scalar_bar, set_icon
 from rmc_discord.gui.views.plots import CMAPS, LIMITS, PlotWidget, metric_mesh, norm
 
 
@@ -138,7 +138,7 @@ class RecalculationView(BaseView):
         for i, (key, title) in enumerate((("data", "data"), ("model", "recalculated"))):
             ax = fig.add_subplot(1, 2, i + 1, sharex=axes[0] if axes else None, sharey=axes[0] if axes else None)
             mesh, _ = metric_mesh(ax, res[key], *res["edges"], skew, aspect, cmap=cmap, norm=nrm, rasterized=True)
-            ax.set_title(f"{title}, {names[res['normal']]} = {res['value']:.3g}")
+            ax.set_title(f"{title}, {names[res['normal']]} = {round(res['value'], 6) + 0.0:.3g}")
             ax.set_xlabel(names[res["axes"][0]])
             if i == 0:
                 ax.set_ylabel(names[res["axes"][1]])
@@ -154,5 +154,5 @@ class RecalculationView(BaseView):
             grid["I"] = res["model"].ravel(order="F")
             lo, hi = np.nanpercentile(res["model"], [2, 98])
             self.plotter.add_mesh(grid, scalars="I", cmap=CMAPS[self.cbar_combo.currentText()], clim=(lo, hi),
-                                  nan_opacity=0.0, scalar_bar_args={"title": "recalculated"})
+                                  nan_opacity=0.0, scalar_bar_args=scalar_bar("recalculated"))
         self.reset_scene()

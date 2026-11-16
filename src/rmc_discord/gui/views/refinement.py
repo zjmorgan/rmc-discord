@@ -32,6 +32,12 @@ MOVE_NAMES = {"swap": "Swap", "spin": "Spin", "displace": "Displace", "swap_disp
               "exchange": "Exchange"}
 
 
+def _held_name(name):
+    """Column/legend name of a held-out set ("held" is the only one)."""
+
+    return "Held-out" if name == "held" else f"Held {name}"
+
+
 def _float(text="", low=-1e12, high=1e12, decimals=8, blank=False):
     line = QLineEdit(text)
     line.setValidator(QDoubleValidator(low, high, decimals, notation=QDoubleValidator.ScientificNotation))
@@ -311,7 +317,7 @@ class RefinementView(BaseView):
         ax.legend(loc="upper right", fontsize=8)
         ax2 = fig.add_subplot(212, sharex=ax)
         for name in records[0]["held"]:
-            ax2.plot(rounds, [r["held"][name] for r in records], "o-", ms=3, label=f"held {name}")
+            ax2.plot(rounds, [r["held"][name] for r in records], "o-", ms=3, label=_held_name(name).lower())
         ax2.plot(rounds, [r["pool"] for r in records], "s-", ms=3, color="0.4", label="pool (free scale)")
         ax2.set_xlabel("round")
         from matplotlib.ticker import MaxNLocator
@@ -323,7 +329,7 @@ class RefinementView(BaseView):
 
         names = list(records[0]["held"])
         moves = list(records[0]["acceptance"])
-        columns = ["Round", "T", "Pool χ²", "Scale"] + [f"Held {n}" for n in names] + ["Score"] + \
+        columns = ["Round", "T", "Pool χ²", "Scale"] + [_held_name(n) for n in names] + ["Score"] + \
                   [f"Acc. {MOVE_NAMES.get(m, m)}" for m in moves]
         self.record_table.setColumnCount(len(columns))
         self.record_table.setHorizontalHeaderLabels(columns)

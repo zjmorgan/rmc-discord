@@ -1,0 +1,20 @@
+name: rmc-discord-docs
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  - numpy
+  - scipy
+  - numba
+  - h5py
+  - pycifrw
+  - matplotlib
+  - pyvista
+  - pyvistaqt
+  - qtpy
+  - pyside6
+  - qdarkstyle
+  - qtawesome
+  - sphinx
+  - pydata-sphinx-theme
+  - numpydoc
