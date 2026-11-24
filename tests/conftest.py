@@ -13,6 +13,27 @@ from rmc_discord.crystal.structure import Crystal  # noqa: E402
 
 LEGACY_DATA = ROOT / "disorder" / "tests" / "data"
 
+# pair-correlation tests (ported from discordant-parsimony)
+from rmc_discord.pairs import Structure as PairStructure  # noqa: E402
+from rmc_discord.pairs.io import data_root as pairs_data_root  # noqa: E402
+
+FIXTURES = Path(__file__).resolve().parent / "pairs" / "fixtures"
+TB5RU6SN18 = pairs_data_root() / "Tb5Ru6Sn18_293K"
+requires_tb5ru6sn18 = pytest.mark.skipif(
+    not (TB5RU6SN18 / "Tb5Ru6Sn18.cif").exists(),
+    reason="private Tb5Ru6Sn18 data not available (set DIFFUSE_DATA_ROOT)",
+)
+
+
+@pytest.fixture
+def tetragonal():
+    return PairStructure.from_cif(FIXTURES / "split_tetragonal.cif")
+
+
+@pytest.fixture
+def tb5ru6sn18():
+    return PairStructure.from_cif(TB5RU6SN18 / "Tb5Ru6Sn18.cif")
+
 
 def data_root():
     root = os.environ.get("DIFFUSE_DATA_ROOT")

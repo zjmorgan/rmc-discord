@@ -5,6 +5,7 @@ dependencies:
   - python
   - numpy
   - scipy
+  - finufft
   - matplotlib
   - pycifrw
   - h5py

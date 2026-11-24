@@ -154,8 +154,8 @@ class MainWindow(QMainWindow):
 
         help_menu.addAction(about)
 
-        for signal in (self.session.crystal_changed, self.session.supercell_changed,
-                       self.session.sample_changed, self.session.refinement_changed,
+        for signal in (self.session.crystal_changed, self.session.model_changed,
+                       self.session.sample_changed, self.session.fit_changed,
                        self.session.correlations_changed, self.session.recalculated):
             signal.connect(self.update_steps)
         theme.notifier.changed.connect(self.update_steps)
@@ -164,13 +164,12 @@ class MainWindow(QMainWindow):
 
     def ready(self):
         s = self.session
-        return [True, s.crystal is not None, s.sample is not None and s.supercell is not None,
-                s.supercell is not None,
-                s.supercell is not None and bool(s.correlations) and s.volume is not None]
+        return [True, s.crystal is not None, s.sample is not None and s.model is not None,
+                bool(s.correlations), s.fit is not None and s.volume is not None]
 
     def done(self):
         s = self.session
-        return [s.supercell is not None, s.sample is not None, s.result is not None,
+        return [s.model is not None, s.sample is not None, s.fit is not None,
                 bool(s.correlations), self.recalculation.model.result is not None]
 
     def update_steps(self):
@@ -198,8 +197,8 @@ class MainWindow(QMainWindow):
     def about(self):
         doi = "https://doi.org/10.1107/S1600576721010141"
         QMessageBox.about(self, "rmc-discord",
-                          f"<b>rmc-discord</b> {__version__}<br><br>Reverse Monte Carlo refinement of diffuse "
-                          "scattering from single crystals.<br>Interface after NeuXtalViz.<br><br>"
+                          f"<b>rmc-discord</b> {__version__}<br><br>Refinement of pair correlations against "
+                          "diffuse scattering from single crystals.<br>Interface after NeuXtalViz.<br><br>"
                           "If you use rmc-discord, please cite:<br>"
                           "Z. J. Morgan, H. D. Zhou, B. C. Chakoumakos, and F. Ye, "
                           "<i>J. Appl. Cryst.</i> <b>54</b>(6), 1867-1885 (2021).<br>"

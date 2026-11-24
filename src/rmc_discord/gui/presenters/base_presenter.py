@@ -20,7 +20,7 @@ class BasePresenter:
 
         session = model.session
         session.crystal_changed.connect(self.update_lattice)
-        session.supercell_changed.connect(self.update_lattice)
+        session.model_changed.connect(self.update_lattice)
 
     # status
 
@@ -79,9 +79,9 @@ class BasePresenter:
         params = self.model.get_lattice_parameters()
         if params is not None:
             self.view.set_lattice_parameters(*params)
-        info = self.model.get_supercell_info()
+        info = self.model.get_model_info()
         if info is not None:
-            self.view.set_supercell_info(*info)
+            self.view.set_model_info(*info)
         self.change_lattice()
 
     def change_lattice(self):

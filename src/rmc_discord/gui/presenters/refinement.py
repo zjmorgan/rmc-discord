@@ -1,119 +1,59 @@
 """Refinement application presenter."""
 
-from rmc_discord.gui.models import display
-from rmc_discord.gui.models.refinement import schedule_from
-from rmc_discord.gui.models.structure import StructureModel
 from rmc_discord.gui.presenters.base_presenter import BasePresenter
 
 
 class RefinementPresenter(BasePresenter):
     def __init__(self, view, model):
         super().__init__(view, model)
-        self.view.connect_initialize(self.initialize)
-        self.view.connect_run(self.run)
-        self.view.connect_stop(self.stop)
-        self.view.connect_save_configuration(self.save_configuration)
-        self.view.connect_load_configuration(self.load_configuration)
+        self.view.set_settings(model.defaults())
+        self.view.connect_fit(self.fit)
+        self.view.connect_compare(self.update_comparison)
         session = model.session
-        session.supercell_changed.connect(self.supercell_changed)
-        session.sample_changed.connect(self.sample_changed)
-        session.configuration_changed.connect(self.draw)
-        self._cells = StructureModel(session)
+        session.model_changed.connect(self.reset)
+        session.sample_changed.connect(self.reset)
 
-    def supercell_changed(self):
-        if self.model.session.supercell is None:
-            return
-        self.view.set_settings(self.model.defaults(), self.model.site_labels())
-        self.view.set_init_info("")
-        self.view.draw_records([], {})
-        self.view.camera_position = None
-        self.draw()
-        self.view.reset_view()
-
-    def sample_changed(self):
-        self.view.set_init_info("Sample changed: initialize the refinement.")
-
-    def initialize(self):
+    def reset(self):
+        self.model.comparison = None
         s = self.model.session
-        if s.supercell is None or s.sample is None:
-            return self.update_status("Build the supercell and sample the data first.")
-        try:
-            st = self.view.get_settings()
-        except ValueError as e:
-            return self.update_status(f"Invalid settings: {e}")
-        if not (st.nuclear or st.magnetic):
-            return self.update_status("Choose nuclear and/or magnetic scattering.")
-        self.update_processing("Initializing refinement.", 5)
-        self.run_task(self.model.initialize, self.initialize_complete, st)
-
-    def initialize_complete(self, result):
-        ref, held, info = result
-        self.model.set_initialized(ref, held, info)
-        held_text = ", ".join(f"{k} {v:,}" for k, v in info["held"].items())
-        base = ", ".join(f"{k} {v:.4g}" for k, v in info["baseline"].items())
-        moves = ", ".join(f"{k} {v:.2f}" for k, v in info["moves"].items())
-        self.view.set_init_info(f"Pool {info['pool']:,} points; held out {held_text}. Pool χ² {info['chi']:.4g}; "
-                                f"background-only held-out χ² {base}. Move mix: {moves}.")
-        self.view.draw_records([], {})
-        self.update_complete("Refinement initialized!")
-
-    def run(self):
-        if self.model.session.refinement is None:
-            return self.update_status("Initialize the refinement first.")
-        try:
-            schedule = schedule_from(self.view.get_schedule_values())
-        except (ValueError, TypeError) as e:
-            return self.update_status(f"Invalid schedule: {e}")
-        self.view.set_running(True)
-        self.update_processing("Annealing.", 1)
-        self.run_task(self.model.run, self.run_complete, schedule, progress=self.progress,
-                      finished=lambda: self.view.set_running(False))
-
-    def progress(self, message, percent):
-        self.view.draw_records(self.model.records, self.model.baseline)
-        self.draw()
-
-    def run_complete(self, result):
-        s = self.model.session
-        s.result = result
-        s.refinement_changed.emit()
-        s.configuration_changed.emit()
-        if result.best is not None:
-            self.update_complete(f"Anneal done: best score {result.best['score']:.4f} at round "
-                                 f"{result.best['round'] + 1} (configuration restored).")
+        if s.model is None:
+            self.view.set_fit_info("Build the pair model (Structure).")
+        elif s.sample is None:
+            self.view.set_fit_info("Sample the data (Data).")
         else:
-            self.update_complete("Anneal stopped before the first check.")
+            self.view.set_fit_info(f"{s.model.n_coefficients} coefficients ({s.model.n_free} free) against "
+                                   f"{len(s.sample):,} observations ({int(s.sample.held.sum()):,} held out).")
+        self.view.draw_comparison(None)
 
-    def stop(self):
-        self.model.stop()
-        self.update_status("Stopping after this round.")
+    def fit(self):
+        s = self.model.session
+        if s.model is None or s.sample is None:
+            return self.update_status("Build the model and sample the data first.")
+        settings = self.view.get_settings()
+        if settings is None:
+            return self.update_invalid()
+        self.view.set_running(True)
+        self.update_processing("Refining correlations.", 2)
+        self.run_task(self.model.fit, self.fit_complete, settings, finished=lambda: self.view.set_running(False))
 
-    def stop_process(self):
-        self.stop()
+    def fit_complete(self, result):
+        fit, tables, record = result
+        self.model.set_fit(fit, tables, record)
+        self.view.draw_records(self.model.records)
+        self.view.set_fit_info(f"Train χ² {record['chi2_train']:.4g} on {record['n_train']:,}, held-out χ² "
+                               f"{record['chi2_test']:.4g} on {record['n_test']:,} observations; rank {record['free']}"
+                               + (f"; {record['ties']} indistinguishable orbits tied." if record["ties"] else "."))
+        self.update_comparison()
+        self.update_complete(f"Refined in {record['seconds']:.1f} s.")
 
-    def save_configuration(self):
-        if self.model.session.supercell is None:
+    def update_comparison(self, *args):
+        params = self.view.get_compare()
+        if params is None or self.model.session.fit is None:
             return
-        filename = self.view.config_save_dialog()
-        if filename:
-            self.model.save_configuration(filename)
-            self.update_complete(f"Saved {filename}.")
-
-    def load_configuration(self):
-        if self.model.session.supercell is None:
-            return
-        filename = self.view.config_load_dialog()
-        if filename:
-            try:
-                self.model.load_configuration(filename)
-            except (ValueError, KeyError) as e:
-                return self.update_status(str(e))
-            self.update_complete(f"Loaded {filename}.")
-
-    def draw(self):
-        sc = self.model.session.supercell
-        if sc is None:
-            return
-        snap = self.model.snapshot or {}
-        style = display.configuration(sc, kind=snap.get("kind"), S=snap.get("S", sc.S), u=snap.get("u"))
-        self.view.draw_configuration(style, self._cells.cell_edges(sc.N))
+        normal, value, thickness = params
+        out = self.model.compare_slice(normal, value, thickness)
+        names = out["names"] if out is not None else None
+        title = ""
+        if names is not None:
+            title = f"{names[normal]} = {value:g} ± {thickness / 2:g} ({out['n']:,} bins)"
+        self.view.draw_comparison(out, title or "slice")

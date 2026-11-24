@@ -16,7 +16,8 @@ from qtpy.QtWidgets import (
     QWidget,
 )
 
-from rmc_discord.gui.models.correlations import NAMES
+COMPONENTS = {"Full model": "model", "Background": "background", "Occupancy": "occupancy",
+              "Size effect": "size effect", "Displacement": "displacement", "Spin": "spin"}
 from rmc_discord.gui.views.base_view import BaseView, scalar_bar, set_icon
 from rmc_discord.gui.views.plots import CMAPS, LIMITS, PlotWidget, metric_mesh, norm
 
@@ -34,18 +35,11 @@ class RecalculationView(BaseView):
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
-        box = QGroupBox("Recalculate a data plane from the correlations")
+        box = QGroupBox("Model of a data plane from the refined correlations")
         grid = QGridLayout(box)
         self.quantity_combo = QComboBox(self)
-        self.radiation_combo = QComboBox(self)
-        self.radiation_combo.addItems(["Neutron", "X-ray"])
-        self.r_max_line = _line("", 0, 1e4)
-        grid.addWidget(QLabel("Correlations:"), 0, 0)
-        grid.addWidget(self.quantity_combo, 0, 1)
-        grid.addWidget(QLabel("Radiation:"), 0, 2)
-        grid.addWidget(self.radiation_combo, 0, 3)
-        grid.addWidget(QLabel("r max (Å):"), 0, 4)
-        grid.addWidget(self.r_max_line, 0, 5)
+        grid.addWidget(QLabel("Show:"), 0, 0)
+        grid.addWidget(self.quantity_combo, 0, 1, 1, 2)
         self.normal_combo = QComboBox(self)
         self.normal_combo.addItems(["Axis 1/2", "Axis 1/3", "Axis 2/3"])
         self.slice_line = _line("0.0")
@@ -57,15 +51,10 @@ class RecalculationView(BaseView):
         grid.addWidget(self.bragg_line, 1, 4, 1, 2)
         self.q_min_line = _line("0", 0, 100)
         self.q_max_line = _line("100", 0, 100)
-        self.degree_combo = QComboBox(self)
-        self.degree_combo.addItems(["Constant", "Linear", "Quadratic"])
-        self.degree_combo.setCurrentIndex(2)
         grid.addWidget(QLabel("|Q| min:"), 2, 0)
         grid.addWidget(self.q_min_line, 2, 1)
         grid.addWidget(QLabel("|Q| max:"), 2, 2)
         grid.addWidget(self.q_max_line, 2, 3)
-        grid.addWidget(QLabel("Background in |Q|:"), 2, 4)
-        grid.addWidget(self.degree_combo, 2, 5)
         self.recalc_button = QPushButton("Recalculate", self)
         set_icon(self.recalc_button, "wave-square")
         self.info = QLabel("")
@@ -98,27 +87,29 @@ class RecalculationView(BaseView):
         for combo in (self.scale_combo, self.clim_combo, self.cbar_combo):
             combo.currentIndexChanged.connect(f)
 
-    def set_quantities(self, quantities):
+    def set_quantities(self, channels):
+        """Full model, background, and each refined channel."""
         current = self.quantity_combo.currentData()
         self.quantity_combo.clear()
-        for q in quantities:
-            self.quantity_combo.addItem(NAMES[q], q)
-        if current in quantities:
-            self.quantity_combo.setCurrentIndex(quantities.index(current))
-
-    def set_r_max(self, r):
-        if r is not None and not self.r_max_line.text():
-            self.r_max_line.setText(f"{0.99 * r:.2f}")
+        for name, key in COMPONENTS.items():
+            if key in ("model", "background") or key in channels:
+                self.quantity_combo.addItem(name, key)
+        keys = [self.quantity_combo.itemData(i) for i in range(self.quantity_combo.count())]
+        if current in keys:
+            self.quantity_combo.setCurrentIndex(keys.index(current))
 
     def get_parameters(self):
-        lines = (self.r_max_line, self.slice_line, self.bragg_line, self.q_min_line, self.q_max_line)
+        lines = (self.slice_line, self.bragg_line, self.q_min_line, self.q_max_line)
         if not all(line.hasAcceptableInput() for line in lines):
             return None
         normal = {"Axis 1/2": 2, "Axis 1/3": 1, "Axis 2/3": 0}[self.normal_combo.currentText()]
         return (self.quantity_combo.currentData(), normal, float(self.slice_line.text()),
-                float(self.r_max_line.text()), float(self.q_min_line.text()), float(self.q_max_line.text()),
-                float(self.bragg_line.text()), self.degree_combo.currentIndex(),
-                "xray" if self.radiation_combo.currentText() == "X-ray" else "neutron")
+                float(self.q_min_line.text()), float(self.q_max_line.text()), float(self.bragg_line.text()))
+
+    def set_q_range(self, q_min, q_max):
+        """Default to the |Q| range the model was refined on."""
+        self.q_min_line.setText(f"{q_min:g}")
+        self.q_max_line.setText(f"{min(q_max, 100.0):g}")
 
     def set_result_info(self, text):
         self.info.setText(text)
@@ -135,7 +126,7 @@ class RecalculationView(BaseView):
         skew, aspect = res["transform"]
         names = res["names"]
         axes = []
-        for i, (key, title) in enumerate((("data", "data"), ("model", "recalculated"))):
+        for i, (key, title) in enumerate((("data", "data"), ("model", res.get("title", "model")))):
             ax = fig.add_subplot(1, 2, i + 1, sharex=axes[0] if axes else None, sharey=axes[0] if axes else None)
             mesh, _ = metric_mesh(ax, res[key], *res["edges"], skew, aspect, cmap=cmap, norm=nrm, rasterized=True)
             ax.set_title(f"{title}, {names[res['normal']]} = {round(res['value'], 6) + 0.0:.3g}")

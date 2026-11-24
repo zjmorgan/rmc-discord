@@ -125,5 +125,21 @@ class Worker(QRunnable):
 
 
 class ThreadPool(QThreadPool):
+    """
+    Thread pool that keeps its workers alive until they finish.
+
+    Without a Python reference the worker (and the QObject carrying its
+    signals) can be garbage collected while it runs, and its queued
+    ``result``/``finished`` signals are then never delivered: the task
+    seems to hang and its buttons stay disabled.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._workers = set()
+
     def start_worker_pool(self, worker):
+        worker.setAutoDelete(False)
+        self._workers.add(worker)
+        worker.signals.finished.connect(lambda: self._workers.discard(worker))
         self.start(worker)

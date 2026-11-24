@@ -61,10 +61,32 @@ def scalar_bar(title):
 
 
 def decorate_combo(combo):
-    """Item icons and a width that fits the longest item (as in NeuXtalViz)."""
+    """Item icons and a width that fits the longest item (as in NeuXtalViz).
+
+    The combo stays decorated: items added or removed later (lists filled
+    once data are loaded) get icons and the width is refitted.
+    """
+
+    if not combo.property("fa_decorated"):
+        combo.setProperty("fa_decorated", True)
+        model = combo.model()
+
+        def removed(parent, first, last):
+            names = list(combo.property("fa_items") or [])
+            del names[first:last + 1]
+            combo.setProperty("fa_items", names)
+            decorate_combo(combo)
+
+        def reset():
+            combo.setProperty("fa_items", [])
+            decorate_combo(combo)
+
+        model.rowsInserted.connect(lambda *_: decorate_combo(combo))
+        model.rowsRemoved.connect(removed)
+        model.modelReset.connect(reset)
 
     digit = combo.count() > 0 and all(combo.itemText(i).isdigit() for i in range(combo.count()))
-    names = list(combo.property("fa_items") or [])
+    names = list(combo.property("fa_items") or [])[:combo.count()]
     for i in range(combo.count()):
         if i >= len(names):
             names.append("hashtag" if digit else "minus")
@@ -134,13 +156,15 @@ class BaseView(QWidget):
             right_layout.addWidget(w)
 
         camera_layout.addLayout(left_layout)
-        camera_layout.addWidget(self._init_view_tab())
+        self.view_tab = self._init_view_tab()
+        camera_layout.addWidget(self.view_tab)
         camera_layout.addLayout(right_layout)
 
         vis_layout.addLayout(camera_layout)
         vis_layout.addWidget(self.plotter.interactor)
         vis_layout.setStretch(1, 1)
-        vis_layout.addWidget(self._init_info_tab())
+        self.info_tab = self._init_info_tab()
+        vis_layout.addWidget(self.info_tab)
 
         self.console = QPlainTextEdit(readOnly=True)
         font = QFont("Courier New")
@@ -171,9 +195,20 @@ class BaseView(QWidget):
     # ------------------------------------------------------------------
     # layout
 
+    def replace_scene(self, widget):
+        """Show ``widget`` in place of the 3-D view and hide the camera controls."""
+        vis_layout = self.layout().itemAt(0).layout()
+        vis_layout.replaceWidget(self.plotter.interactor, widget)
+        self.plotter.interactor.hide()
+        for w in (self.save_button, self.reset_button, self.camera_button, self.recip_box, self.axes_box,
+                  self.proj_box, self.view_tab, self.info_tab):
+            w.hide()
+
     def add_tools(self, tabs, stretch=1):
         """Add the application's tool tabs to the right of the view."""
         for combo in tabs.findChildren(QComboBox):
+            decorate_combo(combo)
+        for combo in self.findChildren(QComboBox):
             decorate_combo(combo)
         self.layout().addWidget(tabs, stretch=stretch)
 
@@ -312,20 +347,20 @@ class BaseView(QWidget):
         lattice_layout.addWidget(QLabel("Å"), 0, 6)
         lattice_layout.addWidget(QLabel("°"), 1, 6)
 
-        names = ["N₁:", "N₂:", "N₃:", "Group:", "Atoms:", "Sites:"]
-        self.supercell_lines = [QLineEdit() for _ in names]
-        supercell_layout = QGridLayout()
-        for i, (name, line) in enumerate(zip(names, self.supercell_lines)):
+        names = ["Group:", "Channels:", "r max:", "Orbits:", "Coefficients:", "Free:"]
+        self.model_lines = [QLineEdit() for _ in names]
+        model_layout = QGridLayout()
+        for i, (name, line) in enumerate(zip(names, self.model_lines)):
             line.setReadOnly(True)
-            supercell_layout.addWidget(QLabel(name, self), i // 3, 2 * (i % 3))
-            supercell_layout.addWidget(line, i // 3, 2 * (i % 3) + 1)
+            model_layout.addWidget(QLabel(name, self), i // 3, 2 * (i % 3))
+            model_layout.addWidget(line, i // 3, 2 * (i % 3) + 1)
 
         lattice_tab = QWidget()
         lattice_tab.setLayout(lattice_layout)
-        supercell_tab = QWidget()
-        supercell_tab.setLayout(supercell_layout)
+        model_tab = QWidget()
+        model_tab.setLayout(model_layout)
         info_tab.addTab(lattice_tab, "Lattice Parameters")
-        info_tab.addTab(supercell_tab, "Supercell")
+        info_tab.addTab(model_tab, "Pair Model")
         return info_tab
 
     # ------------------------------------------------------------------
@@ -409,9 +444,9 @@ class BaseView(QWidget):
         for line, v, fmt in zip(self.lattice_lines, (a, b, c, alpha, beta, gamma), ["{:.5f}"] * 3 + ["{:.3f}"] * 3):
             line.setText(fmt.format(v))
 
-    def set_supercell_info(self, N, group, n_atoms, n_sites):
-        values = [*(str(n) for n in N), str(group), str(n_atoms), str(n_sites)]
-        for line, v in zip(self.supercell_lines, values):
+    def set_model_info(self, group, channels, r_max, n_orbits, n_coefficients, n_free):
+        values = [str(group), str(channels), str(r_max), str(n_orbits), str(n_coefficients), str(n_free)]
+        for line, v in zip(self.model_lines, values):
             line.setText(v)
 
     # ------------------------------------------------------------------

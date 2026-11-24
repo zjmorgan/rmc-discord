@@ -3,7 +3,7 @@
 import numpy as np
 import pyvista as pv
 from qtpy.QtCore import Qt
-from qtpy.QtGui import QDoubleValidator
+from qtpy.QtGui import QDoubleValidator, QIntValidator
 from qtpy.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -13,7 +13,6 @@ from qtpy.QtWidgets import (
     QHeaderView,
     QLabel,
     QLineEdit,
-    QListWidget,
     QPushButton,
     QSplitter,
     QTableWidget,
@@ -29,6 +28,21 @@ from rmc_discord.gui.views.base_view import BaseView, scalar_bar, set_icon
 from rmc_discord.gui.views.plots import PlotWidget
 
 
+def _integer(text):
+    line = QLineEdit(text)
+    line.setValidator(QIntValidator(-99, 99))
+    line.setMaximumWidth(48)
+    return line
+
+
+def _bar(h):
+    return f"{h}" if h >= 0 else f"\\bar{{{-h}}}"
+
+
+def _miller(v, brackets="()"):
+    return "$" + brackets[0] + "".join(_bar(int(x)) for x in v) + brackets[1] + "$"
+
+
 def _line(text, low=0, high=1e4):
     line = QLineEdit(text)
     line.setValidator(QDoubleValidator(low, high, 4, notation=QDoubleValidator.StandardNotation))
@@ -42,51 +56,34 @@ class CorrelationsView(BaseView):
         self.tab_widget = QTabWidget(self)
         self._init_compute_tab()
         self._init_shells_tab()
+        self._init_slice_tab()
         self.add_tools(self.tab_widget)
 
     def _init_compute_tab(self):
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
-        box = QGroupBox("Correlations")
+        box = QGroupBox("Refined correlations")
         grid = QGridLayout(box)
         self.quantity_combo = QComboBox(self)
-        self.symmetrize_box = QCheckBox("Symmetrize (space group)", self)
-        self.symmetrize_box.setChecked(True)
-        self.normalize_box = QCheckBox("Normalize (coefficients)", self)
+        self.normalize_box = QCheckBox("Correlation Coefficients (occupancy)", self)
         self.normalize_box.setChecked(True)
-        grid.addWidget(QLabel("Quantity:"), 0, 0)
+        grid.addWidget(QLabel("Channel:"), 0, 0)
         grid.addWidget(self.quantity_combo, 0, 1)
-        grid.addWidget(self.symmetrize_box, 0, 2)
-        grid.addWidget(self.normalize_box, 0, 3)
-        layout.addWidget(box)
-
-        box = QGroupBox("Configurations (averaged; spread gives the error bars)")
-        v = QVBoxLayout(box)
-        self.current_box = QCheckBox("Current configuration", self)
-        self.current_box.setChecked(True)
-        v.addWidget(self.current_box)
-        self.state_list = QListWidget(self)
-        v.addWidget(self.state_list)
-        buttons = QHBoxLayout()
-        self.add_button = QPushButton("Add Configurations", self)
-        set_icon(self.add_button, "plus")
-        self.remove_button = QPushButton("Remove", self)
-        set_icon(self.remove_button, "trash")
-        buttons.addWidget(self.add_button)
-        buttons.addWidget(self.remove_button)
-        buttons.addStretch(1)
-        v.addLayout(buttons)
-        layout.addWidget(box, stretch=1)
-
-        run = QHBoxLayout()
-        self.info = QLabel("")
+        grid.addWidget(self.normalize_box, 0, 2)
+        self.scale_line = QLineEdit("")
+        self.scale_line.setPlaceholderText("arbitrary units")
+        self.scale_line.setValidator(QDoubleValidator(0.0, 1e300, 6, notation=QDoubleValidator.ScientificNotation))
+        self.scale_line.setToolTip("Difference data fix only scale x <S.S>; enter the scale (e.g. from a fit of the "
+                                   "low-temperature volume, where the unit self term sets it) to show <S.S>.")
+        self.scale_label = QLabel("Scale (difference data):")
+        grid.addWidget(self.scale_label, 2, 0)
+        grid.addWidget(self.scale_line, 2, 1)
+        self.set_difference(False)
+        self.info = QLabel("Refine the correlations first (Refinement).")
         self.info.setWordWrap(True)
-        self.compute_button = QPushButton("Compute", self)
-        set_icon(self.compute_button, "calculator")
-        run.addWidget(self.info, stretch=1)
-        run.addWidget(self.compute_button)
-        layout.addLayout(run)
+        grid.addWidget(self.info, 1, 0, 1, 3)
+        layout.addWidget(box)
 
         box = QGroupBox("Export")
         h = QHBoxLayout(box)
@@ -98,7 +95,8 @@ class CorrelationsView(BaseView):
         h.addWidget(self.csv_button)
         h.addStretch(1)
         layout.addWidget(box)
-        self.tab_widget.addTab(tab, "Compute")
+        layout.addStretch(1)
+        self.tab_widget.addTab(tab, "Channels")
 
     def _init_shells_tab(self):
         tab = QWidget()
@@ -133,16 +131,51 @@ class CorrelationsView(BaseView):
         layout.addWidget(splitter, stretch=1)
         self.tab_widget.addTab(tab, "Shells")
 
+    def _init_slice_tab(self):
+        tab = QWidget()
+        layout = QVBoxLayout(tab)
+        controls = QHBoxLayout()
+        self.h_line, self.k_line, self.l_line = (_integer(v) for v in ("0", "0", "1"))
+        self.d_line = _line("0", -1e4, 1e4)
+        self.tol_line = _line("0.01", 0, 10)
+        self.slice_size_line = _line("40", 0.1, 1e4)
+        for text, w in (("(h", self.h_line), ("k", self.k_line), ("l)", self.l_line), ("· [uvw] =", self.d_line),
+                        ("±", self.tol_line), ("size:", self.slice_size_line)):
+            controls.addWidget(QLabel(text))
+            controls.addWidget(w)
+        layout.addLayout(controls)
+        note = QLabel("Pair and r max from the Shells tab; coincident vectors of different site pairs are averaged.")
+        note.setWordWrap(True)
+        layout.addWidget(note)
+        self.slice_plot = PlotWidget(self)
+        layout.addWidget(self.slice_plot, stretch=1)
+        self.tab_widget.addTab(tab, "Slice")
+
     # ------------------------------------------------------------------
 
-    def connect_compute(self, f):
-        self.compute_button.clicked.connect(f)
+    def connect_channel(self, f):
+        self.quantity_combo.currentIndexChanged.connect(f)
+        self.normalize_box.clicked.connect(f)
+        self.scale_line.editingFinished.connect(f)
 
-    def connect_add(self, f):
-        self.add_button.clicked.connect(f)
+    def connect_slice(self, f):
+        for line in (self.h_line, self.k_line, self.l_line, self.d_line, self.tol_line, self.slice_size_line):
+            line.editingFinished.connect(f)
 
-    def connect_remove(self, f):
-        self.remove_button.clicked.connect(f)
+    def get_slice(self):
+        lines = (self.h_line, self.k_line, self.l_line, self.d_line, self.tol_line, self.slice_size_line)
+        if not all(line.hasAcceptableInput() for line in lines):
+            return None
+        hkl = [int(line.text()) for line in lines[:3]]
+        return hkl, float(self.d_line.text()), float(self.tol_line.text()), float(self.slice_size_line.text())
+
+    def get_scale(self):
+        text = self.scale_line.text().strip()
+        return float(text) if text and self.scale_line.hasAcceptableInput() and float(text) > 0 else None
+
+    def set_difference(self, difference):
+        self.scale_label.setVisible(difference)
+        self.scale_line.setVisible(difference)
 
     def connect_filter(self, f):
         self.pair_combo.currentIndexChanged.connect(f)
@@ -155,28 +188,18 @@ class CorrelationsView(BaseView):
     def connect_csv(self, f):
         self.csv_button.clicked.connect(f)
 
-    def states_dialog(self):
-        from qtpy.QtWidgets import QFileDialog
-
-        files, _ = QFileDialog.getOpenFileNames(self, "Add configurations", "", "NumPy archives (*.npz)",
-                                                options=QFileDialog.DontUseNativeDialog)
-        return files
-
     def set_quantities(self, quantities):
+        self.quantity_combo.blockSignals(True)
+        current = self.quantity_combo.currentData()
         self.quantity_combo.clear()
         for q in quantities:
-            self.quantity_combo.addItem(NAMES[q], q)
+            self.quantity_combo.addItem(NAMES.get(q, q), q)
+        if current in quantities:
+            self.quantity_combo.setCurrentIndex(quantities.index(current))
+        self.quantity_combo.blockSignals(False)
 
-    def get_compute(self):
-        return (self.quantity_combo.currentData(), self.symmetrize_box.isChecked(),
-                self.normalize_box.isChecked(), self.current_box.isChecked())
-
-    def set_states(self, names):
-        self.state_list.clear()
-        self.state_list.addItems(names)
-
-    def selected_state(self):
-        return self.state_list.currentRow()
+    def get_channel(self):
+        return self.quantity_combo.currentData(), self.normalize_box.isChecked()
 
     def set_compute_info(self, text):
         self.info.setText(text)
@@ -209,8 +232,9 @@ class CorrelationsView(BaseView):
             if len(set(shells["label"])) <= 10:
                 ax.legend(fontsize=8)
         ax.set_xlabel("r (Å)")
-        unit = {"occupancy": "⟨δδ⟩", "displacement": "⟨u·u⟩ (Å²)", "spin": "⟨S·S⟩"}.get(quantity, "")
-        ax.set_ylabel("correlation coefficient" if normalized and quantity != "spin" else unit)
+        unit = {"occupancy": "⟨δδ⟩", "displacement": "tr V (Å²)", "spin": "⟨S·S⟩",
+                "bond": "size effect along the bond (Å)"}.get(quantity, "")
+        ax.set_ylabel("correlation coefficient" if normalized and quantity not in ("spin", "bond") else unit)
         self.shell_plot.draw()
 
         n = 0 if shells is None else len(shells["value"])
@@ -222,6 +246,38 @@ class CorrelationsView(BaseView):
                 item = QTableWidgetItem(v)
                 item.setTextAlignment(Qt.AlignCenter)
                 self.shell_table.setItem(i, c, item)
+
+    def draw_slice(self, plane, label, size):
+        fig = self.slice_plot.fig
+        fig.clear()
+        ax = fig.add_subplot(111)
+        if plane is None:
+            self.slice_plot.draw()
+            return
+        x, y, v = plane["x"], plane["y"], plane["value"]
+        m = float(np.max(np.abs(v))) if len(v) else 1.0
+        m = m or 1.0
+        sc = ax.scatter(x, y, c=v, s=size, cmap="RdBu_r", vmin=-m, vmax=m, edgecolors="0.3", linewidths=0.3,
+                        zorder=2)
+        fig.colorbar(sc, ax=ax, label=label)
+        ax.plot([0], [0], "k+", ms=8, zorder=3)
+        extent = max(np.max(np.abs(np.r_[x, y])) if len(x) else 1.0, 1.0)
+        axes = np.asarray(plane["axes"], float)
+        axes = axes * min(1.0, 0.8 * extent / np.linalg.norm(axes, axis=1).max())  # directions only, inside the view
+        for u, (ax_x, ax_y) in zip(plane["directions"], axes):
+            ax.annotate("", xy=(ax_x, ax_y), xytext=(0, 0), arrowprops=dict(arrowstyle="->", color="0.2", lw=1),
+                        zorder=1)
+            ax.text(ax_x, ax_y, " " + _miller(u, "[]"), fontsize=9, color="0.2")
+        ax.set_xlim(-1.08 * extent, 1.08 * extent)
+        ax.set_ylim(-1.08 * extent, 1.08 * extent)
+        ax.set_aspect("equal")
+        ax.grid(True, color="0.9", zorder=0)
+        u1 = plane["directions"][0]
+        ax.set_xlabel(f"along {_miller(u1, '[]')} (Å)")
+        ax.set_ylabel("perpendicular, in plane (Å)")
+        d = plane["d"]
+        ax.set_title(f"{_miller(plane['hkl'].astype(int))}$\\cdot$[uvw] = {d:g}   ({len(v)} vectors)", fontsize=10)
+        self.slice_plot.draw()
 
     def draw_map(self, r, value, size):
         self.clear_scene()

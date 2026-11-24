@@ -1,8 +1,9 @@
-"""Data application: load reduced volumes and sample them at commensurate points."""
+"""Data application: load reduced volumes and take observations from them."""
 
 import numpy as np
 
-from rmc_discord.data import sampling, volume
+from rmc_discord.data import volume
+from rmc_discord.pairs.sampling import from_volume
 from rmc_discord.gui.models.base_model import BaseModel
 
 
@@ -53,34 +54,23 @@ class DataModel(BaseModel):
                     ranges=[(e[0], e[-1]) for e in v.edges],
                     measured=float(np.mean(np.isfinite(v.signal))))
 
-    def sample(self, q_min, q_max, bragg_radius, allowed_only, rings, f_sys, progress=None):
-        crystal, sc = self.session.crystal, self.session.supercell
+    def sample(self, q_min, q_max, bragg_radius, rings, f_sys, merge, extra, held_out, seed=0, progress=None):
+        """
+        Observations from the displayed volume (bins as measured).
+
+        Laue-equivalent bins are merged (``merge`` "mean" or "first") so
+        each observation is one orbit; a fraction is held out.
+        """
         if progress:
-            progress("Sampling commensurate points.", 20)
-        if self.norm is not None and self.subtract is None:
-            s = sampling.commensurate(self.data, crystal, sc.N, norm=self.norm)
-        else:
-            s = sampling.commensurate(self.display, crystal, sc.N)
-        n_all = len(s)
-        if progress:
-            progress("Masking Bragg peaks.", 50)
-        bragg = sampling.bragg_mask(s, crystal, radius=list(bragg_radius), allowed_only=allowed_only)
-        keep = ~bragg
-        n_ring = 0
-        if rings:
-            if progress:
-                progress("Masking powder rings.", 65)
-            ring, _ = sampling.powder_ring_mask(s, exclude=bragg)
-            n_ring = int(np.sum(ring & keep))
-            keep &= ~ring
-        keep &= (s.Q_norm >= q_min) & (s.Q_norm < q_max)
-        s = s.select(keep)
-        if f_sys > 0:
-            s.variance = s.variance + (f_sys * s.y) ** 2
+            progress("Masking and merging equivalent bins.", 20)
+        obs = from_volume(self.display, self.session.structure, bragg_radius=bragg_radius, q_range=(q_min, q_max),
+                          rings=rings, merge=merge, extra=extra, error_floor=f_sys, held_out=held_out, seed=seed)
         if progress:
             progress("Sampled!", 100)
-        summary = dict(points=len(s), commensurate=n_all, bragg=int(bragg.sum()), rings=n_ring)
-        return s, summary
+        info = obs.info
+        summary = dict(points=len(obs), bins=info["bins"], bragg=info.get("bragg", 0), rings=info.get("rings", 0),
+                       held=int(obs.held.sum()), masked=info["masked"])
+        return obs, summary
 
     # ------------------------------------------------------------------
     # display
@@ -143,11 +133,45 @@ class DataModel(BaseModel):
         sin = np.sqrt(max(0.0, 1 - cos**2))
         return image, v.edges[axes[0]], v.edges[axes[1]], tuple(axes), (lb * cos / la, lb * sin / la)
 
+    def planes(self, positions):
+        """
+        Three planes of the display volume through the bins nearest
+        ``positions`` (one per projection axis), for the 3-D view.
+
+        Returns
+        -------
+        planes : list of (ndarray, ndarray)
+            Cartesian corner points ``(n_b + 1, n_c + 1, 3)`` (1/d units) and
+            the plane of the signal ``(n_b, n_c)``.
+        """
+        v = self.display
+        q = self.axis_vectors()
+        planes = []
+        for a, value in enumerate(positions):
+            i = int(np.argmin(np.abs(v.centers[a] - value)))
+            b, c = [k for k in range(3) if k != a]
+            u = np.zeros((len(v.edges[b]), len(v.edges[c]), 3))
+            u[..., a] = v.centers[a][i]
+            u[..., b] = v.edges[b][:, None]
+            u[..., c] = v.edges[c][None, :]
+            planes.append((u @ q.T, np.take(v.signal, i, axis=a)))
+        return planes
+
     def sample_points_in_slice(self, normal, value, thickness):
         s = self.session.sample
         if s is None:
             return None
-        u = s.hkl @ np.linalg.inv(self.display.W).T
+        return self._in_slice(s.h, normal, value, thickness)
+
+    def masked_points_in_slice(self, normal, value, thickness):
+        """Commensurate points removed by the Bragg and powder-ring masks, in the slab."""
+        masked = getattr(self, "masked", None)
+        if masked is None:
+            return None
+        return {k: self._in_slice(hkl, normal, value, thickness) for k, hkl in masked.items()}
+
+    def _in_slice(self, hkl, normal, value, thickness):
+        u = hkl @ np.linalg.inv(self.display.W).T
         keep = np.abs(u[:, normal] - value) <= thickness / 2
         axes = [a for a in range(3) if a != normal]
         return u[keep][:, axes]
@@ -163,4 +187,4 @@ class DataModel(BaseModel):
         y = s.y[idx]
         pos = y[y > 0]
         floor = np.percentile(pos, 1) if pos.size else 1.0
-        return s.Q[idx], np.log10(np.maximum(y, floor))
+        return 2 * np.pi * s.h[idx] @ self.crystal.B.T, np.log10(np.maximum(y, floor))

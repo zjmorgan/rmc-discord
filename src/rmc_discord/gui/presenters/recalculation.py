@@ -9,16 +9,17 @@ class RecalculationPresenter(BasePresenter):
         self.view.connect_recalculate(self.recalculate)
         self.view.connect_style(self.redraw)
         model.session.correlations_changed.connect(self.correlations_changed)
-        model.session.supercell_changed.connect(self.correlations_changed)
 
     def correlations_changed(self):
-        self.view.set_quantities(self.model.quantities())
-        self.view.set_r_max(self.model.max_range())
+        self.view.set_quantities(self.model.channels())
+        sample = self.model.session.sample
+        if sample is not None and "q_range" in sample.info:
+            self.view.set_q_range(*sample.info["q_range"])
 
     def recalculate(self):
         s = self.model.session
-        if s.volume is None:
-            return self.update_status("Load and sample data first (Data).")
+        if s.volume is None or s.fit is None:
+            return self.update_status("Refine the correlations first (Refinement).")
         params = self.view.get_parameters()
         if params is None or params[0] is None:
             return self.update_invalid()
@@ -28,8 +29,8 @@ class RecalculationPresenter(BasePresenter):
     def recalculate_complete(self, res):
         self.model.result = res
         self.model.session.recalculated.emit()
-        self.view.set_result_info(f"{res['n']:,} points: Pearson r {res['r']:.3f} with background, "
-                                  f"{res['r_diffuse']:.3f} for the diffuse part; scale {res['scale']:.3g}.")
+        self.view.set_result_info(f"{res['n']:,} points: χ²/N {res['chi2']:.3g}; Pearson r {res['r']:.3f} with "
+                                  f"background, {res['r_diffuse']:.3f} without; scale {res['scale']:.3g}.")
         self.view.camera_position = None
         self.redraw()
         self.view.reset_view()

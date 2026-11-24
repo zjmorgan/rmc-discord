@@ -9,6 +9,25 @@ def site_name(site):
     return f"{'/'.join(site.labels)} ({x})"
 
 
+def display_names(crystal):
+    """
+    Display name of each CIF label: co-located labels joined, e.g.
+    ``{"Fe1": "Fe1/Mn1", "Mn1": "Fe1/Mn1"}``.
+    """
+    if crystal is None:
+        return {}
+    groups = []
+    for s in crystal.asymmetric:
+        for g in groups:
+            d = (g[0].xyz - s.xyz + 0.5) % 1 - 0.5
+            if np.all(np.abs(d) < 1e-4):
+                g.append(s)
+                break
+        else:
+            groups.append([s])
+    return {s.label: "/".join(t.label for t in g) for g in groups for s in g}
+
+
 class BaseModel:
     def __init__(self, session):
         self.session = session
@@ -21,14 +40,17 @@ class BaseModel:
         if self.crystal is not None:
             return self.crystal.cell
 
-    def get_supercell_info(self):
-        sc = self.session.supercell
+    def get_model_info(self):
+        """Space group and a summary of the pair model (channels, range, orbits, coefficients)."""
         if self.crystal is None:
             return None
         group = self.crystal.space_group.getHMSymbol()
-        if sc is None:
-            return ("", "", ""), group, "", ""
-        return sc.N, group, len(sc), sc.n_sites
+        model = self.session.model
+        if model is None:
+            return group, "", "", "", "", ""
+        channels = ", ".join(b.name for b in model.blocks)
+        orbits = sum(b.orbits.n_orbits for b in model.blocks if b.kind == "orbit") or model.blocks[0].orbits.n_orbits
+        return group, channels, f"{model.spec.r_max:g} Å", orbits, model.n_coefficients, model.n_free
 
     def orientation_matrix(self):
         """Reciprocal basis in Cartesian coordinates (columns a*, b*, c*)."""

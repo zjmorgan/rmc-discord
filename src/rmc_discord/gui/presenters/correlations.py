@@ -6,52 +6,38 @@ from rmc_discord.gui.presenters.base_presenter import BasePresenter
 class CorrelationsPresenter(BasePresenter):
     def __init__(self, view, model):
         super().__init__(view, model)
-        self.view.connect_compute(self.compute)
-        self.view.connect_add(self.add_states)
-        self.view.connect_remove(self.remove_state)
+        self.view.connect_channel(self.show_channel)
         self.view.connect_filter(self.update_display)
+        self.view.connect_slice(self.update_slice)
         self.view.connect_save(self.save)
         self.view.connect_csv(self.write_csv)
-        model.session.supercell_changed.connect(self.supercell_changed)
-        model.session.configuration_changed.connect(self.supercell_changed)
+        model.session.correlations_changed.connect(self.correlations_changed)
         self.quantity = None
         self.normalized = False
 
-    def supercell_changed(self):
+    def correlations_changed(self):
         self.view.set_quantities(self.model.available())
+        if self.model.available():
+            self.view.camera_position = None
+            self.show_channel()
+            self.view.reset_view()
+        else:
+            self.model.shown = None
+            self.view.set_compute_info("Refine the correlations first (Refinement).")
 
-    def add_states(self):
-        for filename in self.view.states_dialog():
-            try:
-                self.model.add_state(filename)
-            except (ValueError, KeyError) as e:
-                self.update_status(str(e))
-        self.view.set_states([n for n, _ in self.model.states])
-
-    def remove_state(self):
-        self.model.remove_state(self.view.selected_state())
-        self.view.set_states([n for n, _ in self.model.states])
-
-    def compute(self):
-        if self.model.session.supercell is None:
-            return self.update_status("Build a supercell first.")
-        quantity, symmetrize, normalize, current = self.view.get_compute()
-        if quantity is None:
-            return self.update_status("No correlations for this supercell (no mixed, displaced, or magnetic sites).")
-        self.normalized = normalize
-        self.update_processing("Computing correlations.", 5)
-        self.run_task(self.model.compute, self.compute_complete, quantity, symmetrize, normalize, current)
-
-    def compute_complete(self, result):
-        quantity, raw, shown, n_states = result
-        self.quantity = quantity
-        self.model.set_computed(quantity, raw, shown)
+    def show_channel(self, *args):
+        channel, normalize = self.view.get_channel()
+        if channel is None:
+            return
+        self.model.scale = self.view.get_scale()
+        self.model.channel = channel
+        self.view.set_difference(self.model.difference())
+        table = self.model.select(channel, normalize)
+        self.quantity = table.quantity if table is not None else None
+        self.normalized = self.model.normalized
         self.view.set_pairs(self.model.pair_names())
-        self.view.set_compute_info(f"{len(shown):,} site pairs × separations from {n_states} configuration(s).")
-        self.view.camera_position = None
+        self.view.set_compute_info(self.model.info())
         self.update_display()
-        self.view.reset_view()
-        self.update_complete("Correlations computed!")
 
     def update_display(self, *args):
         params = self.view.get_filter()
@@ -61,6 +47,30 @@ class CorrelationsPresenter(BasePresenter):
         c = self.model.filtered(pair, r_min, r_max)
         self.view.draw_shells(self.model.shells(pair, r_min, r_max), self.quantity, self.normalized)
         self.view.draw_map(c.r if c is not None else None, c.value if c is not None else None, size)
+        self.update_slice()
+
+    def label(self):
+        if self.quantity == "spin":
+            if self.model.difference():
+                return "⟨S·S⟩ (scaled)" if self.model.scale else "s ⟨S·S⟩ (difference data, arb. units)"
+            return "⟨S·S⟩"
+        if self.normalized:
+            return "correlation coefficient"
+        return {"occupancy": "⟨δn δn⟩", "displacement": "tr V (Å²)", "bond": "size effect along the bond (Å)"}.get(
+            self.quantity, "")
+
+    def update_slice(self, *args):
+        params, sl = self.view.get_filter(), self.view.get_slice()
+        if params is None or sl is None or self.model.shown is None:
+            return
+        pair, _, r_max, _ = params
+        hkl, d, tol, size = sl
+        try:
+            plane = self.model.plane(pair, hkl, d, tol, r_max)
+        except ValueError as error:
+            self.update_status(str(error))
+            return
+        self.view.draw_slice(plane, self.label(), size)
 
     def save(self):
         if self.model.shown is None:

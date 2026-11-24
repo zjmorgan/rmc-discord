@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from rmc_discord.analysis import correlations
+from rmc_discord.analysis import bond_lengths, correlations
 from rmc_discord.analysis.correlations import _site_maps
 from rmc_discord.model.supercell import Supercell
 
@@ -68,6 +68,47 @@ def test_fft_matches_brute_force(toy_crystal, quantity):
     assert np.allclose(sym.value, corr.value)
 
 
+def test_bond_lengths_match_brute_force(toy_crystal):
+    sc = toy_supercell(toy_crystal, N=(3, 3, 3))  # odd: no half-box separations
+    corr = bond_lengths(sc, symmetrize=False)
+    L = sc.crystal.cartesian(np.diag(sc.N).astype(float))
+    labels = np.array([sc.kinds[k].label for k in sc.kind])
+    occupied = labels != "vacancy"
+    d0 = sc.r[None] - sc.r[:, None]
+    f = d0 @ np.linalg.inv(L)
+    d0 = (f - np.round(f)) @ L
+    d = d0 + sc.u[None] - sc.u[:, None]
+    D0, D = np.linalg.norm(d0, axis=-1), np.linalg.norm(d, axis=-1)
+    N = np.array(sc.N)
+    cell = np.mod(sc.cell[None] - sc.cell[:, None], N)
+    n_checked = 0
+    for (j, k), label, dR, value, count in zip(corr.sites, corr.labels, corr.dR, corr.value, corr.count):
+        a, b = label.split("-")
+        m = (sc.site[:, None] == j) & (sc.site[None] == k) & np.all(cell == np.mod(dR, N), axis=-1)
+        m &= (labels[:, None] == a) & (labels[None] == b) & occupied[:, None] & occupied[None]
+        assert m.sum() == pytest.approx(count)
+        assert value == pytest.approx(np.mean(D[m] - D0[m]), abs=2e-4)  # second order in u
+        n_checked += 1
+    assert n_checked == len(corr) > 50
+    assert {"Fe1-Mn1", "Mn1-Co1", "Fe1-Co1"} <= set(corr.labels)
+    assert "vacancy" not in " ".join(corr.labels)
+
+
+def test_bond_lengths_resolve_a_planted_size_effect(toy_crystal):
+    sc = toy_supercell(toy_crystal, N=(4, 4, 4))
+    sc.u[:] = 0.0
+    labels = np.array([sc.kinds[k].label for k in sc.kind])
+    cz = np.array([sc.cell[i][2] for i in range(len(sc))])
+    # Mn pulls its +z neighbor (the Fe/Mn site one cell up) closer by 0.1 A
+    for i in np.flatnonzero(labels == "Mn1"):
+        sc.u[i, 2] += 0.05
+    shells = bond_lengths(sc).within(5.6, 5.4).shells()
+    change = dict(zip(shells["label"], shells["value"]))
+    assert change["Fe1-Fe1"] == pytest.approx(0.0, abs=1e-12)
+    assert change["Mn1-Mn1"] == pytest.approx(0.0, abs=1e-12)
+    assert change["Fe1-Mn1"] < -1e-3  # Mn moved up: bonds to the Fe above shorten, below lengthen
+
+
 def transformed(sc, op):
     """Configuration moved by space-group operator ``op``."""
     channels = np.arange(sc.n_sites)
@@ -99,6 +140,8 @@ def test_symmetrized_correlations_are_invariant(carbonate_crystal, quantity):
         assert np.allclose(a.value, b.value, atol=1e-12)
         if quantity == "displacement":
             assert np.allclose(a.tensor, b.tensor, atol=1e-12)
+        if quantity == "displacement":
+            assert np.allclose(bond_lengths(sc).value, bond_lengths(sc, states=[moved]).value, atol=1e-12)
         raw_a = correlations(sc, quantity, symmetrize=False)
         raw_b = correlations(sc, quantity, states=[moved], symmetrize=False)
         assert not np.allclose(raw_a.value, raw_b.value)

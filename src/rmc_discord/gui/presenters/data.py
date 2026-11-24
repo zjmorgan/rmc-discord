@@ -27,6 +27,7 @@ class DataPresenter(BasePresenter):
 
     def load_complete(self, loaded):
         self.model.set_loaded(loaded)
+        self.model.masked = None
         info = self.model.info()
         names = self.model.axis_names() if self.model.crystal is not None else ["u₁", "u₂", "u₃"]
         ranges = ", ".join(f"{n} [{lo:.2f}, {hi:.2f}]" for n, (lo, hi) in zip(names, info["ranges"]))
@@ -36,13 +37,15 @@ class DataPresenter(BasePresenter):
         self.view.set_data_info(f"Grid {' × '.join(map(str, info['shape']))}; {ranges}; "
                                 f"{100 * info['measured']:.0f}% measured.{lattice}")
         self.update_complete("Data loaded!")
+        self.view.set_plane_names(names)
         self.update_slice()
+        self.view.reset_view()
 
     def sample(self):
         if self.model.display is None:
             return self.update_status("Load data first.")
-        if self.model.session.supercell is None:
-            return self.update_status("Build the supercell first (Structure).")
+        if self.model.session.structure is None:
+            return self.update_status("Load a CIF first (Structure).")
         params = self.view.get_sampling()
         if params is None:
             return self.update_invalid()
@@ -51,16 +54,15 @@ class DataPresenter(BasePresenter):
 
     def sample_complete(self, result):
         sample, summary = result
+        self.model.masked = summary["masked"]
         self.model.session.set_sample(self.model.display, sample)
         self.view.set_sample_info(
-            f"{summary['points']:,} points kept of {summary['commensurate']:,} commensurate "
-            f"({summary['bragg']:,} near Bragg peaks, {summary['rings']:,} on powder rings, rest outside |Q|)."
+            f"{summary['points']:,} observations ({summary['held']:,} held out) from {summary['bins']:,} measured "
+            f"bins ({summary['bragg']:,} near Bragg peaks, {summary['rings']:,} on powder rings, rest outside |Q| "
+            "or merged with equivalents). Check \"Show Masked Points\" on the Slice tab to see the masks."
         )
-        Q, values = self.model.sample_cloud()
-        self.view.draw_cloud(Q, values)
-        self.view.reset_view()
         self.update_slice()
-        self.update_complete(f"{len(sample):,} points sampled!")
+        self.update_complete(f"{len(sample):,} observations!")
 
     def update_slice(self, *args):
         if self.model.display is None or self.model.crystal is None:
@@ -73,7 +75,10 @@ class DataPresenter(BasePresenter):
         names = self.model.axis_names()
         points = None
         if self.view.get_slice_style()[3]:
-            pts = self.model.sample_points_in_slice(normal, value, thickness)
-            points = pts if pts is not None else None
+            points = self.model.sample_points_in_slice(normal, value, thickness)
+        masked = self.model.masked_points_in_slice(normal, value, thickness) if self.view.show_masked() else None
         title = f"{names[normal]} = {value:g} ± {thickness / 2:g}"
-        self.view.draw_slice(image, ea, eb, transform, [names[a] for a in axes], title, points)
+        self.view.draw_slice(image, ea, eb, transform, [names[a] for a in axes], title, points, masked)
+        positions = self.view.get_planes()
+        if positions is not None:
+            self.view.draw_planes(self.model.planes(positions))

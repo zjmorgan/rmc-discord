@@ -5,19 +5,23 @@
 
 ![](https://github.com/zjmorgan/rmc-discord/blob/master/docs/banner.svg)
 
-[*rmc-discord*](https://zjmorgan.github.io/rmc-discord/) is an atomistic program for the analysis of single crystal diffuse scattering from disordered materials capable of extracting short-range magnetic, occupational, and displacive correlations.
+[*rmc-discord*](https://zjmorgan.github.io/rmc-discord/) analyzes single crystal diffuse scattering from disordered materials and extracts short-range magnetic, occupational, and displacive correlations.
+
+Pair correlations are refined directly: the diffuse intensity is linear in symmetry-reduced pair correlations, which are fit by constrained least squares against the measured bins, with exact bin averaging, a smooth background, and held-out validation. There is no supercell and no Monte Carlo. The channels are:
+- occupancy covariances, with within-cluster values, sum rules and rigid units fixed by the average structure
+- size effect (occupation-displacement) and displacement-displacement correlations
+- magnetic correlations, isotropic or as symmetric spin tensors, including mixed magnetic sites
 
 There are two required inputs:
 - CIF file of the average structure
 - NeXus file of the scattering data
 
 There are several outputs:
-- CIF file of disordered structure
-- CSV file of spherically averaged pair correlations
-- VTK file of three-dimensional pair correlations
-- VTK file of recalculated diffuse scattering pattern
+- HDF5 table of the refined pair correlations with uncertainties
+- CSV file of correlation shells
+- three-dimensional maps of the correlations and the recalculated diffuse scattering
 
-The program is written in Python with underlying performance-critical extensions written in Cython and includes a PyQt5 GUI.
+The program is written in Python and includes a Qt GUI. The earlier reverse Monte Carlo engine (`rmc_discord.engine`) is kept in the repository but no longer used by the GUI; its example scripts are in `examples/legacy_rmc/`.
 
 ### Citation
 

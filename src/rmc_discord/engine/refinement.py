@@ -141,6 +141,22 @@ class History:
         return float(acc.mean()) if acc.size else np.nan
 
 
+def _nufft_cheaper(n_atoms, n_points, n_groups, m):
+    """
+    Whether the type-1 NUFFT beats the direct sum for displaced atoms.
+
+    Measured costs (bixbyite, 16 threads): direct about 1e-9 s per atom and
+    point; NUFFT about 6e-8 s per group and point of the 2x upsampled box.
+    """
+
+    try:
+        import finufft  # noqa: F401
+    except ImportError:
+        return False
+    box = np.prod(2.0 * (2 * np.abs(m).max(axis=0) + 1))
+    return n_atoms * n_points > 60.0 * n_groups * box
+
+
 class Refinement:
     """
     RMC refinement state: supercell, sample, structure factors, and cost.
@@ -202,8 +218,9 @@ class Refinement:
         (or for twin domains). Each must map commensurate points to
         commensurate points.
     threads : int, optional
-        Number of Numba threads. Physical cores are usually best; Numba's
-        default (all logical CPUs) can be slower with hyperthreading.
+        Number of Numba threads (process-wide). Numba's default, all logical
+        CPUs, can be several times slower than fewer threads; see
+        :meth:`tune_threads`.
 
     """
 
@@ -250,6 +267,8 @@ class Refinement:
         self._array_offset = offset is not None and not isinstance(offset, str)
         self.nuclear = bool(nuclear)
         self.magnetic = bool(magnetic)
+        if not (self.nuclear or self.magnetic):
+            raise ValueError("neither nuclear nor magnetic scattering is enabled")
         self.displacive = np.array(sorted(set(displacive)), dtype=np.int64)
 
         self.fit_mode = FIT_MODES[fit]
@@ -314,7 +333,11 @@ class Refinement:
         if self.has_basis:
             self.n_fit += len(self.knots) - 1
 
-        self.swap_sites = np.array(sc.mixed_sites, dtype=np.int64)
+        # without the nuclear term a swap only changes the intensity on a
+        # site where some kind carries a moment
+        swappable = sc.mixed_sites if self.nuclear else (
+            sorted(set(sc.mixed_sites) & set(sc.magnetic_sites)) if self.magnetic else [])
+        self.swap_sites = np.array(swappable, dtype=np.int64)
         self.spin_sites = np.array(
             sc.magnetic_sites if self.magnetic else [], dtype=np.int64
         )
@@ -336,6 +359,7 @@ class Refinement:
         if weights is None:
             weights = {"swap": 1.0, "spin": 1.0, "displace": 1.0, "swap_displace": 1.0}
         weights = dict(weights)
+        requested = dict(weights)
         if self.swap_sites.size == 0:
             weights["swap"] = 0.0
         if self.spin_sites.size == 0:
@@ -347,7 +371,18 @@ class Refinement:
             weights["swap_displace"] = 0.0
         p = np.array([weights.get(k, 0.0) for k in MOVES])
         if p.sum() <= 0:
-            raise ValueError("no applicable move types")
+            reasons = []
+            if sc.mixed_sites and self.swap_sites.size == 0:
+                reasons.append("swaps need the nuclear term (or a magnetic kind on the mixed site)")
+            if sc.magnetic_sites and not self.magnetic:
+                reasons.append("spin moves need the magnetic term")
+            if not sc.magnetic_sites and requested.get("spin", 0) > 0:
+                reasons.append("spin moves need a magnetic kind (ion and moment)")
+            if not sc.mixed_sites and requested.get("swap", 0) > 0:
+                reasons.append("swaps need a site with more than one kind (partial occupancy)")
+            if requested.get("displace", 0) > 0 and self.displacive.size == 0:
+                reasons.append("displacements need displacive sites")
+            raise ValueError("no applicable move types" + (": " + "; ".join(reasons) if reasons else ""))
         self.move_cdf = np.cumsum(p / p.sum())
 
         self.L = sc.cholesky_U()
@@ -602,14 +637,24 @@ class Refinement:
 
         return F, FM
 
-    def _displaced_sum(self, sel, F, FM, max_bytes=64e6):
+    def _displaced_sum(self, sel, F, FM, max_bytes=64e6, method="auto"):
         r"""
-        Add displaced atoms to the structure factors directly.
+        Add displaced atoms to the structure factors.
 
-        Atoms are grouped by prefactor tables and summed in blocks; each
-        block gets phase tables :math:`E_a[k, i] = e^{i k \theta_{ia}}`,
-        :math:`\theta_a = 2\pi(R_a + x_a)/N_a + s_a`, so a point costs two
-        complex products per atom and no trigonometric function.
+        Atom :math:`i` contributes :math:`e^{i \mathbf{m}\cdot\boldsymbol\theta_i}`
+        at point :math:`\mathbf{m}`, with :math:`\theta_a = 2\pi(R_a + x_a)/N_a +
+        s_a`. Atoms are grouped by prefactor tables. Each group is summed
+        either directly, in blocks with phase tables :math:`E_a[k, i] = e^{i k
+        \theta_{ia}}` (two complex products per atom and point, no
+        trigonometric function), or by a type-1 non-uniform FFT onto the box
+        of points (finufft, tolerance ``1e-12``), whose cost depends on the
+        box rather than on atoms times points.
+
+        Parameters
+        ----------
+        method : {"auto", "direct", "nufft"}, optional
+            ``"auto"`` takes the NUFFT when finufft is installed and its
+            estimated cost is lower.
         """
 
         sc = self.supercell
@@ -621,12 +666,18 @@ class Refinement:
         if sel.size == 0:
             return
         theta = self.tpN * (self.cell[sel] + self.xyz[self.site[sel]]) + self.su_scaled[sel]
+        tn, tm = self.nuc.t[kind], self.mag.t[kind]
+        groups = sorted(set(zip(tn.tolist(), tm.tolist())))
+        if method == "auto":
+            method = "nufft" if _nufft_cheaper(len(sel), self.n_points, len(groups), self.m) else "direct"
+        if method == "nufft":
+            self._displaced_nufft(sel, theta, cn, cm, tn, tm, groups, F, FM)
+            return
         L = self._E.shape[2]
         block = int(max(256, max_bytes // (48 * L)))
-        tn, tm = self.nuc.t[kind], self.mag.t[kind]
         dummy_n = np.zeros(1, dtype=self.nuc.T.dtype)
         dummy_m = np.zeros(1, dtype=self.mag.T.dtype)
-        for a, b in sorted(set(zip(tn.tolist(), tm.tolist()))):
+        for a, b in groups:
             group = np.flatnonzero((tn == a) & (tm == b))
             T_n = np.ascontiguousarray(self.nuc.T[a]) if a >= 0 else dummy_n
             T_m = np.ascontiguousarray(self.mag.T[b]) if b >= 0 else dummy_m
@@ -641,6 +692,36 @@ class Refinement:
                     np.ascontiguousarray(sc.S[sel[g]], dtype=float),
                     T_n, a >= 0, T_m, b >= 0, self.nuclear, self.magnetic, F, FM,
                 )
+
+    def _displaced_nufft(self, sel, theta, cn, cm, tn, tm, groups, F, FM):
+        """Type-1 NUFFT of each prefactor group onto the box of points (see :meth:`_displaced_sum`)."""
+
+        import finufft
+        import numba
+
+        m = self.m.astype(np.int64)
+        half = np.abs(m).max(axis=0)
+        K = tuple(int(k) for k in 2 * half + 1)
+        at = tuple((m + half).T)
+        x = np.mod(theta + np.pi, 2 * np.pi) - np.pi
+        x, y, z = (np.ascontiguousarray(x[:, a]) for a in range(3))
+        S = self.supercell.S[sel]
+        threads = numba.get_num_threads()
+        for a, b in groups:
+            g = np.flatnonzero((tn == a) & (tm == b))
+            w = []
+            if self.nuclear:
+                w.append(cn[g].astype(complex))
+            if self.magnetic:
+                w += [(cm[g] * S[g, c]).astype(complex) for c in range(3)]
+            w = np.stack(w)
+            out = finufft.nufft3d1(x[g], y[g], z[g], w, K, isign=1, eps=1e-12, nthreads=threads)
+            out = out[(slice(None),) + at]
+            if self.nuclear:
+                F += out[0] * (self.nuc.T[a] if a >= 0 else 1.0)
+                out = out[1:]
+            if self.magnetic:
+                FM += (out * (self.mag.T[b] if b >= 0 else 1.0)).T
 
     def recompute(self, track_drift=True):
         """
@@ -803,9 +884,86 @@ class Refinement:
         delta = history.array("delta")
         uphill = delta[np.isfinite(delta) & (delta > 0)]
         if uphill.size == 0:
-            raise RuntimeError("no uphill moves to calibrate against")
+            raise RuntimeError(
+                "no uphill moves to calibrate against: the enabled moves do not change the model "
+                "intensity (check the nuclear/magnetic terms against the move types), or set a "
+                "starting temperature"
+            )
         self.temperature = float(np.median(uphill) / np.log(1 / acceptance))
         return self.temperature
+
+    def tune_threads(self, candidates=None, n_moves=150, repeats=3, log=None):
+        """
+        Use the fastest Numba thread count for moves at the current points.
+
+        Each move is a short parallel loop over the points, so a thread that
+        is held up (a hyperthread sibling, an efficiency core, a virtual CPU
+        the host deschedules) stalls the whole move; all logical CPUs can be
+        several times slower than fewer threads. Short bursts of greedy moves
+        are timed at each candidate (best of ``repeats``) and the
+        configuration, structure factors, fit, and move generator are
+        restored afterwards.
+
+        Parameters
+        ----------
+        candidates : sequence of int, optional
+            Thread counts to try; 1/4, 1/2, 3/4, and all of the available
+            threads if omitted.
+        n_moves : int, optional
+            Moves per timing burst.
+        repeats : int, optional
+            Bursts per candidate.
+        log : callable, optional
+            Receives a line with the timings.
+
+        Returns
+        -------
+        threads : int
+            Thread count now in use.
+
+        """
+
+        import time
+
+        import numba
+
+        n_max = numba.config.NUMBA_NUM_THREADS
+        if candidates is None:
+            candidates = {max(1, round(f * n_max)) for f in (0.25, 0.5, 0.75, 1.0)}
+        candidates = sorted({min(n_max, max(1, int(c))) for c in candidates})
+        sc = self.supercell
+        saved = dict(kind=sc.kind.copy(), u=sc.u.copy(), S=sc.S.copy(), F=self.F.copy(), FM=self.FM.copy(),
+                     su=self.su.copy(), suu=self.suu.copy(), g=self.g.copy(), su_scaled=self.su_scaled.copy())
+        scalars = {k: getattr(self, k) for k in ("temperature", "scale", "background", "chi_sq",
+                                                 "incremental_chi_sq", "drifts") if hasattr(self, k)}
+        history = self.history
+        self.history = History()
+        times = {}
+        try:
+            for c in candidates:
+                numba.set_num_threads(c)
+                self.run(10, temperature=1e-300)  # warm the pool
+                best = np.inf
+                for _ in range(repeats):
+                    t = time.perf_counter()
+                    self.run(n_moves, temperature=1e-300)
+                    best = min(best, time.perf_counter() - t)
+                times[c] = best / n_moves
+        finally:
+            sc.kind[:], sc.u[:], sc.S[:] = saved["kind"], saved["u"], saved["S"]
+            self.F[:], self.FM[:] = saved["F"], saved["FM"]
+            self.su, self.suu, self.g = saved["su"], saved["suu"], saved["g"]
+            self.su_scaled[:] = saved["su_scaled"]
+            for k, v in scalars.items():
+                setattr(self, k, v)
+            self.history = history
+            kernels.seed(int(self.rng.integers(2**31)))
+        threads = min(times, key=times.get) if times else numba.get_num_threads()
+        numba.set_num_threads(threads)
+        if log:
+            log("threads: " + ", ".join(f"{c} {1e6 * t:.0f} us/move" for c, t in times.items())
+                + f" -> {threads}")
+        return threads
 
     def matched_scale(self):
         r"""

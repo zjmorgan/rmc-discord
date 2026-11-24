@@ -1,4 +1,4 @@
-"""Structure application: average structure, disordered sites, supercell."""
+"""Structure application: average structure, disordered sites, pair-correlation model."""
 
 import itertools
 from dataclasses import replace
@@ -9,7 +9,8 @@ from rmc_discord.crystal import tables
 from rmc_discord.crystal.cif import read_cif
 from rmc_discord.crystal.structure import Crystal
 from rmc_discord.gui.models.base_model import BaseModel, site_name
-from rmc_discord.model.supercell import Supercell
+from rmc_discord.pairs import Structure
+from rmc_discord.pairs.workflow import ModelSpec, PairModel
 
 
 def parse_mapping(text, many=False, number=False):
@@ -53,7 +54,7 @@ class StructureModel(BaseModel):
         self.cif = read_cif(filename)
         self.filename = str(filename)
         crystal = self.make_crystal(self.cif.cell, {})
-        self.session.set_crystal(crystal)
+        self.session.set_crystal(crystal, Structure.from_crystal(crystal))
         return crystal
 
     def make_crystal(self, cell, occupancies):
@@ -73,34 +74,94 @@ class StructureModel(BaseModel):
                              x=s.xyz[0], y=s.xyz[1], z=s.xyz[2], U=U, multiplicity=int(mult[k])))
         return rows
 
-    def build_supercell(self, cell, occupancies, labels, N, groups=None, ions=None, moments=None,
-                        seed=0, displacements=True, progress=None):
-        """Rebuild the crystal with edited lattice and occupancies, then the supercell."""
+    @staticmethod
+    def magnetic_positions(crystal, ions, moments):
+        """
+        Magnetic positions from ``{label: ion}`` and ``{ion or label: moment}``.
+
+        Co-located CIF labels form one position, named by its first label,
+        with the occupancy-weighted moment of its magnetic occupants
+        (non-magnetic occupants and vacancies carry none).
+
+        Returns
+        -------
+        labels : list of str
+        mixtures : dict
+            ``{label: [(occupancy, ion or None), ...]}``.
+        by_ion : dict
+            ``{ion: moment}``.
+        """
+        unknown = set(ions) - {s.label for s in crystal.asymmetric}
+        if unknown:
+            raise ValueError(f"unknown labels in magnetic ions: {sorted(unknown)}")
+        by_ion = {}
+        for label, ion in ions.items():
+            moment = moments.get(label, moments.get(ion))
+            if moment is None:
+                raise ValueError(f"no moment for {label} ({ion})")
+            by_ion[ion] = float(moment)
+        groups = []
+        for s in crystal.asymmetric:
+            for g in groups:
+                d = (g[0].xyz - s.xyz + 0.5) % 1 - 0.5
+                if np.all(np.abs(d) < 1e-4):
+                    g.append(s)
+                    break
+            else:
+                groups.append([s])
+        labels, mixtures = [], {}
+        for g in groups:
+            if not any(s.label in ions for s in g):
+                continue
+            labels.append(g[0].label)
+            mixtures[g[0].label] = [(float(s.occupancy), ions.get(s.label)) for s in g]
+        return labels, mixtures, by_ion
+
+    def build_model(self, cell, occupancies, labels, channels, magnetic, ions, moments, r_max, cluster_distance,
+                    axis=None, difference=False, progress=None):
+        """
+        Crystal with the edited lattice and occupancies, and its pair model.
+
+        Parameters
+        ----------
+        labels : list of str
+            Sites with occupational/displacive disorder.
+        channels : dict
+            ``occupancy``, ``size_effect``, ``displacement`` booleans.
+        magnetic : {None, "isotropic", "tensor"}
+        ions, moments : dict
+            Parsed magnetic ions and moments.
+        """
         if progress:
             progress("Building crystal.", 20)
         crystal = self.make_crystal(cell, occupancies)
+        structure = Structure.from_crystal(crystal)
+        mlabels, mixtures, by_ion = ([], {}, {})
+        if magnetic:
+            if not ions:
+                raise ValueError("give the magnetic ions (label: ion) for a magnetic model")
+            mlabels, mixtures, by_ion = self.magnetic_positions(crystal, ions, moments)
+        spec = ModelSpec(active=list(labels), r_max=float(r_max), cluster_distance=float(cluster_distance),
+                         occupancy=channels.get("occupancy", False), size_effect=channels.get("size_effect", False),
+                         displacement=channels.get("displacement", False), axis=axis, magnetic=magnetic,
+                         magnetic_sites=mlabels, ions=mixtures, moments=by_ion, difference=difference)
         if progress:
-            progress("Building supercell.", 50)
-        sc = Supercell(crystal, N, labels, ions=ions or None, moments=moments or None,
-                       groups=groups or None, rng=seed)
-        if displacements:
-            sc.randomize_displacements()
+            progress("Finding pair orbits and constraints.", 50)
+        model = PairModel(structure, spec)
         if progress:
-            progress("Supercell built!", 100)
-        return crystal, sc
+            progress("Model built!", 100)
+        return crystal, structure, model
 
-    def kind_rows(self):
-        sc = self.session.supercell
-        if sc is None:
+    def model_rows(self):
+        model = self.session.model
+        if model is None:
             return []
         rows = []
-        counts = np.bincount(sc.kind, minlength=len(sc.kinds))
-        for k, kind in enumerate(sc.kinds):
-            site = sc.sites[kind.site]
-            rows.append(dict(site=site_name(site), kind=kind.label, symbol=kind.symbol,
-                             fraction=kind.fraction, count=int(counts[k]), b=kind.b.real,
-                             moment=kind.moment if kind.magnetic else 0.0,
-                             group=len(kind.members) if kind.group else 1))
+        for b in model.blocks:
+            sites = ", ".join(dict.fromkeys(b.sites.label))
+            orbits = len(b.columns) if b.kind == "orbit" else b.orbits.n_orbits
+            rows.append(dict(channel=b.name, sites=sites, orbits=orbits, coefficients=b.n,
+                             free=b.parameterization.n_free))
         return rows
 
     # ------------------------------------------------------------------
@@ -132,11 +193,6 @@ class StructureModel(BaseModel):
                 all_o.append(occ[keep])
         xyz, labels, occ = np.concatenate(all_x), np.concatenate(all_l), np.concatenate(all_o)
         return self._style(crystal.cartesian(xyz), labels, set(active), occ)
-
-    def supercell_atoms(self):
-        sc = self.session.supercell
-        r, labels, _, _ = sc.atoms()
-        return self._style(r, labels, set(labels), np.ones(len(r)))
 
     def _style(self, r, labels, active, occupancy):
         symbols = self._symbols()

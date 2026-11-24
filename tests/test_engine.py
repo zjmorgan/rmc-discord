@@ -184,6 +184,29 @@ def test_incremental_updates_are_exact(toy_crystal, magnetic, displacive):
     assert np.allclose(sc.composition(), [k.fraction for k in sc.kinds], atol=1 / sc.n_cells)
 
 
+@pytest.mark.parametrize("magnetic", [False, True])
+def test_nufft_matches_direct_displaced_sum(toy_crystal, magnetic):
+    pytest.importorskip("finufft")
+    sc = supercell(toy_crystal, rng=3)
+    sample = all_points(toy_crystal, N)
+    sc.randomize_displacements()
+    ref = Refinement(sc, sample, magnetic=magnetic, displacive=(0, 1), seed=5)
+    sel = np.flatnonzero(np.any(ref.su_scaled != 0, axis=1))
+    assert sel.size > 0
+    out = {}
+    for method in ("direct", "nufft"):
+        F = np.zeros(ref.n_points, dtype=complex)
+        FM = np.zeros((ref.n_points, 3), dtype=complex)
+        ref._displaced_sum(sel, F, FM, method=method)
+        out[method] = F, FM
+    scale = max(np.abs(out["direct"][0]).max(), np.abs(out["direct"][1]).max())
+    for a, b in zip(out["direct"], out["nufft"]):
+        assert np.abs(a - b).max() < 1e-10 * scale
+    assert np.abs(out["direct"][0]).max() > 0
+    if magnetic:
+        assert np.abs(out["direct"][1]).max() > 0
+
+
 def test_exchange_conserves_site_displacements(toy_crystal):
     sc = supercell(toy_crystal, rng=3)
     sc.randomize_displacements()
@@ -627,7 +650,7 @@ def test_anneal_with_held_out_validation(tmp_path):
     schedule = Schedule(rounds=15, sweeps=10, cool=0.8, temperature=1.0, batch=len(pool) // 2,
                         batch_sweeps=5, check_every=3)
     out = anneal(ref, held, schedule, save=tmp_path / "best.npz", log=lines.append)
-    assert len(out.records) == 5 and len(lines) == 7
+    assert len(out.records) == 5 and len(lines) == 8  # baseline, threads, start T, 5 checks
     assert out.best["score"] == min(r["score"] for r in out.records)
     assert out.best["score"] < 0.2
     assert np.array_equal(sc.S, out.best["S"])
@@ -701,3 +724,42 @@ def test_fused_magnetic_path_matches_general(toy_crystal, nuclear, offset):
     assert np.allclose(c1, c2, rtol=1e-9)
     assert np.allclose(F1, F2, atol=1e-9 * max(np.abs(F2).max(), 1))
     assert np.allclose(M1, M2, atol=1e-9 * np.abs(M2).max())
+
+
+def test_moves_that_cannot_change_the_intensity_are_rejected(toy_crystal):
+    """Swaps without the nuclear term only count on sites with a moment."""
+    sample = all_points(toy_crystal, N)
+    with pytest.raises(ValueError, match="neither nuclear nor magnetic"):
+        Refinement(supercell(toy_crystal), sample, nuclear=False, magnetic=False)
+    # Fe1/Mn1 are both magnetic: swaps change the magnetic intensity
+    ref = Refinement(supercell(toy_crystal), sample, nuclear=False, magnetic=True, weights={"swap": 1})
+    assert ref.swap_sites.size == 1
+    # without moments a swap is invisible to the magnetic term
+    sc = Supercell(toy_crystal, N, ["Fe1"], rng=0)
+    with pytest.raises(ValueError, match="swaps need the nuclear term"):
+        Refinement(sc, sample, nuclear=False, magnetic=True, weights={"swap": 1})
+
+
+def test_thread_tuning_restores_the_refinement(toy_crystal):
+    """Timing bursts leave the configuration, structure factors, and fit as they were."""
+    import numba
+
+    sc = supercell(toy_crystal, rng=3)
+    sample = all_points(toy_crystal, N)
+    sample.y = np.random.default_rng(4).random(len(sample))
+    sc.randomize_displacements()
+    ref = Refinement(sc, sample, magnetic=True, displacive=[0], cone=60, seed=5,
+                     weights={"swap": 1, "spin": 1, "displace": 1})
+    ref.run(200, temperature=1.0)
+    before = (sc.kind.copy(), sc.u.copy(), sc.S.copy(), ref.F.copy(), ref.FM.copy(), ref.su_scaled.copy(),
+              ref.chi_sq, ref.scale, ref.temperature, len(ref.history.array("move")))
+    threads = ref.tune_threads(candidates=[1, 2], n_moves=50, repeats=1)
+    assert threads in (1, 2) and numba.get_num_threads() == threads
+    after = (sc.kind, sc.u, sc.S, ref.F, ref.FM, ref.su_scaled,
+             ref.chi_sq, ref.scale, ref.temperature, len(ref.history.array("move")))
+    for a, b in zip(before, after):
+        assert np.array_equal(a, b)
+    ref.recompute()
+    assert ref.drift < 1e-12
+    ref.run(200, temperature=1.0)
+    numba.set_num_threads(numba.config.NUMBA_NUM_THREADS)

@@ -16,7 +16,6 @@ from qtpy.QtWidgets import (
     QLabel,
     QLineEdit,
     QPushButton,
-    QSpinBox,
     QTableWidget,
     QTableWidgetItem,
     QTabWidget,
@@ -28,7 +27,7 @@ from rmc_discord.gui.models.display import add_spheres
 from rmc_discord.gui.views.base_view import BaseView, set_icon
 
 SITE_COLUMNS = ["Use", "Label", "Type", "Occupancy", "x", "y", "z", "Uiso (Å²)", "Mult."]
-KIND_COLUMNS = ["Site", "Kind", "Type", "Fraction", "Count", "b (fm)", "μ (μB)", "Atoms"]
+MODEL_COLUMNS = ["Channel", "Sites", "Orbits", "Coefficients", "Free"]
 
 
 def _item(text, editable=False, align=Qt.AlignCenter):
@@ -57,7 +56,7 @@ class StructureView(BaseView):
 
         self.tab_widget = QTabWidget(self)
         self._init_structure_tab()
-        self._init_supercell_tab()
+        self._init_model_tab()
         self.add_tools(self.tab_widget)
 
     # ------------------------------------------------------------------
@@ -100,7 +99,7 @@ class StructureView(BaseView):
 
         display_layout = QHBoxLayout()
         self.display_combo = QComboBox(self)
-        self.display_combo.addItems(["Unit Cell", "Supercell"])
+        self.display_combo.addItems(["Unit Cell", "Model Sites"])
         self.scale_spin = QDoubleSpinBox(self)
         self.scale_spin.setRange(0.1, 3.0)
         self.scale_spin.setSingleStep(0.1)
@@ -117,53 +116,68 @@ class StructureView(BaseView):
 
         self.tab_widget.addTab(tab, "Average Structure")
 
-    def _init_supercell_tab(self):
+    def _init_model_tab(self):
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
-        disorder_box = QGroupBox("Disorder")
-        form = QFormLayout(disorder_box)
-        self.groups_line = QLineEdit()
-        self.groups_line.setPlaceholderText("center: members; e.g. C1: O7; C2: O8")
+        channel_box = QGroupBox("Correlations refined on the checked sites")
+        grid = QGridLayout(channel_box)
+        self.occupancy_box = QCheckBox("Occupancy", self)
+        self.occupancy_box.setChecked(True)
+        self.size_effect_box = QCheckBox("Size Effect", self)
+        self.displacement_box = QCheckBox("Displacement", self)
+        grid.addWidget(self.occupancy_box, 0, 0)
+        grid.addWidget(self.size_effect_box, 0, 1)
+        grid.addWidget(self.displacement_box, 0, 2)
+        self.axis_line = QLineEdit()
+        self.axis_line.setPlaceholderText("any; or a direction, e.g. 0, 0, 1")
+        grid.addWidget(QLabel("Displacement axis:"), 1, 0)
+        grid.addWidget(self.axis_line, 1, 1, 1, 2)
+        layout.addWidget(channel_box)
+
+        magnetic_box = QGroupBox("Magnetic correlations")
+        form = QFormLayout(magnetic_box)
+        self.magnetic_combo = QComboBox(self)
+        self.magnetic_combo.addItems(["None", "Isotropic", "Tensor"])
         self.ions_line = QLineEdit()
         self.ions_line.setPlaceholderText("label: ion; e.g. Fe1: Fe3+; Mn1: Mn3+")
         self.moments_line = QLineEdit()
         self.moments_line.setPlaceholderText("ion or label: μB; e.g. Fe3+: 5.92; Mn3+: 4.90")
-        form.addRow("Rigid groups:", self.groups_line)
+        self.difference_box = QCheckBox("Difference Data (paramagnetic self term cancels)", self)
+        form.addRow("Model:", self.magnetic_combo)
         form.addRow("Magnetic ions:", self.ions_line)
         form.addRow("Moments:", self.moments_line)
-        layout.addWidget(disorder_box)
+        form.addRow(self.difference_box)
+        layout.addWidget(magnetic_box)
 
-        size_box = QGroupBox("Supercell")
-        grid = QGridLayout(size_box)
-        self.N_spins = []
-        for i, name in enumerate(["N₁:", "N₂:", "N₃:"]):
-            spin = QSpinBox(self)
-            spin.setRange(1, 200)
-            spin.setValue(8)
-            self.N_spins.append(spin)
-            grid.addWidget(QLabel(name), 0, 2 * i)
-            grid.addWidget(spin, 0, 2 * i + 1)
-        self.seed_spin = QSpinBox(self)
-        self.seed_spin.setRange(0, 2**31 - 1)
-        self.seed_spin.setValue(1)
-        self.displace_box = QCheckBox("Initial Displacements from ADPs", self)
-        self.displace_box.setChecked(True)
-        self.build_button = QPushButton("Build Supercell", self)
-        set_icon(self.build_button, "cubes")
-        grid.addWidget(QLabel("Seed:"), 1, 0)
-        grid.addWidget(self.seed_spin, 1, 1)
-        grid.addWidget(self.displace_box, 1, 2, 1, 3)
-        grid.addWidget(self.build_button, 1, 5)
-        layout.addWidget(size_box)
+        range_box = QGroupBox("Pairs")
+        grid = QGridLayout(range_box)
+        self.r_max_spin = QDoubleSpinBox(self)
+        self.r_max_spin.setRange(1.0, 200.0)
+        self.r_max_spin.setDecimals(2)
+        self.r_max_spin.setValue(10.0)
+        self.r_max_spin.setSuffix(" Å")
+        self.cluster_spin = QDoubleSpinBox(self)
+        self.cluster_spin.setRange(0.0, 10.0)
+        self.cluster_spin.setDecimals(2)
+        self.cluster_spin.setValue(1.5)
+        self.cluster_spin.setSuffix(" Å")
+        self.build_button = QPushButton("Build Model", self)
+        set_icon(self.build_button, "diagram-project")
+        grid.addWidget(QLabel("Pair range:"), 0, 0)
+        grid.addWidget(self.r_max_spin, 0, 1)
+        grid.addWidget(QLabel("Cluster distance:"), 0, 2)
+        grid.addWidget(self.cluster_spin, 0, 3)
+        grid.addWidget(self.build_button, 0, 4)
+        layout.addWidget(range_box)
 
-        kinds_box = QGroupBox("Occupants of the active sites")
-        kinds_layout = QVBoxLayout(kinds_box)
-        self.kind_table = _table(KIND_COLUMNS)
-        kinds_layout.addWidget(self.kind_table)
-        layout.addWidget(kinds_box, stretch=1)
+        model_box = QGroupBox("Coefficients of the model")
+        model_layout = QVBoxLayout(model_box)
+        self.model_table = _table(MODEL_COLUMNS)
+        model_layout.addWidget(self.model_table)
+        layout.addWidget(model_box, stretch=1)
 
-        self.tab_widget.addTab(tab, "Supercell")
+        self.tab_widget.addTab(tab, "Pair Model")
 
     # ------------------------------------------------------------------
     # connections
@@ -228,19 +242,29 @@ class StructureView(BaseView):
                 pass
         return occ
 
-    def get_disorder_text(self):
-        return self.groups_line.text(), self.ions_line.text(), self.moments_line.text()
+    def get_magnetic_text(self):
+        return self.ions_line.text(), self.moments_line.text()
 
-    def get_supercell_parameters(self):
-        return (tuple(s.value() for s in self.N_spins), self.seed_spin.value(), self.displace_box.isChecked())
+    def get_model_parameters(self):
+        """Channels, magnetic model, pair range, cluster distance, axis (or None), difference flag."""
+        channels = dict(occupancy=self.occupancy_box.isChecked(), size_effect=self.size_effect_box.isChecked(),
+                        displacement=self.displacement_box.isChecked())
+        magnetic = {"None": None, "Isotropic": "isotropic", "Tensor": "tensor"}[self.magnetic_combo.currentText()]
+        text = self.axis_line.text().strip()
+        axis = None
+        if text:
+            axis = tuple(float(v) for v in text.replace(",", " ").split())
+            if len(axis) != 3:
+                raise ValueError("the displacement axis needs three components")
+        return (channels, magnetic, self.r_max_spin.value(), self.cluster_spin.value(), axis,
+                self.difference_box.isChecked())
 
-    def set_kinds(self, rows):
-        self.kind_table.setRowCount(len(rows))
+    def set_model_rows(self, rows):
+        self.model_table.setRowCount(len(rows))
         for i, row in enumerate(rows):
-            values = [row["site"], row["kind"], row["symbol"], f"{row['fraction']:.4f}", str(row["count"]),
-                      f"{row['b']:.3f}", f"{row['moment']:.2f}", str(row["group"])]
+            values = [row["channel"], row["sites"], str(row["orbits"]), str(row["coefficients"]), str(row["free"])]
             for c, v in enumerate(values):
-                self.kind_table.setItem(i, c, _item(v))
+                self.model_table.setItem(i, c, _item(v))
 
     def get_display(self):
         return self.display_combo.currentText(), self.scale_spin.value(), self.inactive_box.isChecked()

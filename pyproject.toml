@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "rmc-discord"
 dynamic = ["version"]
-description = "Reverse Monte Carlo refinement of diffuse scattering and correlated disorder from single crystals"
+description = "Refinement of pair correlations against single-crystal diffuse scattering (occupational, displacive, magnetic)"
 readme = "README.md"
 license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
@@ -33,6 +33,8 @@ dependencies = [
 
 [project.optional-dependencies]
 test = ["pytest"]
+# non-uniform FFT for recomputing displaced atoms (direct sums otherwise)
+fast = ["finufft"]
 gui = ["qtpy", "pyvistaqt", "qdarkstyle"]
 
 [project.urls]
@@ -52,7 +54,7 @@ where = ["src", "."]
 include = ["rmc_discord*", "disorder*"]
 
 [tool.setuptools.package-data]
-rmc_discord = ["crystal/data/*.csv"]
+rmc_discord = ["crystal/data/*.csv", "pairs/tables/*.csv"]
 disorder = [
     "material/*.csv",
     "graphical/*.ui",

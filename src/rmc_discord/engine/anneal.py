@@ -84,6 +84,10 @@ class Schedule:
         ``max(free scale, scale_floor * matched scale)`` and refit at each
         check; this keeps a free scale from collapsing to zero, where no move
         changes chi^2. A free scale throughout if None.
+    threads : int or "auto" or None
+        Numba threads for the moves: "auto" times a few counts on a
+        minibatch first and keeps the fastest (see
+        :meth:`Refinement.tune_threads`); None leaves the current setting.
 
     """
 
@@ -96,6 +100,7 @@ class Schedule:
     check_every: int = 5
     adapt: float = None
     scale_floor: float = None
+    threads: object = "auto"
 
 
 @dataclass
@@ -180,13 +185,20 @@ def anneal(ref, held, schedule=None, restore_best=True, save=None, log=print, ca
         ref.fit_mode = kernels.FIT_BACKGROUND
         ref.recompute(track_drift=False)
 
-    if s.temperature is None:
+    if s.threads not in (None, "auto"):
+        import numba
+
+        numba.set_num_threads(int(s.threads))
+    if s.temperature is None or s.threads == "auto":
         if frac is not None:
             ref.resample(frac)
-        ref.calibrate_temperature()
+        if s.threads == "auto":
+            ref.tune_threads(log=log)
+        if s.temperature is None:
+            ref.calibrate_temperature()
         if frac is not None:
             ref.resample(1.0)
-    else:
+    if s.temperature is not None:
         ref.temperature = float(s.temperature)
     if log:
         log(f"starting temperature {ref.temperature:.4g}")

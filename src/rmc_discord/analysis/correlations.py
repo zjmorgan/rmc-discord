@@ -40,7 +40,8 @@ class Correlations:
     Attributes
     ----------
     quantity : str
-        ``"occupancy"``, ``"spin"``, or ``"displacement"``.
+        ``"occupancy"``, ``"spin"``, ``"displacement"``, or ``"bond"``
+        (:func:`bond_lengths`).
     sites : ndarray, (n, 2), int
         Active-site indices :math:`j, j'` of each pair.
     labels : list of str
@@ -59,7 +60,8 @@ class Correlations:
         \\delta_j\\rangle`, :math:`\\langle\\mathbf{S}_i \\cdot
         \\mathbf{S}_j\\rangle`, or :math:`\\langle\\mathbf{u}_i \\cdot
         \\mathbf{u}_j\\rangle` (A^2); normalized to a correlation
-        coefficient if requested.
+        coefficient if requested. For ``"bond"``, the mean bond-length
+        change (A) of the occupant pair named by ``labels``.
     error : ndarray, (n,)
         Standard error over configurations (zero for one configuration).
     count : ndarray, (n,)
@@ -184,7 +186,7 @@ class Correlations:
         -------
         shells : dict of ndarray
             ``label``, ``distance``, ``value``, ``error``, and ``n`` (number
-            of pair vectors), sorted by orbit pair then distance. Self terms
+            of pair vectors), sorted by pair label then distance. Self terms
             (zero distance) are excluded.
 
         """
@@ -193,15 +195,18 @@ class Correlations:
         if r_max is not None:
             keep &= self.distance <= r_max
         c = self.select(keep)
-        orbit = np.sort(c.orbits, axis=1)
+        pair = np.array(["-".join(sorted(label.split("-"))) for label in c.labels])
+        _, pair_key = np.unique(pair, return_inverse=True)
         d_key = np.round(c.distance / tol).astype(np.int64)
-        keys = np.column_stack([orbit, d_key])
+        keys = np.column_stack([pair_key.ravel(), d_key])
         uniq, inverse = np.unique(keys, axis=0, return_inverse=True)
         inverse = inverse.ravel()
         w = c.count.astype(float)
         sw = np.bincount(inverse, w)
         value = np.bincount(inverse, w * c.value) / sw
-        error = np.sqrt(np.bincount(inverse, (w * c.error) ** 2)) / sw
+        # pairs of one orbit carry the same (symmetrized or refined) value, so their
+        # errors are fully correlated: the weighted mean error, not a quadrature sum
+        error = np.bincount(inverse, w * c.error) / sw
         distance = np.bincount(inverse, w * c.distance) / sw
         n = np.bincount(inverse)
         first = np.zeros(len(uniq), dtype=np.int64)
@@ -440,7 +445,7 @@ def correlations(
     return corr
 
 
-def _table(sc, quantity, channels, value, error, den, T):
+def _table(sc, quantity, channels, value, error, den, T, names=None):
     N = np.array(sc.N)
     n_ch = len(channels)
     G = np.stack(np.meshgrid(*[np.arange(n) for n in N], indexing="ij"), -1).reshape(-1, 3)
@@ -454,7 +459,8 @@ def _table(sc, quantity, channels, value, error, den, T):
     count = den.reshape(-1)
     keep = count > 0
     orbit = np.array([sc.sites[j].orbit for j in channels])
-    names = ["/".join(sc.sites[j].labels) for j in channels]
+    if names is None:
+        names = ["/".join(sc.sites[j].labels) for j in channels]
     idx = np.flatnonzero(keep)
     return Correlations(
         quantity=quantity,
@@ -469,3 +475,165 @@ def _table(sc, quantity, channels, value, error, den, T):
         count=count[idx],
         tensor=None if T is None else T.reshape(-1, 3, 3)[idx],
     )
+
+
+def bond_lengths(supercell, states=None, symmetrize=True, r_max=None):
+    r"""
+    Mean bond lengths of each occupant pair, including displacements.
+
+    :func:`correlations` reports every pair at its average-structure
+    separation :math:`\mathbf{r}`. The actual bond is :math:`\mathbf{r} +
+    \Delta\mathbf{u}`, :math:`\Delta\mathbf{u} = \mathbf{u}_j - \mathbf{u}_i`,
+    and its mean depends on which kinds occupy the two sites (the size
+    effect). With occupant indicators :math:`n_a, n_b` (primes at
+    :math:`\mathbf{R} + \Delta\mathbf{R}`),
+
+    .. math::
+
+        \langle\Delta\mathbf{u}\rangle_{ab} =
+            \frac{\sum_\mathbf{R} n_a (n_b \mathbf{u})' - (n_a \mathbf{u}) n_b'}
+                 {\sum_\mathbf{R} n_a n_b'},
+
+    and likewise :math:`\langle\Delta\mathbf{u}\,\Delta\mathbf{u}^\mathsf{T}
+    \rangle_{ab}`, are cyclic cross-correlations, so every separation comes
+    from FFTs as in :func:`correlations`. The mean length is taken to second
+    order in the fluctuation,
+
+    .. math::
+
+        \langle|\mathbf{d} + \boldsymbol{\epsilon}|\rangle \approx |\mathbf{d}|
+            + \frac{\operatorname{tr}\Sigma - \hat{\mathbf{d}}^\mathsf{T}
+            \Sigma \hat{\mathbf{d}}}{2|\mathbf{d}|},
+        \qquad \mathbf{d} = \mathbf{r} + \langle\Delta\mathbf{u}\rangle,
+
+    with :math:`\Sigma` the covariance of :math:`\Delta\mathbf{u}`.
+
+    Parameters
+    ----------
+    supercell : Supercell
+        Geometry, kinds, and (if ``states`` is omitted) the configuration.
+    states : iterable of dict, optional
+        Configurations with keys ``kind``, ``u`` (missing keys taken from
+        ``supercell``).
+    symmetrize : bool, optional
+        Average over the crystal's space-group operators (lengths are
+        invariant; pair counts weight the average).
+    r_max : float, optional
+        Largest average-structure separation kept (A).
+
+    Returns
+    -------
+    corr : Correlations
+        Quantity ``"bond"``: ``value`` is the mean length minus the
+        average-structure distance (A); ``labels`` name the occupants
+        (e.g. ``"Fe1-Mn2"``); ``distance`` and ``r`` are the
+        average-structure separation. Only separations inside the
+        supercell's inscribed sphere (radius half its smallest width) are
+        kept: beyond it the periodic image of a pair, and so its bond
+        length, is not unique.
+
+    """
+
+    sc = supercell
+    if states is None:
+        states = [{}]
+    channels = [(j, k) for j, ks in enumerate(sc.site_kinds) for k in ks if not sc.kinds[k].vacancy]
+    if not channels:
+        raise ValueError("no occupied sites for bond lengths")
+    site = np.array([j for j, _ in channels])
+    ckind = np.array([k for _, k in channels])
+    N = np.array(sc.N)
+    r0 = [_separations(sc, site[c:c + 1], site, N)[0] for c in range(len(site))]
+
+    def inv0(P):
+        return np.fft.ifftn(P, axes=(1, 2, 3)).real
+
+    results = []
+    for state in states:
+        kind = np.asarray(state.get("kind", sc.kind))
+        u = np.asarray(state.get("u", sc.u), dtype=float)
+        gk = _grid(sc, kind[:, None])[site, ..., 0]
+        on = (gk == ckind[:, None, None, None]).astype(float)
+        gu = _grid(sc, u)[site] * on[..., None]
+        F0 = np.fft.fftn(on, axes=(1, 2, 3))
+        F1 = np.fft.fftn(gu, axes=(1, 2, 3))
+        F2 = np.fft.fftn(gu[..., :, None] * gu[..., None, :], axes=(1, 2, 3))
+        n_ch = len(site)
+        den = np.empty((n_ch, *on.shape))
+        length = np.empty_like(den)
+        for c in range(n_ch):  # one row of channel pairs at a time keeps memory at O(n_ch N^3)
+            a0, a1, a2 = np.conj(F0[c]), np.conj(F1[c]), np.conj(F2[c])
+            dc = inv0(a0 * F0)
+            m1 = inv0(a0[..., None] * F1 - a1 * F0[..., None])
+            cross = inv0(a1[..., :, None] * F1[..., None, :])
+            m2 = inv0(a0[..., None, None] * F2 + a2 * F0[..., None, None]) - cross - np.swapaxes(cross, -1, -2)
+            ok = dc > 0.5
+            safe = np.where(ok, dc, 1.0)
+            mean = m1 / safe[..., None]
+            cov = m2 / safe[..., None, None] - mean[..., :, None] * mean[..., None, :]
+            d = r0[c] + mean
+            L = np.linalg.norm(d, axis=-1)
+            Ls = np.where(L > 1e-8, L, 1.0)
+            dh = d / Ls[..., None]
+            spread = np.trace(cov, axis1=-2, axis2=-1) - np.einsum("...a,...ab,...b->...", dh, cov, dh)
+            length[c] = np.where(ok & (L > 1e-8), L + spread / (2 * Ls), 0.0)
+            den[c] = np.where(ok, dc, 0.0)
+        if symmetrize:
+            num, den = _symmetrize_channels(sc, site, ckind, length * den, den)
+            length = num / np.where(den > 0, den, 1.0)
+        results.append((length, den))
+
+    lengths = np.array([r[0] for r in results])
+    length = lengths.mean(axis=0)
+    error = lengths.std(axis=0, ddof=1) / np.sqrt(len(lengths)) if len(lengths) > 1 else np.zeros_like(length)
+    den = np.mean([r[1] for r in results], axis=0)
+    change = np.where(den > 0, length - np.linalg.norm(r0, axis=-1), 0.0)
+    del r0
+    corr = _table(sc, "bond", site, change, error, den, None, names=[sc.kinds[k].label for k in ckind])
+    corr = corr.select((corr.distance > 1e-8) & (corr.distance < 0.5 * _width(sc) - 1e-6))
+    if r_max is not None:
+        corr = corr.within(r_max)
+    return corr
+
+
+def _width(sc):
+    """Smallest perpendicular width of the supercell (A)."""
+    L = sc.crystal.cartesian(np.diag(np.array(sc.N, dtype=float)))
+    return 1.0 / np.max(np.linalg.norm(np.linalg.inv(L), axis=0))
+
+
+def _separations(sc, site_a, site_b, N):
+    """Average-structure minimum-image separations from ``site_a`` to ``site_b``, (n_a, n_b, N0, N1, N2, 3) in A."""
+    G = np.stack(np.meshgrid(*[np.arange(k) for k in N], indexing="ij"), -1)
+    xa = np.array([sc.sites[j].xyz for j in site_a])
+    xb = np.array([sc.sites[j].xyz for j in site_b])
+    dx = xb[None, :, :] - xa[:, None, :]
+    frac = G[None, None] + dx[:, :, None, None, None]
+    frac = frac - N * np.round(frac / N)
+    return sc.crystal.cartesian(frac.reshape(-1, 3)).reshape(frac.shape)
+
+
+def _symmetrize_channels(sc, site, ckind, num, den):
+    """Space-group sum of scalar pair fields on (site, kind) channels, divided by the operator count."""
+    unique, inverse = np.unique(site, return_inverse=True)
+    maps = _site_maps(sc, unique)
+    N = np.array(sc.N)
+    n_ch = len(site)
+    G = np.stack(np.meshgrid(*[np.arange(k) for k in N], indexing="ij"), -1).reshape(-1, 3)
+    label = [sc.kinds[k].label for k in ckind]
+    index = {(s, l): c for c, (s, l) in enumerate(zip(inverse, label))}
+    flat_num = num.reshape(n_ch, n_ch, -1)
+    flat_den = den.reshape(n_ch, n_ch, -1)
+    out_num = np.zeros_like(flat_num)
+    out_den = np.zeros_like(flat_den)
+    for W, sigma, t, _ in maps:
+        to = np.array([index[sigma[s], l] for s, l in zip(inverse, label)])
+        WG = G @ W.T
+        for c in range(n_ch):
+            R = np.mod(WG[None] + t[inverse][:, None] - t[inverse[c]], N)
+            f = np.ravel_multi_index(R.reshape(-1, 3).T, N).reshape(n_ch, -1)
+            for e in range(n_ch):
+                out_num[to[c], to[e], f[e]] += flat_num[c, e]
+                out_den[to[c], to[e], f[e]] += flat_den[c, e]
+    k = len(maps)
+    return out_num.reshape(num.shape) / k, out_den.reshape(den.shape) / k
