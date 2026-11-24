@@ -1,6 +1,5 @@
 """Structure application presenter."""
 
-from rmc_discord.gui.models.structure import parse_mapping
 from rmc_discord.gui.presenters.base_presenter import BasePresenter
 
 
@@ -26,6 +25,7 @@ class StructurePresenter(BasePresenter):
         self.view.set_cell(crystal.cell, crystal.space_group.getHMSymbol())
         partial = [s.label for s in crystal.asymmetric if s.occupancy < 1 - 1e-6]
         self.view.set_sites(self.model.site_rows(), partial)
+        self.view.set_magnetic_sites(self.model.magnetic_rows())
         self.view.set_model_rows([])
         self.view.set_display("Unit Cell")
         self.view.camera_position = None
@@ -40,11 +40,9 @@ class StructurePresenter(BasePresenter):
         labels = self.view.get_active_labels()
         if cell is None:
             return self.update_status("Check the lattice.")
-        ions_text, moments_text = self.view.get_magnetic_text()
         try:
-            ions = parse_mapping(ions_text)
-            moments = parse_mapping(moments_text, number=True)
-            channels, magnetic, r_max, cluster, axis, difference = self.view.get_model_parameters()
+            ions, moments, g = self.view.get_magnetic()
+            channels, magnetic, r_max, cluster, restrict, difference = self.view.get_model_parameters()
         except ValueError as e:
             return self.update_status(str(e))
         if not magnetic and not (labels and any(channels.values())):
@@ -54,7 +52,7 @@ class StructurePresenter(BasePresenter):
         occupancies = self.view.get_occupancies()
         self.update_processing("Building the pair model.", 10)
         self.run_task(self.model.build_model, self.build_complete, cell, occupancies, labels, channels, magnetic,
-                      ions, moments, r_max, cluster, axis, difference)
+                      ions, moments, r_max, cluster, restrict, difference, g)
 
     def build_complete(self, result):
         crystal, structure, model = result

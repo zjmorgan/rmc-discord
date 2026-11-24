@@ -101,7 +101,9 @@ class ModelSpec:
     occupancy, size_effect, displacement : bool
         Channels on the active sites.
     axis : tuple or None
-        Restrict displacements to a fractional direction.
+        Restrict displacements to a fractional direction [uvw].
+    plane : tuple or None
+        Restrict displacements to the lattice plane (hkl).
     magnetic : {None, "isotropic", "tensor"}
         Spin channel.
     magnetic_sites : list of str
@@ -133,6 +135,7 @@ class ModelSpec:
     size_effect: bool = False
     displacement: bool = False
     axis: tuple = None
+    plane: tuple = None
     magnetic: str = None
     magnetic_sites: list = field(default_factory=list)
     ions: dict = field(default_factory=dict)
@@ -271,13 +274,13 @@ class PairModel:
                 block.parameterization = block.finish(par)
             self.blocks.append(block)
         if s.size_effect:
-            vectors = vector_orbits(orbits, st, active, exclude=fixed[0], axis=s.axis)
+            vectors = vector_orbits(orbits, st, active, exclude=fixed[0], axis=s.axis, plane=s.plane)
             par = parameterize(len(vectors), None, rigid_unit_vector_rows(orbits, vectors, clusters))
             design = lambda h, w, p, o: size_effect_design_matrix(h, orbits, vectors, active, st, widths=w,
                                                                   projection=p, operators=o, thermal=th)
             self.blocks.append(Block("size effect", len(vectors), par, design, orbits, active, "vector", vectors))
         if s.displacement:
-            tensors = tensor_orbits(orbits, st, active, exclude=fixed[0], axis=s.axis)
+            tensors = tensor_orbits(orbits, st, active, exclude=fixed[0], axis=s.axis, plane=s.plane)
             par = parameterize(len(tensors), None, rigid_unit_tensor_rows(orbits, tensors, clusters))
             design = lambda h, w, p, o: displacement_design_matrix(h, orbits, tensors, active, st, widths=w,
                                                                    projection=p, operators=o, thermal=th)

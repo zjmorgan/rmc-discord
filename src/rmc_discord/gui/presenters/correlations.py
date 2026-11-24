@@ -32,6 +32,7 @@ class CorrelationsPresenter(BasePresenter):
         self.model.scale = self.view.get_scale()
         self.model.channel = channel
         self.view.set_difference(self.model.difference())
+        self.view.set_occupancy(channel == "occupancy")
         table = self.model.select(channel, normalize)
         self.quantity = table.quantity if table is not None else None
         self.normalized = self.model.normalized

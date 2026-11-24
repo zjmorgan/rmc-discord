@@ -4,6 +4,7 @@ import numpy as np
 import pyvista as pv
 from qtpy.QtGui import QDoubleValidator
 from qtpy.QtWidgets import (
+    QSpinBox,
     QCheckBox,
     QComboBox,
     QGridLayout,
@@ -17,8 +18,10 @@ from qtpy.QtWidgets import (
     QWidget,
 )
 
-from rmc_discord.gui.views.base_view import BaseView, scalar_bar, set_icon
+from rmc_discord.gui.views.base_view import BaseView, row, scalar_bar, set_icon, short
 from rmc_discord.gui.views.plots import CMAPS, LIMITS, PlotWidget, color_limits, metric_mesh, norm
+
+
 
 
 def _line(text, low=-1e6, high=1e6, decimals=5):
@@ -40,13 +43,16 @@ class DataView(BaseView):
         layout = QVBoxLayout(tab)
 
         files_box = QGroupBox("Reduced data (MDHistoWorkspace NeXus)")
-        grid = QGridLayout(files_box)
+        grid = QGridLayout(files_box)  # a true table: label, path, browse
         self.file_lines, self.browse_buttons = {}, {}
-        for i, (key, name) in enumerate([("data", "Data:"), ("norm", "Normalization:"), ("subtract", "Subtract:")]):
+        files = [("data", "Data:"), ("norm", "Normalization:"), ("subtract", "Background:"),
+                 ("subtract_norm", "Background norm.:")]
+        for i, (key, name) in enumerate(files):
             line = QLineEdit()
             line.setPlaceholderText({"data": "intensity, or counts with a normalization",
                                      "norm": "optional (data are then counts)",
-                                     "subtract": "optional, e.g. a paramagnetic or high-T volume"}[key])
+                                     "subtract": "optional: subtracted, e.g. empty can or a high-T volume",
+                                     "subtract_norm": "optional: normalization of the background counts"}[key])
             button = QPushButton("Browse", self)
             set_icon(button, "folder-open")
             self.file_lines[key], self.browse_buttons[key] = line, button
@@ -55,48 +61,64 @@ class DataView(BaseView):
             grid.addWidget(button, i, 2)
         self.load_button = QPushButton("Load NXS", self)
         set_icon(self.load_button, "file-import")
-        grid.addWidget(self.load_button, 3, 2)
         self.data_info = QLabel("")
         self.data_info.setWordWrap(True)
-        grid.addWidget(self.data_info, 3, 0, 1, 2)
+        self.background_combo = QComboBox(self)
+        self.background_combo.addItems(["Auto", "Normalized: data/norm − bkg", "Counts: (data − bkg)/norm"])
+        self.background_combo.setToolTip("How a background without its own normalization is subtracted. Auto "
+                                         "compares its scale with the data counts and the normalized data. With a "
+                                         "background normalization, data/norm − bkg/bkg_norm is used.")
+        grid.addLayout(row(QLabel("Background is:"), self.background_combo), 4, 1)
+        grid.addWidget(self.data_info, 5, 0, 1, 2)
+        grid.addWidget(self.load_button, 5, 2)
         layout.addWidget(files_box)
 
         sample_box = QGroupBox("Observations (measured bins; equivalent bins merged)")
-        grid = QGridLayout(sample_box)
-        self.q_min_line = _line("0.0", 0, 100)
-        self.q_max_line = _line("100.0", 0, 100)
-        grid.addWidget(QLabel("|Q| min:"), 0, 0)
-        grid.addWidget(self.q_min_line, 0, 1)
-        grid.addWidget(QLabel("|Q| max:"), 0, 2)
-        grid.addWidget(self.q_max_line, 0, 3)
-        grid.addWidget(QLabel("Å⁻¹"), 0, 4)
-        self.bragg_line = _line("0.15", 0, 10)
-        grid.addWidget(QLabel("Bragg radius:"), 1, 0)
-        grid.addWidget(self.bragg_line, 1, 1)
-        grid.addWidget(QLabel("Å⁻¹"), 1, 2)
-        self.rings_box = QCheckBox("Mask Powder Rings", self)
-        grid.addWidget(self.rings_box, 1, 3, 1, 2)
+        rows = QVBoxLayout(sample_box)
+        self.q_min_line = short(_line("0.0", 0, 100))
+        self.q_max_line = short(_line("100.0", 0, 100))
+        self.bragg_line = short(_line("0.15", 0, 10))
+        self.rings_box = QCheckBox("Mask powder rings", self)
+        rows.addLayout(row(QLabel("|Q| from"), self.q_min_line, QLabel("to"), self.q_max_line, QLabel("Å⁻¹"),
+                            QLabel("   Bragg radius:"), self.bragg_line, QLabel("Å⁻¹"), self.rings_box))
         self.merge_combo = QComboBox(self)
         self.merge_combo.addItems(["Mean of Equivalents", "One per Orbit (symmetrized data)", "None"])
-        grid.addWidget(QLabel("Merge:"), 2, 0)
-        grid.addWidget(self.merge_combo, 2, 1, 1, 4)
         self.extra_line = QLineEdit()
-        self.extra_line.setPlaceholderText("data symmetry beyond the structure's, e.g. y, x, z")
-        grid.addWidget(QLabel("Extra Laue operators:"), 3, 0)
-        grid.addWidget(self.extra_line, 3, 1, 1, 4)
-        self.f_sys_line = _line("0.03", 0, 1)
-        self.held_line = _line("0.1", 0, 0.9)
-        grid.addWidget(QLabel("Relative error floor:"), 4, 0)
-        grid.addWidget(self.f_sys_line, 4, 1)
-        grid.addWidget(QLabel("Held out:"), 4, 2)
-        grid.addWidget(self.held_line, 4, 3)
+        self.extra_line.setPlaceholderText("extra Laue operators, e.g. y, x, z")
+        self.extra_line.setToolTip("Data symmetry beyond the structure's (e.g. from merohedral twinning).")
+        rows.addLayout(row(QLabel("Merge:"), self.merge_combo, QLabel("Extra symmetry:"), self.extra_line,
+                            stretch=False))
+        self.f_sys_line = short(_line("0.03", 0, 1))
+        self.held_line = short(_line("0.1", 0, 0.9))
         self.sample_button = QPushButton("Sample", self)
         set_icon(self.sample_button, "braille")
-        grid.addWidget(self.sample_button, 5, 3, 1, 2)
+        rows.addLayout(row(QLabel("Relative error floor:"), self.f_sys_line, QLabel("   Held out:"),
+                            self.held_line, end=self.sample_button))
         self.sample_info = QLabel("")
         self.sample_info.setWordWrap(True)
-        grid.addWidget(self.sample_info, 6, 0, 1, 5)
+        rows.addWidget(self.sample_info)
         layout.addWidget(sample_box)
+
+        view_box = QGroupBox("3-D view")
+        rows = QVBoxLayout(view_box)
+        self.view_combo = QComboBox(self)
+        self.view_combo.addItems(["Data planes", "Observations", "Observations and masks"])
+        self.view_combo.setToolTip("Planes of the loaded volume (positions on the Slice tab), or the sampled "
+                                   "observations (the merged, symmetry-reduced bins) with the masked bins.")
+        self.color_combo = QComboBox(self)
+        self.color_combo.addItems(["Intensity", "Held out"])
+        rows.addLayout(row(QLabel("Show:"), self.view_combo, QLabel("Color:"), self.color_combo))
+        self.point_spin = QSpinBox(self)
+        self.point_spin.setRange(1, 20)
+        self.point_spin.setValue(3)
+        self.max_points_spin = QSpinBox(self)
+        self.max_points_spin.setRange(1_000, 5_000_000)
+        self.max_points_spin.setSingleStep(50_000)
+        self.max_points_spin.setValue(300_000)
+        self.max_points_spin.setGroupSeparatorShown(True)
+        rows.addLayout(row(QLabel("Point size:"), self.point_spin, QLabel("Up to"), self.max_points_spin,
+                            QLabel("points per layer")))
+        layout.addWidget(view_box)
         layout.addStretch(1)
 
         self.tab_widget.addTab(tab, "Load && Sample")
@@ -161,6 +183,18 @@ class DataView(BaseView):
     def connect_sample(self, f):
         self.sample_button.clicked.connect(f)
 
+    def connect_view(self, f):
+        self.view_combo.currentIndexChanged.connect(f)
+        self.color_combo.currentIndexChanged.connect(f)
+        self.point_spin.editingFinished.connect(f)
+        self.max_points_spin.editingFinished.connect(f)
+
+    def get_view(self):
+        """``(mode, color, point size, max points)``, mode in {"planes", "observations", "masks"}."""
+        mode = ("planes", "observations", "masks")[self.view_combo.currentIndex()]
+        color = ("intensity", "held out")[self.color_combo.currentIndex()]
+        return mode, color, self.point_spin.value(), self.max_points_spin.value()
+
     def connect_slice(self, f):
         for combo in (self.normal_combo, self.scale_combo, self.clim_combo, self.cbar_combo):
             combo.currentIndexChanged.connect(f)
@@ -187,7 +221,10 @@ class DataView(BaseView):
         self.file_lines[key].setText(filename)
 
     def get_files(self):
-        return tuple(self.file_lines[k].text().strip() or None for k in ("data", "norm", "subtract"))
+        return tuple(self.file_lines[k].text().strip() or None for k in ("data", "norm", "subtract", "subtract_norm"))
+
+    def get_background_mode(self):
+        return ("auto", "after", "before")[self.background_combo.currentIndex()]
 
     def set_data_info(self, text):
         self.data_info.setText(text)
@@ -267,11 +304,20 @@ class DataView(BaseView):
                                   scalar_bar_args=scalar_bar(title))
         self.reset_scene()
 
-    def draw_cloud(self, Q, values):
+    def draw_cloud(self, layers, point_size=3):
+        """Observation layers from :meth:`DataModel.cloud`: scalar-colored points or solid-colored masks."""
         self.clear_scene()
-        cloud = pv.PolyData(np.ascontiguousarray(Q))
-        cloud["log10 I"] = values
-        scale, limits, cmap, _ = self.get_slice_style()
-        self.plotter.add_mesh(cloud, scalars="log10 I", cmap=cmap, point_size=2, render_points_as_spheres=False,
-                              clim=tuple(np.percentile(values, [2, 98])), scalar_bar_args=scalar_bar("log10 I"))
+        _, limits, cmap, _ = self.get_slice_style()
+        for layer in layers:
+            cloud = pv.PolyData(np.ascontiguousarray(layer["points"], dtype=float))
+            if "scalars" in layer:
+                values = layer["scalars"]
+                cloud[layer["name"]] = values
+                clim = layer.get("clim") or color_limits(values, limits)
+                self.plotter.add_mesh(cloud, scalars=layer["name"], cmap=layer.get("cmap", cmap), clim=clim,
+                                      point_size=point_size, render_points_as_spheres=False, lighting=False,
+                                      scalar_bar_args=scalar_bar(layer["name"]))
+            else:
+                self.plotter.add_mesh(cloud, color=layer["color"], point_size=point_size,
+                                      render_points_as_spheres=False, lighting=False, label=layer["name"])
         self.reset_scene()

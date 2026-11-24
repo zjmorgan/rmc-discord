@@ -144,3 +144,23 @@ def test_collapse_keeps_constraint_separated_members():
     assert out.n_free == 2
     N = out.N
     assert np.allclose(N[0] * 2, N[1])  # least-norm split along the weights
+
+
+def test_displacement_plane_and_axis(tetragonal):
+    """In-plane displacements: v . n = 0 and V n = 0 for (001); an axis leaves only u u^T."""
+    st = tetragonal
+    full = PairModel(st, ModelSpec(r_max=6.0, cluster_distance=1.0, size_effect=True, displacement=True))
+    layer = PairModel(st, ModelSpec(r_max=6.0, cluster_distance=1.0, size_effect=True, displacement=True,
+                                    plane=(0, 0, 1)))
+    chain = PairModel(st, ModelSpec(r_max=6.0, cluster_distance=1.0, size_effect=True, displacement=True,
+                                    axis=(0, 0, 1)))
+    n = st.B @ [0, 0, 1]
+    n = n / np.linalg.norm(n)
+    blocks = {b.name: b for b in layer.blocks}
+    for v in blocks["size effect"].fields.vectors:
+        assert np.allclose(v @ n, 0)
+    for t in blocks["displacement"].fields.tensors:
+        assert np.allclose(t @ n, 0)
+    sizes = [{b.name: b.n for b in m.blocks} for m in (full, layer, chain)]
+    for name in ("size effect", "displacement"):
+        assert sizes[0][name] > sizes[1][name] > 0 and sizes[0][name] > sizes[2][name] > 0

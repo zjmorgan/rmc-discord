@@ -7,7 +7,6 @@ from qtpy.QtGui import QDoubleValidator, QIntValidator
 from qtpy.QtWidgets import (
     QCheckBox,
     QComboBox,
-    QGridLayout,
     QGroupBox,
     QHBoxLayout,
     QHeaderView,
@@ -24,7 +23,7 @@ from qtpy.QtWidgets import (
 
 from rmc_discord.gui.models.correlations import NAMES
 from rmc_discord.gui.models.display import add_spheres
-from rmc_discord.gui.views.base_view import BaseView, scalar_bar, set_icon
+from rmc_discord.gui.views.base_view import BaseView, row, scalar_bar, set_icon, short
 from rmc_discord.gui.views.plots import PlotWidget
 
 
@@ -53,70 +52,60 @@ class CorrelationsView(BaseView):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.recip_box.setChecked(False)
+        tools = QWidget(self)
+        layout = QVBoxLayout(tools)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.addWidget(self._init_channel_box())
         self.tab_widget = QTabWidget(self)
-        self._init_compute_tab()
-        self._init_shells_tab()
         self._init_slice_tab()
-        self.add_tools(self.tab_widget)
+        self._init_shells_tab()
+        layout.addWidget(self.tab_widget, stretch=1)
+        self.add_tools(tools)
 
-    def _init_compute_tab(self):
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
-
+    def _init_channel_box(self):
         box = QGroupBox("Refined correlations")
-        grid = QGridLayout(box)
+        rows = QVBoxLayout(box)
         self.quantity_combo = QComboBox(self)
-        self.normalize_box = QCheckBox("Correlation Coefficients (occupancy)", self)
+        self.normalize_box = QCheckBox("Correlation coefficients (occupancy)", self)
         self.normalize_box.setChecked(True)
-        grid.addWidget(QLabel("Channel:"), 0, 0)
-        grid.addWidget(self.quantity_combo, 0, 1)
-        grid.addWidget(self.normalize_box, 0, 2)
-        self.scale_line = QLineEdit("")
+        self.scale_line = short(QLineEdit(""), 110)
         self.scale_line.setPlaceholderText("arbitrary units")
         self.scale_line.setValidator(QDoubleValidator(0.0, 1e300, 6, notation=QDoubleValidator.ScientificNotation))
         self.scale_line.setToolTip("Difference data fix only scale x <S.S>; enter the scale (e.g. from a fit of the "
                                    "low-temperature volume, where the unit self term sets it) to show <S.S>.")
-        self.scale_label = QLabel("Scale (difference data):")
-        grid.addWidget(self.scale_label, 2, 0)
-        grid.addWidget(self.scale_line, 2, 1)
+        self.scale_label = QLabel("Scale:")
+        rows.addLayout(row(QLabel("Channel:"), self.quantity_combo, self.normalize_box, self.scale_label,
+                           self.scale_line))
         self.set_difference(False)
+        self.pair_combo = QComboBox(self)
+        self.pair_combo.addItem("All pairs")
+        self.r_min_line = short(_line("0"), 60)
+        self.r_max_line = short(_line("20"), 60)
+        self.save_button = QPushButton("HDF5", self)
+        self.save_button.setToolTip("Save the correlation table (HDF5).")
+        set_icon(self.save_button, "floppy-disk")
+        self.csv_button = QPushButton("CSV", self)
+        self.csv_button.setToolTip("Write the shells (CSV).")
+        set_icon(self.csv_button, "file-csv")
+        export = QHBoxLayout()
+        export.addWidget(self.save_button)
+        export.addWidget(self.csv_button)
+        rows.addLayout(row(QLabel("Pairs:"), self.pair_combo, QLabel("r from"), self.r_min_line, QLabel("to"),
+                           self.r_max_line, QLabel("Å")))
+        info = QHBoxLayout()
         self.info = QLabel("Refine the correlations first (Refinement).")
         self.info.setWordWrap(True)
-        grid.addWidget(self.info, 1, 0, 1, 3)
-        layout.addWidget(box)
-
-        box = QGroupBox("Export")
-        h = QHBoxLayout(box)
-        self.save_button = QPushButton("Save Table (HDF5)", self)
-        set_icon(self.save_button, "floppy-disk")
-        self.csv_button = QPushButton("Write Shells (CSV)", self)
-        set_icon(self.csv_button, "file-csv")
-        h.addWidget(self.save_button)
-        h.addWidget(self.csv_button)
-        h.addStretch(1)
-        layout.addWidget(box)
-        layout.addStretch(1)
-        self.tab_widget.addTab(tab, "Channels")
+        info.addWidget(self.info, stretch=1)
+        info.addLayout(export)
+        rows.addLayout(info)
+        return box
 
     def _init_shells_tab(self):
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        controls = QHBoxLayout()
-        self.pair_combo = QComboBox(self)
-        self.pair_combo.addItem("All pairs")
-        self.r_min_line = _line("0")
-        self.r_max_line = _line("20")
-        self.marker_spin = _line("1.0", 0.01, 100)
-        controls.addWidget(QLabel("Pair:"))
-        controls.addWidget(self.pair_combo, stretch=1)
-        controls.addWidget(QLabel("r min:"))
-        controls.addWidget(self.r_min_line)
-        controls.addWidget(QLabel("r max (Å):"))
-        controls.addWidget(self.r_max_line)
-        controls.addWidget(QLabel("3D size:"))
-        controls.addWidget(self.marker_spin)
-        layout.addLayout(controls)
-
+        self.marker_spin = short(_line("1.0", 0.01, 100), 60)
+        self.marker_spin.setToolTip("Sphere size of the 3-D view.")
+        layout.addLayout(row(QLabel("3-D sphere size:"), self.marker_spin))
         splitter = QSplitter(Qt.Vertical)
         self.shell_plot = PlotWidget(self)
         splitter.addWidget(self.shell_plot)
@@ -134,18 +123,14 @@ class CorrelationsView(BaseView):
     def _init_slice_tab(self):
         tab = QWidget()
         layout = QVBoxLayout(tab)
-        controls = QHBoxLayout()
         self.h_line, self.k_line, self.l_line = (_integer(v) for v in ("0", "0", "1"))
-        self.d_line = _line("0", -1e4, 1e4)
-        self.tol_line = _line("0.01", 0, 10)
-        self.slice_size_line = _line("40", 0.1, 1e4)
-        for text, w in (("(h", self.h_line), ("k", self.k_line), ("l)", self.l_line), ("· [uvw] =", self.d_line),
-                        ("±", self.tol_line), ("size:", self.slice_size_line)):
-            controls.addWidget(QLabel(text))
-            controls.addWidget(w)
-        layout.addLayout(controls)
-        note = QLabel("Pair and r max from the Shells tab; coincident vectors of different site pairs are averaged.")
-        note.setWordWrap(True)
+        self.d_line = short(_line("0", -1e4, 1e4), 60)
+        self.tol_line = short(_line("0.01", 0, 10), 60)
+        self.slice_size_line = short(_line("40", 0.1, 1e4), 60)
+        layout.addLayout(row(QLabel("Plane ("), self.h_line, self.k_line, self.l_line, QLabel(") · [uvw] ="),
+                             self.d_line, QLabel("±"), self.tol_line, QLabel("   marker size:"),
+                             self.slice_size_line))
+        note = QLabel("Coincident vectors of different site pairs are averaged.")
         layout.addWidget(note)
         self.slice_plot = PlotWidget(self)
         layout.addWidget(self.slice_plot, stretch=1)
@@ -176,6 +161,10 @@ class CorrelationsView(BaseView):
     def set_difference(self, difference):
         self.scale_label.setVisible(difference)
         self.scale_line.setVisible(difference)
+
+    def set_occupancy(self, occupancy):
+        """Normalization to correlation coefficients applies to occupancies only."""
+        self.normalize_box.setVisible(occupancy)
 
     def connect_filter(self, f):
         self.pair_combo.currentIndexChanged.connect(f)
@@ -257,7 +246,7 @@ class CorrelationsView(BaseView):
         x, y, v = plane["x"], plane["y"], plane["value"]
         m = float(np.max(np.abs(v))) if len(v) else 1.0
         m = m or 1.0
-        sc = ax.scatter(x, y, c=v, s=size, cmap="RdBu_r", vmin=-m, vmax=m, edgecolors="0.3", linewidths=0.3,
+        sc = ax.scatter(x, y, c=v, s=size, cmap="bwr", vmin=-m, vmax=m, edgecolors="0.3", linewidths=0.3,
                         zorder=2)
         fig.colorbar(sc, ax=ax, label=label)
         ax.plot([0], [0], "k+", ms=8, zorder=3)

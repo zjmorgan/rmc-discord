@@ -99,6 +99,24 @@ def decorate_combo(combo):
         combo.setMinimumWidth(width + combo.iconSize().width() + 48)
 
 
+
+def row(*widgets, stretch=True, end=None):
+    """Widgets side by side at their natural size (labels next to their fields), optionally one pushed to the end."""
+    layout = QHBoxLayout()
+    for w in widgets:
+        layout.addWidget(w)
+    if stretch:
+        layout.addStretch(1)
+    if end is not None:
+        layout.addWidget(end)
+    return layout
+
+
+def short(widget, width=90):
+    """Cap the width of a numeric field so rows stay compact."""
+    widget.setMaximumWidth(width)
+    return widget
+
 class BaseView(QWidget):
     cam_ready = Signal()
 
@@ -200,9 +218,12 @@ class BaseView(QWidget):
         vis_layout = self.layout().itemAt(0).layout()
         vis_layout.replaceWidget(self.plotter.interactor, widget)
         self.plotter.interactor.hide()
-        for w in (self.save_button, self.reset_button, self.camera_button, self.recip_box, self.axes_box,
-                  self.proj_box, self.view_tab, self.info_tab):
+        for w in (self.save_button, self.reset_button, self.camera_button, self.theme_combo, self.recip_box,
+                  self.axes_box, self.proj_box, self.view_tab, self.info_tab):
             w.hide()
+        # only the console toggle remains: keep it at its natural size, left-aligned
+        camera_layout = vis_layout.itemAt(0).layout()
+        camera_layout.addStretch(1)
 
     def add_tools(self, tabs, stretch=1):
         """Add the application's tool tabs to the right of the view."""

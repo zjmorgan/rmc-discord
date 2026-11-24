@@ -366,7 +366,13 @@ class VectorOrbits:
         return len(self.orbit)
 
 
-def vector_orbits(orbits, structure, sites, exclude=(), axis=None):
+def _plane_normal(structure, hkl):
+    """Cartesian unit normal of the lattice plane ``hkl``."""
+    n = structure.B @ np.asarray(hkl, float)
+    return n / np.linalg.norm(n)
+
+
+def vector_orbits(orbits, structure, sites, exclude=(), axis=None, plane=None):
     """
     Basis of antisymmetric pair vectors allowed by symmetry.
 
@@ -385,6 +391,10 @@ def vector_orbits(orbits, structure, sites, exclude=(), axis=None):
         Restrict displacements to this fractional direction (e.g.
         ``(0, 0, 1)`` for motion along a chain); the restriction must be
         compatible with the symmetry.
+    plane : array_like, (3,), optional
+        Restrict displacements to the plane with these Miller indices
+        (normal along :math:`B\mathbf{h}`, e.g. ``(0, 0, 1)`` for motion
+        within a layer).
 
     Returns
     -------
@@ -398,6 +408,8 @@ def vector_orbits(orbits, structure, sites, exclude=(), axis=None):
     if axis is not None:
         u = structure.A @ np.asarray(axis, float)
         u = u / np.linalg.norm(u)
+    if plane is not None:
+        n = _plane_normal(structure, plane)
     reps = orbits.representatives()
     excluded = set(np.atleast_1d(exclude).tolist())
 
@@ -413,6 +425,8 @@ def vector_orbits(orbits, structure, sites, exclude=(), axis=None):
                 mapping.setdefault(q, sign * R)
         if axis is not None:
             rows.append(np.eye(3) - np.outer(u, u))
+        if plane is not None:
+            rows.append(np.outer(n, n))
         basis = _null_space(np.vstack(rows)) if rows else np.eye(3)
         members = np.array(sorted(mapping))
         for k in range(basis.shape[1]):
@@ -555,7 +569,7 @@ class TensorOrbits:
         return len(self.orbit)
 
 
-def tensor_orbits(orbits, structure, sites, exclude=(), axis=None):
+def tensor_orbits(orbits, structure, sites, exclude=(), axis=None, plane=None):
     r"""
     Basis of symmetric pair tensors allowed by symmetry.
 
@@ -575,6 +589,10 @@ def tensor_orbits(orbits, structure, sites, exclude=(), axis=None):
     axis : array_like, (3,), optional
         Restrict displacements to this fractional direction, so that
         :math:`V \propto \hat{\mathbf{u}}\hat{\mathbf{u}}^{\mathsf{T}}`.
+    plane : array_like, (3,), optional
+        Restrict displacements to the plane with these Miller indices,
+        so that :math:`V = PVP` with :math:`P = 1 - \hat{\mathbf{n}}
+        \hat{\mathbf{n}}^{\mathsf{T}}`.
 
     Returns
     -------
@@ -596,6 +614,11 @@ def tensor_orbits(orbits, structure, sites, exclude=(), axis=None):
         uu = _sym_coordinates(P)
         # keep only the component along u u^T
         project = np.eye(6) - np.outer(uu, uu) / (uu @ uu)
+    if plane is not None:
+        n = _plane_normal(structure, plane)
+        P = np.eye(3) - np.outer(n, n)
+        # V - P V P = 0 on the coefficients of the basis E
+        in_plane = _sym_coordinates(E - np.einsum("ab,kbc,cd->kad", P, E, P)).T
     reps = orbits.representatives()
     excluded = set(np.atleast_1d(exclude).tolist())
 
@@ -611,6 +634,8 @@ def tensor_orbits(orbits, structure, sites, exclude=(), axis=None):
                 mapping.setdefault(q, R)
         if axis is not None:
             rows.append(project)
+        if plane is not None:
+            rows.append(in_plane)
         basis = _null_space(np.vstack(rows)) if rows else np.eye(6)
         members = np.array(sorted(mapping))
         for k in range(basis.shape[1]):

@@ -5,9 +5,7 @@ import pyvista as pv
 from qtpy.QtGui import QDoubleValidator
 from qtpy.QtWidgets import (
     QComboBox,
-    QGridLayout,
     QGroupBox,
-    QHBoxLayout,
     QLabel,
     QLineEdit,
     QPushButton,
@@ -18,7 +16,7 @@ from qtpy.QtWidgets import (
 
 COMPONENTS = {"Full model": "model", "Background": "background", "Occupancy": "occupancy",
               "Size effect": "size effect", "Displacement": "displacement", "Spin": "spin"}
-from rmc_discord.gui.views.base_view import BaseView, scalar_bar, set_icon
+from rmc_discord.gui.views.base_view import BaseView, row, scalar_bar, set_icon, short
 from rmc_discord.gui.views.plots import CMAPS, LIMITS, PlotWidget, metric_mesh, norm
 
 
@@ -36,34 +34,25 @@ class RecalculationView(BaseView):
         layout = QVBoxLayout(tab)
 
         box = QGroupBox("Model of a data plane from the refined correlations")
-        grid = QGridLayout(box)
+        rows = QVBoxLayout(box)
         self.quantity_combo = QComboBox(self)
-        grid.addWidget(QLabel("Show:"), 0, 0)
-        grid.addWidget(self.quantity_combo, 0, 1, 1, 2)
         self.normal_combo = QComboBox(self)
         self.normal_combo.addItems(["Axis 1/2", "Axis 1/3", "Axis 2/3"])
-        self.slice_line = _line("0.0")
-        self.bragg_line = _line("0.12", 0, 0.5)
-        grid.addWidget(self.normal_combo, 1, 0)
-        grid.addWidget(QLabel("Slice:"), 1, 1)
-        grid.addWidget(self.slice_line, 1, 2)
-        grid.addWidget(QLabel("Bragg exclusion (rlu):"), 1, 3)
-        grid.addWidget(self.bragg_line, 1, 4, 1, 2)
-        self.q_min_line = _line("0", 0, 100)
-        self.q_max_line = _line("100", 0, 100)
-        grid.addWidget(QLabel("|Q| min:"), 2, 0)
-        grid.addWidget(self.q_min_line, 2, 1)
-        grid.addWidget(QLabel("|Q| max:"), 2, 2)
-        grid.addWidget(self.q_max_line, 2, 3)
+        self.slice_line = short(_line("0.0"), 70)
+        rows.addLayout(row(QLabel("Show:"), self.quantity_combo, QLabel("   Plane:"), self.normal_combo,
+                           QLabel("at"), self.slice_line))
+        self.q_min_line = short(_line("0", 0, 100), 60)
+        self.q_max_line = short(_line("100", 0, 100), 60)
+        self.bragg_line = short(_line("0.12", 0, 0.5), 60)
         self.recalc_button = QPushButton("Recalculate", self)
         set_icon(self.recalc_button, "wave-square")
+        rows.addLayout(row(QLabel("|Q| from"), self.q_min_line, QLabel("to"), self.q_max_line, QLabel("Å⁻¹"),
+                           QLabel("   Bragg exclusion:"), self.bragg_line, QLabel("r.l.u."), end=self.recalc_button))
         self.info = QLabel("")
         self.info.setWordWrap(True)
-        grid.addWidget(self.info, 3, 0, 1, 5)
-        grid.addWidget(self.recalc_button, 3, 5)
+        rows.addWidget(self.info)
         layout.addWidget(box)
 
-        draw = QHBoxLayout()
         self.scale_combo = QComboBox(self)
         self.scale_combo.addItems(["Linear", "Log"])
         self.clim_combo = QComboBox(self)
@@ -71,10 +60,7 @@ class RecalculationView(BaseView):
         self.clim_combo.setCurrentIndex(2)
         self.cbar_combo = QComboBox(self)
         self.cbar_combo.addItems(list(CMAPS))
-        for w in (self.scale_combo, self.clim_combo, self.cbar_combo):
-            draw.addWidget(w)
-        draw.addStretch(1)
-        layout.addLayout(draw)
+        layout.addLayout(row(QLabel("Color:"), self.scale_combo, self.clim_combo, self.cbar_combo))
         self.plot = PlotWidget(self)
         layout.addWidget(self.plot, stretch=1)
         self.tab_widget.addTab(tab, "Recalculation")

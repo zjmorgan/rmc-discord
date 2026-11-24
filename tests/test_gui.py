@@ -91,6 +91,33 @@ def test_magnetic_positions_group_mixed_sites():
         StructureModel.magnetic_positions(crystal, {"nope": "Fe3+"}, {"Fe3+": 5.0})
 
 
+
+def test_magnetic_site_table(window):
+    """Ions offered per site, spin-state moments, custom overrides, and the mappings handed to the model."""
+    from types import SimpleNamespace
+
+    from rmc_discord.crystal.structure import Crystal
+    from rmc_discord.gui.models.structure import StructureModel
+    from rmc_discord.gui.views.structure import StructureView
+
+    crystal = Crystal.from_cif(str(LEGACY_DATA / "Tb2Ir3Ga9.cif"))
+    rows = StructureModel(SimpleNamespace(crystal=crystal)).magnetic_rows()
+    by_label = {r["label"]: r for r in rows}
+    tb = next(r for r in rows if r["label"].startswith("Tb"))
+    assert tb["ion"] == "Tb3+" and "Ga" not in "".join(by_label)
+    view = StructureView()
+    view.set_magnetic_sites([tb])
+    ions, moments, g = view.get_magnetic()
+    assert ions == {tb["label"]: "Tb3+"} and np.isclose(moments["Tb3+"], 9.72, atol=0.01) and np.isclose(g["Tb3+"], 1.5)
+    view.set_magnetic_ion(tb["label"], "Tb3+", moment=9.0)  # a measured moment overrides the free-ion value
+    _, state, _, _ = view._widgets(0)
+    assert state.currentText() == "custom" and view.get_magnetic()[1]["Tb3+"] == 9.0
+    view.restrict_combo.setCurrentIndex(2)
+    view.direction_line.setText("0 0 1")
+    assert view.get_model_parameters()[4] == (None, (0.0, 0.0, 1.0))
+    view.close()
+
+
 def test_data_slice_metric(window):
     """Slices of a hexagonal [H,H,0]/[-K,K,0] projection have aspect 1/sqrt(3)."""
     from rmc_discord.data.volume import Volume
@@ -155,6 +182,10 @@ def test_refinement_workflow(window):
     obs, summary = dm.sample(*params)
     w.data.sample_complete((obs, summary))
     assert w.session.sample is obs and len(obs) < summary["bins"]  # equivalent bins merged
+    assert dv.get_view()[0] == "observations"  # the 3-D view switches to what was sampled
+    layers = dm.cloud(masks=True, color="held out", max_points=100)
+    assert len(layers[0]["points"]) == min(100, len(obs)) and set(np.unique(layers[0]["scalars"])) <= {0.0, 1.0}
+    dv.view_combo.setCurrentIndex(0)  # back to the planes
     assert w.workflow.item(2).flags() & Qt.ItemIsEnabled
 
     rv = w.refinement_view
@@ -183,6 +214,7 @@ def test_correlations_and_recalculation(window):
     w = window
     assert w.session.fit is not None, "runs after the refinement test"
     cv, cm = w.correlations_view, w.correlations.model
+    assert cv.tab_widget.tabText(cv.tab_widget.currentIndex()) == "Slice"
     assert cm.available() == ["occupancy"] and cv.quantity_combo.count() == 1
     w.correlations.show_channel()
     assert cm.shown.normalized
@@ -320,3 +352,42 @@ def _wait(view, timeout=60.0):
         time.sleep(0.02)
     for _ in range(20):
         QApplication.processEvents()
+
+
+def test_background_normalization(tmp_path):
+    """data/norm - bkg/bkg_norm; raw background counts subtracted from normalized data are flagged."""
+    from types import SimpleNamespace
+
+    from rmc_discord.data import volume
+    from rmc_discord.data.volume import Volume
+    from rmc_discord.gui.models.data import DataModel
+
+    edges = [np.linspace(-1, 1, 5)] * 3
+    rng = np.random.default_rng(0)
+
+    def write(name, signal):
+        path = tmp_path / f"{name}.nxs"
+        volume.save(Volume(signal, np.ones_like(signal), edges, np.eye(3)), path)
+        return str(path)
+
+    norm = rng.uniform(1e3, 2e3, (4, 4, 4))
+    bkg_norm = 10 * norm
+    files = dict(data=write("data", 0.05 * norm + 1.0), norm=write("norm", norm),
+                 bkg=write("bkg", 0.04 * bkg_norm), bkg_norm=write("bkg_norm", bkg_norm))
+    model = DataModel(SimpleNamespace(structure=None, crystal=None))
+    good = model.load(files["data"], files["norm"], files["bkg"], files["bkg_norm"])
+    expected = (0.05 * norm + 1.0) / norm - 0.04
+    assert good["warning"] is None and np.allclose(good["display"].signal, expected)
+    raw = model.load(files["data"], files["norm"], files["bkg"], mode="after")  # counts taken as normalized
+    assert raw["warning"] and "normalization" in raw["warning"]
+    wrong = model.load(files["data"], files["norm"], files["bkg"])  # auto: counts, but on another normalization
+    assert wrong["background"] == "(data − bkg)/norm" and "exceeds the data" in wrong["warning"]
+
+    same = dict(bkg=write("bkg_same", 0.04 * norm))  # background counts on the data's normalization
+    before = model.load(files["data"], files["norm"], same["bkg"])
+    assert before["background"] == "(data − bkg)/norm" and before["warning"] is None
+    assert np.allclose(before["display"].signal, (0.05 * norm + 1.0 - 0.04 * norm) / norm)
+    normalized = dict(bkg=write("bkg_normalized", np.full((4, 4, 4), 0.04)))
+    after = model.load(files["data"], files["norm"], normalized["bkg"])
+    assert after["background"] == "data/norm − bkg" and after["warning"] is None
+    assert np.allclose(after["display"].signal, expected)

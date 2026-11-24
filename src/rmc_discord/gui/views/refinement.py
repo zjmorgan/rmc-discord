@@ -5,9 +5,7 @@ from matplotlib.colors import Normalize
 from qtpy.QtCore import Qt
 from qtpy.QtGui import QDoubleValidator, QIntValidator
 from qtpy.QtWidgets import (
-    QCheckBox,
     QComboBox,
-    QGridLayout,
     QGroupBox,
     QHBoxLayout,
     QHeaderView,
@@ -23,11 +21,13 @@ from qtpy.QtWidgets import (
 )
 
 from rmc_discord.gui.models.refinement import Settings
-from rmc_discord.gui.views.base_view import BaseView, set_icon
+from rmc_discord.gui.views.base_view import BaseView, row, set_icon, short
 from rmc_discord.gui.views.plots import CMAPS, LIMITS, PlotWidget, color_limits, metric_mesh, norm
 
 BACKGROUNDS = {"Radial (|Q| hat functions)": "radial", "Polynomial in |Q|²": "polynomial", "None": None}
 RECORD_COLUMNS = ["Fit", "Channels", "r max (Å)", "Rank", "χ² train", "χ² held-out", "Scale", "Time (s)"]
+
+
 
 
 def _float(text="", low=-1e12, high=1e12, decimals=8):
@@ -41,55 +41,46 @@ class RefinementView(BaseView):
         super().__init__(parent)
         self.recip_box.setChecked(False)
         self.tab_widget = QTabWidget(self)
-        self._init_setup_tab()
-        self._init_results_tab()
+        self._init_fit_tab()
         self._init_compare()
         self.add_tools(self.tab_widget)
 
     # ------------------------------------------------------------------
 
-    def _init_setup_tab(self):
+    def _init_fit_tab(self):
         tab = QWidget()
         layout = QVBoxLayout(tab)
 
-        box = QGroupBox("Background")
-        grid = QGridLayout(box)
+        box = QGroupBox("Setup")
+        rows = QVBoxLayout(box)
         self.background_combo = QComboBox(self)
         self.background_combo.addItems(list(BACKGROUNDS))
         self.background_combo.setToolTip("Smooth background refined with the correlations.")
-        self.knot_line = _float("0.5", 1e-3, 100)
+        self.knot_line = short(_float("0.5", 1e-3, 100))
         self.knot_line.setToolTip("Knot spacing of the radial hat functions (Å⁻¹).")
-        self.degree_line = QLineEdit("1")
+        self.knot_label = QLabel("knots every")
+        self.knot_unit = QLabel("Å⁻¹")
+        self.degree_line = short(QLineEdit("1"), 40)
         self.degree_line.setValidator(QIntValidator(0, 10))
         self.degree_line.setToolTip("Degree of the polynomial in |Q|².")
-        grid.addWidget(QLabel("Basis:"), 0, 0)
-        grid.addWidget(self.background_combo, 0, 1, 1, 3)
-        grid.addWidget(QLabel("Knot spacing (Å⁻¹):"), 1, 0)
-        grid.addWidget(self.knot_line, 1, 1)
-        grid.addWidget(QLabel("Degree:"), 1, 2)
-        grid.addWidget(self.degree_line, 1, 3)
-        layout.addWidget(box)
-
-        box = QGroupBox("Least squares")
-        grid = QGridLayout(box)
-        self.ridge_line = _float("0", 0, 1)
+        self.degree_label = QLabel("degree")
+        rows.addLayout(row(QLabel("Background:"), self.background_combo, self.knot_label, self.knot_line,
+                            self.knot_unit, self.degree_label, self.degree_line))
+        self.background_combo.currentIndexChanged.connect(self._background_fields)
+        self.ridge_line = short(_float("0", 0, 1))
         self.ridge_line.setToolTip("Tikhonov damping relative to the mean diagonal of the normal matrix "
                                    "(e.g. 1e-6 for nearly collinear orbits); 0 for none.")
         self.fit_button = QPushButton("Refine Correlations", self)
         set_icon(self.fit_button, "play")
-        grid.addWidget(QLabel("Relative ridge:"), 0, 0)
-        grid.addWidget(self.ridge_line, 0, 1)
-        grid.addWidget(self.fit_button, 0, 2)
+        rows.addLayout(row(QLabel("Relative ridge:"), self.ridge_line, end=self.fit_button))
         self.fit_info = QLabel("")
         self.fit_info.setWordWrap(True)
-        grid.addWidget(self.fit_info, 1, 0, 1, 3)
+        rows.addWidget(self.fit_info)
         layout.addWidget(box)
-        layout.addStretch(1)
-        self.tab_widget.addTab(tab, "Setup")
+        self._background_fields()
 
-    def _init_results_tab(self):
-        tab = QWidget()
-        layout = QVBoxLayout(tab)
+        box = QGroupBox("Fits")
+        inner = QVBoxLayout(box)
         splitter = QSplitter(Qt.Vertical)
         self.progress_plot = PlotWidget(self)
         splitter.addWidget(self.progress_plot)
@@ -98,8 +89,18 @@ class RefinementView(BaseView):
         self.record_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
         self.record_table.verticalHeader().setVisible(False)
         splitter.addWidget(self.record_table)
-        layout.addWidget(splitter)
-        self.tab_widget.addTab(tab, "Fits")
+        splitter.setStretchFactor(0, 3)
+        splitter.setStretchFactor(1, 2)
+        inner.addWidget(splitter)
+        layout.addWidget(box, stretch=1)
+        self.tab_widget.addTab(tab, "Fit")
+
+    def _background_fields(self, *args):
+        kind = BACKGROUNDS.get(self.background_combo.currentText())
+        for w in (self.knot_label, self.knot_line, self.knot_unit):
+            w.setVisible(kind == "radial")
+        for w in (self.degree_label, self.degree_line):
+            w.setVisible(kind == "polynomial")
 
     def _init_compare(self):
         """Observed and calculated intensity on a slice of the data volume (replaces the 3-D view)."""
@@ -110,9 +111,9 @@ class RefinementView(BaseView):
         self.compare_normal_combo = QComboBox(self)
         self.compare_normal_combo.addItems(["Axis 1/2", "Axis 1/3", "Axis 2/3"])
         self.compare_normal_combo.setToolTip("Plane of the slice (projection axes of the data volume).")
-        self.compare_value_line = _float("0", -1e6, 1e6)
+        self.compare_value_line = short(_float("0", -1e6, 1e6), 70)
         self.compare_value_line.setToolTip("Position of the slice along the remaining axis (r.l.u.).")
-        self.compare_thickness_line = _float("0.01", 1e-6, 100)
+        self.compare_thickness_line = short(_float("0.01", 1e-6, 100), 70)
         self.compare_thickness_line.setToolTip("Slab thickness (r.l.u.); points within half of it are shown.")
         self.compare_scale_combo = QComboBox(self)
         self.compare_scale_combo.addItems(["Linear", "Log"])
@@ -220,6 +221,9 @@ class RefinementView(BaseView):
             ax.xaxis.set_major_locator(MaxNLocator(integer=True))
             ax.legend(loc="upper right", fontsize=8)
         ax.set_xlabel("fit")
+        if records:
+            ax.set_xticks(x)
+            ax.set_xlim(x[0] - 0.5, x[-1] + 0.5)
         ax.set_ylabel("reduced χ²")
         self.progress_plot.draw()
 

@@ -117,8 +117,25 @@ class StructureModel(BaseModel):
             mixtures[g[0].label] = [(float(s.occupancy), ions.get(s.label)) for s in g]
         return labels, mixtures, by_ion
 
+    def magnetic_rows(self):
+        """Sites that can carry a moment: ``dict(label, ions, ion)`` with a default ion."""
+        from rmc_discord.crystal.moments import magnetic_ions, parse_ion, spin_states
+
+        rows = []
+        crystal = self.session.crystal
+        if crystal is None:
+            return rows
+        for s in crystal.asymmetric:
+            ions = [i for i in magnetic_ions(s.symbol) if parse_ion(i)[1] > 0 and spin_states(i)]  # cations
+            if not ions:
+                continue
+            charges = {parse_ion(i)[1]: i for i in ions}
+            default = next((charges[q] for q in (3, 2) if q in charges), ions[0])
+            rows.append(dict(label=s.label, ions=ions, ion=default))
+        return rows
+
     def build_model(self, cell, occupancies, labels, channels, magnetic, ions, moments, r_max, cluster_distance,
-                    axis=None, difference=False, progress=None):
+                    restrict=(None, None), difference=False, g=None, progress=None):
         """
         Crystal with the edited lattice and occupancies, and its pair model.
 
@@ -130,7 +147,11 @@ class StructureModel(BaseModel):
             ``occupancy``, ``size_effect``, ``displacement`` booleans.
         magnetic : {None, "isotropic", "tensor"}
         ions, moments : dict
-            Parsed magnetic ions and moments.
+            ``{label: ion}`` and ``{ion: moment}`` of the magnetic sites.
+        restrict : tuple
+            ``(axis, plane)`` restricting displacement directions (either may be None).
+        g : dict, optional
+            ``{ion: g}`` Landé factors for the form factors (2 by default).
         """
         if progress:
             progress("Building crystal.", 20)
@@ -139,12 +160,13 @@ class StructureModel(BaseModel):
         mlabels, mixtures, by_ion = ([], {}, {})
         if magnetic:
             if not ions:
-                raise ValueError("give the magnetic ions (label: ion) for a magnetic model")
+                raise ValueError("check at least one magnetic site for a magnetic model")
             mlabels, mixtures, by_ion = self.magnetic_positions(crystal, ions, moments)
         spec = ModelSpec(active=list(labels), r_max=float(r_max), cluster_distance=float(cluster_distance),
                          occupancy=channels.get("occupancy", False), size_effect=channels.get("size_effect", False),
-                         displacement=channels.get("displacement", False), axis=axis, magnetic=magnetic,
-                         magnetic_sites=mlabels, ions=mixtures, moments=by_ion, difference=difference)
+                         displacement=channels.get("displacement", False), axis=restrict[0], plane=restrict[1],
+                         magnetic=magnetic, magnetic_sites=mlabels, ions=mixtures, moments=by_ion,
+                         g={ion: v for ion, v in (g or {}).items() if ion in by_ion}, difference=difference)
         if progress:
             progress("Finding pair orbits and constraints.", 50)
         model = PairModel(structure, spec)
